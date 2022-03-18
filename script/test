@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# Run the project's test suite(s).
+#
+# Copyright (c) 2022 Johannes Krohn <jkrohn@cisco.com>
+# License: MIT
+
+
+# Run all tests by default
+default=true
+
+
+# Process Script Arguments
+for i in ${@}; do
+    case ${i} in
+        lint)
+        lint=true
+        default=
+        ;;
+
+        tests)
+        tests=true
+        default=
+        ;;
+
+        slow)
+        slow=true
+        default=
+        ;;
+
+        *)
+        echo "Unknown argument: $i"
+        exit 1
+        ;;
+    esac
+done
+
+
+set -e
+cd "$(dirname "$0")/.."
+
+
+# Lint the source code
+if [ ${default} ] || [ ${lint} ]; then
+    echo "==> Linting the source code"
+    flake8 --ignore=E501
+fi
+
+# Run the test suite
+if [ ${default} ] || [ ${tests} ]; then
+    echo "==> Running the test suite (excluding slow tests)"
+    py.test -s -m "not slow"
+fi
+
+# Run the rate-limit tests
+if [ ${slow} ]; then
+    echo "==> Running the slow tests"
+    py.test -s -m "slow"
+fi

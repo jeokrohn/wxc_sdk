@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "wxc_sdk"
+version = "0.1.0"
+description = "SDK for Webex APIs with special focus on Webex Calling specific endpoints"
+license = 'MIT'
+authors = ["Johannes Krohn <jkrohn@cisco.com>"]
+readme = 'README.rst'
+homepage = 'https://github.com/jeokrohn/wxc_sdk'
+documentation = 'http://wxc_sdk.readthedocs.io'
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pydantic = "^1.9.0"
+requests = "^2.27.1"
+requests-toolbelt = "^0.9.1"
+backoff = "^1.11.1"
+pytz = "^2021.3"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+python-dotenv = "^0.19.2"
+PyYAML = "^6.0"
+Sphinx = "^4.4.0"
+sphinx-rtd-theme = "^1.0.0"
+flake8 = "^4.0.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
