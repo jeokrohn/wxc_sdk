@@ -25,7 +25,7 @@ This is how easy it is to use the SDK. The example code list all calling enabled
 Installation
 ------------
 
-Installing and upgrading webexteamssdk is easy:
+Installing and upgrading wxc_sdk is easy:
 
 **Install via PIP**
 
