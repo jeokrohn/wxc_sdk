@@ -48,7 +48,6 @@ fi
 if [ ${all} ] || [ ${docs} ]; then
     echo "==> Building the Docs"
     make -C docs clean
-    poetry export -f requirements.txt --output docs/requirements.txt
     sphinx-apidoc -o docs/apidoc -f -e -M wxc_sdk
     make -C docs html
 fi
