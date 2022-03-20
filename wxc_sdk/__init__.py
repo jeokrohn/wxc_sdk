@@ -1,5 +1,5 @@
 """
-Simple SDK for Webex APIs with focus on Weebx Calling specific endpoints
+Simple SDK for Webex APIs with focus on Webex Calling specific endpoints
 """
 import logging
 import os
@@ -13,27 +13,36 @@ from .rest import RestSession
 from .telephony import TelephonyApi
 from .tokens import Tokens
 from .webhook import WebhookApi
+from dataclasses import dataclass
 
 __all__ = ['WebexSimpleApi']
 
-__version__ = '0.1.0'
+__version__ = '0.3.0'
 
 log = logging.getLogger(__name__)
 
 
+@dataclass(init=False)
 class WebexSimpleApi:
     """
     The main API object
 
-    :ivar licenses: :class:`licenses.LicensesApi`
-    :ivar locations: :class:`locations.LocationsApi`
-    :ivar person_settings: :class:`person_settings.PersonSettingsApi`
-    :ivar people: :class:`people.PeopleApi`
-    :ivar telephony: :class:`telephony.TelephonyApi`
-    :ivar webhook: :class:`webhook.WebhookApi`
     """
+
+    #: Licenses API :class:`licenses.LicensesApi`
+    licenses: LicensesApi
+    #: Location API :class:`locations.LocationsApi`
+    locations: LocationsApi
+    #: Person settings API :class:`person_settings.PersonSettingsApi`
+    person_settings: PersonSettingsApi
+    #: People API :class:`people.PeopleApi`
+    people: PeopleApi
+    #: Telephony API :class:`telephony.TelephonyApi`
+    telephony: TelephonyApi
     #: Webhooks API :class:`webhook.WebhookApi`
     webhook: WebhookApi
+    #: :class:`rest.RestSession` used for all API requests
+    session: RestSession
 
     def __init__(self, *, tokens: Union[str, Tokens] = None, concurrent_requests: int = 10):
         """
@@ -52,20 +61,14 @@ class WebexSimpleApi:
                                  'WEBEX_ACCESS_TOKEN environment variable')
             tokens = Tokens(access_token=tokens)
 
-        # :class:`rest.RestSession` used for all API requests
-        self.session = RestSession(tokens=tokens, concurrent_requests=concurrent_requests)
-        #: Licenses API :class:`licenses.LicensesApi`
-        self.licenses = LicensesApi(session=self.session)
-        #: Location API :class:`locations.LocationsApi`
-        self.locations = LocationsApi(session=self.session)
-        #: Person settings API :class:`person_settings.PersonSettingsApi`
-        self.person_settings = PersonSettingsApi(session=self.session)
-        #: People API :class:`people.PeopleApi`
-        self.people = PeopleApi(session=self.session)
-        #: Telephony API :class:`telephony.TelephonyApi`
-        self.telephony = TelephonyApi(session=self.session)
-        #: Webhooks API :class:`webhook.WebhookApi`
-        self.webhook = WebhookApi(session=self.session)
+        session = RestSession(tokens=tokens, concurrent_requests=concurrent_requests)
+        self.licenses = LicensesApi(session=session)
+        self.locations = LocationsApi(session=session)
+        self.person_settings = PersonSettingsApi(session=session)
+        self.people = PeopleApi(session=session)
+        self.telephony = TelephonyApi(session=session)
+        self.webhook = WebhookApi(session=session)
+        self.session = session
 
     def close(self):
         self.session.close()

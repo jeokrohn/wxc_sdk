@@ -2,14 +2,14 @@
 An OAuth integration
 """
 import logging
-import os
 import urllib.parse
 from dataclasses import dataclass
+from typing import Union, List
 
 import requests
 
-from .tokens import Tokens
 from .rest import dump_response
+from .tokens import Tokens
 
 log = logging.getLogger(__name__)
 
@@ -19,31 +19,52 @@ __all__ = ['Integration']
 @dataclass
 class Integration:
     """
-    an OAuth integration
+    An OAuth integration
     """
-    client_id: str  #: integration's client id, obtained from developer.webex.com
-    client_secret: str  #: integration's client id, obtained from developer.webex.com
+    #: integration's client id, obtained from developer.webex.com
+    client_id: str
 
-    #: OAuth scopes of the integration
-    scopes: str
+    #: integration's client secret, obtained from developer.webex.com
+    client_secret: str
+
+    #: OAuth scopes of the integration.
+    scopes: List[str]
+
+    #: redirect URL of the integration
+    redirect_url: str
 
     #: URL of the authorization service; used as part of the URL to start an OAuth flow
-    auth_service = 'https://webexapis.com/v1/authorize'
+    auth_service: str
 
     #: base URL of the access token service
-    token_service = 'https://webexapis.com/v1/access_token'
+    token_service: str
 
-    @property
-    def redirect_url(self) -> str:
+    def __init__(self, client_id: str, client_secret: str, scopes: Union[str, List[str]],
+                 redirect_url: str,
+                 auth_service: str = None,
+                 token_service: str = None):
         """
-        Obtain redirect URI. Either on Heroku or localhost:6001
 
+        :param client_id: integration's client id, obtained from developer.webex.com
+        :param client_secret: integration's client secret, obtained from developer.webex.com
+        :param scopes: integration's scopes. Can be a list of strings or a string containing a list of space
+            separated scopes
+        :param redirect_url: integration's redirect URL
+        :param auth_service: authorization service to be used in the authorization URL.
+            Default: 'https://webexapis.com/v1/authorize'
+        :param token_service: URL of token service to use to obrtain tokens from.
+            Default: 'https://webexapis.com/v1/access_token'
         """
-        # redirect URL is either local or to heroku
-        heroku_name = os.getenv('HEROKU_NAME')
-        if heroku_name:
-            return f'https://{heroku_name}.herokuapp.com/redirect'
-        return 'http://localhost:6001/redirect'
+        self.client_id = client_id
+        self.client_secret = client_secret
+        if isinstance(scopes, list):
+            self.scopes = scopes
+        else:
+            scopes: str
+            self.scopes = scopes.split()
+        self.redirect_url = redirect_url
+        self.auth_service = auth_service or 'https://webexapis.com/v1/authorize'
+        self.token_service = token_service or 'https://webexapis.com/v1/access_token'
 
     def auth_url(self, *, state: str) -> str:
         """
@@ -91,41 +112,61 @@ class Integration:
         response.raise_for_status()
         json_data = response.json()
         tokens = Tokens.parse_obj(json_data)
+        tokens.set_expiration()
         return tokens
 
-    def validate_tokens(self, tokens: Tokens) -> bool:
+    def refresh(self, *, tokens: Tokens):
         """
-        Validate tokens if remaining life time is to small then try to get a new access token
+        Try to get a new access token using the refresh token.
+
+        :param tokens: Tokens. Access token and expirations get updated in place.
+        :raise:
+            :class:`requests.HTTPError`: if request to obtain new access token fails
+        """
+        data = {
+            'grant_type': 'refresh_token',
+            'client_id': self.client_id,
+            'client_secret': self.client_secret,
+            'refresh_token': tokens.refresh_token
+        }
+        try:
+            url = self.token_service
+            with requests.Session() as session:
+                with session.post(url=url, data=data) as response:
+                    dump_response(response=response, dump_log=log)
+                    response.raise_for_status()
+                    json_data = response.json()
+        except requests.HTTPError:
+            tokens.access_token = None
+            raise
+        else:
+            new_tokens = Tokens.parse_obj(json_data)
+            new_tokens: Tokens
+            new_tokens.set_expiration()
+            tokens.update(new_tokens)
+
+    def validate_tokens(self, *, tokens: Tokens, min_lifetime_seconds: int = 300) -> bool:
+        """
+        Validate tokens
+
+        If remaining life time is to small then try to get a new access token
         using the existing refresh token.
         If no new access token can be obtained using the refresh token then the access token is set to None
         and True is returned
 
         :param tokens: current OAuth tokens. Get updated if new tokens are created
         :type tokens: Tokens
-        :return: Indicate if tokens have been changed
+        :param min_lifetime_seconds: minimal remaining lifetime in seconds. Default: 300 seconds
+        :type min_lifetime_seconds: int
+        :return: True -> min lifetime reached and tried to get new access token.
         :rtype: bool
         """
-        if tokens.needs_refresh:
-            log.debug(f'Getting new access token, valid until {tokens.expires_at}, remaining {tokens.remaining}')
-            data = {
-                'grant_type': 'refresh_token',
-                'client_id': self.client_id,
-                'client_secret': self.client_secret,
-                'refresh_token': tokens.refresh_token
-            }
-            try:
-                url = self.token_service
-                with requests.Session() as session:
-                    with session.post(url=url, data=data) as response:
-                        dump_response(response=response, dump_log=log)
-                        response.raise_for_status()
-                        json_data = response.json()
-            except requests.HTTPError:
-                tokens.access_token = None
-            else:
-                new_tokens = Tokens.parse_obj(json_data)
-                new_tokens: Tokens
-                new_tokens.set_expiration()
-                tokens.update(new_tokens)
-                return True
-        return False
+        if tokens.remaining >= min_lifetime_seconds:
+            return False
+        log.debug(f'Getting new access token, valid until {tokens.expires_at}, remaining {tokens.remaining}')
+        try:
+            self.refresh(tokens=tokens)
+        except requests.HTTPError:
+            # ignore HTTPErrors
+            pass
+        return True

@@ -60,7 +60,7 @@ class Tokens(BaseModel):
     @property
     def remaining(self) -> int:
         """
-        remaining lifeime in seconds
+        remaining lifetime in seconds
         """
         if not self.access_token:
             return 0
@@ -69,10 +69,3 @@ class Tokens(BaseModel):
         diff: datetime.timedelta
         diff = int(diff.total_seconds())
         return diff
-
-    @property
-    def needs_refresh(self) -> bool:
-        """
-        Determine if the access token needs to be refreshed. True: refresh needed
-        """
-        return not self.access_token or self.remaining < 300

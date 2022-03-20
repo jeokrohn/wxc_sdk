@@ -39,6 +39,14 @@ extensions = [
     # 'enum_tools.autoenum'
 ]
 
+# This value selects what content will be inserted into the main body of an autoclass directive.
+# Both the class’ and the __init__ method’s docstring are concatenated and inserted.
+autoclass_content = 'both'
+
+# This value selects if automatically documented members are sorted alphabetical (value 'alphabetical'), by member
+# type (value 'groupwise') or by source order (value 'bysource'). The default is alphabetical.
+autodoc_member_order = 'bysource'
+
 # autoapi_dirs = ['../wxc_sdk']
 # autoapi_keep_files = True
 # autoapi_generate_api_docs = True

@@ -60,11 +60,10 @@ class AdminIntegration(Integration):
     The integration we want to use to get tokens for the test cases
     """
 
-    @property
-    def redirect_url(self) -> str:
-        return 'http://localhost:6001/redirect'
-
     def __init__(self):
+        """
+        Integration parameters are read from environment variables
+        """
         # get client id and client secret from .env in test directory
         dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
         load_dotenv(dotenv_path=dotenv_path)
@@ -77,7 +76,8 @@ class AdminIntegration(Integration):
         super().__init__(
             client_id=client_id,
             client_secret=client_secret,
-            scopes=scopes)
+            scopes=scopes,
+            redirect_url='http://localhost:6001/redirect')
 
 
 def get_tokens_from_oauth_flow(integration: Integration) -> Optional[Tokens]:
