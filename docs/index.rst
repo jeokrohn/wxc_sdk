@@ -1,3 +1,7 @@
+.. currentmodule:: wxc_sdk
+.. highlight:: python
+   :linenothreshold: 5
+
 =======
 wxc_sdk
 =======
@@ -9,18 +13,8 @@ endpoints.
 
 This is how easy it is to use the SDK. The example code list all calling enabled users within the org.
 
-.. code-block:: Python
-
-    from wxc_sdk import WebexSimpleApi
-
-    api = WebexSimpleApi()
-
-    # if a user is enabled for calling, then the location_id attribute is set
-    calling_users = [user for user in api.people.list(calling_data=True)
-                     if user.location_id]
-    print(f'{len(calling_users)} users:')
-    print('\n'.join(user.display_name for user in calling_users))
-
+.. literalinclude:: ../examples/calling_users.py
+    :language: Python
 
 Installation
 ------------
@@ -53,8 +47,17 @@ Smaple scripts are available in the examples_ folder.
 .. _examples: https://github.com/jeokrohn/wxc_sdk/tree/master/examples
 
 
+Reference
+---------
+
+.. toctree::
+    :maxdepth: 4
+
+    apidoc/wxc_sdk.rst
+
+---------
+
 Indices and tables
 ==================
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`

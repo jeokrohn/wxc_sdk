@@ -1,0 +1,7 @@
+# rename this to .env and set values
+
+# API key for Calendarific API: https://calendarific.com/
+CALENDARIFIC_KEY=
+
+# Webex Access Token to be used by example scrips
+WEBEX_ACCESS_TOKEN=

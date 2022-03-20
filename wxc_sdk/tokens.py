@@ -14,7 +14,7 @@ class Tokens(BaseModel):
     """
     Webex tokens
     """
-    access_token: str  #: access token
+    access_token: Optional[str]  #: access token
     expires_in: Optional[int]  #: remaining lifetime at time of token creation
     expires_at: Optional[datetime.datetime]  #: expiration, calculated at time of token creation
     refresh_token: Optional[str]  #: refresh token

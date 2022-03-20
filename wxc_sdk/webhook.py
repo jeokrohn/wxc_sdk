@@ -12,6 +12,8 @@ from pydantic import Field
 from .api_child import ApiChild
 from .base import ApiModel, to_camel, webex_id_to_uuid
 
+__all__ = ['WebHookEvent', 'WebHookResource', 'WebHookCreate', 'WebHookStatus', 'WebHook', 'WebhookApi']
+
 
 class WebHookEvent(str, Enum):
     """
@@ -164,6 +166,7 @@ class WebhookApi(ApiChild, base='webhooks'):
         Updates a webhook, by ID. You cannot use this call to deactivate a webhook, only to activate a webhook that
         was auto deactivated. The fields that can be updated are name, targetURL, secret and status. All other fields,
         if supplied, are ignored.
+
         :param webhook_id: The unique identifier for the webhook.
         :type webhook_id: str
         :param update: The webhook update

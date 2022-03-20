@@ -1,5 +1,13 @@
+"""
+Example script
+Get all calling users within the org
+"""
+
+from dotenv import load_dotenv
 
 from wxc_sdk import WebexSimpleApi
+
+load_dotenv()
 
 api = WebexSimpleApi()
 

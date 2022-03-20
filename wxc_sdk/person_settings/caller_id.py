@@ -53,6 +53,9 @@ class ExternalCallerIdNamePolicy(str, Enum):
 
 
 class CallerId(ApiModel):
+    """
+    Caller id settings of a user
+    """
     #: Allowed types for the selected field.
     caller_id_types: List[CallerIdSelectedType] = Field(alias='types')
     #: Which type of outgoing Caller ID will be used.
@@ -92,6 +95,16 @@ class CallerId(ApiModel):
 
         :return: dict
         :rtype: dict
+
+        Example:
+
+        .. code-block:: python
+
+            caller_id = wx_api.person_settings.caller_id.read(person_id=...)
+            caller_id.first_name = 'Bob'
+            wx_api.person_settings.caller_id.configure(person_id=...,
+                                                       **caller_id.configure_params())
+
         """
         data = self.dict()
         to_keep = {
@@ -137,7 +150,6 @@ class CallerIdApi(PersonSettingsApiChild, base='people'):
                   external_caller_id_name_policy: ExternalCallerIdNamePolicy = None,
                   custom_external_caller_id_name: str = None):
         """
-        Configure Caller ID Settings for a Person
         Configure a Person's Caller ID Settings
 
         Caller ID settings control how a person’s information is displayed when making outgoing calls.
@@ -167,6 +179,7 @@ class CallerIdApi(PersonSettingsApiChild, base='people'):
         :param custom_external_caller_id_name: Custom External Caller Name, which will be shown if External Caller Id
             Name is OTHER.
         :type custom_external_caller_id_name: str
+
         """
         data = {to_camel(k): v for i, (k, v) in enumerate(locals().items())
                 if i > 2 and v is not None}

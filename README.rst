@@ -48,6 +48,6 @@ http://wxc_sdk.readthedocs.io
 Examples
 --------
 
-Smaple scripts are available in the examples_ folder.
+Sample scripts are available in the examples_ folder.
 
 .. _examples: https://github.com/jeokrohn/wxc_sdk/tree/master/examples

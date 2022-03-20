@@ -25,7 +25,6 @@ class WebexSimpleApi:
     """
     The main API object
 
-    :ivar session: :class:`rest.RestSession` used for all API requests
     :ivar licenses: :class:`licenses.LicensesApi`
     :ivar locations: :class:`locations.LocationsApi`
     :ivar person_settings: :class:`person_settings.PersonSettingsApi`
@@ -53,13 +52,13 @@ class WebexSimpleApi:
                                  'WEBEX_ACCESS_TOKEN environment variable')
             tokens = Tokens(access_token=tokens)
 
-        #: :class:`rest.RestSession` used for all API requests
+        # :class:`rest.RestSession` used for all API requests
         self.session = RestSession(tokens=tokens, concurrent_requests=concurrent_requests)
         #: Licenses API :class:`licenses.LicensesApi`
         self.licenses = LicensesApi(session=self.session)
         #: Location API :class:`locations.LocationsApi`
         self.locations = LocationsApi(session=self.session)
-        #: Person settings API: :class:`person_settings.PersonSettingsApi`
+        #: Person settings API :class:`person_settings.PersonSettingsApi`
         self.person_settings = PersonSettingsApi(session=self.session)
         #: People API :class:`people.PeopleApi`
         self.people = PeopleApi(session=self.session)
