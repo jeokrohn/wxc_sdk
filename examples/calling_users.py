@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Example script
 Get all calling users within the org

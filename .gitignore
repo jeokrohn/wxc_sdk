@@ -140,4 +140,5 @@ cython_debug/
 tests/logs
 tests/testtoken.yml
 .idea
-
+examples/*.env
+examples/*.yml

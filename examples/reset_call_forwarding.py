@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Example script
 Reset call forwarding to default for all users in the org

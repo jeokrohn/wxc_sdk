@@ -39,7 +39,7 @@ class Integration:
     #: base URL of the access token service
     token_service: str
 
-    def __init__(self, client_id: str, client_secret: str, scopes: Union[str, List[str]],
+    def __init__(self, *, client_id: str, client_secret: str, scopes: Union[str, List[str]],
                  redirect_url: str,
                  auth_service: str = None,
                  token_service: str = None):

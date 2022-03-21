@@ -1,4 +1,6 @@
+#!/usr/bin/env python
 """
+Example script
 Create a holiday schedule for all US locations with all national holidays
 """
 
