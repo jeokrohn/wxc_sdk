@@ -42,9 +42,12 @@ http://wxc_sdk.readthedocs.io
 Examples
 --------
 
-Smaple scripts are available in the examples_ folder.
+Sample scripts are available in the examples_ folder.
+
+Also the test cases in the tests_ folder can serve as examples of how to use the SDK.
 
 .. _examples: https://github.com/jeokrohn/wxc_sdk/tree/master/examples
+.. _tests: https://github.com/jeokrohn/wxc_sdk/tree/master/tests
 
 
 Reference

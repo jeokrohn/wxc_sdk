@@ -5,25 +5,11 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from typing import Callable
 
-from .base import TestCaseWithLog, gather
+from .base import TestCaseWithUsers, gather
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.barge import BargeSettings
 from wxc_sdk.person_settings.call_intercept import InterceptSetting, InterceptTypeIncoming, Greeting
 from wxc_sdk.person_settings.caller_id import CallerIdSelectedType
-
-
-class TestCaseWithUsers(TestCaseWithLog):
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-        print('Getting users...')
-        users = list(cls.api.people.list(calling_data=True))
-        cls.users = [user for user in users if user.location_id]
-        print(f'got {len(cls.users)} users')
-
-    def setUp(self) -> None:
-        super().setUp()
-        self.assertFalse(not self.users, 'Need at least one user to run test')
 
 
 class TestRead(TestCaseWithUsers):

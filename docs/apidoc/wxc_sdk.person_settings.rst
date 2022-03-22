@@ -19,3 +19,4 @@ Submodules
    wxc_sdk.person_settings.common
    wxc_sdk.person_settings.dnd
    wxc_sdk.person_settings.forwarding
+   wxc_sdk.person_settings.voicemail

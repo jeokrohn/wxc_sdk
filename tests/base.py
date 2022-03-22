@@ -18,20 +18,20 @@ from collections.abc import Iterable, Generator
 from dataclasses import dataclass
 from typing import Optional, Any, Union, List
 from unittest import TestCase
-from dotenv import load_dotenv
 
 import requests
 import yaml
+from dotenv import load_dotenv
 from yaml import safe_load
 
-from wxc_sdk.integration import Integration
-from wxc_sdk.tokens import Tokens
 from wxc_sdk import WebexSimpleApi
+from wxc_sdk.integration import Integration
 from wxc_sdk.locations import Location
+from wxc_sdk.tokens import Tokens
 
 log = logging.getLogger(__name__)
 
-__all__ = ['TestCaseWithTokens', 'TestCaseWithLog', 'gather', 'TestWithLocations']
+__all__ = ['TestCaseWithTokens', 'TestCaseWithLog', 'gather', 'TestWithLocations', 'TestCaseWithUsers']
 
 
 def gather(mapping: Iterable[Any], return_exceptions: bool = False) -> Generator[Union[Any, Exception]]:
@@ -335,3 +335,17 @@ class TestWithLocations(TestCaseWithLog):
         super().setUp()
         if not self.locations:
             self.skipTest('Need at least ohe location to run test.')
+
+
+class TestCaseWithUsers(TestCaseWithLog):
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        print('Getting users...')
+        users = list(cls.api.people.list(calling_data=True))
+        cls.users = [user for user in users if user.location_id]
+        print(f'got {len(cls.users)} users')
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.assertFalse(not self.users, 'Need at least one user to run test')

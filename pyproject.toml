@@ -17,12 +17,12 @@ backoff = "^1.11.1"
 pytz = "*"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
-python-dotenv = "^0.19.2"
 PyYAML = "^6.0"
 Sphinx = "^4.4.0"
 sphinx-rtd-theme = "^1.0.0"
 flake8 = "^4.0.1"
+pytest = "^7.1.1"
+python-dotenv = "^0.19.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

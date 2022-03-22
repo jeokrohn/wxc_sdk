@@ -4,24 +4,25 @@ Example script
 read tokens from file or interactively obtain token by starting a local web server and open the authorization URL in
 the local web browser
 """
-
-from dotenv import load_dotenv
-import os
-from wxc_sdk.tokens import Tokens
-from wxc_sdk.integration import Integration
-from wxc_sdk import WebexSimpleApi
-from typing import Optional
 import concurrent.futures
-import threading
-import logging
 import http.server
-import webbrowser
-import requests
-import socketserver
-from yaml import safe_load, safe_dump
 import json
+import logging
+import os
+import socketserver
+import threading
 import urllib.parse
 import uuid
+import webbrowser
+from typing import Optional
+
+import requests
+from dotenv import load_dotenv
+from yaml import safe_load, safe_dump
+
+from wxc_sdk import WebexSimpleApi
+from wxc_sdk.integration import Integration
+from wxc_sdk.tokens import Tokens
 
 log = logging.getLogger(__name__)
 

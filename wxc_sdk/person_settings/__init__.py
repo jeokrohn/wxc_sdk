@@ -7,6 +7,7 @@ from .call_intercept import CallInterceptApi
 from .call_recording import CallRecordingApi
 from .caller_id import CallerIdApi
 from .forwarding import ForwardingApi
+from .voicemail import VoicemailApi
 from .dnd import DndApi
 from ..api_child import ApiChild
 from ..rest import RestSession
@@ -24,6 +25,7 @@ class PersonSettingsApi(ApiChild, base='people'):
     :ivar forwarding: call forwarding API :class:`forwarding.ForwardingApi`
     :ivar barge: barge API :class:`barge.BargeApi`
     :ivar dnd: DND API :class:`dnd.DndApi`
+    :ivar voicemail: Voicemail API: :class:`voicemail.VoicemailApi`
         
     """
 
@@ -35,4 +37,4 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.forwarding = ForwardingApi(session)
         self.barge = BargeApi(session)
         self.dnd = DndApi(session)
-        # TODO: voicemail settings
+        self.voicemail = VoicemailApi(session)

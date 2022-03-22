@@ -209,8 +209,10 @@ class CallInterceptApi(PersonSettingsApiChild, base='people'):
                 raise ValueError('upload_as is required')
         encoder = MultipartEncoder(fields={'file': (upload_as, content, 'audio/wav')})
         ep = self.f_ep(person_id=person_id, path='intercept/actions/announcementUpload/invoke')
+        params = org_id and {'orgId': org_id} or None
         try:
-            self.post(ep, data=encoder, headers={'Content-Type': encoder.content_type})
+            self.post(ep, data=encoder, headers={'Content-Type': encoder.content_type},
+                      params=params)
         finally:
             if must_close:
                 content.close()
