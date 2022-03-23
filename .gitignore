@@ -142,3 +142,4 @@ tests/testtoken.yml
 .idea
 examples/*.env
 examples/*.yml
+tests/test_cpapi.py

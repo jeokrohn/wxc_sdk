@@ -27,7 +27,7 @@ class VoicemailTests(TestCaseWithUsers):
         """
         Try to update VM settings of a random user with unchanged settings.
         """
-        # random iuser
+        # random user
         target_user = random.choice(self.users)
         apv = self.api.person_settings.voicemail
 

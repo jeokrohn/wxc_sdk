@@ -167,7 +167,7 @@ class HuntGroupAPI(ApiChild, base='telephony/config/huntGroups'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=HuntGroup,params=params)
 
-    async def by_name(self, name: str, location_id: str = None, org_id: str = None) -> Optional[HuntGroup]:
+    def by_name(self, name: str, location_id: str = None, org_id: str = None) -> Optional[HuntGroup]:
         """
         Get hunt group info by name
         :param location_id:
@@ -178,7 +178,7 @@ class HuntGroupAPI(ApiChild, base='telephony/config/huntGroups'):
         return next((hg for hg in self.list(name=name, location_id=location_id, org_id=org_id)
                      if hg.name==name), None)
 
-    async def create(self, location_id: str, huntgroup: HuntGroupDetail, org_id: str = None) -> str:
+    def create(self, location_id: str, huntgroup: HuntGroupDetail, org_id: str = None) -> str:
         """
         Create a Hunt Group
         Create new Hunt Groups for the given location.

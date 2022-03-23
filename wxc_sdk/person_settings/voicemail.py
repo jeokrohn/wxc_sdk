@@ -283,7 +283,8 @@ class VoicemailApi(PersonSettingsApiChild, base='people'):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        self._configure_greeting(**(locals()), greeting_key='uploadBusyGreeting')
+        self._configure_greeting(person_id=person_id, content=content, upload_as=upload_as, org_id=org_id,
+                                 greeting_key='uploadBusyGreeting')
 
     def configure_no_answer_greeting(self, person_id: str, content: Union[BufferedReader, str],
                                      upload_as: str = None, org_id: str = None):
@@ -309,4 +310,5 @@ class VoicemailApi(PersonSettingsApiChild, base='people'):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        self._configure_greeting(**(locals()), greeting_key='uploadNoAnswerGreeting')
+        self._configure_greeting(person_id=person_id, content=content, upload_as=upload_as, org_id=org_id,
+                                 greeting_key='uploadNoAnswerGreeting')

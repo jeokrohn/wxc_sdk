@@ -397,7 +397,7 @@ class ForwardingAPI:
         result = ForwardingRuleDetails.parse_obj(data)
         return result
 
-    async def update_call_forwarding_rule(self, location_id: str, feature_id: str, rule_id: str,
+    def update_call_forwarding_rule(self, location_id: str, feature_id: str, rule_id: str,
                                           forwarding_rule: ForwardingRuleDetails, org_id: str = None):
         """
         Update a Selective Call Forwarding Rule's settings for the designated call queue or hunt group.
@@ -422,7 +422,7 @@ class ForwardingAPI:
         data = self._session.rest_put(url=url, params=params, json=body)
         return data['id']
 
-    async def delete_call_forwarding_rule(self, location_id: str, feature_id: str, rule_id: str, org_id: str = None):
+    def delete_call_forwarding_rule(self, location_id: str, feature_id: str, rule_id: str, org_id: str = None):
         """
         Delete a Selective Call Forwarding Rule for the designated Call queue or hunt group.
 

@@ -54,7 +54,7 @@ class AnnouncementAPI:
         # noinspection PyTypeChecker
         return self._session.follow_pagination(url=url, model=Announcement, params=params)
 
-    async def delete_announcement(self, *, location_id: str, queue_id: str, file_name: str, org_id: str = None):
+    def delete_announcement(self, *, location_id: str, queue_id: str, file_name: str, org_id: str = None):
         """
 
         :param location_id:
