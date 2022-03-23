@@ -10,15 +10,15 @@ A partner administrator can retrieve or change settings in a customer's organiza
 parameter.
 """
 import datetime
+import json
+from collections.abc import Generator
 from enum import Enum
 from typing import Optional, List, Union
-import json
+
 from pydantic import Field
-from collections.abc import Generator
 
 from ..api_child import ApiChild
 from ..base import ApiModel
-from requests import Session
 
 __all__ = ['ScheduleAPI', 'ScheduleType', 'ScheduleMonth', 'ScheduleDay', 'ScheduleWeek', 'RecurWeekly',
            'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence', 'Event', 'Schedule']

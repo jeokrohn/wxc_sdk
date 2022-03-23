@@ -11,6 +11,7 @@ from pydantic import Field
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 from .common import PersonSettingsApiChild
 from ..base import ApiModel
+from ..common import Greeting
 
 
 class InterceptTypeIncoming(str, Enum):
@@ -18,16 +19,6 @@ class InterceptTypeIncoming(str, Enum):
     intercept_all = 'INTERCEPT_ALL'
     #: Incoming calls are not intercepted.
     allow_all = 'ALLOW_ALL'
-
-
-class Greeting(str, Enum):
-    """
-    DEFAULT indicates that a system default message will be placed when incoming calls are intercepted.
-    """
-    #: A custom will be placed when incoming calls are intercepted.
-    custom = 'CUSTOM'
-    #: A System default message will be placed when incoming calls are intercepted.
-    default = 'DEFAULT'
 
 
 class InterceptNumber(ApiModel):

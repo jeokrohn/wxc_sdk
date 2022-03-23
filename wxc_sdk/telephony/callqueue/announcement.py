@@ -58,10 +58,13 @@ class AnnouncementAPI:
         """
 
         :param location_id:
+        :type location_id: str
         :param queue_id:
+        :type queue_id: str
+        :param file_name:
+        :type file_name: str
         :param org_id:
-        :return:
         """
-        url = self._endpoint(location_id=location_id, queue_id=queue_id, domain=file_name)
+        url = self._endpoint(location_id=location_id, queue_id=queue_id, path=file_name)
         params = org_id and {'orgId': org_id} or None
         self._session.delete(url=url, params=params)

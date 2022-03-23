@@ -1,17 +1,15 @@
-
 from collections.abc import Generator
 from typing import Optional, List
 
 from pydantic import Field
 
-from .hg_and_cq import HGandCQ, AlternateNumber, Policy, Agent, AlternateNumberSettings, ForwardingAPI, \
-    FeatureSelector
+from .forwarding import ForwardingAPI, FeatureSelector
+from .hg_and_cq import HGandCQ, Policy, Agent, AlternateNumberSettings
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
 from ..rest import RestSession
 
-__all__ = ['HuntGroupAPI', 'AlternateNumber', 'Policy', 'Agent', 'AlternateNumberSettings', 'HuntGroup',
-           'HuntGroupDetail']
+__all__ = ['HuntGroupAPI', 'Policy', 'Agent', 'AlternateNumberSettings', 'HuntGroup', 'HuntGroupDetail']
 
 
 class HuntGroup(HGandCQ):
@@ -118,7 +116,7 @@ class HuntGroupAPI(ApiChild, base='telephony/config/huntGroups'):
     """
     Hunt Group API
 
-    :ivar forwarding: hunt group forwarding API :class:`wxc_sdk.telephony.hg_and_cq.ForwardingAPI`
+    :ivar forwarding: hunt group forwarding API :class:`wxc_sdk.telephony.forwarding.ForwardingAPI`
 
     """
 
@@ -169,7 +167,7 @@ class HuntGroupAPI(ApiChild, base='telephony/config/huntGroups'):
                   if i and v is not None}
         url = self._endpoint()
         # noinspection PyTypeChecker
-        return self.session.follow_pagination(url=url, model=HuntGroup,params=params)
+        return self.session.follow_pagination(url=url, model=HuntGroup, params=params)
 
     def by_name(self, name: str, location_id: str = None, org_id: str = None) -> Optional[HuntGroup]:
         """
@@ -180,7 +178,7 @@ class HuntGroupAPI(ApiChild, base='telephony/config/huntGroups'):
         :return:
         """
         return next((hg for hg in self.list(name=name, location_id=location_id, org_id=org_id)
-                     if hg.name==name), None)
+                     if hg.name == name), None)
 
     def create(self, location_id: str, huntgroup: HuntGroupDetail, org_id: str = None) -> str:
         """
@@ -226,8 +224,9 @@ class HuntGroupAPI(ApiChild, base='telephony/config/huntGroups'):
         :param org_id: Delete the hunt group with the matching ID.
         :type org_id: str
         """
+        params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id, huntgroup_id=huntgroup_id)
-        self.delete(url)
+        self.delete(url, params=params)
 
     def details(self, location_id: str, huntgroup_id: str, org_id: str = None) -> HuntGroupDetail:
         """
@@ -254,7 +253,7 @@ class HuntGroupAPI(ApiChild, base='telephony/config/huntGroups'):
         return result
 
     def update_huntgroup(self, location_id: str, huntgroup_id: str, huntgroup: HuntGroupDetail,
-                               org_id: str = None):
+                         org_id: str = None):
         """
 
         :param location_id: Update the hunt group for this location.
@@ -272,4 +271,3 @@ class HuntGroupAPI(ApiChild, base='telephony/config/huntGroups'):
                                           'time_zone', 'call_policies', 'agents'})
         url = self._endpoint(location_id=location_id, huntgroup_id=huntgroup_id)
         self.put(url, data=hg_data, params=params)
-

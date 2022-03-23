@@ -60,9 +60,10 @@ class TestScheduleList(TestWithLocations):
         List all business hours schedules in all locations
         """
         with ThreadPoolExecutor() as pool:
-            lists = pool.map(lambda loc: list(self.api.telephony.schedules.list(location_id=loc.location_id,
-                                                                                schedule_type=ScheduleType.business_hours)),
-                             self.locations)
+            lists = pool.map(
+                lambda loc: list(self.api.telephony.schedules.list(location_id=loc.location_id,
+                                                                   schedule_type=ScheduleType.business_hours)),
+                self.locations)
             schedules = list(chain.from_iterable(lists))
         schedules: List[Schedule]
         print(f'got {len(schedules)} schedules')

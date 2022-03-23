@@ -35,6 +35,7 @@ LAST_YEAR = 2023
 
 LAST_YEAR = not CLEAN_UP and LAST_YEAR or FIRST_YEAR
 
+
 def observe_in_location(*, api: WebexSimpleApi, location: Location, holidays: List[Holiday]):
     """
     create/update a "National Holiday" schedule in one location

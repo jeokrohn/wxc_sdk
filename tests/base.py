@@ -142,6 +142,7 @@ def get_tokens_from_oauth_flow(integration: Integration) -> Optional[Tokens]:
         try:
             result = fut.result(timeout=120)
         except concurrent.futures.TimeoutError:
+            # noinspection PyBroadException
             try:
                 # post a dummy response to the redirect URI to stop the server
                 with requests.Session() as session:

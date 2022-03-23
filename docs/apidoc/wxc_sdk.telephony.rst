@@ -20,7 +20,9 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   wxc_sdk.telephony.autoattendant
    wxc_sdk.telephony.calls
+   wxc_sdk.telephony.forwarding
    wxc_sdk.telephony.hg_and_cq
    wxc_sdk.telephony.huntgroup
    wxc_sdk.telephony.paging

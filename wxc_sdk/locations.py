@@ -10,7 +10,7 @@ combinations.
 """
 
 from collections.abc import Generator
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import Field
 
@@ -23,20 +23,19 @@ __all__ = ['LocationAddress', 'Location', 'LocationsApi']
 class LocationAddress(ApiModel):
     """
     Address of a :class:`Location`
-
-    :ivar address1: address line 1
-    :ivar address2: address line 1
-    :ivar city:
-    :ivar state:
-    :ivar postal_code: ZIP/Postal code
-    :ivar country:
     """
 
+    #: address line 1
     address1: str
+    #: address line 2
     address2: str
+    #: city
     city: str
+    #: state
     state: Optional[str]
+    #: ZIP/Postal code
     postal_code: str
+    #: country
     country: str
 
 
@@ -44,22 +43,28 @@ class Location(ApiModel):
     """
     Webex location
 
-    :ivar location_id: A unique identifier for the location.
-    :ivar name: The name of the location.
-    :ivar org_id: The ID of the organization to which this location belongs.
-    :ivar address: The address of the location, :class:`LocationAddress`
     """
+    #: A unique identifier for the location.
     location_id: str = Field(alias='id')
+    #: The name of the location.
     name: str
+    #: The ID of the organization to which this location belongs.
     org_id: str
+    #: The address of the location, :class:`LocationAddress`
     address: LocationAddress
 
     @property
-    def location_id_uuid(self):
+    def location_id_uuid(self) -> str:
+        """
+        location id as UUID
+        """
         return webex_id_to_uuid(self.location_id)
 
     @property
-    def org_id_uuid(self):
+    def org_id_uuid(self) -> str:
+        """
+        org id as UUID
+        """
         return webex_id_to_uuid(self.org_id)
 
 

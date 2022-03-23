@@ -23,6 +23,7 @@ Submodules
 
    wxc_sdk.api_child
    wxc_sdk.base
+   wxc_sdk.common
    wxc_sdk.integration
    wxc_sdk.licenses
    wxc_sdk.locations

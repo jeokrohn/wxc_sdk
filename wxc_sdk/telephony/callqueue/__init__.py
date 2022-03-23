@@ -1,14 +1,15 @@
+from collections.abc import Generator
 from enum import Enum
 from typing import List, Optional
 
 from pydantic import Field
 
 from .announcement import AnnouncementAPI
-from ..hg_and_cq import HGandCQ, AlternateNumber, Policy, Agent, RingPattern, AlternateNumberSettings, ForwardingAPI, \
-    FeatureSelector
-from collections.abc import Generator
-from ...rest import RestSession
+from ..forwarding import ForwardingAPI, FeatureSelector
+from ..hg_and_cq import HGandCQ, Policy, Agent, AlternateNumberSettings
 from ...base import to_camel, ApiModel
+from ...common import RingPattern, AlternateNumber
+from ...rest import RestSession
 
 __all__ = ['CallQueueAPI', 'CallQueue', 'CallQueueDetail',
            'AlternateNumber', 'AlternateNumberSettings', 'CallBounce', 'DistinctiveRing', 'Policy',
@@ -251,7 +252,7 @@ class CallQueueAPI:
     """
     Call Queue APÍ
 
-    :ivar forwarding: forwarding API :class:`wxc_sdk.telephony.hg_and_cq.ForwardingAPI`
+    :ivar forwarding: forwarding API :class:`wxc_sdk.telephony.forwarding.ForwardingAPI`
     :ivar announcement: announcement API :class:`announcement.AnnouncementAPI`
 
     """

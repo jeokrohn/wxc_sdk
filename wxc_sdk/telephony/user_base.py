@@ -1,7 +1,9 @@
 from enum import Enum
-from pydantic import Field
 from typing import Optional
-from ..base import webex_id_to_uuid, ApiModel
+
+from pydantic import Field
+
+from ..base import ApiModel
 
 __all__ = ['UserType', 'UserBase']
 
