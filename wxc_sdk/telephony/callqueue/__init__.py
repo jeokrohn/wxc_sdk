@@ -86,9 +86,11 @@ class OverflowAction(str, Enum):
     transfer_to_phone_number = 'TRANSFER_TO_PHONE_NUMBER'
     play_ringing_until_caller_hangs_up = 'PLAY_RINGING_UNTIL_CALLER_HANGS_UP'
 
+
 class Greeting(str, Enum):
     default = 'DEFAULT'
     custom = 'CUSTOM'
+
 
 class OverflowSetting(ApiModel):
     action: Optional[OverflowAction]
@@ -253,6 +255,7 @@ class CallQueueAPI:
     :ivar announcement: announcement API :class:`announcement.AnnouncementAPI`
 
     """
+
     def __init__(self, session: RestSession):
         self._session = session
         self.forwarding = ForwardingAPI(session=session, feature_selector=FeatureSelector.queues)
@@ -299,7 +302,7 @@ class CallQueueAPI:
         :return:
         """
         return next((cq for cq in self.list(location_id=location_id, org_id=org_id, name=name)
-                     if cq.name==name), None)
+                     if cq.name == name), None)
 
     def create(self, location_id: str, queue: CallQueueDetail, org_id: str = None) -> str:
         """

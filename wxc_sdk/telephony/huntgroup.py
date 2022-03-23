@@ -116,8 +116,12 @@ class HuntGroupDetail(HGandCQ):
 
 class HuntGroupAPI(ApiChild, base='telephony/config/huntGroups'):
     """
+    Hunt Group API
+
+    :ivar forwarding: hunt group forwarding API :class:`wxc_sdk.telephony.hg_and_cq.ForwardingAPI`
 
     """
+
     def __init__(self, session: RestSession):
         super().__init__(session=session)
         self.forwarding = ForwardingAPI(session=session, feature_selector=FeatureSelector.huntgroups)
