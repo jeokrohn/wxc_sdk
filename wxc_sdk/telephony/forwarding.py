@@ -12,7 +12,7 @@ from ..rest import RestSession
 
 __all__ = ['ForwardingRule', 'ForwardingSetting', 'CallForwarding', 'ForwardToSelection', 'CallForwardingNumberType',
            'CallForwardingNumber', 'ForwardCallsTo', 'CustomNumbers', 'CallsFrom', 'ForwardingRuleDetails',
-           'FeatureSelector', 'ForwardingAPI']
+           'FeatureSelector', 'ForwardingApi']
 
 
 def assert_plus1(number: str) -> str:
@@ -203,7 +203,7 @@ class FeatureSelector(str, Enum):
     auto_attendants = 'autoAttendants'
 
 
-class ForwardingAPI:
+class ForwardingApi:
     """
     API for forwarding settings on call queues, hunt groups, and auto attendants
     """
@@ -231,7 +231,7 @@ class ForwardingAPI:
         Retrieve Call Forwarding settings for the designated feature including the list of call
         forwarding rules.
 
-        :param location_id: Location in which this call queue or hunt group exists.
+        :param location_id: Location in which this feature exists.
         :type location_id: str
         :param feature_id: Retrieve the call forwarding settings for this entity
         :type feature_id: str

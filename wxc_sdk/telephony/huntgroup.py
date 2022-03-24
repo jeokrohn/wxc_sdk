@@ -3,13 +3,13 @@ from typing import Optional, List
 
 from pydantic import Field
 
-from .forwarding import ForwardingAPI, FeatureSelector
+from .forwarding import ForwardingApi, FeatureSelector
 from .hg_and_cq import HGandCQ, Policy, Agent, AlternateNumberSettings
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
 from ..rest import RestSession
 
-__all__ = ['HuntGroupAPI', 'Policy', 'Agent', 'AlternateNumberSettings', 'HuntGroup', 'HuntGroupDetail']
+__all__ = ['HuntGroupApi', 'HuntGroup', 'HuntGroupDetail']
 
 
 class HuntGroup(HGandCQ):
@@ -112,17 +112,17 @@ class HuntGroupDetail(HGandCQ):
         return HuntGroupDetail(**params)
 
 
-class HuntGroupAPI(ApiChild, base='telephony/config/huntGroups'):
+class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
     """
     Hunt Group API
 
-    :ivar forwarding: hunt group forwarding API :class:`wxc_sdk.telephony.forwarding.ForwardingAPI`
+    :ivar forwarding: hunt group forwarding API :class:`wxc_sdk.telephony.forwarding.ForwardingApi`
 
     """
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
-        self.forwarding = ForwardingAPI(session=session, feature_selector=FeatureSelector.huntgroups)
+        self.forwarding = ForwardingApi(session=session, feature_selector=FeatureSelector.huntgroups)
 
     def _endpoint(self, *, location_id: str = None, huntgroup_id: str = None) -> str:
         """

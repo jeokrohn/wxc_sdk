@@ -8,14 +8,14 @@ from typing import Optional, List
 from pydantic import Field
 
 from wxc_sdk.common import AlternateNumber
-from .forwarding import ForwardingAPI, FeatureSelector
+from .forwarding import ForwardingApi, FeatureSelector
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
 from ..rest import RestSession
 from ..common import Greeting
 
 __all__ = ['Dialing', 'MenuKey', 'AutoAttendantAction', 'AutoAttendantKeyConfiguration', 'AutoAttendantMenu',
-           'AutoAttendant', 'AutoAttendantAPI']
+           'AutoAttendant', 'AutoAttendantApi']
 
 
 class Dialing(str, Enum):
@@ -185,16 +185,16 @@ class AutoAttendant(ApiModel):
                              after_hours_menu=AutoAttendantMenu.default())
 
 
-class AutoAttendantAPI(ApiChild, base='telephony/config/autoAttendants'):
+class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
     """
     auto attendant API
 
-    :ivar forwarding: auto attendant forwarding API :class:`wxc_sdk.telephony.forwarding.ForwardingAPI`
+    :ivar forwarding: auto attendant forwarding API :class:`wxc_sdk.telephony.forwarding.ForwardingApi`
     """
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
-        self.forwarding = ForwardingAPI(session=session, feature_selector=FeatureSelector.auto_attendants)
+        self.forwarding = ForwardingApi(session=session, feature_selector=FeatureSelector.auto_attendants)
 
     def _endpoint(self, *, location_id: str = None, auto_attendant_id: str = None) -> str:
         """

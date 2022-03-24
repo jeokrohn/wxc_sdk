@@ -26,6 +26,11 @@ for i in ${@}; do
         docs=true
         ;;
 
+        types)
+        all=
+        types=true
+        ;;
+
         *)
         echo "Unknown argument: $i"
         exit 1
@@ -38,16 +43,23 @@ echo "==> Cleaning previous build artifacts"
 script/clean
 
 
-# Project build steps
-if [ ${all} ] || [ ${package} ]; then
-    echo "==> Building the Source Distribution package"
-    poetry build
+if [ ${all} ] || [ ${types} ]; then
+    echo "==> Creating types.py"
+    script/all_types.py
 fi
 
 
 if [ ${all} ] || [ ${docs} ]; then
     echo "==> Building the Docs"
     make -C docs clean
-    sphinx-apidoc -o docs/apidoc -f -e -M wxc_sdk
+    sphinx-apidoc -o docs/apidoc -f -e -M wxc_sdk 'wxc_sdk/types.py'
     make -C docs html
 fi
+
+
+# Project build steps
+if [ ${all} ] || [ ${package} ]; then
+    echo "==> Building the Source Distribution package"
+    poetry build
+fi
+

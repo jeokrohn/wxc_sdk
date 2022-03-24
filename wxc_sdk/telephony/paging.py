@@ -9,7 +9,7 @@ from pydantic import Field
 from typing import Optional, List, Union
 from .user_base import UserType
 
-__all__ = ['PagingAPI', 'Paging']
+__all__ = ['PagingApi', 'Paging']
 
 
 class Agent(ApiModel):
@@ -70,7 +70,7 @@ class Paging(ApiModel):
     location_id: Optional[str]
 
 
-class PagingAPI(ApiChild, base='telephony/config'):
+class PagingApi(ApiChild, base='telephony/config'):
 
     def _endpoint(self, *, location_id: str = None, paging_id: str = None) -> str:
         """

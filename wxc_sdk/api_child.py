@@ -5,7 +5,7 @@ __all__ = ['ApiChild']
 
 class ApiChild:
     """
-    Base class for child APIs of :class:`WebexSimpleAPI`
+    Base class for child APIs of :class:`WebexSimpleApi`
     """
 
     def __init__(self, session: RestSession):

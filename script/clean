@@ -47,6 +47,7 @@ rm -rf .pytest_cache/
 if [ -d "docs" ]; then
     echo "Cleaning the docs directories"
     rm -rf docs/_build/*
+    rm -rf docs/apidoc/*
 fi
 
 

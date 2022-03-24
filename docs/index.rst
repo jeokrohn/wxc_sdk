@@ -49,14 +49,38 @@ Also the test cases in the tests_ folder can serve as examples of how to use the
 .. _examples: https://github.com/jeokrohn/wxc_sdk/tree/master/examples
 .. _tests: https://github.com/jeokrohn/wxc_sdk/tree/master/tests
 
+Datatypes
+---------
+
+Datatypes are defined in the respective subpackages and submodules and have to be imported from there explicitly:
+
+.. code-block::
+
+   from wxc_sdk.people import Person
+   from wxc_sdk.person_settings.barge import BargeSettings
+
+To allow to abstract from the subpackage and submodule structure any datatype can also be imported from
+``wxc_sdk.types`` directly:
+
+.. code-block::
+
+   from wxc_sdk.types import Person, BargeSettings
+
+All ``wxc_sdk`` data types can also be imported at once:
+
+.. code-block::
+
+   from wxc_sdk.types import *
+
 
 Reference
 ---------
 
 .. toctree::
-    :maxdepth: 4
+   :maxdepth: 4
 
-    apidoc/wxc_sdk.rst
+   changes.rst
+   apidoc/wxc_sdk.rst
 
 ---------
 

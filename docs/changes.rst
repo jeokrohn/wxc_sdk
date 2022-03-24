@@ -1,0 +1,39 @@
+Release history
+===============
+
+0.4.1
+-----
+-   all datatypes defined in any of the submodules and subpackages can now be imported directly from
+    ``wxc_sdk.types``.
+
+    Instead of importing from the respective submodule/subpackage:
+
+    .. code-block::
+
+       from wxc_sdk.people import Person
+       from wxc_sdk.person_settings.barge import BargeSettings
+
+    ... the datatypes can simply imported like this:
+
+    .. code-block::
+
+       from wxc_sdk.types import Person, BargeSettings
+-   documentation updates
+
+0.4.0
+-----
+-   auto attendant API added :class:`wxc_sdk.telephony.autoattendant.AutoAttendantApi`.
+    Example:
+
+    .. code-block::
+
+        from wxc_sdk import WebexSimpleApi
+
+        api = WebexSimpleApi()
+        auto_attendants = list(api.telephony.auto_attendant.list())
+-   refactoring of forwarding API (:class:`wxc_sdk.telephony.forwarding.ForwardingApi`) which is used to manage
+    forwarding settings for:
+
+    - hunt groups: :class:`wxc_sdk.telephony.huntgroup.HuntGroupApi`
+    - call queues: :class:`wxc_sdk.telephony.callqueue.CallQueueApi`
+    - auto attendants: :class:`wxc_sdk.telephony.autoattendant.AutoAttendantApi`

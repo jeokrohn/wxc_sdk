@@ -6,7 +6,7 @@ from .barge import BargeApi
 from .call_intercept import CallInterceptApi
 from .call_recording import CallRecordingApi
 from .caller_id import CallerIdApi
-from .forwarding import ForwardingApi
+from .forwarding import PersonForwardingApi
 from .voicemail import VoicemailApi
 from .dnd import DndApi
 from ..api_child import ApiChild
@@ -34,7 +34,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.caller_id = CallerIdApi(session)
         self.call_recording = CallRecordingApi(session)
         self.call_intercept = CallInterceptApi(session)
-        self.forwarding = ForwardingApi(session)
+        self.forwarding = PersonForwardingApi(session)
         self.barge = BargeApi(session)
         self.dnd = DndApi(session)
         self.voicemail = VoicemailApi(session)

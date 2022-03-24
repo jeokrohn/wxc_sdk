@@ -4,17 +4,16 @@ from typing import List, Optional
 
 from pydantic import Field
 
-from .announcement import AnnouncementAPI
-from ..forwarding import ForwardingAPI, FeatureSelector
+from .announcement import AnnouncementApi
+from ..forwarding import ForwardingApi, FeatureSelector
 from ..hg_and_cq import HGandCQ, Policy, Agent, AlternateNumberSettings
 from ...base import to_camel, ApiModel
-from ...common import RingPattern, AlternateNumber
+from ...common import RingPattern
 from ...rest import RestSession
 
-__all__ = ['CallQueueAPI', 'CallQueue', 'CallQueueDetail',
-           'AlternateNumber', 'AlternateNumberSettings', 'CallBounce', 'DistinctiveRing', 'Policy',
+__all__ = ['CallQueueApi', 'CallQueue', 'CallQueueDetail', 'CallBounce', 'DistinctiveRing',
            'CallPolicies', 'OverflowSetting', 'WaitMessageSetting', 'WelcomeMessageSetting', 'AudioSource',
-           'ComfortMessageSetting', 'MohMessageSetting', 'QueueSettings', 'Agent']
+           'ComfortMessageSetting', 'MohMessageSetting', 'QueueSettings']
 
 
 class CallQueue(HGandCQ):
@@ -248,19 +247,19 @@ class CallQueueDetail(HGandCQ):
         return CallQueueDetail(**params)
 
 
-class CallQueueAPI:
+class CallQueueApi:
     """
     Call Queue APÍ
 
-    :ivar forwarding: forwarding API :class:`wxc_sdk.telephony.forwarding.ForwardingAPI`
-    :ivar announcement: announcement API :class:`announcement.AnnouncementAPI`
+    :ivar forwarding: forwarding API :class:`wxc_sdk.telephony.forwarding.ForwardingApi`
+    :ivar announcement: announcement API :class:`announcement.AnnouncementApi`
 
     """
 
     def __init__(self, session: RestSession):
         self._session = session
-        self.forwarding = ForwardingAPI(session=session, feature_selector=FeatureSelector.queues)
-        self.announcement = AnnouncementAPI(session=session)
+        self.forwarding = ForwardingApi(session=session, feature_selector=FeatureSelector.queues)
+        self.announcement = AnnouncementApi(session=session)
 
     def _endpoint(self, location_id: str = None, queue_id: str = None):
         """

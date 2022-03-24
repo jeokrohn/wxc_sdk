@@ -7,8 +7,8 @@ from typing import Optional
 from .common import PersonSettingsApiChild
 from ..base import ApiModel
 
-__all__ = ['CallForwardingCommon', 'CallForwardingAlways', 'CallForwardingNoAnswer', 'CallForwarding',
-           'ForwardingSetting', 'ForwardingApi']
+__all__ = ['CallForwardingCommon', 'CallForwardingAlways', 'CallForwardingNoAnswer', 'CallForwardingPerson',
+           'PersonForwardingSetting', 'PersonForwardingApi']
 
 
 class CallForwardingCommon(ApiModel):
@@ -53,7 +53,7 @@ class CallForwardingNoAnswer(CallForwardingCommon):
                                       number_of_rings=3)
 
 
-class CallForwarding(ApiModel):
+class CallForwardingPerson(ApiModel):
     """
     Settings related to "Always", "Busy", and "No Answer" call forwarding.
     """
@@ -66,34 +66,34 @@ class CallForwarding(ApiModel):
     no_answer: CallForwardingNoAnswer
 
     @staticmethod
-    def default() -> 'CallForwarding':
-        return CallForwarding(always=CallForwardingAlways.default(),
-                              busy=CallForwardingCommon.default(),
-                              no_answer=CallForwardingNoAnswer.default())
+    def default() -> 'CallForwardingPerson':
+        return CallForwardingPerson(always=CallForwardingAlways.default(),
+                                    busy=CallForwardingCommon.default(),
+                                    no_answer=CallForwardingNoAnswer.default())
 
 
-class ForwardingSetting(ApiModel):
+class PersonForwardingSetting(ApiModel):
     """
     A person's call forwarding setting
     """
     #: Settings related to "Always", "Busy", and "No Answer" call forwarding.
-    call_forwarding: CallForwarding
+    call_forwarding: CallForwardingPerson
     #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for
     #: any reason, such as power outage, failed Internet connection, or wiring problem.
     business_continuity: CallForwardingCommon
 
     @staticmethod
-    def default() -> 'ForwardingSetting':
-        return ForwardingSetting(call_forwarding=CallForwarding.default(),
-                                 business_continuity=CallForwardingCommon.default())
+    def default() -> 'PersonForwardingSetting':
+        return PersonForwardingSetting(call_forwarding=CallForwardingPerson.default(),
+                                       business_continuity=CallForwardingCommon.default())
 
 
-class ForwardingApi(PersonSettingsApiChild, base='people'):
+class PersonForwardingApi(PersonSettingsApiChild, base='people'):
     """
     Api for person's call forwarding settings
     """
 
-    def read(self, person_id: str, org_id: str = None) -> ForwardingSetting:
+    def read(self, person_id: str, org_id: str = None) -> PersonForwardingSetting:
         """
         Retrieve a Person's Call Forwarding Settings
 
@@ -118,13 +118,13 @@ class ForwardingApi(PersonSettingsApiChild, base='people'):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :return: user's forwarding settings
-        :rtype: ForwardingSetting
+        :rtype: PersonForwardingSetting
         """
         ep = self.f_ep(person_id=person_id, path='callForwarding')
         params = org_id and {'orgId': org_id} or None
-        return ForwardingSetting.parse_obj(self.get(ep, params=params))
+        return PersonForwardingSetting.parse_obj(self.get(ep, params=params))
 
-    def configure(self, person_id: str, forwarding: ForwardingSetting, org_id: str = None):
+    def configure(self, person_id: str, forwarding: PersonForwardingSetting, org_id: str = None):
         """
         Configure a Person's Call Forwarding Settings
 
@@ -146,7 +146,7 @@ class ForwardingApi(PersonSettingsApiChild, base='people'):
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param forwarding: new forwarding settings
-        :type forwarding: ForwardingSetting
+        :type forwarding: PersonForwardingSetting
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str

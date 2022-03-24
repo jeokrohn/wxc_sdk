@@ -20,7 +20,7 @@ from pydantic import Field
 from ..api_child import ApiChild
 from ..base import ApiModel
 
-__all__ = ['ScheduleAPI', 'ScheduleType', 'ScheduleMonth', 'ScheduleDay', 'ScheduleWeek', 'RecurWeekly',
+__all__ = ['ScheduleApi', 'ScheduleType', 'ScheduleMonth', 'ScheduleDay', 'ScheduleWeek', 'RecurWeekly',
            'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence', 'Event', 'Schedule']
 
 ScheduleTypeOrStr = Union[str, 'ScheduleType']
@@ -247,7 +247,7 @@ class Schedule(ApiModel):
         return schedule
 
 
-class ScheduleAPI(ApiChild, base='telephony/config/locations'):
+class ScheduleApi(ApiChild, base='telephony/config/locations'):
 
     def _endpoint(self, *, location_id: str, schedule_type: ScheduleTypeOrStr = None, schedule_id: str = None,
                   event_id: str = None):

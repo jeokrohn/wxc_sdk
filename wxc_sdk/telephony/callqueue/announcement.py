@@ -9,7 +9,7 @@ from pydantic import Field
 from ...base import ApiModel
 from ...rest import RestSession
 
-__all__ = ['AnnouncementAPI', 'Announcement']
+__all__ = ['AnnouncementApi', 'Announcement']
 
 
 class Announcement(ApiModel):
@@ -20,7 +20,7 @@ class Announcement(ApiModel):
     size: int = Field(alias='fileSize')
 
 
-class AnnouncementAPI:
+class AnnouncementApi:
     """
     API for call queue Announcements
     """

@@ -10,24 +10,15 @@ from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 from .common import PersonSettingsApiChild
 from ..base import ApiModel
+from ..common import Greeting
 
-__all__ = ['VoicemailApi', 'VoicemailEnabled', 'Greeting', 'VoicemailEnabledWithGreeting', 'UnansweredCalls',
+__all__ = ['VoicemailApi', 'VoicemailEnabled', 'VoicemailEnabledWithGreeting', 'UnansweredCalls',
            'StorageType', 'VoicemailMessageStorage', 'VoicemailCopyOfMessage', 'VoicemailFax',
            'VoicemailTransferToNumber', 'VoicemailNotifications', 'VoiceMailFax', 'VoicemailSettings']
 
 
 class VoicemailEnabled(ApiModel):
     enabled: bool
-
-
-class Greeting(str, Enum):
-    """
-    Greeting type
-    """
-    #: The default greeting will be played.
-    default = 'DEFAULT'
-    #: Designates that a custom .wav file will be played.
-    custom = 'CUSTOM'
 
 
 class VoicemailEnabledWithGreeting(VoicemailEnabled):
