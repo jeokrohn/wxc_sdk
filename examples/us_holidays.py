@@ -159,7 +159,7 @@ def observe_national_holidays(*, api: WebexSimpleApi, locations: List[Location],
 
     :param api: Webex api
     :type api: WebexSimpleApi
-    :param locations: list of locartions in which US national holidays should be observed
+    :param locations: list of locations in which US national holidays should be observed
     :type locations: List[Location]
     :param year: year for national holidays. Default: current year
     :type year: int
@@ -185,7 +185,6 @@ def observe_national_holidays(*, api: WebexSimpleApi, locations: List[Location],
 if __name__ == '__main__':
     # read dotenv which has some environment variables like Webex API token and Calendarify
     # API key.
-    # dotenv_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.env'))
     load_dotenv()
 
     # enable logging

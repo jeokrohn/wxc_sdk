@@ -60,11 +60,11 @@ integrations are explained at the `"Integrations" page on developer.cisco.com`_.
 This example code shows how an OAUth Grant flow for an integration can be initiated from a script by using the Python
 `webbrowser module`_ and calling the ``open()`` method with the authorization URL of a given integration to open that
 URL in the system web browser. The user can then authenticate and grant access to the integration. In the last
-step of a successful authorization flow the the web browser is redirected to the ``redirect_url`` of the
+step of a successful authorization flow the web browser is redirected to the ``redirect_url`` of the
 integration.
 
 The example code starts a primitive web server serving GET requests to ``http://localhost:6001/redirect``.
-This URL has to be the redirect URL of the integration you create under `My Webex Apps on develoepr.webex.com`_.
+This URL has to be the redirect URL of the integration you create under `My Webex Apps on developer.webex.com`_.
 
 The sample script reads the integration parameters from environment variables (``TOKEN_INTEGRATION_CLIENT_ID``,
 ``TOKEN_INTEGRATION_CLIENT_SECRET``, ``TOKEN_INTEGRATION_CLIENT_SCOPES``). These variables can also be defined in
@@ -75,7 +75,7 @@ The sample script reads the integration parameters from environment variables (`
 The sample code persists the tokens in ``get_tokens.yml`` in the current directory. On startup the sample code tries
 to read tokens from that file. If needed a new access token is obtained using the refresh token.
 
-An OAuth flow is only initiated if no (valid) tokens could be read from ``get_tokens.yml```
+An OAuth flow is only initiated if no (valid) tokens could be read from ``get_tokens.yml``
 
 Source: |get_tokens.py|_
 
@@ -95,7 +95,7 @@ Source: |get_tokens.py|_
 .. _reset_call_forwarding.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/reset_call_forwarding.py
 
 .. _webbrowser module: https://docs.python.org/3/library/webbrowser.html
-.. _My Webex Apps on develoepr.webex.com: https://developer.webex.com/my-apps
+.. _My Webex Apps on developer.webex.com: https://developer.webex.com/my-apps
 
 .. _tests directory: https://github.com/jeokrohn/wxc_sdk/tree/master/tests
 
