@@ -69,10 +69,14 @@ class Policy(str, Enum):
 
 
 class Agent(UserBase):
-    extension: Optional[str]
-    phone_number: Optional[str]
-    weight: Optional[int]
+    #: ID of person or workspace.
     agent_id: str = Field(alias='id')
+    #: Extension of person or workspace.
+    extension: Optional[str]
+    #: Phone number of person or workspace.
+    phone_number: Optional[str]
+    #: Weight of person or workspace. Only applied when call policy is WEIGHTED.
+    weight: Optional[int]
 
     @property
     def cpapi_id(self) -> str:

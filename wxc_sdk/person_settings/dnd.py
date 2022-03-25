@@ -11,7 +11,6 @@ __all__ = ['DND', 'DndApi']
 class DND(ApiModel):
     """
     DND settings
-
     """
     #: forwarding.py
     enabled: bool

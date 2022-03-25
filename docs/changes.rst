@@ -1,6 +1,12 @@
 Release history
 ===============
 
+0.4.2
+-----
+-   Call queue API (:class:`wxc_sdk.telephony.callqueue.CallQueueApi`)
+    `test cases <https://github.com/jeokrohn/wxc_sdk/blob/master/tests/test_telephony_callqueue.py>`_ and bug fixes.
+-   improved documentation
+
 0.4.1
 -----
 -   all datatypes defined in any of the submodules and subpackages can now be imported directly from

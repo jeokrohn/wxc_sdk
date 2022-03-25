@@ -237,7 +237,6 @@ class TestCallerIdConfigure(TestCaseWithUsers):
     def test_set_direct_line(self):
         """
         Try to set the caller ID to direct line
-        :return:
         """
         with self.user_context(users_with_tn=True) as user:
             ps = self.api.person_settings
@@ -248,7 +247,6 @@ class TestCallerIdConfigure(TestCaseWithUsers):
     def test_set_location_number(self):
         """
         Try to set the caller ID to location number
-        :return:
         """
         with self.user_context(users_with_tn=True) as user:
             ps = self.api.person_settings
@@ -256,5 +254,3 @@ class TestCallerIdConfigure(TestCaseWithUsers):
             after = ps.caller_id.read(person_id=user.person_id)
             self.assertEqual(CallerIdSelectedType.location_number, after.selected)
 
-    def set_custom(self):
-        pass

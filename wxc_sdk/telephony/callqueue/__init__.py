@@ -8,31 +8,31 @@ from .announcement import AnnouncementApi
 from ..forwarding import ForwardingApi, FeatureSelector
 from ..hg_and_cq import HGandCQ, Policy, Agent, AlternateNumberSettings
 from ...base import to_camel, ApiModel
-from ...common import RingPattern
+from ...common import RingPattern, Greeting
 from ...rest import RestSession
 
-__all__ = ['CallQueueApi', 'CallQueue', 'CallQueueDetail', 'CallBounce', 'DistinctiveRing',
+__all__ = ['CallQueueApi', 'CallQueue', 'CallBounce', 'DistinctiveRing', 'OverflowAction',
            'CallPolicies', 'OverflowSetting', 'WaitMessageSetting', 'WelcomeMessageSetting', 'AudioSource',
-           'ComfortMessageSetting', 'MohMessageSetting', 'QueueSettings']
-
-
-class CallQueue(HGandCQ):
-    """
-    A Call Queue object
-    """
-    pass
+           'ComfortMessageSetting', 'MohMessageSetting', 'QueueSettings', 'WaitMode']
 
 
 class CallBounce(ApiModel):
     """
-    Call bounce settings
+    Settings for when the call into the call queue is not answered.
     """
-    enabled: bool = Field(alias='callBounceEnabled')
+    #: If enabled, bounce calls after the set number of rings.
+    enabled: Optional[bool] = Field(alias='callBounceEnabled')
+    #: Number of rings after which to bounce call, if call bounce is enabled.
     max_rings: Optional[int] = Field(alias='callBounceMaxRings')
-    agent_unavailable_enabled: bool
+    #: Bounce if agent becomes unavailable.
+    agent_unavailable_enabled: Optional[bool]
+    #: Alert agent if call on hold more than alert_agent_max_seconds.
     alert_agent_enabled: Optional[bool]
+    #: Number of second after which to alert agent if alertAgentEnabled.
     alert_agent_max_seconds: Optional[int]
-    on_hold_enabled: bool = Field(alias='callBounceOnHoldEnabled')
+    #: Bounce if call on hold more than on_hold_max_seconds
+    on_hold_enabled: Optional[bool] = Field(alias='callBounceOnHoldEnabled')
+    #: Number of second after which to bounce if on_hold_enabled.
     on_hold_max_seconds: Optional[int] = Field(alias='callBounceOnHoldMaxSeconds')
 
     @staticmethod
@@ -48,13 +48,19 @@ class CallBounce(ApiModel):
 
 class DistinctiveRing(ApiModel):
     """
-    Distinctive ring settings
+    Whether or not the call queue has the distinctive ring option enabled.
     """
-    enabled: Optional[bool]
+    #: Whether or not the distinctive ring is enabled.
+    enabled: bool
+    #: Ring pattern for when this callqueue is called. Only available when distinctiveRing is enabled for the call
+    #: queue.
     ring_pattern: Optional[RingPattern]
 
     @staticmethod
     def default() -> 'DistinctiveRing':
+        """
+        Default DistinctiveRing
+        """
         return DistinctiveRing(enabled=True,
                                ring_pattern=RingPattern.normal)
 
@@ -72,35 +78,56 @@ class CallPolicies(ApiModel):
 
     @staticmethod
     def default() -> 'CallPolicies':
+        """
+        Default CallPolicies
+        """
         return CallPolicies(policy=Policy.circular,
                             call_bounce=CallBounce.default(),
                             distinctive_ring=DistinctiveRing.default())
 
     @staticmethod
     def simple() -> 'CallPolicies':
-        return CallPolicies(policy=Policy.circular)
+        return CallPolicies(policy=Policy.circular,
+                            call_bounce=CallBounce.default())
 
 
 class OverflowAction(str, Enum):
+    """
+    How to handle new calls when the queue is full.
+    """
+    #: The caller hears a fast-busy tone.
     perform_busy_treatment = 'PERFORM_BUSY_TREATMENT'
+    #: Enter the number where you want to transfer overflow calls.
     transfer_to_phone_number = 'TRANSFER_TO_PHONE_NUMBER'
+    #: The caller hears ringing until they disconnect.
     play_ringing_until_caller_hangs_up = 'PLAY_RINGING_UNTIL_CALLER_HANGS_UP'
 
 
-class Greeting(str, Enum):
-    default = 'DEFAULT'
-    custom = 'CUSTOM'
-
-
 class OverflowSetting(ApiModel):
+    """
+    Settings for incoming calls exceed queueSize.
+    """
+    #: How to handle new calls when the queue is full.
     action: Optional[OverflowAction]
+    #: When true, forward all calls to a voicemail service of an internal number. This option is ignored when an
+    #: external transfer_number is entered.
     send_to_voicemail: Optional[bool]
+    #: Destination number for overflow calls when action is set to TRANSFER_TO_PHONE_NUMBER.
     transfer_number: Optional[str]
+    #: True: transfer number is set
     is_transfer_number_set: Optional[bool]
+    #: After calls wait for the configured number of seconds and no agent is available, the overflow treatment
+    #: is triggered.
     overflow_after_wait_enabled: Optional[bool]
+    #: Number of seconds to wait before the overflow treatment is triggered when no agent is available.
     overflow_after_wait_time: Optional[int]
+    #: Indicate overflow audio to be played, otherwise callers will hear the hold music until the call is answered
+    #: by a user.
     play_overflow_greeting_enabled: Optional[bool]
+    #: How to handle new calls when the queue is full.
     greeting: Optional[Greeting]
+    #: Array of announcement file name strings to be played as overflow greetings. These files must be from the list
+    #: of announcements files associated with this call queue.
     audio_files: Optional[List[str]]
 
     @staticmethod
@@ -167,17 +194,37 @@ class MohMessageSetting(ApiModel):
 
 
 class QueueSettings(ApiModel):
+    """
+    Overall call queue settings.
+    """
+    #: maximum number of calls for this call queue. Once this number is reached, the overflow settings are triggered
+    # (max 50).
     queue_size: int
-    call_offer_tone_enabled: bool = Field(default=True)
-    reset_call_statistics_enabled: bool = Field(default=True)
-    overflow: OverflowSetting = Field(default_factory=OverflowSetting)
-    wait_message: WaitMessageSetting = Field(default_factory=WaitMessageSetting)
-    welcome_message: WelcomeMessageSetting = Field(default_factory=WelcomeMessageSetting)
-    comfort_message: ComfortMessageSetting = Field(default_factory=ComfortMessageSetting.default)
-    moh_message: MohMessageSetting = Field(default_factory=MohMessageSetting.default)
+    #: Play ringing tone to callers when their call is set to an available agent.
+    call_offer_tone_enabled: Optional[bool]
+    #: Reset caller statistics upon queue entry.
+    reset_call_statistics_enabled: Optional[bool]
+    #: Settings for incoming calls exceed queue_size.
+    overflow: Optional[OverflowSetting]
+    #:
+    wait_message: Optional[WaitMessageSetting]
+    welcome_message: Optional[WelcomeMessageSetting]
+    comfort_message: Optional[ComfortMessageSetting]
+    moh_message: Optional[MohMessageSetting]
+
+    @staticmethod
+    def default(*, queue_size: int) -> 'QueueSettings':
+        """
+        Simple queue settings
+
+        :param queue_size: queue size
+        :type queue_size: int
+        """
+        return QueueSettings(queue_size=queue_size,
+                             overflow=OverflowSetting.default())
 
 
-class CallQueueDetail(HGandCQ):
+class CallQueue(HGandCQ):
     """
     Call queue details
     """
@@ -198,12 +245,18 @@ class CallQueueDetail(HGandCQ):
     alternate_number_settings: Optional[AlternateNumberSettings]
     #: Policy controlling how calls are routed to agents.
     call_policies: Optional[CallPolicies]
+    # TODO: file documentation defect. This is missing at
+    #  https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-call-queue
+    #: Overall call queue settings.
     queue_settings: Optional[QueueSettings]
+    # TODO: file documentation defect. This is missing at
+    #  https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-call-queue
     allow_call_waiting_for_agents_enabled: Optional[bool]
-    agents: List[Agent] = Field(default_factory=list)
+    #: People, including workspaces, that are eligible to receive calls.
+    agents: Optional[List[Agent]]
 
     @staticmethod
-    def create(name: str,
+    def create(*, name: str,
                agents: List[Agent],
                queue_size: int = None,
                enabled: bool = None,
@@ -215,10 +268,11 @@ class CallQueueDetail(HGandCQ):
                extension: str = None,
                call_policies: CallPolicies = None,
                queue_settings: QueueSettings = None,
-               allow_call_waiting_for_agents_enabled: bool = None) -> 'CallQueueDetail':
+               allow_call_waiting_for_agents_enabled: bool = None) -> 'CallQueue':
         """
         Get an instance which can be uses for a create() call. Allows simplified creation of default queue settings
         based on queue_size
+
         :param name:
         :param agents:
         :param queue_size:
@@ -244,7 +298,7 @@ class CallQueueDetail(HGandCQ):
             queue_settings = QueueSettings(queue_size=queue_size)
         params = {k: v for k, v in locals().items()
                   if v is not None and k != 'queue_size'}
-        return CallQueueDetail(**params)
+        return CallQueue(**params)
 
 
 class CallQueueApi:
@@ -261,7 +315,7 @@ class CallQueueApi:
         self.forwarding = ForwardingApi(session=session, feature_selector=FeatureSelector.queues)
         self.announcement = AnnouncementApi(session=session)
 
-    def _endpoint(self, location_id: str = None, queue_id: str = None):
+    def _endpoint(self, *, location_id: str = None, queue_id: str = None):
         """
         Helper to get URL for API endpoints
 
@@ -278,13 +332,58 @@ class CallQueueApi:
                 ep = f'{ep}/{queue_id}'
             return ep
 
-    def list(self, location_id: str = None, name: str = None, org_id: str = None) -> Generator[CallQueue]:
+    @staticmethod
+    def update_or_create(*, queue: CallQueue) -> str:
+        """
+        Get JSON for update or create
+
+        :param queue:
+        :return:
+        :meta private:
+        """
+        return queue.json(
+            exclude={'id': True,
+                     'location_name': True,
+                     'location_id': True,
+                     'toll_free_number': True,
+                     'language': True,
+                     'agents':
+                         {'__all__':
+                              {'first_name': True,
+                               'last_name': True,
+                               'user_type': True,
+                               'extension': True,
+                               'phone_number': True}},
+                     'alternate_number_settings':
+                         {'alternate_numbers':
+                              {'__all__':
+                                   {'toll_free_number': True}}},
+                     'queue_settings':
+                         {'overflow':
+                              {'is_transfer_number_set': True}}})
+
+    def list(self, *, location_id: str = None, name: str = None,
+             org_id: str = None) -> Generator[CallQueue, None, None]:
         """
         Read the List of Call Queues
+        List all Call Queues for the organization.
+
+        Call queues temporarily hold calls in the cloud when all agents, which can be users or agents, assigned to
+        receive calls from the queue are unavailable. Queued calls are routed to an available agent when not on an
+        active call. Each call queue is assigned a Lead Number, which is a telephone number outside callers can dial
+        to reach users assigned to the call queue. Call queues are also assigned an internal extension, which can be
+        dialed internally to reach users assigned to the call queue.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
         :param location_id: Only return call queues with matching location ID.
+        :type location_id: str
         :param name: Only return call queues with the matching name.
+        :type name: str
         :param org_id: List call queues for this organization
-        :return:
+        :type org_id: str
+        :return: yields :class:`CallQueue` objects
         """
         params = {to_camel(k): v
                   for i, (k, v) in enumerate(locals().items())
@@ -293,9 +392,10 @@ class CallQueueApi:
         # noinspection PyTypeChecker
         return self._session.follow_pagination(url=url, model=CallQueue, params=params)
 
-    def by_name(self, name: str, location_id: str = None, org_id: str = None) -> Optional[CallQueue]:
+    def by_name(self, *, name: str, location_id: str = None, org_id: str = None) -> Optional[CallQueue]:
         """
         Get queue info by name
+
         :param location_id:
         :param name:
         :param org_id:
@@ -304,61 +404,154 @@ class CallQueueApi:
         return next((cq for cq in self.list(location_id=location_id, org_id=org_id, name=name)
                      if cq.name == name), None)
 
-    def create(self, location_id: str, queue: CallQueueDetail, org_id: str = None) -> str:
+    def create(self, *, location_id: str, queue: CallQueue, org_id: str = None) -> str:
         """
         Create a Call Queue
-        :param location_id:
-        :param queue:
-        :param org_id:
+        Create new Call Queues for the given location.
+
+        Call queues temporarily hold calls in the cloud when all agents, which can be users or agents, assigned to
+        receive calls from the queue are unavailable. Queued calls are routed to an available agent when not on an
+        active call. Each call queue is assigned a Lead Number, which is a telephone number outside callers can dial
+        to reach users assigned to the call queue. Call queues are also assigned an internal extension, which can be
+        dialed internally to reach users assigned to the call queue.
+
+        Creating a call queue requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Create the call queue for this location.
+        :type location_id: str
+        :param queue: parameters for queue creation.
+        :type queue: :class:`CallQueue`
+        :param org_id: Create the call queue for this organization.
+        :type org_id: str
         :return: queue id
+        :rtype: str
         """
         params = org_id and {'orgId': org_id} or {}
-        if not queue.call_policies:
-            queue.call_policies = CallPolicies.simple()
-        cq_data = queue.json()
+        cq_data = self.update_or_create(queue=queue)
         url = self._endpoint(location_id=location_id)
         data = self._session.rest_post(url, data=cq_data, params=params)
         return data['id']
 
-    def delete_queue(self, location_id: str, queue_id: str, org_id: str = None):
+    def delete_queue(self, *, location_id: str, queue_id: str, org_id: str = None):
         """
-        Delete queue
-        :param location_id:
-        :param queue_id:
-        :param org_id:
-        :return:
+        Delete a Call Queue
+        Delete the designated Call Queue.
+
+        Call queues temporarily hold calls in the cloud when all agents, which can be users or agents, assigned to
+        receive calls from the queue are unavailable. Queued calls are routed to an available agent when not on an
+        active call. Each call queue is assigned a Lead Number, which is a telephone number outside callers can dial
+        to reach users assigned to the call queue. Call queues are also assigned an internal extension, which can be
+        dialed internally to reach users assigned to the call queue.
+
+        Deleting a call queue requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Location from which to delete a call queue.
+        :type location_id: str
+        :param queue_id: Delete the call queue with the matching ID.
+        :type queue_id: str
+        :param org_id: Delete the call queue from this organization.
+        :type org_id: str
         """
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
         params = org_id and {'orgId': org_id} or None
         self._session.delete(url=url, params=params)
 
-    def details(self, location_id: str, queue_id: str, org_id: str = None) -> CallQueueDetail:
+    def details(self, *, location_id: str, queue_id: str, org_id: str = None) -> CallQueue:
         """
-        Read Settings for a Call Queue
-        :param location_id:
-        :param queue_id:
-        :param org_id:
-        :return:
+        Get Details for a Call Queue
+        Retrieve Call Queue details.
+
+        Call queues temporarily hold calls in the cloud when all agents, which can be users or agents, assigned to
+        receive calls from the queue are unavailable. Queued calls are routed to an available agent when not on an
+        active call. Each call queue is assigned a Lead Number, which is a telephone number outside callers can dial
+        to reach users assigned to the call queue. Call queues are also assigned anvinternal extension, which can be
+        dialed internally to reach users assigned to the call queue.
+
+        Retrieving call queue details requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param location_id: Retrieve settings for a call queue in this location
+        :type location_id: str
+        :param queue_id: Retrieve settings for the call queue with this identifier.
+        :type queue_id: str
+        :param org_id: Retrieve call queue settings from this organization.
+        :type org_id: str
+        :return: call queue details
+        :rtype: :class:`CallQueue`
         """
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
         params = {'orgId': org_id} if org_id is not None else {}
         data = self._session.rest_get(url, params=params)
-        result = CallQueueDetail.parse_obj(data)
+        result = CallQueue.parse_obj(data)
         # noinspection PyTypeChecker
         return result
 
-    def update_callqueue(self, location_id: str, queue_id: str, queue: CallQueueDetail, org_id: str = None):
+    def update_callqueue(self, *, location_id: str, queue_id: str, update: CallQueue, org_id: str = None):
         """
-        Configure a Call Queue
+        Update a Call Queue
+        Update the designated Call Queue.
 
-        :param location_id:
-        :param queue_id:
-        :param queue:
-        :param org_id:
-        :return: queue id
+        Call queues temporarily hold calls in the cloud when all agents, which can be users or agents, assigned to
+        receive calls from the queue are unavailable. Queued calls are routed to an available agent when not on an
+        active call. Each call queue is assigned a Lead Number, which is a telephone number outside callers can dial
+        to reach users assigned to the call queue. Call queues are also assigned an internal extension, which can be
+        dialed internally to reach users assigned to the call queue.
+
+        Updating a call queue requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        Examples:
+
+        .. code-block::
+
+            api = WebexSimpleApi()
+
+            # shortcut
+            cq = api.telephony.callqueue
+
+            # disable a call queue
+            update = CallQueue(enabled=False)
+            cq.update_callqueue(location_id=...,
+                                queue_id=...,
+                                update=update)
+
+            # set the call routing policy to SIMULTANEOUS
+            update = CallQueue(call_policies=CallPolicies(policy=Policy.simultaneous))
+            cq.update_callqueue(location_id=...,
+                                queue_id=...,
+                                update=update)
+            # don't bounce calls after the set number of rings.
+            update = CallQueue(
+                call_policies=CallPolicies(
+                    call_bounce=CallBounce(
+                        enabled=False)))
+            cq.update_callqueue(location_id=...,
+                                queue_id=...,
+                                update=update)
+
+        Alternatively you can also read call queue details, update them in place and then call update().
+
+        .. code-block::
+
+            details = cq.details(location_id=...,
+                         queue_id=...)
+            details.call_policies.call_bounce.agent_unavailable_enabled=False
+            details.call_policies.call_bounce.on_hold_enabled=False
+            cq.update_callqueue(location_id=...,
+                                queue_id=...,
+                                update=details)
+
+        :param location_id: Location in which this call queue exists.
+        :type location_id: str
+        :param queue_id: Update setting for the call queue with the matching ID.
+        :type queue_id: str
+        :param update: updates
+        :type update: :class:`CallQueue`
+        :param org_id: Update call queue settings from this organization.
         """
         params = org_id and {'orgId': org_id} or None
-        cq_data = queue.json(exclude={'id', 'language', 'location_name', 'location_id', 'toll_free_number'})
-
+        cq_data = self.update_or_create(queue=update)
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
         self._session.rest_put(url=url, data=cq_data, params=params)

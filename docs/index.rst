@@ -79,8 +79,10 @@ Reference
 .. toctree::
    :maxdepth: 4
 
-   changes.rst
    apidoc/wxc_sdk.rst
+   changes.rst
+   rest_debug.rst
+
 
 ---------
 

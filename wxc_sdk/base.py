@@ -37,7 +37,7 @@ class ApiModel(BaseModel):
         allow_population_by_field_name = True
         #: set to 'forbid' if run in unittest to catch schema issues during tests
         #: else set to 'allow'
-        extra = 'allow' if 'unittest' not in sys.modules.keys() else 'forbid'
+        extra = 'forbid' if 'unittest' in sys.modules or 'pytest' in sys.modules else 'allow'
 
     def json(self, *args, exclude_none=True, by_alias=True, **kwargs) -> str:
         return super().json(*args, exclude_none=exclude_none, by_alias=by_alias, **kwargs)

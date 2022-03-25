@@ -1,4 +1,4 @@
-from base import TestCaseWithTokens
+from .base import TestCaseWithTokens
 
 
 class Test(TestCaseWithTokens):

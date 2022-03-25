@@ -16,4 +16,4 @@ class UserType(str, Enum):
 class UserBase(ApiModel):
     first_name: Optional[str]
     last_name: Optional[str]
-    user_type: UserType = Field(alias='type', default=UserType.people)
+    user_type: Optional[UserType] = Field(alias='type')

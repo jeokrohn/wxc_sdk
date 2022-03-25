@@ -308,7 +308,6 @@ class TestCaseWithLog(TestCaseWithTokens):
 
         self.file_log_handler.close()
         self.file_log_handler = None
-        self.record_log_handler = None
 
 
 @dataclass(init=False)
