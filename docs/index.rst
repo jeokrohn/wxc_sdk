@@ -82,6 +82,7 @@ Reference
    apidoc/wxc_sdk.rst
    changes.rst
    rest_debug.rst
+   examples.rst
 
 
 ---------

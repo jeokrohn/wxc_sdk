@@ -153,10 +153,9 @@ class PersonForwardingApi(PersonSettingsApiChild, base='people'):
         """
         ep = self.f_ep(person_id=person_id, path='callForwarding')
         params = org_id and {'orgId': org_id} or None
-        data = json.loads(forwarding.json())
-        try:
-            # remove attribute not present in update
-            data['callForwarding']['noAnswer'].pop('systemMaxNumberOfRings', None)
-        except KeyError:
-            pass
-        self.put(ep, params=params, json=data)
+        # system_max_number_of_ring cannot be used in update
+        data = forwarding.json(
+            exclude={'call_forwarding':
+                         {'no_answer':
+                              {'system_max_number_of_rings': True}}})
+        self.put(ep, params=params, data=data)

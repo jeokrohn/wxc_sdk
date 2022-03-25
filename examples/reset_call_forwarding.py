@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
 
 from wxc_sdk import WebexSimpleApi
-from wxc_sdk.person_settings.forwarding import PersonForwardingSetting
+from wxc_sdk.types import PersonForwardingSetting
 
 load_dotenv()
 
@@ -27,7 +27,11 @@ calling_users = [user for user in api.people.list(calling_data=True)
 
 # set call forwarding to default for all users
 with ThreadPoolExecutor() as pool:
+    # default call forwarding settings
     forwarding = PersonForwardingSetting.default()
-    list(pool.map(lambda user: api.person_settings.forwarding.configure(person_id=user.person_id,
-                                                                        forwarding=forwarding),
-                  calling_users))
+
+    # schedule update for each user and wait for completion
+    list(pool.map(
+        lambda user: api.person_settings.forwarding.configure(person_id=user.person_id,
+                                                              forwarding=forwarding),
+        calling_users))
