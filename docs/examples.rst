@@ -30,6 +30,25 @@ Source: |reset_call_forwarding.py|_
 .. literalinclude:: ../examples/reset_call_forwarding.py
     :linenos:
 
+Holiday schedule w/ US national holidays for all US locations
+-------------------------------------------------------------
+
+This example uses the Calendarific API at https://calendarific.com/ to get a list of national US holidays and creates
+a "``National Holidays``" holiday schedule for all US locations with all these national holidays.
+
+A rudimentary API implementation in |calendarific.py|_ is used for the requests to https://calendarific.com/.
+Calendarific APIs require all requests to be authenticated using an API key. You can `sign up for a free account`_ to get
+a free API account key which then is read from environment variable ``CALENDARIFIC_KEY``.
+
+.. |calendarific.py| replace:: ``calendarific.py``
+
+Source: |us_holidays.py|_
+
+.. |us_holidays.py| replace:: ``us_holidays.py``
+
+.. literalinclude:: ../examples/us_holidays.py
+    :linenos:
+
 
 Persist tokens and obtain new tokens interactively
 --------------------------------------------------
@@ -71,12 +90,16 @@ Source: |get_tokens.py|_
 
 .. _get_tokens.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/get_tokens.py
 .. _calling_users.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/calling_users.py
+.. _us_holidays.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/us_holidays.py
+.. _calendarific.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/calendarific.py
 .. _reset_call_forwarding.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/reset_call_forwarding.py
 
 .. _webbrowser module: https://docs.python.org/3/library/webbrowser.html
 .. _My Webex Apps on develoepr.webex.com: https://developer.webex.com/my-apps
 
 .. _tests directory: https://github.com/jeokrohn/wxc_sdk/tree/master/tests
+
+.. _sign up for a free account: https://calendarific.com/signup
 
 
 
