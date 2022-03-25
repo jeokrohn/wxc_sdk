@@ -2,9 +2,9 @@
 .. highlight:: python
    :linenothreshold: 5
 
-=======
-wxc_sdk
-=======
+========
+wxc_sdk1
+========
 
 A simple SDK to work with `Webex APIs <https://developer.webex.com>`_, special focus on Webex Calling specific API
 endpoints.
