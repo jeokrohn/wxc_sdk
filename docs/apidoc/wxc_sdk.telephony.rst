@@ -21,10 +21,11 @@ Submodules
    :maxdepth: 4
 
    wxc_sdk.telephony.autoattendant
+   wxc_sdk.telephony.callpark
+   wxc_sdk.telephony.callpickup
    wxc_sdk.telephony.calls
    wxc_sdk.telephony.forwarding
    wxc_sdk.telephony.hg_and_cq
    wxc_sdk.telephony.huntgroup
    wxc_sdk.telephony.paging
    wxc_sdk.telephony.schedules
-   wxc_sdk.telephony.user_base

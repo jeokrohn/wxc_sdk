@@ -80,7 +80,8 @@ class LocationsApi(ApiChild, base='locations'):
     scope combinations.
     """
 
-    def list(self, name: str = None, location_id: str = None, org_id: str = None) -> Generator[Location, None, None]:
+    def list(self, name: str = None, location_id: str = None, org_id: str = None,
+             **params) -> Generator[Location, None, None]:
         """
         List locations for an organization.
 
@@ -93,14 +94,15 @@ class LocationsApi(ApiChild, base='locations'):
         :type org_id: str
         :return: generator of :class:`Location` instances
         """
-        data = {to_camel(k): v for i, (k, v) in enumerate(locals().items())
-                if i and k != 'self' and v is not None}
+        params.update((to_camel(k), v)
+                      for i, (k, v) in enumerate(locals().items())
+                      if i and k != 'params' and v is not None)
         if location_id is not None:
-            data.pop('locationId')
-            data['id'] = location_id
+            params.pop('locationId')
+            params['id'] = location_id
         ep = self.ep()
         # noinspection PyTypeChecker
-        return self.session.follow_pagination(url=ep, model=Location, params=data)
+        return self.session.follow_pagination(url=ep, model=Location, params=params)
 
     def by_name(self, name: str, org_id: str = None) -> Optional[Location]:
         """

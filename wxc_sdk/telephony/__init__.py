@@ -7,6 +7,8 @@ from .schedules import ScheduleApi
 from .paging import PagingApi
 from .huntgroup import HuntGroupApi
 from .callqueue import CallQueueApi
+from .callpark import CallParkApi
+from .callpickup import CallPickupApi
 from .autoattendant import AutoAttendantApi
 from ..api_child import ApiChild
 from ..rest import RestSession
@@ -24,6 +26,8 @@ class TelephonyApi(ApiChild, base='telephony'):
     :ivar paging: :class:`paging.PagingApi`
     :ivar huntgroup: :class:`huntgroup.HuntGroupApi`
     :ivar callqueue: :class:`callqueue.CallQueueApi`
+    :ivar callpark: :class:`callpark.CallParkApi`
+    :ivar pickup: :class:`callpickup.CallPickupApi`
 
     """
 
@@ -35,3 +39,5 @@ class TelephonyApi(ApiChild, base='telephony'):
         self.paging = PagingApi(session=session)
         self.huntgroup = HuntGroupApi(session=session)
         self.callqueue = CallQueueApi(session=session)
+        self.callpark = CallParkApi(session=session)
+        self.pickup = CallPickupApi(session=session)

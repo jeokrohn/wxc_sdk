@@ -180,7 +180,7 @@ class PeopleApi(ApiChild, base='people'):
     """
 
     def list(self, email: str = None, display_name: str = None, id_list: List[str] = None, org_id: str = None,
-             calling_data: bool = None, location_id: str = None) -> Generator[Person, None, None]:
+             calling_data: bool = None, location_id: str = None, **params) -> Generator[Person, None, None]:
         """
         List people in your organization. For most users, either the email or display_name parameter is required. Admin
         users can omit these fields and list all users in their organization.
@@ -210,8 +210,9 @@ class PeopleApi(ApiChild, base='people'):
         :type location_id: str
         :return: yield :class:`Person` instances
         """
-        params = {to_camel(k): v for i, (k, v) in enumerate(locals().items())
-                  if i and v is not None}
+        params.update((to_camel(k), v)
+                      for i, (k, v) in enumerate(locals().items())
+                      if i and v is not None and k != 'params')
         if calling_data:
             params['callingData'] = 'true'
         id_list = params.pop('idList', None)

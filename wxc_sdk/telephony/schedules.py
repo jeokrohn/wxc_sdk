@@ -274,7 +274,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         return ep
 
     def list(self, *, location_id: str, org_id: str = None, schedule_type: ScheduleType = None,
-             name: str = None) -> Generator[Schedule, None, None]:
+             name: str = None, **params) -> Generator[Schedule, None, None]:
         """
         Read the List of Schedules
         List all Schedules for the given location of the organization.
@@ -296,7 +296,6 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         :return: yields schedules
         """
         url = self._endpoint(location_id=location_id)
-        params = dict()
         if schedule_type is not None:
             params['type'] = schedule_type.value
         if name is not None:
@@ -304,8 +303,6 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         if org_id is not None:
             params['orgId'] = org_id
 
-        # with Session() as session:
-        #     r = session.get(url=url, headers={'authorization': f'Bearer {self.session._tokens.access_token}'})
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Schedule, params=params or None)
 

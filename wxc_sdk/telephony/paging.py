@@ -7,7 +7,7 @@ from collections.abc import Generator
 from ..base import ApiModel, to_camel
 from pydantic import Field
 from typing import Optional, List, Union
-from .user_base import UserType
+from ..common import UserType
 
 __all__ = ['PagingApi', 'Paging']
 
@@ -88,7 +88,7 @@ class PagingApi(ApiChild, base='telephony/config'):
         return super().ep(f'locations/{location_id}/paging{paging_id}')
 
     def list(self, *, location_id: str = None, name: str = None, phone_number: str = None,
-             org_id: str = None) -> Generator[Paging, None, None]:
+             org_id: str = None, **params) -> Generator[Paging, None, None]:
         """
         Read the List of Paging Groups
         List all Paging Groups for the organization.
@@ -110,8 +110,9 @@ class PagingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :return: generator of class:`Paging` objects
         """
-        params = {to_camel(k): v for i, (k, v) in enumerate(locals().items())
-                  if i and v is not None}
+        params.update((to_camel(k), v)
+                      for i, (k, v) in enumerate(locals().items())
+                      if i and v is not None and k != 'params')
         url = self._endpoint()
         return self.session.follow_pagination(url=url, model=Paging, params=params, item_key='locationPaging')
         pass

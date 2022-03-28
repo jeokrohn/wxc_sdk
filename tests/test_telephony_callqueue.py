@@ -1,12 +1,11 @@
 import json
 import random
-import uuid
 from concurrent.futures import ThreadPoolExecutor
-from typing import ClassVar, List
 from contextlib import contextmanager
+from typing import ClassVar, List
 
+from wxc_sdk.types import *
 from .base import TestCaseWithLog, TestCaseWithUsers
-from wxc_sdk.types import Location, CallQueue, CallPolicies, QueueSettings, Agent, Policy, CallBounce
 
 
 class TestList(TestCaseWithLog):
@@ -17,6 +16,9 @@ class TestList(TestCaseWithLog):
         """
         queues = list(self.api.telephony.callqueue.list())
         print(f'Got {len(queues)} call queues')
+        queues_pag = list(self.api.telephony.callqueue.list(max=50))
+        print(f'Total number of queues read with pagination: {len(queues_pag)}')
+        self.assertEqual(len(queues), len(queues_pag))
 
     def test_002_all_details(self):
         """
@@ -64,12 +66,12 @@ class TestCreate(TestCaseWithUsers):
         # settings for new call queue
         settings = CallQueue(name=new_name,
                              extension=extension,
-                             call_policies=CallPolicies.default(),
+                             call_policies=CallQueueCallPolicies.default(),
                              queue_settings=QueueSettings.default(queue_size=10),
                              agents=[Agent(agent_id=user.person_id) for user in members])
         # creat new queue
         new_queue = tcq.create(location_id=target_location.location_id,
-                               queue=settings)
+                               settings=settings)
 
         # and get details of new queue using the queue id
         details = tcq.details(location_id=target_location.location_id,
@@ -102,9 +104,72 @@ class TestCreate(TestCaseWithUsers):
         settings.phone_number = ''
         settings.name = new_name
         new_id = tcq.create(location_id=target_queue.location_id,
-                            queue=settings)
+                            settings=settings)
         details = tcq.details(location_id=target_queue.location_id, queue_id=new_id)
+
+        # details of new queue should be identical to existing with a few exceptions
+        details.name = target_queue_details.name
+        details.phone_number = target_queue_details.phone_number
+        details.extension = target_queue_details.extension
+        details.id = target_queue_details.id
+        self.assertEqual(target_queue_details, details)
+
         print(json.dumps(json.loads(details.json()), indent=2))
+
+    def test_003_create_many(self):
+        """
+        Create large number of call queues and check pagination
+        """
+        CQ_NUMBER = 300
+        # pick a random location
+        target_location = random.choice(self.locations)
+        print(f'Target location: {target_location.name}')
+
+        tcq = self.api.telephony.callqueue
+
+        # Get names for new call queues
+        queues = list(tcq.list(location_id=target_location.location_id))
+        to_create = max(0, CQ_NUMBER - len(queues))
+
+        print(f'{len(queues)} existing queues')
+        queue_names = set(queue.name for queue in queues)
+        new_names = (name for i in range(1000)
+                     if (name := f'many_{i:03}') not in queue_names)
+        names = [name for name, _ in zip(new_names, range(to_create))]
+        print(f'got {len(names)} new names')
+
+        def new_queue(queue_name:str):
+            """
+            Create a new call queue with the given name
+            :param queue_name:
+            :return:
+            """
+            extension = str(7000 + int(queue_name[-3:]))
+            # pick two calling users
+            members = random.sample(self.users, 2)
+
+            # settings for new call queue
+            settings = CallQueue(name=queue_name,
+                                 extension=extension,
+                                 call_policies=CallQueueCallPolicies.default(),
+                                 queue_settings=QueueSettings.default(queue_size=10),
+                                 agents=[Agent(agent_id=user.person_id) for user in members])
+            # creat new queue
+            new_queue = tcq.create(location_id=target_location.location_id,
+                                   settings=settings)
+            print(f'Created {queue_name}')
+            return new_queue
+
+        if names:
+            with ThreadPoolExecutor() as pool:
+                new_queues = list(pool.map(lambda name:new_queue(name),
+                                           names))
+        print(f'Created {len(names)} call queues.')
+        queues = list(tcq.list(location_id=target_location.location_id))
+        print(f'Total number of queues: {len(queues)}')
+        queues_pag = list(tcq.list(location_id=target_location.location_id, max=50))
+        print(f'Total number of queues read with pagination: {len(queues_pag)}')
+        self.assertEqual(len(queues), len(queues_pag))
 
 
 class TestUpdate(TestCaseWithLog):
@@ -191,43 +256,6 @@ class TestUpdate(TestCaseWithLog):
         details.location_name = target.location_name
         self.assertEqual(target, details)
 
-    def xxx(self):
-        from wxc_sdk import WebexSimpleApi
-        from wxc_sdk.types import CallQueue, CallPolicies, CallBounce, Policy
-
-        api = WebexSimpleApi()
-
-        # shortcut
-        cq = api.telephony.callqueue
-
-        # disable a call queue
-        update = CallQueue(enabled=False)
-        cq.update_callqueue(location_id=...,
-                            queue_id=...,
-                            update=update)
-
-        # set the call routing policy to SIMULTANEOUS
-        update = CallQueue(call_policies=CallPolicies(policy=Policy.simultaneous))
-        cq.update_callqueue(location_id=...,
-                            queue_id=...,
-                            update=update)
-        # don't bounce calls after the set number of rings.
-        update = CallQueue(
-            call_policies=CallPolicies(
-                call_bounce=CallBounce(
-                    enabled=False)))
-        cq.update_callqueue(location_id=...,
-                            queue_id=...,
-                            update=update)
-
-        details = cq.details(location_id=...,
-                             queue_id=...)
-        details.call_policies.call_bounce.agent_unavailable_enabled=False
-        details.call_policies.call_bounce.on_hold_enabled=False
-        cq.update_callqueue(location_id=...,
-                            queue_id=...,
-                            update=details)
-
     def test_003_enable(self):
         """
         Disable a call queue
@@ -259,7 +287,7 @@ class TestUpdate(TestCaseWithLog):
             other_policies = [p for p in Policy if p != policy]
             new_policy: Policy = random.choice(other_policies)
             print(f'Switch policy from {policy.value} to {new_policy.value}')
-            update = CallQueue(call_policies=CallPolicies(policy=new_policy))
+            update = CallQueue(call_policies=CallQueueCallPolicies(policy=new_policy))
             self.api.telephony.callqueue.update_callqueue(location_id=target.location_id,
                                                           queue_id=target.id,
                                                           update=update)
@@ -269,6 +297,9 @@ class TestUpdate(TestCaseWithLog):
         details.call_policies.policy = policy
         details.location_id = target.location_id
         details.location_name = target.location_name
+        # when switching to weighted the agent weights also change. We are ignoring that for the equality test
+        for details_agent, target_agent in zip(details.agents, target.agents):
+            details_agent.weight = target_agent.weight
         self.assertEqual(target, details)
 
     def test_005_call_bounce_enabled(self):
@@ -280,7 +311,7 @@ class TestUpdate(TestCaseWithLog):
 
             bounce_enabled = target.call_policies.call_bounce.enabled
             update = CallQueue(
-                call_policies=CallPolicies(
+                call_policies=CallQueueCallPolicies(
                     call_bounce=CallBounce(
                         enabled=not bounce_enabled)))
             print(f' Switch bounce enabled from {bounce_enabled} to {not bounce_enabled}')

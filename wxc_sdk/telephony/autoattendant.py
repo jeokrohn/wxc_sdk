@@ -110,7 +110,7 @@ class AutoAttendant(ApiModel):
     #: A unique identifier for the auto attendant.
     auto_attendant_id: Optional[str] = Field(alias='id')
     #: Unique name for the auto attendant.
-    name: str
+    name: Optional[str]
     #: Name of location for auto attendant. (only returned by list())
     location_name: Optional[str]
     #: ID of location for auto attendant. (only returned by list())
@@ -147,6 +147,21 @@ class AutoAttendant(ApiModel):
     business_hours_menu: Optional[AutoAttendantMenu]
     #: After hours menu defined for the auto attendant.
     after_hours_menu: Optional[AutoAttendantMenu]
+
+    def create_or_update(self) -> str:
+        """
+        Get JSON for create or update call
+
+        :return: JSON
+        :rtype: str
+        """
+        return self.json(exclude={'auto_attendant_id': True,
+                                  'location_name': True,
+                                  'location_id': True,
+                                  'enabled': True,
+                                  'toll_free_number': True,
+                                  'language': True,
+                                  })
 
     @staticmethod
     def create(*, name: str, business_schedule: str, phone_number: str = None,
@@ -218,7 +233,7 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
             return ep
 
     def list(self, *, org_id: str = None, location_id: str = None, name: str = None,
-             phone_number: str = None) -> Generator[AutoAttendant, None, None]:
+             phone_number: str = None, **params) -> Generator[AutoAttendant, None, None]:
         """
         Read the List of Auto Attendants
         List all Auto Attendants for the organization.
@@ -239,8 +254,9 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         :type phone_number: str
         :return: yields :class:`AutoAttendant` objects
         """
-        params = {to_camel(k): v for i, (k, v) in enumerate(locals().items())
-                  if i and v is not None}
+        params.update((to_camel(k), v)
+                      for i, (k, v) in enumerate(locals().items())
+                      if i and v is not None and k != 'params')
         url = self._endpoint()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=AutoAttendant, params=params, item_key='autoAttendants')
@@ -301,13 +317,7 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         :return: ID of the newly created auto attendant.
         :rtype: str
         """
-        data = settings.json(exclude={'auto_attendant_id': True,
-                                      'location_name': True,
-                                      'location_id': True,
-                                      'enabled': True,
-                                      'toll_free_number': True,
-                                      'language': True,
-                                      })
+        data = settings.create_or_update()
         url = self._endpoint(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
         data = self.post(url, data=data, params=params)
@@ -333,14 +343,8 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         :param org_id: Create the auto attendant for this organization.
         :type org_id: str
         """
-        data = settings.json(exclude={'auto_attendant_id': True,
-                                      'location_name': True,
-                                      'location_id': True,
-                                      'enabled': True,
-                                      'toll_free_number': True,
-                                      'language': True,
-                                      })
-        url = self._endpoint(location_id=location_id)
+        data = settings.create_or_update()
+        url = self._endpoint(location_id=location_id, auto_attendant_id=auto_attendant_id)
         params = org_id and {'orgId': org_id} or None
         self.put(url, data=data, params=params)
 

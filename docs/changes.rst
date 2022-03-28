@@ -1,6 +1,14 @@
 Release history
 ===============
 
+0.5.0
+-----
+-   Call park API (:class:`wxc_sdk.telephony.callpark.CallParkApi`)
+-   Call pickup API (:class:`wxc_sdk.telephony.callpickup.CallPickupApi`)
+-   refactoring data types for call queues and hunt groups
+-   improved documentation of hunt group data types
+-   additional tests for call queues, hunt groups
+
 0.4.2
 -----
 -   Call queue API (:class:`wxc_sdk.telephony.callqueue.CallQueueApi`)

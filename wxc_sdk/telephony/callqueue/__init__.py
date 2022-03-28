@@ -6,14 +6,14 @@ from pydantic import Field
 
 from .announcement import AnnouncementApi
 from ..forwarding import ForwardingApi, FeatureSelector
-from ..hg_and_cq import HGandCQ, Policy, Agent, AlternateNumberSettings
+from ..hg_and_cq import HGandCQ, Policy, Agent
 from ...base import to_camel, ApiModel
 from ...common import RingPattern, Greeting
 from ...rest import RestSession
 
-__all__ = ['CallQueueApi', 'CallQueue', 'CallBounce', 'DistinctiveRing', 'OverflowAction',
-           'CallPolicies', 'OverflowSetting', 'WaitMessageSetting', 'WelcomeMessageSetting', 'AudioSource',
-           'ComfortMessageSetting', 'MohMessageSetting', 'QueueSettings', 'WaitMode']
+__all__ = ['CallBounce', 'DistinctiveRing', 'CallQueueCallPolicies', 'OverflowAction', 'OverflowSetting', 'WaitMode',
+           'WaitMessageSetting', 'AudioSource', 'WelcomeMessageSetting', 'ComfortMessageSetting', 'MohMessageSetting',
+           'QueueSettings', 'CallQueue', 'CallQueueApi']
 
 
 class CallBounce(ApiModel):
@@ -65,7 +65,7 @@ class DistinctiveRing(ApiModel):
                                ring_pattern=RingPattern.normal)
 
 
-class CallPolicies(ApiModel):
+class CallQueueCallPolicies(ApiModel):
     """
     Policy controlling how calls are routed to agents.
     """
@@ -77,18 +77,18 @@ class CallPolicies(ApiModel):
     distinctive_ring: Optional[DistinctiveRing]
 
     @staticmethod
-    def default() -> 'CallPolicies':
+    def default() -> 'CallQueueCallPolicies':
         """
         Default CallPolicies
         """
-        return CallPolicies(policy=Policy.circular,
-                            call_bounce=CallBounce.default(),
-                            distinctive_ring=DistinctiveRing.default())
+        return CallQueueCallPolicies(policy=Policy.circular,
+                                     call_bounce=CallBounce.default(),
+                                     distinctive_ring=DistinctiveRing.default())
 
     @staticmethod
-    def simple() -> 'CallPolicies':
-        return CallPolicies(policy=Policy.circular,
-                            call_bounce=CallBounce.default())
+    def simple() -> 'CallQueueCallPolicies':
+        return CallQueueCallPolicies(policy=Policy.circular,
+                                     call_bounce=CallBounce.default())
 
 
 class OverflowAction(str, Enum):
@@ -228,23 +228,8 @@ class CallQueue(HGandCQ):
     """
     Call queue details
     """
-    #: Language for call queue.
-    language: Optional[str]
-    #: Language code.
-    language_code: Optional[str]
-    #: First name to be shown when calls are forwarded out of this call queue. Defaults to ".".
-    first_name: Optional[str]
-    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the phone number if set,
-    #: otherwise defaults to call group name.
-    last_name: Optional[str]
-    #: Time zone for the call queue.
-    time_zone: Optional[str]
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
-    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
-    #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
-    alternate_number_settings: Optional[AlternateNumberSettings]
     #: Policy controlling how calls are routed to agents.
-    call_policies: Optional[CallPolicies]
+    call_policies: Optional[CallQueueCallPolicies]
     # TODO: file documentation defect. This is missing at
     #  https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-call-queue
     #: Overall call queue settings.
@@ -252,8 +237,19 @@ class CallQueue(HGandCQ):
     # TODO: file documentation defect. This is missing at
     #  https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-call-queue
     allow_call_waiting_for_agents_enabled: Optional[bool]
-    #: People, including workspaces, that are eligible to receive calls.
-    agents: Optional[List[Agent]]
+
+    @staticmethod
+    def exclude_update_or_create() -> dict:
+        """
+        Exclude dict for update or create calls
+        :return: dict
+        :meta private:
+        """
+        base_exclude = HGandCQ.exclude_update_or_create()
+        base_exclude.update({'queue_settings':
+                                 {'overflow':
+                                      {'is_transfer_number_set': True}}})
+        return base_exclude
 
     @staticmethod
     def create(*, name: str,
@@ -266,7 +262,7 @@ class CallQueue(HGandCQ):
                time_zone: str = None,
                phone_number: str = None,
                extension: str = None,
-               call_policies: CallPolicies = None,
+               call_policies: CallQueueCallPolicies = None,
                queue_settings: QueueSettings = None,
                allow_call_waiting_for_agents_enabled: bool = None) -> 'CallQueue':
         """
@@ -363,7 +359,7 @@ class CallQueueApi:
                               {'is_transfer_number_set': True}}})
 
     def list(self, *, location_id: str = None, name: str = None,
-             org_id: str = None) -> Generator[CallQueue, None, None]:
+             org_id: str = None, **params) -> Generator[CallQueue, None, None]:
         """
         Read the List of Call Queues
         List all Call Queues for the organization.
@@ -383,11 +379,13 @@ class CallQueueApi:
         :type name: str
         :param org_id: List call queues for this organization
         :type org_id: str
+        :param params: dict of additional parameters passed directly to endpoint
+        :type params: dict
         :return: yields :class:`CallQueue` objects
         """
-        params = {to_camel(k): v
-                  for i, (k, v) in enumerate(locals().items())
-                  if i and v is not None}
+        params.update((to_camel(k), v)
+                      for i, (k, v) in enumerate(locals().items())
+                      if i and v is not None and k != 'params')
         url = self._endpoint()
         # noinspection PyTypeChecker
         return self._session.follow_pagination(url=url, model=CallQueue, params=params)
@@ -404,7 +402,7 @@ class CallQueueApi:
         return next((cq for cq in self.list(location_id=location_id, org_id=org_id, name=name)
                      if cq.name == name), None)
 
-    def create(self, *, location_id: str, queue: CallQueue, org_id: str = None) -> str:
+    def create(self, *, location_id: str, settings: CallQueue, org_id: str = None) -> str:
         """
         Create a Call Queue
         Create new Call Queues for the given location.
@@ -420,15 +418,15 @@ class CallQueueApi:
 
         :param location_id: Create the call queue for this location.
         :type location_id: str
-        :param queue: parameters for queue creation.
-        :type queue: :class:`CallQueue`
+        :param settings: parameters for queue creation.
+        :type settings: :class:`CallQueue`
         :param org_id: Create the call queue for this organization.
         :type org_id: str
         :return: queue id
         :rtype: str
         """
         params = org_id and {'orgId': org_id} or {}
-        cq_data = self.update_or_create(queue=queue)
+        cq_data = settings.create_or_update()
         url = self._endpoint(location_id=location_id)
         data = self._session.rest_post(url, data=cq_data, params=params)
         return data['id']
@@ -552,6 +550,6 @@ class CallQueueApi:
         :param org_id: Update call queue settings from this organization.
         """
         params = org_id and {'orgId': org_id} or None
-        cq_data = self.update_or_create(queue=update)
+        cq_data = update.create_or_update()
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
         self._session.rest_put(url=url, data=cq_data, params=params)
