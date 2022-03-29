@@ -486,9 +486,10 @@ class CallQueueApi:
         # noinspection PyTypeChecker
         return result
 
-    def update_callqueue(self, *, location_id: str, queue_id: str, update: CallQueue, org_id: str = None):
+    def update(self, *, location_id: str, queue_id: str, update: CallQueue, org_id: str = None):
         """
         Update a Call Queue
+
         Update the designated Call Queue.
 
         Call queues temporarily hold calls in the cloud when all agents, which can be users or agents, assigned to
@@ -511,35 +512,35 @@ class CallQueueApi:
 
             # disable a call queue
             update = CallQueue(enabled=False)
-            cq.update_callqueue(location_id=...,
-                                queue_id=...,
-                                update=update)
+            cq.update(location_id=...,
+                      queue_id=...,
+                      update=update)
 
             # set the call routing policy to SIMULTANEOUS
             update = CallQueue(call_policies=CallPolicies(policy=Policy.simultaneous))
-            cq.update_callqueue(location_id=...,
-                                queue_id=...,
-                                update=update)
+            cq.update(location_id=...,
+                      queue_id=...,
+                      update=update)
             # don't bounce calls after the set number of rings.
             update = CallQueue(
                 call_policies=CallPolicies(
                     call_bounce=CallBounce(
                         enabled=False)))
-            cq.update_callqueue(location_id=...,
-                                queue_id=...,
-                                update=update)
+            cq.update(location_id=...,
+                      queue_id=...,
+                      update=update)
 
         Alternatively you can also read call queue details, update them in place and then call update().
 
         .. code-block::
 
             details = cq.details(location_id=...,
-                         queue_id=...)
+                                 queue_id=...)
             details.call_policies.call_bounce.agent_unavailable_enabled=False
             details.call_policies.call_bounce.on_hold_enabled=False
-            cq.update_callqueue(location_id=...,
-                                queue_id=...,
-                                update=details)
+            cq.update(location_id=...,
+                      queue_id=...,
+                      update=details)
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str

@@ -317,7 +317,7 @@ class TestWithLocations(TestCaseWithLog):
     """
     Test cases with existing locations
     """
-    locations: List[Location]
+    locations: list[Location]
 
     @classmethod
     def setUpClass(cls) -> None:

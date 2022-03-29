@@ -2,7 +2,7 @@ import json
 import random
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
-from typing import ClassVar, List
+from typing import ClassVar
 
 from wxc_sdk.types import *
 from .base import TestCaseWithLog, TestCaseWithUsers
@@ -40,7 +40,7 @@ class TestCreate(TestCaseWithUsers):
     """
     Test call queue creation
     """
-    locations: ClassVar[List[Location]]
+    locations: ClassVar[list[Location]]
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -178,7 +178,7 @@ class TestUpdate(TestCaseWithLog):
     """
     Try to update call queues
     """
-    queues = ClassVar[List[CallQueue]]
+    queues = ClassVar[list[CallQueue]]
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -210,8 +210,8 @@ class TestUpdate(TestCaseWithLog):
         try:
             yield details.copy(deep=True)
         finally:
-            self.api.telephony.callqueue.update_callqueue(location_id=target.location_id,
-                                                          queue_id=target.id, update=details)
+            self.api.telephony.callqueue.update(location_id=target.location_id,
+                                                queue_id=target.id, update=details)
 
     def test_001_update_extension(self):
         """
@@ -226,9 +226,9 @@ class TestUpdate(TestCaseWithLog):
 
             print(f'changing extension to {new_extension}...')
             update = CallQueue(extension=new_extension)
-            self.api.telephony.callqueue.update_callqueue(location_id=target.location_id,
-                                                          queue_id=target.id,
-                                                          update=update)
+            self.api.telephony.callqueue.update(location_id=target.location_id,
+                                                queue_id=target.id,
+                                                update=update)
             details = self.api.telephony.callqueue.details(location_id=target.location_id,
                                                            queue_id=target.id)
         self.assertEqual(new_extension, details.extension)
@@ -247,9 +247,9 @@ class TestUpdate(TestCaseWithLog):
 
             print(f'Changing name to "{new_name}"...')
             update = CallQueue(name=new_name)
-            self.api.telephony.callqueue.update_callqueue(location_id=target.location_id,
-                                                          queue_id=target.id,
-                                                          update=update)
+            self.api.telephony.callqueue.update(location_id=target.location_id,
+                                                queue_id=target.id,
+                                                update=update)
             details = self.api.telephony.callqueue.details(location_id=target.location_id,
                                                            queue_id=target.id)
         self.assertEqual(new_name, details.name)
@@ -267,9 +267,9 @@ class TestUpdate(TestCaseWithLog):
 
             print(f'Toggle enable...')
             update = CallQueue(enabled=not target.enabled)
-            self.api.telephony.callqueue.update_callqueue(location_id=target.location_id,
-                                                          queue_id=target.id,
-                                                          update=update)
+            self.api.telephony.callqueue.update(location_id=target.location_id,
+                                                queue_id=target.id,
+                                                update=update)
             details = self.api.telephony.callqueue.details(location_id=target.location_id,
                                                            queue_id=target.id)
         self.assertEqual(not target.enabled, details.enabled)
@@ -290,9 +290,9 @@ class TestUpdate(TestCaseWithLog):
             new_policy: Policy = random.choice(other_policies)
             print(f'Switch policy from {policy.value} to {new_policy.value}')
             update = CallQueue(call_policies=CallQueueCallPolicies(policy=new_policy))
-            self.api.telephony.callqueue.update_callqueue(location_id=target.location_id,
-                                                          queue_id=target.id,
-                                                          update=update)
+            self.api.telephony.callqueue.update(location_id=target.location_id,
+                                                queue_id=target.id,
+                                                update=update)
             details = self.api.telephony.callqueue.details(location_id=target.location_id,
                                                            queue_id=target.id)
         self.assertEqual(new_policy, details.call_policies.policy)
@@ -317,9 +317,9 @@ class TestUpdate(TestCaseWithLog):
                     call_bounce=CallBounce(
                         enabled=not bounce_enabled)))
             print(f' Switch bounce enabled from {bounce_enabled} to {not bounce_enabled}')
-            self.api.telephony.callqueue.update_callqueue(location_id=target.location_id,
-                                                          queue_id=target.id,
-                                                          update=update)
+            self.api.telephony.callqueue.update(location_id=target.location_id,
+                                                queue_id=target.id,
+                                                update=update)
             details = self.api.telephony.callqueue.details(location_id=target.location_id,
                                                            queue_id=target.id)
         self.assertEqual(not bounce_enabled, details.call_policies.call_bounce.enabled)

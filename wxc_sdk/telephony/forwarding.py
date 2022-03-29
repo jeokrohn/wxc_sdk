@@ -246,10 +246,11 @@ class ForwardingApi:
         result = CallForwarding.parse_obj(data['callForwarding'])
         return result
 
-    def update_forwarding(self, location_id: str, feature_id: str,
+    def update(self, location_id: str, feature_id: str,
                           forwarding: CallForwarding, org_id: str = None):
         """
         Update Call Forwarding Settings for a feature
+
         Update Call Forwarding settings for the designated feature.
 
         Updating call forwarding settings for a feature requires a full administrator auth token with a scope

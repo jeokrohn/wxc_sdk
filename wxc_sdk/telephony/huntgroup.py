@@ -279,7 +279,7 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
         result = HuntGroup.parse_obj(data)
         return result
 
-    def update_huntgroup(self, location_id: str, huntgroup_id: str, update: HuntGroup,
+    def update(self, location_id: str, huntgroup_id: str, update: HuntGroup,
                          org_id: str = None):
         """
         Update a Hunt Group

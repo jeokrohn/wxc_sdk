@@ -2,7 +2,7 @@ import json
 import random
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
-from typing import ClassVar, List
+from typing import ClassVar
 
 from wxc_sdk.types import *
 from .base import TestCaseWithLog, TestCaseWithUsers
@@ -41,7 +41,7 @@ class TestCreate(TestCaseWithUsers):
     """
     Test hunt group creation
     """
-    locations: ClassVar[List[Location]]
+    locations: ClassVar[list[Location]]
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -174,7 +174,7 @@ class TestUpdate(TestCaseWithUsers):
     """
     Try to update hunt groups
     """
-    hg_list = ClassVar[List[HuntGroup]]
+    hg_list = ClassVar[list[HuntGroup]]
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -206,8 +206,8 @@ class TestUpdate(TestCaseWithUsers):
         try:
             yield details.copy(deep=True)
         finally:
-            self.api.telephony.huntgroup.update_huntgroup(location_id=target.location_id,
-                                                          huntgroup_id=target.id, update=details)
+            self.api.telephony.huntgroup.update(location_id=target.location_id,
+                                                huntgroup_id=target.id, update=details)
 
     def test_001_update_extension(self):
         """
@@ -222,9 +222,9 @@ class TestUpdate(TestCaseWithUsers):
 
             print(f'changing extension to {new_extension}...')
             update = HuntGroup(extension=new_extension)
-            self.api.telephony.huntgroup.update_huntgroup(location_id=target.location_id,
-                                                          huntgroup_id=target.id,
-                                                          update=update)
+            self.api.telephony.huntgroup.update(location_id=target.location_id,
+                                                huntgroup_id=target.id,
+                                                update=update)
             details = self.api.telephony.huntgroup.details(location_id=target.location_id,
                                                            huntgroup_id=target.id)
         self.assertEqual(new_extension, details.extension)
@@ -243,9 +243,9 @@ class TestUpdate(TestCaseWithUsers):
 
             print(f'Changing name to "{new_name}"...')
             update = HuntGroup(name=new_name)
-            self.api.telephony.huntgroup.update_huntgroup(location_id=target.location_id,
-                                                          huntgroup_id=target.id,
-                                                          update=update)
+            self.api.telephony.huntgroup.update(location_id=target.location_id,
+                                                huntgroup_id=target.id,
+                                                update=update)
             details = self.api.telephony.huntgroup.details(location_id=target.location_id,
                                                            huntgroup_id=target.id)
         self.assertEqual(new_name, details.name)
@@ -263,9 +263,9 @@ class TestUpdate(TestCaseWithUsers):
 
             print(f'Toggle enable...')
             update = HuntGroup(enabled=not target.enabled)
-            self.api.telephony.huntgroup.update_huntgroup(location_id=target.location_id,
-                                                          huntgroup_id=target.id,
-                                                          update=update)
+            self.api.telephony.huntgroup.update(location_id=target.location_id,
+                                                huntgroup_id=target.id,
+                                                update=update)
             details = self.api.telephony.huntgroup.details(location_id=target.location_id,
                                                            huntgroup_id=target.id)
         self.assertEqual(not target.enabled, details.enabled)
@@ -286,9 +286,9 @@ class TestUpdate(TestCaseWithUsers):
             new_policy: Policy = random.choice(other_policies)
             print(f'Switch policy from {policy.value} to {new_policy.value}')
             update = HuntGroup(call_policies=HGCallPolicies(policy=new_policy))
-            self.api.telephony.huntgroup.update_huntgroup(location_id=target.location_id,
-                                                          huntgroup_id=target.id,
-                                                          update=update)
+            self.api.telephony.huntgroup.update(location_id=target.location_id,
+                                                huntgroup_id=target.id,
+                                                update=update)
             details = self.api.telephony.huntgroup.details(location_id=target.location_id,
                                                            huntgroup_id=target.id)
         self.assertEqual(new_policy, details.call_policies.policy)
@@ -308,9 +308,9 @@ class TestUpdate(TestCaseWithUsers):
             print(f'Switch distinctive ring from {distinctive_ring} to {not distinctive_ring}')
             update = HuntGroup(
                 alternate_number_settings=AlternateNumberSettings(distinctive_ring_enabled=not distinctive_ring))
-            self.api.telephony.huntgroup.update_huntgroup(location_id=target.location_id,
-                                                          huntgroup_id=target.id,
-                                                          update=update)
+            self.api.telephony.huntgroup.update(location_id=target.location_id,
+                                                huntgroup_id=target.id,
+                                                update=update)
             details = self.api.telephony.huntgroup.details(location_id=target.location_id,
                                                            huntgroup_id=target.id)
         self.assertEqual(not distinctive_ring, details.alternate_number_settings.distinctive_ring_enabled)
@@ -336,9 +336,9 @@ class TestUpdate(TestCaseWithUsers):
             new_agents = target.agents + [Agent(agent_id=new_agent.person_id)]
 
             update = HuntGroup(agents=new_agents)
-            self.api.telephony.huntgroup.update_huntgroup(location_id=target.location_id,
-                                                          huntgroup_id=target.id,
-                                                          update=update)
+            self.api.telephony.huntgroup.update(location_id=target.location_id,
+                                                huntgroup_id=target.id,
+                                                update=update)
             details = self.api.telephony.huntgroup.details(location_id=target.location_id,
                                                            huntgroup_id=target.id)
         new_agent_ids = set(agent.agent_id for agent in new_agents)

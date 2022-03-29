@@ -254,7 +254,7 @@ class PeopleApi(ApiChild, base='people'):
         ep = self.ep(path=person_id)
         self.delete(ep)
 
-    def update_person(self, person: Person, calling_data: bool = False, show_all_types: bool = False) -> Person:
+    def update(self, person: Person, calling_data: bool = False, show_all_types: bool = False) -> Person:
         """
         Update details for a person, by ID.
 

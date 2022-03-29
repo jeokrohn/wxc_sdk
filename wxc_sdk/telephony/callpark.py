@@ -285,7 +285,7 @@ class CallParkApi(ApiChild, base='telephony/config/callParks'):
         params = org_id and {'orgId': org_id} or None
         return CallPark.parse_obj(self.get(url, params=params))
 
-    def update_callpark(self, location_id: str, callpark_id: str, settings: CallPark, org_id: str = None) -> str:
+    def update(self, location_id: str, callpark_id: str, settings: CallPark, org_id: str = None) -> str:
         """
         Update a Call Park
 

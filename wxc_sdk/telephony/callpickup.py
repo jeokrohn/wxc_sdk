@@ -169,7 +169,7 @@ class CallPickupApi(ApiChild, base='telephony/config/callPickups'):
         params = org_id and {'orgId': org_id} or None
         return CallPickup.parse_obj(self.get(url, params=params))
 
-    def update_pickup(self, location_id: str, pickup_id: str, settings: CallPickup, org_id: str = None) -> str:
+    def update(self, location_id: str, pickup_id: str, settings: CallPickup, org_id: str = None) -> str:
         """
         Update a Call Pickup
 

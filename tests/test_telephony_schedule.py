@@ -10,10 +10,10 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from itertools import chain
-from typing import List, Optional
+from typing import Optional
 
-from .base import TestWithLocations
 from wxc_sdk.telephony.schedules import *
+from .base import TestWithLocations
 
 
 class TestScheduleList(TestWithLocations):
@@ -21,7 +21,7 @@ class TestScheduleList(TestWithLocations):
     Test cases for schedules
     """
 
-    def all_schedules(self) -> List[Schedule]:
+    def all_schedules(self) -> list[Schedule]:
         """
         Get all existing schedules in all locations
         :return: list of schedules
@@ -49,7 +49,7 @@ class TestScheduleList(TestWithLocations):
                                                                            name='Germany 2'),
                              self.locations)
             schedules = list(chain.from_iterable(lists))
-            schedules: List[Schedule]
+            schedules: list[Schedule]
             print(f'got {len(schedules)} schedules')
             print('\n'.join(f'{s}' for s in schedules))
             self.assertTrue(all(schedule.name.startswith('Germany 2') for schedule in schedules),
@@ -65,7 +65,7 @@ class TestScheduleList(TestWithLocations):
                                                                    schedule_type=ScheduleType.business_hours)),
                 self.locations)
             schedules = list(chain.from_iterable(lists))
-        schedules: List[Schedule]
+        schedules: list[Schedule]
         print(f'got {len(schedules)} schedules')
         print('\n'.join(f'{s}' for s in schedules))
         self.assertTrue(all(schedule.schedule_type == ScheduleType.business_hours for schedule in schedules),
@@ -124,7 +124,7 @@ class TestWithTestSchedules(TestWithLocations):
     """
     Base class for tests with test schedules (test_xxx)
     """
-    test_schedules: Optional[List[Schedule]]
+    test_schedules: Optional[list[Schedule]]
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -142,7 +142,7 @@ class TestWithTestSchedules(TestWithLocations):
                                                                                name='test_')),
                              cls.locations)
             cls.test_schedules = list(chain.from_iterable(tasks))
-        cls.test_schedules: List[Schedule]
+        cls.test_schedules: list[Schedule]
         cls.test_schedules = [schedule
                               for schedule in cls.test_schedules
                               if re.match(r'test_\d{3}', schedule.name)]

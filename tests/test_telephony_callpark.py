@@ -187,9 +187,9 @@ class TestUpdate(TestWithLocations):
         try:
             if self.target:
                 print('tearDown: restore settings')
-                self.api.telephony.callpark.update_callpark(location_id=self.target.location_id,
-                                                            callpark_id=self.target.callpark_id,
-                                                            settings=self.target)
+                self.api.telephony.callpark.update(location_id=self.target.location_id,
+                                                   callpark_id=self.target.callpark_id,
+                                                   settings=self.target)
         finally:
             super().tearDown()
 
@@ -204,9 +204,9 @@ class TestUpdate(TestWithLocations):
                         if (name := f'cp_{i:03}') not in names)
         settings = CallPark(name=new_name)
         cpa = self.api.telephony.callpark
-        new_id = cpa.update_callpark(location_id=self.target.location_id,
-                                     callpark_id=self.target.callpark_id,
-                                     settings=settings)
+        new_id = cpa.update(location_id=self.target.location_id,
+                            callpark_id=self.target.callpark_id,
+                            settings=settings)
         self.target.callpark_id = new_id
         details = cpa.details(location_id=self.target.location_id,
                               callpark_id=new_id)
@@ -255,8 +255,8 @@ class TestUpdate(TestWithLocations):
             new_recall_name = None
         settings = CallPark(recall=RecallHuntGroup(hunt_group_id=new_recall_id, option=CallParkRecall.hunt_group_only))
         try:
-            cpa.update_callpark(location_id=location_id, callpark_id=target_details.callpark_id,
-                                settings=settings)
+            cpa.update(location_id=location_id, callpark_id=target_details.callpark_id,
+                       settings=settings)
             details_after = cpa.details(location_id=location_id, callpark_id=target_details.callpark_id)
             self.assertEqual(new_recall_id, details_after.recall.hunt_group_id or '')
             self.assertEqual(new_recall_name, details_after.recall.hunt_group_name)
@@ -264,9 +264,9 @@ class TestUpdate(TestWithLocations):
         finally:
             # restore old settings
             target_details.recall.hunt_group_id = recall_hunt_group_id
-            cpa.update_callpark(location_id=location_id,
-                                callpark_id=target_details.callpark_id,
-                                settings=target_details)
+            cpa.update(location_id=location_id,
+                       callpark_id=target_details.callpark_id,
+                       settings=target_details)
             details = cpa.details(location_id=location_id,
                                   callpark_id=target_details.callpark_id)
             self.assertEqual(target_details.recall.hunt_group_id, details.recall.hunt_group_id)
@@ -276,9 +276,9 @@ class TestUpdate(TestWithLocations):
         get details and use details for update
         """
         cpa = self.api.telephony.callpark
-        new_id = cpa.update_callpark(location_id=self.target.location_id,
-                                     callpark_id=self.target.callpark_id,
-                                     settings=self.target)
+        new_id = cpa.update(location_id=self.target.location_id,
+                            callpark_id=self.target.callpark_id,
+                            settings=self.target)
         details = cpa.details(location_id=self.target.location_id,
                               callpark_id=new_id)
         self.assertEqual(self.target, details)

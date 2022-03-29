@@ -1,6 +1,16 @@
 Release history
 ===============
 
+0.5.2
+-----
+-   consistently use update() for all objects
+
+0.5.1
+-----
+-   Paging group tests
+-   Call park tests
+-   fixed issue w/ paging group create/update
+
 0.5.0
 -----
 -   Call park API (:class:`wxc_sdk.telephony.callpark.CallParkApi`)
