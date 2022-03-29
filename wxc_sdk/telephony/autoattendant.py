@@ -3,7 +3,7 @@ Auto attendant data types and API
 """
 from collections.abc import Generator
 from enum import Enum
-from typing import Optional, List
+from typing import Optional
 
 from pydantic import Field
 
@@ -11,8 +11,8 @@ from wxc_sdk.common import AlternateNumber
 from .forwarding import ForwardingApi, FeatureSelector
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
-from ..rest import RestSession
 from ..common import Greeting
+from ..rest import RestSession
 
 __all__ = ['Dialing', 'MenuKey', 'AutoAttendantAction', 'AutoAttendantKeyConfiguration', 'AutoAttendantMenu',
            'AutoAttendant', 'AutoAttendantApi']
@@ -89,7 +89,7 @@ class AutoAttendantMenu(ApiModel):
     #: Flag to indicate if auto attendant extension is enabled or not.
     extension_enabled: bool
     #: Key configurations defined for the auto attendant.
-    key_configurations: List[AutoAttendantKeyConfiguration]
+    key_configurations: list[AutoAttendantKeyConfiguration]
 
     @staticmethod
     def default() -> 'AutoAttendantMenu':
@@ -128,7 +128,7 @@ class AutoAttendant(ApiModel):
     #: Last name defined for an auto attendant. (only returned by details())
     last_name: Optional[str]
     #: Alternate numbers defined for the auto attendant. (only returned by details())
-    alternate_numbers: Optional[List[AlternateNumber]]
+    alternate_numbers: Optional[list[AlternateNumber]]
     #: Language for the auto attendant.
     language: Optional[str]
     #: Language code for the auto attendant.

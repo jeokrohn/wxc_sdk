@@ -1,7 +1,6 @@
 """
 Call forwarding API
 """
-import json
 from typing import Optional
 
 from .common import PersonSettingsApiChild

@@ -80,7 +80,7 @@ class TestScheduleList(TestWithLocations):
             details = pool.map(lambda schedule: self.api.telephony.schedules.details(**schedule.selector),
                                schedules)
             details = list(details)
-        # no tests: we actually only want to test if there are any issues with parsing existing schedules
+        print(f'Got details for {len(details)} schedules')
 
     def test_005_all_event_details(self):
         """

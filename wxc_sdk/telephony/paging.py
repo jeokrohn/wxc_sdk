@@ -2,32 +2,44 @@
 Paging group API
 
 """
-from ..api_child import ApiChild
+import json
 from collections.abc import Generator
-from ..base import ApiModel, to_camel
+from typing import Optional
+
 from pydantic import Field
-from typing import Optional, List, Union
+
+from ..api_child import ApiChild
+from ..base import ApiModel, to_camel
 from ..common import UserType
 
-__all__ = ['PagingApi', 'Paging']
+__all__ = ['PagingApi', 'Paging', 'PagingAgent']
 
 
-class Agent(ApiModel):
+class PagingAgent(ApiModel):
     #: Agents ID
-    agent_id: str = Field(alias='id')
+    agent_id: Optional[str] = Field(alias='id')
     #: Agents first name. Minimum length is 1. Maximum length is 30.
-    first_name: str
+    first_name: Optional[str]
     #: Agents last name. Minimum length is 1. Maximum length is 30.
-    last_name: str
+    last_name: Optional[str]
     #: Type of the person or workspace.
-    agent_type: UserType = Field(alias='type')
+    agent_type: Optional[UserType] = Field(alias='type')
     #: Agents phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is mandatory.
     phone_number: Optional[str]
     #: Agents extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
     extension: Optional[str]
 
-
-IdOrAgent = Union[str, Agent]
+    @classmethod
+    def create_update_exclude(cls) -> dict:
+        """
+        What to exclude in JSON for create and update
+        :meta private:
+        """
+        return {'first_name': True,
+                'last_name': True,
+                'agent_type': True,
+                'phone_number': True,
+                'extension': True}
 
 
 class Paging(ApiModel):
@@ -36,7 +48,7 @@ class Paging(ApiModel):
     #: Whether or not the paging group is enabled.
     enabled: Optional[bool]
     #: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
-    name: str
+    name: Optional[str]
     #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is
     #: mandatory.
     phone_number: Optional[str]
@@ -57,17 +69,60 @@ class Paging(ApiModel):
     #: ID.
     originator_caller_id_enabled: Optional[bool]
     #: An array of people and/or workspaces, who may originate pages to this paging group.
-    #: When creating a paging group then this is a list of agent IDs. The details() call returns detailed agent
-    #: information
-    originators: Optional[List[IdOrAgent]]
+    originators: Optional[list[PagingAgent]]
     #: People, including workspaces, that are added to paging group as paging call targets.
-    targets: Optional[List[IdOrAgent]]
+    targets: Optional[list[PagingAgent]]
     #: Name of location for paging group. Only present in list() response.
     #: When creating a paging group then this is a list of agent IDs. The details() call returns detailed agent
     #: information
     location_name: Optional[str]
     #: ID of location for paging group. Only present in list() response.
     location_id: Optional[str]
+
+    def create_or_update(self) -> str:
+        """
+        Get JSON for create or update call
+
+        :return: JSON
+        :rtype: str
+        """
+        data = json.loads(self.json(exclude={'paging_id': True,
+                                             'toll_free_number': True,
+                                             'language': True,
+                                             'originators': {'__all__': PagingAgent.create_update_exclude()},
+                                             'targets': {'__all__': PagingAgent.create_update_exclude()},
+                                             'location_name': True,
+                                             'location_id': True}))
+
+        # originators and targets are only ID lists
+        def to_id(key: str):
+            if data.get(key):
+                data[key] = [e['id'] for e in data[key]]
+
+        to_id('originators')
+        to_id('targets')
+        return json.dumps(data)
+
+    @staticmethod
+    def create(*, name: str, phone_number: str = None, extension: str = None) -> 'Paging':
+        """
+        Get minimal paging group settings that can be used to create a paging group by
+        calling :meth:`PagingApi.create` with these settings.
+
+        :param name: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
+        :type name: str
+        :param phone_number: Paging group phone number. Minimum length is 1. Maximum length is 23. 
+            Either phone_number or extension is mandatory.
+        :type phone_number: str
+        :param extension: Paging group extension. Minimum length is 2. Maximum length is 6. 
+            Either phone_number or extension is mandatory.
+        :type extension: str
+        :return: settings for :meth:`PagingApi.create` call
+        :rtype :class:`Paging`
+        """
+        if not any((phone_number, extension)):
+            raise ValueError('Either phone_number or extension is mandatory.')
+        return Paging(name=name, phone_number=phone_number, extension=extension)
 
 
 class PagingApi(ApiChild, base='telephony/config'):
@@ -114,10 +169,11 @@ class PagingApi(ApiChild, base='telephony/config'):
                       for i, (k, v) in enumerate(locals().items())
                       if i and v is not None and k != 'params')
         url = self._endpoint()
+        # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Paging, params=params, item_key='locationPaging')
         pass
 
-    def create(self, *, location_id: str, paging: Paging, org_id: str = None) -> str:
+    def create(self, *, location_id: str, settings: Paging, org_id: str = None) -> str:
         """
         Create a new Paging Group
         Create a new Paging Group for the given location.
@@ -131,17 +187,19 @@ class PagingApi(ApiChild, base='telephony/config'):
 
         :param location_id: Create the paging group for this location.
         :type location_id: str
-        :param paging: new paging group
-        :type paging: Paging
+        :param settings: new paging group
+        :type settings: Paging
         :param org_id: Create the paging group for this organization.
         :type org_id: str
         :return: ID of the newly created paging group.
         :rtype: str
         """
         params = org_id and {'orgId': org_id} or None
+        if settings.originators and settings.originator_caller_id_enabled is None:
+            raise TypeError('originator_caller_id_enabled required if originators are provided')
         url = self._endpoint(location_id=location_id)
-        paging_data = paging.json(exclude={'paging_id', 'location_name', 'location_id'})
-        data = self.post(url, data=paging_data, params=params)
+        data = settings.create_or_update()
+        data = self.post(url, data=data, params=params)
         return data['id']
 
     def delete_paging(self, *, location_id: str, paging_id: str, org_id: str = None):
@@ -207,11 +265,5 @@ class PagingApi(ApiChild, base='telephony/config'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id, paging_id=paging_id)
-        paging = update.copy(deep=True)
-        # for update originators and targets are just the IDs
-        if paging.originators is not None:
-            paging.originators = [o.agent_id if isinstance(o, Agent) else o for o in paging.originators]
-        if paging.targets is not None:
-            paging.targets = [t.agent_id if isinstance(t, Agent) else t for t in paging.targets]
-        paging_data = paging.json()
-        self.put(url, data=paging_data, params=params)
+        data = update.create_or_update()
+        self.put(url, data=data, params=params)

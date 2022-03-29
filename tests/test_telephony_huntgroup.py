@@ -7,6 +7,9 @@ from typing import ClassVar, List
 from wxc_sdk.types import *
 from .base import TestCaseWithLog, TestCaseWithUsers
 
+# number of huntgroups to create my create many test
+HG_MANY = 100
+
 
 class TestList(TestCaseWithLog):
 
@@ -31,7 +34,7 @@ class TestList(TestCaseWithLog):
             details = list(pool.map(
                 lambda hg: hapi.details(location_id=hg.location_id, huntgroup_id=hg.id),
                 hg_list))
-        print(f'Got details for {len(hg_list)} hunt groups')
+        print(f'Got details for {len(details)} hunt groups')
 
 
 class TestCreate(TestCaseWithUsers):
@@ -117,7 +120,6 @@ class TestCreate(TestCaseWithUsers):
         """
         Create large number of hunt groups and check pagination
         """
-        HG_NUMBER = 300
         # pick a random location
         target_location = random.choice(self.locations)
         print(f'Target location: {target_location.name}')
@@ -126,7 +128,7 @@ class TestCreate(TestCaseWithUsers):
 
         # Get names for new hunt groups
         hg_list = list(hapi.list(location_id=target_location.location_id))
-        to_create = max(0, HG_NUMBER - len(hg_list))
+        to_create = max(0, HG_MANY - len(hg_list))
 
         print(f'{len(hg_list)} existing hunt groups')
         queue_names = set(queue.name for queue in hg_list)
@@ -160,7 +162,7 @@ class TestCreate(TestCaseWithUsers):
             with ThreadPoolExecutor() as pool:
                 new_hg_ids = list(pool.map(lambda name: new_hg(hg_name=name),
                                            names))
-        print(f'Created {len(names)} call hunt groups.')
+        print(f'Created {len(new_hg_ids)} call hunt groups.')
         hg_list = list(hapi.list(location_id=target_location.location_id))
         print(f'Total number of hunt groups: {len(hg_list)}')
         queues_pag = list(hapi.list(location_id=target_location.location_id, max=50))

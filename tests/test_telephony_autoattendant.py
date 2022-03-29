@@ -29,6 +29,8 @@ class TestAutoAttendant(TestCaseWithLog):
         Get details of all auto attendants
         """
         aa_list = list(self.api.telephony.auto_attendant.list())
+        if not aa_list:
+            self.skipTest('No existing auto attendants')
         ata = self.api.telephony.auto_attendant
         with ThreadPoolExecutor() as pool:
             aa = aa_list[0]
@@ -110,4 +112,4 @@ class TestForwarding(TestCaseWithLog):
             forwarding_settings = list(pool.map(
                 lambda aa: ata.forwarding.settings(location_id=aa.location_id, feature_id=aa.auto_attendant_id),
                 aa_list))
-        print(f'Got forwarding settings for {len(aa_list)} auto attendants.')
+        print(f'Got forwarding settings for {len(forwarding_settings)} auto attendants.')

@@ -7,6 +7,9 @@ from typing import ClassVar, List
 from wxc_sdk.types import *
 from .base import TestCaseWithLog, TestCaseWithUsers
 
+# number of call queues to create by create many test
+CQ_MANY = 100
+
 
 class TestList(TestCaseWithLog):
 
@@ -30,7 +33,7 @@ class TestList(TestCaseWithLog):
             details = list(pool.map(
                 lambda q: atq.details(location_id=q.location_id, queue_id=q.id),
                 queues))
-        print(f'Got details for {len(queues)} call queues')
+        print(f'Got details for {len(details)} call queues')
 
 
 class TestCreate(TestCaseWithUsers):
@@ -120,7 +123,6 @@ class TestCreate(TestCaseWithUsers):
         """
         Create large number of call queues and check pagination
         """
-        CQ_NUMBER = 300
         # pick a random location
         target_location = random.choice(self.locations)
         print(f'Target location: {target_location.name}')
@@ -129,7 +131,7 @@ class TestCreate(TestCaseWithUsers):
 
         # Get names for new call queues
         queues = list(tcq.list(location_id=target_location.location_id))
-        to_create = max(0, CQ_NUMBER - len(queues))
+        to_create = max(0, CQ_MANY - len(queues))
 
         print(f'{len(queues)} existing queues')
         queue_names = set(queue.name for queue in queues)
@@ -138,7 +140,7 @@ class TestCreate(TestCaseWithUsers):
         names = [name for name, _ in zip(new_names, range(to_create))]
         print(f'got {len(names)} new names')
 
-        def new_queue(queue_name:str):
+        def new_queue(queue_name: str):
             """
             Create a new call queue with the given name
             :param queue_name:
@@ -162,9 +164,9 @@ class TestCreate(TestCaseWithUsers):
 
         if names:
             with ThreadPoolExecutor() as pool:
-                new_queues = list(pool.map(lambda name:new_queue(name),
+                new_queues = list(pool.map(lambda name: new_queue(name),
                                            names))
-        print(f'Created {len(names)} call queues.')
+        print(f'Created {len(new_queues)} call queues.')
         queues = list(tcq.list(location_id=target_location.location_id))
         print(f'Total number of queues: {len(queues)}')
         queues_pag = list(tcq.list(location_id=target_location.location_id, max=50))

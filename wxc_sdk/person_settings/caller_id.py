@@ -57,7 +57,7 @@ class CallerId(ApiModel):
     Caller id settings of a user
     """
     #: Allowed types for the selected field.
-    caller_id_types: List[CallerIdSelectedType] = Field(alias='types')
+    caller_id_types: list[CallerIdSelectedType] = Field(alias='types')
     #: Which type of outgoing Caller ID will be used.
     selected: CallerIdSelectedType
     #: Direct number which will be shown if DIRECT_LINE is selected.

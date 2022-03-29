@@ -1,5 +1,5 @@
 from collections.abc import Generator
-from typing import Optional, List, Literal
+from typing import Optional, Literal
 
 from pydantic import Field
 
@@ -20,7 +20,7 @@ class CallPickup(ApiModel):
     #: ID of location for call pickup.
     location_id: Optional[str]
     #: People, including workspaces, that are eligible to receive calls.
-    agents: Optional[List[PersonPlaceAgent]]
+    agents: Optional[list[PersonPlaceAgent]]
 
     def create_or_update(self) -> str:
         """

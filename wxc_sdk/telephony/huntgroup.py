@@ -1,5 +1,5 @@
 from collections.abc import Generator
-from typing import Optional, List
+from typing import Optional
 
 from .forwarding import ForwardingApi, FeatureSelector
 from .hg_and_cq import HGandCQ, Policy
@@ -94,7 +94,7 @@ class HuntGroup(HGandCQ):
     #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each
     #: number will reach the same greeting and each menu will function identically to the main number. The alternate
     #: numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
-    alternate_numbers: Optional[List[AlternateNumber]]
+    alternate_numbers: Optional[list[AlternateNumber]]
     #: Policy controlling how calls are routed to agents.
     call_policies: Optional[HGCallPolicies]
 

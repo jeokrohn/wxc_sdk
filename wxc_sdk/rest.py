@@ -8,18 +8,16 @@ import uuid
 from collections.abc import Generator
 from io import TextIOBase, StringIO
 from threading import Semaphore
-from typing import List, Union, Tuple, Type, Optional
+from typing import Union, Tuple, Type, Optional
 from urllib.parse import parse_qsl
-
 
 import backoff
 from pydantic import BaseModel, ValidationError, Field
 from requests import HTTPError, Response, Session
 from requests.adapters import HTTPAdapter
 
-
-from .tokens import Tokens
 from .base import ApiModel
+from .tokens import Tokens
 
 __all__ = ['SingleError', 'ErrorDetail', 'RestError', 'StrOrDict', 'RestSession', 'dump_response']
 
@@ -49,7 +47,7 @@ class ErrorDetail(ApiModel):
     """
     error_code: Optional[int] = Field(alias='errorCode')
     message: str  #: error message
-    errors: List[SingleError]  #: list of errors; typically has a single entry
+    errors: list[SingleError]  #: list of errors; typically has a single entry
     tracking_id: str  #: tracking ID of the request
 
     @property

@@ -3,7 +3,7 @@ Common data types
 """
 
 from enum import Enum
-from typing import Optional, List
+from typing import Optional
 
 from pydantic import Field
 
@@ -80,4 +80,4 @@ class PersonPlaceAgent(UserBase):
     #: Email of the person or workspace.
     email: Optional[str]
     #: List of phone numbers of the person or workspace.
-    numbers: Optional[List[UserNumber]]
+    numbers: Optional[list[UserNumber]]

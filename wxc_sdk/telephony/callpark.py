@@ -1,6 +1,6 @@
 from collections.abc import Generator
 from enum import Enum
-from typing import Optional, List, Literal
+from typing import Optional, Literal
 
 from pydantic import Field
 
@@ -68,7 +68,7 @@ class CallPark(ApiModel):
     #: Recall options that are added to call park.
     recall: Optional[RecallHuntGroup]
     #: People, including workspaces, that are eligible to receive calls.
-    agents: Optional[List[PersonPlaceAgent]]
+    agents: Optional[list[PersonPlaceAgent]]
 
     @staticmethod
     def default(*, name: str) -> 'CallPark':
@@ -91,7 +91,7 @@ class CallPark(ApiModel):
         :return: JSON
         :rtype: str
         """
-        return self.json(exclude={'call_park_id': True,
+        return self.json(exclude={'callpark_id': True,
                                   'location_name': True,
                                   'location_id': True,
                                   'recall': {'hunt_group_name': True},

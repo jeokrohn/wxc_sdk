@@ -22,6 +22,7 @@ class VoicemailTests(TestCaseWithUsers):
             details = list(pool.map(
                 lambda user: self.api.person_settings.voicemail.read(person_id=user.person_id),
                 self.users))
+        print(f'Got details for {len(details)} users')
 
     def test_002_configure(self):
         """

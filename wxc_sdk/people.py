@@ -15,7 +15,7 @@ import datetime
 import json
 from collections.abc import Generator
 from enum import Enum
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import Field
 
@@ -88,9 +88,9 @@ class Person(ApiModel):
     #: A unique identifier for the person.
     person_id: str = Field(alias='id')
     #: The email addresses of the person.
-    emails: List[str]
+    emails: list[str]
     #: Phone numbers for the person.
-    phone_numbers: Optional[List[PhoneNumber]]
+    phone_numbers: Optional[list[PhoneNumber]]
     #: The Webex Calling extension for the person. Only applies to a person with a Webex Calling license
     extension: Optional[str]
     #: The ID of the location for this person retrieved from BroadCloud.
@@ -109,9 +109,9 @@ class Person(ApiModel):
     #: The ID of the organization to which this person belongs.
     org_id: str
     #: An array of role strings representing the roles to which this person belongs.
-    roles: Optional[List[str]]
+    roles: Optional[list[str]]
     #: An array of license strings allocated to this person.
-    licenses: Optional[List[str]]
+    licenses: Optional[list[str]]
     #: The date and time the person was created.
     created: datetime.datetime
     #: The date and time the person was last changed.
@@ -124,9 +124,9 @@ class Person(ApiModel):
     #: user has disabled status sharing.
     last_activity: Optional[str]
     #: One or several site names where this user has a role (host or attendee)
-    site_urls: Optional[List[str]]
+    site_urls: Optional[list[str]]
     #: The users sip addresses
-    sip_addresses: Optional[List[SipAddress]]
+    sip_addresses: Optional[list[SipAddress]]
     #: The current presence status of the person. This will only be returned for people within your organization or
     #: an organization you manage. Presence information will not be shown if the authenticated user has disabled
     #: status sharing.
@@ -154,7 +154,7 @@ class Person(ApiModel):
         return webex_id_to_uuid(self.person_id)
 
     @property
-    def plus_e164(self) -> List[PhoneNumber]:
+    def plus_e164(self) -> list[PhoneNumber]:
         """
         List of +E.164 phone numbers of the user
         :return:
@@ -179,7 +179,7 @@ class PeopleApi(ApiChild, base='people'):
     People API
     """
 
-    def list(self, email: str = None, display_name: str = None, id_list: List[str] = None, org_id: str = None,
+    def list(self, email: str = None, display_name: str = None, id_list: list[str] = None, org_id: str = None,
              calling_data: bool = None, location_id: str = None, **params) -> Generator[Person, None, None]:
         """
         List people in your organization. For most users, either the email or display_name parameter is required. Admin
@@ -200,7 +200,7 @@ class PeopleApi(ApiChild, base='people'):
         :type display_name: str
         :param id_list: List people by ID. Accepts up to 85 person IDs. If this parameter is provided then presence
             information (such as the last_activity or status properties) will not be included in the response.
-        :type id_list: List[str]
+        :type id_list: list[str]
         :param org_id: List people in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
         :type org_id: str

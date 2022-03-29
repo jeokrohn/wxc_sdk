@@ -3,13 +3,13 @@ common base for Call Queues and Hunt Groups
 """
 from base64 import b64decode
 from enum import Enum
-from typing import Optional, List
+from typing import Optional
 
 from pydantic import Field
 
-from ..common import UserBase
-from ..base import ApiModel, webex_id_to_uuid
 from wxc_sdk.common import AlternateNumber
+from ..base import ApiModel, webex_id_to_uuid
+from ..common import UserBase
 
 __all__ = ['HGandCQ', 'Policy', 'Agent', 'AlternateNumberSettings']
 
@@ -27,7 +27,7 @@ class AlternateNumberSettings(ApiModel):
     #: ringing patterns set for Alternate Number.
     distinctive_ring_enabled: bool = Field(default=True)
     #: Specifies up to 10 numbers which can each have an overriden distinctive ring setting.
-    alternate_numbers: Optional[List[AlternateNumber]]
+    alternate_numbers: Optional[list[AlternateNumber]]
 
 
 class Agent(UserBase):
@@ -79,7 +79,7 @@ class HGandCQ(ApiModel):
     #: Time zone for the call queue.
     time_zone: Optional[str]
     #: People, including workspaces, that are eligible to receive calls.
-    agents: Optional[List[Agent]]
+    agents: Optional[list[Agent]]
 
     @property
     def cpapi_id(self):

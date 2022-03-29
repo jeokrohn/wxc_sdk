@@ -4,13 +4,13 @@ Webex Calling Call Control API and related data types
 import datetime
 from collections.abc import Generator
 from enum import Enum
-from typing import Optional, Literal, List, Union
+from typing import Optional, Literal, Union
 
 from pydantic import Field
 
-from ..webhook import WebHook
 from ..api_child import ApiChild
 from ..base import ApiModel
+from ..webhook import WebHook
 
 __all__ = ['CallType', 'TelephonyParty', 'RedirectReason', 'Redirection', 'Recall', 'RecordingState',
            'Personality', 'CallState', 'TelephonyCall', 'TelephonyEventData', 'TelephonyEvent', 'DialResponse',
@@ -155,7 +155,7 @@ class TelephonyCall(ApiModel):
     #: For example, if user B forwards an incoming call to user C, then a redirection entry is present for B's
     #: forwarding in C's incoming call details. Only present when there were previous redirections and the incoming
     #: call's state is alerting.
-    redirections: List[Redirection] = Field(default_factory=list)
+    redirections: list[Redirection] = Field(default_factory=list)
     #: The recall details for the incoming call. Only present when the incoming call is for a recall.
     recall: Optional[Recall]
     #: The call's current recording state. Only present when the user's call recording has been invoked during the

@@ -7,6 +7,7 @@ import http.server
 import json
 import logging
 import os
+import random
 import re
 import socketserver
 import threading
@@ -226,6 +227,7 @@ class TestCaseWithTokens(TestCase):
 
     def setUp(self) -> None:
         self.assertTrue(self.tokens and self.api, 'Failed to obtain tokens')
+        random.seed()
 
 
 def log_name(prefix: str, test_case_id: str) -> str:

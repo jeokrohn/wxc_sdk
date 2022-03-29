@@ -13,7 +13,7 @@ import datetime
 import json
 from collections.abc import Generator
 from enum import Enum
-from typing import Optional, List, Union
+from typing import Optional, Union
 
 from pydantic import Field
 
@@ -192,7 +192,7 @@ class Schedule(ApiModel):
     location_name: Optional[str]  # not returned by details()
     location_id: Optional[str]  # not returned by details()
     schedule_type: ScheduleType = Field(alias='type')
-    events: List[Event] = Field(default_factory=list)
+    events: list[Event] = Field(default_factory=list)
 
     class Config:
         json_encoders = {

@@ -3,7 +3,7 @@ Forwarding settings and API for call queues, hunt groups, and auto attendants
 """
 
 from enum import Enum
-from typing import Optional, List, Dict
+from typing import Optional, Dict
 
 from pydantic import Field, validator
 
@@ -60,7 +60,7 @@ class ForwardingSetting(ApiModel):
 class CallForwarding(ApiModel):
     always: ForwardingSetting
     selective: ForwardingSetting
-    rules: List[ForwardingRule]
+    rules: list[ForwardingRule]
 
     @staticmethod
     def default() -> 'CallForwarding':
@@ -132,7 +132,7 @@ class ForwardCallsTo(ApiModel):
     """
     List of numbers in custom number definition
     """
-    numbers: List[CallForwardingNumber] = Field(default_factory=list)
+    numbers: list[CallForwardingNumber] = Field(default_factory=list)
 
 
 class CustomNumbers(ApiModel):
@@ -141,10 +141,10 @@ class CustomNumbers(ApiModel):
     """
     private_number_enabled: bool = Field(default=False)
     unavailable_number_enabled: bool = Field(default=False)
-    numbers: Optional[List[str]]
+    numbers: Optional[list[str]]
 
     @validator('numbers', pre=True)
-    def numbers_validator(cls, numbers: List[str]):
+    def numbers_validator(cls, numbers: list[str]):
         """
         Platform returns NANP numbers w/o +1
         :param numbers:

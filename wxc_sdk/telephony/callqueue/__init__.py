@@ -128,7 +128,7 @@ class OverflowSetting(ApiModel):
     greeting: Optional[Greeting]
     #: Array of announcement file name strings to be played as overflow greetings. These files must be from the list
     #: of announcements files associated with this call queue.
-    audio_files: Optional[List[str]]
+    audio_files: Optional[list[str]]
 
     @staticmethod
     def default() -> 'OverflowSetting':
@@ -168,7 +168,7 @@ class WaitMessageSetting(ApiModel):
 class AudioSource(ApiModel):
     enabled: bool = Field(default=True)
     greeting: Greeting = Field(default=Greeting.default)
-    audio_files: List[str] = Field(default_factory=list)
+    audio_files: list[str] = Field(default_factory=list)
 
 
 class WelcomeMessageSetting(AudioSource):
@@ -253,7 +253,7 @@ class CallQueue(HGandCQ):
 
     @staticmethod
     def create(*, name: str,
-               agents: List[Agent],
+               agents: list[Agent],
                queue_size: int = None,
                enabled: bool = None,
                language_code: str = None,
