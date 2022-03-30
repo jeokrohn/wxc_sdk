@@ -1,6 +1,12 @@
 Release history
 ===============
 
+0.5.3
+-----
+-   fixed an issue with call park updates (agents need to be pased as list of IDs)
+-   fixed an issue in forwarding API: wrong URL path handling
+-   additional paging group tests
+
 0.5.2
 -----
 -   consistently use update() for all objects

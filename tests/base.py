@@ -17,7 +17,7 @@ import uuid
 import webbrowser
 from collections.abc import Iterable, Generator
 from dataclasses import dataclass
-from typing import Optional, Any, Union, List
+from typing import Optional, Any, Union
 from unittest import TestCase
 
 import requests
@@ -32,7 +32,7 @@ from wxc_sdk.tokens import Tokens
 
 log = logging.getLogger(__name__)
 
-__all__ = ['TestCaseWithTokens', 'TestCaseWithLog', 'gather', 'TestWithLocations', 'TestCaseWithUsers']
+__all__ = ['TestCaseWithTokens', 'TestCaseWithLog', 'gather', 'TestWithLocations', 'TestCaseWithUsers', 'get_tokens']
 
 
 def gather(mapping: Iterable[Any], return_exceptions: bool = False) -> Generator[Union[Any, Exception]]:

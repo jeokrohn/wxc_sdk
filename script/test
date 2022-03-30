@@ -42,13 +42,13 @@ cd "$(dirname "$0")/.."
 # Lint the source code
 if [ ${default} ] || [ ${lint} ]; then
     echo "==> Linting the source code"
-    flake8 --ignore=E501
+    flake8 --ignore=E501,F405,F403
 fi
 
 # Run the test suite
 if [ ${default} ] || [ ${tests} ]; then
     echo "==> Running the test suite (excluding slow tests)"
-    py.test -s -m "not slow"
+    export PYTHONPATH=../webex_calling_api; py.test -s -m "not slow"
 fi
 
 # Run the rate-limit tests

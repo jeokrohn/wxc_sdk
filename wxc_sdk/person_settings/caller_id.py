@@ -1,7 +1,8 @@
 from enum import Enum
-from typing import Optional, List
+from typing import Optional
 
 from pydantic import Field
+
 from .common import PersonSettingsApiChild
 from ..base import ApiModel, to_camel
 

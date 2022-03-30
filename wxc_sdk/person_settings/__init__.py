@@ -14,11 +14,26 @@ from ..rest import RestSession
 
 __all__ = ['PersonSettingsApi']
 
+# TODO: UC profile
+# TODO: schedules
+# TODO: schedule events
+# TODO: call waiting
+# TODO: monitoring
+# TODO: list of phone numbers
+# TODO: application settings
+# TODO: privacy settings
+# TODO: exec assistant settings
+# TODO: receptionist client settings
+# TODO: push to talk
+# TODO: hoteling
+# TODO: reset VM PIN
+# TODO: incoming permissions
+# TODO: outgoing permissions
 
 class PersonSettingsApi(ApiChild, base='people'):
     """
     API for all user level settings
-    
+
     :ivar caller_id: caller id API :class:`caller_id.CallerIdApi`
     :ivar call_recording: call recording API :class:`call_recording.CallRecordingApi`
     :ivar call_intercept: call intercept API :class:`call_intercept.CallInterceptApi`
@@ -26,7 +41,6 @@ class PersonSettingsApi(ApiChild, base='people'):
     :ivar barge: barge API :class:`barge.BargeApi`
     :ivar dnd: DND API :class:`dnd.DndApi`
     :ivar voicemail: Voicemail API: :class:`voicemail.VoicemailApi`
-        
     """
 
     def __init__(self, session: RestSession):

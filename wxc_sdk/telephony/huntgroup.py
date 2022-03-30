@@ -170,11 +170,11 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
         """
         Read the List of Hunt Groups
         List all calling Hunt Groups for the organization.
-        
-        Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to 
+
+        Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
         route to a whole group.
-        
-        Retrieving this list requires a full or read-only administrator auth token with a scope of 
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read.
 
         List all calling Hunt Groups for the organization.

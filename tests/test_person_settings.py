@@ -135,7 +135,7 @@ class TestConfigure(TestCaseWithUsers):
 
     def call_intercept_update_and_check(self, user: Person, settings: InterceptSetting):
         """
-        Update and verify call interceptsettings
+        Update and verify call intercept settings
         """
         print(f'setting: {settings}')
         self.api.person_settings.call_intercept.configure(person_id=user.person_id, intercept=settings)
@@ -151,10 +151,10 @@ class TestConfigure(TestCaseWithUsers):
 
         with self.call_intercept_user_context() as user:
             user: Person
-            intercept = InterceptSetting.default()
-            intercept.enabled = True
+            intercept = self.api.person_settings.call_intercept.read(person_id=user.person_id)
+            intercept.enabled = not intercept.enabled
             self.call_intercept_update_and_check(user=user, settings=intercept)
-            # TODO: add more tests
+
 
     def test_006_upload_intercept_greeting(self):
         """
@@ -253,4 +253,3 @@ class TestCallerIdConfigure(TestCaseWithUsers):
             ps.caller_id.configure(person_id=user.person_id, selected=CallerIdSelectedType.location_number)
             after = ps.caller_id.read(person_id=user.person_id)
             self.assertEqual(CallerIdSelectedType.location_number, after.selected)
-

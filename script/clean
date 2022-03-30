@@ -16,6 +16,10 @@ for i in ${@}; do
         deep_clean=true
         ;;
 
+        org)
+        org=true
+        ;;
+
         *)
         echo "Unknown argument: $i"
         exit 1
@@ -48,6 +52,11 @@ if [ -d "docs" ]; then
     echo "Cleaning the docs directories"
     rm -rf docs/_build/*
     rm -rf docs/apidoc/*
+fi
+
+if [ ${org} ]; then
+    echo "==> Cleaning up WxC org..."
+    tests/cleanup.py
 fi
 
 

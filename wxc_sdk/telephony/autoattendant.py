@@ -352,10 +352,10 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         """
         elete the designated Auto Attendant.
 
-        Auto attendants play customized prompts and provide callers with menu options for routing their calls through 
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
         your system.
-        
-        Deleting an auto attendant requires a full administrator auth token with a scope 
+
+        Deleting an auto attendant requires a full administrator auth token with a scope
         of spark-admin:telephony_config_write.
 
         :param location_id: Location from which to delete an auto attendant.

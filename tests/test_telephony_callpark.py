@@ -281,6 +281,8 @@ class TestUpdate(TestWithLocations):
                             settings=self.target)
         details = cpa.details(location_id=self.target.location_id,
                               callpark_id=new_id)
+        details.location_id = self.target.location_id
+        details.location_name = self.target.location_name
         self.assertEqual(self.target, details)
 
     @skip('Not implemented')

@@ -1,6 +1,6 @@
 from collections.abc import Generator
 from enum import Enum
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import Field
 
@@ -454,7 +454,7 @@ class CallQueueApi:
         """
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
         params = org_id and {'orgId': org_id} or None
-        self._session.delete(url=url, params=params)
+        self._session.rest_delete(url=url, params=params)
 
     def details(self, *, location_id: str, queue_id: str, org_id: str = None) -> CallQueue:
         """

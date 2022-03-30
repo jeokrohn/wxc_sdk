@@ -84,8 +84,7 @@ def observe_in_location(*, api: WebexSimpleApi, location: Location, holidays: Li
                         end_date=holiday.date,
                         all_day_enabled=True)
                   for holiday in holidays
-                  if holiday.date >= today
-                  and holiday.date.weekday() != 6]
+                  if holiday.date >= today and holiday.date.weekday() != 6]
 
         if not schedule:
             # create new schedule

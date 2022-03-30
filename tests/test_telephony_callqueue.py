@@ -10,6 +10,10 @@ from .base import TestCaseWithLog, TestCaseWithUsers
 # number of call queues to create by create many test
 CQ_MANY = 100
 
+def available_extensions(*, cq_list: list[CallQueue]):
+    extensions = set(cq.extension for cq in cq_list)
+    return (extension for i in range(1000)
+            if (extension := f'{8000 + i}') not in extensions)
 
 class TestList(TestCaseWithLog):
 
@@ -57,11 +61,11 @@ class TestCreate(TestCaseWithUsers):
 
         tcq = self.api.telephony.callqueue
         # pick available CQ name in location
-        queues = list(tcq.list(location_id=target_location.location_id))
-        queue_names = set(queue.name for queue in queues)
+        cq_list = list(tcq.list(location_id=target_location.location_id))
+        queue_names = set(queue.name for queue in cq_list)
         new_name = next(name for i in range(1000)
                         if (name := f'cq_{i:03}') not in queue_names)
-        extension = str(8000 + int(new_name[-3:]))
+        extension = next(available_extensions(cq_list=cq_list))
 
         # pick two calling users
         members = random.sample(self.users, 2)
@@ -88,14 +92,14 @@ class TestCreate(TestCaseWithUsers):
         can't be used in create() call.
         """
         tcq = self.api.telephony.callqueue
-        queues = list(tcq.list(name='cq_'))
-        if not queues:
+        cq_list = list(tcq.list(name='cq_'))
+        if not cq_list:
             self.skipTest('No queues cq_* found')
-        target_queue = random.choice(queues)
-        queue_names = set(queue.name for queue in queues)
+        target_queue = random.choice(cq_list)
+        queue_names = set(queue.name for queue in cq_list)
         new_name = next(name for i in range(1000)
                         if (name := f'cq_{i:03}') not in queue_names)
-        extension = str(8000 + int(new_name[-3:]))
+        extension = next(available_extensions(cq_list=cq_list))
 
         # prepare settings for new queue
         print(f'Creating copy of call queue "{target_queue.name}" in location "{target_queue.location_name}"'
@@ -130,23 +134,23 @@ class TestCreate(TestCaseWithUsers):
         tcq = self.api.telephony.callqueue
 
         # Get names for new call queues
-        queues = list(tcq.list(location_id=target_location.location_id))
-        to_create = max(0, CQ_MANY - len(queues))
+        cq_list = list(tcq.list(location_id=target_location.location_id))
+        to_create = max(0, CQ_MANY - len(cq_list))
 
-        print(f'{len(queues)} existing queues')
-        queue_names = set(queue.name for queue in queues)
+        print(f'{len(cq_list)} existing queues')
+        queue_names = set(queue.name for queue in cq_list)
         new_names = (name for i in range(1000)
                      if (name := f'many_{i:03}') not in queue_names)
         names = [name for name, _ in zip(new_names, range(to_create))]
         print(f'got {len(names)} new names')
+        extensions = available_extensions(cq_list=cq_list)
 
-        def new_queue(queue_name: str):
+        def new_queue(queue_name: str, extension: str):
             """
             Create a new call queue with the given name
             :param queue_name:
             :return:
             """
-            extension = str(7000 + int(queue_name[-3:]))
             # pick two calling users
             members = random.sample(self.users, 2)
 
@@ -164,14 +168,14 @@ class TestCreate(TestCaseWithUsers):
 
         if names:
             with ThreadPoolExecutor() as pool:
-                new_queues = list(pool.map(lambda name: new_queue(name),
+                new_queues = list(pool.map(lambda name: new_queue(name, extension=next(extensions)),
                                            names))
         print(f'Created {len(new_queues)} call queues.')
-        queues = list(tcq.list(location_id=target_location.location_id))
-        print(f'Total number of queues: {len(queues)}')
+        cq_list = list(tcq.list(location_id=target_location.location_id))
+        print(f'Total number of queues: {len(cq_list)}')
         queues_pag = list(tcq.list(location_id=target_location.location_id, max=50))
         print(f'Total number of queues read with pagination: {len(queues_pag)}')
-        self.assertEqual(len(queues), len(queues_pag))
+        self.assertEqual(len(cq_list), len(queues_pag))
 
 
 class TestUpdate(TestCaseWithLog):
@@ -265,7 +269,7 @@ class TestUpdate(TestCaseWithLog):
         with self.random_queue() as target:
             target: CallQueue
 
-            print(f'Toggle enable...')
+            print('Toggle enable...')
             update = CallQueue(enabled=not target.enabled)
             self.api.telephony.callqueue.update(location_id=target.location_id,
                                                 queue_id=target.id,

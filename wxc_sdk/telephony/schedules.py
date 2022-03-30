@@ -504,14 +504,15 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
                      event: Event, event_id: str = None, org_id: str = None) -> str:
         """
         Update a Schedule Event
+
         Update the designated Schedule Event.
-        
-        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for 
+
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
         example auto attendants, can perform a specific action.
-        
-        Updating a schedule event requires a full administrator auth token with a scope of 
+
+        Updating a schedule event requires a full administrator auth token with a scope of
         spark-admin:telephony_config_write.
-        
+
         NOTE: The Schedule Event ID will change upon modification of the Schedule event name.
 
         :param location_id: Location in which this schedule event exists.

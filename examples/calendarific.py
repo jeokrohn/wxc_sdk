@@ -53,25 +53,25 @@ class CalendarifiyApi:
         This provides a list of holidays based on the parameters passed to it.
         https://calendarific.com/api-documentation
 
-        :param country: The country parameter must be in the iso-3166 format as specified in the document here. To 
+        :param country: The country parameter must be in the iso-3166 format as specified in the document here. To
             view a list of countries and regions we support, visit our list of supported countries.
         :type country: str
-        :param year: The year you want to return the holidays. We currently support both historical and future years 
+        :param year: The year you want to return the holidays. We currently support both historical and future years
             until 2049. The year must be specified as a number eg, 2019
         :type year: int
-        :param day: Limits the number of holidays to a particular day. Must be passed as the numeric value of the 
+        :param day: Limits the number of holidays to a particular day. Must be passed as the numeric value of the
             day [1..31].
         :type day: int
-        :param month: Limits the number of holidays to a particular month. Must be passed as the numeric value of the 
+        :param month: Limits the number of holidays to a particular month. Must be passed as the numeric value of the
             month [1..12].
         :type month: int
-        :param location: We support multiple counties, states and regions for all the countries we support. This 
+        :param location: We support multiple counties, states and regions for all the countries we support. This
             optional parameter allows you to limit the holidays to a particular state or region. The value of field
             is iso-3166 format of the state. View a list of supported countries and states. An example is, for New York
             state in the United States, it would be us-nyc
         :type location: str
-        :param holiday_type: We support multiple types of holidays and observances. This parameter allows users to 
-            return only a particular type of holiday or event. By default, the API returns all holidays. Below is the 
+        :param holiday_type: We support multiple types of holidays and observances. This parameter allows users to
+            return only a particular type of holiday or event. By default, the API returns all holidays. Below is the
             list of holiday types supported by the API and this is how to reference them.
             * national - Returns public, federal and bank holidays
             * local - Returns local, regional and state holidays

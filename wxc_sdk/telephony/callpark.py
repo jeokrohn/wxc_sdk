@@ -1,3 +1,4 @@
+import json
 from collections.abc import Generator
 from enum import Enum
 from typing import Optional, Literal
@@ -91,13 +92,14 @@ class CallPark(ApiModel):
         :return: JSON
         :rtype: str
         """
-        return self.json(exclude={'callpark_id': True,
-                                  'location_name': True,
-                                  'location_id': True,
-                                  'recall': {'hunt_group_name': True},
-                                  'agents': {'__all__': {'display_name': True,
-                                                         'email': True,
-                                                         'numbers': True}}})
+        data = json.loads(self.json(exclude={'callpark_id': True,
+                                             'location_name': True,
+                                             'location_id': True,
+                                             'recall': {'hunt_group_name': True}}))
+        # agents need to be passed as list of IDs only
+        if data.get('agents'):
+            data['agents'] = [a['id'] for a in data['agents']]
+        return json.dumps(data)
 
 
 class CallParkSettings(ApiModel):

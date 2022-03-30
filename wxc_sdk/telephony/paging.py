@@ -111,10 +111,10 @@ class Paging(ApiModel):
 
         :param name: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
         :type name: str
-        :param phone_number: Paging group phone number. Minimum length is 1. Maximum length is 23. 
+        :param phone_number: Paging group phone number. Minimum length is 1. Maximum length is 23.
             Either phone_number or extension is mandatory.
         :type phone_number: str
-        :param extension: Paging group extension. Minimum length is 2. Maximum length is 6. 
+        :param extension: Paging group extension. Minimum length is 2. Maximum length is 6.
             Either phone_number or extension is mandatory.
         :type extension: str
         :return: settings for :meth:`PagingApi.create` call

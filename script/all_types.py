@@ -82,7 +82,7 @@ def main():
     for name in combined_all:
         entry = f"'{name}', "
         if len(line) + len(entry) >= max_line:
-            print(line, file=source)
+            print(line.rstrip(), file=source)
             line = ' ' * 11
 
         line = f'{line}{entry}'

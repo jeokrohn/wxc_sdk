@@ -1,5 +1,3 @@
-# TODO: test cases
-
 import json
 import random
 from concurrent.futures import ThreadPoolExecutor
@@ -7,13 +5,18 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from itertools import groupby
 from typing import ClassVar
-from unittest import skip
 
 from wxc_sdk.types import *
 from .base import TestCaseWithLog, TestCaseWithUsers
 
 # number of paging groups to create in create many test
 PG_MANY = 100
+
+
+def available_extensions(*, pg_list: list[Paging]):
+    extensions = set(hg.extension for hg in pg_list)
+    return (extension for i in range(1000)
+            if (extension := f'{5000 + i}') not in extensions)
 
 
 class TestPaging(TestCaseWithLog):
@@ -68,7 +71,7 @@ class TestCreate(TestCaseWithUsers):
         pg_names = set(pg.name for pg in pg_list)
         new_name = next(name for i in range(1000)
                         if (name := f'pg_{i:03}') not in pg_names)
-        extension = str(5000 + int(new_name[-3:]))
+        extension = next(available_extensions(pg_list=pg_list))
 
         # settings for new paging group
         settings = Paging.create(name=new_name, extension=extension)
@@ -103,14 +106,14 @@ class TestCreate(TestCaseWithUsers):
                      if (name := f'many_{i:03}') not in pg_names)
         names = [name for name, _ in zip(new_names, range(to_create))]
         print(f'got {len(names)} new names')
+        extensions = available_extensions(pg_list=pg_list)
 
-        def new_pg(*, pg_name: str):
+        def new_pg(*, pg_name: str, extension: str):
             """
             Create a new paging group with the given name
             :param pg_name:
             :return:
             """
-            extension = str(5000 + int(pg_name[-3:]))
             # pick two targets and originators
             random.shuffle(self.users)
             if len(self.users) < 4:
@@ -130,9 +133,9 @@ class TestCreate(TestCaseWithUsers):
 
         if names:
             with ThreadPoolExecutor() as pool:
-                new_hg_ids = list(pool.map(lambda name: new_pg(pg_name=name),
-                                           names))
-        print(f'Created {len(new_hg_ids)} paging groups.')
+                list(pool.map(lambda name: new_pg(pg_name=name, extension=next(extensions)),
+                              names))
+        print(f'Created {len(names)} paging groups.')
         pg_list = list(pgapi.list(location_id=target_location.location_id))
         print(f'Total number of paging groups: {len(pg_list)}')
         queues_pag = list(pgapi.list(location_id=target_location.location_id, max=50))
@@ -155,6 +158,7 @@ class TestUpdate(TestCaseWithUsers):
         cls.locations = [pg for pg in cls.api.locations.list()
                          if pg.name.startswith('pg_') or pg.name.startswith('many_')]
         cls.pg_list = list(cls.api.telephony.paging.list())
+
         # paging groups grouped by location
         cls.pg_by_location = {location_id: list(pgi)
                               for location_id, pgi in groupby(sorted(cls.pg_list,
@@ -172,11 +176,11 @@ class TestUpdate(TestCaseWithUsers):
         """
         pg_names = set(pg.name for pg in self.pg_by_location[location_id])
         new_name = next(name for i in range(1000)
-                        if (name := f'hg_{i:03}') not in pg_names)
+                        if (name := f'pg_{i:03}') not in pg_names)
         return new_name
 
     @contextmanager
-    def random_pg(self) -> HuntGroup:
+    def random_pg(self) -> Paging:
         target = random.choice(self.pg_list)
         details = self.api.telephony.paging.details(location_id=target.location_id,
                                                     paging_id=target.paging_id)
@@ -186,151 +190,214 @@ class TestUpdate(TestCaseWithUsers):
         try:
             yield details
         finally:
-            self.api.telephony.paging.update(location_id=target.location_id,
-                                             huntgroup_id=target.id, update=details)
+            # try to restore original settings
+            self.api.telephony.paging.update(location_id=details.location_id,
+                                             paging_id=details.paging_id, update=details)
+            restored = self.api.telephony.paging.details(location_id=details.location_id,
+                                                         paging_id=details.paging_id)
+            restored.location_id = details.location_id
+            restored.location_name = details.location_name
+            self.assertEqual(details, restored)
 
-    @skip('change to paging group')
     def test_001_update_extension(self):
         """
-        try to change the extension of a queue
+        try to change the extension of a paging group
         """
         with self.random_pg() as target:
-            target: HuntGroup
-            extensions = set(q.extension for q in self.hg_list
-                             if q.extension)
+            target: Paging
+            extensions = set(pg.extension for pg in self.pg_list
+                             if pg.extension and pg.location_id == target.location_id)
             new_extension = next(ext for i in range(1000)
-                                 if (ext := f'{6000 + i:03}') not in extensions)
+                                 if (ext := f'{5000 + i:03}') not in extensions)
 
             print(f'changing extension to {new_extension}...')
-            update = HuntGroup(extension=new_extension)
-            self.api.telephony.huntgroup.update(location_id=target.location_id,
-                                                huntgroup_id=target.id,
-                                                update=update)
-            details = self.api.telephony.huntgroup.details(location_id=target.location_id,
-                                                           huntgroup_id=target.id)
+            update = Paging(extension=new_extension)
+            self.api.telephony.paging.update(location_id=target.location_id,
+                                             paging_id=target.paging_id,
+                                             update=update)
+            details = self.api.telephony.paging.details(location_id=target.location_id,
+                                                        paging_id=target.paging_id)
         self.assertEqual(new_extension, details.extension)
         details.extension = target.extension
         details.location_id = target.location_id
         details.location_name = target.location_name
         self.assertEqual(target, details)
 
-    @skip('change to paging group')
     def test_002_update_name(self):
         """
-        try to change the name of a hunt group
+        try to change the name of a paging group
         """
         with self.random_pg() as target:
-            target: HuntGroup
-            new_name = self.get_new_name()
+            target: Paging
+            new_name = self.get_new_name(location_id=target.location_id)
 
             print(f'Changing name to "{new_name}"...')
-            update = HuntGroup(name=new_name)
-            self.api.telephony.huntgroup.update(location_id=target.location_id,
-                                                huntgroup_id=target.id,
-                                                update=update)
-            details = self.api.telephony.huntgroup.details(location_id=target.location_id,
-                                                           huntgroup_id=target.id)
+            update = Paging(name=new_name)
+            self.api.telephony.paging.update(location_id=target.location_id,
+                                             paging_id=target.paging_id,
+                                             update=update)
+            details = self.api.telephony.paging.details(location_id=target.location_id,
+                                                        paging_id=target.paging_id)
         self.assertEqual(new_name, details.name)
         details.name = target.name
         details.location_id = target.location_id
         details.location_name = target.location_name
         self.assertEqual(target, details)
 
-    @skip('change to paging group')
     def test_003_enable(self):
         """
-        Disable a hunt group
+        Disable a paging group
         """
         with self.random_pg() as target:
-            target: HuntGroup
+            target: Paging
 
-            print(f'Toggle enable...')
-            update = HuntGroup(enabled=not target.enabled)
-            self.api.telephony.huntgroup.update(location_id=target.location_id,
-                                                huntgroup_id=target.id,
-                                                update=update)
-            details = self.api.telephony.huntgroup.details(location_id=target.location_id,
-                                                           huntgroup_id=target.id)
-        self.assertEqual(not target.enabled, details.enabled)
+            print('Toggle enable...')
+            update = Paging(enabled=not target.enabled)
+            self.api.telephony.paging.update(location_id=target.location_id,
+                                             paging_id=target.paging_id,
+                                             update=update)
+            details = self.api.telephony.paging.details(location_id=target.location_id,
+                                                        paging_id=target.paging_id)
+        self.assertEqual(update.enabled, details.enabled)
         details.enabled = target.enabled
         details.location_id = target.location_id
         details.location_name = target.location_name
         self.assertEqual(target, details)
 
-    @skip('change to paging group')
-    def test_004_call_policy_policy(self):
+    def test_004_language_code(self):
         """
-        Change call policy
+        Change language
         """
         with self.random_pg() as target:
-            target: HuntGroup
+            target: Paging
 
-            policy = target.call_policies.policy
-            other_policies = [p for p in Policy if p != policy]
-            new_policy: Policy = random.choice(other_policies)
-            print(f'Switch policy from {policy.value} to {new_policy.value}')
-            update = HuntGroup(call_policies=HGCallPolicies(policy=new_policy))
-            self.api.telephony.huntgroup.update(location_id=target.location_id,
-                                                huntgroup_id=target.id,
-                                                update=update)
-            details = self.api.telephony.huntgroup.details(location_id=target.location_id,
-                                                           huntgroup_id=target.id)
-        self.assertEqual(new_policy, details.call_policies.policy)
-        details.call_policies.policy = policy
+            update = Paging(language_code='de_de' if target.language_code == 'en_us' else 'en_us')
+            print(f'Change language code from {target.language_code} ({target.language}) to {update.language_code}')
+            self.api.telephony.paging.update(location_id=target.location_id,
+                                             paging_id=target.paging_id,
+                                             update=update)
+            details = self.api.telephony.paging.details(location_id=target.location_id,
+                                                        paging_id=target.paging_id)
+            print(f'updated language code: {details.language_code} ({details.language})')
+        self.assertEqual(update.language_code, details.language_code)
+        details.language_code = target.language_code
+        details.language = target.language
         details.location_id = target.location_id
         details.location_name = target.location_name
         self.assertEqual(target, details)
 
-    @skip('change to paging group')
-    def test_005_distinctive_ring(self):
+    def test_005_first_name(self):
         """
-        Change distinctive ring
+        Change first name
         """
         with self.random_pg() as target:
-            target: HuntGroup
+            target: Paging
 
-            distinctive_ring = target.alternate_number_settings.distinctive_ring_enabled
-            print(f'Switch distinctive ring from {distinctive_ring} to {not distinctive_ring}')
-            update = HuntGroup(
-                alternate_number_settings=AlternateNumberSettings(distinctive_ring_enabled=not distinctive_ring))
-            self.api.telephony.huntgroup.update(location_id=target.location_id,
-                                                huntgroup_id=target.id,
-                                                update=update)
-            details = self.api.telephony.huntgroup.details(location_id=target.location_id,
-                                                           huntgroup_id=target.id)
-        self.assertEqual(not distinctive_ring, details.alternate_number_settings.distinctive_ring_enabled)
-        details.alternate_number_settings.distinctive_ring_enabled = distinctive_ring
+            update = Paging(first_name=f'first{random.randint(0, 999):03}')
+            print(f'Change first name from "{target.first_name}" to "{update.first_name}"')
+            self.api.telephony.paging.update(location_id=target.location_id,
+                                             paging_id=target.paging_id,
+                                             update=update)
+            details = self.api.telephony.paging.details(location_id=target.location_id,
+                                                        paging_id=target.paging_id)
+        self.assertEqual(update.first_name, details.first_name)
+        details.first_name = target.first_name
         details.location_id = target.location_id
         details.location_name = target.location_name
         self.assertEqual(target, details)
 
-    @skip('change to paging group')
-    def test_060_add_agent(self):
+    def test_006_last_name(self):
         """
-        Add an agent to a hunt group
+        Change last name
         """
         with self.random_pg() as target:
-            target: HuntGroup
-            agents_in_target = set(agent.agent_id for agent in target.agents)
-            available_agents = [user for user in self.users
-                                if user.person_id not in agents_in_target]
-            if not available_agents:
-                self.skipTest('No available agents')
-            new_agent = random.choice(available_agents)
+            target: Paging
 
-            print(f'Adding agent "{new_agent.display_name}"')
-            new_agents = target.agents + [Agent(agent_id=new_agent.person_id)]
+            update = Paging(last_name=f'last{random.randint(0, 999):03}')
+            print(f'Change last name from "{target.last_name}" to "{update.last_name}"')
+            self.api.telephony.paging.update(location_id=target.location_id,
+                                             paging_id=target.paging_id,
+                                             update=update)
+            details = self.api.telephony.paging.details(location_id=target.location_id,
+                                                        paging_id=target.paging_id)
+        self.assertEqual(update.last_name, details.last_name)
+        details.last_name = target.last_name
+        details.location_id = target.location_id
+        details.location_name = target.location_name
+        self.assertEqual(target, details)
 
-            update = HuntGroup(agents=new_agents)
-            self.api.telephony.huntgroup.update(location_id=target.location_id,
-                                                huntgroup_id=target.id,
-                                                update=update)
-            details = self.api.telephony.huntgroup.details(location_id=target.location_id,
-                                                           huntgroup_id=target.id)
-        new_agent_ids = set(agent.agent_id for agent in new_agents)
-        agent_ids = set(agent.agent_id for agent in details.agents)
-        self.assertEqual(new_agent_ids, agent_ids)
-        details.agents = target.agents
+    def test_007_originator_caller_id_enabled(self):
+        """
+        toggle originator_caller_id_enabled
+        """
+        with self.random_pg() as target:
+            target: Paging
+
+            update = Paging(originator_caller_id_enabled=not target.originator_caller_id_enabled)
+            self.api.telephony.paging.update(location_id=target.location_id,
+                                             paging_id=target.paging_id,
+                                             update=update)
+            details = self.api.telephony.paging.details(location_id=target.location_id,
+                                                        paging_id=target.paging_id)
+        self.assertEqual(update.originator_caller_id_enabled, details.originator_caller_id_enabled)
+        details.originator_caller_id_enabled = target.originator_caller_id_enabled
+        details.location_id = target.location_id
+        details.location_name = target.location_name
+        self.assertEqual(target, details)
+
+    def available_users(self, *, pg: Paging) -> list[Person]:
+        """
+        users not ued in originators nor targets
+        :param pg: paging group
+        :return: list of users
+        """
+        used = set(agent.agent_id for agent in pg.originators).union(agent.agent_id for agent in pg.targets)
+        return [user for user in self.users if user.person_id not in used]
+
+    def test_008_add_originator(self):
+        """
+        add originator
+        """
+        with self.random_pg() as target:
+            target: Paging
+            users = self.available_users(pg=target)
+            if not users:
+                self.skipTest('No users available to add as originator')
+            new_originator = random.choice(users)
+            update = Paging(originators=(target.originators or []) + [PagingAgent(agent_id=new_originator.person_id)])
+            self.api.telephony.paging.update(location_id=target.location_id,
+                                             paging_id=target.paging_id,
+                                             update=update)
+            details = self.api.telephony.paging.details(location_id=target.location_id,
+                                                        paging_id=target.paging_id)
+        # order or originators not necessarily the same as in update, but the set of agent ids should be identical
+        self.assertEqual(set(a.agent_id for a in update.originators),
+                         set(a.agent_id for a in details.originators))
+        details.originators = target.originators
+        details.location_id = target.location_id
+        details.location_name = target.location_name
+        self.assertEqual(target, details)
+
+    def test_009_add_target(self):
+        """
+        add target
+        """
+        with self.random_pg() as target:
+            target: Paging
+            users = self.available_users(pg=target)
+            if not users:
+                self.skipTest('No users available to add as originator')
+            new_target = random.choice(users)
+            update = Paging(targets=(target.targets or []) + [PagingAgent(agent_id=new_target.person_id)])
+            self.api.telephony.paging.update(location_id=target.location_id,
+                                             paging_id=target.paging_id,
+                                             update=update)
+            details = self.api.telephony.paging.details(location_id=target.location_id,
+                                                        paging_id=target.paging_id)
+        # order or targets not necessarily the same as in update, but the set of agent ids should be identical
+        self.assertEqual(set(a.agent_id for a in update.targets),
+                         set(a.agent_id for a in details.targets))
+        details.targets = target.targets
         details.location_id = target.location_id
         details.location_name = target.location_name
         self.assertEqual(target, details)

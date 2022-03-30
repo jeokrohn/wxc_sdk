@@ -221,7 +221,7 @@ class ForwardingApi:
         :param path:
         :return:
         """
-        path = path and f'/path' or ''
+        path = path and f'/{path}' or ''
         ep = self._session.ep(path=f'telephony/config/locations/{location_id}/{self._feature.value}/'
                                    f'{feature_id}/callForwarding{path}')
         return ep
@@ -302,7 +302,7 @@ class ForwardingApi:
         :return: forwarding rule id
         :rtype; str
         """
-        url = self._endpoint(location_id=location_id, feature_id=feature_id, path=f'selectiveRules')
+        url = self._endpoint(location_id=location_id, feature_id=feature_id, path='selectiveRules')
         body = forwarding_rule.dict()
         params = org_id and {'orgId': org_id} or None
         data = self._session.rest_post(url=url, json=body, params=params)
@@ -347,7 +347,7 @@ class ForwardingApi:
         forwarding settings.
 
         NOTE: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
-        
+
         :param location_id: Location in which the feature exists.
         :type location_id: str
         :param feature_id: Update settings for a rule for this feature.
@@ -358,7 +358,7 @@ class ForwardingApi:
         :type forwarding_rule: :class:`ForwardingRuleDetails`
         :param org_id: Update feature rule settings for this organization.
         :type org_id: str
-        :return: new call forwarding rule id 
+        :return: new call forwarding rule id
         :rtype: str
         """
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path=f'selectiveRules/{rule_id}')

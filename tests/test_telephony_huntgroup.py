@@ -11,6 +11,12 @@ from .base import TestCaseWithLog, TestCaseWithUsers
 HG_MANY = 100
 
 
+def available_extensions(*, hg_list: list[HuntGroup]):
+    extensions = set(hg.extension for hg in hg_list)
+    return (extension for i in range(1000)
+            if (extension := f'{6000 + i}') not in extensions)
+
+
 class TestList(TestCaseWithLog):
 
     def test_001_list_all(self):
@@ -58,11 +64,11 @@ class TestCreate(TestCaseWithUsers):
 
         hapi = self.api.telephony.huntgroup
         # pick available HG name in location
-        hgs = list(hapi.list(location_id=target_location.location_id))
-        hg_names = set(hg.name for hg in hgs)
+        hg_list = list(hapi.list(location_id=target_location.location_id))
+        hg_names = set(hg.name for hg in hg_list)
         new_name = next(name for i in range(1000)
                         if (name := f'hg_{i:03}') not in hg_names)
-        extension = str(6000 + int(new_name[-3:]))
+        extension = next(available_extensions(hg_list=hg_list))
 
         # pick two calling users
         members = random.sample(self.users, 2)
@@ -87,17 +93,22 @@ class TestCreate(TestCaseWithUsers):
         can't be used in create() call.
         """
         hapi = self.api.telephony.huntgroup
-        hg_list = list(hapi.list(name='hg_'))
-        if not hg_list:
-            self.skipTest('No hunr groups hg_* found')
-        target_hg = random.choice(hg_list)
+        hg_list = list(hapi.list())
+        candidates = [hg for hg in hg_list
+                      if hg.name.startswith('hg_')]
+        if not candidates:
+            self.skipTest('No hunt groups hg_* found')
+        target_hg = random.choice(candidates)
+        # reduce list to hgs in same location
+        hg_list = [hg for hg in hg_list
+                   if hg.location_id == target_hg.location_id]
         hg_names = set(hg.name for hg in hg_list)
         new_name = next(name for i in range(1000)
                         if (name := f'hg_{i:03}') not in hg_names)
-        extension = str(6000 + int(new_name[-3:]))
+        extension = next(available_extensions(hg_list=hg_list))
 
         # prepare settings for new hg
-        print(f'Creating copy of hunt group "{target_hg.name}" in location "{target_hg.location_name}"'
+        print(f'Creating copy of hunt group "{target_hg.name}" in location "{target_hg.location_name}" '
               f'as hunt group "{new_name}" ({extension})')
         target_hg_details = hapi.details(location_id=target_hg.location_id, huntgroup_id=target_hg.id)
         settings = target_hg_details.copy(deep=True)
@@ -131,19 +142,19 @@ class TestCreate(TestCaseWithUsers):
         to_create = max(0, HG_MANY - len(hg_list))
 
         print(f'{len(hg_list)} existing hunt groups')
-        queue_names = set(queue.name for queue in hg_list)
+        hg_names = set(hg.name for hg in hg_list)
         new_names = (name for i in range(1000)
-                     if (name := f'many_{i:03}') not in queue_names)
+                     if (name := f'many_{i:03}') not in hg_names)
         names = [name for name, _ in zip(new_names, range(to_create))]
         print(f'got {len(names)} new names')
+        extensions = available_extensions(hg_list=hg_list)
 
-        def new_hg(*, hg_name: str):
+        def new_hg(*, hg_name: str, extension: str):
             """
             Create a new call hunt groups with the given name
             :param hg_name:
             :return:
             """
-            extension = str(6000 + int(hg_name[-3:]))
             # pick two calling users
             members = random.sample(self.users, 2)
 
@@ -160,9 +171,9 @@ class TestCreate(TestCaseWithUsers):
 
         if names:
             with ThreadPoolExecutor() as pool:
-                new_hg_ids = list(pool.map(lambda name: new_hg(hg_name=name),
-                                           names))
-        print(f'Created {len(new_hg_ids)} call hunt groups.')
+                list(pool.map(lambda name: new_hg(hg_name=name, extension=next(extensions)),
+                              names))
+        print(f'Created {len(names)} call hunt groups.')
         hg_list = list(hapi.list(location_id=target_location.location_id))
         print(f'Total number of hunt groups: {len(hg_list)}')
         queues_pag = list(hapi.list(location_id=target_location.location_id, max=50))
@@ -179,12 +190,13 @@ class TestUpdate(TestCaseWithUsers):
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
-        cls.hg_list = list(cls.api.telephony.huntgroup.list(name='hg_'))
+        cls.hg_list = [hg for hg in cls.api.telephony.huntgroup.list()
+                       if hg.name.startswith('hg_') or hg.name.startswith('many_')]
 
     def setUp(self) -> None:
         super().setUp()
         if not self.hg_list:
-            self.skipTest('No hunt groups hg_*')
+            self.skipTest('No target hunt groups')
 
     def get_new_name(self) -> str:
         """
@@ -215,10 +227,10 @@ class TestUpdate(TestCaseWithUsers):
         """
         with self.random_hg() as target:
             target: HuntGroup
-            extensions = set(q.extension for q in self.hg_list
-                             if q.extension)
-            new_extension = next(ext for i in range(1000)
-                                 if (ext := f'{6000 + i:03}') not in extensions)
+            # get new extension based on extensions already assigned to HGs in location
+            hgs_in_location = [hg for hg in self.hg_list
+                               if hg.location_id == target.location_id]
+            new_extension = next(available_extensions(hg_list=hgs_in_location))
 
             print(f'changing extension to {new_extension}...')
             update = HuntGroup(extension=new_extension)
@@ -261,7 +273,7 @@ class TestUpdate(TestCaseWithUsers):
         with self.random_hg() as target:
             target: HuntGroup
 
-            print(f'Toggle enable...')
+            print('Toggle enable...')
             update = HuntGroup(enabled=not target.enabled)
             self.api.telephony.huntgroup.update(location_id=target.location_id,
                                                 huntgroup_id=target.id,
