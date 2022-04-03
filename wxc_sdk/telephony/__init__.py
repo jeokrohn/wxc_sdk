@@ -22,7 +22,7 @@ class TelephonyApi(ApiChild, base='telephony'):
 
     :ivar auto_attendant: :class:`autoattendant.AutoAttendantApi`
     :ivar calls: :class:`calls.CallsApi`
-    :ivar schedules: :class:`schedules.ScheduleApi`
+    :ivar schedules: :class:`wxc_sdk.common.schedules.ScheduleApi`
     :ivar paging: :class:`paging.PagingApi`
     :ivar huntgroup: :class:`huntgroup.HuntGroupApi`
     :ivar callqueue: :class:`callqueue.CallQueueApi`

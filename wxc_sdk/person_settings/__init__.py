@@ -50,6 +50,7 @@ class PersonSettingsApi(ApiChild, base='people'):
     :ivar permissions_out: outgoing permission settings API: :class:`permissions_out.OutgoingPermissionsApi`
     :ivar privacy: privacy API: :class:`privacy.PrivacyApi`
     :ivar receptionist: receptionist client settings API: :class:`receptionist.ReceptionistApi`
+    :ivar schedules: person schedules API: :class:`wxc_sdk.common.schedules.ScheduleApi`
     :ivar voicemail: voicemail API: :class:`voicemail.VoicemailApi`
     """
 
