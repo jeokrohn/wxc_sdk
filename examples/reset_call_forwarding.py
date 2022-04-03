@@ -14,7 +14,7 @@ from wxc_sdk.types import PersonForwardingSetting
 
 load_dotenv()
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 # set to DEBUG to see the actual requests
 logging.getLogger('wxc_sdk.rest').setLevel(logging.INFO)

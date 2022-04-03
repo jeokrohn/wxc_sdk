@@ -156,10 +156,12 @@ class XForwardingSetting:
     pass
 
 
-class VoicemailApi(PersonSettingsApiChild, base='people'):
+class VoicemailApi(PersonSettingsApiChild):
     """
     Api for person's call voicemail settings
     """
+
+    feature = 'voicemail'
 
     def read(self, *, person_id: str, org_id: str = None) -> VoicemailSettings:
         """
@@ -183,7 +185,7 @@ class VoicemailApi(PersonSettingsApiChild, base='people'):
         :return: user's voicemail settings
         :rtype: VoicemailSettings
         """
-        url = self.f_ep(person_id=person_id, path='voicemail')
+        url = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         return VoicemailSettings.parse_obj(self.get(url, params=params))
 
@@ -208,7 +210,7 @@ class VoicemailApi(PersonSettingsApiChild, base='people'):
                                                                 'greeting_uploaded': True},
                                       'voice_message_forwarding_enabled': True
                                       })
-        url = self.f_ep(person_id=person_id, path='voicemail')
+        url = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         self.put(url, data=data, params=params)
 
@@ -241,7 +243,7 @@ class VoicemailApi(PersonSettingsApiChild, base='people'):
             if not upload_as:
                 raise ValueError('upload_as is required')
         encoder = MultipartEncoder(fields={'file': (upload_as, content, 'audio/wav')})
-        ep = self.f_ep(person_id=person_id, path=f'voicemail/actions/{greeting_key}/invoke')
+        ep = self.f_ep(person_id=person_id, path=f'actions/{greeting_key}/invoke')
         params = org_id and {'orgId': org_id} or None
         try:
             self.post(ep, data=encoder, headers={'Content-Type': encoder.content_type},

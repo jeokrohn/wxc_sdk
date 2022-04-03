@@ -120,11 +120,14 @@ class CallerId(ApiModel):
         return result
 
 
-class CallerIdApi(PersonSettingsApiChild, base='people'):
+class CallerIdApi(PersonSettingsApiChild):
     """
     Api for person's caller id settings
     """
-    def read(self, person_id: str, org_id: str = None) -> CallerId:
+
+    feature = 'callerId'
+
+    def read(self, *, person_id: str, org_id: str = None) -> CallerId:
         """
         Retrieve a Person's Caller ID Settings
 
@@ -139,11 +142,11 @@ class CallerIdApi(PersonSettingsApiChild, base='people'):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        ep = self.f_ep(person_id=person_id, path='callerId')
+        ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         return CallerId.parse_obj(self.get(ep, params=params))
 
-    def configure(self, person_id: str, org_id: str = None,
+    def configure(self, *, person_id: str, org_id: str = None,
                   selected: CallerIdSelectedType = None,
                   custom_number: str = None,
                   first_name: str = None,
@@ -185,5 +188,5 @@ class CallerIdApi(PersonSettingsApiChild, base='people'):
         data = {to_camel(k): v for i, (k, v) in enumerate(locals().items())
                 if i > 2 and v is not None}
         params = org_id and {'orgId': org_id} or None
-        ep = self.f_ep(person_id=person_id, path='callerId')
+        ep = self.f_ep(person_id=person_id)
         self.put(ep, params=params, json=data)

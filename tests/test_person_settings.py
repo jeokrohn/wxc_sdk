@@ -155,7 +155,6 @@ class TestConfigure(TestCaseWithUsers):
             intercept.enabled = not intercept.enabled
             self.call_intercept_update_and_check(user=user, settings=intercept)
 
-
     def test_006_upload_intercept_greeting(self):
         """
         test to upload a custom greeting for call intercept

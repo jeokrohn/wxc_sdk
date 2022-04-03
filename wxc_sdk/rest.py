@@ -230,6 +230,16 @@ class RestSession(Session):
         path = path and f'/{path}' or ''
         return f'{self.BASE}{path}'
 
+    @property
+    def access_token(self) -> str:
+        """
+        access token used for all requests
+
+        :return: access token
+        :rtype: str
+        """
+        return self._tokens.access_token
+
     @backoff.on_exception(backoff.constant, RestError, interval=0, giveup=_giveup_429)
     def _request_w_response(self, method: str, url: str, headers=None,
                             **kwargs) -> Tuple[Response, StrOrDict]:

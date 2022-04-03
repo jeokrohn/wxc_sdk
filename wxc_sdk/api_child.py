@@ -8,19 +8,20 @@ class ApiChild:
     Base class for child APIs of :class:`WebexSimpleApi`
     """
 
-    def __init__(self, session: RestSession):
+    def __init__(self, *, session: RestSession, base: str = None):
         #: REST session
         self.session = session
+        if base:
+            self.base = base
 
-    def __init_subclass__(cls, base: str, **kwargs):
+    def __init_subclass__(cls, base: str):
         """
         Subclass registration hook. Each APIChild has a specific endpoint prefix which we gather at subclass
         registration time-
 
         :param base: APIChild specific URL path
-        :param kwargs:
         """
-        super().__init_subclass__(**kwargs)
+        super().__init_subclass__()
         # save endpoint prefix
         cls.base = base
 

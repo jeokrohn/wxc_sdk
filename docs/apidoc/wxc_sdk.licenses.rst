@@ -1,5 +1,5 @@
-wxc\_sdk.licenses module
-========================
+wxc\_sdk.licenses package
+=========================
 
 .. automodule:: wxc_sdk.licenses
    :members:

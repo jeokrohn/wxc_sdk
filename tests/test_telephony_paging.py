@@ -112,6 +112,7 @@ class TestCreate(TestCaseWithUsers):
             """
             Create a new paging group with the given name
             :param pg_name:
+            :param extension:
             :return:
             """
             # pick two targets and originators

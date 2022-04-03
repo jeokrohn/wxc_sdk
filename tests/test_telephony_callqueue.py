@@ -10,10 +10,12 @@ from .base import TestCaseWithLog, TestCaseWithUsers
 # number of call queues to create by create many test
 CQ_MANY = 100
 
+
 def available_extensions(*, cq_list: list[CallQueue]):
     extensions = set(cq.extension for cq in cq_list)
     return (extension for i in range(1000)
             if (extension := f'{8000 + i}') not in extensions)
+
 
 class TestList(TestCaseWithLog):
 
@@ -149,6 +151,7 @@ class TestCreate(TestCaseWithUsers):
             """
             Create a new call queue with the given name
             :param queue_name:
+            :param extension:
             :return:
             """
             # pick two calling users

@@ -87,12 +87,14 @@ class PersonForwardingSetting(ApiModel):
                                        business_continuity=CallForwardingCommon.default())
 
 
-class PersonForwardingApi(PersonSettingsApiChild, base='people'):
+class PersonForwardingApi(PersonSettingsApiChild):
     """
     Api for person's call forwarding settings
     """
 
-    def read(self, person_id: str, org_id: str = None) -> PersonForwardingSetting:
+    feature = 'callForwarding'
+
+    def read(self, *, person_id: str, org_id: str = None) -> PersonForwardingSetting:
         """
         Retrieve a Person's Call Forwarding Settings
 
@@ -119,11 +121,11 @@ class PersonForwardingApi(PersonSettingsApiChild, base='people'):
         :return: user's forwarding settings
         :rtype: PersonForwardingSetting
         """
-        ep = self.f_ep(person_id=person_id, path='callForwarding')
+        ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         return PersonForwardingSetting.parse_obj(self.get(ep, params=params))
 
-    def configure(self, person_id: str, forwarding: PersonForwardingSetting, org_id: str = None):
+    def configure(self, *, person_id: str, forwarding: PersonForwardingSetting, org_id: str = None):
         """
         Configure a Person's Call Forwarding Settings
 
@@ -150,7 +152,7 @@ class PersonForwardingApi(PersonSettingsApiChild, base='people'):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        ep = self.f_ep(person_id=person_id, path='callForwarding')
+        ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         # system_max_number_of_ring cannot be used in update
         data = forwarding.json(

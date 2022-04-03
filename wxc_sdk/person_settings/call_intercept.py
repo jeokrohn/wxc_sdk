@@ -103,12 +103,14 @@ class InterceptSetting(ApiModel):
                                 outgoing=InterceptSettingOutgoing.default())
 
 
-class CallInterceptApi(PersonSettingsApiChild, base='people'):
+class CallInterceptApi(PersonSettingsApiChild):
     """
     Api for person's call intercept settings
     """
 
-    def read(self, person_id: str, org_id: str = None) -> InterceptSetting:
+    feature = 'intercept'
+
+    def read(self, *, person_id: str, org_id: str = None) -> InterceptSetting:
         """
         Read Call Intercept Settings for a Person
 
@@ -129,11 +131,11 @@ class CallInterceptApi(PersonSettingsApiChild, base='people'):
         :return: user's call intercept settings
         :rtype: InterceptSetting
         """
-        ep = self.f_ep(person_id=person_id, path='intercept')
+        ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         return InterceptSetting.parse_obj(self.get(ep, params=params))
 
-    def configure(self, person_id: str, intercept: InterceptSetting, org_id: str = None):
+    def configure(self, *, person_id: str, intercept: InterceptSetting, org_id: str = None):
         """
         Configure Call Intercept Settings for a Person
         Configures a Person's Call Intercept Settings
@@ -153,7 +155,7 @@ class CallInterceptApi(PersonSettingsApiChild, base='people'):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        ep = self.f_ep(person_id=person_id, path='intercept')
+        ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         data = json.loads(intercept.json())
         try:
@@ -199,7 +201,7 @@ class CallInterceptApi(PersonSettingsApiChild, base='people'):
             if not upload_as:
                 raise ValueError('upload_as is required')
         encoder = MultipartEncoder(fields={'file': (upload_as, content, 'audio/wav')})
-        ep = self.f_ep(person_id=person_id, path='intercept/actions/announcementUpload/invoke')
+        ep = self.f_ep(person_id=person_id, path='actions/announcementUpload/invoke')
         params = org_id and {'orgId': org_id} or None
         try:
             self.post(ep, data=encoder, headers={'Content-Type': encoder.content_type},

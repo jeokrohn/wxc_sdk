@@ -1,5 +1,5 @@
 """
-Common data types
+Common date types and APIs
 """
 
 from enum import Enum
@@ -8,8 +8,10 @@ from typing import Optional
 from pydantic import Field
 
 from wxc_sdk.base import ApiModel
+from ..base import webex_id_to_uuid
 
-__all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting', 'UserNumber', 'PersonPlaceAgent']
+__all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting', 'UserNumber', 'PersonPlaceAgent',
+           'MonitoredMember']
 
 
 class UserType(str, Enum):
@@ -73,6 +75,9 @@ class UserNumber(ApiModel):
 
 
 class PersonPlaceAgent(UserBase):
+    """
+    Agent (person or place)
+    """
     #: ID of person or workspace.
     agent_id: str = Field(alias='id')
     #: Display name of person or workspace.
@@ -81,3 +86,27 @@ class PersonPlaceAgent(UserBase):
     email: Optional[str]
     #: List of phone numbers of the person or workspace.
     numbers: Optional[list[UserNumber]]
+
+
+class MonitoredMember(ApiModel):
+    """
+    a monitored user or place
+    """
+    #: The identifier of the monitored person.
+    member_id: Optional[str] = Field(alias='id')
+    #: The last name of the monitored person or place.
+    last_name: Optional[str]
+    #: The first name of the monitored person or place.
+    first_name: Optional[str]
+    #: The display name of the monitored person or place.
+    display_name: Optional[str]
+    #: Indicates whether type is PEOPLE or PLACE.
+    member_type: Optional[UserType] = Field(alias='type')
+    #: The email address of the monitored person or place.
+    email: Optional[str]
+    #: The list of phone numbers of the monitored person or place.
+    numbers: Optional[list[UserNumber]]
+
+    @property
+    def ci_member_id(self) -> Optional[str]:
+        return self.member_id and webex_id_to_uuid(self.member_id)

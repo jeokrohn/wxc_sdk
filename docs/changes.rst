@@ -1,6 +1,14 @@
 Release history
 ===============
 
+0.6.0
+-----
+-   refactoring
+-   new person settings: application services, call waiting, exec assistant, hoteling, montoring, numbers, incoming
+    permisssions, outgoing permissions, privacy, schedules, receptionist
+-   new api: workspaces
+-   various new test cases
+
 0.5.3
 -----
 -   fixed an issue with call park updates (agents need to be pased as list of IDs)

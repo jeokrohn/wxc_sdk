@@ -11,8 +11,8 @@ from typing import Optional
 
 from pydantic import Field
 
-from .api_child import ApiChild
-from .base import ApiModel
+from ..api_child import ApiChild
+from ..base import ApiModel
 
 __all__ = ['SiteType', 'License', 'LicensesApi']
 

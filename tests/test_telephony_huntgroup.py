@@ -153,6 +153,7 @@ class TestCreate(TestCaseWithUsers):
             """
             Create a new call hunt groups with the given name
             :param hg_name:
+            :param extension:
             :return:
             """
             # pick two calling users

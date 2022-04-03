@@ -13,14 +13,19 @@ from .rest import RestSession
 from .telephony import TelephonyApi
 from .tokens import Tokens
 from .webhook import WebhookApi
+from .workspaces import WorkspacesApi
 from dataclasses import dataclass
 
 __all__ = ['WebexSimpleApi']
 
-__version__ = '0.5.3'
+__version__ = '0.6.0'
 
 log = logging.getLogger(__name__)
 
+
+# TODO: workspace settings
+#   https://developer.webex.com/docs/api/v1/webex-calling-workspaces-settings
+# TODO: devices
 
 @dataclass(init=False)
 class WebexSimpleApi:
@@ -41,6 +46,8 @@ class WebexSimpleApi:
     telephony: TelephonyApi
     #: Webhooks API :class:`webhook.WebhookApi`
     webhook: WebhookApi
+    #: Workspaces API :class:`workspaces.WorkspacesApi`
+    workspaces: WorkspacesApi
     #: :class:`rest.RestSession` used for all API requests
     session: RestSession
 
@@ -68,7 +75,18 @@ class WebexSimpleApi:
         self.people = PeopleApi(session=session)
         self.telephony = TelephonyApi(session=session)
         self.webhook = WebhookApi(session=session)
+        self.workspaces = WorkspacesApi(session=session)
         self.session = session
+
+    @property
+    def access_token(self) -> str:
+        """
+        access token used for all requests
+
+        :return: access token
+        :rtype: str
+        """
+        return self.session.access_token
 
     def close(self):
         self.session.close()

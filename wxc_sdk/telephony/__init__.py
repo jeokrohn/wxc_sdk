@@ -3,7 +3,7 @@ Telephony types and API
 """
 
 from .calls import CallsApi
-from .schedules import ScheduleApi
+from ..common.schedules import ScheduleApi, ScheduleApiBase
 from .paging import PagingApi
 from .huntgroup import HuntGroupApi
 from .callqueue import CallQueueApi
@@ -35,7 +35,7 @@ class TelephonyApi(ApiChild, base='telephony'):
         super().__init__(session=session)
         self.auto_attendant = AutoAttendantApi(session=session)
         self.calls = CallsApi(session=session)
-        self.schedules = ScheduleApi(session=session)
+        self.schedules = ScheduleApi(session=session, base=ScheduleApiBase.locations)
         self.paging = PagingApi(session=session)
         self.huntgroup = HuntGroupApi(session=session)
         self.callqueue = CallQueueApi(session=session)

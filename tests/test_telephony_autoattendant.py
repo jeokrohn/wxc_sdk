@@ -6,8 +6,7 @@ import json
 import random
 from concurrent.futures import ThreadPoolExecutor
 
-from wxc_sdk.telephony.autoattendant import AutoAttendant
-from wxc_sdk.telephony.schedules import ScheduleType
+from wxc_sdk.types import AutoAttendant, ScheduleType
 from .base import TestCaseWithLog, TestWithLocations
 
 
@@ -49,7 +48,7 @@ class TestCreate(TestWithLocations):
         Create a simple AA in a random location
         """
         target_location = random.choice(self.locations)
-        schedules = list(self.api.telephony.schedules.list(location_id=target_location.location_id,
+        schedules = list(self.api.telephony.schedules.list(obj_id=target_location.location_id,
                                                            schedule_type=ScheduleType.business_hours))
         if not schedules:
             self.skipTest(f'No business hours schedule in location "{target_location.name}"')

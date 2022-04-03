@@ -14,7 +14,7 @@ from itertools import chain
 from tests.base import get_tokens
 from wxc_sdk import WebexSimpleApi
 
-TO_DELETE = re.compile(r'^(?:\w{2}|many|test)_\d{3}$')
+TO_DELETE = re.compile(r'^(?:(?:\w{2}|many|test|test_user)_\d{3})|National Holidays$')
 DRY_RUN = False
 
 
@@ -107,14 +107,35 @@ def main():
         # schedules
         ats = api.telephony.schedules
         schedule_list = list(filter(chain.from_iterable(
-            pool.map(lambda l: ats.list(location_id=l.location_id),
+            pool.map(lambda l: ats.list(obj_id=l.location_id),
                      locations))))
         print(f'deleting {len(schedule_list)} schedules: {", ".join(schedule.name for schedule in schedule_list)}')
         if not DRY_RUN:
-            list(pool.map(lambda schedule: ats.delete_schedule(location_id=schedule.location_id,
+            list(pool.map(lambda schedule: ats.delete_schedule(obj_id=schedule.location_id,
                                                                schedule_type=schedule.schedule_type,
                                                                schedule_id=schedule.schedule_id),
                           schedule_list))
+
+        # person schedules
+        aps = api.person_settings.schedules
+        users = [user for user in api.people.list(calling_data=True)
+                 if user.location_id]
+
+        schedule_lists = list(pool.map(lambda user: list(aps.list(obj_id=user.person_id)),
+                                       users))
+        users_and_schedules = list(chain.from_iterable(((user, schedule)
+                                                        for schedule in filter(schedules))
+                                                       for user, schedules in zip(users, schedule_lists)))
+        print(f'deleting {len(users_and_schedules)} user schedules:'
+              f' {", ".join(f"{user.display_name}-{schedule.name}" for user, schedule in users_and_schedules)}')
+
+        if not DRY_RUN:
+            list(pool.map(
+                lambda user_and_schedule: aps.delete_schedule(
+                    obj_id=user_and_schedule[0].person_id,
+                    schedule_type=user_and_schedule[1].schedule_type,
+                    schedule_id=user_and_schedule[1].schedule_id),
+                users_and_schedules))
 
 
 if __name__ == '__main__':

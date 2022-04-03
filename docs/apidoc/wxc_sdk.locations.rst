@@ -1,5 +1,5 @@
-wxc\_sdk.locations module
-=========================
+wxc\_sdk.locations package
+==========================
 
 .. automodule:: wxc_sdk.locations
    :members:

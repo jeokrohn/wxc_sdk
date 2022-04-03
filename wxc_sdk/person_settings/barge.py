@@ -18,12 +18,14 @@ class BargeSettings(ApiModel):
     tone_enabled: bool
 
 
-class BargeApi(PersonSettingsApiChild, base='people'):
+class BargeApi(PersonSettingsApiChild):
     """
     Api for person's barge settings
     """
 
-    def read(self, person_id: str, org_id: str = None) -> BargeSettings:
+    feature = 'bargeIn'
+
+    def read(self, *, person_id: str, org_id: str = None) -> BargeSettings:
         """
         Retrieve a Person's Barge In Settings
 
@@ -41,11 +43,11 @@ class BargeApi(PersonSettingsApiChild, base='people'):
         :return: barge settings for specific user
         :rtype: BargeSettings
         """
-        ep = self.f_ep(person_id=person_id, path='bargeIn')
+        ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         return BargeSettings.parse_obj(self.get(ep, params=params))
 
-    def configure(self, person_id: str, barge_settings: BargeSettings, org_id: str = None):
+    def configure(self, *, person_id: str, barge_settings: BargeSettings, org_id: str = None):
         """
         Configure a Person's Barge In Settings
 
@@ -62,6 +64,6 @@ class BargeApi(PersonSettingsApiChild, base='people'):
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         """
-        ep = self.f_ep(person_id=person_id, path='bargeIn')
+        ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         self.put(ep, params=params, data=barge_settings.json())

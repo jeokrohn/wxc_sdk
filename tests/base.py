@@ -26,6 +26,7 @@ from dotenv import load_dotenv
 from yaml import safe_load
 
 from wxc_sdk import WebexSimpleApi
+from wxc_sdk.types import Person
 from wxc_sdk.integration import Integration
 from wxc_sdk.locations import Location
 from wxc_sdk.tokens import Tokens
@@ -212,6 +213,8 @@ def get_tokens() -> Optional[Tokens]:
 
 class TestCaseWithTokens(TestCase):
     api: Optional[WebexSimpleApi]
+    me: Optional[Person]
+    tokens: Optional[Tokens]
     """
     A test case that required access tokens to run
     """
@@ -222,6 +225,7 @@ class TestCaseWithTokens(TestCase):
         cls.tokens = tokens
         if tokens:
             cls.api = WebexSimpleApi(tokens=tokens)
+            cls.me = cls.api.people.me()
         else:
             cls.api = None
 

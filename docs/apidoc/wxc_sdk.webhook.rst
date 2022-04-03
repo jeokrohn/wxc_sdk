@@ -1,5 +1,5 @@
-wxc\_sdk.webhook module
-=======================
+wxc\_sdk.webhook package
+========================
 
 .. automodule:: wxc_sdk.webhook
    :members:

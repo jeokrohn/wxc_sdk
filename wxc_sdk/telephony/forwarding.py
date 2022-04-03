@@ -247,7 +247,7 @@ class ForwardingApi:
         return result
 
     def update(self, location_id: str, feature_id: str,
-                          forwarding: CallForwarding, org_id: str = None):
+               forwarding: CallForwarding, org_id: str = None):
         """
         Update Call Forwarding Settings for a feature
 

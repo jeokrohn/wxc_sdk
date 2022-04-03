@@ -61,7 +61,7 @@ def main():
         module_all = module.__dict__.get('__all__')
         if module_all is None:
             continue
-        print(f'from {module_name} import *', file=source)
+        names_in_module = []
         for name in module_all:
             if name.endswith('Api'):
                 # Apis not needed
@@ -71,6 +71,30 @@ def main():
                 err = True
             else:
                 combined_all.add(name)
+                names_in_module.append(name)
+        # import statement for module
+        if names_in_module:
+            names_in_module.sort()
+            line = f'from {module_name} import '
+            max_line = 116
+            pending_line = ''
+            for name in names_in_module:
+                entry = f"{name}, "
+                if len(line) + len(entry) >= max_line:
+                    if pending_line:
+                        print(f'{pending_line.rstrip()}\\', file=source)
+                    pending_line = line.rstrip()
+                    # next line is indented by 4 spaces
+                    line = ' ' * 4
+                line = f'{line}{entry}'
+            if pending_line:
+                if line.strip():
+                    print(f'{pending_line.rstrip()}\\', file=source)
+                    print(f'{line.rstrip(" ,")}', file=source)
+                else:
+                    print(f'{pending_line.rstrip(" ,")}\\', file=source)
+            else:
+                print(f'{line.rstrip(" ,")}', file=source)
     if err:
         raise NameError('Duplicate names')
 
@@ -86,7 +110,7 @@ def main():
             line = ' ' * 11
 
         line = f'{line}{entry}'
-    print(f'{line}]', file=source)
+    print(f'{line.rstrip(" ,")}]', file=source)
     with open(os.path.join(wxc_sdk, 'types.py'), mode='w') as f:
         f.write(source.getvalue())
 

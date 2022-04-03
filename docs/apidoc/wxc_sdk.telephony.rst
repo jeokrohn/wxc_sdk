@@ -28,4 +28,3 @@ Submodules
    wxc_sdk.telephony.hg_and_cq
    wxc_sdk.telephony.huntgroup
    wxc_sdk.telephony.paging
-   wxc_sdk.telephony.schedules

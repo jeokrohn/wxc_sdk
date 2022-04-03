@@ -1,5 +1,5 @@
-wxc\_sdk.people module
-======================
+wxc\_sdk.people package
+=======================
 
 .. automodule:: wxc_sdk.people
    :members:

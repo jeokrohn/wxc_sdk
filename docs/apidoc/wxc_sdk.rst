@@ -12,8 +12,15 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   wxc_sdk.common
+   wxc_sdk.integration
+   wxc_sdk.licenses
+   wxc_sdk.locations
+   wxc_sdk.people
    wxc_sdk.person_settings
    wxc_sdk.telephony
+   wxc_sdk.webhook
+   wxc_sdk.workspaces
 
 Submodules
 ----------
@@ -23,11 +30,5 @@ Submodules
 
    wxc_sdk.api_child
    wxc_sdk.base
-   wxc_sdk.common
-   wxc_sdk.integration
-   wxc_sdk.licenses
-   wxc_sdk.locations
-   wxc_sdk.people
    wxc_sdk.rest
    wxc_sdk.tokens
-   wxc_sdk.webhook

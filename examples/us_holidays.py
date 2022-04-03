@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 from calendarific import CalendarifiyApi, Holiday
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.locations import Location
-from wxc_sdk.telephony.schedules import ScheduleType, Event, Schedule
+from wxc_sdk.types import ScheduleType, Event, Schedule
 
 log = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ CLEAN_UP = False
 
 # first and last year for which to create public holiday events
 FIRST_YEAR = 2022
-LAST_YEAR = 2023
+LAST_YEAR = 2022
 
 LAST_YEAR = not CLEAN_UP and LAST_YEAR or FIRST_YEAR
 
@@ -57,7 +57,7 @@ def observe_in_location(*, api: WebexSimpleApi, location: Location, holidays: Li
 
         # existing "National Holiday" schedule or None
         schedule = next((schedule
-                         for schedule in ats.list(location_id=location.location_id,
+                         for schedule in ats.list(obj_id=location.location_id,
                                                   schedule_type=ScheduleType.holidays,
                                                   name=schedule_name)
                          if schedule.name == schedule_name),
@@ -65,13 +65,13 @@ def observe_in_location(*, api: WebexSimpleApi, location: Location, holidays: Li
         if CLEAN_UP:
             if schedule:
                 log.info(f'Delete schedule {schedule.name} in location {schedule.location_name}')
-                ats.delete_schedule(location_id=location.location_id,
+                ats.delete_schedule(obj_id=location.location_id,
                                     schedule_type=ScheduleType.holidays,
                                     schedule_id=schedule.schedule_id)
             return
         if schedule:
             # we need the details: list response doesn't have events
-            schedule = ats.details(location_id=location.location_id,
+            schedule = ats.details(obj_id=location.location_id,
                                    schedule_type=ScheduleType.holidays,
                                    schedule_id=schedule.schedule_id)
         # create list of desired schedule entries
@@ -98,7 +98,7 @@ def observe_in_location(*, api: WebexSimpleApi, location: Location, holidays: Li
             log.debug(
                 f'observe_in_location({location.name}, {year}): creating schedule "{schedule_name}" with {len(events)} '
                 f'events')
-            schedule_id = ats.create(location_id=location.location_id, schedule=schedule)
+            schedule_id = ats.create(obj_id=location.location_id, schedule=schedule)
             log.info(f'observe_in_location({location.name}, {year}): new schedule id: {schedule_id}, done')
             return
 
@@ -112,13 +112,13 @@ def observe_in_location(*, api: WebexSimpleApi, location: Location, holidays: Li
                 log.debug(f'observe_in_location({location.name}, {year}): deleting {len(to_delete)} outdated events')
                 if USE_THREADING:
                     list(pool.map(
-                        lambda event: ats.event_delete(location_id=location.location_id,
+                        lambda event: ats.event_delete(obj_id=location.location_id,
                                                        schedule_type=ScheduleType.holidays,
                                                        event_id=event.event_id),
                         to_delete))
                 else:
                     for event in to_delete:
-                        ats.event_delete(location_id=location.location_id,
+                        ats.event_delete(obj_id=location.location_id,
                                          schedule_type=ScheduleType.holidays,
                                          event_id=event.event_id)
 
@@ -135,7 +135,7 @@ def observe_in_location(*, api: WebexSimpleApi, location: Location, holidays: Li
             if USE_THREADING:
                 list(pool.map(
                     lambda event: ats.event_create(
-                        location_id=location.location_id,
+                        obj_id=location.location_id,
                         schedule_type=ScheduleType.holidays,
                         schedule_id=schedule.schedule_id,
                         event=event),
@@ -143,7 +143,7 @@ def observe_in_location(*, api: WebexSimpleApi, location: Location, holidays: Li
             else:
                 for event in to_add:
                     ats.event_create(
-                        location_id=location.location_id,
+                        obj_id=location.location_id,
                         schedule_type=ScheduleType.holidays,
                         schedule_id=schedule.schedule_id,
                         event=event)

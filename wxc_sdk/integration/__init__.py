@@ -8,8 +8,8 @@ from typing import Union
 
 import requests
 
-from .rest import dump_response
-from .tokens import Tokens
+from ..rest import dump_response
+from ..tokens import Tokens
 
 log = logging.getLogger(__name__)
 

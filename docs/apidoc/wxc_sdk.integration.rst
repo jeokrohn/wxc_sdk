@@ -1,5 +1,5 @@
-wxc\_sdk.integration module
-===========================
+wxc\_sdk.integration package
+============================
 
 .. automodule:: wxc_sdk.integration
    :members:

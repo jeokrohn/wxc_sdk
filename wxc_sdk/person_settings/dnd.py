@@ -18,12 +18,14 @@ class DND(ApiModel):
     ring_splash_enabled: bool
 
 
-class DndApi(PersonSettingsApiChild, base='people'):
+class DndApi(PersonSettingsApiChild):
     """
     Api for person's DND settings
     """
 
-    def read(self, person_id: str, org_id: str = None) -> DND:
+    feature = 'doNotDisturb'
+
+    def read(self, *, person_id: str, org_id: str = None) -> DND:
         """
         Read Do Not Disturb Settings for a Person
         Retrieve a Person's Do Not Disturb Settings
@@ -40,11 +42,11 @@ class DndApi(PersonSettingsApiChild, base='people'):
         :type org_id: str
         :return:
         """
-        ep = self.f_ep(person_id=person_id, path='doNotDisturb')
+        ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         return DND.parse_obj(self.get(ep, params=params))
 
-    def configure(self, person_id: str, dnd_settings: DND, org_id: str = None):
+    def configure(self, *, person_id: str, dnd_settings: DND, org_id: str = None):
         """
         Configure Do Not Disturb Settings for a Person
         Configure a Person's Do Not Disturb Settings
@@ -62,6 +64,6 @@ class DndApi(PersonSettingsApiChild, base='people'):
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         """
-        ep = self.f_ep(person_id=person_id, path='doNotDisturb')
+        ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         self.put(ep, params=params, data=dnd_settings.json())

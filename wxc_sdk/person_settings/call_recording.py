@@ -1,5 +1,5 @@
 """
-Call reconding API
+Call recording API
 """
 import json
 from enum import Enum
@@ -91,14 +91,17 @@ class CallRecordingSetting(ApiModel):
                                                               enabled=False))
 
 
-class CallRecordingApi(PersonSettingsApiChild, base='people'):
+class CallRecordingApi(PersonSettingsApiChild):
     """
     Api for person's call recording settings
     """
 
-    def read(self, person_id: str, org_id: str = None) -> CallRecordingSetting:
+    feature = 'callRecording'
+
+    def read(self, *, person_id: str, org_id: str = None) -> CallRecordingSetting:
         """
         Read Call Recording Settings for a Person
+
         Retrieve a Person's Call Recording Settings
 
         The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
@@ -112,13 +115,14 @@ class CallRecordingApi(PersonSettingsApiChild, base='people'):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        ep = self.f_ep(person_id=person_id, path='callRecording')
+        ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         return CallRecordingSetting.parse_obj(self.get(ep, params=params))
 
-    def configure(self, person_id: str, recording: CallRecordingSetting, org_id: str = None):
+    def configure(self, *, person_id: str, recording: CallRecordingSetting, org_id: str = None):
         """
         Configure Call Recording Settings for a Person
+
         Configure a Person's Call Recording Settings
 
         The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
@@ -134,7 +138,7 @@ class CallRecordingApi(PersonSettingsApiChild, base='people'):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        ep = self.f_ep(person_id=person_id, path='callRecording')
+        ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         data = json.loads(recording.json())
         for key in ['serviceProvider', 'externalGroup', 'externalIdentifier']:

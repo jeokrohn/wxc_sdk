@@ -3,10 +3,17 @@ from ..api_child import ApiChild
 __all__ = ['PersonSettingsApiChild']
 
 
-class PersonSettingsApiChild(ApiChild, base='people'):
+class PersonSettingsApiChild(ApiChild, base=''):
     """
     API for all user level settings
     """
+
+    feature = None
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(base='')
+        if cls.feature is None:
+            raise TypeError('feature has to be defined')
 
     def f_ep(self, *, person_id: str, path: str = None) -> str:
         """
@@ -20,4 +27,4 @@ class PersonSettingsApiChild(ApiChild, base='people'):
         :rtype: str
         """
         path = path and f'/{path}' or ''
-        return self.session.ep(f'people/{person_id}/features{path}')
+        return self.session.ep(f'people/{person_id}/features/{self.feature}{path}')
