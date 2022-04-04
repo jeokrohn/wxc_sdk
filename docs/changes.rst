@@ -4,9 +4,21 @@ Release history
 0.6.0
 -----
 -   refactoring
--   new person settings: application services, call waiting, exec assistant, hoteling, montoring, numbers, incoming
-    permisssions, outgoing permissions, privacy, schedules, receptionist
--   new api: workspaces
+-   new person settings :class:`wxc_sdk.person_settings.PersonSettingsApi`
+
+    * application services: :class:`wxc_sdk.person_settings.appservices.AppServicesApi`
+    * call waiting: :class:`wxc_sdk.person_settings.call_waiting.CallWaitingApi`
+    * exec assistant: :class:`wxc_sdk.person_settings.exec_assistant.ExecAssistantApi`
+    * hoteling: :class:`wxc_sdk.person_settings.hoteling.HotelingApi`
+    * montoring: :class:`wxc_sdk.person_settings.monitoring.MonitoringApi`
+    * numbers: :class:`wxc_sdk.person_settings.numbers.NumbersApi`
+    * incoming permisssions: :class:`wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi`
+    * outgoing permissions: :class:`wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi`
+    * privacy: :class:`wxc_sdk.person_settings.privacy.PrivacyApi`
+    * receptionist: :class:`wxc_sdk.person_settings.receptionist.ReceptionistApi`
+    * schedules: :class:`wxc_sdk.common.schedules.ScheduleApi`
+
+-   new api: workspaces: :class:`wxc_sdk.WebexSimpleApi`. :class:`wxc_sdk.workspaces.WorkspacesApi`
 -   various new test cases
 
 0.5.3

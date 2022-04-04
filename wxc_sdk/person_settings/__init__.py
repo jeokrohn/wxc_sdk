@@ -45,6 +45,7 @@ class PersonSettingsApi(ApiChild, base='people'):
     :ivar exec_assistant: exec assistant settings API: :class:`exec_assistant.ExecAssistantApi`
     :ivar forwarding: call forwarding API :class:`forwarding.ForwardingApi`
     :ivar hoteling: hoteling API: :class:`hoteling.HotelingApi`
+    :ivar monitoring: :class:`monitoring.MonitoringApi`
     :ivar numbers: numbers API: :class:`numbers.NumbersApi`
     :ivar permissions_in: incoming permission settings API: :class:`permissions_in.IncomingPermissionsApi`
     :ivar permissions_out: outgoing permission settings API: :class:`permissions_out.OutgoingPermissionsApi`
