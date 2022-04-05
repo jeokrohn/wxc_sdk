@@ -1,0 +1,6 @@
+USERNAME,DIRECTORY NUMBER,MAC ADDRESS,ERROR
+prodtestorg1@example.com,1101,CSFDemoUser101,
+demotest1020@example.com,1102,CSFDemoUser102,Unable to update user attributes; no rollback the license change.
+demotest1030@example.com,1103,CSFDemoUser103,
+demotest1040@example.com,1104,CSFDemouser104,Unable to update user attributes; no rollback the license change.
+demotest1050@example.com,1105,CSFDemoUser105,

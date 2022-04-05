@@ -30,6 +30,22 @@ Source: |reset_call_forwarding.py|_
 .. literalinclude:: ../examples/reset_call_forwarding.py
     :linenos:
 
+Modify number of rings configuration for users read from CSV
+------------------------------------------------------------
+
+Here we read a bunch of user email addresses from a CSV. The CSV as an ERROR column and we only want to consider
+users without errors.
+
+For all these users a VM setting is updated and the results are written to a CSV for further processing.
+
+Source: |modify_voicemail.py|_
+
+.. |modify_voicemail.py| replace:: ``modify_voicemail.py``
+
+.. literalinclude:: ../examples/modify_voicemail.py
+    :linenos:
+
+
 Holiday schedule w/ US national holidays for all US locations
 -------------------------------------------------------------
 
@@ -93,6 +109,7 @@ Source: |get_tokens.py|_
 .. _us_holidays.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/us_holidays.py
 .. _calendarific.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/calendarific.py
 .. _reset_call_forwarding.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/reset_call_forwarding.py
+.. _modify_voicemail.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/modify_voicemail.py
 
 .. _webbrowser module: https://docs.python.org/3/library/webbrowser.html
 .. _My Webex Apps on developer.webex.com: https://developer.webex.com/my-apps
