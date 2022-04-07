@@ -77,4 +77,3 @@ class TestUpdate(TestCaseWithUsers):
         self.assertEqual(settings.available_line_count, after.available_line_count)
         after.available_line_count = before.available_line_count
         self.assertEqual(before, after)
-

@@ -15,8 +15,8 @@ class TestRead(TestCaseWithUsers):
         nu = self.api.person_settings.numbers
 
         with ThreadPoolExecutor() as pool:
-            numbers = list(pool.map(lambda user: nu.read(person_id=user.person_id),
-                                    self.users))
+            _ = list(pool.map(lambda user: nu.read(person_id=user.person_id),
+                              self.users))
         print(f'Got numbers for {len(self.users)} users')
 
     def test_002_direct_number_format(self):

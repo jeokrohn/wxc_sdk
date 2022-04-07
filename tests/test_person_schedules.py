@@ -332,7 +332,7 @@ class TestCreateOrUpdate(TestCaseWithUsers):
             print(f'Getting user schedule details for {schedule.name}({schedule.schedule_type.name})')
             if (schedule.schedule_type, schedule.name) in location_schedules_after:
                 # this is actually a location schedule and we expect the user details call to fail
-                with self.assertRaises(RestError) as exc:
+                with self.assertRaises(RestError):
                     ps.details(obj_id=target_user.person_id, schedule_type=schedule.schedule_type,
                                schedule_id=schedule.schedule_id)
                 print(f'Getting user schedule details for {schedule.name:{name_len}} '

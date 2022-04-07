@@ -1,6 +1,10 @@
 Release history
 ===============
 
+0.6.1
+-----
+-   implemented missing call control API endpoints in :class:`wxc_sdk.telephony.calls.CallsApi`
+
 0.6.0
 -----
 -   refactoring

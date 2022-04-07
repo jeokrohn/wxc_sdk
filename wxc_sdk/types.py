@@ -36,9 +36,9 @@ from wxc_sdk.telephony.callqueue import AudioSource, CallBounce, CallQueue, Call
     ComfortMessageSetting, DistinctiveRing, MohMessageSetting, OverflowAction, OverflowSetting, QueueSettings,\
     WaitMessageSetting, WaitMode, WelcomeMessageSetting
 from wxc_sdk.telephony.callqueue.announcement import Announcement
-from wxc_sdk.telephony.calls import CallHistoryRecord, CallState, CallType, DialResponse, HistoryType,\
-    Personality, Recall, RecordingState, RedirectReason, Redirection, TelephonyCall, TelephonyEvent,\
-    TelephonyEventData, TelephonyParty
+from wxc_sdk.telephony.calls import CallHistoryRecord, CallInfo, CallState, CallType, DialResponse, HistoryType,\
+    ParkedAgainst, Personality, Recall, RecordingState, RedirectReason, Redirection, TelephonyCall,\
+    TelephonyEvent, TelephonyEventData, TelephonyParty
 from wxc_sdk.telephony.forwarding import CallForwarding, CallForwardingNumber, CallForwardingNumberType,\
     CallsFrom, CustomNumbers, FeatureSelector, ForwardCallsTo, ForwardToSelection, ForwardingRule,\
     ForwardingRuleDetails, ForwardingSetting
@@ -54,8 +54,8 @@ __all__ = ['Action', 'Agent', 'AlternateNumber', 'AlternateNumberSettings', 'Ann
            'AutoAttendantMenu', 'AvailableRecallHuntGroup', 'BargeSettings', 'BusinessContinuity', 'Calendar',
            'CalendarType', 'CallBounce', 'CallForwarding', 'CallForwardingAlways', 'CallForwardingCommon',
            'CallForwardingNoAnswer', 'CallForwardingNumber', 'CallForwardingNumberType', 'CallForwardingPerson',
-           'CallHistoryRecord', 'CallPark', 'CallParkExtension', 'CallParkRecall', 'CallParkSettings', 'CallPickup',
-           'CallQueue', 'CallQueueCallPolicies', 'CallRecordingSetting', 'CallState', 'CallType',
+           'CallHistoryRecord', 'CallInfo', 'CallPark', 'CallParkExtension', 'CallParkRecall', 'CallParkSettings',
+           'CallPickup', 'CallQueue', 'CallQueueCallPolicies', 'CallRecordingSetting', 'CallState', 'CallType',
            'CallTypePermission', 'CallerId', 'CallerIdSelectedType', 'CallingPermissions', 'CallingType', 'CallsFrom',
            'ComfortMessageSetting', 'CustomNumberInfo', 'CustomNumberType', 'CustomNumbers', 'DND', 'DialResponse',
            'Dialing', 'DistinctiveRing', 'Event', 'ExecAssistantType', 'ExternalCallerIdNamePolicy',
@@ -65,9 +65,9 @@ __all__ = ['Action', 'Agent', 'AlternateNumber', 'AlternateNumberSettings', 'Ann
            'MenuKey', 'MohMessageSetting', 'MonitoredElement', 'MonitoredElementMember', 'MonitoredMember',
            'Monitoring', 'NoAnswer', 'Notification', 'NotificationRepeat', 'NotificationType',
            'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction', 'OverflowSetting', 'Paging',
-           'PagingAgent', 'PeopleStatus', 'Person', 'PersonForwardingSetting', 'PersonNumbers', 'PersonPhoneNumber',
-           'PersonPlaceAgent', 'PersonSettingsApiChild', 'PersonType', 'Personality', 'PhoneNumber',
-           'PhoneNumberType', 'Policy', 'Privacy', 'QueueSettings', 'Recall', 'RecallHuntGroup',
+           'PagingAgent', 'ParkedAgainst', 'PeopleStatus', 'Person', 'PersonForwardingSetting', 'PersonNumbers',
+           'PersonPhoneNumber', 'PersonPlaceAgent', 'PersonSettingsApiChild', 'PersonType', 'Personality',
+           'PhoneNumber', 'PhoneNumberType', 'Policy', 'Privacy', 'QueueSettings', 'Recall', 'RecallHuntGroup',
            'ReceptionistSettings', 'Record', 'RecordingState', 'RecurWeekly', 'RecurYearlyByDate', 'RecurYearlyByDay',
            'Recurrence', 'RedirectReason', 'Redirection', 'RingPattern', 'Schedule', 'ScheduleApiBase', 'ScheduleDay',
            'ScheduleMonth', 'ScheduleType', 'ScheduleWeek', 'SipAddress', 'SipType', 'SiteType', 'StorageType',
