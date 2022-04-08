@@ -32,7 +32,7 @@ class AppServicesSettings(ApiModel):
 
 class AppServicesApi(PersonSettingsApiChild):
     """
-    Api for person's app services settings
+    API for person's app services settings
     """
 
     feature = 'applications'

@@ -93,7 +93,7 @@ class CallRecordingSetting(ApiModel):
 
 class CallRecordingApi(PersonSettingsApiChild):
     """
-    Api for person's call recording settings
+    API for person's call recording settings
     """
 
     feature = 'callRecording'

@@ -1,4 +1,5 @@
 from collections.abc import Generator
+from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
@@ -297,14 +298,13 @@ class CallQueue(HGandCQ):
         return CallQueue(**params)
 
 
+@dataclass(init=False)
 class CallQueueApi:
     """
     Call Queue APÍ
-
-    :ivar forwarding: forwarding API :class:`wxc_sdk.telephony.forwarding.ForwardingApi`
-    :ivar announcement: announcement API :class:`announcement.AnnouncementApi`
-
     """
+    forwarding: ForwardingApi
+    announcement: AnnouncementApi
 
     def __init__(self, session: RestSession):
         self._session = session

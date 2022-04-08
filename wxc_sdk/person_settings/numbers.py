@@ -36,7 +36,7 @@ class PersonNumbers(ApiModel):
 
 class NumbersApi(PersonSettingsApiChild):
     """
-    Api for person's numbers
+    API for person's numbers
     """
 
     feature = 'numbers'

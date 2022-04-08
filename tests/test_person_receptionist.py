@@ -112,7 +112,9 @@ class TestRead(TestCaseWithUsers):
     def test_003_extension_format(self):
         """
         Verify extension format
-        # TODO: defect, wrong extension format. Some extensions are returned as ESN with hyphen before the extension
+
+        # TODO: defect, wrong extension format. Some extensions are returned as ESN with hyphen before the extension,
+            # CALL-68675
         """
         with self.target_user() as user:
             # API shortcut

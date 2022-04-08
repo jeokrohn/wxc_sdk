@@ -1,3 +1,9 @@
 # TODO: pagination tests for wxc specific list() calls
 # TODO: how do you create a workspace w/ WxC using the API?
+# TODO: what about outgoing permissions auto transfer numbers for persons
+# TODO: what about outgoing permisssions authorization codes for persons
+# TODO: what about location level settings?
+    #   what about outgoing and incoming permissions for locations
+    #   what about call park for locations
+    #   what about MoH for locations
 

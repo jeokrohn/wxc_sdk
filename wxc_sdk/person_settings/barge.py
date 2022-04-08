@@ -20,7 +20,7 @@ class BargeSettings(ApiModel):
 
 class BargeApi(PersonSettingsApiChild):
     """
-    Api for person's barge settings
+    API for person's barge settings
     """
 
     feature = 'bargeIn'

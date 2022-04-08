@@ -89,7 +89,7 @@ class PersonForwardingSetting(ApiModel):
 
 class PersonForwardingApi(PersonSettingsApiChild):
     """
-    Api for person's call forwarding settings
+    API for person's call forwarding settings
     """
 
     feature = 'callForwarding'

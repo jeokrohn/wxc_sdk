@@ -20,6 +20,7 @@ Subpackages
    wxc_sdk.person_settings
    wxc_sdk.telephony
    wxc_sdk.webhook
+   wxc_sdk.workspace_settings
    wxc_sdk.workspaces
 
 Submodules

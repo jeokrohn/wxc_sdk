@@ -20,7 +20,7 @@ class DND(ApiModel):
 
 class DndApi(PersonSettingsApiChild):
     """
-    Api for person's DND settings
+    API for person's DND settings
     """
 
     feature = 'doNotDisturb'

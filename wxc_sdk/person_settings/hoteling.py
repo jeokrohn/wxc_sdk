@@ -10,7 +10,7 @@ __all__ = ['HotelingApi']
 
 class HotelingApi(PersonSettingsApiChild):
     """
-    Api for person's hoteling settings
+    API for person's hoteling settings
     """
 
     feature = 'hoteling'

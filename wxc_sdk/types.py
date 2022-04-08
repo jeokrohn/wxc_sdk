@@ -20,8 +20,8 @@ from wxc_sdk.person_settings.monitoring import CallParkExtension, MonitoredEleme
     Monitoring
 from wxc_sdk.person_settings.numbers import PersonNumbers, PersonPhoneNumber
 from wxc_sdk.person_settings.permissions_in import ExternalTransfer, IncomingPermissions
-from wxc_sdk.person_settings.permissions_out import Action, CallTypePermission, CallingPermissions,\
-    OutgoingPermissionCallType, OutgoingPermissions
+from wxc_sdk.person_settings.permissions_out import Action, AuthCode, AutoTransferNumbers, CallTypePermission,\
+    CallingPermissions, OutgoingPermissionCallType, OutgoingPermissions
 from wxc_sdk.person_settings.privacy import Privacy
 from wxc_sdk.person_settings.receptionist import ReceptionistSettings
 from wxc_sdk.person_settings.voicemail import StorageType, UnansweredCalls, VoiceMailFax, VoicemailCopyOfMessage,\
@@ -50,29 +50,30 @@ from wxc_sdk.webhook import WebHook, WebHookCreate, WebHookEvent, WebHookResourc
 from wxc_sdk.workspaces import Calendar, CalendarType, CallingType, WorkSpaceType, Workspace, WorkspaceEmail
 
 __all__ = ['Action', 'Agent', 'AlternateNumber', 'AlternateNumberSettings', 'Announcement', 'AppServicesSettings',
-           'AudioSource', 'AutoAttendant', 'AutoAttendantAction', 'AutoAttendantKeyConfiguration',
-           'AutoAttendantMenu', 'AvailableRecallHuntGroup', 'BargeSettings', 'BusinessContinuity', 'Calendar',
-           'CalendarType', 'CallBounce', 'CallForwarding', 'CallForwardingAlways', 'CallForwardingCommon',
-           'CallForwardingNoAnswer', 'CallForwardingNumber', 'CallForwardingNumberType', 'CallForwardingPerson',
-           'CallHistoryRecord', 'CallInfo', 'CallPark', 'CallParkExtension', 'CallParkRecall', 'CallParkSettings',
-           'CallPickup', 'CallQueue', 'CallQueueCallPolicies', 'CallRecordingSetting', 'CallState', 'CallType',
-           'CallTypePermission', 'CallerId', 'CallerIdSelectedType', 'CallingPermissions', 'CallingType', 'CallsFrom',
-           'ComfortMessageSetting', 'CustomNumberInfo', 'CustomNumberType', 'CustomNumbers', 'DND', 'DialResponse',
-           'Dialing', 'DistinctiveRing', 'Event', 'ExecAssistantType', 'ExternalCallerIdNamePolicy',
-           'ExternalTransfer', 'FeatureSelector', 'ForwardCallsTo', 'ForwardToSelection', 'ForwardingRule',
-           'ForwardingRuleDetails', 'ForwardingSetting', 'Greeting', 'HGCallPolicies', 'HGandCQ', 'HistoryType',
-           'HuntGroup', 'IncomingPermissions', 'License', 'Location', 'LocationAddress', 'LocationCallParkSettings',
-           'MenuKey', 'MohMessageSetting', 'MonitoredElement', 'MonitoredElementMember', 'MonitoredMember',
-           'Monitoring', 'NoAnswer', 'Notification', 'NotificationRepeat', 'NotificationType',
-           'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction', 'OverflowSetting', 'Paging',
-           'PagingAgent', 'ParkedAgainst', 'PeopleStatus', 'Person', 'PersonForwardingSetting', 'PersonNumbers',
-           'PersonPhoneNumber', 'PersonPlaceAgent', 'PersonSettingsApiChild', 'PersonType', 'Personality',
-           'PhoneNumber', 'PhoneNumberType', 'Policy', 'Privacy', 'QueueSettings', 'Recall', 'RecallHuntGroup',
-           'ReceptionistSettings', 'Record', 'RecordingState', 'RecurWeekly', 'RecurYearlyByDate', 'RecurYearlyByDay',
-           'Recurrence', 'RedirectReason', 'Redirection', 'RingPattern', 'Schedule', 'ScheduleApiBase', 'ScheduleDay',
-           'ScheduleMonth', 'ScheduleType', 'ScheduleWeek', 'SipAddress', 'SipType', 'SiteType', 'StorageType',
-           'TelephonyCall', 'TelephonyEvent', 'TelephonyEventData', 'TelephonyParty', 'Tokens', 'UnansweredCalls',
-           'UserBase', 'UserNumber', 'UserType', 'VoiceMailFax', 'VoicemailCopyOfMessage', 'VoicemailEnabled',
+           'AudioSource', 'AuthCode', 'AutoAttendant', 'AutoAttendantAction', 'AutoAttendantKeyConfiguration',
+           'AutoAttendantMenu', 'AutoTransferNumbers', 'AvailableRecallHuntGroup', 'BargeSettings',
+           'BusinessContinuity', 'Calendar', 'CalendarType', 'CallBounce', 'CallForwarding', 'CallForwardingAlways',
+           'CallForwardingCommon', 'CallForwardingNoAnswer', 'CallForwardingNumber', 'CallForwardingNumberType',
+           'CallForwardingPerson', 'CallHistoryRecord', 'CallInfo', 'CallPark', 'CallParkExtension', 'CallParkRecall',
+           'CallParkSettings', 'CallPickup', 'CallQueue', 'CallQueueCallPolicies', 'CallRecordingSetting',
+           'CallState', 'CallType', 'CallTypePermission', 'CallerId', 'CallerIdSelectedType', 'CallingPermissions',
+           'CallingType', 'CallsFrom', 'ComfortMessageSetting', 'CustomNumberInfo', 'CustomNumberType',
+           'CustomNumbers', 'DND', 'DialResponse', 'Dialing', 'DistinctiveRing', 'Event', 'ExecAssistantType',
+           'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FeatureSelector', 'ForwardCallsTo',
+           'ForwardToSelection', 'ForwardingRule', 'ForwardingRuleDetails', 'ForwardingSetting', 'Greeting',
+           'HGCallPolicies', 'HGandCQ', 'HistoryType', 'HuntGroup', 'IncomingPermissions', 'License', 'Location',
+           'LocationAddress', 'LocationCallParkSettings', 'MenuKey', 'MohMessageSetting', 'MonitoredElement',
+           'MonitoredElementMember', 'MonitoredMember', 'Monitoring', 'NoAnswer', 'Notification',
+           'NotificationRepeat', 'NotificationType', 'OutgoingPermissionCallType', 'OutgoingPermissions',
+           'OverflowAction', 'OverflowSetting', 'Paging', 'PagingAgent', 'ParkedAgainst', 'PeopleStatus', 'Person',
+           'PersonForwardingSetting', 'PersonNumbers', 'PersonPhoneNumber', 'PersonPlaceAgent',
+           'PersonSettingsApiChild', 'PersonType', 'Personality', 'PhoneNumber', 'PhoneNumberType', 'Policy',
+           'Privacy', 'QueueSettings', 'Recall', 'RecallHuntGroup', 'ReceptionistSettings', 'Record',
+           'RecordingState', 'RecurWeekly', 'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence', 'RedirectReason',
+           'Redirection', 'RingPattern', 'Schedule', 'ScheduleApiBase', 'ScheduleDay', 'ScheduleMonth',
+           'ScheduleType', 'ScheduleWeek', 'SipAddress', 'SipType', 'SiteType', 'StorageType', 'TelephonyCall',
+           'TelephonyEvent', 'TelephonyEventData', 'TelephonyParty', 'Tokens', 'UnansweredCalls', 'UserBase',
+           'UserNumber', 'UserType', 'VoiceMailFax', 'VoicemailCopyOfMessage', 'VoicemailEnabled',
            'VoicemailEnabledWithGreeting', 'VoicemailFax', 'VoicemailMessageStorage', 'VoicemailNotifications',
            'VoicemailSettings', 'VoicemailTransferToNumber', 'WaitMessageSetting', 'WaitMode', 'WebHook',
            'WebHookCreate', 'WebHookEvent', 'WebHookResource', 'WebHookStatus', 'WelcomeMessageSetting',

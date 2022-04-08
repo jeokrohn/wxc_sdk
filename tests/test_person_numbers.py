@@ -22,7 +22,7 @@ class TestRead(TestCaseWithUsers):
     def test_002_direct_number_format(self):
         """
         Read numbers all users, verify number format for direct number
-        # TODO: defect, direct number are not +E.164
+        # TODO: defect, direct number are not +E.164, CALL-69213
         """
         nu = self.api.person_settings.numbers
 

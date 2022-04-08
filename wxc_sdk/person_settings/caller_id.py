@@ -85,8 +85,7 @@ class CallerId(ApiModel):
     external_caller_id_name_policy: Optional[ExternalCallerIdNamePolicy]
     #: Custom External Caller Name, which will be shown if External Caller Id Name is OTHER.
     custom_external_caller_id_name: Optional[str]
-    # TODO: file documentation defect, value seems to be present if
-    #  caller id is set to location number
+    # TODO: file documentation defect, value seems to be present if caller id is set to location number
     #: location external caller ID name
     location_external_caller_id_name: Optional[str]
 
@@ -122,7 +121,7 @@ class CallerId(ApiModel):
 
 class CallerIdApi(PersonSettingsApiChild):
     """
-    Api for person's caller id settings
+    API for person's caller id settings
     """
 
     feature = 'callerId'

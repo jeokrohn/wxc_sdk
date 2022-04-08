@@ -1,4 +1,5 @@
 from collections.abc import Generator
+from dataclasses import dataclass
 from typing import Optional
 
 from .forwarding import ForwardingApi, FeatureSelector
@@ -134,12 +135,12 @@ class HuntGroup(HGandCQ):
                          extension=extension)
 
 
+@dataclass(init=False)
 class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
     """
     Hunt Group API
-
-    :ivar forwarding: hunt group forwarding API :class:`wxc_sdk.telephony.forwarding.ForwardingApi`
     """
+    forwarding: ForwardingApi
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
@@ -280,7 +281,7 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
         return result
 
     def update(self, location_id: str, huntgroup_id: str, update: HuntGroup,
-                         org_id: str = None):
+               org_id: str = None):
         """
         Update a Hunt Group
 

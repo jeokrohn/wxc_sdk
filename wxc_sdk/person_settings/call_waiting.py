@@ -10,7 +10,7 @@ __all__ = ['CallWaitingApi']
 
 class CallWaitingApi(PersonSettingsApiChild):
     """
-    Api for person's call waiting settings
+    API for person's call waiting settings
     """
 
     feature = 'callWaiting'

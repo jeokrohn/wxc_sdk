@@ -1,4 +1,5 @@
 from ..api_child import ApiChild
+from ..rest import RestSession
 
 __all__ = ['PersonSettingsApiChild']
 
@@ -9,6 +10,14 @@ class PersonSettingsApiChild(ApiChild, base=''):
     """
 
     feature = None
+
+    def __init__(self, *, session: RestSession, base: str = None,
+                 workspaces: bool = False):
+        if workspaces:
+            self.selector = 'workspaces'
+        else:
+            self.selector = 'people'
+        super().__init__(session=session, base=base)
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(base='')
@@ -27,4 +36,4 @@ class PersonSettingsApiChild(ApiChild, base=''):
         :rtype: str
         """
         path = path and f'/{path}' or ''
-        return self.session.ep(f'people/{person_id}/features/{self.feature}{path}')
+        return self.session.ep(f'{self.selector}/{person_id}/features/{self.feature}{path}')

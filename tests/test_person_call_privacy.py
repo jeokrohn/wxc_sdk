@@ -115,7 +115,7 @@ class TestUpdate(TestCaseWithUsers):
     def test_004_verify_agent_id_format(self):
         """
         verify format of agent IDs
-        # TODO: defect, wrong agent id format; broadcloud ID instead of UUID
+        # TODO: defect, wrong agent id format; broadcloud ID instead of UUID, CALL-68642
         """
         with self.target_user() as user:
             # API shortcut

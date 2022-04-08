@@ -1,6 +1,7 @@
 """
 Person settings
 """
+from dataclasses import dataclass
 
 from .appservices import AppServicesApi
 from .barge import BargeApi
@@ -30,30 +31,29 @@ __all__ = ['PersonSettingsApi']
 # TODO: push to talk
 # TODO: what about auto transfer numbers? These seem to exist in workspace settings
 
-
+@dataclass(init=False)
 class PersonSettingsApi(ApiChild, base='people'):
     """
     API for all user level settings
-
-    :ivar appservices: app services settings API: :class:`appservices.AppServicesApi`
-    :ivar barge: barge API :class:`barge.BargeApi`
-    :ivar call_intercept: call intercept API :class:`call_intercept.CallInterceptApi`
-    :ivar call_recording: call recording API :class:`call_recording.CallRecordingApi`
-    :ivar call_waiting: call waiting API: :class:`call_waiting.CallWaitingApi`
-    :ivar caller_id: caller id API :class:`caller_id.CallerIdApi`
-    :ivar dnd: DND API :class:`dnd.DndApi`
-    :ivar exec_assistant: exec assistant settings API: :class:`exec_assistant.ExecAssistantApi`
-    :ivar forwarding: call forwarding API :class:`forwarding.ForwardingApi`
-    :ivar hoteling: hoteling API: :class:`hoteling.HotelingApi`
-    :ivar monitoring: :class:`monitoring.MonitoringApi`
-    :ivar numbers: numbers API: :class:`numbers.NumbersApi`
-    :ivar permissions_in: incoming permission settings API: :class:`permissions_in.IncomingPermissionsApi`
-    :ivar permissions_out: outgoing permission settings API: :class:`permissions_out.OutgoingPermissionsApi`
-    :ivar privacy: privacy API: :class:`privacy.PrivacyApi`
-    :ivar receptionist: receptionist client settings API: :class:`receptionist.ReceptionistApi`
-    :ivar schedules: person schedules API: :class:`wxc_sdk.common.schedules.ScheduleApi`
-    :ivar voicemail: voicemail API: :class:`voicemail.VoicemailApi`
     """
+    appservices: AppServicesApi
+    barge: BargeApi
+    call_intercept: CallInterceptApi
+    call_recording: CallRecordingApi
+    call_waiting: CallWaitingApi
+    caller_id: CallerIdApi
+    dnd: DndApi
+    exec_assistant: ExecAssistantApi
+    forwarding: PersonForwardingApi
+    hoteling: HotelingApi
+    monitoring: MonitoringApi
+    numbers: NumbersApi
+    permissions_in: IncomingPermissionsApi
+    permissions_out: OutgoingPermissionsApi
+    privacy: PrivacyApi
+    receptionist: ReceptionistApi
+    schedules: ScheduleApi
+    voicemail: VoicemailApi
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)

@@ -29,7 +29,7 @@ class Privacy(ApiModel):
 
 class PrivacyApi(PersonSettingsApiChild):
     """
-    Api for person's call monitoring settings
+    API for person's call monitoring settings
     """
 
     feature = 'privacy'

@@ -158,7 +158,7 @@ class XForwardingSetting:
 
 class VoicemailApi(PersonSettingsApiChild):
     """
-    Api for person's call voicemail settings
+    API for person's call voicemail settings
     """
 
     feature = 'voicemail'

@@ -1,6 +1,7 @@
 """
 Telephony types and API
 """
+from dataclasses import dataclass
 
 from .calls import CallsApi
 from ..common.schedules import ScheduleApi, ScheduleApiBase
@@ -16,20 +17,20 @@ from ..rest import RestSession
 __all__ = ['TelephonyApi']
 
 
+@dataclass(init=False)
 class TelephonyApi(ApiChild, base='telephony'):
     """
-    The telephony API. Child of :class:`WebexSimpleApi`
-
-    :ivar auto_attendant: :class:`autoattendant.AutoAttendantApi`
-    :ivar calls: :class:`calls.CallsApi`
-    :ivar schedules: :class:`wxc_sdk.common.schedules.ScheduleApi`
-    :ivar paging: :class:`paging.PagingApi`
-    :ivar huntgroup: :class:`huntgroup.HuntGroupApi`
-    :ivar callqueue: :class:`callqueue.CallQueueApi`
-    :ivar callpark: :class:`callpark.CallParkApi`
-    :ivar pickup: :class:`callpickup.CallPickupApi`
+    The telephony settings (features) API.
 
     """
+    auto_attendant: AutoAttendantApi
+    calls: CallsApi
+    schedules: ScheduleApi
+    paging: PagingApi
+    huntgroup: HuntGroupApi
+    callqueue: CallQueueApi
+    callpark: CallParkApi
+    pickup: CallPickupApi
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)

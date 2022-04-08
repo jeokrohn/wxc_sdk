@@ -30,7 +30,7 @@ class _Helper(ApiModel):
 
 class ExecAssistantApi(PersonSettingsApiChild):
     """
-    Api for person's exec assistant settings
+    API for person's exec assistant settings
     """
 
     feature = 'executiveAssistant'

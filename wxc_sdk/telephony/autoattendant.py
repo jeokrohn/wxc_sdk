@@ -2,6 +2,7 @@
 Auto attendant data types and API
 """
 from collections.abc import Generator
+from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
@@ -200,12 +201,12 @@ class AutoAttendant(ApiModel):
                              after_hours_menu=AutoAttendantMenu.default())
 
 
+@dataclass(init=False)
 class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
     """
-    auto attendant API
-
-    :ivar forwarding: auto attendant forwarding API :class:`wxc_sdk.telephony.forwarding.ForwardingApi`
+    Auto attendant API
     """
+    forwarding: ForwardingApi
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)

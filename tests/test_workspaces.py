@@ -1,6 +1,7 @@
 """
 Test for workspaces API
 """
+# TODO: tests for authorization codes
 import random
 from collections.abc import Generator
 from concurrent.futures import ThreadPoolExecutor
@@ -31,6 +32,155 @@ class TestDetails(TestCaseWithLog):
             details = list(pool.map(lambda w: ws.details(workspace_id=w.workspace_id),
                                     ws_list))
         print(f'got details for {len(details)} workspaces')
+
+
+class TestOutgoingPermissionsAutoTransferNumbers(TestCaseWithLog):
+
+    def test_001_get_all(self):
+        """
+        get outgoing permissions auto transfer numbers for all workspaces
+        """
+        wsa = self.api.workspaces
+        tna = self.api.workspace_settings.permissions_out.transfer_numbers
+        targets = [ws for ws in wsa.list()
+                   if ws.calling == CallingType.webex]
+        if not targets:
+            self.skipTest('Need some WxC enabled workspaces to run this test')
+        with ThreadPoolExecutor() as pool:
+            _ = list(pool.map(lambda ws: tna.read(person_id=ws.workspace_id),
+                              targets))
+        print(f'outgoing permissions auto transfer numbers for {len(targets)} workspaces')
+
+    @contextmanager
+    def target_ws_context(self, use_custom_enabled: bool = True) -> Workspace:
+        """
+        pick a random workspace and make sure that the outgoing permission settings are restored
+
+        :return:
+        """
+        po = self.api.workspace_settings.permissions_out
+        targets = [ws for ws in self.api.workspaces.list()
+                   if ws.calling == CallingType.webex]
+        if not targets:
+            self.skipTest('Need some WxC enabled workspaces to run this test')
+        random.shuffle(targets)
+        # if enable == False then we need a workspace where custom_enabled is not set. Else setting it to False
+        # will clear all existing customer settings and we want to avoid that side effect of the test
+        po_settings = None
+        target_ws = next((ws for ws in targets
+                          if use_custom_enabled or
+                          not (po_settings := po.read(person_id=ws.workspace_id)).use_custom_enabled),
+                         None)
+        if target_ws is None:
+            self.skipTest('No WxC enabled workspace with use_custom_enabled==False')
+        if po_settings is None:
+            po_settings = po.read(person_id=target_ws.workspace_id)
+        try:
+            if use_custom_enabled:
+                # enable custom settings: else auto transfer numbers can't be set
+                po.configure(person_id=target_ws.workspace_id,
+                             settings=OutgoingPermissions(use_custom_enabled=use_custom_enabled))
+            yield target_ws
+        finally:
+            # restore old settings
+            if use_custom_enabled:
+                po.configure(person_id=target_ws.workspace_id, settings=po_settings)
+            po_restored = po.read(person_id=target_ws.workspace_id)
+            self.assertEqual(po_settings, po_restored)
+
+    def test_002_update_wo_custom_enabled(self):
+        """
+        updating auto transfer numbers requires use_custom_enabled to be set
+        :return:
+        """
+        tna = self.api.workspace_settings.permissions_out.transfer_numbers
+        with self.target_ws_context(use_custom_enabled=False) as target_ws:
+            target_ws: Workspace
+            numbers = tna.read(person_id=target_ws.workspace_id)
+            try:
+                # change auto transfer number 1
+                update = numbers.copy(deep=True)
+                transfer = f'+4961007739{random.randint(0, 999):03}'
+                update.auto_transfer_number1 = transfer
+                tna.configure(person_id=target_ws.workspace_id, settings=update)
+
+                # verify update
+                updated = tna.read(person_id=target_ws.workspace_id)
+                # update should not work with use_custom_enabled == False
+                self.assertEqual(numbers, updated)
+            finally:
+                # restore old settings
+                tna.configure(person_id=target_ws.workspace_id, settings=numbers.configure_unset_numbers)
+                restored = tna.read(person_id=target_ws.workspace_id)
+                self.assertEqual(numbers, restored)
+            # try
+        # with
+
+    def test_003_update_one_number(self):
+        """
+        try to update auto transfer numbers for a workspace
+        """
+        tna = self.api.workspace_settings.permissions_out.transfer_numbers
+        with self.target_ws_context() as target_ws:
+            target_ws: Workspace
+            numbers = tna.read(person_id=target_ws.workspace_id)
+            try:
+                # change auto transfer number 1
+                update = numbers.copy(deep=True)
+                transfer = f'+496100773{random.randint(0, 9999):03}'
+                update.auto_transfer_number1 = transfer
+                tna.configure(person_id=target_ws.workspace_id, settings=update)
+
+                # verify update
+                updated = tna.read(person_id=target_ws.workspace_id)
+                # number should be equal; ignore hyphens in number returned by API
+                self.assertEqual(transfer, updated.auto_transfer_number1.replace('-', ''))
+                # other than that the updated numbers should be identical to the numbers before
+                updated.auto_transfer_number1 = numbers.auto_transfer_number1
+                self.assertEqual(numbers, updated)
+            finally:
+                # restore old settings
+                tna.configure(person_id=target_ws.workspace_id, settings=numbers.configure_unset_numbers)
+                restored = tna.read(person_id=target_ws.workspace_id)
+                self.assertEqual(numbers, restored)
+            # try
+        # with
+
+    def test_002_update_one_number_no_effect_on_other_numbers(self):
+        """
+        try to update auto transfer numbers for a workspace. Verify that updating a single number doesn't affect the
+        other numbers
+        """
+        tna = self.api.workspace_settings.permissions_out.transfer_numbers
+        with self.target_ws_context() as target_ws:
+            target_ws: Workspace
+            numbers = tna.read(person_id=target_ws.workspace_id)
+            try:
+                all_numbers_set = AutoTransferNumbers(auto_transfer_number1='+4961007738001',
+                                                      auto_transfer_number2='+4961007738002',
+                                                      auto_transfer_number3='+4961007738003')
+                tna.configure(person_id=target_ws.workspace_id, settings=all_numbers_set)
+                all_numbers_set = tna.read(person_id=target_ws.workspace_id)
+
+                # change auto transfer number 1
+                transfer = f'+496100773{random.randint(0, 9999):03}'
+                update = AutoTransferNumbers(auto_transfer_number1=transfer)
+                tna.configure(person_id=target_ws.workspace_id, settings=update)
+
+                # verify update
+                updated = tna.read(person_id=target_ws.workspace_id)
+                # number should be equal; ignore hyphens in number returned by API
+                self.assertEqual(transfer, updated.auto_transfer_number1.replace('-', ''))
+                # other than that the updated numbers should be identical to the numbers before
+                updated.auto_transfer_number1 = all_numbers_set.auto_transfer_number1
+                self.assertEqual(all_numbers_set, updated)
+            finally:
+                # restore old settings
+                tna.configure(person_id=target_ws.workspace_id, settings=numbers.configure_unset_numbers)
+                restored = tna.read(person_id=target_ws.workspace_id)
+                self.assertEqual(numbers, restored)
+            # try
+        # with
 
 
 class TestCreateUpdate(TestCaseWithLog):

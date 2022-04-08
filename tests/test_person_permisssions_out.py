@@ -23,6 +23,28 @@ class TestRead(TestCaseWithUsers):
         print(f'Got outgoing permissions for {len(self.users)} users')
         print('\n'.join(f'{user.display_name}: {s.json()}' for user, s in zip(self.users, settings)))
 
+    def test_002_missing_auto_transfer_numbers(self):
+        """
+        apparently we are missing an API for person auto transfer numbers for outgoing permissions.
+        This API exists for workspaces though
+        """
+        po = self.api.person_settings.permissions_out
+
+        with ThreadPoolExecutor() as pool:
+            settings = list(pool.map(lambda user: po.read(person_id=user.person_id),
+                                     self.users))
+        print(f'Got outgoing permissions for {len(self.users)} users')
+        print('\n'.join(f'{user.display_name}: {s.json()}' for user, s in zip(self.users, settings)))
+
+        def get_numbers(person: Person):
+            # /v1/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers
+            url = f'https://webexapis.com/v1/people/{person.person_id}/features/outgoingPermission/autoTransferNumbers'
+            return self.api.session.rest_get(url)
+
+        with ThreadPoolExecutor() as pool:
+            _ = list(pool.map(lambda user: get_numbers(user),
+                              self.users))
+
 
 class TestUpdate(TestCaseWithUsers):
 

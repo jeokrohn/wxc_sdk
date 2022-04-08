@@ -61,7 +61,7 @@ class IncomingPermissions(ApiModel):
 
 class IncomingPermissionsApi(PersonSettingsApiChild):
     """
-    Api for person's incoming permissions settings
+    API for person's incoming permissions settings
     """
 
     feature = 'incomingPermission'

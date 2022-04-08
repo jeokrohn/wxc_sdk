@@ -69,7 +69,7 @@ class Monitoring(ApiModel):
 
 class MonitoringApi(PersonSettingsApiChild):
     """
-    Api for person's call monitoring settings
+    API for person's call monitoring settings
     """
 
     feature = 'monitoring'

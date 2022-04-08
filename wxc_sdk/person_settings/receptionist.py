@@ -27,7 +27,7 @@ class ReceptionistSettings(ApiModel):
 
 class ReceptionistApi(PersonSettingsApiChild):
     """
-    Api for person's receptionist client settings
+    API for person's receptionist client settings
     """
 
     feature = 'reception'

@@ -105,7 +105,7 @@ class InterceptSetting(ApiModel):
 
 class CallInterceptApi(PersonSettingsApiChild):
     """
-    Api for person's call intercept settings
+    API for person's call intercept settings
     """
 
     feature = 'intercept'

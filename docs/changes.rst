@@ -1,5 +1,18 @@
 Release history
 ===============
+0.7.0
+-----
+-   new API: workspaces settings :attr:`wxc_sdk.WebexSimpleApi.workspace_settings`
+    Workspace settings are very similar to person settings. Hence the
+    :class:`wxc_sdk.workspace_settings.WorkspaceSettingsApi` reuses the existing person settings sub-APIs. When calling
+    any of these endpoints the ``workspace_id`` of the workspace has to be passed to the ``person_id`` parameter of
+    endpoint.
+-   outgoing permissions API (:class:`wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi`) enhanced to
+    support outgoing permission transfer numbers
+    (:attr:`wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.transfer_numbers`) and authorization codes
+    (:attr:`wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.auth_codes`). For now these sub-APIs are
+    only available for workspaces and not for persons. As soon as the Webex Calling APIs start to support this
+    functionally for persons the SDK will follow.
 
 0.6.1
 -----

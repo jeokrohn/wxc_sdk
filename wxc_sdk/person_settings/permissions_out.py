@@ -3,14 +3,17 @@ Person outgoing permissions API
 """
 import json
 from enum import Enum
+from typing import Optional
 
-from pydantic import validator
+from pydantic import validator, parse_obj_as
 
 from .common import PersonSettingsApiChild
 from ..base import ApiModel
+from ..rest import RestSession
 
 __all__ = ['OutgoingPermissionCallType', 'Action', 'CallTypePermission', 'CallingPermissions',
-           'OutgoingPermissions', 'OutgoingPermissionsApi']
+           'OutgoingPermissions', 'AutoTransferNumbers', 'AuthCode', 'TransferNumbersApi',
+           'AuthCodesApi', 'OutgoingPermissionsApi']
 
 
 class OutgoingPermissionCallType(str, Enum):
@@ -21,6 +24,7 @@ class OutgoingPermissionCallType(str, Enum):
     local = 'LOCAL'
     toll_free = 'TOLL_FREE'
     toll = 'TOLL'
+    national = 'NATIONAL'
     international = 'INTERNATIONAL'
     operator_assisted = 'OPERATOR_ASSISTED'
     chargeable_directory_assisted = 'CHARGEABLE_DIRECTORY_ASSISTED'
@@ -64,6 +68,7 @@ class CallingPermissions(ApiModel):
     local: CallTypePermission
     toll_free: CallTypePermission
     toll: CallTypePermission
+    national: CallTypePermission
     international: CallTypePermission
     operator_assisted: CallTypePermission
     chargeable_directory_assisted: CallTypePermission
@@ -119,9 +124,9 @@ class OutgoingPermissions(ApiModel):
     Person's Outgoing Permission Settings
     """
     #: When true, indicates that this user uses the specified calling permissions when placing outbound calls.
-    use_custom_enabled: bool
+    use_custom_enabled: Optional[bool]
     #: Specifies the outbound calling permissions settings.
-    calling_permissions: CallingPermissions
+    calling_permissions: Optional[CallingPermissions]
 
     @validator('calling_permissions', pre=True)
     def transform_calling_permissions(cls, v):
@@ -140,25 +145,205 @@ class OutgoingPermissions(ApiModel):
     def json(self, *args, exclude_none=True, by_alias=True, **kwargs) -> str:
         # convert calling_permissions back to a list
         j_data = json.loads(super().json(*args, exclude_none=exclude_none, by_alias=by_alias, **kwargs))
-        c_perms = []
-        for call_type, setting in j_data['callingPermissions'].items():
-            setting['callType'] = call_type.upper()
-            c_perms.append(setting)
-        j_data['callingPermissions'] = c_perms
+        if j_data.get('callingPermissions'):
+            c_perms = []
+            for call_type, setting in j_data['callingPermissions'].items():
+                setting['callType'] = call_type.upper()
+                c_perms.append(setting)
+            j_data['callingPermissions'] = c_perms
         return json.dumps(j_data)
+
+
+class AutoTransferNumbers(ApiModel):
+    """
+    Outgoing permission auto transfer numbers
+    """
+    #: When calling a specific call type, this workspace will be automatically transferred to another number.
+    auto_transfer_number1: Optional[str]
+    #: When calling a specific call type, this workspace will be automatically transferred to another number.
+    auto_transfer_number2: Optional[str]
+    #: When calling a specific call type, this workspace will be automatically transferred to another number.
+    auto_transfer_number3: Optional[str]
+
+    @property
+    def configure_unset_numbers(self) -> 'AutoTransferNumbers':
+        """
+        Unset numbers are returned by the API as null (None). To set a number back to unset an empty strings has to
+        be set. This property returns an :class:`AutoTransferNumbers` instance where the numbers are set to an empty
+        string instead of None
+
+        :return: auto transfer numbers with empty strings instead of None
+        :rtype: :class:`AutoTransferNumbers`
+        """
+        data = self.dict()
+        for k in data:
+            data[k] = data[k] or ''
+        return AutoTransferNumbers.parse_obj(data)
+
+
+class AuthCode(ApiModel):
+    """
+    activation codes and description.
+    """
+    #: Indicates an authorization code.
+    code: str
+    #: Indicates the description of the authorization code.
+    description: str
+
+
+class TransferNumbersApi(PersonSettingsApiChild):
+    """
+    API for outgoing permission auto transfer numbers
+    """
+    feature = 'outgoingPermission/autoTransferNumbers'
+
+    def read(self, person_id: str, org_id: str = None) -> AutoTransferNumbers:
+        """
+        Retrieve Transfer Numbers Settings for a Workspace.
+
+        When calling a specific call type, this workspace will be automatically transferred to another number. The
+        person assigned the Auto Transfer Number can then approve the call and send it through or reject the call
+        type. You can add up to 3 numbers.
+
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or
+        a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+
+        :param person_id: Unique identifier for the workspace.
+        :type person_id: str
+        :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
+            may use this parameter as the default is the same organization as the token used to access API.
+        :type org_id: str
+        :return: auto transfer numbers
+        :rtype: :class:`AutoTransferNumbers`
+        """
+        url = self.f_ep(person_id=person_id)
+        params = org_id and {'orgId': org_id} or None
+        data = self.get(url, params=params)
+        return AutoTransferNumbers.parse_obj(data)
+
+    def configure(self, person_id: str, settings: AutoTransferNumbers, org_id: str = None):
+        """
+        Modify Transfer Numbers Settings for a Place.
+
+        When calling a specific call type, this workspace will be automatically transferred to another number.
+        The person assigned the Auto Transfer Number can then approve the call and send it through or reject the
+        call type. You can add up to 3 numbers.
+
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a
+        user auth token with spark:workspaces_write scope can be used to update workspace settings.
+
+        :param person_id: Unique identifier for the workspace.
+        :type person_id: str
+        :param settings: new auto transfer numbers
+        :type settings: AutoTransferNumbers
+        :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
+            may use this parameter as the default is the same organization as the token used to access API.
+        :type org_id: str
+        """
+        url = self.f_ep(person_id=person_id)
+        params = org_id and {'orgId': org_id} or None
+        body = settings.json()
+        self.put(url, params=params, data=body)
+
+
+class AuthCodesApi(PersonSettingsApiChild):
+    """
+    API for person's outgoing permission authorization codes
+    """
+    feature = 'outgoingPermission/authorizationCodes'
+
+    def read(self, person_id: str, org_id: str = None) -> list[AuthCode]:
+        """
+        Retrieve Authorization codes for a Workspace.
+
+        Authorization codes are used to bypass permissions.
+
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or
+        a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+
+        :param person_id: Unique identifier for the workspace.
+        :type person_id: str
+        :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
+            may use this parameter as the default is the same organization as the token used to access API.
+        :type org_id: str
+        :return: list of authorization codes
+        :rtype: list of :class:`AuthCode`
+        """
+        url = self.f_ep(person_id=person_id)
+        params = org_id and {'orgId': org_id} or None
+        data = self.get(url, params=params)
+        return parse_obj_as(list[AuthCode], data['authorizationCodes'])
+
+    def modify(self, person_id: str, delete_codes: list[str], org_id: str = None):
+        """
+        Modify Authorization codes for a workspace.
+
+        Authorization codes are used to bypass permissions.
+
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a
+        user auth token with spark:workspaces_write scope can be used to update workspace settings.
+
+        :param person_id: Unique identifier for the workspace.
+        :type person_id: str
+        :param delete_codes: authorization codes to remove
+        :type delete_codes: list[str]
+        :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
+            may use this parameter as the default is the same organization as the token used to access API.
+        :type org_id: str
+        """
+        url = self.f_ep(person_id=person_id)
+        params = org_id and {'orgId': org_id} or None
+        body = {'deleteCodes': delete_codes}
+        self.put(url, params=params, json=body)
+
+    def create(self, person_id: str, code: str, description: str, org_id: str = None):
+        """
+        Modify Authorization codes for a workspace.
+
+        Authorization codes are used to bypass permissions.
+
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a
+        user auth token with spark:workspaces_write scope can be used to update workspace settings.
+
+        :param person_id: Unique identifier for the workspace.
+        :type person_id: str
+        :param code: Indicates an authorization code.
+        :type code: str
+        :param description: Indicates the description of the authorization code.
+        :type description: str
+        :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
+            may use this parameter as the default is the same organization as the token used to access API.
+        :type org_id: str
+        """
+        url = self.f_ep(person_id=person_id)
+        params = org_id and {'orgId': org_id} or None
+        body = {'code': code,
+                'description': description}
+        self.post(url, params=params, json=body)
 
 
 class OutgoingPermissionsApi(PersonSettingsApiChild):
     """
-    Api for person's outgoing permissions settings
+    API for person's outgoing permissions settings
     """
+    #: Only available for workspaces
+    transfer_numbers: TransferNumbersApi
+    #: Only available for workspaces
+    auth_codes: AuthCodesApi
 
     feature = 'outgoingPermission'
 
+    def __init__(self, *, session: RestSession, base: str = None,
+                 workspaces: bool = False):
+        super().__init__(session=session, base=base, workspaces=workspaces)
+        if workspaces:
+            # auto transfer numbers API seems to only exist for workspaces
+            self.transfer_numbers = TransferNumbersApi(session=session,
+                                                       base=base, workspaces=workspaces)
+            self.auth_codes = AuthCodesApi(session=session, base=base, workspaces=workspaces)
+
     def read(self, *, person_id: str, org_id: str = None) -> OutgoingPermissions:
         """
-        Retrieve a Person's Outgoing Calling Permissions Settings
-
         Retrieve a Person's Outgoing Calling Permissions Settings
 
         You can change the outgoing calling permissions for a person if you want them to be different from your
@@ -180,10 +365,10 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
 
     def configure(self, *, person_id: str, settings: OutgoingPermissions, org_id: str = None):
         """
-        Configure a Person's Barge In Settings
+        Configure a Person's Outgoing Calling Permissions Settings
 
-        The Barge In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to
-        another subscriber, or barge-in on the call if it was already answered. Barge In can be used across locations.
+        Turn on outgoing call settings for this person to override the calling settings from the location that are
+        used by default.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
         auth token with spark:people_write scope can be used by a person to update their own settings.
