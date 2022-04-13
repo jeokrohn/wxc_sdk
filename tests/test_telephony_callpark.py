@@ -6,7 +6,7 @@ from itertools import chain, groupby
 from typing import ClassVar, Optional
 from unittest import skip
 
-from wxc_sdk.types import *
+from wxc_sdk.all_types import *
 from .base import TestWithLocations
 
 # Number of call parks to create by create many test

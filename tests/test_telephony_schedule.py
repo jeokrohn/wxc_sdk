@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from itertools import chain
 from typing import Optional
 
-from wxc_sdk.types import *
+from wxc_sdk.all_types import *
 from .base import TestWithLocations
 
 

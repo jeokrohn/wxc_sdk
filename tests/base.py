@@ -26,7 +26,7 @@ from dotenv import load_dotenv
 from yaml import safe_load
 
 from wxc_sdk import WebexSimpleApi
-from wxc_sdk.types import Person
+from wxc_sdk.all_types import Person
 from wxc_sdk.integration import Integration
 from wxc_sdk.locations import Location
 from wxc_sdk.tokens import Tokens

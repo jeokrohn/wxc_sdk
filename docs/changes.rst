@@ -1,5 +1,17 @@
 Release history
 ===============
+
+1.0.0
+-----
+-   renamed ``wxc_sdk.types`` to ``wxc_sdk.all_types`` to avoid conflicts
+-   calling behavior API for users: :attr:`wxc_sdk.person_settings.PersonSettingsApi.calling_behavior`
+-   new method: :meth:`wxc_sdk.telephony.TelephonyApi.phone_numbers`
+-   new method: :meth:`wxc_sdk.telephony.TelephonyApi.phone_number_details`
+-   new method: :meth:`wxc_sdk.telephony.TelephonyApi.validate_extensions`
+-   numbers API for workspaces: :attr:`wxc_sdk.workspace_settings.WorkspaceSettingsApi.numbers`
+
+
+
 0.7.0
 -----
 -   new API: workspaces settings :attr:`wxc_sdk.WebexSimpleApi.workspace_settings`

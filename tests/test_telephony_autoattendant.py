@@ -6,7 +6,7 @@ import json
 import random
 from concurrent.futures import ThreadPoolExecutor
 
-from wxc_sdk.types import AutoAttendant, ScheduleType
+from wxc_sdk.all_types import AutoAttendant, ScheduleType
 from .base import TestCaseWithLog, TestWithLocations
 
 

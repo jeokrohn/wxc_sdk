@@ -12,7 +12,7 @@ from concurrent.futures import ThreadPoolExecutor
 from itertools import chain
 
 from wxc_sdk.rest import RestError
-from wxc_sdk.types import *
+from wxc_sdk.all_types import *
 from .base import TestCaseWithUsers
 
 # prefix for test schedule names

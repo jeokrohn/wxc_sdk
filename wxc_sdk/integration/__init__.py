@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 __all__ = ['Integration']
 
 
-@dataclass
+@dataclass(init=False)
 class Integration:
     """
     An OAuth integration

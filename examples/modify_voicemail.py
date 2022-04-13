@@ -12,7 +12,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
 
 from wxc_sdk import WebexSimpleApi
-from wxc_sdk.types import *
+from wxc_sdk.all_types import *
 
 VOICEMAIL_SETTINGS_NUMBER_OF_RINGS = 6
 

@@ -10,6 +10,7 @@ from ..person_settings.call_waiting import CallWaitingApi
 from ..person_settings.caller_id import CallerIdApi
 from ..person_settings.forwarding import PersonForwardingApi
 from ..person_settings.monitoring import MonitoringApi
+from ..person_settings.numbers import NumbersApi
 from ..person_settings.permissions_in import IncomingPermissionsApi
 from ..person_settings.permissions_out import OutgoingPermissionsApi
 from ..rest import RestSession
@@ -31,6 +32,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
     caller_id: CallerIdApi
     forwarding: PersonForwardingApi
     monitoring: MonitoringApi
+    numbers: NumbersApi
     permissions_in: IncomingPermissionsApi
     permissions_out: OutgoingPermissionsApi
 
@@ -41,5 +43,6 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
         self.caller_id = CallerIdApi(session=session, workspaces=True)
         self.forwarding = PersonForwardingApi(session=session, workspaces=True)
         self.monitoring = MonitoringApi(session=session, workspaces=True)
+        self.numbers = NumbersApi(session=session, workspaces=True)
         self.permissions_in = IncomingPermissionsApi(session=session, workspaces=True)
         self.permissions_out = OutgoingPermissionsApi(session=session, workspaces=True)

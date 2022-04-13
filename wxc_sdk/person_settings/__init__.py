@@ -9,6 +9,7 @@ from .call_intercept import CallInterceptApi
 from .call_recording import CallRecordingApi
 from .call_waiting import CallWaitingApi
 from .caller_id import CallerIdApi
+from .calling_behavior import CallingBehaviorApi
 from .dnd import DndApi
 from .exec_assistant import ExecAssistantApi
 from .forwarding import PersonForwardingApi
@@ -38,11 +39,12 @@ class PersonSettingsApi(ApiChild, base='people'):
     """
     appservices: AppServicesApi
     barge: BargeApi
+    dnd: DndApi
     call_intercept: CallInterceptApi
     call_recording: CallRecordingApi
     call_waiting: CallWaitingApi
     caller_id: CallerIdApi
-    dnd: DndApi
+    calling_behavior: CallingBehaviorApi
     exec_assistant: ExecAssistantApi
     forwarding: PersonForwardingApi
     hoteling: HotelingApi
@@ -57,24 +59,25 @@ class PersonSettingsApi(ApiChild, base='people'):
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
-        self.caller_id = CallerIdApi(session=session)
-        self.call_recording = CallRecordingApi(session=session)
-        self.call_intercept = CallInterceptApi(session=session)
-        self.forwarding = PersonForwardingApi(session=session)
+        self.appservices = AppServicesApi(session=session)
         self.barge = BargeApi(session=session)
         self.dnd = DndApi(session=session)
-        self.voicemail = VoicemailApi(session=session)
+        self.call_intercept = CallInterceptApi(session=session)
+        self.call_recording = CallRecordingApi(session=session)
         self.call_waiting = CallWaitingApi(session=session)
-        self.monitoring = MonitoringApi(session=session)
-        self.hoteling = HotelingApi(session=session)
-        self.privacy = PrivacyApi(session=session)
-        self.numbers = NumbersApi(session=session)
-        self.appservices = AppServicesApi(session=session)
+        self.calling_behavior = CallingBehaviorApi(session=session)
+        self.caller_id = CallerIdApi(session=session)
         self.exec_assistant = ExecAssistantApi(session=session)
-        self.receptionist = ReceptionistApi(session=session)
-        self.schedules = ScheduleApi(session=session, base=ScheduleApiBase.people)
+        self.forwarding = PersonForwardingApi(session=session)
+        self.hoteling = HotelingApi(session=session)
+        self.monitoring = MonitoringApi(session=session)
+        self.numbers = NumbersApi(session=session)
         self.permissions_in = IncomingPermissionsApi(session=session)
         self.permissions_out = OutgoingPermissionsApi(session=session)
+        self.privacy = PrivacyApi(session=session)
+        self.receptionist = ReceptionistApi(session=session)
+        self.schedules = ScheduleApi(session=session, base=ScheduleApiBase.people)
+        self.voicemail = VoicemailApi(session=session)
 
     def reset_vm_pin(self, person_id: str, org_id: str = None):
         """

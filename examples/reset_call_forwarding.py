@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
 
 from wxc_sdk import WebexSimpleApi
-from wxc_sdk.types import PersonForwardingSetting
+from wxc_sdk.all_types import PersonForwardingSetting
 
 load_dotenv()
 

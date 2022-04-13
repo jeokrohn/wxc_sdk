@@ -6,7 +6,7 @@ __all__ = ['PersonSettingsApiChild']
 
 class PersonSettingsApiChild(ApiChild, base=''):
     """
-    API for all user level settings
+    Base class for all classes implementing person settings APIs
     """
 
     feature = None

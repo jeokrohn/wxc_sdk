@@ -60,17 +60,17 @@ Datatypes are defined in the respective subpackages and submodules and have to b
    from wxc_sdk.person_settings.barge import BargeSettings
 
 To allow to abstract from the subpackage and submodule structure any datatype can also be imported from
-``wxc_sdk.types`` directly:
+``wxc_sdk.all_types`` directly:
 
 .. code-block::
 
-   from wxc_sdk.types import Person, BargeSettings
+   from wxc_sdk.all_types import Person, BargeSettings
 
 All ``wxc_sdk`` data types can also be imported at once:
 
 .. code-block::
 
-   from wxc_sdk.types import *
+   from wxc_sdk.all_types import *
 
 
 Reference

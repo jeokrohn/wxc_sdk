@@ -5,7 +5,7 @@ import random
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from dataclasses import dataclass
-from wxc_sdk.types import Person, Privacy
+from wxc_sdk.all_types import Person, Privacy
 
 import base64
 

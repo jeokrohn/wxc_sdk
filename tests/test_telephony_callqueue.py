@@ -4,7 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from typing import ClassVar
 
-from wxc_sdk.types import *
+from wxc_sdk.all_types import *
 from .base import TestCaseWithLog, TestCaseWithUsers
 
 # number of call queues to create by create many test

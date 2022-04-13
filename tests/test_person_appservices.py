@@ -7,7 +7,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from unittest import skip
 
-from wxc_sdk.types import Person, AppServicesSettings
+from wxc_sdk.all_types import Person, AppServicesSettings
 from .base import TestCaseWithUsers
 
 

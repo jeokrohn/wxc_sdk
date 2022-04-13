@@ -5,7 +5,7 @@ import random
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 
-from wxc_sdk.types import *
+from wxc_sdk.all_types import *
 from .base import TestCaseWithUsers
 
 

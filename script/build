@@ -52,7 +52,7 @@ fi
 if [ ${all} ] || [ ${docs} ]; then
     echo "==> Building the Docs"
     make -C docs clean
-    sphinx-apidoc -o docs/apidoc -f -e -M wxc_sdk 'wxc_sdk/types.py'
+    sphinx-apidoc -o docs/apidoc -f -e -M wxc_sdk 'wxc_sdk/all_types.py'
     make -C docs html
 fi
 

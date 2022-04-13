@@ -2,6 +2,7 @@
 Person outgoing permissions API
 """
 import json
+from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
@@ -322,6 +323,7 @@ class AuthCodesApi(PersonSettingsApiChild):
         self.post(url, params=params, json=body)
 
 
+@dataclass(init=False)
 class OutgoingPermissionsApi(PersonSettingsApiChild):
     """
     API for person's outgoing permissions settings

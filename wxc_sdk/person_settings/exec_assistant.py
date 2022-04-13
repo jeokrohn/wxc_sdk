@@ -7,7 +7,7 @@ from enum import Enum
 from pydantic import Field
 
 from .common import PersonSettingsApiChild
-from ..common import ApiModel
+from ..base import ApiModel
 
 __all__ = ['ExecAssistantApi', 'ExecAssistantType']
 

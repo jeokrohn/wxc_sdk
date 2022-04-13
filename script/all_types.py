@@ -52,7 +52,7 @@ def main():
                'wxc_sdk.api_child',
                'wxc_sdk.integration',
                'wxc_sdk.rest',
-               'wxc_sdk.types']
+               'wxc_sdk.all_types']
     err = False
     for module_name in module_names:
         if module_name in to_skip:
@@ -111,7 +111,7 @@ def main():
 
         line = f'{line}{entry}'
     print(f'{line.rstrip(" ,")}]', file=source)
-    with open(os.path.join(wxc_sdk, 'types.py'), mode='w') as f:
+    with open(os.path.join(wxc_sdk, 'all_types.py'), mode='w') as f:
         f.write(source.getvalue())
 
     print(source.getvalue())

@@ -6,7 +6,7 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from itertools import chain
 
-from wxc_sdk.types import Person, ReceptionistSettings
+from wxc_sdk.all_types import Person, ReceptionistSettings
 from .base import TestCaseWithUsers
 
 

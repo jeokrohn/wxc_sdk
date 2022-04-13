@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 from calendarific import CalendarifiyApi, Holiday
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.locations import Location
-from wxc_sdk.types import ScheduleType, Event, Schedule
+from wxc_sdk.all_types import ScheduleType, Event, Schedule
 
 log = logging.getLogger(__name__)
 
