@@ -1,6 +1,7 @@
 """
 base functions for unit tests
 """
+import asyncio
 import concurrent.futures
 import glob
 import http.server
@@ -17,6 +18,7 @@ import uuid
 import webbrowser
 from collections.abc import Iterable, Generator
 from dataclasses import dataclass
+from functools import wraps
 from typing import Optional, Any, Union
 from unittest import TestCase
 
@@ -27,6 +29,7 @@ from yaml import safe_load
 
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.all_types import Person
+from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.integration import Integration
 from wxc_sdk.locations import Location
 from wxc_sdk.tokens import Tokens
@@ -215,9 +218,28 @@ class TestCaseWithTokens(TestCase):
     api: Optional[WebexSimpleApi]
     me: Optional[Person]
     tokens: Optional[Tokens]
+    async_api: Optional[AsWebexSimpleApi]
     """
     A test case that required access tokens to run
     """
+
+    class wrapper:
+        pass
+
+    def async_test(async_test):
+        """
+        Decorator to run async tests
+        also initializes the async_api attribute
+        :return:
+        """
+        @wraps(async_test)
+        def run_async_test(test_self: TestCaseWithTokens):
+            async def prepare_and_run():
+                async with AsWebexSimpleApi(tokens=test_self.tokens) as async_api:
+                    test_self.async_api = async_api
+                    await async_test(test_self)
+            asyncio.run(prepare_and_run())
+        return run_async_test
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -289,9 +311,6 @@ class TestCaseWithLog(TestCaseWithTokens):
         super().setUp()
         print(f'{self.__class__.__name__}.setUp() in TestCaseWithLog.setUp()')
         test_case_id = self.id()
-        # enable debug logging on the REST logger
-        rest_logger = logging.getLogger('wxc_sdk.rest')
-        rest_logger.setLevel(logging.DEBUG)
 
         # we always want to have REST logging into a file
         self.log_path = log_name(prefix='rest', test_case_id=test_case_id)
@@ -302,15 +321,22 @@ class TestCaseWithLog(TestCaseWithTokens):
         file_handler.setFormatter(file_fmt)
         self.file_log_handler = file_handler
 
-        rest_logger.addHandler(file_handler)
+        # enable debug logging on the REST loggers
+        rest_logger_names = ['wxc_sdk.rest', 'wxc_sdk.as_rest']
+        for rest_logger_name in rest_logger_names:
+            rest_logger = logging.getLogger(rest_logger_name)
+            rest_logger.setLevel(logging.DEBUG)
+            rest_logger.addHandler(file_handler)
 
     def tearDown(self) -> None:
         super().tearDown()
         print(f'{self.__class__.__name__}.tearDown() in TestCaseWithLog.teardown()')
 
         # close REST file handler and remove from REST logger
-        rest_logger = logging.getLogger('wxc_sdk.rest')
-        rest_logger.removeHandler(self.file_log_handler)
+        rest_logger_names = ['wxc_sdk.rest', 'wxc_sdk.as_rest']
+        for rest_logger_name in rest_logger_names:
+            rest_logger = logging.getLogger(rest_logger_name)
+            rest_logger.removeHandler(self.file_log_handler)
 
         self.file_log_handler.close()
         self.file_log_handler = None

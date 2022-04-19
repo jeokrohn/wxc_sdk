@@ -9,7 +9,7 @@ from pydantic import Field
 from .common import PersonSettingsApiChild
 from ..base import ApiModel
 
-__all__ = ['ExecAssistantApi', 'ExecAssistantType']
+__all__ = ['ExecAssistantApi', 'ExecAssistantType', '_Helper']
 
 
 class ExecAssistantType(str, Enum):

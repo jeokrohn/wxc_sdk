@@ -83,7 +83,7 @@ class CallingPermissions(ApiModel):
 
     def for_call_type(self, call_type: OutgoingPermissionCallType) -> CallTypePermission:
         """
-        get call type seting for a specific call type
+        get call type setting for a specific call type
 
         :param call_type: call type
         :type call_type: :class:`OutgoingPermissionCallType`
@@ -343,6 +343,9 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
             self.transfer_numbers = TransferNumbersApi(session=session,
                                                        base=base, workspaces=workspaces)
             self.auth_codes = AuthCodesApi(session=session, base=base, workspaces=workspaces)
+        else:
+            self.transfer_numbers = None
+            self.auth_codes = None
 
     def read(self, *, person_id: str, org_id: str = None) -> OutgoingPermissions:
         """

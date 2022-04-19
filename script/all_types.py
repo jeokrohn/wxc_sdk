@@ -52,6 +52,8 @@ def main():
                'wxc_sdk.api_child',
                'wxc_sdk.integration',
                'wxc_sdk.rest',
+               'wxc_sdk.as_rest',
+               'wxc_sdk.as_api',
                'wxc_sdk.all_types']
     err = False
     for module_name in module_names:

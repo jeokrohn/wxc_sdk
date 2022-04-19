@@ -166,6 +166,18 @@ class TestConfigure(TestCaseWithUsers):
             intercept = ps.call_intercept.read(person_id=user.person_id)
         self.assertEqual(os.path.basename(self.wav_path), intercept.incoming.announcements.file_name)
 
+    @TestCaseWithUsers.async_test
+    async def test_006a_async_upload_intercept_greeting(self):
+        """
+        test to upload a custom greeting for call intercept
+        :return:
+        """
+        with self.call_intercept_user_context() as user:
+            ps = self.async_api.person_settings
+            await ps.call_intercept.greeting(person_id=user.person_id, content=self.wav_path)
+            intercept = await ps.call_intercept.read(person_id=user.person_id)
+        self.assertEqual(os.path.basename(self.wav_path), intercept.incoming.announcements.file_name)
+
     def test_007_upload_intercept_greeting_from_open_file(self):
         """
         test to upload a custom greeting for call intercept from an open file

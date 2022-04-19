@@ -143,4 +143,3 @@ tests/testtoken.yml
 examples/*.env
 examples/*.yml
 tests/test_cpapi.py
-/script/async_gen.py

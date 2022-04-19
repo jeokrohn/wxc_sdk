@@ -66,4 +66,8 @@ class TestValidateExtensions(TestCaseWithLog):
         to_validate = [next(new_extensions)] * 3
         result = at.validate_extensions(extensions=to_validate)
         print(result)
-        self.assertEqual(ValidateExtensionResponseStatus.ok, result.status)
+        self.assertEqual(ValidateExtensionResponseStatus.errors, result.status)
+        self.assertTrue(result.extension_status)
+        self.assertEqual(len(to_validate), len(result.extension_status))
+        for i in range(1, 3):
+            self.assertEqual(ValidateExtensionStatusState.DUPLICATE_IN_LIST, result.extension_status[i].state)

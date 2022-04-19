@@ -26,17 +26,17 @@ class LocationAddress(ApiModel):
     """
 
     #: address line 1
-    address1: str
+    address1: Optional[str]
     #: address line 2
-    address2: str
+    address2: Optional[str]
     #: city
-    city: str
+    city: Optional[str]
     #: state
     state: Optional[str]
     #: ZIP/Postal code
-    postal_code: str
+    postal_code: Optional[str]
     #: country
-    country: str
+    country: Optional[str]
 
 
 class Location(ApiModel):

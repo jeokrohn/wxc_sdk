@@ -13,6 +13,7 @@ Subpackages
    :maxdepth: 4
 
    wxc_sdk.common
+   wxc_sdk.groups
    wxc_sdk.integration
    wxc_sdk.licenses
    wxc_sdk.locations
@@ -30,6 +31,8 @@ Submodules
    :maxdepth: 4
 
    wxc_sdk.api_child
+   wxc_sdk.as_api
+   wxc_sdk.as_rest
    wxc_sdk.base
    wxc_sdk.rest
    wxc_sdk.tokens

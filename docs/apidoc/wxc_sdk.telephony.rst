@@ -22,6 +22,7 @@ Submodules
 
    wxc_sdk.telephony.autoattendant
    wxc_sdk.telephony.callpark
+   wxc_sdk.telephony.callpark_extension
    wxc_sdk.telephony.callpickup
    wxc_sdk.telephony.calls
    wxc_sdk.telephony.forwarding

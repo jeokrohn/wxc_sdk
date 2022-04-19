@@ -5,13 +5,13 @@ Common date types and APIs
 from enum import Enum
 from typing import Optional
 
-from pydantic import Field
+from pydantic import Field, root_validator
 
 from wxc_sdk.base import ApiModel
 from ..base import webex_id_to_uuid
 
 __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting', 'UserNumber', 'PersonPlaceAgent',
-           'MonitoredMember']
+           'MonitoredMember', 'CallParkExtension']
 
 
 class UserType(str, Enum):
@@ -110,3 +110,36 @@ class MonitoredMember(ApiModel):
     @property
     def ci_member_id(self) -> Optional[str]:
         return self.member_id and webex_id_to_uuid(self.member_id)
+
+
+class CallParkExtension(ApiModel):
+    #: The identifier of the call park extension.
+    cpe_id: Optional[str] = Field(alias='id')
+    #: The name to describe the call park extension.
+    name: Optional[str]
+    #: The extension number for this call park extension.
+    extension: Optional[str]
+    #: The location name where the call park extension is.
+    location_name: Optional[str]
+    #: The location Id for the location.
+    location_id: Optional[str]
+
+    @root_validator(pre=True)
+    def fix_location_name(cls, values):
+        """
+
+        :meta private:
+        :param values:
+        :return:
+        """
+        location = values.pop('location', None)
+        if location is not None:
+            values['location_name'] = location
+        return values
+
+    @property
+    def ci_cpe_id(self) -> Optional[str]:
+        """
+        call park extension ID as UUID
+        """
+        return self.cpe_id and webex_id_to_uuid(self.cpe_id)

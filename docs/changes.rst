@@ -1,6 +1,13 @@
 Release history
 ===============
 
+1.1.0
+-----
+-   new: read only call park extensions API: :attr:`wxc_sdk.telephony.TelephonyApi.callpark_extension`
+-   new: groups API: :attr:`wxc_sdk.WebexSimpleApi.groups`
+-   new: experimental async API: :class:`wxc_sdk.as_api.AsWebexSimpleApi`
+
+
 1.0.0
 -----
 -   renamed ``wxc_sdk.types`` to ``wxc_sdk.all_types`` to avoid conflicts
@@ -9,7 +16,6 @@ Release history
 -   new method: :meth:`wxc_sdk.telephony.TelephonyApi.phone_number_details`
 -   new method: :meth:`wxc_sdk.telephony.TelephonyApi.validate_extensions`
 -   numbers API for workspaces: :attr:`wxc_sdk.workspace_settings.WorkspaceSettingsApi.numbers`
-
 
 
 0.7.0

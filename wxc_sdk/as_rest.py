@@ -1,30 +1,31 @@
 """
 REST session for Webex API requests
 """
-import json
+import asyncio
+import json as json_mod
 import logging
-import time
+import urllib.parse
 import uuid
-from collections.abc import Generator
+from asyncio import Semaphore
+from collections.abc import AsyncGenerator
 from io import TextIOBase, StringIO
-from threading import Semaphore
 from typing import Tuple, Type, Optional
-from urllib.parse import parse_qsl
 
 import backoff
+from aiohttp import ClientSession, ClientResponse, ClientResponseError, RequestInfo
+from aiohttp.typedefs import LooseHeaders
 from pydantic import BaseModel, ValidationError, Field
-from requests import HTTPError, Response, Session
-from requests.adapters import HTTPAdapter
 
-from .base import ApiModel, StrOrDict
+from .base import ApiModel
+from .base import StrOrDict
 from .tokens import Tokens
 
-__all__ = ['SingleError', 'ErrorDetail', 'RestError', 'RestSession', 'dump_response']
+__all__ = ['AsSingleError', 'AsErrorDetail', 'AsRestError', 'as_dump_response', 'AsRestSession']
 
 log = logging.getLogger(__name__)
 
 
-class SingleError(BaseModel):
+class AsSingleError(BaseModel):
     """
     Representation of single error in the body of an HTTP error response from Webex
     """
@@ -41,13 +42,13 @@ class SingleError(BaseModel):
         return self.error_code
 
 
-class ErrorDetail(ApiModel):
+class AsErrorDetail(ApiModel):
     """
     Representation of error details in the body of an HTTP error response from Webex
     """
     error_code: Optional[int] = Field(alias='errorCode')
     message: str  #: error message
-    errors: list[SingleError]  #: list of errors; typically has a single entry
+    errors: list[AsSingleError]  #: list of errors; typically has a single entry
     tracking_id: str  #: tracking ID of the request
 
     @property
@@ -67,17 +68,23 @@ class ErrorDetail(ApiModel):
         return self.errors and self.errors[0].code or None
 
 
-class RestError(HTTPError):
+class AsRestError(ClientResponseError):
     """
     A REST error
     """
 
-    def __init__(self, msg: str, response: Response):
-        super().__init__(msg, response=response)
+    def __init__(self, request_info: RequestInfo, history: Tuple[ClientResponse, ...], *, code: Optional[int] = None,
+                 status: Optional[int] = None, message: str = "", headers: Optional[LooseHeaders] = None) -> None:
+        super().__init__(request_info, history, code=code, status=status, message=message, headers=headers)
+        foo = 1
+        # TODO: implement equivalent to __xinit__
+
+    def __xinit__(self, msg: str, response):
+        super().__xinit__(msg, response=response)
         # try to parse the body of the API response
         try:
-            self.detail = ErrorDetail.parse_obj(json.loads(response.text))
-        except (json.JSONDecodeError, ValidationError):
+            self.detail = AsErrorDetail.parse_obj(json_mod.loads(response.text))
+        except (json_mod.JSONDecodeError, ValidationError):
             self.detail = response.text
 
     def __str__(self):
@@ -99,7 +106,7 @@ class RestError(HTTPError):
         """
         if isinstance(self.detail, str):
             return self.detail
-        self.detail: ErrorDetail
+        self.detail: AsErrorDetail
         return self.detail and self.detail.description or ''
 
     @property
@@ -108,10 +115,11 @@ class RestError(HTTPError):
         error code
 
         """
-        return self.detail and isinstance(self.detail, ErrorDetail) and self.detail.code or 0
+        return self.detail and isinstance(self.detail, AsErrorDetail) and self.detail.code or 0
 
 
-def dump_response(response: Response, file: TextIOBase = None, dump_log: logging.Logger = None):
+def as_dump_response(*, response: ClientResponse, response_data=None, data=None,
+                     json=None, file: TextIOBase = None, dump_log: logging.Logger = None):
     """
     Dump response object to log file
 
@@ -128,47 +136,44 @@ def dump_response(response: Response, file: TextIOBase = None, dump_log: logging
 
     # dump response objects in redirect history
     for h in response.history:
-        dump_response(response=h, file=output)
+        as_dump_response(response=h, file=output)
 
-    print(f'Request {response.status_code}[{response.reason}]: '
-          f'{response.request.method} {response.request.url}', file=output)
+    print(f'Request {response.status}[{response.reason}]: '
+          f'{response.request_info.method} {response.request_info.url}', file=output)
 
     # request headers
-    for k, v in response.request.headers.items():
+    for k, v in response.request_info.headers.items():
         if k.lower() == 'authorization':
             v = 'Bearer ***'
         print(f'  {k}: {v}', file=output)
 
     # request body
-    request_body = response.request.body
-    if request_body:
+    body_str = ''
+    if isinstance(data, dict):
+        body_str = str(urllib.parse.quote_plus(urllib.parse.urlencode(data)))
+    elif isinstance(data, str):
+        body_str = data
+    elif json:
+        body_str = json_mod.dumps(json)
+
+    if body_str:
         print('  --- body ---', file=output)
-        ct = response.request.headers.get('content-type').lower()
-        if ct.startswith('application/json'):
-            for line in json.dumps(json.loads(request_body), indent=2).splitlines():
-                print(f'  {line}', file=output)
-        elif ct.startswith('application/x-www-form-urlencoded'):
-            for k, v in parse_qsl(request_body):
-                print(f'  {k}: {"***" if k == "client_secret" else v}',
-                      file=output)
-        else:
-            print(f'  {request_body}', file=output)
+        print(f'  {body_str}')
 
     print(' Response', file=output)
     # response headers
     for k in response.headers:
         print(f'  {k}: {response.headers[k]}', file=output)
-    body = response.text
     # dump response body
-    if body:
+    if response_data:
         print('  ---response body ---', file=output)
         try:
-            body = json.loads(body)
+            body = response_data
             if 'access_token' in body:
                 # mask access token
                 body['access_token'] = '***'
-            body = json.dumps(body, indent=2)
-        except json.JSONDecodeError:
+            body = json_mod.dumps(body, indent=2)
+        except json_mod.JSONDecodeError:
             pass
         for line in body.splitlines():
             print(f'  {line}', file=output)
@@ -177,29 +182,28 @@ def dump_response(response: Response, file: TextIOBase = None, dump_log: logging
         dump_log.debug(output.getvalue())
 
 
-def _giveup_429(e: RestError) -> bool:
+async def _giveup_429(e: ClientResponseError) -> bool:
     """
     callback for backoff on REST requests
 
     :param e: latest exception
     :return: True -> break the backoff loop
     """
-    response = e.response
-    response: Response
-    if response.status_code != 429:
+    if e.status != 429:
         # Don't retry on anything other than 429
         return True
 
     # determine how long we have to wait
-    retry_after = int(response.headers.get('Retry-After', 5))
+    retry_after = int(e.headers.get('Retry-After', 5))
 
     # never wait more than the defined maximum of 20 s
     retry_after = min(retry_after, 20)
-    time.sleep(retry_after)
+    log.warning(f'429 retry after {retry_after} on {e.request_info.method} {e.request_info.url}')
+    await asyncio.sleep(retry_after)
     return False
 
 
-class RestSession(Session):
+class AsRestSession(ClientSession):
     """
     REST session used for API requests:
             * includes an Authorization header in reach request
@@ -211,8 +215,6 @@ class RestSession(Session):
 
     def __init__(self, *, tokens: Tokens, concurrent_requests: int):
         super().__init__()
-        self.mount('http://', HTTPAdapter(pool_maxsize=concurrent_requests))
-        self.mount('https://', HTTPAdapter(pool_maxsize=concurrent_requests))
         self._tokens = tokens
         self._sem = Semaphore(concurrent_requests)
 
@@ -237,9 +239,9 @@ class RestSession(Session):
         """
         return self._tokens.access_token
 
-    @backoff.on_exception(backoff.constant, RestError, interval=0, giveup=_giveup_429)
-    def _request_w_response(self, method: str, url: str, headers=None,
-                            **kwargs) -> Tuple[Response, StrOrDict]:
+    @backoff.on_exception(backoff.constant, ClientResponseError, interval=0, giveup=_giveup_429)
+    async def _request_w_response(self, method: str, url: str, headers=None,
+                                  xdata=None, json=None, **kwargs) -> Tuple[ClientResponse, StrOrDict]:
         """
         low level API REST request with support for 429 rate limiting
 
@@ -259,29 +261,30 @@ class RestSession(Session):
                            'TrackingID': f'SIMPLE_{uuid.uuid4()}'}
         if headers:
             request_headers.update((k.lower(), v) for k, v in headers.items())
-        with self._sem:
-            response = self.request(method, url=url, headers=request_headers, **kwargs)
-        try:
-            dump_response(response)
-            try:
-                response.raise_for_status()
-            except HTTPError as error:
-                # create a RestError based on HTTP error
-                error = RestError(error.args[0], response=error.response)
-                raise error
-            # get response body as text or dict (parsed JSON)
-            ct = response.headers.get('Content-Type')
-            if not ct:
-                data = ''
-            elif ct.startswith('application/json') and response.text:
-                data = response.json()
-            else:
-                data = response.text
-        finally:
-            response.close()
-        return response, data
+        async with self._sem:
+            async with self.request(method, url=url, headers=request_headers, **kwargs) as response:
+                try:
+                    response.raise_for_status()
+                except ClientResponseError as error:
+                    as_dump_response(response=response)
+                    # create a RestError based on HTTP error
+                    error = AsRestError(request_info=error.request_info,
+                                        history=error.history, status=error.status,
+                                        message=error.message, headers=error.headers)
+                    raise error
+                # get response body as text or dict (parsed JSON)
+                ct = response.headers.get('Content-Type')
+                if not ct:
+                    response_data = ''
+                elif ct.startswith('application/json'):
+                    response_data = await response.json()
+                else:
+                    response_data = await response.text()
+                as_dump_response(response=response, response_data=response_data)
 
-    def _rest_request(self, method: str, url: str, **kwargs) -> StrOrDict:
+        return response, response_data
+
+    async def _rest_request(self, method: str, url: str, **kwargs) -> StrOrDict:
         """
         low level API request only returning the body
 
@@ -296,10 +299,10 @@ class RestSession(Session):
         :return: body. Body can be text or dict (parsed from JSON body)
         :rtype: Unon
         """
-        _, data = self._request_w_response(method, url=url, **kwargs)
+        _, data = await self._request_w_response(method, url=url, **kwargs)
         return data
 
-    def rest_get(self, *args, **kwargs) -> StrOrDict:
+    async def rest_get(self, *args, **kwargs) -> StrOrDict:
         """
         GET request
 
@@ -307,9 +310,9 @@ class RestSession(Session):
         :param kwargs:
         :return: deserialized JSON content or body text
         """
-        return self._rest_request('GET', *args, **kwargs)
+        return await self._rest_request('GET', *args, **kwargs)
 
-    def rest_post(self, *args, **kwargs) -> StrOrDict:
+    async def rest_post(self, *args, **kwargs) -> StrOrDict:
         """
         POST request
 
@@ -317,9 +320,9 @@ class RestSession(Session):
         :param kwargs:
         :return: deserialized JSON content or body text
         """
-        return self._rest_request('POST', *args, **kwargs)
+        return await self._rest_request('POST', *args, **kwargs)
 
-    def rest_put(self, *args, **kwargs) -> StrOrDict:
+    async def rest_put(self, *args, **kwargs) -> StrOrDict:
         """
         PUT request
 
@@ -327,28 +330,29 @@ class RestSession(Session):
         :param kwargs:
         :return: deserialized JSON content or body text
         """
-        return self._rest_request('PUT', *args, **kwargs)
+        return await self._rest_request('PUT', *args, **kwargs)
 
-    def rest_delete(self, *args, **kwargs) -> None:
+    async def rest_delete(self, *args, **kwargs) -> None:
         """
         DELETE request
 
         :param args:
         :param kwargs:
         """
-        self._rest_request('DELETE', *args, **kwargs)
+        await self._rest_request('DELETE', *args, **kwargs)
 
-    def rest_patch(self, *args, **kwargs) -> StrOrDict:
+    async def rest_patch(self, *args, **kwargs) -> StrOrDict:
         """
         PATCH request
 
         :param args:
         :param kwargs:
         """
-        return self._rest_request('PATCH', *args, **kwargs)
+        return await self._rest_request('PATCH', *args, **kwargs)
 
-    def follow_pagination(self, *, url: str, model: Type[ApiModel],
-                          params: dict = None, item_key: str = None, **kwargs) -> Generator[ApiModel, None, None]:
+    async def follow_pagination(self, *, url: str, model: Type[ApiModel],
+                                params: dict = None,
+                                item_key: str = None, **kwargs) -> AsyncGenerator[ApiModel, None, None]:
         """
         Handling RFC5988 pagination of list requests. Generator of parsed objects
 
@@ -364,7 +368,7 @@ class RestSession(Session):
         """
         while url:
             log.debug(f'{self}.pagination: getting {url}')
-            response, data = self._request_w_response('GET', url=url, params=params, **kwargs)
+            response, data = await self._request_w_response('GET', url=url, params=params, **kwargs)
             # params only in first request. In subsequent requests we rely on the completeness of the 'next' URL
             params = None
             # try to get the next page (if present)

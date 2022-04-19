@@ -72,6 +72,17 @@ All ``wxc_sdk`` data types can also be imported at once:
 
    from wxc_sdk.all_types import *
 
+Async version of the SDK (experimental)
+---------------------------------------
+
+With :class:`wxc_sdk.as_api.AsWebexSimpleApi` the SDK offers an async variant based on asyncio/aiohttp. This variant is
+automatically generated based off the source of the synchronous API and offers async variants of the endpoints using the
+same datastructures than the synchronous API.
+
+Here is an example of how to use the async SDK:
+
+.. literalinclude:: ../examples/calling_users_async.py
+    :language: Python
 
 Reference
 ---------

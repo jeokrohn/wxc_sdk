@@ -42,7 +42,7 @@ cd "$(dirname "$0")/.."
 # Lint the source code
 if [ ${default} ] || [ ${lint} ]; then
     echo "==> Linting the source code"
-    flake8 --ignore=E501,F405,F403
+    flake8 --ignore=E501,F405,F403 --exclude=as_api.py
 fi
 
 # Run the test suite

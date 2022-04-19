@@ -7,9 +7,9 @@ from pydantic import Field
 
 from .common import PersonSettingsApiChild
 from ..base import ApiModel, webex_id_to_uuid
-from ..common import MonitoredMember
+from ..common import MonitoredMember, CallParkExtension
 
-__all__ = ['MonitoredElementMember', 'CallParkExtension', 'MonitoredElement', 'Monitoring',
+__all__ = ['MonitoredElementMember', 'MonitoredElement', 'Monitoring',
            'MonitoringApi']
 
 
@@ -22,23 +22,6 @@ class MonitoredElementMember(MonitoredMember):
     @property
     def ci_location_id(self) -> Optional[str]:
         return self.location_id and webex_id_to_uuid(self.location_id)
-
-
-class CallParkExtension(ApiModel):
-    #: The identifier of the call park extension.
-    cpe_id: Optional[str] = Field(alias='id')
-    #: The name to describe the call park extension.
-    name: Optional[str]
-    #: The extension number for this call park extension.
-    extension: Optional[str]
-    #: The location name where the call park extension is.
-    location_name: Optional[str] = Field(alias='location')
-    #: The location Id for the location.
-    location_id: Optional[str]
-
-    @property
-    def ci_cpe_id(self) -> Optional[str]:
-        return self.cpe_id and webex_id_to_uuid(self.cpe_id)
 
 
 class MonitoredElement(ApiModel):

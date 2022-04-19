@@ -1,12 +1,17 @@
-from .rest import RestSession, StrOrDict
+from dataclasses import dataclass
+
+from .base import StrOrDict
+from .rest import RestSession
 
 __all__ = ['ApiChild']
 
 
+@dataclass(init=False)
 class ApiChild:
     """
     Base class for child APIs of :class:`WebexSimpleApi`
     """
+    session: RestSession
 
     def __init__(self, *, session: RestSession, base: str = None):
         #: REST session
@@ -75,3 +80,12 @@ class ApiChild:
         :param kwargs:
         """
         self.session.rest_delete(*args, **kwargs)
+
+    def patch(self, *args, **kwargs) -> StrOrDict:
+        """
+        PATCH request
+
+        :param args:
+        :param kwargs:
+        """
+        return self.session.rest_patch(*args, **kwargs)

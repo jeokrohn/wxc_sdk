@@ -1,8 +1,12 @@
 import base64
 import sys
-from typing import Optional
+from typing import Optional, Union
 
 from pydantic import BaseModel, ValidationError
+
+__all__ = ['StrOrDict', 'webex_id_to_uuid', 'to_camel', 'ApiModel']
+
+StrOrDict = Union[str, dict]
 
 
 def webex_id_to_uuid(webex_id: Optional[str]) -> Optional[str]:

@@ -14,6 +14,7 @@ from ..webhook import WebHook
 
 __all__ = ['CallType', 'TelephonyParty', 'RedirectReason', 'Redirection', 'Recall', 'RecordingState',
            'Personality', 'CallState', 'TelephonyCall', 'TelephonyEventData', 'TelephonyEvent', 'DialResponse',
+           'RejectAction',
            'HistoryType', 'CallHistoryRecord', 'ParkedAgainst', 'CallInfo',
            'CallsApi']
 

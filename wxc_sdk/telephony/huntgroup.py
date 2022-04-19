@@ -170,6 +170,7 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
              phone_number: str = None, **params) -> Generator[HuntGroup, None, None]:
         """
         Read the List of Hunt Groups
+
         List all calling Hunt Groups for the organization.
 
         Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
@@ -178,7 +179,6 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read.
 
-        List all calling Hunt Groups for the organization.
         :param org_id: List hunt groups for this organization.
         :param location_id: Only return hunt groups with matching location ID.
         :param name: Only return hunt groups with the matching name.

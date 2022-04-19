@@ -16,6 +16,19 @@ Source: |calling_users.py|_
 .. literalinclude:: ../examples/calling_users.py
     :linenos:
 
+
+Get all calling users (async variant)
+-------------------------------------
+
+Source: |calling_users_async.py|_
+
+.. |calling_users_async.py| replace:: ``calling_users_async.py``
+
+
+.. literalinclude:: ../examples/calling_users_async.py
+    :linenos:
+
+
 Default call forwarding settings for all users
 ----------------------------------------------
 
@@ -106,6 +119,7 @@ Source: |get_tokens.py|_
 
 .. _get_tokens.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/get_tokens.py
 .. _calling_users.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/calling_users.py
+.. _calling_users_async.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/calling_users_async.py
 .. _us_holidays.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/us_holidays.py
 .. _calendarific.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/calendarific.py
 .. _reset_call_forwarding.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/reset_call_forwarding.py

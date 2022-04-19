@@ -13,7 +13,8 @@ from ..base import ApiModel
 from ..rest import RestSession
 
 __all__ = ['ScheduleApi', 'ScheduleType', 'ScheduleMonth', 'ScheduleDay', 'ScheduleWeek', 'RecurWeekly',
-           'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence', 'Event', 'Schedule', 'ScheduleApiBase']
+           'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence', 'Event', 'Schedule', 'ScheduleApiBase',
+           'ScheduleTypeOrStr']
 
 ScheduleTypeOrStr = Union[str, 'ScheduleType']
 

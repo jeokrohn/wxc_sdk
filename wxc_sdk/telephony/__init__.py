@@ -15,6 +15,7 @@ from .paging import PagingApi
 from .huntgroup import HuntGroupApi
 from .callqueue import CallQueueApi
 from .callpark import CallParkApi
+from .callpark_extension import CallparkExtensionApi
 from .callpickup import CallPickupApi
 from .autoattendant import AutoAttendantApi
 from ..api_child import ApiChild
@@ -71,7 +72,7 @@ class NumberState(str, Enum):
 
 class NumberListPhoneNumberType(str, Enum):
     primary = 'PRIMARY'
-    secondary = 'SECONDARY'
+    alternate = 'ALTERNATE'
 
 
 class NumberListPhoneNumber(ApiModel):
@@ -139,27 +140,28 @@ class ValidateExtensionsResponse(ApiModel):
 class TelephonyApi(ApiChild, base='telephony'):
     """
     The telephony settings (features) API.
-
     """
     auto_attendant: AutoAttendantApi
     calls: CallsApi
-    schedules: ScheduleApi
-    paging: PagingApi
-    huntgroup: HuntGroupApi
-    callqueue: CallQueueApi
     callpark: CallParkApi
+    callpark_extension: CallparkExtensionApi
+    callqueue: CallQueueApi
+    huntgroup: HuntGroupApi
+    paging: PagingApi
     pickup: CallPickupApi
+    schedules: ScheduleApi
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
         self.auto_attendant = AutoAttendantApi(session=session)
         self.calls = CallsApi(session=session)
-        self.schedules = ScheduleApi(session=session, base=ScheduleApiBase.locations)
-        self.paging = PagingApi(session=session)
-        self.huntgroup = HuntGroupApi(session=session)
-        self.callqueue = CallQueueApi(session=session)
         self.callpark = CallParkApi(session=session)
+        self.callpark_extension = CallparkExtensionApi(session=session)
+        self.callqueue = CallQueueApi(session=session)
+        self.huntgroup = HuntGroupApi(session=session)
+        self.paging = PagingApi(session=session)
         self.pickup = CallPickupApi(session=session)
+        self.schedules = ScheduleApi(session=session, base=ScheduleApiBase.locations)
 
     def phone_numbers(self, *, location_id: str = None, phone_number: str = None, available: bool = None,
                       order: str = None,
@@ -222,7 +224,15 @@ class TelephonyApi(ApiChild, base='telephony'):
         url = self.ep(path='config/numbers')
         return self.session.follow_pagination(url=url, model=NumberListPhoneNumber, params=params, item_key='phoneNumbers')
 
-    def phone_number_details(self, *, org_id: str = None):
+    def phone_number_details(self, *, org_id: str = None) -> NumberDetails:
+        """
+        get summary (counts) of phone numbers
+
+        :param org_id: detaild for numbers in this organization.
+        :type org_id: str
+        :return: phone number details
+        :rtype: :class:`NumberDetails`
+        """
         params = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
                   if i and v is not None}
         params['details'] = 'true'
