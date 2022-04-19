@@ -13,13 +13,21 @@ from wxc_sdk.as_api import AsWebexSimpleApi
 load_dotenv()
 
 
-async def calling_users():
+async def get_calling_users():
+    """
+    Get details of all calling enabled users by:
+    1) getting all calling users
+    2) collecting all users that have a calling license
+    3) getting details for all users
+    """
     async with AsWebexSimpleApi(concurrent_requests=40) as api:
-        # using AsPeopleApi.list_gen to iterate over persons
-        # Parameter calling_data needs to be set to true to gat calling specific information
-        # calling users have the attribute location_id set
-        calling_users = [user async for user in api.people.list_gen(calling_data=True)
-                         if user.location_id]
+        print('Collecting calling licenses')
+        calling_license_ids = set(lic.license_id for lic in await api.licenses.list()
+                                  if lic.webex_calling)
+
+        # get users with a calling license
+        calling_users = [user async for user in api.people.list_gen()
+                         if any(lic_id in calling_license_ids for lic_id in user.licenses)]
         print(f'{len(calling_users)} users:')
         print('\n'.join(user.display_name for user in calling_users))
 
@@ -31,4 +39,4 @@ async def calling_users():
         print(f'Got details for {len(calling_users)} users in {expired * 1000:.3f} ms')
 
 
-asyncio.run(calling_users())
+asyncio.run(get_calling_users())

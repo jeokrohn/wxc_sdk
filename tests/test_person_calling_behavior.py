@@ -47,7 +47,7 @@ class TestUpdate(TestCaseWithUsers):
 
     def test_001_switch_calling_behavior(self):
         """
-        select different calling behavior for usert
+        select different calling behavior for user
         """
         with self.target_user() as user:
             cba = self.api.person_settings.calling_behavior

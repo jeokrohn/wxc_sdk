@@ -4727,7 +4727,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         :type toll_free_numbers: bool
         :param org_id: List numbers for this organization.
         :type org_id: str
-        :return: yields :class:`PhoneNumber` instances
+        :return: yields :class:`NumberListPhoneNumber` instances
         """
         params.update((to_camel(p), v) for i, (p, v) in enumerate(locals().items())
                       if i and v is not None)
@@ -4788,7 +4788,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         :type toll_free_numbers: bool
         :param org_id: List numbers for this organization.
         :type org_id: str
-        :return: yields :class:`PhoneNumber` instances
+        :return: yields :class:`NumberListPhoneNumber` instances
         """
         params.update((to_camel(p), v) for i, (p, v) in enumerate(locals().items())
                       if i and v is not None)
