@@ -50,6 +50,11 @@ class MultipartEncoder(MultipartWriter):
             part.set_content_disposition('form-data', name=field_name, filename=file_name)
 
 
+# there seems to be a problem with getting too many users with calling data at the same time
+# this is the maximum number the SDK enforces
+MAX_USERS_WITH_CALLING_DATA = 10
+
+
 """
 
 # identify sync calls to be translated to "await .." calls

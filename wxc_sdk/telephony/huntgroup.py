@@ -302,10 +302,6 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
         :param org_id: Update hunt group settings from this organization.
         """
         params = org_id and {'orgId': org_id} or None
-        # TODO: file documentation defect
-        #   https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-a-hunt-group shows
-        #   distinctiveRing and alternateNumbers as direct members while they actually are childs of
-        #   alternateNumberSettings
         data = update.create_or_update()
         url = self._endpoint(location_id=location_id, huntgroup_id=huntgroup_id)
         self.put(url, data=data, params=params)

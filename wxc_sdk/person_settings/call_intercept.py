@@ -29,7 +29,7 @@ class InterceptNumber(ApiModel):
     Information about a number announcement.
     """
     #: If true, the caller will hear this number when the call is intercepted.
-    enabled: bool
+    enabled: Optional[bool]
     #: number caller will hear announced.
     destination: Optional[str]
 
@@ -38,13 +38,13 @@ class InterceptAnnouncements(ApiModel):
     """
     Settings related to how incoming calls are handled when the intercept feature is enabled.
     """
-    greeting: Greeting
+    greeting: Optional[Greeting]
     #: Filename of custom greeting, will be an empty string if no custom greeting has been uploaded.
     file_name: Optional[str]
     #: Information about the new number announcement.
-    new_number: InterceptNumber
+    new_number: Optional[InterceptNumber]
     #: Information about how the call will be handled if zero (0) is pressed.
-    zero_transfer: InterceptNumber
+    zero_transfer: Optional[InterceptNumber]
 
     @staticmethod
     def default() -> 'InterceptAnnouncements':
@@ -56,11 +56,11 @@ class InterceptSettingIncoming(ApiModel):
     """
     Settings related to how incoming calls are handled when the intercept feature is enabled.
     """
-    intercept_type: InterceptTypeIncoming = Field(alias='type')
+    intercept_type: Optional[InterceptTypeIncoming] = Field(alias='type')
     #: If true, the destination will be the person's voicemail.
-    voicemail_enabled: bool
+    voicemail_enabled: Optional[bool]
     #: Settings related to how incoming calls are handled when the intercept feature is enabled.
-    announcements: InterceptAnnouncements
+    announcements: Optional[InterceptAnnouncements]
 
     @staticmethod
     def default() -> 'InterceptSettingIncoming':
@@ -76,10 +76,10 @@ class InterceptTypeOutgoing(str, Enum):
 
 
 class InterceptSettingOutgoing(ApiModel):
-    intercept_type: InterceptTypeOutgoing = Field(alias='type')
+    intercept_type: Optional[InterceptTypeOutgoing] = Field(alias='type')
     #: If true, when the person attempts to make an outbound call, a system default message is played and the call is
     #: made to the destination phone number
-    transfer_enabled: bool
+    transfer_enabled: Optional[bool]
     #: Number to which the outbound call be transferred.
     destination: Optional[str]
 
@@ -93,11 +93,11 @@ class InterceptSetting(ApiModel):
     A person's call intercept settings
     """
     #: true if call intercept is enabled.
-    enabled: bool
+    enabled: Optional[bool]
     #: Settings related to how incoming calls are handled when the intercept feature is enabled.
-    incoming: InterceptSettingIncoming
+    incoming: Optional[InterceptSettingIncoming]
     #: Settings related to how outgoing calls are handled when the intercept feature is enabled.
-    outgoing: InterceptSettingOutgoing
+    outgoing: Optional[InterceptSettingOutgoing]
 
     @staticmethod
     def default() -> 'InterceptSetting':
@@ -141,6 +141,7 @@ class CallInterceptApi(PersonSettingsApiChild):
     def configure(self, *, person_id: str, intercept: InterceptSetting, org_id: str = None):
         """
         Configure Call Intercept Settings for a Person
+
         Configures a Person's Call Intercept Settings
 
         The intercept feature gracefully takes a person’s phone out of service, while providing callers with

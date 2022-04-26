@@ -1,6 +1,12 @@
 Release history
 ===============
 
+1.2.0
+-----
+-   new: push to talk person settings: :attr:`wxc_sdk.person_settings.PersonSettingsApi.push_to_talk`
+-   new: location features intercept, announcement language, MoH, outgoing permissions, PNC, voicemail
+    rules/settings/groups, voice portal and voice portal passcode rules: :class:`wxc_sdk.telephony.TelephonyApi`
+
 1.1.0
 -----
 -   new: read only call park extensions API: :attr:`wxc_sdk.telephony.TelephonyApi.callpark_extension`

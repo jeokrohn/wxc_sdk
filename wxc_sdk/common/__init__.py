@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel
 from ..base import webex_id_to_uuid
 
 __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting', 'UserNumber', 'PersonPlaceAgent',
-           'MonitoredMember', 'CallParkExtension']
+           'MonitoredMember', 'CallParkExtension', 'AuthCode']
 
 
 class UserType(str, Enum):
@@ -143,3 +143,13 @@ class CallParkExtension(ApiModel):
         call park extension ID as UUID
         """
         return self.cpe_id and webex_id_to_uuid(self.cpe_id)
+
+
+class AuthCode(ApiModel):
+    """
+    authorization codea and description.
+    """
+    #: Indicates an authorization code.
+    code: str
+    #: Indicates the description of the authorization code.
+    description: str

@@ -31,15 +31,22 @@ class MultipartEncoder(MultipartWriter):
             part.set_content_disposition('form-data', name=field_name, filename=file_name)
 
 
-__all__ = ['AsAnnouncementApi', 'AsApiChild', 'AsAppServicesApi', 'AsAuthCodesApi', 'AsAutoAttendantApi',
-           'AsBargeApi', 'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi',
-           'AsCallRecordingApi', 'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallingBehaviorApi',
+# there seems to be a problem with getting too many users with calling data at the same time
+# this is the maximum number the SDK enforces
+MAX_USERS_WITH_CALLING_DATA = 10
+
+
+__all__ = ['AsAccessCodesApi', 'AsAnnouncementApi', 'AsApiChild', 'AsAppServicesApi', 'AsAuthCodesApi',
+           'AsAutoAttendantApi', 'AsBargeApi', 'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi',
+           'AsCallQueueApi', 'AsCallRecordingApi', 'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallingBehaviorApi',
            'AsCallparkExtensionApi', 'AsCallsApi', 'AsDndApi', 'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi',
-           'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsLicensesApi', 'AsLocationsApi',
-           'AsMonitoringApi', 'AsNumbersApi', 'AsOutgoingPermissionsApi', 'AsPagingApi', 'AsPeopleApi',
+           'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsLicensesApi', 'AsLocationInterceptApi',
+           'AsLocationMoHApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMonitoringApi', 'AsNumbersApi',
+           'AsOrganisationVoicemailSettingsAPI', 'AsOutgoingPermissionsApi', 'AsPagingApi', 'AsPeopleApi',
            'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPrivacyApi',
-           'AsReceptionistApi', 'AsRestSession', 'AsScheduleApi', 'AsTelephonyApi', 'AsTransferNumbersApi',
-           'AsVoicemailApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
+           'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsReceptionistApi', 'AsRestSession', 'AsScheduleApi',
+           'AsTelephonyApi', 'AsTransferNumbersApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
+           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
 
 @dataclass(init=False)
@@ -477,6 +484,8 @@ class AsPeopleApi(AsApiChild, base='people'):
                       if i and v is not None and k != 'params')
         if calling_data:
             params['callingData'] = 'true'
+            # apparently there is a performance problem with getting too many users w/ calling data at the same time
+            params['max'] = params.get('max', MAX_USERS_WITH_CALLING_DATA)
         id_list = params.pop('idList', None)
         if id_list:
             params['id'] = ','.join(id_list)
@@ -520,6 +529,8 @@ class AsPeopleApi(AsApiChild, base='people'):
                       if i and v is not None and k != 'params')
         if calling_data:
             params['callingData'] = 'true'
+            # apparently there is a performance problem with getting too many users w/ calling data at the same time
+            params['max'] = params.get('max', MAX_USERS_WITH_CALLING_DATA)
         id_list = params.pop('idList', None)
         if id_list:
             params['id'] = ','.join(id_list)
@@ -634,9 +645,13 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
     feature = None
 
     def __init__(self, *, session: AsRestSession, base: str = None,
-                 workspaces: bool = False):
+                 workspaces: bool = False, locations: bool = False):
+        self.feature_prefix = '/features/'
         if workspaces:
             self.selector = 'workspaces'
+        elif locations:
+            self.selector = 'telephony/config/locations'
+            self.feature_prefix = '/'
         else:
             self.selector = 'people'
         super().__init__(session=session, base=base)
@@ -658,7 +673,7 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
         :rtype: str
         """
         path = path and f'/{path}' or ''
-        return self.session.ep(f'{self.selector}/{person_id}/features/{self.feature}{path}')
+        return self.session.ep(f'{self.selector}/{person_id}{self.feature_prefix}{self.feature}{path}')
 
 
 class AsAppServicesApi(AsPersonSettingsApiChild):
@@ -799,6 +814,7 @@ class AsCallInterceptApi(AsPersonSettingsApiChild):
     async def configure(self, *, person_id: str, intercept: InterceptSetting, org_id: str = None):
         """
         Configure Call Intercept Settings for a Person
+
         Configures a Person's Call Intercept Settings
 
         The intercept feature gracefully takes a person’s phone out of service, while providing callers with
@@ -1479,7 +1495,7 @@ class AsAuthCodesApi(AsPersonSettingsApiChild):
         data = await self.get(url, params=params)
         return parse_obj_as(list[AuthCode], data['authorizationCodes'])
 
-    async def modify(self, person_id: str, delete_codes: list[str], org_id: str = None):
+    async def delete_codes(self, person_id: str, access_codes: list[Union[str, AuthCode]], org_id: str = None):
         """
         Modify Authorization codes for a workspace.
 
@@ -1490,15 +1506,16 @@ class AsAuthCodesApi(AsPersonSettingsApiChild):
 
         :param person_id: Unique identifier for the workspace.
         :type person_id: str
-        :param delete_codes: authorization codes to remove
-        :type delete_codes: list[str]
+        :param access_codes: authorization codes to remove
+        :type access_codes: list[str]
         :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
         url = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        body = {'deleteCodes': delete_codes}
+        body = {'deleteCodes': [ac.code if isinstance(ac, AuthCode) else ac
+                                for ac in access_codes]}
         await self.put(url, params=params, json=body)
 
     async def create(self, person_id: str, code: str, description: str, org_id: str = None):
@@ -1588,6 +1605,8 @@ class AsTransferNumbersApi(AsPersonSettingsApiChild):
 class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
     """
     API for person's outgoing permissions settings
+
+    also used for workspace and location outgoing permissions
     """
     #: Only available for workspaces
     transfer_numbers: AsTransferNumbersApi
@@ -1597,13 +1616,17 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
     feature = 'outgoingPermission'
 
     def __init__(self, *, session: AsRestSession, base: str = None,
-                 workspaces: bool = False):
-        super().__init__(session=session, base=base, workspaces=workspaces)
+                 workspaces: bool = False, locations: bool = False):
+        super().__init__(session=session, base=base, workspaces=workspaces, locations=locations)
         if workspaces:
             # auto transfer numbers API seems to only exist for workspaces
             self.transfer_numbers = AsTransferNumbersApi(session=session,
-                                                       base=base, workspaces=workspaces)
-            self.auth_codes = AsAuthCodesApi(session=session, base=base, workspaces=workspaces)
+                                                       base=base, workspaces=True)
+            self.auth_codes = AsAuthCodesApi(session=session, base=base, workspaces=True)
+        elif locations:
+            self.transfer_numbers = AsTransferNumbersApi(session=session,
+                                                       base=base, locations=True)
+            self.auth_codes = None
         else:
             self.transfer_numbers = None
             self.auth_codes = None
@@ -1789,6 +1812,68 @@ class AsPrivacyApi(AsPersonSettingsApiChild):
                     id_list.append(ma.agent_id)
             data['monitoringAgents'] = id_list
         await self.put(ep, params=params, json=data)
+
+
+class AsPushToTalkApi(AsPersonSettingsApiChild):
+    """
+    API for person's PTT settings
+    """
+
+    feature = 'pushToTalk'
+
+    async def read(self, *, person_id: str, org_id: str = None) -> PushToTalkSettings:
+        """
+        Read Push-to-Talk Settings for a Person
+        Retrieve a Person's Push-to-Talk Settings
+
+        Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in
+        different parts of your organization.
+
+        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+            may use this parameter as the default is the same organization as the token used to access API.
+        :type org_id: str
+        :return: PTT settings for specific user
+        :rtype: PushToTalkSettings
+        """
+        ep = self.f_ep(person_id=person_id)
+        params = org_id and {'orgId': org_id} or None
+        return PushToTalkSettings.parse_obj(await self.get(ep, params=params))
+
+    async def configure(self, *, person_id: str, settings: PushToTalkSettings, org_id: str = None):
+        """
+        Configure Push-to-Talk Settings for a Person
+
+        Configure a Person's Push-to-Talk Settings
+
+        Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in
+        different parts of your organization.
+
+        This API requires a full or user administrator auth token with the spark-admin:people_write scope.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param settings: new setting to be applied. For members only the ID needs to be set
+        :type settings: PushToTalkSettings
+        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+            may use this parameter as the default is the same organization as the token used to access API.
+        """
+        ep = self.f_ep(person_id=person_id)
+        params = org_id and {'orgId': org_id} or None
+        if settings.members:
+            # for an update member is just a list of IDs
+            body_settings = settings.copy(deep=True)
+            members = [m.member_id if isinstance(m, MonitoredMember) else m
+                       for m in settings.members]
+            body_settings.members = members
+        else:
+            body_settings = settings
+        body = body_settings.json(exclude_none=False,
+                                  exclude_unset=True)
+        await self.put(ep, params=params, data=body)
 
 
 class AsReceptionistApi(AsPersonSettingsApiChild):
@@ -2202,7 +2287,15 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
     async def event_delete(self, *, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                      event_id: str, org_id: str = None):
         """
-        # TODO: update documentation
+        Delete a Schedule Event
+
+        Delete the designated Schedule Event.
+
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+
+        Deleting a schedule event requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
 
         :param obj_id: Location or user from which to delete a schedule.
         :type obj_id: str
@@ -2395,6 +2488,7 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
     permissions_in: AsIncomingPermissionsApi
     permissions_out: AsOutgoingPermissionsApi
     privacy: AsPrivacyApi
+    push_to_talk: AsPushToTalkApi
     receptionist: AsReceptionistApi
     schedules: AsScheduleApi
     voicemail: AsVoicemailApi
@@ -2417,6 +2511,7 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         self.permissions_in = AsIncomingPermissionsApi(session=session)
         self.permissions_out = AsOutgoingPermissionsApi(session=session)
         self.privacy = AsPrivacyApi(session=session)
+        self.push_to_talk = AsPushToTalkApi(session=session)
         self.receptionist = AsReceptionistApi(session=session)
         self.schedules = AsScheduleApi(session=session, base=ScheduleApiBase.people)
         self.voicemail = AsVoicemailApi(session=session)
@@ -2439,6 +2534,92 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(f'{person_id}/features/voicemail/actions/resetPin/invoke')
         await self.post(url, params=params)
+
+
+class AsAccessCodesApi(AsApiChild, base='telephony/config/locations'):
+    """
+    Access codes API
+    """
+
+    def _endpoint(self, *, location_id: str, path: str = None) -> str:
+        """
+        location specific feature endpoint like
+        /v1/telephony/config/locations/{locationId}/outgoingPermission/accessCodes}
+
+        :meta private:
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param path: additional path
+        :type: path: str
+        :return: full endpoint
+        :rtype: str
+        """
+        path = path and f'/{path}' or ''
+        ep = self.session.ep(f'telephony/config/locations/{location_id}/outgoingPermission/accessCodes{path}')
+        return ep
+
+    async def read(self, *, location_id: str, org_id: str = None) -> list[AuthCode]:
+        """
+        Get Location Access Code
+
+        Retrieve access codes details for a customer location.
+
+        Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
+
+        Retrieving access codes details requires a full, user or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+
+
+        :param location_id: Retrieve access codes details for this location.
+        :type location_id: str
+        :param org_id: Retrieve access codes details for a customer location in this organization
+        :type org_id: str
+        :return: list of :class:`wxc_sdk.common.CallPark`
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id)
+        data = await self.get(url, params=params)
+        return parse_obj_as(list[AuthCode], data['accessCodes'])
+
+    async def create(self, *, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> list[AuthCode]:
+        """
+
+        :param location_id: Add new access code for this location.
+        :type location_id: str
+        :param access_codes: Access code details
+        :type access_codes: list of :class:`wxc_sdk.common.AuthCode`
+        :param org_id: Add new access code for this organization.
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id)
+        body = {'accessCodes': [json.loads(ac.json()) for ac in access_codes]}
+        await self.post(url, json=body, params=params)
+
+    async def delete_codes(self, *, location_id: str, access_codes: list[Union[str, AuthCode]],
+                     org_id: str = None) -> list[AuthCode]:
+        """
+        Delete Access Code Location
+
+        Deletes the access code details for a particular location for a customer.
+
+        Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
+
+        Modifying the access code location details requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Deletes the access code details for this location.
+        :type location_id: str
+        :param access_codes: access codes to delete
+        :type access_codes: list of :class:`wxc_sdk.common.AuthCode` or str
+        :param org_id: Delete access codes from this organization.
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id)
+        body = {'deleteCodes': [ac.code if isinstance(ac, AuthCode) else ac
+                                for ac in access_codes]}
+        await self.put(url, json=body, params=params)
 
 
 class AsForwardingApi:
@@ -4470,12 +4651,307 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
         :param org_id: Update hunt group settings from this organization.
         """
         params = org_id and {'orgId': org_id} or None
-        # TODO: file documentation defect
-        #   https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-a-hunt-group shows
-        #   distinctiveRing and alternateNumbers as direct members while they actually are childs of
-        #   alternateNumberSettings
         data = update.create_or_update()
         url = self._endpoint(location_id=location_id, huntgroup_id=huntgroup_id)
+        await self.put(url, data=data, params=params)
+
+
+class AsLocationInterceptApi(AsApiChild, base='telephony/config/locations'):
+    """
+    API for location's call intercept settings
+    """
+
+    def _endpoint(self, *, location_id: str, path: str = None) -> str:
+        """
+        location specific
+        telephony/config/locations/{locationId}/intercept
+
+        :meta private:
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param path: additional path
+        :type: path: str
+        :return: full endpoint
+        :rtype: str
+        """
+        path = path and f'/{path}' or ''
+        ep = self.session.ep(f'telephony/config/locations/{location_id}/intercept{path}')
+        return ep
+
+    async def read(self, *, location_id: str, org_id: str = None) -> InterceptSetting:
+        """
+        Get Location Intercept
+
+        Retrieve intercept location details for a customer location.
+
+        Intercept incoming or outgoing calls for persons in your organization. If this is enabled, calls are either
+        routed to a designated number the person chooses, or to the person's voicemail.
+
+        Retrieving intercept location details requires a full, user or read-only administrator auth token with a
+        scope of spark-admin:telephony_config_read.
+
+        :param location_id: Retrieve intercept details for this location.
+        :type location_id: str
+        :param org_id: Retrieve intercept location details for a customer location.
+        :type org_id: str
+        :return: user's call intercept settings
+        :rtype: :class:`wxc_sdk.person_settings.call_intercept.InterceptSetting`
+        """
+        ep = self._endpoint(location_id=location_id)
+        params = org_id and {'orgId': org_id} or None
+        return InterceptSetting.parse_obj(await self.get(ep, params=params))
+
+    async def configure(self, *, location_id: str, settings: InterceptSetting, org_id: str = None):
+        """
+        Put Location Intercept
+
+        Modifies the intercept location details for a customer location.
+
+        Intercept incoming or outgoing calls for users in your organization. If this is enabled, calls are either
+        routed to a designated number the user chooses, or to the user's voicemail.
+
+        Modifying the intercept location details requires a full, user administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Unique identifier for the person.
+        :type location_id: str
+        :param settings: new intercept settings
+        :type settings: InterceptSetting
+        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+            may use this parameter as the default is the same organization as the token used to access API.
+        :type org_id: str
+        """
+        ep = self._endpoint(location_id=location_id)
+        params = org_id and {'orgId': org_id} or None
+        data = settings.json()
+        await self.put(ep, params=params, data=data)
+
+
+class AsLocationMoHApi(AsApiChild, base='telephony/config/locations'):
+    """
+    Access codes API
+    """
+
+    def _endpoint(self, *, location_id: str, path: str = None) -> str:
+        """
+        location specific feature endpoint like
+        /v1/telephony/config/locations/{locationId}/musicOnHold
+
+        :meta private:
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param path: additional path
+        :type: path: str
+        :return: full endpoint
+        :rtype: str
+        """
+        path = path and f'/{path}' or ''
+        ep = self.session.ep(f'telephony/config/locations/{location_id}/musicOnHold{path}')
+        return ep
+
+    async def read(self, *, location_id: str, org_id: str = None) -> LocationMoHSetting:
+        """
+        Get Music On Hold
+
+        Retrieve the location's music on hold settings.
+
+        Location's music on hold settings allows you to play music when a call is placed on hold or parked.
+
+        Retrieving location's music on hold settings requires a full, user or read-only administrator auth token with
+        a scope of spark-admin:telephony_config_read.
+
+        :param location_id: Retrieve access codes details for this location.
+        :type location_id: str
+        :param org_id: Retrieve access codes details for a customer location in this organization
+        :type org_id: str
+        :return: MoH settings
+        :rtype: :class:`LocationMoHSetting`
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id)
+        data = await self.get(url, params=params)
+        return LocationMoHSetting.parse_obj(data)
+
+    async def update(self, *, location_id: str, settings: LocationMoHSetting, org_id: str = None) -> LocationMoHSetting:
+        """
+        Get Music On Hold
+
+        Retrieve the location's music on hold settings.
+
+        Location's music on hold settings allows you to play music when a call is placed on hold or parked.
+
+        Retrieving location's music on hold settings requires a full, user or read-only administrator auth token with
+        a scope of spark-admin:telephony_config_read.
+
+        :param location_id: Retrieve access codes details for this location.
+        :type location_id: str
+        :param settings: new settings
+        :type settings: :class:`LocationMoHSetting`
+        :param org_id: Retrieve access codes details for a customer location in this organization
+        :type org_id: str
+        :return: list of :class:`wxc_sdk.common.CallPark`
+        """
+        params = org_id and {'orgId': org_id} or None
+        data = settings.json()
+        url = self._endpoint(location_id=location_id)
+        await self.put(url, params=params, data=data)
+
+    async def create(self, *, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> list[AuthCode]:
+        """
+
+        :param location_id: Add new access code for this location.
+        :type location_id: str
+        :param access_codes: Access code details
+        :type access_codes: list of :class:`wxc_sdk.common.AuthCode`
+        :param org_id: Add new access code for this organization.
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id)
+        body = {'accessCodes': [json.loads(ac.json()) for ac in access_codes]}
+        await self.post(url, json=body, params=params)
+
+    async def delete_codes(self, *, location_id: str, access_codes: list[Union[str, AuthCode]],
+                     org_id: str = None) -> list[AuthCode]:
+        """
+        Delete Access Code Location
+
+        Deletes the access code details for a particular location for a customer.
+
+        Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
+
+        Modifying the access code location details requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Deletes the access code details for this location.
+        :type location_id: str
+        :param access_codes: access codes to delete
+        :type access_codes: list of :class:`wxc_sdk.common.AuthCode` or str
+        :param org_id: Delete access codes from this organization.
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id)
+        body = {'deleteCodes': [ac.code if isinstance(ac, AuthCode) else ac
+                                for ac in access_codes]}
+        await self.put(url, json=body, params=params)
+
+
+class AsLocationVoicemailSettingsApi(AsApiChild, base='telephony/config/locations'):
+    """
+    location voicemail settings API, for now only enable/disable Vm transcription
+    """
+
+    def _endpoint(self, *, location_id: str, path: str = None) -> str:
+        """
+        location specific
+        telephony/config/locations/{locationId}/voicemail
+
+        :meta private:
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param path: additional path
+        :type: path: str
+        :return: full endpoint
+        :rtype: str
+        """
+        path = path and f'/{path}' or ''
+        ep = self.session.ep(f'telephony/config/locations/{location_id}/voicemail{path}')
+        return ep
+
+    async def read(self, *, location_id: str, org_id: str = None) -> LocationVoiceMailSettings:
+        """
+        Get Location Voicemail
+
+        Retrieve voicemail settings for a specific location.
+
+        Location's voicemail settings allows you to enable voicemail transcription for a specific location.
+
+        Retrieving location's voicemail settings requires a full, user or read-only administrator auth token with
+        a scope of spark-admin:telephony_config_read.
+
+
+        :param location_id: Retrieve access codes details for this location.
+        :type location_id: str
+        :param org_id: Retrieve access codes details for a customer location in this organization
+        :type org_id: str
+        :return: location voicemail settings
+        :rtype: :class:`LocationVoiceMailSettings`
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id)
+        data = await self.get(url, params=params)
+        return LocationVoiceMailSettings.parse_obj(data)
+
+    async def update(self, *, location_id: str, settings: LocationVoiceMailSettings, org_id: str = None):
+        """
+        Get Location Voicemail
+
+        Retrieve voicemail settings for a specific location.
+
+        Location's voicemail settings allows you to enable voicemail transcription for a specific location.
+
+        Retrieving location's voicemail settings requires a full, user or read-only administrator auth token with
+        a scope of spark-admin:telephony_config_read.
+
+
+        :param location_id: Retrieve access codes details for this location.
+        :type location_id: str
+        :param settings: new settings
+        :type settings: :class:`LocationVoiceMailSettings`
+        :param org_id: Retrieve access codes details for a customer location in this organization
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id)
+        body = settings.json()
+        await self.put(url, params=params, data=body)
+
+
+class AsOrganisationVoicemailSettingsAPI(AsApiChild, base='telephony/config/voicemail/settings'):
+    """
+    API for Organisation voicemail settings
+    """
+
+    async def read(self, *, org_id: str = None) -> OrganisationVoicemailSettings:
+        """
+        Get Voicemail Settings
+
+        Retrieve the organization's voicemail settings.
+
+        Organizational voicemail settings determines what voicemail features a person can configure and automatic
+        message expiration.
+
+        Retrieving organization's voicemail settings requires a full, user or read-only administrator auth token with
+        a scope of spark-admin:telephony_config_read.
+
+        :param org_id: Retrieve voicemail settings for this organization.
+        :type org_id: str
+        :return: VM settings
+        :rtype: OrganisationVoicemailSettings
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep()
+        return OrganisationVoicemailSettings.parse_obj(await self.get(url, params=params))
+
+    async def update(self, *, settings: OrganisationVoicemailSettings, org_id: str = None):
+        """
+        Update the organization's voicemail settings.
+
+        Organizational voicemail settings determines what voicemail features a person can configure and automatic
+        message expiration.
+
+        Updating organization's voicemail settings requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param settings: new settings
+        :type settings: OrganisationVoicemailSettings
+        :param org_id: Update voicemail settings for this organization.
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep()
+        data = settings.json()
         await self.put(url, data=data, params=params)
 
 
@@ -4654,40 +5130,268 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         await self.put(url, data=data, params=params)
 
 
+class AsPrivateNetworkConnectApi(AsApiChild, base='telephony/config/locations'):
+    """
+    API for location private network connect API settings
+    """
+
+    async def read(self, *, location_id: str, org_id: str = None) -> NetworkConnectionType:
+        """
+        Get Private Network Connect
+
+        Retrieve the location's network connection type.
+
+        Network Connection Type determines if the location's network connection is public or private.
+
+        Retrieving location's network connection type requires a full, user or read-only administrator auth token with
+        a scope of spark-admin:telephony_config_read.
+
+        :param location_id: Retrieve network connection type for this location.
+        :type location_id: str
+        :param org_id: Retrieve network connection type for this organization.
+        :type org_id: str
+        :return: location PNC settings
+        :rtype: NetworkConnectionType
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.session.ep(f'telephony/config/locations/{location_id}/privateNetworkConnect')
+        data = await self.get(url, params=params)
+        return parse_obj_as(NetworkConnectionType, data['networkConnectionType'])
+
+    async def update(self, *, location_id: str, connection_type: NetworkConnectionType, org_id: str = None):
+        """
+        Get Private Network Connect
+
+        Retrieve the location's network connection type.
+
+        Network Connection Type determines if the location's network connection is public or private.
+
+        Retrieving location's network connection type requires a full, user or read-only administrator auth token with
+        a scope of spark-admin:telephony_config_read.
+
+        :param location_id: Update network connection type for this location.
+        :type location_id: str
+        :param connection_type: Network Connection Type for the location.
+        :type connection_type: NetworkConnectionType
+        :param org_id: Update network connection type for this organization.
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.session.ep(f'telephony/config/locations/{location_id}/privateNetworkConnect')
+        body = {'networkConnectionType': connection_type.value}
+        await self.put(url, json=body, params=params)
+
+
+class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
+    """
+    location voice portal API
+    """
+
+    def _endpoint(self, *, location_id: str, path: str = None) -> str:
+        """
+        location specific
+        telephony/config/locations/{locationId}/voicePortal
+
+        :meta private:
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param path: additional path
+        :type: path: str
+        :return: full endpoint
+        :rtype: str
+        """
+        path = path and f'/{path}' or ''
+        ep = self.session.ep(f'telephony/config/locations/{location_id}/voicePortal{path}')
+        return ep
+
+    async def read(self, *, location_id: str, org_id: str = None) -> VoicePortalSettings:
+        """
+
+        :param location_id: Location to which the voice portal belongs.
+        :type location_id: str
+        :param org_id: Organization to which the voice portal belongs.
+        :type org_id: str
+        :return: location voice portal settings
+        :rtype: VoicePortalSettings
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id)
+        return VoicePortalSettings.parse_obj(await self.get(url, params=params))
+
+    async def update(self, *, location_id: str, settings: VoicePortalSettings, passcode: str = None, org_id: str = None):
+        """
+        Update VoicePortal
+
+        Update Voice portal information for the location.
+
+        Voice portals provide an interactive voice response (IVR) system so administrators can manage auto attendant
+        announcements.
+
+        Updating voice portal information for organization and/or rules requires a full administrator auth token with
+        a scope of spark-admin:telephony_config_write.
+
+        :param location_id: Location to which the voice portal belongs.
+        :type location_id: str
+        :param settings: new settings
+        :type settings: VoicePortalSettings
+        :param passcode: new passcode
+        :type passcode: str
+        :param org_id: Organization to which the voice portal belongs.
+        :type org_id: str
+        """
+        data = json.loads(settings.json(exclude={'portal_id': True,
+                                                 'language': True}))
+        if passcode is not None:
+            data['passcode'] = {'newPasscode': passcode,
+                                'confirmPasscode': passcode}
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id)
+        await self.put(url, params=params, json=data)
+
+    async def passcode_rules(self, *, location_id: str, org_id: str = None) -> PasscodeRules:
+        """
+        Get VoicePortal Passcode Rule
+
+        Retrieve the voice portal passcode rule for a location.
+
+        Voice portals provide an interactive voice response (IVR) system so administrators can manage auto attendant
+        announcements
+
+        Retrieving the voice portal passcode rule requires a full read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param location_id: Retrieve voice portal passcode rules for this location.
+        :type location_id: str
+        :param org_id: Retrieve voice portal passcode rules for this organization.
+        :type org_id: str
+        :return: passcode rules
+        :rtype: PasscodeRules
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id, path='passcodeRules')
+        return PasscodeRules.parse_obj(await self.get(url, params=params))
+
+
+class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
+    """
+    API for location private network connect API settings
+    """
+
+    def list(self, *, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None):
+        params = {to_camel(p): v for p, v in locals().items() if p != 'self' and v is not None}
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=VoicemailGroup, params=params, item_key='voicemailGroups')
+
+
+class AsVoicemailRulesApi(AsApiChild, base='telephony/config/voicemail/rules'):
+    """
+    API for voicemail rules settings
+    """
+
+    async def read(self, *, org_id: str = None) -> VoiceMailRules:
+        """
+        Get Voicemail Rules
+
+        Retrieve the organization's voicemail rules.
+
+        Organizational voicemail rules specify the default passcode requirements.
+
+        Retrieving the organization's voicemail rules requires a full, user or read-only administrator auth token with
+        a scope of spark-admin:telephony_config_read.
+
+        :param org_id: Retrieve voicemail settings for this organization.
+        :type org_id: str
+        :return: VM settings
+        :rtype: OrganisationVoicemailSettings
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep()
+        return VoiceMailRules.parse_obj(await self.get(url, params=params))
+
+    async def update(self, *, settings: VoiceMailRules, org_id: str = None):
+        """
+        Update Voicemail Rules
+
+        Update the organization's default voicemail passcode and/or rules.
+
+        Organizational voicemail rules specify the default passcode requirements.
+
+        If you choose to set default passcode for new people added to your organization, communicate to your people
+        what that passcode is, and that it must be reset before they can access their voicemail. If this feature is
+        not turned on, each new person must initially set their own passcode.
+
+        Updating organization's voicemail passcode and/or rules requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param settings: new settings
+        :type settings: VoiceMailRules
+        :param org_id: Update voicemail rules for this organization.
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep()
+        data = settings.json(exclude={'default_voicemail_pin_rules': True})
+        await self.put(url, params=params, data=data)
+
+
 class AsTelephonyApi(AsApiChild, base='telephony'):
     """
     The telephony settings (features) API.
     """
+    #: access or authentication codes
+    access_codes: AsAccessCodesApi
     auto_attendant: AsAutoAttendantApi
     calls: AsCallsApi
     callpark: AsCallParkApi
     callpark_extension: AsCallparkExtensionApi
     callqueue: AsCallQueueApi
     huntgroup: AsHuntGroupApi
+    location_intercept: AsLocationInterceptApi
+    location_moh: AsLocationMoHApi
+    #: Location VM settings (only enable/disable transcription for now)
+    location_voicemail: AsLocationVoicemailSettingsApi
+    #: organisation voicemail settings
+    organisation_voicemail: AsOrganisationVoicemailSettingsAPI
     paging: AsPagingApi
+    permissions_out: AsOutgoingPermissionsApi
     pickup: AsCallPickupApi
+    pnc: AsPrivateNetworkConnectApi
     schedules: AsScheduleApi
+    voicemail_groups: AsVoicemailGroupsApi
+    voicemail_rules: AsVoicemailRulesApi
+    voiceportal: AsVoicePortalApi
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
+        self.access_codes = AsAccessCodesApi(session=session)
         self.auto_attendant = AsAutoAttendantApi(session=session)
         self.calls = AsCallsApi(session=session)
         self.callpark = AsCallParkApi(session=session)
         self.callpark_extension = AsCallparkExtensionApi(session=session)
         self.callqueue = AsCallQueueApi(session=session)
         self.huntgroup = AsHuntGroupApi(session=session)
+        self.location_intercept = AsLocationInterceptApi(session=session)
+        self.location_moh = AsLocationMoHApi(session=session)
+        self.location_voicemail = AsLocationVoicemailSettingsApi(session=session)
+        self.organisation_voicemail = AsOrganisationVoicemailSettingsAPI(session=session)
         self.paging = AsPagingApi(session=session)
+        self.permissions_out = AsOutgoingPermissionsApi(session=session, locations=True)
         self.pickup = AsCallPickupApi(session=session)
+        self.pnc = AsPrivateNetworkConnectApi(session=session)
         self.schedules = AsScheduleApi(session=session, base=ScheduleApiBase.locations)
+        self.voicemail_groups = AsVoicemailGroupsApi(session=session)
+        self.voicemail_rules = AsVoicemailRulesApi(session=session)
+        self.voiceportal = AsVoicePortalApi(session=session)
 
     def phone_numbers_gen(self, *, location_id: str = None, phone_number: str = None, available: bool = None,
                       order: str = None,
                       owner_name: str = None, owner_id: str = None, owner_type: OwnerType = None,
-                      extension: str = None, number_type: NumberType = None, phone_number_type: NumberListPhoneNumberType = None,
+                      extension: str = None, number_type: NumberType = None,
+                      phone_number_type: NumberListPhoneNumberType = None,
                       state: NumberState = None, toll_free_numbers: bool = None,
                       org_id: str = None, **params) -> AsyncGenerator[NumberListPhoneNumber, None, None]:
         """
-        Get Phone Numbers for an Organization with Given Criterias.
+        Get Phone Numbers for an Organization with given criteria.
 
         List all the phone numbers for the given organization along with the status and owner (if any).
 
@@ -4739,16 +5443,18 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
                 value = value.value
                 params[param] = value
         url = self.ep(path='config/numbers')
-        return self.session.follow_pagination(url=url, model=NumberListPhoneNumber, params=params, item_key='phoneNumbers')
+        return self.session.follow_pagination(url=url, model=NumberListPhoneNumber, params=params,
+                                              item_key='phoneNumbers')
 
     async def phone_numbers(self, *, location_id: str = None, phone_number: str = None, available: bool = None,
                       order: str = None,
                       owner_name: str = None, owner_id: str = None, owner_type: OwnerType = None,
-                      extension: str = None, number_type: NumberType = None, phone_number_type: NumberListPhoneNumberType = None,
+                      extension: str = None, number_type: NumberType = None,
+                      phone_number_type: NumberListPhoneNumberType = None,
                       state: NumberState = None, toll_free_numbers: bool = None,
                       org_id: str = None, **params) -> List[NumberListPhoneNumber]:
         """
-        Get Phone Numbers for an Organization with Given Criterias.
+        Get Phone Numbers for an Organization with given criteria.
 
         List all the phone numbers for the given organization along with the status and owner (if any).
 
@@ -4800,7 +5506,8 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
                 value = value.value
                 params[param] = value
         url = self.ep(path='config/numbers')
-        return [o async for o in self.session.follow_pagination(url=url, model=NumberListPhoneNumber, params=params, item_key='phoneNumbers')]
+        return [o async for o in self.session.follow_pagination(url=url, model=NumberListPhoneNumber, params=params,
+                                              item_key='phoneNumbers')]
 
     async def phone_number_details(self, *, org_id: str = None) -> NumberDetails:
         """
@@ -4832,6 +5539,65 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         url = self.ep(path='config/actions/validateExtensions/invoke')
         data = await self.post(url, json={'extensions': extensions})
         return ValidateExtensionsResponse.parse_obj(data)
+
+    async def ucm_profiles(self, *, org_id: str = None) -> list[UCMProfile]:
+        """
+        Read the List of UC Manager Profiles
+
+        List all calling UC Manager Profiles for the organization.
+
+        UC Manager Profiles are applicable if your organization uses Jabber in Team Messaging mode or Calling in
+        Webex Teams (Unified CM).
+
+        The UC Manager Profile has an organization-wide default and may be overridden for individual persons, although
+        currently only setting at a user level is supported by Webex APIs.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:people_read as this API is designed to be used in conjunction with calling behavior at the
+        user level.
+
+        :param org_id: List manager profiles in this organization.
+        :type org_id: str
+        :return: list of :class:`UCMProfile`
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(path='config/callingProfiles')
+        data = await self.get(url, params=params)
+        return parse_obj_as(list[UCMProfile], data['callingProfiles'])
+
+    async def change_announcement_language(self, *, location_id: str, language_code: str, agent_enabled: bool = None,
+                                     service_enabled: bool = None, org_id: str = None):
+        """
+        Change Announcement Language
+
+        Change announcement language for the given location.
+
+        Change announcement language for current people/workspaces and/or existing feature configurations. This does
+        not change the default announcement language which is applied to new users/workspaces and new feature
+        configurations.
+
+        Changing announcement language for the given location requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Change announcement language for this location.
+        :type location_id: str
+        :param language_code: Language code.
+        :type language_code: str
+        :param agent_enabled: Set to true to change announcement language for existing people and workspaces.
+        :type agent_enabled: bool
+        :param service_enabled: Set to true to change announcement language for existing feature configurations.
+        :type service_enabled: bool
+        :param org_id: Change announcement language for this organization.
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = {'announcementLanguageCode': language_code}
+        if agent_enabled is not None:
+            body['agentEnabled'] = agent_enabled
+        if service_enabled is not None:
+            body['serviceEnabled'] = service_enabled
+        url = self.session.ep(f'telephony/config/locations/{location_id}/actions/modifyAnnouncementLanguage/invoke')
+        await self.put(url, json=body, params=params)
 
 
 class AsWebhookApi(AsApiChild, base='webhooks'):

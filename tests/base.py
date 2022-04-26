@@ -17,20 +17,25 @@ import urllib.parse
 import uuid
 import webbrowser
 from collections.abc import Iterable, Generator
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
+from datetime import datetime
 from functools import wraps
-from typing import Optional, Any, Union
+from typing import Optional, Any, Union, ClassVar
 from unittest import TestCase
 
 import requests
 import yaml
 from dotenv import load_dotenv
+from pydantic import parse_obj_as, ValidationError, BaseModel, Field
 from yaml import safe_load
+from yaml.scanner import ScannerError
 
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.all_types import Person
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.integration import Integration
+from wxc_sdk.licenses import License
 from wxc_sdk.locations import Location
 from wxc_sdk.tokens import Tokens
 
@@ -232,13 +237,16 @@ class TestCaseWithTokens(TestCase):
         also initializes the async_api attribute
         :return:
         """
+
         @wraps(async_test)
         def run_async_test(test_self: TestCaseWithTokens):
             async def prepare_and_run():
                 async with AsWebexSimpleApi(tokens=test_self.tokens) as async_api:
                     test_self.async_api = async_api
                     await async_test(test_self)
+
             asyncio.run(prepare_and_run())
+
         return run_async_test
 
     @classmethod
@@ -369,15 +377,91 @@ class TestWithLocations(TestCaseWithLog):
             self.skipTest('Need at least ohe location to run test.')
 
 
+class UserCache(BaseModel):
+    last_access: datetime = Field(default_factory=datetime.utcnow)
+    users: list[Person] = Field(default_factory=list)
+    licenses: list[License] = Field(default_factory=list)
+
+    @property
+    def needs_validation(self) -> bool:
+        """
+        cache needs validation if is has been longer than 5 minutes since we last used the cache
+        """
+        seconds_since_last_access = (datetime.utcnow() - self.last_access).total_seconds()
+        return seconds_since_last_access > 300
+
+
+@dataclass(init=False)
 class TestCaseWithUsers(TestCaseWithLog):
+    users: ClassVar[list[Person]]
+
+    @staticmethod
+    def user_cache_path() -> str:
+        path = os.path.join(os.path.dirname(__file__), 'user_cache.yml')
+        return path
+
+    @classmethod
+    def users_from_cache(cls) -> UserCache:
+        try:
+            with open(cls.user_cache_path(), mode='r') as f:
+                cache = parse_obj_as(UserCache, yaml.safe_load(f))
+            return cache
+        except (FileNotFoundError, ValidationError, ScannerError):
+            return UserCache()
+
+    @classmethod
+    def dump_users(cls, cache: UserCache):
+        cache.last_access = datetime.utcnow()
+        with open(cls.user_cache_path(), mode='w') as f:
+            yaml.safe_dump(json.loads(cache.json()), f)
+
     @classmethod
     def setUpClass(cls) -> None:
+        """
+        initialize cls.users with list of calling users. Try to read users from cache since it takes FOREVER to list
+        users with calling data.
+        """
         super().setUpClass()
         print('Getting users...')
-        users = list(cls.api.people.list(calling_data=True))
-        cls.users = [user for user in users if user.location_id]
+
+        # read users from cache
+        user_cache = cls.users_from_cache()
+        if user_cache.needs_validation or not user_cache.users or not user_cache.licenses:
+            # get licenses
+            user_cache.licenses = list(cls.api.licenses.list())
+            # getting users w/o calling data is relatively fast. Look at that list for validation
+            user_dict = {user.person_id: user for user in cls.api.people.list()}
+            user_dict: dict[str, Person]
+
+            # all users from cache still exist and licenses have not changed?
+            if user_cache.users and all((user := user_dict.get(cu.person_id)) and user.licenses == cu.licenses
+                                        for cu in user_cache.users):
+                pass
+            else:
+                # update cache
+                if False:
+                    # maybe getting details for all users is faster than listing...
+                    with ThreadPoolExecutor() as pool:
+                        user_cache.users = list(pool.map(lambda user: cls.api.people.details(person_id=user.person_id,
+                                                                                             calling_data=True),
+                                                         user_dict.values()))
+                else:
+                    # bite the bullet: list users with calling data --> slooooooowww
+                    user_cache.users = list(cls.api.people.list(calling_data=True))
+        cls.dump_users(cache=user_cache)
+
+        # select users with a webex calling license
+        calling_license_ids = set(lic.license_id
+                                  for lic in user_cache.licenses
+                                  if lic.webex_calling)
+
+        # pick the calling enabled users
+        cls.users = [user
+                     for user in user_cache.users
+                     if any(lic_id in calling_license_ids for lic_id in user.licenses)]
         print(f'got {len(cls.users)} users')
 
     def setUp(self) -> None:
         super().setUp()
-        self.assertFalse(not self.users, 'Need at least one user to run test')
+        if not self.users:
+            self.skipTest('Need at least one calling user to run test')

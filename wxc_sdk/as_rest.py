@@ -76,46 +76,7 @@ class AsRestError(ClientResponseError):
     def __init__(self, request_info: RequestInfo, history: Tuple[ClientResponse, ...], *, code: Optional[int] = None,
                  status: Optional[int] = None, message: str = "", headers: Optional[LooseHeaders] = None) -> None:
         super().__init__(request_info, history, code=code, status=status, message=message, headers=headers)
-        foo = 1
-        # TODO: implement equivalent to __xinit__
-
-    def __xinit__(self, msg: str, response):
-        super().__xinit__(msg, response=response)
-        # try to parse the body of the API response
-        try:
-            self.detail = AsErrorDetail.parse_obj(json_mod.loads(response.text))
-        except (json_mod.JSONDecodeError, ValidationError):
-            self.detail = response.text
-
-    def __str__(self):
-        desc = self.description
-        if desc:
-            if self.code:
-                desc = f', {self.code} {desc}'
-            else:
-                desc = f', {desc}'
-        else:
-            desc = ''
-        return f'{super().__str__()}{desc}'
-
-    @property
-    def description(self) -> str:
-        """
-        error description
-
-        """
-        if isinstance(self.detail, str):
-            return self.detail
-        self.detail: AsErrorDetail
-        return self.detail and self.detail.description or ''
-
-    @property
-    def code(self) -> str:
-        """
-        error code
-
-        """
-        return self.detail and isinstance(self.detail, AsErrorDetail) and self.detail.code or 0
+        # TODO: implement equivalent to __init__ in sync implementation
 
 
 def as_dump_response(*, response: ClientResponse, response_data=None, data=None,

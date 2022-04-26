@@ -29,5 +29,6 @@ Submodules
    wxc_sdk.person_settings.permissions_in
    wxc_sdk.person_settings.permissions_out
    wxc_sdk.person_settings.privacy
+   wxc_sdk.person_settings.push_to_talk
    wxc_sdk.person_settings.receptionist
    wxc_sdk.person_settings.voicemail

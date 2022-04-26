@@ -4,16 +4,17 @@ Person outgoing permissions API
 import json
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 
 from pydantic import validator, parse_obj_as
 
 from .common import PersonSettingsApiChild
 from ..base import ApiModel
+from ..common import AuthCode
 from ..rest import RestSession
 
 __all__ = ['OutgoingPermissionCallType', 'Action', 'CallTypePermission', 'CallingPermissions',
-           'OutgoingPermissions', 'AutoTransferNumbers', 'AuthCode', 'TransferNumbersApi',
+           'OutgoingPermissions', 'AutoTransferNumbers', 'TransferNumbersApi',
            'AuthCodesApi', 'OutgoingPermissionsApi']
 
 
@@ -182,16 +183,6 @@ class AutoTransferNumbers(ApiModel):
         return AutoTransferNumbers.parse_obj(data)
 
 
-class AuthCode(ApiModel):
-    """
-    activation codes and description.
-    """
-    #: Indicates an authorization code.
-    code: str
-    #: Indicates the description of the authorization code.
-    description: str
-
-
 class TransferNumbersApi(PersonSettingsApiChild):
     """
     API for outgoing permission auto transfer numbers
@@ -275,7 +266,7 @@ class AuthCodesApi(PersonSettingsApiChild):
         data = self.get(url, params=params)
         return parse_obj_as(list[AuthCode], data['authorizationCodes'])
 
-    def modify(self, person_id: str, delete_codes: list[str], org_id: str = None):
+    def delete_codes(self, person_id: str, access_codes: list[Union[str, AuthCode]], org_id: str = None):
         """
         Modify Authorization codes for a workspace.
 
@@ -286,15 +277,16 @@ class AuthCodesApi(PersonSettingsApiChild):
 
         :param person_id: Unique identifier for the workspace.
         :type person_id: str
-        :param delete_codes: authorization codes to remove
-        :type delete_codes: list[str]
+        :param access_codes: authorization codes to remove
+        :type access_codes: list[str]
         :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
         url = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        body = {'deleteCodes': delete_codes}
+        body = {'deleteCodes': [ac.code if isinstance(ac, AuthCode) else ac
+                                for ac in access_codes]}
         self.put(url, params=params, json=body)
 
     def create(self, person_id: str, code: str, description: str, org_id: str = None):
@@ -327,6 +319,8 @@ class AuthCodesApi(PersonSettingsApiChild):
 class OutgoingPermissionsApi(PersonSettingsApiChild):
     """
     API for person's outgoing permissions settings
+
+    also used for workspace and location outgoing permissions
     """
     #: Only available for workspaces
     transfer_numbers: TransferNumbersApi
@@ -336,13 +330,17 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
     feature = 'outgoingPermission'
 
     def __init__(self, *, session: RestSession, base: str = None,
-                 workspaces: bool = False):
-        super().__init__(session=session, base=base, workspaces=workspaces)
+                 workspaces: bool = False, locations: bool = False):
+        super().__init__(session=session, base=base, workspaces=workspaces, locations=locations)
         if workspaces:
             # auto transfer numbers API seems to only exist for workspaces
             self.transfer_numbers = TransferNumbersApi(session=session,
-                                                       base=base, workspaces=workspaces)
-            self.auth_codes = AuthCodesApi(session=session, base=base, workspaces=workspaces)
+                                                       base=base, workspaces=True)
+            self.auth_codes = AuthCodesApi(session=session, base=base, workspaces=True)
+        elif locations:
+            self.transfer_numbers = TransferNumbersApi(session=session,
+                                                       base=base, locations=True)
+            self.auth_codes = None
         else:
             self.transfer_numbers = None
             self.auth_codes = None

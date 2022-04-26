@@ -1,30 +1,40 @@
 """
-Telephony types and API
+Telephony types and API (location and organisation settings)
 """
 from collections.abc import Generator
 from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
-from pydantic import Field
+from pydantic import Field, parse_obj_as
 
-from .calls import CallsApi
-from ..base import ApiModel, to_camel
-from ..common.schedules import ScheduleApi, ScheduleApiBase
-from .paging import PagingApi
-from .huntgroup import HuntGroupApi
-from .callqueue import CallQueueApi
+from .access_codes import AccessCodesApi
+from .autoattendant import AutoAttendantApi
 from .callpark import CallParkApi
 from .callpark_extension import CallparkExtensionApi
 from .callpickup import CallPickupApi
-from .autoattendant import AutoAttendantApi
+from .callqueue import CallQueueApi
+from .calls import CallsApi
+from .huntgroup import HuntGroupApi
+from .location_intercept import LocationInterceptApi
+from .location_moh import LocationMoHApi
+from .location_vm import LocationVoicemailSettingsApi
+from .organisation_vm import OrganisationVoicemailSettingsAPI
+from .paging import PagingApi
+from .pnc import PrivateNetworkConnectApi
+from .vm_rules import VoicemailRulesApi
+from .voicemail_groups import VoicemailGroupsApi
+from .voiceportal import VoicePortalApi
 from ..api_child import ApiChild
+from ..base import ApiModel, to_camel
+from ..common.schedules import ScheduleApi, ScheduleApiBase
+from ..person_settings.permissions_out import OutgoingPermissionsApi
 from ..rest import RestSession
 
 __all__ = ['OwnerType', 'NumberLocation', 'NumberOwner', 'NumberState', 'NumberListPhoneNumberType',
            'NumberListPhoneNumber',
            'NumberType', 'NumberDetails', 'ValidateExtensionResponseStatus', 'ValidateExtensionStatus',
-           'ValidateExtensionStatusState', 'ValidateExtensionsResponse', 'TelephonyApi']
+           'ValidateExtensionStatusState', 'ValidateExtensionsResponse', 'UCMProfile', 'TelephonyApi']
 
 
 class OwnerType(str, Enum):
@@ -58,11 +68,11 @@ class NumberOwner(ApiModel):
     #: ID of the owner to which PSTN Phone number is assigned.
     owner_id: Optional[str] = Field(alias='id')
     #: Type of the PSTN phone number's owner
-    owner_type: str = Field(alias='type')
+    owner_type: Optional[OwnerType] = Field(alias='type')
     #: Last name of the PSTN phone number's owner
-    last_name: str
+    last_name: Optional[str]
     #: First name of the PSTN phone number's owner
-    first_name: str
+    first_name: Optional[str]
 
 
 class NumberState(str, Enum):
@@ -136,41 +146,72 @@ class ValidateExtensionsResponse(ApiModel):
     extension_status: Optional[list[ValidateExtensionStatus]]
 
 
+class UCMProfile(ApiModel):
+    #: A unique identifier for the calling UC Manager Profile.
+    profile_id: str = Field(alias='id')
+    #: Unique name for the calling UC Manager Profile.
+    name: str
+
+
 @dataclass(init=False)
 class TelephonyApi(ApiChild, base='telephony'):
     """
     The telephony settings (features) API.
     """
+    #: access or authentication codes
+    access_codes: AccessCodesApi
     auto_attendant: AutoAttendantApi
     calls: CallsApi
     callpark: CallParkApi
     callpark_extension: CallparkExtensionApi
     callqueue: CallQueueApi
     huntgroup: HuntGroupApi
+    location_intercept: LocationInterceptApi
+    location_moh: LocationMoHApi
+    #: Location VM settings (only enable/disable transcription for now)
+    location_voicemail: LocationVoicemailSettingsApi
+    #: organisation voicemail settings
+    organisation_voicemail: OrganisationVoicemailSettingsAPI
     paging: PagingApi
+    permissions_out: OutgoingPermissionsApi
     pickup: CallPickupApi
+    pnc: PrivateNetworkConnectApi
     schedules: ScheduleApi
+    voicemail_groups: VoicemailGroupsApi
+    voicemail_rules: VoicemailRulesApi
+    voiceportal: VoicePortalApi
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
+        self.access_codes = AccessCodesApi(session=session)
         self.auto_attendant = AutoAttendantApi(session=session)
         self.calls = CallsApi(session=session)
         self.callpark = CallParkApi(session=session)
         self.callpark_extension = CallparkExtensionApi(session=session)
         self.callqueue = CallQueueApi(session=session)
         self.huntgroup = HuntGroupApi(session=session)
+        self.location_intercept = LocationInterceptApi(session=session)
+        self.location_moh = LocationMoHApi(session=session)
+        self.location_voicemail = LocationVoicemailSettingsApi(session=session)
+        self.organisation_voicemail = OrganisationVoicemailSettingsAPI(session=session)
         self.paging = PagingApi(session=session)
+        self.permissions_out = OutgoingPermissionsApi(session=session, locations=True)
         self.pickup = CallPickupApi(session=session)
+        self.pnc = PrivateNetworkConnectApi(session=session)
         self.schedules = ScheduleApi(session=session, base=ScheduleApiBase.locations)
+        self.voicemail_groups = VoicemailGroupsApi(session=session)
+        self.voicemail_rules = VoicemailRulesApi(session=session)
+        self.voiceportal = VoicePortalApi(session=session)
 
     def phone_numbers(self, *, location_id: str = None, phone_number: str = None, available: bool = None,
                       order: str = None,
                       owner_name: str = None, owner_id: str = None, owner_type: OwnerType = None,
-                      extension: str = None, number_type: NumberType = None, phone_number_type: NumberListPhoneNumberType = None,
+                      extension: str = None, number_type: NumberType = None,
+                      phone_number_type: NumberListPhoneNumberType = None,
                       state: NumberState = None, toll_free_numbers: bool = None,
                       org_id: str = None, **params) -> Generator[NumberListPhoneNumber, None, None]:
         """
-        Get Phone Numbers for an Organization with Given Criterias.
+        Get Phone Numbers for an Organization with given criteria.
 
         List all the phone numbers for the given organization along with the status and owner (if any).
 
@@ -222,7 +263,8 @@ class TelephonyApi(ApiChild, base='telephony'):
                 value = value.value
                 params[param] = value
         url = self.ep(path='config/numbers')
-        return self.session.follow_pagination(url=url, model=NumberListPhoneNumber, params=params, item_key='phoneNumbers')
+        return self.session.follow_pagination(url=url, model=NumberListPhoneNumber, params=params,
+                                              item_key='phoneNumbers')
 
     def phone_number_details(self, *, org_id: str = None) -> NumberDetails:
         """
@@ -254,3 +296,62 @@ class TelephonyApi(ApiChild, base='telephony'):
         url = self.ep(path='config/actions/validateExtensions/invoke')
         data = self.post(url, json={'extensions': extensions})
         return ValidateExtensionsResponse.parse_obj(data)
+
+    def ucm_profiles(self, *, org_id: str = None) -> list[UCMProfile]:
+        """
+        Read the List of UC Manager Profiles
+
+        List all calling UC Manager Profiles for the organization.
+
+        UC Manager Profiles are applicable if your organization uses Jabber in Team Messaging mode or Calling in
+        Webex Teams (Unified CM).
+
+        The UC Manager Profile has an organization-wide default and may be overridden for individual persons, although
+        currently only setting at a user level is supported by Webex APIs.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:people_read as this API is designed to be used in conjunction with calling behavior at the
+        user level.
+
+        :param org_id: List manager profiles in this organization.
+        :type org_id: str
+        :return: list of :class:`UCMProfile`
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(path='config/callingProfiles')
+        data = self.get(url, params=params)
+        return parse_obj_as(list[UCMProfile], data['callingProfiles'])
+
+    def change_announcement_language(self, *, location_id: str, language_code: str, agent_enabled: bool = None,
+                                     service_enabled: bool = None, org_id: str = None):
+        """
+        Change Announcement Language
+
+        Change announcement language for the given location.
+
+        Change announcement language for current people/workspaces and/or existing feature configurations. This does
+        not change the default announcement language which is applied to new users/workspaces and new feature
+        configurations.
+
+        Changing announcement language for the given location requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Change announcement language for this location.
+        :type location_id: str
+        :param language_code: Language code.
+        :type language_code: str
+        :param agent_enabled: Set to true to change announcement language for existing people and workspaces.
+        :type agent_enabled: bool
+        :param service_enabled: Set to true to change announcement language for existing feature configurations.
+        :type service_enabled: bool
+        :param org_id: Change announcement language for this organization.
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = {'announcementLanguageCode': language_code}
+        if agent_enabled is not None:
+            body['agentEnabled'] = agent_enabled
+        if service_enabled is not None:
+            body['serviceEnabled'] = service_enabled
+        url = self.session.ep(f'telephony/config/locations/{location_id}/actions/modifyAnnouncementLanguage/invoke')
+        self.put(url, json=body, params=params)

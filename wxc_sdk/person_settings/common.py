@@ -12,9 +12,13 @@ class PersonSettingsApiChild(ApiChild, base=''):
     feature = None
 
     def __init__(self, *, session: RestSession, base: str = None,
-                 workspaces: bool = False):
+                 workspaces: bool = False, locations: bool = False):
+        self.feature_prefix = '/features/'
         if workspaces:
             self.selector = 'workspaces'
+        elif locations:
+            self.selector = 'telephony/config/locations'
+            self.feature_prefix = '/'
         else:
             self.selector = 'people'
         super().__init__(session=session, base=base)
@@ -36,4 +40,4 @@ class PersonSettingsApiChild(ApiChild, base=''):
         :rtype: str
         """
         path = path and f'/{path}' or ''
-        return self.session.ep(f'{self.selector}/{person_id}/features/{self.feature}{path}')
+        return self.session.ep(f'{self.selector}/{person_id}{self.feature_prefix}{self.feature}{path}')

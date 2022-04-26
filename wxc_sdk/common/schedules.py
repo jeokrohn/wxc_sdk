@@ -629,7 +629,15 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
     def event_delete(self, *, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                      event_id: str, org_id: str = None):
         """
-        # TODO: update documentation
+        Delete a Schedule Event
+
+        Delete the designated Schedule Event.
+
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+
+        Deleting a schedule event requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
 
         :param obj_id: Location or user from which to delete a schedule.
         :type obj_id: str

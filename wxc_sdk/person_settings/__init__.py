@@ -23,13 +23,13 @@ from ..api_child import ApiChild
 from ..rest import RestSession
 from .permissions_in import IncomingPermissionsApi
 from .permissions_out import OutgoingPermissionsApi
+from .push_to_talk import PushToTalkApi
 from ..common.schedules import ScheduleApi, ScheduleApiBase
 
 __all__ = ['PersonSettingsApi']
 
 
 # TODO: UC profile
-# TODO: push to talk
 # TODO: what about auto transfer numbers? These seem to exist in workspace settings
 
 @dataclass(init=False)
@@ -53,6 +53,7 @@ class PersonSettingsApi(ApiChild, base='people'):
     permissions_in: IncomingPermissionsApi
     permissions_out: OutgoingPermissionsApi
     privacy: PrivacyApi
+    push_to_talk: PushToTalkApi
     receptionist: ReceptionistApi
     schedules: ScheduleApi
     voicemail: VoicemailApi
@@ -75,6 +76,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.permissions_in = IncomingPermissionsApi(session=session)
         self.permissions_out = OutgoingPermissionsApi(session=session)
         self.privacy = PrivacyApi(session=session)
+        self.push_to_talk = PushToTalkApi(session=session)
         self.receptionist = ReceptionistApi(session=session)
         self.schedules = ScheduleApi(session=session, base=ScheduleApiBase.people)
         self.voicemail = VoicemailApi(session=session)
