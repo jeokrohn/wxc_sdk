@@ -61,26 +61,30 @@ class CallTypePermission(ApiModel):
     #: Allow the person to transfer or forward a call of the specified call type.
     transfer_enabled: bool
 
+    @staticmethod
+    def default() -> 'CallTypePermission':
+        return CallTypePermission(action=Action.allow, transfer_enabled=True)
+
 
 class CallingPermissions(ApiModel):
     """
     Calling permissions for all call types
     """
-    internal_call: CallTypePermission
-    local: CallTypePermission
-    toll_free: CallTypePermission
-    toll: CallTypePermission
-    national: CallTypePermission
-    international: CallTypePermission
-    operator_assisted: CallTypePermission
-    chargeable_directory_assisted: CallTypePermission
-    special_services_i: CallTypePermission
-    special_services_ii: CallTypePermission
-    premium_services_i: CallTypePermission
-    premium_services_ii: CallTypePermission
-    casual: CallTypePermission
-    url_dialing: CallTypePermission
-    unknown: CallTypePermission
+    internal_call: Optional[CallTypePermission]
+    local: Optional[CallTypePermission]
+    toll_free: Optional[CallTypePermission]
+    toll: Optional[CallTypePermission]
+    national: Optional[CallTypePermission]
+    international: Optional[CallTypePermission]
+    operator_assisted: Optional[CallTypePermission]
+    chargeable_directory_assisted: Optional[CallTypePermission]
+    special_services_i: Optional[CallTypePermission]
+    special_services_ii: Optional[CallTypePermission]
+    premium_services_i: Optional[CallTypePermission]
+    premium_services_ii: Optional[CallTypePermission]
+    casual: Optional[CallTypePermission]
+    url_dialing: Optional[CallTypePermission]
+    unknown: Optional[CallTypePermission]
 
     def for_call_type(self, call_type: OutgoingPermissionCallType) -> CallTypePermission:
         """

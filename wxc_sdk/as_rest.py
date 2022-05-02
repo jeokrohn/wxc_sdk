@@ -14,7 +14,7 @@ from typing import Tuple, Type, Optional
 import backoff
 from aiohttp import ClientSession, ClientResponse, ClientResponseError, RequestInfo
 from aiohttp.typedefs import LooseHeaders
-from pydantic import BaseModel, ValidationError, Field
+from pydantic import BaseModel, Field
 
 from .base import ApiModel
 from .base import StrOrDict
@@ -119,7 +119,7 @@ def as_dump_response(*, response: ClientResponse, response_data=None, data=None,
 
     if body_str:
         print('  --- body ---', file=output)
-        print(f'  {body_str}')
+        print(f'  {body_str}', file=output)
 
     print(' Response', file=output)
     # response headers
@@ -202,7 +202,7 @@ class AsRestSession(ClientSession):
 
     @backoff.on_exception(backoff.constant, ClientResponseError, interval=0, giveup=_giveup_429)
     async def _request_w_response(self, method: str, url: str, headers=None,
-                                  xdata=None, json=None, **kwargs) -> Tuple[ClientResponse, StrOrDict]:
+                                  data=None, json=None, **kwargs) -> Tuple[ClientResponse, StrOrDict]:
         """
         low level API REST request with support for 429 rate limiting
 
@@ -223,11 +223,11 @@ class AsRestSession(ClientSession):
         if headers:
             request_headers.update((k.lower(), v) for k, v in headers.items())
         async with self._sem:
-            async with self.request(method, url=url, headers=request_headers, **kwargs) as response:
+            async with self.request(method, url=url, headers=request_headers, data=data, json=json, **kwargs) as response:
                 try:
                     response.raise_for_status()
                 except ClientResponseError as error:
-                    as_dump_response(response=response)
+                    as_dump_response(response=response, data=data, json=json)
                     # create a RestError based on HTTP error
                     error = AsRestError(request_info=error.request_info,
                                         history=error.history, status=error.status,
@@ -241,7 +241,7 @@ class AsRestSession(ClientSession):
                     response_data = await response.json()
                 else:
                     response_data = await response.text()
-                as_dump_response(response=response, response_data=response_data)
+                as_dump_response(response=response, data=data, json=json, response_data=response_data)
 
         return response, response_data
 

@@ -87,10 +87,18 @@ class TestUpdate(TestCaseWithUsers):
             user: Person
             before = po.read(person_id=user.person_id)
             settings: OutgoingPermissions = before.copy(deep=True)
+            # enable custom settings
             settings.use_custom_enabled = True
-            settings.calling_permissions.toll.transfer_enabled = not settings.calling_permissions.toll.transfer_enabled
+            # toggle transfer enabled for toll calls
+            toll_transfer_enabled = not settings.calling_permissions.toll.transfer_enabled
+            print(f'Setting toll transfer enabled to {toll_transfer_enabled}')
+            settings.calling_permissions.toll.transfer_enabled = toll_transfer_enabled
+            print(f'Toll settings: {settings.calling_permissions.toll}')
             po.configure(person_id=user.person_id, settings=settings)
             after = po.read(person_id=user.person_id)
+            self.assertTrue(after.use_custom_enabled)
+            self.assertEqual(toll_transfer_enabled, after.calling_permissions.toll.transfer_enabled,
+                             'Apparently permissions for call type local can\'t be set individually?')
             self.assertEqual(settings, after)
 
     def test_003_local_transfer_enabled_false_all_call_types(self):
@@ -126,3 +134,31 @@ class TestUpdate(TestCaseWithUsers):
             po.configure(person_id=user.person_id, settings=settings)
             after = po.read(person_id=user.person_id)
             self.assertEqual(settings, after)
+
+    def test_005_local_transfer_enabled_false_all_call_types_individually(self):
+        """
+        set transfer_enabled to False for all call types one by one
+        """
+        with self.target_user() as user:
+            po = self.api.person_settings.permissions_out
+            user: Person
+            before = po.read(person_id=user.person_id)
+            last_error = None
+            for call_type in OutgoingPermissionCallType:
+                settings: OutgoingPermissions = before.copy(deep=True)
+                settings.use_custom_enabled = True
+                permissions = settings.calling_permissions.for_call_type(call_type)
+                permissions.transfer_enabled = False
+                po.configure(person_id=user.person_id, settings=settings)
+                after = po.read(person_id=user.person_id)
+                try:
+                    self.assertEqual(settings, after)
+                except AssertionError as e:
+                    last_error = e
+                    result = 'fail'
+                else:
+                    result = 'ok'
+                print(f'Setting transfer_enabled to False for call type "{call_type}": {result}')
+                po.configure(person_id=user.person_id, settings=before)
+        if last_error:
+            raise last_error

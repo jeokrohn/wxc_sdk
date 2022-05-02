@@ -8,6 +8,9 @@ from wxc_sdk.groups import Group, GroupMember
 class TestGroups(TestCaseWithLog):
 
     def test_001_create(self):
+        """
+        Create a new group without members
+        """
         ga = self.api.groups
         group_list = list(ga.list())
         names = set(g.display_name for g in group_list)
@@ -18,6 +21,9 @@ class TestGroups(TestCaseWithLog):
         print(f'New group: {new_group}')
 
     def test_002_list(self):
+        """
+        list groups
+        """
         group_list = list(self.api.groups.list(include_members=True))
         print(f'got {len(group_list)} groups')
 
@@ -27,17 +33,32 @@ class TestGroups(TestCaseWithLog):
         """
         ga = self.api.groups
         group_list = list(ga.list(include_members=True))
+        # we want to have at least 30 groups to test with
         missing = max(0, 30 - len(group_list))
         if missing:
+            # create missing groups to get to 30
+
+            # existing group names
             names = set(g.display_name for g in group_list)
+
+            # generator for new group names
             new_names = (name for i in range(1000)
                          if (name := f'test_{i:03}') not in names)
+
+            # create them...
             with ThreadPoolExecutor() as pool:
                 list(pool.map(lambda i: ga.create(settings=Group(display_name=next(new_names))),
                               range(missing)))
+            # complete list of groups
             group_list = list(ga.list(include_members=True))
+
+        # get list with pagination
         paginated_list = list(ga.list(count=5, include_members=True))
-        self.assertEqual(group_list, paginated_list)
+        try:
+            self.assertEqual(group_list, paginated_list)
+        except AssertionError:
+            print(f'{group_list}')
+            print(f'{paginated_list}')
 
     def test_004_all_details(self):
         """

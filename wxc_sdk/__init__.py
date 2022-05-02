@@ -20,7 +20,7 @@ from dataclasses import dataclass
 
 __all__ = ['WebexSimpleApi']
 
-__version__ = '1.2.0'
+__version__ = '1.3.0'
 
 log = logging.getLogger(__name__)
 

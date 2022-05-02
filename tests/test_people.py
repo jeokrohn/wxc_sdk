@@ -1,7 +1,15 @@
+import json
+import os
+import re
 import time
+import uuid
 from contextlib import contextmanager
+from itertools import chain
 from unittest import skip
 
+from dotenv import load_dotenv
+
+from wxc_sdk.people import Person
 from wxc_sdk.rest import RestError
 from .base import TestCaseWithLog
 
@@ -65,3 +73,36 @@ class TestPeople(TestCaseWithLog):
                     break
                 page_size = int((page_size + upper) / 2)
         print(f'Maximum page size: {page_size} ')
+
+    def test_005_create_user(self):
+        """
+        Try to create a test user
+        """
+
+        # get all users with emails derived from base email defined in .eenv
+        dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+        load_dotenv(dotenv_path=dotenv_path)
+
+        base_email = os.getenv('BASE_EMAIL').split('@')
+        # RE to find all emails in the form user+foo@domain
+        email_re = re.compile(f'{base_email[0]}\+.+@{base_email[1]}')
+
+        # users with email matching that re
+        test_users = [user for user in self.api.people.list()
+                      if any(email_re.match(email) for email in user.emails)]
+
+        # set of all used emails
+        emails = set(chain.from_iterable(u.emails for u in test_users))
+
+        # get available email and user index
+        index, email = next((index, email) for index in range(1, 1000)
+                            if (email := f'{base_email[0]}+test{index:03}@{base_email[1]}') not in emails)
+
+        # create user
+        settings = Person(first_name='test', last_name=f'foo{index:03}', emails=[email])
+        new_user = self.api.people.create(settings=settings)
+        print(f'Created new user: {settings.first_name} {settings.last_name} {settings.emails[0]}')
+        print(json.dumps(json.loads(new_user.json()), indent=2))
+
+        # clean up: delete the user again
+        self.api.people.delete_person(person_id=new_user.person_id)

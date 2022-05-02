@@ -310,6 +310,8 @@ class TestCaseWithLog(TestCaseWithTokens):
     log_path: str
     file_log_handler: Optional[logging.Handler]
 
+    rest_logger_names = ['wxc_sdk.rest', 'wxc_sdk.as_rest','webexteamsasyncapi.rest']
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # this can be reused for other logging to the same file
@@ -330,8 +332,7 @@ class TestCaseWithLog(TestCaseWithTokens):
         self.file_log_handler = file_handler
 
         # enable debug logging on the REST loggers
-        rest_logger_names = ['wxc_sdk.rest', 'wxc_sdk.as_rest']
-        for rest_logger_name in rest_logger_names:
+        for rest_logger_name in self.rest_logger_names:
             rest_logger = logging.getLogger(rest_logger_name)
             rest_logger.setLevel(logging.DEBUG)
             rest_logger.addHandler(file_handler)
@@ -341,8 +342,7 @@ class TestCaseWithLog(TestCaseWithTokens):
         print(f'{self.__class__.__name__}.tearDown() in TestCaseWithLog.teardown()')
 
         # close REST file handler and remove from REST logger
-        rest_logger_names = ['wxc_sdk.rest', 'wxc_sdk.as_rest']
-        for rest_logger_name in rest_logger_names:
+        for rest_logger_name in self.rest_logger_names:
             rest_logger = logging.getLogger(rest_logger_name)
             rest_logger.removeHandler(self.file_log_handler)
 

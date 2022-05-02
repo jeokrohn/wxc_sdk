@@ -4,7 +4,7 @@ from typing import Optional, Union
 
 from pydantic import BaseModel, ValidationError
 
-__all__ = ['StrOrDict', 'webex_id_to_uuid', 'to_camel', 'ApiModel']
+__all__ = ['StrOrDict', 'webex_id_to_uuid', 'to_camel', 'ApiModel', 'CodeAndReason', 'ApiModelWithErrors']
 
 StrOrDict = Union[str, dict]
 
@@ -53,3 +53,12 @@ class ApiModel(BaseModel):
         except ValidationError as e:
             raise e
         return r
+
+
+class CodeAndReason(ApiModel):
+    code: str
+    reason: str
+
+
+class ApiModelWithErrors(ApiModel):
+    errors: Optional[dict[str, CodeAndReason]]

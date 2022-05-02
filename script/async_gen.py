@@ -37,6 +37,9 @@ from wxc_sdk.base import to_camel, StrOrDict
 log = logging.getLogger(__name__)
 
 
+__all__ = ['AsWebexSimpleApi']
+
+
 class MultipartEncoder(MultipartWriter):
     \"""
     Compatibility class for requests toolbelt MultipartEncoder

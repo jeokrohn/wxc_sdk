@@ -254,7 +254,7 @@ class TelephonyApi(ApiChild, base='telephony'):
         :return: yields :class:`NumberListPhoneNumber` instances
         """
         params.update((to_camel(p), v) for i, (p, v) in enumerate(locals().items())
-                      if i and v is not None)
+                      if i and v is not None and p != 'params')
         for param, value in params.items():
             if isinstance(value, bool):
                 value = 'true' if value else 'false'

@@ -1,6 +1,13 @@
 Release history
 ===============
 
+1.3.0
+-----
+-   missing people endpoint create()
+-   new: Person.errors
+-   fix: people update()
+-   fix: parameter error when listing phone numbers
+
 1.2.0
 -----
 -   new: push to talk person settings: :attr:`wxc_sdk.person_settings.PersonSettingsApi.push_to_talk`

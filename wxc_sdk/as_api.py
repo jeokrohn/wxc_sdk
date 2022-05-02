@@ -18,6 +18,9 @@ from wxc_sdk.base import to_camel, StrOrDict
 log = logging.getLogger(__name__)
 
 
+__all__ = ['AsWebexSimpleApi']
+
+
 class MultipartEncoder(MultipartWriter):
     """
     Compatibility class for requests toolbelt MultipartEncoder
@@ -538,6 +541,46 @@ class AsPeopleApi(AsApiChild, base='people'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=ep, model=Person, params=params)]
 
+    async def create(self, settings: Person, calling_data: bool = False) -> Person:
+        """
+        Create a Person
+
+        Create a new user account for a given organization. Only an admin can create a new user account.
+
+        At least one of the following body parameters is required to create a new user: displayName, firstName,
+        lastName.
+
+        Currently, users may have only one email address associated with their account. The emails parameter is an
+        array, which accepts multiple values to allow for future expansion, but currently only one email address will
+        be used for the new user.
+
+        Admin users can include Webex calling (BroadCloud) user details in the response by specifying callingData
+        parameter as true.
+
+        When doing attendee management, to make the new user an attendee for a site: append #attendee to the siteUrl
+        parameter (eg: mysite.webex.com#attendee).
+
+        :param settings: settings for new user
+        :type settings: Person
+        :param calling_data: Include Webex Calling user details in the response.
+        :type calling_data: bool
+        :return: new user
+        :rtype: Person
+        """
+        params = calling_data and {'callingData': 'true'} or None
+        url = self.ep()
+        data = settings.json(exclude={'person_id': True,
+                                      'created': True,
+                                      'last_modified': True,
+                                      'timezone': True,
+                                      'last_activity': True,
+                                      'sip_addresses': True,
+                                      'status': True,
+                                      'invite_pending': True,
+                                      'login_enabled': True,
+                                      'person_type': True})
+        return Person.parse_obj(await self.post(url, data=data, params=params))
+
     async def details(self, person_id: str, calling_data: bool = False) -> Person:
         """
         Shows details for a person, by ID.
@@ -603,19 +646,24 @@ class AsPeopleApi(AsApiChild, base='people'):
         :return: Person details
         :rtype: Person
         """
-        params = {}
-        if calling_data:
-            params['callingData'] = 'true'
-        if show_all_types:
-            params['showAllTypes'] = 'true'
+        params = calling_data and {'callingData': 'true'} or None
 
-        # set of attributes that can be updated and should be included in body of PUT
-        can_update = {'emails', 'phoneNumbers', 'extension', 'locationId', 'displayName', 'firstName', 'lastName',
-                      'nickName', 'avatar', 'orgId', 'roles', 'licenses', 'siteUrls', 'loginEnabled'}
-        data = {k: v for k, v in json.loads(person.json()).items()
-                if k in can_update}
+        if not all(v is not None
+                   for v in (person.display_name, person.first_name, person.last_name)):
+            raise ValueError('display_name, first_name, and last_name are required')
+
+        # some attributes should not be included in update
+        data = person.json(exclude={'created': True,
+                                    'last_modified': True,
+                                    'timezone': True,
+                                    'last_activity': True,
+                                    'sip_addresses': True,
+                                    'status': True,
+                                    'invite_pending': True,
+                                    'login_enabled': True,
+                                    'person_type': True})
         ep = self.ep(path=person.person_id)
-        return Person.parse_obj(await self.put(url=ep, json=data))
+        return Person.parse_obj(await self.put(url=ep, data=data, params=params))
 
     async def me(self, calling_data: bool = False) -> Person:
         """
@@ -5434,7 +5482,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         :return: yields :class:`NumberListPhoneNumber` instances
         """
         params.update((to_camel(p), v) for i, (p, v) in enumerate(locals().items())
-                      if i and v is not None)
+                      if i and v is not None and p != 'params')
         for param, value in params.items():
             if isinstance(value, bool):
                 value = 'true' if value else 'false'
@@ -5497,7 +5545,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         :return: yields :class:`NumberListPhoneNumber` instances
         """
         params.update((to_camel(p), v) for i, (p, v) in enumerate(locals().items())
-                      if i and v is not None)
+                      if i and v is not None and p != 'params')
         for param, value in params.items():
             if isinstance(value, bool):
                 value = 'true' if value else 'false'
