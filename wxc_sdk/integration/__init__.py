@@ -269,8 +269,11 @@ class Integration:
         Tokens are read from cache and then verified. If needed an OAuth flow is initiated to get a new
         set of tokens. For this the redirect URL http://localhost:6001/redirect is expected.
 
-        :param read_from_cache: callback to read tokens from cache
-        :param write_to_cache: callback to write updated tokens back to cache
+        :param read_from_cache: callback to read tokens from cache. Called without parameters and is expected to return
+            a :class:`wxc_sdk.tokens.Tokens` instance with the cached tokens. If cached tokens cannot be provided then
+            None should be returned.
+        :param write_to_cache: callback to write updated tokens back to cache. The callback is called with a
+            :class:`wxc_sdk.tokens.Tokens` instance as only argument.
         :return: set of tokens or None
         :rtype: :class:`wxc_sdk.tokens.Tokens`
         """
