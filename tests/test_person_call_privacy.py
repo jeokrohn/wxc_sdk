@@ -106,10 +106,20 @@ class TestUpdate(TestCaseWithUsers):
         # all new user ids need to be present now
         after_agent_ids = set(agent.agent_id for agent in after.monitoring_agents)
         new_user_ids = set(user.person_id for user in to_add)
-        self.assertEqual(new_user_ids, after_agent_ids & new_user_ids)
+        try:
+            self.assertEqual(new_user_ids, after_agent_ids & new_user_ids)
+        except AssertionError as e:
+            new_ids_missing = new_user_ids - after_agent_ids
+            for new_id in new_ids_missing:
+                print(f'New ID missing: {new_id}, {base64.b64decode(new_id + "==").decode()}')
+            unexpected_ids = after_agent_ids - set(agent.agent_id for agent in before.monitoring_agents or []) - \
+                new_user_ids
+            for unexpected_id in unexpected_ids:
+                print(f'Unexpected ID: {unexpected_id}, {base64.b64decode(unexpected_id + "==").decode()}')
+            raise
 
         # other than that nothing should've changed
-        after.monitored_elements = before.monitored_elements
+        after.monitoring_agents = before.monitoring_agents
         self.assertEqual(before, after)
 
     def test_004_verify_agent_id_format(self):

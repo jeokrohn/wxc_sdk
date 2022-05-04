@@ -1,6 +1,12 @@
 Release history
 ===============
 
+1.4.0
+-----
+-   new: :meth:`wxc_sdk.integration.Integration.get_cached_tokens`
+-   new: :attr:`wxc_sdk.common.schedules.Schedule.new_name` for updates
+-   minor changes in unit tests
+
 1.3.0
 -----
 -   missing people endpoint create()

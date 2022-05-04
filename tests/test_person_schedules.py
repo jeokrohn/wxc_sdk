@@ -356,10 +356,12 @@ class TestCreateOrUpdate(TestCaseWithUsers):
         print(f'target user: {target_user.display_name}')
 
         # list user and location schedules
-        user_schedules = {(s.schedule_type, s.name): s for s in ps.list(obj_id=target_user.person_id,
-                                                                        schedule_type=ScheduleType.holidays)}
-        location_schedules = {(s.schedule_type, s.name): s for s in ls.list(obj_id=target_user.location_id,
-                                                                            schedule_type=ScheduleType.holidays)}
+        user_schedules = {(s.schedule_type, s.name): s
+                          for s in ps.list(obj_id=target_user.person_id,
+                                           schedule_type=ScheduleType.holidays)}
+        location_schedules = {(s.schedule_type, s.name): s
+                              for s in ls.list(obj_id=target_user.location_id,
+                                               schedule_type=ScheduleType.holidays)}
         print(f'    user schedules:'
               f' {", ".join(f"{s_name}({s_type})" for s_type, s_name in user_schedules)}')
         print(f'location schedules:'
@@ -369,13 +371,13 @@ class TestCreateOrUpdate(TestCaseWithUsers):
         schedule_names = set(chain((s.name for s in user_schedules.values()),
                                    (s.name for s in location_schedules.values())))
         new_names = (name for i in range(1000)
-                     if (name := f'{SCHEDULE_NAME_PREFIX}{i:03}') not in schedule_names)
+                     if (name := f'{SCHEDULE_NAME_PREFIX}user_{i:03}') not in schedule_names)
 
         # we also at least need one real(!) user schedule for the test
         if (target_schedule_id := next((schedule.schedule_id
                                         for key, schedule in user_schedules.items()
                                         if key not in location_schedules), None)) is None:
-            # new user schedule
+            # new user schedule name
             user_schedule_name = next(new_names)
             target_schedule_id = ps.create(obj_id=target_user.person_id,
                                            schedule=Schedule(name=user_schedule_name,
@@ -408,9 +410,11 @@ class TestCreateOrUpdate(TestCaseWithUsers):
 
         new_name = next(new_names)
         print(f'Changing name to {new_name}')
-        settings = Schedule(name=new_name,
+        settings = Schedule(name=target_schedule.name,
+                            new_name=new_name,
                             schedule_type=target_schedule.schedule_type)
         updated_id = ps.update(obj_id=target_user.person_id,
+                               schedule_id=target_schedule.schedule_id,
                                schedule=settings)
 
         print(f'updated id: {debug_schedule_id(updated_id)}')

@@ -237,6 +237,8 @@ class Event(ApiModel):
 class Schedule(ApiModel):
     #: Name for the schedule.
     name: Optional[str]
+    #: new name for the schedule. Only used in update()
+    new_name: Optional[str]
     #: Identifier for a schedule.
     schedule_id: Optional[str] = Field(alias='id')
     #: location name, only returned by list() for location schedules

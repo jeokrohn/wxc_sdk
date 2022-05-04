@@ -2,7 +2,7 @@
 Test for calling behavior settings
 """
 import random
-from concurrent.futures import ThreadPoolExecutor
+from asyncio import gather
 from contextlib import contextmanager
 from dataclasses import dataclass
 
@@ -12,15 +12,29 @@ from .base import TestCaseWithUsers
 
 class TestRead(TestCaseWithUsers):
 
-    def test_001_read_all(self):
+    @TestCaseWithUsers.async_test
+    async def test_001_read_one(self):
+        """
+        Read app services settings for one user
+        TODO: track https://jira-eng-gpk2.cisco.com/jira/browse/PROVISION-9609
+        """
+        cb = self.async_api.person_settings.calling_behavior
+        # pick the 1st user
+        target_user = self.users[0]
+        print(f'Trying to get calling behavior for {target_user.display_name}({target_user.emails[0]})')
+        settings = await cb.read(person_id=target_user.person_id)
+        print(f'Got settings: {settings.json()}')
+        self.assertTrue(settings.effective_behavior_type is not None)
+
+    @TestCaseWithUsers.async_test
+    async def test_002_read_all(self):
         """
         Read app services settings of all users
         """
-        cb = self.api.person_settings.calling_behavior
+        cb = self.async_api.person_settings.calling_behavior
 
-        with ThreadPoolExecutor() as pool:
-            settings = list(pool.map(lambda user: cb.read(person_id=user.person_id),
-                                     self.users))
+        settings = await gather(*[cb.read(person_id=user.person_id) for user in self.users],
+                                return_exceptions=False)
         print(f'Got app services settings for {len(self.users)} users')
         print('\n'.join(s.json(exclude_none=False) for s in settings))
         self.assertTrue(all(s.behavior_type is not None and s.effective_behavior_type is not None for s in settings),

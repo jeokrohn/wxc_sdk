@@ -1,10 +1,17 @@
 """
 An OAuth integration
 """
+import concurrent.futures
+import http.server
 import logging
+import socketserver
+import threading
 import urllib.parse
+import uuid
+import webbrowser
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Union
+from typing import Union, Optional
 
 import requests
 
@@ -170,3 +177,116 @@ class Integration:
             # ignore HTTPErrors
             pass
         return True
+
+    def get_tokens_from_oauth_flow(self) -> Optional[Tokens]:
+        """
+        Initiate an OAuth flow to obtain new tokens.
+
+        start a local webserver on port 6001 o serve the last step in the OAuth flow
+
+        :param self: Integration to use for the flow
+        :type: :class:`wxc_sdk.integration.Integration`
+        :return: set of new tokens if successful, else None
+        :rtype: :class:`wxc_sdk.tokens.Tokens``
+        """
+
+        def serve_redirect():
+            """
+            Temporarily start a web server to serve the redirect URI at http://localhost:6001/redirect'
+            :return: parses query of the GET on the redirect URI
+            """
+
+            # mutable to hold the query result
+            oauth_response = dict()
+
+            class RedirectRequestHandler(http.server.BaseHTTPRequestHandler):
+                # handle the GET request on the redirect URI
+
+                # noinspection PyPep8Naming
+                def do_GET(self):
+                    # serve exactly one GET on the redirect URI and then we are done
+
+                    parsed = urllib.parse.urlparse(self.path)
+                    if parsed.path == '/redirect':
+                        log.debug('serve_redirect: got GET on /redirect')
+                        query = urllib.parse.parse_qs(parsed.query)
+                        oauth_response['query'] = query
+                        # we are done
+                        self.shutdown(self.server)
+                    self.send_response(200)
+                    self.flush_headers()
+
+                @staticmethod
+                def shutdown(server: socketserver.BaseServer):
+                    log.debug('serve_redirect: shutdown of local web server requested')
+                    threading.Thread(target=server.shutdown, daemon=True).start()
+
+            httpd = http.server.HTTPServer(server_address=('', 6001),
+                                           RequestHandlerClass=RedirectRequestHandler)
+            log.debug('serve_redirect: starting local web server for redirect URI')
+            httpd.serve_forever()
+            httpd.server_close()
+            log.debug(f'serve_redirect: server terminated, result {oauth_response["query"]}')
+            return oauth_response['query']
+
+        state = str(uuid.uuid4())
+        auth_url = self.auth_url(state=state)
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            # start web server
+            fut = executor.submit(serve_redirect)
+
+            # open authentication URL in local webbrowser
+            webbrowser.open(auth_url)
+            # wait for GET on redirect URI and get the result (parsed query of redirect URI)
+            try:
+                result = fut.result(timeout=120)
+            except concurrent.futures.TimeoutError:
+                try:
+                    # post a dummy response to the redirect URI to stop the server
+                    with requests.Session() as session:
+                        session.get(self.redirect_url, params={'code': 'foo'})
+                except Exception:
+                    pass
+                log.warning('Authorization did not finish in time (60 seconds)')
+                return
+
+        code = result['code'][0]
+        response_state = result['state'][0]
+        assert response_state == state
+
+        # get access tokens
+        new_tokens = self.tokens_from_code(code=code)
+        if new_tokens is None:
+            log.error('Failed to obtain tokens')
+            return None
+        return new_tokens
+
+    def get_cached_tokens(self, *, read_from_cache: Callable[[], Optional[Tokens]],
+                          write_to_cache: Callable[[Tokens], None]) -> Optional[Tokens]:
+        """
+        Get tokens.
+
+        Tokens are read from cache and then verified. If needed an OAuth flow is initiated to get a new
+        set of tokens. For this the redirect URL http://localhost:6001/redirect is expected.
+
+        :param read_from_cache: callback to read tokens from cache
+        :param write_to_cache: callback to write updated tokens back to cache
+        :return: set of tokens or None
+        :rtype: :class:`wxc_sdk.tokens.Tokens`
+        """
+        # read tokens from cache
+        tokens = read_from_cache()
+        if tokens:
+            # validate tokens
+            changed = self.validate_tokens(tokens=tokens)
+            if not tokens.access_token:
+                tokens = None
+            elif changed:
+                write_to_cache(tokens)
+        if not tokens:
+            # get new tokens via integration if needed
+            tokens = self.get_tokens_from_oauth_flow()
+            if tokens:
+                tokens.set_expiration()
+                write_to_cache(tokens)
+        return tokens
