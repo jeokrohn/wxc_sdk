@@ -14,6 +14,7 @@ from yaml import safe_load, safe_dump
 
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.integration import Integration
+from wxc_sdk.scopes import parse_scopes
 from wxc_sdk.tokens import Tokens
 
 log = logging.getLogger(__name__)
@@ -44,7 +45,7 @@ def build_integration() -> Integration:
     """
     client_id = os.getenv('TOKEN_INTEGRATION_CLIENT_ID')
     client_secret = os.getenv('TOKEN_INTEGRATION_CLIENT_SECRET')
-    scopes = os.getenv('TOKEN_INTEGRATION_CLIENT_SCOPES')
+    scopes = parse_scopes(os.getenv('TOKEN_INTEGRATION_CLIENT_SCOPES'))
     redirect_url = 'http://localhost:6001/redirect'
     if not all((client_id, client_secret, scopes)):
         raise ValueError('failed to get integration parameters from environment')

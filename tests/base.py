@@ -37,6 +37,7 @@ from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.integration import Integration
 from wxc_sdk.licenses import License
 from wxc_sdk.locations import Location
+from wxc_sdk.scopes import parse_scopes
 from wxc_sdk.tokens import Tokens
 
 log = logging.getLogger(__name__)
@@ -79,7 +80,7 @@ class AdminIntegration(Integration):
         load_dotenv(dotenv_path=dotenv_path)
         client_id = os.getenv('ADMIN_CLIENT_ID')
         client_secret = os.getenv('ADMIN_CLIENT_SECRET')
-        scopes = os.getenv('ADMIN_CLIENT_SCOPES')
+        scopes = parse_scopes(os.getenv('ADMIN_CLIENT_SCOPES'))
         if not all((client_id, client_secret, scopes)):
             raise ValueError('ADMIN_CLIENT_ID, ADMIN_CLIENT_SECRET, and ADMIN_CLIENT_SCOPES environment variables '
                              'required')
@@ -310,7 +311,7 @@ class TestCaseWithLog(TestCaseWithTokens):
     log_path: str
     file_log_handler: Optional[logging.Handler]
 
-    rest_logger_names = ['wxc_sdk.rest', 'wxc_sdk.as_rest','webexteamsasyncapi.rest']
+    rest_logger_names = ['wxc_sdk.rest', 'wxc_sdk.as_rest', 'webexteamsasyncapi.rest']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

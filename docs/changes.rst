@@ -1,6 +1,12 @@
 Release history
 ===============
 
+1.4.1
+-----
+
+- new: utility function to parse scopes, :func:`wxc_sdk.scopes.parse_scopes`
+- new example: us_holidays_async.py
+
 1.4.0
 -----
 -   new: :meth:`wxc_sdk.integration.Integration.get_cached_tokens`

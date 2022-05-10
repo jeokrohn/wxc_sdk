@@ -35,4 +35,5 @@ Submodules
    wxc_sdk.as_rest
    wxc_sdk.base
    wxc_sdk.rest
+   wxc_sdk.scopes
    wxc_sdk.tokens

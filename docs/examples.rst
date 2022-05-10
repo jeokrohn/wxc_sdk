@@ -79,6 +79,24 @@ Source: |us_holidays.py|_
     :linenos:
 
 
+Holiday schedule w/ US national holidays for all US locations (async variant)
+-----------------------------------------------------------------------------
+
+This example uses the Calendarific API at https://calendarific.com/ to get a list of national US holidays and creates
+a "``National Holidays``" holiday schedule for all US locations with all these national holidays.
+
+A rudimentary API implementation in |calendarific.py|_ is used for the requests to https://calendarific.com/.
+Calendarific APIs require all requests to be authenticated using an API key. You can `sign up for a free account`_ to get
+a free API account key which then is read from environment variable ``CALENDARIFIC_KEY``.
+
+Source: |us_holidays_async.py|_
+
+.. |us_holidays_async.py| replace:: ``us_holidays_async.py``
+
+.. literalinclude:: ../examples/us_holidays_async.py
+    :linenos:
+
+
 Persist tokens and obtain new tokens interactively
 --------------------------------------------------
 
@@ -121,6 +139,7 @@ Source: |get_tokens.py|_
 .. _calling_users.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/calling_users.py
 .. _calling_users_async.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/calling_users_async.py
 .. _us_holidays.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/us_holidays.py
+.. _us_holidays_async.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/us_holidays_async.py
 .. _calendarific.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/calendarific.py
 .. _reset_call_forwarding.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/reset_call_forwarding.py
 .. _modify_voicemail.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/modify_voicemail.py

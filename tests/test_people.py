@@ -2,7 +2,6 @@ import json
 import os
 import re
 import time
-import uuid
 from contextlib import contextmanager
 from itertools import chain
 from unittest import skip

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "wxc_sdk"
-version = "1.4.0"
+version = "1.4.1"
 description = "SDK for Webex APIs with special focus on Webex Calling specific endpoints"
 license = 'MIT'
 authors = ["Johannes Krohn <jkrohn@cisco.com>"]
@@ -13,7 +13,7 @@ python = "^3.9"
 pydantic = "^1.9.0"
 requests = "^2.27.1"
 requests-toolbelt = "^0.9.1"
-backoff = "^1.11.1"
+backoff = "^2.0.1"
 pytz = "*"
 aiohttp = "^3.8.1"
 
