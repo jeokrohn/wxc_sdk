@@ -31,7 +31,8 @@ def env_path() -> str:
 
 def yml_path() -> str:
     """
-    determine path of YML file to persists tokens
+    determine path of YML file to persist tokens
+
     :return: path to YML file
     :rtype: str
     """
@@ -41,6 +42,7 @@ def yml_path() -> str:
 def build_integration() -> Integration:
     """
     read integration parameters from environment variables and create an integration
+
     :return: :class:`wxc_sdk.integration.Integration` instance
     """
     client_id = os.getenv('TOKEN_INTEGRATION_CLIENT_ID')
