@@ -55,13 +55,15 @@ class WebexSimpleApi:
     #: :class:`rest.RestSession` used for all API requests
     session: RestSession
 
-    def __init__(self, *, tokens: Union[str, Tokens] = None, concurrent_requests: int = 10):
+    def __init__(self, *, tokens: Union[str, Tokens] = None, concurrent_requests: int = 10, org_id: str = None):
         """
 
         :param tokens: token to be used by the API. Can be a :class:`tokens.Tokens` instance, a string or None. If
             None then an access token is expected in the WEBEX_ACCESS_TOKEN environment variable.
         :param concurrent_requests: number of concurrent requests when using multi-threading
         :type concurrent_requests: int
+        :param org_id: orgId value specifying a specific Webex tenant
+        :type org_id: str
         """
         if isinstance(tokens, str):
             tokens = Tokens(access_token=tokens)
@@ -72,7 +74,7 @@ class WebexSimpleApi:
                                  'WEBEX_ACCESS_TOKEN environment variable')
             tokens = Tokens(access_token=tokens)
 
-        session = RestSession(tokens=tokens, concurrent_requests=concurrent_requests)
+        session = RestSession(tokens=tokens, concurrent_requests=concurrent_requests, org_id=org_id)
         self.groups = GroupsApi(session=session)
         self.licenses = LicensesApi(session=session)
         self.locations = LocationsApi(session=session)

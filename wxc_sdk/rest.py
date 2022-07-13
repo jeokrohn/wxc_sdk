@@ -209,12 +209,13 @@ class RestSession(Session):
     #: base URL for all Webex API requests
     BASE = 'https://webexapis.com/v1'
 
-    def __init__(self, *, tokens: Tokens, concurrent_requests: int):
+    def __init__(self, *, tokens: Tokens, concurrent_requests: int, org_id: str):
         super().__init__()
         self.mount('http://', HTTPAdapter(pool_maxsize=concurrent_requests))
         self.mount('https://', HTTPAdapter(pool_maxsize=concurrent_requests))
         self._tokens = tokens
         self._sem = Semaphore(concurrent_requests)
+        self.org_id = org_id
 
     def ep(self, path: str = None):
         """
@@ -260,6 +261,8 @@ class RestSession(Session):
         if headers:
             request_headers.update((k.lower(), v) for k, v in headers.items())
         with self._sem:
+            if self.org_id:
+                kwargs['params']['orgId'] = self.org_id
             response = self.request(method, url=url, headers=request_headers, **kwargs)
         try:
             dump_response(response)

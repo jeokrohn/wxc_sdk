@@ -219,6 +219,21 @@ def get_tokens() -> Optional[Tokens]:
             write_tokens(tokens=tokens)
     return tokens
 
+def get_org_id() -> Optional[str]:
+    """
+    Get Organization ID to run a test
+
+    The Organization ID is read from the environment variable ORG_ID.
+
+    :return: org_id
+    :rtype: str
+    """
+
+    org_id = os.getenv('ORG_ID', None)
+
+    return org_id
+
+
 
 class TestCaseWithTokens(TestCase):
     api: Optional[WebexSimpleApi]
@@ -253,9 +268,11 @@ class TestCaseWithTokens(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         tokens = get_tokens()
+        org_id = get_org_id()
         cls.tokens = tokens
+        cls.org_id = org_id
         if tokens:
-            cls.api = WebexSimpleApi(tokens=tokens)
+            cls.api = WebexSimpleApi(tokens=tokens, org_id=org_id)
             cls.me = cls.api.people.me()
         else:
             cls.api = None
