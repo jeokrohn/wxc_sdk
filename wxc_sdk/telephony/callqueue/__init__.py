@@ -154,6 +154,16 @@ class WaitMessageSetting(ApiModel):
     handling_time: Optional[int]
     queue_position: Optional[int]
     high_volume_message_enabled: Optional[bool]
+    # TODO: undocumented
+    estimated_waiting_time: Optional[int]
+    # TODO: undocumented
+    callback_option_enabled: Optional[bool]
+    # TODO: undocumented
+    minimum_estimated_callback_time: Optional[int]
+    # TODO: undocumented
+    international_callback_enabled: Optional[bool]
+    # TODO: undocumented
+    play_updated_estimated_wait_message: Optional[bool]
     default_handling_time: Optional[int]
 
     @staticmethod

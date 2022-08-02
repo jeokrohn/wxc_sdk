@@ -129,6 +129,12 @@ class TestRead(TestCaseWithUsers):
             for u in to_add:
                 print(f'  {u.display_name}: {u.phone_numbers}')
 
+            # get details of all users to add to have them iun the API log
+            with ThreadPoolExecutor() as pool:
+                details = list(pool.map(
+                    lambda user:self.api.people.details(person_id=user.person_id, calling_data=True),
+                    to_add))
+
             # ths is what we want to add
             new_monitoring = [u.person_id
                               for u in to_add]

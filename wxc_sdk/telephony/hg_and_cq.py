@@ -45,6 +45,12 @@ class Agent(UserBase):
         return webex_id_to_uuid(self.agent_id)
 
 
+class CallingLineIdPolicy(str, Enum):
+    direct_line = 'DIRECT_LINE'
+    location_numer = 'LOCATION_NUMBER'
+    customer = 'CUSTOM'
+
+
 class HGandCQ(ApiModel):
     """
     Common attributes of hunt groups and call queues
@@ -59,6 +65,10 @@ class HGandCQ(ApiModel):
     phone_number: Optional[str]
     #: Extension
     extension: Optional[str]
+    # TODO: undocumented
+    calling_line_id_policy: Optional[CallingLineIdPolicy]
+    # TODO: undocumented
+    calling_line_id_phone_number: Optional[str]
     #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
     #: number will reach the same greeting and each menu will function identically to the main number. The alternate
     #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.

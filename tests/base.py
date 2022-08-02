@@ -18,7 +18,7 @@ import uuid
 import webbrowser
 from collections.abc import Iterable, Generator
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from functools import wraps
 from typing import Optional, Any, Union, ClassVar
@@ -309,14 +309,9 @@ class TestCaseWithLog(TestCaseWithTokens):
     Test case with automatic logging
     """
     log_path: str
-    file_log_handler: Optional[logging.Handler]
+    file_log_handler: logging.Handler = field(default=None)
 
     rest_logger_names = ['wxc_sdk.rest', 'wxc_sdk.as_rest', 'webexteamsasyncapi.rest']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # this can be reused for other logging to the same file
-        self.file_log_handler = None
 
     def setUp(self) -> None:
         super().setUp()
@@ -342,13 +337,14 @@ class TestCaseWithLog(TestCaseWithTokens):
         super().tearDown()
         print(f'{self.__class__.__name__}.tearDown() in TestCaseWithLog.teardown()')
 
-        # close REST file handler and remove from REST logger
-        for rest_logger_name in self.rest_logger_names:
-            rest_logger = logging.getLogger(rest_logger_name)
-            rest_logger.removeHandler(self.file_log_handler)
+        if self.file_log_handler is not None:
+            # close REST file handler and remove from REST logger
+            for rest_logger_name in self.rest_logger_names:
+                rest_logger = logging.getLogger(rest_logger_name)
+                rest_logger.removeHandler(self.file_log_handler)
 
-        self.file_log_handler.close()
-        self.file_log_handler = None
+            self.file_log_handler.close()
+            self.file_log_handler = None
 
 
 @dataclass(init=False)

@@ -190,9 +190,9 @@ if __name__ == '__main__':
     logging.getLogger('urllib3').setLevel(logging.INFO)
     logging.getLogger('wxc_sdk.as_rest').setLevel(logging.INFO)
 
-
     # the actual action
     async def do_provision():
+
         async with AsWebexSimpleApi(concurrent_requests=5) as wx_api:
             # get all US locations
             log.info('Getting locations...')
@@ -209,6 +209,5 @@ if __name__ == '__main__':
             else:
                 for year in range(FIRST_YEAR, LAST_YEAR + 1):
                     await observe_national_holidays(api=wx_api, year=year, locations=us_locations)
-
 
     asyncio.run(do_provision())

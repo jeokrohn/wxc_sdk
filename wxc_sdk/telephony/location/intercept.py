@@ -2,8 +2,8 @@
 location intercept
 """
 
-from ..api_child import ApiChild
-from ..person_settings.call_intercept import InterceptSetting
+from ...api_child import ApiChild
+from ...person_settings.call_intercept import InterceptSetting
 
 __all__ = ['LocationInterceptApi']
 

@@ -37,9 +37,6 @@ from wxc_sdk.base import to_camel, StrOrDict
 log = logging.getLogger(__name__)
 
 
-__all__ = ['AsWebexSimpleApi']
-
-
 class MultipartEncoder(MultipartWriter):
     \"""
     Compatibility class for requests toolbelt MultipartEncoder
@@ -96,7 +93,7 @@ RE_METHOD_DEF = re.compile(r"""
     """, flags=re.VERBOSE)
 
 # Generator return annotation
-RE_GENERATOR = re.compile(r'-> Generator\[(?P<gen_type>\w+)(?P<post>.+)')
+RE_GENERATOR = re.compile(r'->\s*Generator\[(?P<gen_type>\w+)(?P<post>.+)')
 
 RE_FOLLOW_PAGINATION = re.compile("""
     return\s(?P<follow>\S+?follow_pagination\((?s:.+)?\))
@@ -479,6 +476,7 @@ class ClassTransform:
         :param class_name:
         :return:
         """
+        log.debug(f'New ClassTransform: {class_name} -> As{class_name}')
         return ClassTransform(class_name=class_name,
                               regex=re.compile(f'(\\b){class_name}(\\b)'),
                               replacement=f'\g<1>As{class_name}\g<2>')
@@ -641,9 +639,14 @@ if __name__ == '__main__':
     # register all modules
     modules = list(map(Module, paths))
     Module.init_imports()
+
+    # names of modules that use rest (depend on rest)
     uses_rest = set(m.module_name for m in Module.registry['wxc_sdk.rest'].dependants_gen())
+
+    # modules depending on rest
     mo = list(m for m in Module.module_order()
               if m.module_name in uses_rest)
+
     for module in Module.registry.values():
         imported = import_module(module.module_name)
         foo = 1

@@ -130,6 +130,7 @@ class TestUpdate(TestCaseWithUsers):
         with self.target_user() as user:
             # API shortcut
             priv = self.api.person_settings.privacy
+
             # get current settings
             before = priv.read(person_id=user.person_id)
             present_ids = [agent.agent_id for agent in before.monitoring_agents or []]

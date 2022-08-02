@@ -13,7 +13,7 @@ from .base import TestWithLocations
 class TestIntercept(TestWithLocations):
     @contextmanager
     def context(self):
-        li = self.api.telephony.location_intercept
+        li = self.api.telephony.location.intercept
         target = random.choice(self.locations)
         before = li.read(location_id=target.location_id)
         try:
@@ -24,7 +24,7 @@ class TestIntercept(TestWithLocations):
             self.assertEqual(before, after)
 
     def test_001_read_all(self):
-        li = self.api.telephony.location_intercept
+        li = self.api.telephony.location.intercept
         with ThreadPoolExecutor() as pool:
             settings = list(pool.map(lambda loc: li.read(location_id=loc.location_id),
                                      self.locations))
@@ -34,7 +34,7 @@ class TestIntercept(TestWithLocations):
         """
         enable call intercept for a location
         """
-        li = self.api.telephony.location_intercept
+        li = self.api.telephony.location.intercept
         with self.context() as target_location:
             target_location: Location
             before = li.read(location_id=target_location.location_id)
@@ -45,4 +45,3 @@ class TestIntercept(TestWithLocations):
             self.assertEqual(enable, after.enabled)
             after.enabled = before.enabled
             self.assertEqual(before, after)
-

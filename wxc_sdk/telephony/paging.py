@@ -118,7 +118,7 @@ class Paging(ApiModel):
             Either phone_number or extension is mandatory.
         :type extension: str
         :return: settings for :meth:`PagingApi.create` call
-        :rtype :class:`Paging`
+        :rtype: :class:`Paging`
         """
         if not any((phone_number, extension)):
             raise ValueError('Either phone_number or extension is mandatory.')

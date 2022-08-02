@@ -198,10 +198,8 @@ class CallParkApi(ApiChild, base='telephony/config/callParks'):
         :param name: Return the list of call parks that contains the given name. The maximum length is 80.
         :type name: str
         :param org_id: List call parks for this organization.
-        :param params: dict of additional parameters passed directly to endpoint
-        :type params: dict
         :type org_id: str
-        :return yields :class:`CallPark` objects
+        :return: yields :class:`CallPark` objects
         """
         params.update((to_camel(k), v)
                       for i, (k, v) in enumerate(locals().items())

@@ -347,7 +347,7 @@ class RestSession(Session):
         """
         return self._rest_request('PATCH', *args, **kwargs)
 
-    def follow_pagination(self, *, url: str, model: Type[ApiModel],
+    def follow_pagination(self, *, url: str, model: Type[ApiModel] = None,
                           params: dict = None, item_key: str = None, **kwargs) -> Generator[ApiModel, None, None]:
         """
         Handling RFC5988 pagination of list requests. Generator of parsed objects
@@ -362,7 +362,18 @@ class RestSession(Session):
         :type item_key: str
         :return: yields parsed objects
         """
+        def noop(x):
+            return x
+
+        if model is None:
+            model = noop
+        else:
+            model = model.parse_obj
+
         while url:
+            if url.startswith('https,'):
+                # TODO: this has to go as soon as WXCAPIBULK-27 gets fixed
+                url = url[6:]
             log.debug(f'{self}.pagination: getting {url}')
             response, data = self._request_w_response('GET', url=url, params=params, **kwargs)
             # params only in first request. In subsequent requests we rely on the completeness of the 'next' URL
@@ -382,4 +393,4 @@ class RestSession(Session):
                                      if isinstance(v, list)))
             items = data.get(item_key)
             for item in items:
-                yield model.parse_obj(item)
+                yield model(item)

@@ -13,6 +13,8 @@ Subpackages
    :maxdepth: 4
 
    wxc_sdk.telephony.callqueue
+   wxc_sdk.telephony.location
+   wxc_sdk.telephony.prem_pstn
 
 Submodules
 ----------
@@ -29,9 +31,6 @@ Submodules
    wxc_sdk.telephony.forwarding
    wxc_sdk.telephony.hg_and_cq
    wxc_sdk.telephony.huntgroup
-   wxc_sdk.telephony.location_intercept
-   wxc_sdk.telephony.location_moh
-   wxc_sdk.telephony.location_vm
    wxc_sdk.telephony.organisation_vm
    wxc_sdk.telephony.paging
    wxc_sdk.telephony.pnc

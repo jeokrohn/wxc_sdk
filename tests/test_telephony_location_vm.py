@@ -4,10 +4,8 @@ Test cases for location voicemail settings
 import random
 from concurrent.futures import ThreadPoolExecutor
 
+from wxc_sdk.telephony.location.vm import LocationVoiceMailSettings
 from .base import TestWithLocations
-
-from wxc_sdk.common import AuthCode
-from wxc_sdk.telephony.location_vm import LocationVoiceMailSettings
 
 
 class Test(TestWithLocations):
@@ -15,7 +13,7 @@ class Test(TestWithLocations):
     def test_001_read_all(self):
         with ThreadPoolExecutor() as pool:
             details = list(pool.map(
-                lambda location: self.api.telephony.location_voicemail.read(location_id=location.location_id),
+                lambda location: self.api.telephony.location.voicemail.read(location_id=location.location_id),
                 self.locations))
         print(f'Got voicemail settings for {len(details)} locations')
 
@@ -24,7 +22,7 @@ class Test(TestWithLocations):
         Update VM settings for one locations
         """
         target_location = random.choice(self.locations)
-        lvm = self.api.telephony.location_voicemail
+        lvm = self.api.telephony.location.voicemail
         before = lvm.read(location_id=target_location.location_id)
         try:
             new_settings = LocationVoiceMailSettings(

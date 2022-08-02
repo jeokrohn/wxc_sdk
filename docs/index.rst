@@ -77,7 +77,7 @@ Async version of the SDK (experimental)
 
 With :class:`wxc_sdk.as_api.AsWebexSimpleApi` the SDK offers an async variant based on asyncio/aiohttp. This variant is
 automatically generated based off the source of the synchronous API and offers async variants of the endpoints using the
-same datastructures than the synchronous API.
+same datastructures as the synchronous API.
 
 Here is an example of how to use the async SDK:
 
@@ -94,6 +94,7 @@ Reference
    changes.rst
    rest_debug.rst
    examples.rst
+   method_ref.rst
 
 
 ---------

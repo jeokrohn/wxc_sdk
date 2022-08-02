@@ -21,7 +21,7 @@ class TestOrgVM(TestCaseWithLog):
             ov.update(settings=settings)
             after = ov.read()
             self.assertEqual(expiry_enabled, after.message_expiry_enabled)
-            after.message_expiry_enabled=before.message_expiry_enabled
+            after.message_expiry_enabled = before.message_expiry_enabled
             self.assertEqual(before, after)
         finally:
             ov.update(settings=before)

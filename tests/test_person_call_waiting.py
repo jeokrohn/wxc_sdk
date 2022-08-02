@@ -15,7 +15,7 @@ class TestRead(TestCaseWithUsers):
         """
         cw = self.api.person_settings.call_waiting
         with ThreadPoolExecutor() as pool:
-            details = list(pool.map(lambda user:cw.read(person_id=user.person_id),
+            details = list(pool.map(lambda user: cw.read(person_id=user.person_id),
                                     self.users))
         print(f'Got details for {len(details)} users.')
 

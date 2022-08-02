@@ -40,4 +40,3 @@ def parse_scopes(scopes: str) -> str:
     # .. else just unquote the string and return the part before the 1st "&" ... or the full string
     unquoted = urllib.parse.unquote(scopes)
     return unquoted.split('&')[0]
-

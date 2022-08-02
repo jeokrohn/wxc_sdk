@@ -37,25 +37,46 @@ class PersonSettingsApi(ApiChild, base='people'):
     """
     API for all user level settings
     """
+
+    #: Person's Application Services Settings
     appservices: AppServicesApi
+    #: Barge In Settings for a Person
     barge: BargeApi
+    #: Do Not Disturb Settings for a Person
     dnd: DndApi
+    #: Call Intercept Settings for a Person
     call_intercept: CallInterceptApi
+    #: Call Recording Settings for a Person
     call_recording: CallRecordingApi
+    #: Call Waiting Settings for a Person
     call_waiting: CallWaitingApi
+    #: Caller ID Settings for a Person
     caller_id: CallerIdApi
+    #: Person's Calling Behavior
     calling_behavior: CallingBehaviorApi
+    #: Executive Assistant Settings for a Person
     exec_assistant: ExecAssistantApi
+    #: Forwarding Settings for a Person
     forwarding: PersonForwardingApi
+    #: Hoteling Settings for a Person
     hoteling: HotelingApi
+    #: Person's Monitoring Settings
     monitoring: MonitoringApi
+    #: Phone Numbers for a Person
     numbers: NumbersApi
+    #: Incoming Permission Settings for a Person
     permissions_in: IncomingPermissionsApi
+    #: Person's Outgoing Calling Permissions Settings
     permissions_out: OutgoingPermissionsApi
+    #: Person's Privacy Settings
     privacy: PrivacyApi
+    #: Push-to-Talk Settings for a Person
     push_to_talk: PushToTalkApi
+    #: Receptionist Client Settings for a Person
     receptionist: ReceptionistApi
+    #: Schedules for a Person
     schedules: ScheduleApi
+    #: Voicemail Settings for a Person
     voicemail: VoicemailApi
 
     def __init__(self, session: RestSession):

@@ -11,7 +11,10 @@ from wxc_sdk.base import ApiModel
 from ..base import webex_id_to_uuid
 
 __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting', 'UserNumber', 'PersonPlaceAgent',
-           'MonitoredMember', 'CallParkExtension', 'AuthCode']
+           'MonitoredMember', 'CallParkExtension', 'AuthCode', 'RouteType', 'DialPatternValidate', 'DialPatternStatus',
+           'RouteIdentity', 'Customer', 'IdAndName', 'PatternAction', 'NumberState', 'ValidateExtensionResponseStatus',
+           'ValidateExtensionStatusState', 'ValidateExtensionStatus', 'ValidateExtensionsResponse',
+           'ValidatePhoneNumberStatusState', 'ValidatePhoneNumberStatus', 'ValidatePhoneNumbersResponse']
 
 
 class UserType(str, Enum):
@@ -153,3 +156,138 @@ class AuthCode(ApiModel):
     code: str
     #: Indicates the description of the authorization code.
     description: str
+
+
+class RouteType(str, Enum):
+    #: Route group must include at least one trunk with a maximum of 10 trunks per route group.
+    route_group = 'ROUTE_GROUP'
+    # Connection between Webex Calling and the premises.
+    trunk = 'TRUNK'
+
+
+class DialPatternStatus(str, Enum):
+    """
+    validation status.
+    """
+    #: invalid pattern
+    invalid = 'INVALID'
+    #: duplicate pattern
+    duplicate = 'DUPLICATE'
+    #: duplicate in input
+    duplicate_in_list = 'DUPLICATE_IN_LIST'
+
+
+class DialPatternValidate(ApiModel):
+    #: input dial pattern that is being validate
+    dial_pattern: str
+    #: validation status.
+    pattern_status: DialPatternStatus
+    #: failure details.
+    message: str
+
+
+class RouteIdentity(ApiModel):
+    route_id: str = Field(alias='id')
+    name: Optional[str]
+    route_type: RouteType = Field(alias='type')
+
+
+class Customer(ApiModel):
+    """
+    Customer information.
+    """
+    #: Id of the customer/organization.
+    customer_id: str = Field(alias='id')
+    #: Name of the customer/organization.
+    name: str
+
+
+class IdAndName(ApiModel):
+    id: str
+    name: str
+
+
+class PatternAction(str, Enum):
+    #: add action, when adding a new dial pattern
+    add = 'ADD'
+    #: delete action, when deleting an existing dial pattern
+    delete = 'DELETE'
+
+
+class NumberState(str, Enum):
+    active = 'ACTIVE'
+    inactive = 'INACTIVE'
+
+
+class ValidateExtensionResponseStatus(str, Enum):
+    ok = 'OK'
+    errors = 'ERRORS'
+
+
+class ValidateExtensionStatusState(str, Enum):
+    valid = 'VALID'
+    duplicate = 'DUPLICATE'
+    duplicate_in_list = 'DUPLICATE_IN_LIST'
+    invalid = 'INVALID'
+
+
+class ValidateExtensionStatus(ApiModel):
+    #: Indicates the extention Id for which the status is about .
+    extension: str
+    #: Indicate the status for the given extention id .
+    state: ValidateExtensionStatusState
+    #: Error Code .
+    error_code: Optional[int]
+    message: Optional[str]
+
+    @property
+    def ok(self):
+        return self.state == ValidateExtensionStatusState.valid
+
+
+class ValidateExtensionsResponse(ApiModel):
+    status: ValidateExtensionResponseStatus
+    extension_status: Optional[list[ValidateExtensionStatus]]
+
+    @property
+    def ok(self) -> bool:
+        return self.status == ValidateExtensionResponseStatus.ok
+
+
+class ValidatePhoneNumberStatusState(str, Enum):
+    #: This means the phone number is available.
+    available = 'Available'
+    #: This means it's a duplicate phone number.
+    duplicate = 'Duplicate'
+    #: This means it's a duplicate phone number in the list.
+    duplicate_in_list = 'Duplicate In List'
+    #: The phone number is invalid.
+    invalid = 'Invalid'
+    #: This phone number is unavailable and cannot be used.
+    unavailable = 'Unavailable'
+
+
+class ValidatePhoneNumberStatus(ApiModel):
+    #: Phone number that need to be validated.
+    phone_number: str
+    #: This indicates the state of the number.
+    state: ValidatePhoneNumberStatusState
+    #: This indicated whether it's a toll-free number
+    toll_free_number: bool
+    #: This field has the details if error if the number is unavailable.
+    detail: list[str] = Field(default_factory=list)
+
+    @property
+    def ok(self):
+        return self.state == ValidatePhoneNumberStatusState.available
+
+
+class ValidatePhoneNumbersResponse(ApiModel):
+    #: This indicates the status of the numbers.
+    status: ValidateExtensionResponseStatus
+    #: This is an array of number objects with number details.
+    phone_numbers: Optional[list[ValidatePhoneNumberStatus]]
+
+    @property
+    def ok(self) -> bool:
+        return self.status == ValidateExtensionResponseStatus.ok

@@ -7,6 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 from wxc_sdk.telephony.pnc import NetworkConnectionType
 from .base import TestWithLocations
 
+
 class TestPNC(TestWithLocations):
     def test_001_read_all(self):
         pnc = self.api.telephony.pnc
@@ -28,6 +29,3 @@ class TestPNC(TestWithLocations):
             pnc.update(location_id=target.location_id, connection_type=before)
             after = pnc.read(location_id=target.location_id)
             self.assertEqual(before, after)
-
-
-

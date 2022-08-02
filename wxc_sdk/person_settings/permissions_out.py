@@ -333,17 +333,17 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
 
     feature = 'outgoingPermission'
 
-    def __init__(self, *, session: RestSession, base: str = None,
+    def __init__(self, *, session: RestSession,
                  workspaces: bool = False, locations: bool = False):
-        super().__init__(session=session, base=base, workspaces=workspaces, locations=locations)
+        super().__init__(session=session, workspaces=workspaces, locations=locations)
         if workspaces:
             # auto transfer numbers API seems to only exist for workspaces
             self.transfer_numbers = TransferNumbersApi(session=session,
-                                                       base=base, workspaces=True)
-            self.auth_codes = AuthCodesApi(session=session, base=base, workspaces=True)
+                                                       workspaces=True)
+            self.auth_codes = AuthCodesApi(session=session, workspaces=True)
         elif locations:
             self.transfer_numbers = TransferNumbersApi(session=session,
-                                                       base=base, locations=True)
+                                                       locations=True)
             self.auth_codes = None
         else:
             self.transfer_numbers = None

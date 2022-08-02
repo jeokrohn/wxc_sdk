@@ -50,7 +50,7 @@ class NotificationRepeat(ApiModel):
 
 class Notification(ApiModel):
     #: Type of pause/resume notification.
-    notification_type: NotificationType = Field(alias='type')
+    notification_type: Optional[NotificationType] = Field(alias='type')
     #: true when the notification feature is in effect. false indicates notification is disabled.
     enabled: bool
 

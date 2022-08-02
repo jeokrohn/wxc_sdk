@@ -11,7 +11,7 @@ class PersonSettingsApiChild(ApiChild, base=''):
 
     feature = None
 
-    def __init__(self, *, session: RestSession, base: str = None,
+    def __init__(self, *, session: RestSession,
                  workspaces: bool = False, locations: bool = False):
         self.feature_prefix = '/features/'
         if workspaces:
@@ -21,7 +21,7 @@ class PersonSettingsApiChild(ApiChild, base=''):
             self.feature_prefix = '/'
         else:
             self.selector = 'people'
-        super().__init__(session=session, base=base)
+        super().__init__(session=session, base=self.selector)
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(base='')

@@ -61,6 +61,7 @@ class AccessCodesApi(ApiChild, base='telephony/config/locations'):
 
     def create(self, *, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> list[AuthCode]:
         """
+        Create access code in location
 
         :param location_id: Add new access code for this location.
         :type location_id: str

@@ -36,6 +36,11 @@ for i in ${@}; do
         async=true
         ;;
 
+        methref)
+        all=
+        methref=true
+        ;;
+
         *)
         echo "Unknown argument: $i"
         exit 1
@@ -53,6 +58,11 @@ if [ ${all} ] || [ ${types} ]; then
     script/all_types.py
 fi
 
+
+if [ ${all} ] || [ ${methref} ]; then
+    echo "==> Creating method_ref.rst"
+    script/method_ref.py
+fi
 
 if [ ${all} ] || [ ${async} ]; then
     echo "==> Creating as_api.py"

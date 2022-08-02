@@ -1,3 +1,4 @@
+import asyncio
 import json
 import random
 from concurrent.futures import ThreadPoolExecutor
@@ -29,16 +30,14 @@ class TestList(TestCaseWithLog):
         print(f'Total number of queues read with pagination: {len(queues_pag)}')
         self.assertEqual(len(queues), len(queues_pag))
 
-    def test_002_all_details(self):
+    @TestCaseWithLog.async_test
+    async def test_002_all_details(self):
         """
         get details of all call queues
         """
-        atq = self.api.telephony.callqueue
-        queues = list(atq.list())
-        with ThreadPoolExecutor() as pool:
-            details = list(pool.map(
-                lambda q: atq.details(location_id=q.location_id, queue_id=q.id),
-                queues))
+        atq = self.async_api.telephony.callqueue
+        queues = await atq.list()
+        details = await asyncio.gather(*[atq.details(location_id=q.location_id, queue_id=q.id) for q in queues])
         print(f'Got details for {len(details)} call queues')
 
 
@@ -128,6 +127,7 @@ class TestCreate(TestCaseWithUsers):
     def test_003_create_many(self):
         """
         Create large number of call queues and check pagination
+        CALL-68209
         """
         # pick a random location
         target_location = random.choice(self.locations)
@@ -173,7 +173,7 @@ class TestCreate(TestCaseWithUsers):
             with ThreadPoolExecutor() as pool:
                 new_queues = list(pool.map(lambda name: new_queue(name, extension=next(extensions)),
                                            names))
-        print(f'Created {len(new_queues)} call queues.')
+        print(f'Created {len(names)} call queues.')
         cq_list = list(tcq.list(location_id=target_location.location_id))
         print(f'Total number of queues: {len(cq_list)}')
         queues_pag = list(tcq.list(location_id=target_location.location_id, max=50))

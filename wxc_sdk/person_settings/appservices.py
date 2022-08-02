@@ -1,5 +1,5 @@
 """
-app services settinsg API
+app services settings API
 """
 from typing import Optional
 

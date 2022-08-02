@@ -6,9 +6,9 @@ import json
 from enum import Enum
 from typing import Union, Optional
 
-from ..api_child import ApiChild
-from ..base import ApiModel
-from ..common import AuthCode
+from ...api_child import ApiChild
+from ...base import ApiModel
+from ...common import AuthCode
 
 __all__ = ['LocationMoHGreetingType', 'LocationMoHSetting', 'LocationMoHApi']
 

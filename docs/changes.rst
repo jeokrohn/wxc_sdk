@@ -1,6 +1,22 @@
 Release history
 ===============
 
+1.5.0
+-----
+- new: location API: :attr:`wxc_sdk.telephony.TelephonyApi.location`
+    - moved location intercept, location moh and location voicemail settings from telephony to location API
+    - new: number API: :attr:`wxc_sdk.telephony.location.TelephonyLocationApi.number`
+    - new: internal dialing API: :attr:`wxc_sdk.telephony.location.TelephonyLocationApi.internal_dialing`
+- new: premises PSTN API: :attr:`wxc_sdk.telephony.TelephonyApi.prem_pstn`
+    - dial plans: :attr:`wxc_sdk.telephony.prem_pstn.PremisePstnApi.dial_plan`
+    - trunks: :attr:`wxc_sdk.telephony.prem_pstn.PremisePstnApi.trunk`
+    - route lists: :attr:`wxc_sdk.telephony.prem_pstn.PremisePstnApi.route_list`
+    - route groups: :attr:`wxc_sdk.telephony.prem_pstn.PremisePstnApi.route_group`
+- new: cross reference of all methods in :doc:`Reference of all available methods <./method_ref>`
+- new update person numbers: :meth:`wxc_sdk.person_settings.numbers.NumbersApi.update`
+- workaround to catch broken pagination URLs
+- new test cases
+
 1.4.1
 -----
 

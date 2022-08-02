@@ -29,15 +29,15 @@ class Test(TestWithLocations):
         ac_set_before = set(c.code for c in access_codes)
         try:
             new_codes = (code for i in range(999)
-                         if (code:=str(1000+i)) not in ac_set_before)
+                         if (code := str(1000 + i)) not in ac_set_before)
             new_access_codes = [AuthCode(code=next(new_codes), description=f'New code {i}') for i in range(10)]
             ac_set_new = set(ac.code for ac in new_access_codes)
             ac.create(location_id=target_location.location_id, access_codes=new_access_codes)
             access_codes_after = ac.read(location_id=target_location.location_id)
             # make sure that all old and new codes are in there
             ac_set_after = set(ac.code for ac in access_codes_after)
-            self.assertTrue(ac_set_before<=ac_set_after, 'Not all access codes that existed before are still there')
-            self.assertTrue(ac_set_new<=ac_set_after, 'Not all new access codes show up in list')
+            self.assertTrue(ac_set_before <= ac_set_after, 'Not all access codes that existed before are still there')
+            self.assertTrue(ac_set_new <= ac_set_after, 'Not all new access codes show up in list')
         finally:
             # restore old settings
             ac_codes = ac.read(location_id=target_location.location_id)

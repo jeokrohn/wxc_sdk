@@ -83,7 +83,7 @@ class CallPickupApi(ApiChild, base='telephony/config/callPickups'):
         :type name: str
         :param org_id: List call pickups for this organization.
         :type org_id: str
-        :return yields :class:`CallPickup` objects
+        :return: yields :class:`CallPickup` objects
         """
         params.update((to_camel(k), v)
                       for i, (k, v) in enumerate(locals().items())

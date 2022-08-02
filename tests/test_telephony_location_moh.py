@@ -6,7 +6,7 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 
 from wxc_sdk.locations import Location
-from wxc_sdk.telephony.location_moh import LocationMoHSetting
+from wxc_sdk.telephony.location.moh import LocationMoHSetting
 from .base import TestWithLocations
 
 
@@ -15,19 +15,19 @@ class Test(TestWithLocations):
     @contextmanager
     def location_context(self):
         target_location = random.choice(self.locations)
-        before = self.api.telephony.location_moh.read(location_id=target_location.location_id)
+        before = self.api.telephony.location.moh.read(location_id=target_location.location_id)
         try:
             yield target_location
         finally:
-            self.api.telephony.location_moh.update(location_id=target_location.location_id,
+            self.api.telephony.location.moh.update(location_id=target_location.location_id,
                                                    settings=before)
-            after = self.api.telephony.location_moh.read(location_id=target_location.location_id)
+            after = self.api.telephony.location.moh.read(location_id=target_location.location_id)
             self.assertEqual(before, after)
 
     def test_001_read_all(self):
-        moh = self.api.telephony.location_moh
+        moh = self.api.telephony.location.moh
         with ThreadPoolExecutor() as pool:
-            settings = list(pool.map(lambda location:moh.read(location_id=location.location_id),
+            settings = list(pool.map(lambda location: moh.read(location_id=location.location_id),
                                      self.locations))
         print(f'Got {len(settings)} location MoH settings')
 
@@ -35,7 +35,7 @@ class Test(TestWithLocations):
         """
         try to change call hold moh
         """
-        moh = self.api.telephony.location_moh
+        moh = self.api.telephony.location.moh
         with self.location_context() as target_location:
             target_location: Location
             before = moh.read(location_id=target_location.location_id)
@@ -53,7 +53,7 @@ class Test(TestWithLocations):
         """
         try to change call park moh
         """
-        moh = self.api.telephony.location_moh
+        moh = self.api.telephony.location.moh
         with self.location_context() as target_location:
             target_location: Location
             before = moh.read(location_id=target_location.location_id)
@@ -66,4 +66,3 @@ class Test(TestWithLocations):
             self.assertEqual(settings.call_park_enabled, after.call_park_enabled)
             after.call_park_enabled = before.call_park_enabled
             self.assertEqual(before, after)
-

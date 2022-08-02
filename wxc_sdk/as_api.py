@@ -18,9 +18,6 @@ from wxc_sdk.base import to_camel, StrOrDict
 log = logging.getLogger(__name__)
 
 
-__all__ = ['AsWebexSimpleApi']
-
-
 class MultipartEncoder(MultipartWriter):
     """
     Compatibility class for requests toolbelt MultipartEncoder
@@ -42,14 +39,17 @@ MAX_USERS_WITH_CALLING_DATA = 10
 __all__ = ['AsAccessCodesApi', 'AsAnnouncementApi', 'AsApiChild', 'AsAppServicesApi', 'AsAuthCodesApi',
            'AsAutoAttendantApi', 'AsBargeApi', 'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi',
            'AsCallQueueApi', 'AsCallRecordingApi', 'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallingBehaviorApi',
-           'AsCallparkExtensionApi', 'AsCallsApi', 'AsDndApi', 'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi',
-           'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsLicensesApi', 'AsLocationInterceptApi',
-           'AsLocationMoHApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMonitoringApi', 'AsNumbersApi',
-           'AsOrganisationVoicemailSettingsAPI', 'AsOutgoingPermissionsApi', 'AsPagingApi', 'AsPeopleApi',
-           'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPrivacyApi',
-           'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsReceptionistApi', 'AsRestSession', 'AsScheduleApi',
-           'AsTelephonyApi', 'AsTransferNumbersApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
-           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
+           'AsCallparkExtensionApi', 'AsCallsApi', 'AsDialPlanApi', 'AsDndApi', 'AsExecAssistantApi',
+           'AsForwardingApi', 'AsGroupsApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
+           'AsInternalDialingApi', 'AsLicensesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
+           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMonitoringApi',
+           'AsNumbersApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOutgoingPermissionsApi', 'AsPagingApi',
+           'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
+           'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsReceptionistApi',
+           'AsRestSession', 'AsRouteGroupApi', 'AsRouteListApi', 'AsScheduleApi', 'AsTelephonyApi',
+           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi', 'AsVoicePortalApi', 'AsVoicemailApi',
+           'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi',
+           'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
 
 @dataclass(init=False)
@@ -692,7 +692,7 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
 
     feature = None
 
-    def __init__(self, *, session: AsRestSession, base: str = None,
+    def __init__(self, *, session: AsRestSession,
                  workspaces: bool = False, locations: bool = False):
         self.feature_prefix = '/features/'
         if workspaces:
@@ -702,7 +702,7 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
             self.feature_prefix = '/'
         else:
             self.selector = 'people'
-        super().__init__(session=session, base=base)
+        super().__init__(session=session, base=self.selector)
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(base='')
@@ -1488,7 +1488,8 @@ class AsNumbersApi(AsPersonSettingsApiChild):
     feature = 'numbers'
 
     # TODO: documentation defect:
-    #  https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-additional-settings/get-a-list-of-phone-numbers-for-a-person
+    #  https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-additional-settings/get-a-list-of
+    #  -phone-numbers-for-a-person
     #  says the URL is /v1/people/{personId}/numbers
     #  while it actually is /v1/people/{personId}/features/numbers
 
@@ -1509,10 +1510,32 @@ class AsNumbersApi(AsPersonSettingsApiChild):
         :type org_id: str
         :return:
         """
-        # ep = self.ep(path=f'{person_id}/numbers')
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         return PersonNumbers.parse_obj(await self.get(ep, params=params))
+
+    async def update(self, *, person_id: str, update: UpdatePersonNumbers, org_id: str = None):
+        """
+        Assign or unassign alternate phone numbers to a person.
+
+        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone
+        numbers must follow E.164 format for all countries, except for the United States, which can also follow the
+        National format. Active phone numbers are in service.
+
+        Assigning or Unassigning an alternate phone number to a person requires a full administrator auth token with
+        a scope of spark-admin:telephony_config_write.
+
+        :param person_id: Unique identifier of the person.
+        :type person_id: str
+        :param update: Update to apply
+        :type update: :class:`UpdatePersonNumbers`
+        :param org_id: organization to work on
+        :type org_id: str
+        """
+        url = self.session.ep(f'telephony/config/people/{person_id}/numbers')
+        params = org_id and {'orgId': org_id} or None
+        body = update.json()
+        await self.put(url=url, params=params, data=body)
 
 
 class AsAuthCodesApi(AsPersonSettingsApiChild):
@@ -1663,17 +1686,17 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
 
     feature = 'outgoingPermission'
 
-    def __init__(self, *, session: AsRestSession, base: str = None,
+    def __init__(self, *, session: AsRestSession,
                  workspaces: bool = False, locations: bool = False):
-        super().__init__(session=session, base=base, workspaces=workspaces, locations=locations)
+        super().__init__(session=session, workspaces=workspaces, locations=locations)
         if workspaces:
             # auto transfer numbers API seems to only exist for workspaces
             self.transfer_numbers = AsTransferNumbersApi(session=session,
-                                                       base=base, workspaces=True)
-            self.auth_codes = AsAuthCodesApi(session=session, base=base, workspaces=True)
+                                                       workspaces=True)
+            self.auth_codes = AsAuthCodesApi(session=session, workspaces=True)
         elif locations:
             self.transfer_numbers = AsTransferNumbersApi(session=session,
-                                                       base=base, locations=True)
+                                                       locations=True)
             self.auth_codes = None
         else:
             self.transfer_numbers = None
@@ -2520,25 +2543,46 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
     """
     API for all user level settings
     """
+
+    #: Person's Application Services Settings
     appservices: AsAppServicesApi
+    #: Barge In Settings for a Person
     barge: AsBargeApi
+    #: Do Not Disturb Settings for a Person
     dnd: AsDndApi
+    #: Call Intercept Settings for a Person
     call_intercept: AsCallInterceptApi
+    #: Call Recording Settings for a Person
     call_recording: AsCallRecordingApi
+    #: Call Waiting Settings for a Person
     call_waiting: AsCallWaitingApi
+    #: Caller ID Settings for a Person
     caller_id: AsCallerIdApi
+    #: Person's Calling Behavior
     calling_behavior: AsCallingBehaviorApi
+    #: Executive Assistant Settings for a Person
     exec_assistant: AsExecAssistantApi
+    #: Forwarding Settings for a Person
     forwarding: AsPersonForwardingApi
+    #: Hoteling Settings for a Person
     hoteling: AsHotelingApi
+    #: Person's Monitoring Settings
     monitoring: AsMonitoringApi
+    #: Phone Numbers for a Person
     numbers: AsNumbersApi
+    #: Incoming Permission Settings for a Person
     permissions_in: AsIncomingPermissionsApi
+    #: Person's Outgoing Calling Permissions Settings
     permissions_out: AsOutgoingPermissionsApi
+    #: Person's Privacy Settings
     privacy: AsPrivacyApi
+    #: Push-to-Talk Settings for a Person
     push_to_talk: AsPushToTalkApi
+    #: Receptionist Client Settings for a Person
     receptionist: AsReceptionistApi
+    #: Schedules for a Person
     schedules: AsScheduleApi
+    #: Voicemail Settings for a Person
     voicemail: AsVoicemailApi
 
     def __init__(self, session: AsRestSession):
@@ -2631,6 +2675,7 @@ class AsAccessCodesApi(AsApiChild, base='telephony/config/locations'):
 
     async def create(self, *, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> list[AuthCode]:
         """
+        Create access code in location
 
         :param location_id: Add new access code for this location.
         :type location_id: str
@@ -3093,10 +3138,8 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         :param name: Return the list of call parks that contains the given name. The maximum length is 80.
         :type name: str
         :param org_id: List call parks for this organization.
-        :param params: dict of additional parameters passed directly to endpoint
-        :type params: dict
         :type org_id: str
-        :return yields :class:`CallPark` objects
+        :return: yields :class:`CallPark` objects
         """
         params.update((to_camel(k), v)
                       for i, (k, v) in enumerate(locals().items())
@@ -3126,10 +3169,8 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         :param name: Return the list of call parks that contains the given name. The maximum length is 80.
         :type name: str
         :param org_id: List call parks for this organization.
-        :param params: dict of additional parameters passed directly to endpoint
-        :type params: dict
         :type org_id: str
-        :return yields :class:`CallPark` objects
+        :return: yields :class:`CallPark` objects
         """
         params.update((to_camel(k), v)
                       for i, (k, v) in enumerate(locals().items())
@@ -3460,7 +3501,7 @@ class AsCallPickupApi(AsApiChild, base='telephony/config/callPickups'):
         :type name: str
         :param org_id: List call pickups for this organization.
         :type org_id: str
-        :return yields :class:`CallPickup` objects
+        :return: yields :class:`CallPickup` objects
         """
         params.update((to_camel(k), v)
                       for i, (k, v) in enumerate(locals().items())
@@ -3491,7 +3532,7 @@ class AsCallPickupApi(AsApiChild, base='telephony/config/callPickups'):
         :type name: str
         :param org_id: List call pickups for this organization.
         :type org_id: str
-        :return yields :class:`CallPickup` objects
+        :return: yields :class:`CallPickup` objects
         """
         params.update((to_camel(k), v)
                       for i, (k, v) in enumerate(locals().items())
@@ -4704,258 +4745,6 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
         await self.put(url, data=data, params=params)
 
 
-class AsLocationInterceptApi(AsApiChild, base='telephony/config/locations'):
-    """
-    API for location's call intercept settings
-    """
-
-    def _endpoint(self, *, location_id: str, path: str = None) -> str:
-        """
-        location specific
-        telephony/config/locations/{locationId}/intercept
-
-        :meta private:
-        :param location_id: Unique identifier for the location.
-        :type location_id: str
-        :param path: additional path
-        :type: path: str
-        :return: full endpoint
-        :rtype: str
-        """
-        path = path and f'/{path}' or ''
-        ep = self.session.ep(f'telephony/config/locations/{location_id}/intercept{path}')
-        return ep
-
-    async def read(self, *, location_id: str, org_id: str = None) -> InterceptSetting:
-        """
-        Get Location Intercept
-
-        Retrieve intercept location details for a customer location.
-
-        Intercept incoming or outgoing calls for persons in your organization. If this is enabled, calls are either
-        routed to a designated number the person chooses, or to the person's voicemail.
-
-        Retrieving intercept location details requires a full, user or read-only administrator auth token with a
-        scope of spark-admin:telephony_config_read.
-
-        :param location_id: Retrieve intercept details for this location.
-        :type location_id: str
-        :param org_id: Retrieve intercept location details for a customer location.
-        :type org_id: str
-        :return: user's call intercept settings
-        :rtype: :class:`wxc_sdk.person_settings.call_intercept.InterceptSetting`
-        """
-        ep = self._endpoint(location_id=location_id)
-        params = org_id and {'orgId': org_id} or None
-        return InterceptSetting.parse_obj(await self.get(ep, params=params))
-
-    async def configure(self, *, location_id: str, settings: InterceptSetting, org_id: str = None):
-        """
-        Put Location Intercept
-
-        Modifies the intercept location details for a customer location.
-
-        Intercept incoming or outgoing calls for users in your organization. If this is enabled, calls are either
-        routed to a designated number the user chooses, or to the user's voicemail.
-
-        Modifying the intercept location details requires a full, user administrator auth token with a scope
-        of spark-admin:telephony_config_write.
-
-        :param location_id: Unique identifier for the person.
-        :type location_id: str
-        :param settings: new intercept settings
-        :type settings: InterceptSetting
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
-            may use this parameter as the default is the same organization as the token used to access API.
-        :type org_id: str
-        """
-        ep = self._endpoint(location_id=location_id)
-        params = org_id and {'orgId': org_id} or None
-        data = settings.json()
-        await self.put(ep, params=params, data=data)
-
-
-class AsLocationMoHApi(AsApiChild, base='telephony/config/locations'):
-    """
-    Access codes API
-    """
-
-    def _endpoint(self, *, location_id: str, path: str = None) -> str:
-        """
-        location specific feature endpoint like
-        /v1/telephony/config/locations/{locationId}/musicOnHold
-
-        :meta private:
-        :param location_id: Unique identifier for the location.
-        :type location_id: str
-        :param path: additional path
-        :type: path: str
-        :return: full endpoint
-        :rtype: str
-        """
-        path = path and f'/{path}' or ''
-        ep = self.session.ep(f'telephony/config/locations/{location_id}/musicOnHold{path}')
-        return ep
-
-    async def read(self, *, location_id: str, org_id: str = None) -> LocationMoHSetting:
-        """
-        Get Music On Hold
-
-        Retrieve the location's music on hold settings.
-
-        Location's music on hold settings allows you to play music when a call is placed on hold or parked.
-
-        Retrieving location's music on hold settings requires a full, user or read-only administrator auth token with
-        a scope of spark-admin:telephony_config_read.
-
-        :param location_id: Retrieve access codes details for this location.
-        :type location_id: str
-        :param org_id: Retrieve access codes details for a customer location in this organization
-        :type org_id: str
-        :return: MoH settings
-        :rtype: :class:`LocationMoHSetting`
-        """
-        params = org_id and {'orgId': org_id} or None
-        url = self._endpoint(location_id=location_id)
-        data = await self.get(url, params=params)
-        return LocationMoHSetting.parse_obj(data)
-
-    async def update(self, *, location_id: str, settings: LocationMoHSetting, org_id: str = None) -> LocationMoHSetting:
-        """
-        Get Music On Hold
-
-        Retrieve the location's music on hold settings.
-
-        Location's music on hold settings allows you to play music when a call is placed on hold or parked.
-
-        Retrieving location's music on hold settings requires a full, user or read-only administrator auth token with
-        a scope of spark-admin:telephony_config_read.
-
-        :param location_id: Retrieve access codes details for this location.
-        :type location_id: str
-        :param settings: new settings
-        :type settings: :class:`LocationMoHSetting`
-        :param org_id: Retrieve access codes details for a customer location in this organization
-        :type org_id: str
-        :return: list of :class:`wxc_sdk.common.CallPark`
-        """
-        params = org_id and {'orgId': org_id} or None
-        data = settings.json()
-        url = self._endpoint(location_id=location_id)
-        await self.put(url, params=params, data=data)
-
-    async def create(self, *, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> list[AuthCode]:
-        """
-
-        :param location_id: Add new access code for this location.
-        :type location_id: str
-        :param access_codes: Access code details
-        :type access_codes: list of :class:`wxc_sdk.common.AuthCode`
-        :param org_id: Add new access code for this organization.
-        :type org_id: str
-        """
-        params = org_id and {'orgId': org_id} or None
-        url = self._endpoint(location_id=location_id)
-        body = {'accessCodes': [json.loads(ac.json()) for ac in access_codes]}
-        await self.post(url, json=body, params=params)
-
-    async def delete_codes(self, *, location_id: str, access_codes: list[Union[str, AuthCode]],
-                     org_id: str = None) -> list[AuthCode]:
-        """
-        Delete Access Code Location
-
-        Deletes the access code details for a particular location for a customer.
-
-        Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
-
-        Modifying the access code location details requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
-
-        :param location_id: Deletes the access code details for this location.
-        :type location_id: str
-        :param access_codes: access codes to delete
-        :type access_codes: list of :class:`wxc_sdk.common.AuthCode` or str
-        :param org_id: Delete access codes from this organization.
-        :type org_id: str
-        """
-        params = org_id and {'orgId': org_id} or None
-        url = self._endpoint(location_id=location_id)
-        body = {'deleteCodes': [ac.code if isinstance(ac, AuthCode) else ac
-                                for ac in access_codes]}
-        await self.put(url, json=body, params=params)
-
-
-class AsLocationVoicemailSettingsApi(AsApiChild, base='telephony/config/locations'):
-    """
-    location voicemail settings API, for now only enable/disable Vm transcription
-    """
-
-    def _endpoint(self, *, location_id: str, path: str = None) -> str:
-        """
-        location specific
-        telephony/config/locations/{locationId}/voicemail
-
-        :meta private:
-        :param location_id: Unique identifier for the location.
-        :type location_id: str
-        :param path: additional path
-        :type: path: str
-        :return: full endpoint
-        :rtype: str
-        """
-        path = path and f'/{path}' or ''
-        ep = self.session.ep(f'telephony/config/locations/{location_id}/voicemail{path}')
-        return ep
-
-    async def read(self, *, location_id: str, org_id: str = None) -> LocationVoiceMailSettings:
-        """
-        Get Location Voicemail
-
-        Retrieve voicemail settings for a specific location.
-
-        Location's voicemail settings allows you to enable voicemail transcription for a specific location.
-
-        Retrieving location's voicemail settings requires a full, user or read-only administrator auth token with
-        a scope of spark-admin:telephony_config_read.
-
-
-        :param location_id: Retrieve access codes details for this location.
-        :type location_id: str
-        :param org_id: Retrieve access codes details for a customer location in this organization
-        :type org_id: str
-        :return: location voicemail settings
-        :rtype: :class:`LocationVoiceMailSettings`
-        """
-        params = org_id and {'orgId': org_id} or None
-        url = self._endpoint(location_id=location_id)
-        data = await self.get(url, params=params)
-        return LocationVoiceMailSettings.parse_obj(data)
-
-    async def update(self, *, location_id: str, settings: LocationVoiceMailSettings, org_id: str = None):
-        """
-        Get Location Voicemail
-
-        Retrieve voicemail settings for a specific location.
-
-        Location's voicemail settings allows you to enable voicemail transcription for a specific location.
-
-        Retrieving location's voicemail settings requires a full, user or read-only administrator auth token with
-        a scope of spark-admin:telephony_config_read.
-
-
-        :param location_id: Retrieve access codes details for this location.
-        :type location_id: str
-        :param settings: new settings
-        :type settings: :class:`LocationVoiceMailSettings`
-        :param org_id: Retrieve access codes details for a customer location in this organization
-        :type org_id: str
-        """
-        params = org_id and {'orgId': org_id} or None
-        url = self._endpoint(location_id=location_id)
-        body = settings.json()
-        await self.put(url, params=params, data=body)
-
-
 class AsOrganisationVoicemailSettingsAPI(AsApiChild, base='telephony/config/voicemail/settings'):
     """
     API for Organisation voicemail settings
@@ -5178,6 +4967,1143 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         await self.put(url, data=data, params=params)
 
 
+class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
+
+    def list_gen(self, *, dial_plan_name: str = None, route_group_name: str = None, trunk_name: str = None,
+             order: str = None, org_id: str = None, **params) -> AsyncGenerator[DialPlan, None, None]:
+        """
+        List all Dial Plans for the organization.
+
+        Dial plans route calls to on-premises destinations by use of the trunks or route groups with which the dial
+        plan is associated. Multiple dial patterns can be defined as part of your dial plan. Dial plans are configured
+        globally for an enterprise and apply to all users, regardless of location.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param dial_plan_name: Return the list of dial plans matching the dial plan name.
+        :type dial_plan_name: str
+        :param route_group_name: Return the list of dial plans matching the route group name.
+        :type route_group_name: str
+        :param trunk_name: Return the list of dial plans matching the trunk name.
+        :type trunk_name: str
+        :param order: Order the dial plans according to the designated fields. Available sort fields: name, routeName,
+            routeType. Sort order is ascending by default
+        :type order: str
+        :param org_id: List dial plans for this organization.
+        :type org_id: str
+        :return:
+        """
+        params.update((to_camel(p), v) for i, (p, v) in enumerate(locals().items())
+                      if i and v is not None and p != 'params')
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=DialPlan, params=params, item_key='dialPlans')
+
+    async def list(self, *, dial_plan_name: str = None, route_group_name: str = None, trunk_name: str = None,
+             order: str = None, org_id: str = None, **params) -> List[DialPlan]:
+        """
+        List all Dial Plans for the organization.
+
+        Dial plans route calls to on-premises destinations by use of the trunks or route groups with which the dial
+        plan is associated. Multiple dial patterns can be defined as part of your dial plan. Dial plans are configured
+        globally for an enterprise and apply to all users, regardless of location.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param dial_plan_name: Return the list of dial plans matching the dial plan name.
+        :type dial_plan_name: str
+        :param route_group_name: Return the list of dial plans matching the route group name.
+        :type route_group_name: str
+        :param trunk_name: Return the list of dial plans matching the trunk name.
+        :type trunk_name: str
+        :param order: Order the dial plans according to the designated fields. Available sort fields: name, routeName,
+            routeType. Sort order is ascending by default
+        :type order: str
+        :param org_id: List dial plans for this organization.
+        :type org_id: str
+        :return:
+        """
+        params.update((to_camel(p), v) for i, (p, v) in enumerate(locals().items())
+                      if i and v is not None and p != 'params')
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=DialPlan, params=params, item_key='dialPlans')]
+
+    async def create(self, *, name: str, route_id: str, route_type: RouteType, dial_patterns: List[str] = None,
+               org_id: str = None) -> CreateResponse:
+        """
+        Create a Dial Plan for the organization.
+
+        Dial plans route calls to on-premises destinations by use of trunks or route groups. They are configured
+        globally for an enterprise and apply to all users, regardless of location. A dial plan also specifies the
+        routing choice (trunk or route group) for calls that match any of its dial patterns. Specific dial patterns
+        can be defined as part of your dial plan.
+
+        Creating a dial plan requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param name: A unique name for the dial plan.
+        :type name: str
+        :param route_id: ID of route type associated with the dial plan.
+        :type route_id: str
+        :param route_type: Route Type associated with the dial plan.
+        :type route_type: :class:`wxc_sdk.common.RouteType`
+        :param dial_patterns: An Array of dial patterns
+        :type dial_patterns: list[str]
+        :param org_id: Organization to which dial plan belongs.
+        :type org_id: str
+        :return: result of dial plan creation
+        :rtype: :class:`CreateResponse`
+        """
+        url = self.ep()
+        params = org_id and {'orgId': org_id} or None
+        body = {
+            'name': name,
+            'routeId': route_id,
+            'routeType': route_type.value if isinstance(route_type, RouteType) else route_type,
+            'dialPatterns': dial_patterns or []
+        }
+        data = await self.post(url=url, params=params, json=body)
+        return CreateResponse.parse_obj(data)
+
+    async def details(self, *, dial_plan_id: str, org_id: str = None) -> DialPlan:
+        """
+        Get a Dial Plan for the organization.
+
+        Dial plans route calls to on-premises destinations by use of trunks or route groups. They are configured
+        globally for an enterprise and apply to all users, regardless of location. A dial plan also specifies the
+        routing choice (trunk or route group) for calls that match any of its dial patterns. Specific dial patterns
+        can be defined as part of your dial plan.
+
+        Retrieving a dial plan requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param dial_plan_id: Id of the dial plan.
+        :type dial_plan_id: str
+        :param org_id: Organization to which dial plan belongs.
+        :type org_id: str
+        :return: dial plan details
+        :rtype: :class:`DialPlan`
+        """
+        url = self.ep(dial_plan_id)
+        params = org_id and {'orgId': org_id} or None
+        data = await self.get(url=url, params=params)
+        return DialPlan.parse_obj(data)
+
+    async def update(self, *, update: DialPlan, org_id: str = None):
+        """
+        Modify a Dial Plan for the organization.
+
+        Dial plans route calls to on-premises destinations by use of trunks or route groups. They are configured
+        globally for an enterprise and apply to all users, regardless of location. A dial plan also specifies the
+        routing choice (trunk or route group) for calls that match any of its dial patterns. Specific dial patterns
+        can be defined as part of your dial plan.
+
+        Modifying a dial plan requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param update: DialPlan objects with updated settings. Only name, route_id and route_type are considered. All
+            three need to be set
+        :param org_id: Organization to which dial plan belongs.
+        :type org_id: str
+        """
+        url = self.ep(update.dial_plan_id)
+        params = org_id and {'orgId': org_id} or None
+        body = update.json(include={'name', 'route_id', 'route_type'})
+        await self.put(url=url, params=params, data=body)
+
+    async def delete_dial_plan(self, *, dial_plan_id: str, org_id: str = None):
+        """
+        Delete a Dial Plan for the organization.
+
+        Dial plans route calls to on-premises destinations by use of trunks or route groups. They are configured
+        globally for an enterprise and apply to all users, regardless of location. A dial plan also specifies the
+        routing choice (trunk or route group) for calls that match any of its dial patterns. Specific dial patterns
+        can be defined as part of your dial plan.
+
+        Deleting a dial plan requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param dial_plan_id: Id of the dial plan.
+        :type dial_plan_id: str
+        :param org_id: Organization to which dial plan belongs.
+        :type org_id: str
+        """
+        url = self.ep(dial_plan_id)
+        params = org_id and {'orgId': org_id} or None
+        await self.delete(url=url, params=params)
+
+    def patterns_gen(self, *, dial_plan_id: str, org_id: str = None,
+                 dial_pattern: str = None, **params) -> AsyncGenerator[str, None, None]:
+        """
+        List all Dial Patterns for the organization.
+
+        Dial plans route calls to on-premises destinations by use of trunks or route groups. They are configured
+        globally for an enterprise and apply to all users, regardless of location. A dial plan also specifies the
+        routing choice (trunk or route group) for calls that match any of its dial patterns. Specific dial patterns
+        can be defined as part of your dial plan.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param dial_plan_id: Id of the dial plan.
+        :type dial_plan_id: str
+        :param org_id: List dial patterns associated with a dial plan.
+        :type org_id: str
+        :param dial_pattern: An enterprise dial pattern is represented by a sequence of digits (1-9), followed by
+            optional wildcard characters. Valid wildcard characters are ! (matches any sequence of digits) and
+            X (matches a single digit, 0-9).
+            The ! wildcard can only occur once at the end and only in an E.164 pattern
+        :return: list of patterns
+        :rtype: list[str]
+        """
+        params.update((to_camel(p), v) for i, (p, v) in enumerate(locals().items())
+                      if i > 1 and v is not None and p != 'params')
+        url = self.ep(f'{dial_plan_id}/dialPatterns')
+
+        return self.session.follow_pagination(url=url, params=params, item_key='dialPatterns')
+
+    async def patterns(self, *, dial_plan_id: str, org_id: str = None,
+                 dial_pattern: str = None, **params) -> List[str]:
+        """
+        List all Dial Patterns for the organization.
+
+        Dial plans route calls to on-premises destinations by use of trunks or route groups. They are configured
+        globally for an enterprise and apply to all users, regardless of location. A dial plan also specifies the
+        routing choice (trunk or route group) for calls that match any of its dial patterns. Specific dial patterns
+        can be defined as part of your dial plan.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param dial_plan_id: Id of the dial plan.
+        :type dial_plan_id: str
+        :param org_id: List dial patterns associated with a dial plan.
+        :type org_id: str
+        :param dial_pattern: An enterprise dial pattern is represented by a sequence of digits (1-9), followed by
+            optional wildcard characters. Valid wildcard characters are ! (matches any sequence of digits) and
+            X (matches a single digit, 0-9).
+            The ! wildcard can only occur once at the end and only in an E.164 pattern
+        :return: list of patterns
+        :rtype: list[str]
+        """
+        params.update((to_camel(p), v) for i, (p, v) in enumerate(locals().items())
+                      if i > 1 and v is not None and p != 'params')
+        url = self.ep(f'{dial_plan_id}/dialPatterns')
+
+        return [o async for o in self.session.follow_pagination(url=url, params=params, item_key='dialPatterns')]
+
+    async def modify_patterns(self, *, dial_plan_id: str, dial_patterns: List[PatternAndAction], org_id: str = None):
+        """
+        Modify dial patterns for the Dial Plan.
+
+        Dial plans route calls to on-premises destinations by use of trunks or route groups. They are configured
+        globally for an enterprise and apply to all users, regardless of location. A dial plan also specifies the
+        routing choice (trunk or route group) for calls that match any of its dial patterns. Specific dial patterns
+        can be defined as part of your dial plan.
+
+        Modifying a dial pattern requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param dial_plan_id: Id of the dial plan being modified.
+        :type dial_plan_id: str
+        :param dial_patterns: Array of dial patterns to add or delete. Dial Pattern that is not present in the
+            request is not modified.
+        :type dial_patterns: :class:`PatternAndAction`
+        :param org_id: Organization to which dial plan belongs.
+        :type org_id: str
+        """
+        url = self.ep(f'{dial_plan_id}/dialPatterns')
+        params = org_id and {'orgId': org_id} or None
+
+        class Body(ApiModel):
+            dial_patterns: list[PatternAndAction]
+
+        body = Body(dial_patterns=dial_patterns).json()
+        await self.put(url=url, params=params, data=body)
+
+    async def delete_all_patterns(self, *, dial_plan_id: str, org_id: str = None):
+        """
+        Delete all dial patterns from the Dial Plan.
+
+        Dial plans route calls to on-premises destinations by use of trunks or route groups. They are configured
+        globally for an enterprise and apply to all users, regardless of location. A dial plan also specifies the
+        routing choice (trunk or route group) for calls that match any of its dial patterns. Specific dial patterns
+        can be defined as part of your dial plan.
+
+        Deleting dial pattern requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param dial_plan_id: Id of the dial plan being modified.
+        :type dial_plan_id: str
+        :param org_id: Organization to which dial plan belongs.
+        :type org_id: str
+        """
+        url = self.ep(f'{dial_plan_id}/dialPatterns')
+        params = org_id and {'orgId': org_id} or None
+        body = {'deleteAllDialPatterns': True}
+        await self.put(url=url, params=params, json=body)
+
+
+class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups'):
+    """
+    API for everything route groups
+    """
+
+    def list_gen(self, *, name: str = None, order: str = None,
+             org_id: str = None, **params) -> AsyncGenerator[RouteGroup, None, None]:
+        """
+        List all Route Groups for an organization. A Route Group is a group of trunks that allows further scale and
+        redundancy with the connection to the premises.
+
+        Retrieving this route group list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param name: Return the list of route groups matching the route group name.
+        :type name: st
+        :param order: Order the route groups according to designated fields. Available sort orders: asc, desc.
+        :type order: str
+        :param org_id: List route groups for this organization.
+        :type org_id: str
+        :return: generator of :class:`RouteGroup` instances
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if v is not None and p not in {'self', 'params'})
+        url = self.ep()
+        # noinspection PyTypeChecker
+        return self.session.follow_pagination(url=url, params=params, model=RouteGroup)
+
+    async def list(self, *, name: str = None, order: str = None,
+             org_id: str = None, **params) -> List[RouteGroup]:
+        """
+        List all Route Groups for an organization. A Route Group is a group of trunks that allows further scale and
+        redundancy with the connection to the premises.
+
+        Retrieving this route group list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param name: Return the list of route groups matching the route group name.
+        :type name: st
+        :param order: Order the route groups according to designated fields. Available sort orders: asc, desc.
+        :type order: str
+        :param org_id: List route groups for this organization.
+        :type org_id: str
+        :return: generator of :class:`RouteGroup` instances
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if v is not None and p not in {'self', 'params'})
+        url = self.ep()
+        # noinspection PyTypeChecker
+        return [o async for o in self.session.follow_pagination(url=url, params=params, model=RouteGroup)]
+
+    async def create(self, *, route_group: RouteGroup, org_id: str = None) -> str:
+        """
+        Creates a Route Group for the organization.
+
+        A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the
+        premises. Route groups can include up to 10 trunks from different locations.
+
+        Creating a Route Group requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param route_group: settings for new route group. name and local_gateways need to be set. For each LGW
+            id and priority need to be set.
+            Example:
+
+            .. code-block:: python
+
+                rg = RouteGroup(name=rg_name,
+                        local_gateways=[RGTrunk(trunk_id=trunk.trunk_id,
+                                                priority=1)])
+                rg_id = api.telephony.prem_pstn.route_group.create(route_group=rg)
+        :type route_group: :class:`RouteGroup`
+        :param org_id:
+        :type org_id: str
+        :return: id of new route group
+        :rtype: str
+        """
+        # TODO: doc defect. wrong URL at https://developer.webex.com/docs/api/v1/webex-calling-organization-settings
+        #  /create-route-group-for-a-organization
+        params = org_id and {'orgId': org_id} or None
+        body = route_group.json(include={'name': True,
+                                         'local_gateways': {'__all__': {'trunk_id', 'priority'}}})
+        url = self.ep()
+        data = await self.post(url=url, params=params, data=body)
+        return data['id']
+
+    async def details(self, *, rg_id: str, org_id: str = None) -> RouteGroup:
+        """
+        Reads a Route Group for the organization based on id.
+
+        A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the
+        premises. Route groups can include up to 10 trunks from different locations.
+
+        Reading a Route Group requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param rg_id: Route Group for which details are being requested.
+        :type rg_id: str
+        :param org_id: Organization of the Route Group.
+        :type org_id: str
+        :return: route group details
+        :rtype: :class:`RouteGroup`
+        """
+        # TODO: wrong data structure at
+        #  https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-a-route-group-for-a
+        #  -organization
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(rg_id)
+        data = await self.get(url=url, params=params)
+        return RouteGroup.parse_obj(data)
+
+    async def update(self, *, rg_id: str, update: RouteGroup, org_id: str = None):
+        """
+        Modifies an existing Route Group for an organization based on id.
+
+        A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the
+        premises. Route groups can include up to 10 trunks from different locations.
+
+        Modifying a Route Group requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param rg_id: route group to be modified
+        :type rg_id: str
+        :param update: new settings
+        :type update: :class:`RouteGroup`
+        :param org_id: Organization of the Route Group.
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = update.json(include={'name': True,
+                                    'local_gateways': {'__all__': {'trunk_id', 'priority'}}})
+        url = self.ep(rg_id)
+        data = await self.post(url=url, params=params, data=body)
+        await self.put(url=url, params=params, data=data)
+
+    async def delete_route_group(self, *, rg_id: str, org_id: str = None):
+        """
+        Remove a Route Group from an Organization based on id.
+
+        A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the
+        premises. Route groups can include up to 10 trunks from different locations.
+
+        Removing a Route Group requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param rg_id: Route Group to be deleted
+        :type rg_id: str
+        :param org_id: Organization of the Route Group.
+        :type org_id: str
+        """
+        # TODO: doc defect. wrong URL
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(rg_id)
+        await self.delete(url=url, params=params)
+
+    async def usage(self, *, rg_id: str, org_id: str = None) -> RouteGroupUsage:
+        """
+        List the number of "Call to" on-premises Extensions, Dial Plans, PSTN Connections, and Route Lists used by a
+        specific Route Group. Users within Call to Extension locations are registered to a PBX which allows you to
+        route unknown extensions (calling number length of 2-6 digits) to the PBX using an existing Trunk or Route
+        Group. PSTN Connections may be cisco PSTN, cloud-connected PSTN, or premises-based PSTN (local gateway).
+        Dial Plans allow you to route calls to on-premises extensions via your trunk or route group. Route Lists are
+        a list of numbers that can be reached via a route group. It can be used to provide cloud PSTN connectivity to
+        Webex Calling Dedicated Instance.
+
+        Retrieving usage information requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param rg_id: Route group requested for information.
+        :type rg_id: str
+        :param org_id: Organization associated with specific route group
+        :type org_id: str
+        :return: usage information
+        :rtype: :class:`RouteGroupUsage`
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(f'{rg_id}/usage')
+        data = await self.get(url=url, params=params)
+        return RouteGroupUsage.parse_obj(data)
+
+    def usage_call_to_extension_gen(self, rg_id: str, org_id: str = None, **params) -> AsyncGenerator[IdAndName, None, None]:
+        """
+        List "Call to" on-premises Extension Locations for a specific route group. Users within these locations are
+        registered to a PBX which allows you to route unknown extensions (calling number length of 2-6 digits) to
+        the PBX using an existing trunk or route group.
+
+        Retrieving this location list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param rg_id: Route group requested for information.
+        :param org_id: Organization associated with specific route group.
+        :return: generator of instances
+        :rtype: :class:`wxc_sdk.common.IdAndName`
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if v is not None and p not in {'self', 'trunk_id'})
+        url = self.ep(f'{rg_id}/usageCallToExtension')
+        # noinspection PyTypeChecker
+        return self.session.follow_pagination(url=url, model=IdAndName, params=params)
+
+    async def usage_call_to_extension(self, rg_id: str, org_id: str = None, **params) -> List[IdAndName]:
+        """
+        List "Call to" on-premises Extension Locations for a specific route group. Users within these locations are
+        registered to a PBX which allows you to route unknown extensions (calling number length of 2-6 digits) to
+        the PBX using an existing trunk or route group.
+
+        Retrieving this location list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param rg_id: Route group requested for information.
+        :param org_id: Organization associated with specific route group.
+        :return: generator of instances
+        :rtype: :class:`wxc_sdk.common.IdAndName`
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if v is not None and p not in {'self', 'trunk_id'})
+        url = self.ep(f'{rg_id}/usageCallToExtension')
+        # noinspection PyTypeChecker
+        return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
+
+    def usage_dial_plan_gen(self, rg_id: str, org_id: str = None, **params) -> AsyncGenerator[IdAndName, None, None]:
+        """
+        List Dial Plan Locations for a specific route group.
+
+        Dial Plans allow you to route calls to on-premises destinations by use of trunks or route groups. They are
+        configured globally for an enterprise and apply to all users, regardless of location. A Dial Plan also
+        specifies the routing choice (trunk or route group) for calls that match any of its dial patterns.
+        Specific dial patterns can be defined as part of your dial plan.
+
+        Retrieving this location list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param rg_id: Route group requested for information.
+        :param org_id: Organization associated with specific route group.
+        :return: generator of instances
+        :rtype: :class:`wxc_sdk.common.IdAndName`
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if v is not None and p not in {'self', 'trunk_id'})
+        url = self.ep(f'{rg_id}/usageDialPlan')
+        # noinspection PyTypeChecker
+        return self.session.follow_pagination(url=url, model=IdAndName, params=params)
+
+    async def usage_dial_plan(self, rg_id: str, org_id: str = None, **params) -> List[IdAndName]:
+        """
+        List Dial Plan Locations for a specific route group.
+
+        Dial Plans allow you to route calls to on-premises destinations by use of trunks or route groups. They are
+        configured globally for an enterprise and apply to all users, regardless of location. A Dial Plan also
+        specifies the routing choice (trunk or route group) for calls that match any of its dial patterns.
+        Specific dial patterns can be defined as part of your dial plan.
+
+        Retrieving this location list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param rg_id: Route group requested for information.
+        :param org_id: Organization associated with specific route group.
+        :return: generator of instances
+        :rtype: :class:`wxc_sdk.common.IdAndName`
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if v is not None and p not in {'self', 'trunk_id'})
+        url = self.ep(f'{rg_id}/usageDialPlan')
+        # noinspection PyTypeChecker
+        return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
+
+    def usage_location_pstn_gen(self, rg_id: str, org_id: str = None, **params) -> AsyncGenerator[IdAndName, None, None]:
+        """
+        List PSTN Connection Locations for a specific route group. This solution lets you configure users to use Cloud
+        PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
+
+        Retrieving this Location list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param rg_id: Route group requested for information.
+        :param org_id: Organization associated with specific route group.
+        :return: generator of instances
+        :rtype: :class:`wxc_sdk.common.IdAndName`
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if v is not None and p not in {'self', 'trunk_id'})
+        url = self.ep(f'{rg_id}/usagePstnConnection')
+        # noinspection PyTypeChecker
+        return self.session.follow_pagination(url=url, model=IdAndName, params=params)
+
+    async def usage_location_pstn(self, rg_id: str, org_id: str = None, **params) -> List[IdAndName]:
+        """
+        List PSTN Connection Locations for a specific route group. This solution lets you configure users to use Cloud
+        PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
+
+        Retrieving this Location list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param rg_id: Route group requested for information.
+        :param org_id: Organization associated with specific route group.
+        :return: generator of instances
+        :rtype: :class:`wxc_sdk.common.IdAndName`
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if v is not None and p not in {'self', 'trunk_id'})
+        url = self.ep(f'{rg_id}/usagePstnConnection')
+        # noinspection PyTypeChecker
+        return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
+
+    def usage_route_lists_gen(self, rg_id: str, org_id: str = None, **params) -> AsyncGenerator[UsageRouteLists, None, None]:
+        """
+        List Route Lists for a specific route group. Route Lists are a list of numbers that can be reached via a
+        Route Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
+
+        Retrieving this list of Route Lists requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param rg_id: Route group requested for information.
+        :param org_id: Organization associated with specific route group.
+        :return: generator of instances
+        :rtype: :class:`wxc_sdk.common.IdAndName`
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if v is not None and p not in {'self', 'trunk_id'})
+        url = self.ep(f'{rg_id}/usageRouteList')
+        # noinspection PyTypeChecker
+        return self.session.follow_pagination(url=url, model=UsageRouteLists, params=params)
+
+    async def usage_route_lists(self, rg_id: str, org_id: str = None, **params) -> List[UsageRouteLists]:
+        """
+        List Route Lists for a specific route group. Route Lists are a list of numbers that can be reached via a
+        Route Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
+
+        Retrieving this list of Route Lists requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param rg_id: Route group requested for information.
+        :param org_id: Organization associated with specific route group.
+        :return: generator of instances
+        :rtype: :class:`wxc_sdk.common.IdAndName`
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if v is not None and p not in {'self', 'trunk_id'})
+        url = self.ep(f'{rg_id}/usageRouteList')
+        # noinspection PyTypeChecker
+        return [o async for o in self.session.follow_pagination(url=url, model=UsageRouteLists, params=params)]
+
+
+class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists'):
+    """
+    API for everything route lists
+    """
+
+    def list_gen(self, *, name: list[str] = None, location_id: list[str] = None, order: str = None,
+             org_id: str = None, **params) -> AsyncGenerator[RouteList, None, None]:
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if v is not None and p not in {'self', 'params'})
+        url = self.ep()
+        # noinspection PyTypeChecker
+        return self.session.follow_pagination(url=url, params=params, model=RouteList)
+
+    async def list(self, *, name: list[str] = None, location_id: list[str] = None, order: str = None,
+             org_id: str = None, **params) -> List[RouteList]:
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if v is not None and p not in {'self', 'params'})
+        url = self.ep()
+        # noinspection PyTypeChecker
+        return [o async for o in self.session.follow_pagination(url=url, params=params, model=RouteList)]
+
+    async def create(self, *, name: str, location_id: str, rg_id: str, org_id: str = None) -> str:
+        params = org_id and {'orgId': org_id} or None
+        body = {'name': name,
+                'locationId': location_id,
+                'routeGroupId': rg_id}
+        url = self.ep()
+        data = await self.post(url=url, params=params, json=body)
+        return data['id']
+
+    async def details(self, *, rl_id: str, org_id: str = None) -> RouteListDetail:
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(rl_id)
+        data = await self.get(url=url, params=params)
+        return RouteListDetail.parse_obj(data)
+
+    async def update(self, *, rl_id: str, name: str, location_id: str, rg_id: str, org_id: str = None) -> str:
+        params = org_id and {'orgId': org_id} or None
+        body = {'name': name,
+                'locationId': location_id,
+                'routeGroupId': rg_id}
+        url = self.ep(rl_id)
+        await self.put(url=url, params=params, json=body)
+
+    async def delete_route_list(self, *, rl_id: str, org_id: str = None):
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(rl_id)
+        await self.delete(url=url, params=params)
+
+    def numbers_gen(self, *, rl_id: str, order: str = None, number: str = None,
+                org_id: str = None, **params) -> AsyncGenerator[str, None, None]:
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if v is not None and p not in {'self', 'params', 'rl_id'})
+        url = self.ep(f'{rl_id}/numbers')
+        return self.session.follow_pagination(url=url, params=params)
+
+    async def numbers(self, *, rl_id: str, order: str = None, number: str = None,
+                org_id: str = None, **params) -> List[str]:
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if v is not None and p not in {'self', 'params', 'rl_id'})
+        url = self.ep(f'{rl_id}/numbers')
+        return [o async for o in self.session.follow_pagination(url=url, params=params)]
+
+    async def update_numbers(self, *, rl_id: str, numbers: List[NumberAndAction],
+                       org_id: str = None) -> List[UpdateNumbersResponse]:
+        url = self.ep(f'{rl_id}/numbers')
+        params = org_id and {'orgId': org_id} or None
+
+        class Body(ApiModel):
+            numbers: list[NumberAndAction]
+
+        body = Body(numbers=numbers).json()
+        data = await self.put(url=url, params=params, data=body)
+        if data:
+            return parse_obj_as(list[UpdateNumbersResponse], data['numberStatus'])
+        else:
+            return []
+
+    async def delete_all_numbers(self, *, rl_id: str, org_id: str = None):
+        url = self.ep(f'{rl_id}/numbers')
+        params = org_id and {'orgId': org_id} or None
+        body = {'deleteAllNumbers': True}
+        await self.put(url=url, params=params, json=body)
+
+
+class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
+    """
+    API for everything trunks
+    """
+
+    def list_gen(self, *, name: str = None, location_name: str = None, trunk_type: str = None, order: str = None,
+             org_id: str = None, **params) -> AsyncGenerator[Trunk, None, None]:
+        """
+        List all Trunks for the organization.
+
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group - a group of trunks that allow
+        ebex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param name: Return the list of trunks matching the local gateway names.
+        :type name: str
+        :param location_name: Return the list of trunks matching the location names.
+        :type location_name: str
+        :param trunk_type: Return the list of trunks matching the trunk type.
+        :type trunk_type: str
+        :param order: Order the trunks according to the designated fields. Available sort fields: name, locationName.
+            Sort order is ascending by default
+        :type order: str
+        :param org_id:
+        :type org_id: str
+        :return: generator of Trunk instances
+        :rtype: :class:`Trunk`
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if p != 'self')
+        url = self.ep()
+        # noinspection PyTypeChecker
+        return self.session.follow_pagination(url=url, params=params, model=Trunk, item_key='trunks')
+
+    async def list(self, *, name: str = None, location_name: str = None, trunk_type: str = None, order: str = None,
+             org_id: str = None, **params) -> List[Trunk]:
+        """
+        List all Trunks for the organization.
+
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group - a group of trunks that allow
+        ebex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param name: Return the list of trunks matching the local gateway names.
+        :type name: str
+        :param location_name: Return the list of trunks matching the location names.
+        :type location_name: str
+        :param trunk_type: Return the list of trunks matching the trunk type.
+        :type trunk_type: str
+        :param order: Order the trunks according to the designated fields. Available sort fields: name, locationName.
+            Sort order is ascending by default
+        :type order: str
+        :param org_id:
+        :type org_id: str
+        :return: generator of Trunk instances
+        :rtype: :class:`Trunk`
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if p != 'self')
+        url = self.ep()
+        # noinspection PyTypeChecker
+        return [o async for o in self.session.follow_pagination(url=url, params=params, model=Trunk, item_key='trunks')]
+
+    async def create(self, *, name: str, location_id: str, password: str, trunk_type: TrunkType,
+               dual_identity_support_enabled: bool = None, device_type: TrunkDeviceType = None, address: str = None,
+               domain: str = None, port: int = None, max_concurrent_calls: int = None, org_id: str = None) -> str:
+        """
+        Create a Trunk for the organization.
+
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group - a group of trunks that allow
+        Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Creating a trunk requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param name: A unique name for the trunk.
+        :type name: str
+        :param location_id: ID of location associated with the trunk.
+        :type location_id: str
+        :param password: A password to use on the trunk.
+        :type password: str
+        :param trunk_type: Trunk Type associated with the trunk.
+        :type trunk_type: :class:`TrunkType`
+        :param dual_identity_support_enabled: Dual Identity Support setting impacts the handling of the From header
+            and P-Asserted-Identity header when sending an initial SIP INVITE to the trunk for an outbound call.
+        :type dual_identity_support_enabled: bool
+        :param device_type: Device type associated with trunk.
+        :type device_type: :class:`TrunkDeviceType`
+        :param address: FQDN or SRV address. Required to create a static certificate-based trunk.
+        :type address: str
+        :param domain: Domain name. Required to create a static certificate based trunk.
+        :type domain: str
+        :param port: FQDN port. Required to create a static certificate-based trunk.
+        :type port: int
+        :param max_concurrent_calls: Max Concurrent call. Required to create a static certificate based trunk.
+        :type max_concurrent_calls: int
+        :param org_id: Organization to which trunk belongs.
+        :type org_id: str
+        :return: id of new trunk
+        :rtype: str
+        """
+        body = {to_camel(p): v for p, v in locals().items()
+                if p not in {'self', 'org_id'} and v is not None}
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep()
+        data = await self.post(url=url, params=params, json=body)
+        return data['id']
+
+    async def details(self, *, trunk_id: str, org_id: str = None) -> TrunkDetail:
+        """
+        Get a Trunk for the organization.
+
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group - a group of trunks that allow
+        Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Retrieving a trunk requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param trunk_id: Id of the trunk.
+        :type trunk_id: str
+        :param org_id: Organization to which trunk belongs.
+        :type org_id: str
+        :return: trunk details
+        :rtype: :class:`TrunkDetail`
+        """
+        url = self.ep(trunk_id)
+        params = org_id and {'orgId': org_id} or None
+        data = await self.get(url=url, params=params)
+        return TrunkDetail.parse_obj(data)
+
+    async def update(self, *, trunk_id: str, name: str, location_id: str, password: str, trunk_type: TrunkType,
+               dual_identity_support_enabled: bool = None, max_concurrent_calls: int = None, org_id: str = None):
+        """
+        Modify a Trunk for the organization.
+
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group - a group of trunks that allow
+        Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Modifying a trunk requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param trunk_id:
+        :type name: str
+        :param location_id: ID of location associated with the trunk.
+        :type location_id: str
+        :param password: A password to use on the trunk.
+        :type password: str
+        :param trunk_type: Trunk Type associated with the trunk.
+        :type trunk_type: :class:`TrunkType`
+        :param dual_identity_support_enabled: Dual Identity Support setting impacts the handling of the From header
+            and P-Asserted-Identity header when sending an initial SIP INVITE to the trunk for an outbound call.
+        :type dual_identity_support_enabled: bool
+        :param max_concurrent_calls: Max Concurrent call. Required to create a static certificate based trunk.
+        :type max_concurrent_calls: int
+        :param org_id: Organization to which trunk belongs.
+        :type org_id: str:return:
+        """
+        body = {to_camel(p): v for p, v in locals().items()
+                if p not in {'self', 'org_id'} and v is not None}
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep()
+        await self.put(url=url, params=params, json=body)
+
+    async def delete_trunk(self, *, trunk_id: str, org_id: str = None):
+        """
+        Delete a Trunk for the organization.
+
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group - a group of trunks that allow
+        Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Deleting a trunk requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param trunk_id: Id of the trunk.
+        :type trunk_id: str
+        :param org_id: Organization to which trunk belongs.
+        :type org_id: str
+        """
+        url = self.ep(trunk_id)
+        params = org_id and {'orgId': org_id} or None
+        await self.delete(url=url, params=params)
+
+    async def trunk_types(self, org_id: str = None) -> List[TrunkTypeWithDeviceType]:
+        """
+        List all TrunkTypes with DeviceTypes for the organization.
+
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group - a group of trunks that allow
+        Webex Calling to distribute calls over multiple trunks or to provide redundancy. Trunk Types are Registering
+        or Certificate Based and are configured in CallManager.
+
+        Retrieving trunk types requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param org_id:
+        :return: trunk types
+        :rtype: list[:class:`TrunkTypeWithDeviceType`]
+        """
+        params = org_id and {'orgId': org_id} or None
+        ep = self.ep('trunkTypes')
+        data = await self.get(url=ep, params=params)
+        return parse_obj_as(list[TrunkTypeWithDeviceType], data['trunkTypes'])
+
+    async def usage(self, *, trunk_id: str, org_id: str = None) -> TrunkUsage:
+        """
+        Get Local Gateway Usage Count
+
+        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group - a group of trunks that allow
+        Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Retrieving this information requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param trunk_id: Id of the trunk.
+        :type trunk_id: str
+        :param org_id: Organization to which trunk belongs.
+        :type org_id: str
+        :return: usage counts
+        :rtype: :class:`TrunkUsage`
+        """
+        url = self.ep(f'{trunk_id}/usage')
+        params = org_id and {'orgId': org_id} or None
+        data = await self.get(url=url, params=params)
+        return TrunkUsage.parse_obj(data)
+
+    def usage_dial_plan_gen(self, *, trunk_id: str, org_id: str = None) -> AsyncGenerator[IdAndName, None, None]:
+        """
+        Get Local Gateway Dial Plan Usage for a Trunk.
+
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group - a group of trunks that allow
+        Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Retrieving this information requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param trunk_id: Id of the trunk.
+        :type trunk_id: str
+        :param org_id: Organization to which trunk belongs.
+        :type org_id: str
+        :return: id and name objects
+        """
+        params = {to_camel(p): v for p, v in locals().items()
+                  if v is not None and p not in {'self', 'trunk_id'}}
+        url = self.ep(f'{trunk_id}/usageDialPlan')
+        # noinspection PyTypeChecker
+        return self.session.follow_pagination(url=url, model=IdAndName, params=params)
+
+    async def usage_dial_plan(self, *, trunk_id: str, org_id: str = None) -> List[IdAndName]:
+        """
+        Get Local Gateway Dial Plan Usage for a Trunk.
+
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group - a group of trunks that allow
+        Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Retrieving this information requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param trunk_id: Id of the trunk.
+        :type trunk_id: str
+        :param org_id: Organization to which trunk belongs.
+        :type org_id: str
+        :return: id and name objects
+        """
+        params = {to_camel(p): v for p, v in locals().items()
+                  if v is not None and p not in {'self', 'trunk_id'}}
+        url = self.ep(f'{trunk_id}/usageDialPlan')
+        # noinspection PyTypeChecker
+        return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
+
+    def usage_location_pstn_gen(self, *, trunk_id: str, org_id: str = None) -> AsyncGenerator[IdAndName, None, None]:
+        """
+        Get Local Gateway Dial Plan Usage for a Trunk.
+
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with
+        a local
+        gateway or other supported device. The trunk can be assigned to a Route Group - a group of trunks
+        that allow
+        Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Retrieving this information requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param trunk_id: Id of the trunk.
+        :type trunk_id: str
+        :param org_id: Organization to which trunk belongs.
+        :type org_id: str
+        :return: id and name objects
+        """
+        params = {to_camel(p): v for p, v in locals().items()
+                  if v is not None and p not in {'self', 'trunk_id'}}
+        url = self.ep(f'{trunk_id}/usagePstnConnection')
+        # noinspection PyTypeChecker
+        return self.session.follow_pagination(url=url, model=IdAndName, params=params)
+
+    async def usage_location_pstn(self, *, trunk_id: str, org_id: str = None) -> List[IdAndName]:
+        """
+        Get Local Gateway Dial Plan Usage for a Trunk.
+
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with
+        a local
+        gateway or other supported device. The trunk can be assigned to a Route Group - a group of trunks
+        that allow
+        Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Retrieving this information requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param trunk_id: Id of the trunk.
+        :type trunk_id: str
+        :param org_id: Organization to which trunk belongs.
+        :type org_id: str
+        :return: id and name objects
+        """
+        params = {to_camel(p): v for p, v in locals().items()
+                  if v is not None and p not in {'self', 'trunk_id'}}
+        url = self.ep(f'{trunk_id}/usagePstnConnection')
+        # noinspection PyTypeChecker
+        return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
+
+    def usage_route_group_gen(self, *, trunk_id: str, org_id: str = None) -> AsyncGenerator[IdAndName, None, None]:
+        """
+        Get Local Gateway Dial Plan Usage for a Trunk.
+
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group - a group of trunks that allow
+        Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Retrieving this information requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param trunk_id: Id of the trunk.
+        :type trunk_id: str
+        :param org_id: Organization to which trunk belongs.
+        :type org_id: str
+        :return: id and name objects
+        """
+        params = {to_camel(p): v for p, v in locals().items()
+                  if v is not None and p not in {'self', 'trunk_id'}}
+        url = self.ep(f'{trunk_id}/usageRouteGroup')
+        # noinspection PyTypeChecker
+        return self.session.follow_pagination(url=url, model=IdAndName, params=params)
+
+    async def usage_route_group(self, *, trunk_id: str, org_id: str = None) -> List[IdAndName]:
+        """
+        Get Local Gateway Dial Plan Usage for a Trunk.
+
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group - a group of trunks that allow
+        Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Retrieving this information requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param trunk_id: Id of the trunk.
+        :type trunk_id: str
+        :param org_id: Organization to which trunk belongs.
+        :type org_id: str
+        :return: id and name objects
+        """
+        params = {to_camel(p): v for p, v in locals().items()
+                  if v is not None and p not in {'self', 'trunk_id'}}
+        url = self.ep(f'{trunk_id}/usageRouteGroup')
+        # noinspection PyTypeChecker
+        return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
+
+    def validate_fqdn_and_domain(self):
+        # TODO: implement
+        ...
+
+    # TODO: are we missing a usage for trunks used for calls to unknown extensions??
+    # TODO: are we missing a usage for route lists??
+
+
+class AsPremisePstnApi(AsApiChild, base='telephony/config/premisePstn'):
+    """
+    Premises PSTN API
+    """
+    #: dial plan configuration
+    dial_plan: AsDialPlanApi
+    #: trunk configuration
+    trunk: AsTrunkApi
+    #: route group configuration
+    route_group: AsRouteGroupApi
+    #: route list configuration
+    route_list: AsRouteListApi
+
+    def __init__(self, session: AsRestSession):
+        super().__init__(session=session)
+        self.dial_plan = AsDialPlanApi(session=session)
+        self.trunk = AsTrunkApi(session=session)
+        self.route_group = AsRouteGroupApi(session=session)
+        self.route_list = AsRouteListApi(session=session)
+
+    async def validate_pattern(self, dial_patterns: Union[str, List[str]], org_id: str = None) -> DialPatternValidationResult:
+        """
+        Validate a Dial Pattern.
+
+        Dial plans route calls to on-premises destinations by use of trunks or route groups. They are configured
+        globally for an enterprise and apply to all users, regardless of location. A dial plan also specifies the
+        routing choice (trunk or route group) for calls that match any of its dial patterns. Specific dial patterns
+        can be defined as part of your dial plan.
+
+        Validating a dial pattern requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param dial_patterns: Array of dial patterns.
+        :type dial_patterns: list[str] or str
+        :param org_id: Organization to which dial plan belongs.
+        :return: validation result
+        :rtype: :class:`DialPatternValidationResult`
+        """
+        if isinstance(dial_patterns, str):
+            dial_patterns = [dial_patterns]
+
+        url = self.ep('actions/validateDialPatterns/invoke')
+        params = org_id and {'orgId': org_id} or None
+        body = {'dialPatterns': dial_patterns}
+        data = await self.post(url=url, params=params, json=body)
+        return DialPatternValidationResult.parse_obj(data)
+
+
 class AsPrivateNetworkConnectApi(AsApiChild, base='telephony/config/locations'):
     """
     API for location private network connect API settings
@@ -5228,6 +6154,460 @@ class AsPrivateNetworkConnectApi(AsApiChild, base='telephony/config/locations'):
         url = self.session.ep(f'telephony/config/locations/{location_id}/privateNetworkConnect')
         body = {'networkConnectionType': connection_type.value}
         await self.put(url, json=body, params=params)
+
+
+class AsInternalDialingApi(AsApiChild, base='telephony/config/locations'):
+    """
+    Internal dialing settings for location
+    """
+
+    def url(self, *, location_id: str) -> str:
+        return super().ep(f'{location_id}/internalDialing')
+
+    async def read(self, *, location_id: str, org_id: str = None) -> InternalDialing:
+        """
+        Get current configuration for routing unknown extensions to the Premises as internal calls
+
+        If some users in a location are registered to a PBX, retrieve the setting to route unknown extensions (digits
+        that match the extension length) to the PBX.
+
+        Retrieving the internal dialing configuration requires a full or read-only administrator auth token with a
+        scope of spark-admin:telephony_config_read.
+
+        :param location_id: location for which internal calling configuration is being requested
+        :type location_id: str
+        :param org_id:
+        :type org_id: str
+        :return: settings
+        :rtype: :class:`InternalDialing`
+        """
+        url = self.url(location_id=location_id)
+        params = org_id and {'orgId': org_id} or None
+        data = await self.get(url=url, params=params)
+        return InternalDialing.parse_obj(data)
+
+    async def update(self, *, location_id: str, update: InternalDialing, org_id: str = None):
+        """
+        Modify current configuration for routing unknown extensions to the Premises as internal calls
+
+        If some users in a location are registered to a PBX, enable the setting to route unknown extensions (digits
+        that match the extension length) to the PBX.
+
+        Editing the internal dialing configuration requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: location for which internal calling configuration is being requested
+        :type location_id: str
+        :param update: new settings
+        :type update: :class:`InternalDialing`
+        :param org_id:
+        :type org_id: str
+        """
+        url = self.url(location_id=location_id)
+        params = org_id and {'orgId': org_id} or None
+        data = update.json()
+        await self.put(url=url, params=params, data=data)
+
+
+class AsLocationInterceptApi(AsApiChild, base='telephony/config/locations'):
+    """
+    API for location's call intercept settings
+    """
+
+    def _endpoint(self, *, location_id: str, path: str = None) -> str:
+        """
+        location specific
+        telephony/config/locations/{locationId}/intercept
+
+        :meta private:
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param path: additional path
+        :type: path: str
+        :return: full endpoint
+        :rtype: str
+        """
+        path = path and f'/{path}' or ''
+        ep = self.session.ep(f'telephony/config/locations/{location_id}/intercept{path}')
+        return ep
+
+    async def read(self, *, location_id: str, org_id: str = None) -> InterceptSetting:
+        """
+        Get Location Intercept
+
+        Retrieve intercept location details for a customer location.
+
+        Intercept incoming or outgoing calls for persons in your organization. If this is enabled, calls are either
+        routed to a designated number the person chooses, or to the person's voicemail.
+
+        Retrieving intercept location details requires a full, user or read-only administrator auth token with a
+        scope of spark-admin:telephony_config_read.
+
+        :param location_id: Retrieve intercept details for this location.
+        :type location_id: str
+        :param org_id: Retrieve intercept location details for a customer location.
+        :type org_id: str
+        :return: user's call intercept settings
+        :rtype: :class:`wxc_sdk.person_settings.call_intercept.InterceptSetting`
+        """
+        ep = self._endpoint(location_id=location_id)
+        params = org_id and {'orgId': org_id} or None
+        return InterceptSetting.parse_obj(await self.get(ep, params=params))
+
+    async def configure(self, *, location_id: str, settings: InterceptSetting, org_id: str = None):
+        """
+        Put Location Intercept
+
+        Modifies the intercept location details for a customer location.
+
+        Intercept incoming or outgoing calls for users in your organization. If this is enabled, calls are either
+        routed to a designated number the user chooses, or to the user's voicemail.
+
+        Modifying the intercept location details requires a full, user administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Unique identifier for the person.
+        :type location_id: str
+        :param settings: new intercept settings
+        :type settings: InterceptSetting
+        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+            may use this parameter as the default is the same organization as the token used to access API.
+        :type org_id: str
+        """
+        ep = self._endpoint(location_id=location_id)
+        params = org_id and {'orgId': org_id} or None
+        data = settings.json()
+        await self.put(ep, params=params, data=data)
+
+
+class AsLocationMoHApi(AsApiChild, base='telephony/config/locations'):
+    """
+    Access codes API
+    """
+
+    def _endpoint(self, *, location_id: str, path: str = None) -> str:
+        """
+        location specific feature endpoint like
+        /v1/telephony/config/locations/{locationId}/musicOnHold
+
+        :meta private:
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param path: additional path
+        :type: path: str
+        :return: full endpoint
+        :rtype: str
+        """
+        path = path and f'/{path}' or ''
+        ep = self.session.ep(f'telephony/config/locations/{location_id}/musicOnHold{path}')
+        return ep
+
+    async def read(self, *, location_id: str, org_id: str = None) -> LocationMoHSetting:
+        """
+        Get Music On Hold
+
+        Retrieve the location's music on hold settings.
+
+        Location's music on hold settings allows you to play music when a call is placed on hold or parked.
+
+        Retrieving location's music on hold settings requires a full, user or read-only administrator auth token with
+        a scope of spark-admin:telephony_config_read.
+
+        :param location_id: Retrieve access codes details for this location.
+        :type location_id: str
+        :param org_id: Retrieve access codes details for a customer location in this organization
+        :type org_id: str
+        :return: MoH settings
+        :rtype: :class:`LocationMoHSetting`
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id)
+        data = await self.get(url, params=params)
+        return LocationMoHSetting.parse_obj(data)
+
+    async def update(self, *, location_id: str, settings: LocationMoHSetting, org_id: str = None) -> LocationMoHSetting:
+        """
+        Get Music On Hold
+
+        Retrieve the location's music on hold settings.
+
+        Location's music on hold settings allows you to play music when a call is placed on hold or parked.
+
+        Retrieving location's music on hold settings requires a full, user or read-only administrator auth token with
+        a scope of spark-admin:telephony_config_read.
+
+        :param location_id: Retrieve access codes details for this location.
+        :type location_id: str
+        :param settings: new settings
+        :type settings: :class:`LocationMoHSetting`
+        :param org_id: Retrieve access codes details for a customer location in this organization
+        :type org_id: str
+        :return: list of :class:`wxc_sdk.common.CallPark`
+        """
+        params = org_id and {'orgId': org_id} or None
+        data = settings.json()
+        url = self._endpoint(location_id=location_id)
+        await self.put(url, params=params, data=data)
+
+    async def create(self, *, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> list[AuthCode]:
+        """
+
+        :param location_id: Add new access code for this location.
+        :type location_id: str
+        :param access_codes: Access code details
+        :type access_codes: list of :class:`wxc_sdk.common.AuthCode`
+        :param org_id: Add new access code for this organization.
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id)
+        body = {'accessCodes': [json.loads(ac.json()) for ac in access_codes]}
+        await self.post(url, json=body, params=params)
+
+    async def delete_codes(self, *, location_id: str, access_codes: list[Union[str, AuthCode]],
+                     org_id: str = None) -> list[AuthCode]:
+        """
+        Delete Access Code Location
+
+        Deletes the access code details for a particular location for a customer.
+
+        Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
+
+        Modifying the access code location details requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Deletes the access code details for this location.
+        :type location_id: str
+        :param access_codes: access codes to delete
+        :type access_codes: list of :class:`wxc_sdk.common.AuthCode` or str
+        :param org_id: Delete access codes from this organization.
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id)
+        body = {'deleteCodes': [ac.code if isinstance(ac, AuthCode) else ac
+                                for ac in access_codes]}
+        await self.put(url, json=body, params=params)
+
+
+class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
+    def _url(self, location_id: str, path: str = None):
+        path = path and f'/{path}' or ''
+        return self.ep(f'{location_id}/numbers{path}')
+
+    async def add(self, *, location_id: str, phone_numbers: list[str], state: NumberState = NumberState.inactive,
+            org_id: str = None):
+        """
+        Adds specified set of phone numbers to a location for an organization.
+
+        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
+        must follow E.164 format for all countries, except for the United States, which can also follow the National
+        format. Active phone numbers are in service.
+
+        Adding a phone number to a location requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: LocationId to which numbers should be added.
+        :type location_id: str
+        :param phone_numbers: List of phone numbers that need to be added.
+        :type phone_numbers: list[str]
+        :param state: State of the phone numbers.
+        :type state: :class:`wxc_sdk.common.NumberState`
+        :param org_id: Organization to manage
+        :type org_id: str
+        """
+        url = self._url(location_id)
+        params = org_id and {'orgId': org_id} or None
+        body = {'phoneNumbers': phone_numbers,
+                'state': state}
+        await self.post(url=url, params=params, json=body)
+
+    async def activate(self, *, location_id: str, phone_numbers: list[str], org_id: str = None):
+        """
+        Activate the specified set of phone numbers in a location for an organization.
+
+        Each location has a set of phone numbers that can be assigned to people, workspaces, or features.
+        Phone numbers must follow E.164 format for all countries, except for the United States, which can also
+        follow the National format. Active phone numbers are in service.
+
+        Activating a phone number in a location requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: LocationId in which numbers should be activated.
+        :type location_id: str
+        :param phone_numbers: List of phone numbers to be activated.
+        :type phone_numbers: list[str]
+        :param org_id: Organization to manage
+        :type org_id: str
+        """
+        url = self._url(location_id)
+        params = org_id and {'orgId': org_id} or None
+        body = {'phoneNumbers': phone_numbers}
+        await self.put(url=url, params=params, json=body)
+
+    async def remove(self, *, location_id: str, phone_numbers: list[str], org_id: str = None):
+        """
+        Remove the specified set of phone numbers from a location for an organization.
+
+        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
+        must follow E.164 format for all countries, except for the United States, which can also follow the National
+        format. Active phone numbers are in service.
+
+        Removing a phone number from a location requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: LocationId from which numbers should be removed.
+        :type location_id: str
+        :param phone_numbers: List of phone numbers to be removed.
+        :type phone_numbers: list[str]
+        :param org_id: Organization to manage
+        :type org_id: str
+        """
+        url = self._url(location_id)
+        params = org_id and {'orgId': org_id} or None
+        body = {'phoneNumbers': phone_numbers}
+        await self.delete(url=url, params=params, json=body)
+
+
+class AsLocationVoicemailSettingsApi(AsApiChild, base='telephony/config/locations'):
+    """
+    location voicemail settings API, for now only enable/disable Vm transcription
+    """
+
+    def _endpoint(self, *, location_id: str, path: str = None) -> str:
+        """
+        location specific
+        telephony/config/locations/{locationId}/voicemail
+
+        :meta private:
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param path: additional path
+        :type: path: str
+        :return: full endpoint
+        :rtype: str
+        """
+        path = path and f'/{path}' or ''
+        ep = self.session.ep(f'telephony/config/locations/{location_id}/voicemail{path}')
+        return ep
+
+    async def read(self, *, location_id: str, org_id: str = None) -> LocationVoiceMailSettings:
+        """
+        Get Location Voicemail
+
+        Retrieve voicemail settings for a specific location.
+
+        Location's voicemail settings allows you to enable voicemail transcription for a specific location.
+
+        Retrieving location's voicemail settings requires a full, user or read-only administrator auth token with
+        a scope of spark-admin:telephony_config_read.
+
+
+        :param location_id: Retrieve access codes details for this location.
+        :type location_id: str
+        :param org_id: Retrieve access codes details for a customer location in this organization
+        :type org_id: str
+        :return: location voicemail settings
+        :rtype: :class:`LocationVoiceMailSettings`
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id)
+        data = await self.get(url, params=params)
+        return LocationVoiceMailSettings.parse_obj(data)
+
+    async def update(self, *, location_id: str, settings: LocationVoiceMailSettings, org_id: str = None):
+        """
+        Get Location Voicemail
+
+        Retrieve voicemail settings for a specific location.
+
+        Location's voicemail settings allows you to enable voicemail transcription for a specific location.
+
+        Retrieving location's voicemail settings requires a full, user or read-only administrator auth token with
+        a scope of spark-admin:telephony_config_read.
+
+
+        :param location_id: Retrieve access codes details for this location.
+        :type location_id: str
+        :param settings: new settings
+        :type settings: :class:`LocationVoiceMailSettings`
+        :param org_id: Retrieve access codes details for a customer location in this organization
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id)
+        body = settings.json()
+        await self.put(url, params=params, data=body)
+
+
+@dataclass(init=False)
+class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
+    #: call intercept settings
+    intercept: AsLocationInterceptApi
+    #: internal dialing settings
+    internal_dialing: AsInternalDialingApi
+    #: moh settings
+    moh: AsLocationMoHApi
+    #: number settings
+    number: AsLocationNumbersApi
+    #: Location VM settings (only enable/disable transcription for now)
+    voicemail: AsLocationVoicemailSettingsApi
+
+    def __init__(self, session: AsRestSession):
+        super().__init__(session=session)
+        self.intercept = AsLocationInterceptApi(session=session)
+        self.moh = AsLocationMoHApi(session=session)
+        self.number = AsLocationNumbersApi(session=session)
+        self.voicemail = AsLocationVoicemailSettingsApi(session=session)
+        self.internal_dialing = AsInternalDialingApi(session=session)
+
+    async def generate_password(self, *, location_id: str, generate: list[str] = None, org_id: str = None):
+        """
+        Generates an example password using the effective password settings for the location. If you don't specify
+        anything in the generate field or don't provide a request body, then you will receive a SIP password by default.
+
+        It's used while creating a trunk and shouldn't be used anywhere else.
+
+        Generating an example password requires a full or write-only administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Location for which example password has to be generated.
+        :type location_id: str
+        :param generate: password settings array.
+        :type generate: list[str]
+        :param org_id: Organization to which location belongs.
+        :type org_id: str
+        :return: new password
+        :rtype: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = generate and {'generate': generate} or {}
+        url = self.ep(f'{location_id}/actions/generatePassword/invoke')
+        data = await self.post(url=url, params=params, json=body)
+        return data['exampleSipPassword']
+
+    async def validate_extensions(self, location_id: str, extensions: list[str],
+                            org_id: str = None) -> ValidateExtensionsResponse:
+        """
+        Validate extensions for a specific location.
+
+        Validating extensions requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Validate extensions for this location.
+        :type location_id: str
+        :param extensions: Array of extensions that will be validated.
+        :type extensions: list[str]
+        :param org_id: Validate extensions for this organization.
+        :type org_id: str
+        :return: Validation result
+        :rtype: :class:`wxc_sdk.common.ValidateExtensionsResponse`
+        """
+        url = self.ep(f'{location_id}/actions/validateExtensions/invoke')
+        body = {'extensions': extensions}
+        params = org_id and {'orgId': org_id} or None
+        data = await self.post(url=url, params=params, json=body)
+        return ValidateExtensionsResponse.parse_obj(data)
 
 
 class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
@@ -5394,15 +6774,14 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
     callpark_extension: AsCallparkExtensionApi
     callqueue: AsCallQueueApi
     huntgroup: AsHuntGroupApi
-    location_intercept: AsLocationInterceptApi
-    location_moh: AsLocationMoHApi
-    #: Location VM settings (only enable/disable transcription for now)
-    location_voicemail: AsLocationVoicemailSettingsApi
+    #: location specific settings
+    location: AsTelephonyLocationApi
     #: organisation voicemail settings
     organisation_voicemail: AsOrganisationVoicemailSettingsAPI
     paging: AsPagingApi
     permissions_out: AsOutgoingPermissionsApi
     pickup: AsCallPickupApi
+    prem_pstn: AsPremisePstnApi
     pnc: AsPrivateNetworkConnectApi
     schedules: AsScheduleApi
     voicemail_groups: AsVoicemailGroupsApi
@@ -5418,14 +6797,13 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         self.callpark_extension = AsCallparkExtensionApi(session=session)
         self.callqueue = AsCallQueueApi(session=session)
         self.huntgroup = AsHuntGroupApi(session=session)
-        self.location_intercept = AsLocationInterceptApi(session=session)
-        self.location_moh = AsLocationMoHApi(session=session)
-        self.location_voicemail = AsLocationVoicemailSettingsApi(session=session)
+        self.location = AsTelephonyLocationApi(session=session)
         self.organisation_voicemail = AsOrganisationVoicemailSettingsAPI(session=session)
         self.paging = AsPagingApi(session=session)
         self.permissions_out = AsOutgoingPermissionsApi(session=session, locations=True)
         self.pickup = AsCallPickupApi(session=session)
         self.pnc = AsPrivateNetworkConnectApi(session=session)
+        self.prem_pstn = AsPremisePstnApi(session=session)
         self.schedules = AsScheduleApi(session=session, base=ScheduleApiBase.locations)
         self.voicemail_groups = AsVoicemailGroupsApi(session=session)
         self.voicemail_rules = AsVoicemailRulesApi(session=session)
@@ -5582,11 +6960,38 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         with a scope of spark-admin:telephony_config_read.
 
         :param extensions: Array of Strings of ID of Extensions.
-        :return:
+        :type extensions: list[str]
+        :return: validation response
+        :rtype: :class:`wxc_sdk.common.ValidateExtensionsResponse`
         """
         url = self.ep(path='config/actions/validateExtensions/invoke')
         data = await self.post(url, json={'extensions': extensions})
         return ValidateExtensionsResponse.parse_obj(data)
+
+    async def validate_phone_numbers(self, phone_numbers: list[str], org_id: str = None) -> ValidatePhoneNumbersResponse:
+        """
+        Validate the list of phone numbers in an organization. Each phone number's availability is indicated in the
+        response.
+
+        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
+        must follow E.164 format for all countries, except for the United States, which can also follow the National
+        format. Active phone numbers are in service.
+
+        Validating a phone number in an organization requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param phone_numbers: List of phone numbers to be validated.
+        :type phone_numbers: list[str]
+        :param org_id: Organization of the Route Group.
+        :type org_id: str
+        :return: validation result
+        :rtype: :class:`wxc_sdk.common.ValidatePhoneNumbersResponse`
+        """
+        url = self.ep('config/actions/validateNumbers/invoke')
+        body = {'phoneNumbers': phone_numbers}
+        params = org_id and {'orgId': org_id} or None
+        data = await self.post(url=url, params=params, json=body)
+        return ValidatePhoneNumbersResponse.parse_obj(data)
 
     async def ucm_profiles(self, *, org_id: str = None) -> list[UCMProfile]:
         """
@@ -5646,6 +7051,88 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
             body['serviceEnabled'] = service_enabled
         url = self.session.ep(f'telephony/config/locations/{location_id}/actions/modifyAnnouncementLanguage/invoke')
         await self.put(url, json=body, params=params)
+
+    def route_choices_gen(self, route_group_name: str = None, trunk_name: str = None, order: str = None,
+                      org_id: str = None) -> AsyncGenerator[RouteIdentity, None, None]:
+        """
+        List all Routes for the organization.
+
+        Trunk and Route Group qualify as Route. Trunks and Route Groups provide you the ability to configure Webex
+        Calling to manage calls between Webex Calling hosted users and premises PBX(s) users. This solution lets you
+        configure users to use Cloud PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param route_group_name: Return the list of route identities matching the route group name.
+        :param trunk_name: Return the list of route identities matching the trunk name.
+        :param order: Order the route identities according to the designated fields.
+            Available sort fields: routeName, routeType.
+        :param org_id: List route identities for this organization.
+        :return:
+        """
+        params = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
+                  if i and v is not None}
+        url = self.ep('config/routeChoices')
+        return self.session.follow_pagination(url=url, model=RouteIdentity, params=params, item_key='routeIdentities')
+
+    async def route_choices(self, route_group_name: str = None, trunk_name: str = None, order: str = None,
+                      org_id: str = None) -> List[RouteIdentity]:
+        """
+        List all Routes for the organization.
+
+        Trunk and Route Group qualify as Route. Trunks and Route Groups provide you the ability to configure Webex
+        Calling to manage calls between Webex Calling hosted users and premises PBX(s) users. This solution lets you
+        configure users to use Cloud PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param route_group_name: Return the list of route identities matching the route group name.
+        :param trunk_name: Return the list of route identities matching the trunk name.
+        :param order: Order the route identities according to the designated fields.
+            Available sort fields: routeName, routeType.
+        :param org_id: List route identities for this organization.
+        :return:
+        """
+        params = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
+                  if i and v is not None}
+        url = self.ep('config/routeChoices')
+        return [o async for o in self.session.follow_pagination(url=url, model=RouteIdentity, params=params, item_key='routeIdentities')]
+
+    async def test_call_routing(self, *, originator_id: str, originator_type: OriginatorType, destination: str,
+                          originator_number: str = None, org_id: str = None) -> TestCallRoutingResult:
+        """
+        Validates that an incoming call can be routed.
+
+        Dial plans route calls to on-premises destinations by use of trunks or route groups. They are configured
+        globally for an enterprise and apply to all users, regardless of location. A dial plan also specifies the
+        routing choice (trunk or route group) for calls that match any of its dial patterns. Specific dial patterns
+        can be defined as part of your dial plan.
+
+        Test call routing requires a full or write-only administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param originator_id: This element is used to identify the originating party. It can be user UUID or trunk UUID.
+        :type originator_id: str
+        :param originator_type:
+        :type originator_type: :class:`OriginatorType`
+        :param destination: This element specifies called party. It can be any dialable string, for example, an
+            ESN number, E.164 number, hosted user DN, extension, extension with location code, URL, FAC code.
+        :type destination: str
+        :param originator_number: Only used when originatorType is TRUNK. This element could be a phone number or URI.
+        :type originator_number: str
+        :param org_id: Organization in which we are validating a call routing.
+        :type org_id: str
+        :return: call routing test result
+        :rtype: :class:`TestCallRoutingResult`
+        """
+        body = {to_camel(p): v for p, v in locals().items()
+                if p not in {'self', 'org_id'} and v is not None}
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep('config/actions/testCallRouting/invoke')
+        data = await self.post(url=url, params=params, json=body)
+        return TestCallRoutingResult.parse_obj(data)
 
 
 class AsWebhookApi(AsApiChild, base='webhooks'):
