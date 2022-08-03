@@ -1,3 +1,5 @@
+import asyncio
+from collections.abc import Iterable
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from dataclasses import dataclass, field
@@ -8,6 +10,7 @@ from tests.base import TestCaseWithLog
 from wxc_sdk.common import RouteIdentity, RouteType
 from wxc_sdk.locations import Location
 from wxc_sdk.telephony.location.internal_dialing import InternalDialing
+from wxc_sdk.telephony.prem_pstn.trunk import TrunkDetail
 
 
 @dataclass(init=False)
@@ -67,20 +70,35 @@ class TestInternalDialing(TestCaseWithLog):
 
     def test_001_modify_trunk(self):
         """
-        set route choice to trunk
+        set route choice for internal dialing in one location to trunk
         """
-        # TODO: implement as soon as we can determine which trunks are in India
-        # pick a trunk
-        self.skipTest('revisit when we can avoid India trunks')
+        # only look at trunk route choices
         trunks = [c for c in self.route_choices
                   if c.route_type == RouteType.trunk]
+
+        def get_trunk_details(trunk_ids: Iterable[str]) -> list[TrunkDetail]:
+            with ThreadPoolExecutor() as pool:
+                return list(pool.map(lambda tid:self.api.telephony.prem_pstn.trunk.details(trunk_id=tid),
+                                     trunk_ids))
+
+        india_location_ids = set(loc.location_id for loc in self.locations
+                                 if loc.address.country == 'IN')
+        if india_location_ids:
+            # filter out trunks in india locations
+            # need to get trunk details so that we can take a look at the location iod of the trunk
+            trunk_details = get_trunk_details(trunk.route_id for trunk in trunks)
+
+            trunks = [trunk for trunk, detail in zip(trunks, trunk_details)
+                      if detail.location.location_id not in india_location_ids]
         if not trunks:
-            self.skipTest('Need at least trunk to run this test')
+            self.skipTest('Need at least trunk not in India to run this test')
+
+        # pick a trunk
         trunk = choice(trunks)
 
         # pick a location (don't pick India locations to avoid toll bypass hassle)
         locations = [l for l in self.locations if l.address.country != 'IN']
-        location = choice(self.locations)
+        location = choice(locations)
         api = self.api.telephony.location.internal_dialing
         with self.update_context(location=location):
             print(f'Location: {location.name}, trunk: {trunk.name}')

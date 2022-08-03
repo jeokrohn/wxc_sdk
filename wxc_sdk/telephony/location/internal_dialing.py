@@ -64,5 +64,5 @@ class InternalDialingApi(ApiChild, base='telephony/config/locations'):
         """
         url = self.url(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
-        data = update.json()
+        data = update.json(exclude_none=False)
         self.put(url=url, params=params, data=data)

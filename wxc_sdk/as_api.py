@@ -5440,7 +5440,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
         params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'trunk_id'})
+                      if v is not None and p not in {'self', 'rg_id', 'params'})
         url = self.ep(f'{rg_id}/usageCallToExtension')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
@@ -5460,7 +5460,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
         params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'trunk_id'})
+                      if v is not None and p not in {'self', 'rg_id', 'params'})
         url = self.ep(f'{rg_id}/usageCallToExtension')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
@@ -5483,7 +5483,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
         params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'trunk_id'})
+                      if v is not None and p not in {'self', 'rg_id', 'params'})
         url = self.ep(f'{rg_id}/usageDialPlan')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
@@ -5506,7 +5506,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
         params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'trunk_id'})
+                      if v is not None and p not in {'self', 'rg_id', 'params'})
         url = self.ep(f'{rg_id}/usageDialPlan')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
@@ -5525,7 +5525,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
         params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'trunk_id'})
+                      if v is not None and p not in {'self', 'rg_id', 'params'})
         url = self.ep(f'{rg_id}/usagePstnConnection')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
@@ -5544,7 +5544,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
         params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'trunk_id'})
+                      if v is not None and p not in {'self', 'rg_id', 'params'})
         url = self.ep(f'{rg_id}/usagePstnConnection')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
@@ -5563,7 +5563,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
         params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'trunk_id'})
+                      if v is not None and p not in {'self', 'rg_id', 'params'})
         url = self.ep(f'{rg_id}/usageRouteList')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=UsageRouteLists, params=params)
@@ -5582,7 +5582,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
         params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'trunk_id'})
+                      if v is not None and p not in {'self', 'rg_id', 'params'})
         url = self.ep(f'{rg_id}/usageRouteList')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=UsageRouteLists, params=params)]
@@ -5624,7 +5624,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         data = await self.get(url=url, params=params)
         return RouteListDetail.parse_obj(data)
 
-    async def update(self, *, rl_id: str, name: str, location_id: str, rg_id: str, org_id: str = None) -> str:
+    async def update(self, *, rl_id: str, name: str, location_id: str, rg_id: str, org_id: str = None):
         params = org_id and {'orgId': org_id} or None
         body = {'name': name,
                 'locationId': location_id,
@@ -5705,7 +5705,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         :rtype: :class:`Trunk`
         """
         params.update((to_camel(p), v) for p, v in locals().items()
-                      if p != 'self')
+                      if v is not None and p not in {'self', 'params'})
         url = self.ep()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, params=params, model=Trunk, item_key='trunks')
@@ -5737,7 +5737,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         :rtype: :class:`Trunk`
         """
         params.update((to_camel(p), v) for p, v in locals().items()
-                      if p != 'self')
+                      if v is not None and p not in {'self', 'params'})
         url = self.ep()
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, params=params, model=Trunk, item_key='trunks')]
@@ -6205,7 +6205,7 @@ class AsInternalDialingApi(AsApiChild, base='telephony/config/locations'):
         """
         url = self.url(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
-        data = update.json()
+        data = update.json(exclude_none=False)
         await self.put(url=url, params=params, data=data)
 
 

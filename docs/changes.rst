@@ -1,6 +1,17 @@
 Release history
 ===============
 
+1.5.1
+-----
+- :meth:`wxc_sdk.telephony.location.internal_dialing.InternalDialingApi.update`: fixed a problem with removing an
+  internal dialing target (trunk or route group)
+- :class:`wxc_sdk.telephony.prem_pstn.route_group.RouteGroupApi`: fixed errors handling optional parameters for
+  some methods.
+- :class:`wxc_sdk.telephony.prem_pstn.route_list.RouteListApi`: doc strings
+- :meth:`wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.list`: fixed errors handling optional parameters
+- Test case for location internal dialing settings
+- Test case for adding/removing numbers from route lists
+
 1.5.0
 -----
 - new: location API: :attr:`wxc_sdk.telephony.TelephonyApi.location`

@@ -223,7 +223,7 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
         params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'trunk_id'})
+                      if v is not None and p not in {'self', 'rg_id', 'params'})
         url = self.ep(f'{rg_id}/usageCallToExtension')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
@@ -246,7 +246,7 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
         params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'trunk_id'})
+                      if v is not None and p not in {'self', 'rg_id', 'params'})
         url = self.ep(f'{rg_id}/usageDialPlan')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
@@ -265,7 +265,7 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
         params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'trunk_id'})
+                      if v is not None and p not in {'self', 'rg_id', 'params'})
         url = self.ep(f'{rg_id}/usagePstnConnection')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
@@ -284,7 +284,7 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         :rtype: :class:`wxc_sdk.common.IdAndName`
         """
         params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'trunk_id'})
+                      if v is not None and p not in {'self', 'rg_id', 'params'})
         url = self.ep(f'{rg_id}/usageRouteList')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=UsageRouteLists, params=params)

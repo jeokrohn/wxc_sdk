@@ -157,7 +157,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         :rtype: :class:`Trunk`
         """
         params.update((to_camel(p), v) for p, v in locals().items()
-                      if p != 'self')
+                      if v is not None and p not in {'self', 'params'})
         url = self.ep()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, params=params, model=Trunk, item_key='trunks')

@@ -85,6 +85,9 @@ class LocationInfo:
     main_number: str
     numbers: list[NumberListPhoneNumber]
 
+    def available_tns(self, *, api: WebexSimpleApi, tns_requested: int = 1) -> list[str]:
+        return available_tns(api=api, tn_prefix=self.main_number[:5], tns_requested=tns_requested)
+
 
 def us_location_info(*, api: WebexSimpleApi) -> list[LocationInfo]:
     """

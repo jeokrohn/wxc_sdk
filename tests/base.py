@@ -18,6 +18,7 @@ import uuid
 import webbrowser
 from collections.abc import Iterable, Generator
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import wraps
@@ -346,13 +347,39 @@ class TestCaseWithLog(TestCaseWithTokens):
             self.file_log_handler.close()
             self.file_log_handler = None
 
+    @contextmanager
+    def no_log(self):
+        """
+        Context manager to temporarily disable logging
+        """
+        old_level = self.file_log_handler.level
+        self.file_log_handler.setLevel(logging.INFO)
+        try:
+            yield
+        finally:
+            if self.file_log_handler:
+                self.file_log_handler.setLevel(old_level)
+
+    @contextmanager
+    def with_log(self):
+        """
+        Context manager to temporarily (re-)enable logging
+        """
+        old_level = self.file_log_handler.level
+        self.file_log_handler.setLevel(logging.DEBUG)
+        try:
+            yield
+        finally:
+            if self.file_log_handler:
+                self.file_log_handler.setLevel(old_level)
+
 
 @dataclass(init=False)
 class TestWithLocations(TestCaseWithLog):
     """
     Test cases with existing locations
     """
-    locations: list[Location]
+    locations: list[Location] = field(default_factory=list)
 
     @classmethod
     def setUpClass(cls) -> None:
