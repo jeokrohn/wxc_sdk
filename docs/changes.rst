@@ -1,6 +1,10 @@
 Release history
 ===============
 
+1.5.2
+-----
+- deprecate broken build 1.5.1
+
 1.5.1
 -----
 - :meth:`wxc_sdk.telephony.location.internal_dialing.InternalDialingApi.update`: fixed a problem with removing an

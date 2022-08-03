@@ -546,28 +546,28 @@ The second column of the table has a link to the documentation of the method.
         List Route Lists for a specific route group
      - :meth:`~wxc_sdk.telephony.prem_pstn.route_group.RouteGroupApi.usage_route_lists`
    * - api.telephony.prem_pstn.route_list.create
-        
+        Create a Route List for the organization
      - :meth:`~wxc_sdk.telephony.prem_pstn.route_list.RouteListApi.create`
    * - api.telephony.prem_pstn.route_list.delete_all_numbers
         
      - :meth:`~wxc_sdk.telephony.prem_pstn.route_list.RouteListApi.delete_all_numbers`
    * - api.telephony.prem_pstn.route_list.delete_route_list
-        
+        Delete Route List for a Customer
      - :meth:`~wxc_sdk.telephony.prem_pstn.route_list.RouteListApi.delete_route_list`
    * - api.telephony.prem_pstn.route_list.details
-        
+        Get Route List Details
      - :meth:`~wxc_sdk.telephony.prem_pstn.route_list.RouteListApi.details`
    * - api.telephony.prem_pstn.route_list.list
-        
+        List all Route Lists for the organization
      - :meth:`~wxc_sdk.telephony.prem_pstn.route_list.RouteListApi.list`
    * - api.telephony.prem_pstn.route_list.numbers
-        
+        Get numbers assigned to a Route List
      - :meth:`~wxc_sdk.telephony.prem_pstn.route_list.RouteListApi.numbers`
    * - api.telephony.prem_pstn.route_list.update
-        
+        Modify the details for a Route List
      - :meth:`~wxc_sdk.telephony.prem_pstn.route_list.RouteListApi.update`
    * - api.telephony.prem_pstn.route_list.update_numbers
-        
+        Modify numbers for a specific Route List of a Customer
      - :meth:`~wxc_sdk.telephony.prem_pstn.route_list.RouteListApi.update_numbers`
    * - api.telephony.prem_pstn.trunk.create
         Create a Trunk for the organization
