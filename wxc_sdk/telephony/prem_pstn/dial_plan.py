@@ -83,6 +83,7 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         params.update((to_camel(p), v) for i, (p, v) in enumerate(locals().items())
                       if i and v is not None and p != 'params')
         url = self.ep()
+        # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=DialPlan, params=params, item_key='dialPlans')
 
     def create(self, *, name: str, route_id: str, route_type: RouteType, dial_patterns: List[str] = None,
@@ -144,7 +145,9 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         url = self.ep(dial_plan_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(url=url, params=params)
-        return DialPlan.parse_obj(data)
+        dp: DialPlan = DialPlan.parse_obj(data)
+        dp.dial_plan_id = dial_plan_id
+        return dp
 
     def update(self, *, update: DialPlan, org_id: str = None):
         """
