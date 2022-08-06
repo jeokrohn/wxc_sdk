@@ -352,12 +352,14 @@ class TestCaseWithLog(TestCaseWithTokens):
         """
         Context manager to temporarily disable logging
         """
-        old_level = self.file_log_handler.level
-        self.file_log_handler.setLevel(logging.INFO)
+        old_level = None
+        if self.file_log_handler:
+            old_level = self.file_log_handler.level
+            self.file_log_handler.setLevel(logging.INFO)
         try:
             yield
         finally:
-            if self.file_log_handler:
+            if old_level:
                 self.file_log_handler.setLevel(old_level)
 
     @contextmanager
