@@ -1,5 +1,7 @@
+import re
 from concurrent.futures import ThreadPoolExecutor
 from random import choice
+from unittest import skip
 
 from tests.base import TestCaseWithLog
 from wxc_sdk.telephony.prem_pstn.trunk import TrunkType
@@ -115,3 +117,17 @@ class TestTrunkTypes(TestCaseWithLog):
             print(f'type: {tt.trunk_type.name}')
             for dt in tt.device_types:
                 print(f'  device type: {dt.device_type} min; {dt.min_concurrent_calls} max: {dt.max_concurrent_calls}')
+
+
+@skip
+class TestDeleteTestTrunks(TestCaseWithLog):
+    def test_001_delete_test_trunks(self):
+        trunks = list(self.api.telephony.prem_pstn.trunk.list())
+        to_delete = [trunk for trunk in trunks
+                     if re.match(r'.+\s\d{2}$', trunk.name)]
+        if not to_delete:
+            self.skipTest('Nothing to do')
+        with ThreadPoolExecutor() as pool:
+            list(pool.map(
+                lambda trunk: self.api.telephony.prem_pstn.trunk.delete_trunk(trunk_id=trunk.trunk_id),
+                trunks))
