@@ -81,15 +81,13 @@ class NumbersApi(PersonSettingsApiChild):
 
     def read(self, *, person_id: str, org_id: str = None) -> PersonNumbers:
         """
-        Read Do Not Disturb Settings for a Person
-        Retrieve a Person's Do Not Disturb Settings
+        Get a person's phone numbers including alternate numbers.
 
-        When enabled, this feature will give all incoming calls the busy treatment. Optionally, you can enable a Ring
-        Reminder to play a brief tone on your desktop phone when you receive incoming calls.
+        A person can have one or more phone numbers and/or extensions via which they can be called.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
-        or a user auth token with spark:people_read scope can be used by a person to read their settings.
-        :param person_id: Unique identifier for the person.
+        This API requires a full or user administrator auth token with
+        the spark-admin:people_read scope.:param person_id: Unique identifier for the person.
+
         :type person_id: str
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners) may
         use this parameter as the default is the same organization as the token used to access API.
