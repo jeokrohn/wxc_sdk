@@ -12,63 +12,93 @@ from wxc_sdk.telephony.prem_pstn import DialPatternValidationStatus
 from wxc_sdk.telephony.prem_pstn.dial_plan import DialPlan, PatternAndAction
 
 
-class TestList(TestCaseWithLog):
-    # TODO: teste with different params
-    def test_001_list_all(self):
-        dp = self.api.telephony.prem_pstn.dial_plan
-        dial_plans = list(dp.list())
-        print(f'Got {len(dial_plans)} dial plans')
-
-
+@dataclass(init=False)
 class TestCreate(TestCaseWithLog):
+    dial_plans: ClassVar[list[DialPlan]]
+    new_dp_names: ClassVar[Generator[str, None, None]]
+    route_choices: ClassVar[list[RouteIdentity]]
 
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-        dp_names = set(dp.name for dp in cls.api.telephony.prem_pstn.dial_plan.list())
-        cls.new_dp_names = (dp_name for i in range(1000) if (dp_name := f'TEST_{i:03}') not in dp_names)
-        cls.route_choices = list(cls.api.telephony.route_choices())
-
-    def test_001_no_patterns(self):
-        dp = self.api.telephony.prem_pstn.dial_plan
-        dp_name = next(self.new_dp_names)
-        route_choice = random.choice(self.route_choices)
-        dp_id = dp.create(name=dp_name, route_id=route_choice.route_id,
-                          route_type=route_choice.route_type).dial_plan_id
-        print(f'Created dial plan {dp_name}: {dp_id}')
-
-
-class TestUpdateDialPlans(TestCaseWithLog):
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
         dial_plans = list(cls.api.telephony.prem_pstn.dial_plan.list())
         cls.dial_plans = dial_plans
-        dp_names = set(dp.name for dp in dial_plans)
-        cls.new_dp_names = (dp_name for i in range(1000) if (dp_name := f'TEST_{i:03}') not in dp_names)
+        dp_names = set(dp.name for dp in cls.api.telephony.prem_pstn.dial_plan.list())
+        cls.new_dp_names = (dp_name for i in range(1, 1000) if (dp_name := f'TEST_{i:03}') not in dp_names)
         cls.route_choices = list(cls.api.telephony.route_choices())
+
+    @contextlib.contextmanager
+    def create(self) -> str:
+        dp = self.api.telephony.prem_pstn.dial_plan
+        dp_name = next(self.new_dp_names)
+        route_choice = random.choice(self.route_choices)
+        print(f'Creating dial plan "{dp_name}"')
+        dp_id = dp.create(name=dp_name, route_id=route_choice.route_id,
+                          route_type=route_choice.route_type).dial_plan_id
+        try:
+            yield dp_name, dp_id
+        finally:
+            print(f'Deleting dial plan "{dp_name}"')
+            self.api.telephony.prem_pstn.dial_plan.delete_dial_plan(dial_plan_id=dp_id)
+
+    def test_001_no_patterns(self):
+        with self.create() as (dp_name, dp_id):
+            print(f'Created dial plan {dp_name}: {dp_id}')
+            dp_list = list(self.api.telephony.prem_pstn.dial_plan.list(dial_plan_name='TEST'))
+            self.assertIsNotNone(next((dp for dp in dp_list
+                                       if dp.name == dp_name), None),
+                                 f'DP "{dp_name}" could not be found')
+
+
+class TestList(TestCreate):
+    # TODO: tests with different params
+    def test_001_list_all(self):
+        dp = self.api.telephony.prem_pstn.dial_plan
+        dial_plans = list(dp.list())
+        print(f'Got {len(dial_plans)} dial plans')
+
+    def test_002_list_by_name(self):
+        with contextlib.ExitStack() as st:
+            new_dp_names = set()
+            for _ in range(5):
+                dp_name, _ = st.enter_context(self.create())
+                new_dp_names.add(dp_name)
+            dp_names = set(dp.name for dp in self.api.telephony.prem_pstn.dial_plan.list(dial_plan_name='TEST'))
+            self.assertEqual(new_dp_names, new_dp_names & dp_names)
+
+
+class TestUpdateDialPlans(TestCreate):
+
+    @contextlib.contextmanager
+    def assert_dial_plan(self) -> DialPlan:
+        if self.dial_plans:
+            target = random.choice(self.dial_plans)
+            yield target
+        else:
+            with self.create() as (dp_name, dp_id):
+                target = self.api.telephony.prem_pstn.dial_plan.details(dial_plan_id=dp_id)
+                yield target
 
     @contextlib.contextmanager
     def pick_target(self):
         """
         Pick a target dial plan and restore the settings after the test
         """
-        if not self.dial_plans:
-            self.skipTest('No target dial plan')
-        target = random.choice(self.dial_plans)
-        target_id = target.dial_plan_id
-        dp_api = self.api.telephony.prem_pstn.dial_plan
-        target = dp_api.details(dial_plan_id=target.dial_plan_id)
-        target.dial_plan_id = target_id
-        try:
-            yield target
-        finally:
-            # restore previous settings and verify
-            dp_api.update(update=target)
-            details = dp_api.details(dial_plan_id=target.dial_plan_id)
-            self.assertEqual(target.name, details.name)
-            self.assertEqual(target.route_id, details.route_id)
-            self.assertEqual(target.route_type, details.route_type)
+        with self.assert_dial_plan() as target:
+            target: DialPlan
+            target_id = target.dial_plan_id
+            dp_api = self.api.telephony.prem_pstn.dial_plan
+            target = dp_api.details(dial_plan_id=target.dial_plan_id)
+            target.dial_plan_id = target_id
+            try:
+                yield target
+            finally:
+                # restore previous settings and verify
+                dp_api.update(update=target)
+                details = dp_api.details(dial_plan_id=target.dial_plan_id)
+                self.assertEqual(target.name, details.name)
+                self.assertEqual(target.route_id, details.route_id)
+                self.assertEqual(target.route_type, details.route_type)
 
     def update_and_check(self, *, target: DialPlan):
         self.api.telephony.prem_pstn.dial_plan.update(update=target)
@@ -141,7 +171,7 @@ class TestPatternValidation(TestCaseWithLog):
         """
         validate an invalid pattern
         """
-        result = self.api.telephony.prem_pstn.validate_pattern(dial_patterns='+1456!!')
+        result = self.api.telephony.prem_pstn.validate_pattern(dial_patterns='+1456X234')
         print(result)
         self.assertEqual(result.status, DialPatternValidationStatus.errors)
         self.assertEqual(1, len(result.dial_pattern_status))
@@ -194,15 +224,20 @@ class TestPatternValidation(TestCaseWithLog):
         self.assertFalse(err)
 
     def all_patterns(self) -> list[str]:
-        dp = self.api.telephony.prem_pstn.dial_plan
-        dial_plans = list(dp.list())
-        with ThreadPoolExecutor() as pool:
-            patterns = list(pool.map(lambda d: list(dp.patterns(dial_plan_id=d.dial_plan_id)), dial_plans))
+        """
+        Get all patterns of al dial plans
+        :return:
+        """
+        with self.no_log():
+            dp = self.api.telephony.prem_pstn.dial_plan
+            dial_plans = list(dp.list())
+            with ThreadPoolExecutor() as pool:
+                patterns = list(pool.map(lambda d: list(dp.patterns(dial_plan_id=d.dial_plan_id)), dial_plans))
         return list(chain.from_iterable(patterns))
 
     def test_005_duplicate_pattern(self):
         """
-        Validate some patterns already in
+        Validate some patterns already in a dial plan
         :return:
         """
         existing_patterns = self.all_patterns()
@@ -370,6 +405,7 @@ class TestDeleteAllTestDialPlans(TestCaseWithLog):
         dps = [dp for dp in api.list()
                if dp.name.startswith('TEST_')]
         if not dps:
+            self.skipTest('No Test dial plans to delete')
             return
         with ThreadPoolExecutor() as pool:
             list(pool.map(lambda dp: api.delete_dial_plan(dial_plan_id=dp.dial_plan_id), dps))
