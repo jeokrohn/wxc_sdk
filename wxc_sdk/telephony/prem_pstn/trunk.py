@@ -162,7 +162,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, params=params, model=Trunk, item_key='trunks')
 
-    def create(self, *, name: str, location_id: str, password: str, trunk_type: TrunkType,
+    def create(self, *, name: str, location_id: str, password: str, trunk_type: TrunkType = TrunkType.registering,
                dual_identity_support_enabled: bool = None, device_type: TrunkDeviceType = None, address: str = None,
                domain: str = None, port: int = None, max_concurrent_calls: int = None, org_id: str = None) -> str:
         """
@@ -402,4 +402,3 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         ...
 
     # TODO: are we missing a usage for trunks used for calls to unknown extensions??
-    # TODO: are we missing a usage for route lists??
