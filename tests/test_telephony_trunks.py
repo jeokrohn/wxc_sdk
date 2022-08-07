@@ -130,4 +130,4 @@ class TestDeleteTestTrunks(TestCaseWithLog):
         with ThreadPoolExecutor() as pool:
             list(pool.map(
                 lambda trunk: self.api.telephony.prem_pstn.trunk.delete_trunk(trunk_id=trunk.trunk_id),
-                trunks))
+                to_delete))
