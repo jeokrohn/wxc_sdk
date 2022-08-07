@@ -13,7 +13,8 @@ from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 
-__all__ = ['as_available_tns', 'available_tns', 'LocationInfo', 'us_location_info', 'calling_users']
+__all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'LocationInfo', 'us_location_info',
+           'calling_users']
 
 
 async def as_available_tns(*, as_api: AsWebexSimpleApi, tn_prefix: str, tns_requested: int = 1):
@@ -80,7 +81,7 @@ def available_tns(*, api: WebexSimpleApi, tn_prefix: str, tns_requested: int = 1
     return asyncio.run(as_run())
 
 
-def available_extensions(*, api: WebexSimpleApi, location_id, ext_requested:int=1)->list[str]:
+def available_extensions(*, api: WebexSimpleApi, location_id, ext_requested: int = 1) -> list[str]:
     """
     Get some available extensions in given location
     :param api:
@@ -96,16 +97,15 @@ def available_extensions(*, api: WebexSimpleApi, location_id, ext_requested:int=
         ext_len = 4
     else:
         # group extensions by len
-        by_len:dict[int, list[str]] = reduce(lambda red, pn: red[len(pn)].append(pn) or red,
-                                             extensions, defaultdict(list))
+        by_len: dict[int, list[str]] = reduce(lambda red, pn: red[len(pn)].append(pn) or red,
+                                              extensions, defaultdict(list))
         ext_len = max(by_len)
         extensions = by_len[ext_len]
         start = int(min(extensions))
     available = (number for i in range(start, 10 ** ext_len)
-                 if (number:=f'{i:0{ext_len}}') not in extensions)
+                 if (number := f'{i:0{ext_len}}') not in extensions)
     result = [next(available) for _ in range(ext_requested)]
     return result
-
 
 
 @dataclass
@@ -121,7 +121,7 @@ class LocationInfo:
 def us_location_info(*, api: WebexSimpleApi) -> list[LocationInfo]:
     """
     Get information about US location with numbers
-    :param apI:
+    :param api:
     """
     us_locations = [loc for loc in api.locations.list()
                     if loc.address.country == 'US']
