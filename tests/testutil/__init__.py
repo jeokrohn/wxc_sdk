@@ -4,21 +4,22 @@ Generic helper for test cases
 import asyncio
 from collections import defaultdict
 from dataclasses import dataclass
+from functools import reduce
 from itertools import zip_longest
 
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.locations import Location
+from wxc_sdk.people import Person
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 
-__all__ = ['as_available_tns', 'available_tns', 'LocationInfo', 'us_location_info']
+__all__ = ['as_available_tns', 'available_tns', 'LocationInfo', 'us_location_info', 'calling_users']
 
 
 async def as_available_tns(*, as_api: AsWebexSimpleApi, tn_prefix: str, tns_requested: int = 1):
     """
     Get some available US TNs
     :param as_api:
-    :param ci_org_id:
     :param tn_prefix: prefix for TNs to find. Can be +E.164 or 1st few digits of 10D. If an NPA is passed as 3D or
         +1-3D then numbers in the +1 NXX 555 01XX range are searched
     :param tns_requested: number of TNs to find
@@ -35,7 +36,7 @@ async def as_available_tns(*, as_api: AsWebexSimpleApi, tn_prefix: str, tns_requ
     numbers_to_scan = 10 ** digits_to_fill
 
     # generator for numbers to scan for availability
-    scan = (f'{tn_prefix}{i:0{digits_to_fill}}' for i in range(numbers_to_scan))
+    scan = (f'{tn_prefix}{i:0{digits_to_fill}}' for i in range(1, numbers_to_scan))
     tns = []
 
     # the check for availability should operate on batches of at least 5 TNs
@@ -79,6 +80,34 @@ def available_tns(*, api: WebexSimpleApi, tn_prefix: str, tns_requested: int = 1
     return asyncio.run(as_run())
 
 
+def available_extensions(*, api: WebexSimpleApi, location_id, ext_requested:int=1)->list[str]:
+    """
+    Get some available extensions in given location
+    :param api:
+    :param location_id:
+    :param ext_requested:
+    :return: list of extensions
+    """
+    extensions = set(pn.extension for pn in api.telephony.phone_numbers(location_id=location_id)
+                     if pn.extension)
+    if not extensions:
+        # defauilt: 1XXX
+        start = 1001
+        ext_len = 4
+    else:
+        # group extensions by len
+        by_len:dict[int, list[str]] = reduce(lambda red, pn: red[len(pn)].append(pn) or red,
+                                             extensions, defaultdict(list))
+        ext_len = max(by_len)
+        extensions = by_len[ext_len]
+        start = int(min(extensions))
+    available = (number for i in range(start, 10 ** ext_len)
+                 if (number:=f'{i:0{ext_len}}') not in extensions)
+    result = [next(available) for _ in range(ext_requested)]
+    return result
+
+
+
 @dataclass
 class LocationInfo:
     location: Location
@@ -104,7 +133,7 @@ def us_location_info(*, api: WebexSimpleApi) -> list[LocationInfo]:
     # collect results
     result = []
     for loc in us_locations:
-        # ger numbers for this location; maybe there are none
+        # get numbers for this location; maybe there are none
         loc_numbers = numbers_by_location.get(loc.location_id)
         if loc_numbers is None:
             # skip locations w/o numbers
@@ -118,3 +147,18 @@ def us_location_info(*, api: WebexSimpleApi) -> list[LocationInfo]:
             continue
         result.append(LocationInfo(location=loc, main_number=main_number.phone_number, numbers=loc_numbers))
     return result
+
+
+def calling_users(*, api: WebexSimpleApi) -> list[Person]:
+    """
+    Get a list of all calling users
+    :param api:
+    :return: list of users
+    """
+
+    calling_license_ids = set(lic.license_id for lic in api.licenses.list()
+                              if lic.webex_calling)
+    # user is a calling user if any of the user's licenses is a calling license
+    users = [user for user in api.people.list()
+             if any(license_id in calling_license_ids for license_id in user.licenses)]
+    return users
