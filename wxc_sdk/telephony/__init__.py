@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
-from pydantic import Field, parse_obj_as
+from pydantic import Field, parse_obj_as, validator
 
 from .access_codes import AccessCodesApi
 from .autoattendant import AutoAttendantApi
@@ -25,7 +25,7 @@ from .vm_rules import VoicemailRulesApi
 from .voicemail_groups import VoicemailGroupsApi
 from .voiceportal import VoicePortalApi
 from ..api_child import ApiChild
-from ..base import ApiModel, to_camel
+from ..base import ApiModel, to_camel, plus1
 from ..common import UserType, RouteIdentity, NumberState, ValidateExtensionsResponse, ValidatePhoneNumbersResponse
 from ..common.schedules import ScheduleApi, ScheduleApiBase
 from ..person_settings.permissions_out import OutgoingPermissionsApi
@@ -35,7 +35,7 @@ __all__ = ['OwnerType', 'NumberLocation', 'NumberOwner', 'NumberListPhoneNumberT
            'NumberListPhoneNumber',
            'NumberType', 'NumberDetails', 'UCMProfile',
            'TestCallRoutingResult', 'OriginatorType', 'CallSourceType', 'CallSourceInfo', 'DestinationType',
-           'LocationAndNumbers', 'HostedAgentDestination', 'ServiceType', 'HostedFeatureDestination',
+           'LocationAndNumbers', 'HostedUserDestination', 'ServiceType', 'HostedFeatureDestination',
            'TrunkDestination', 'PbxUserDestination', 'PstnNumberDestination', 'VirtualExtensionDestination',
            'RouteListDestination', 'FeatureAccessCodeDestination', 'EmergencyDestination', 'TelephonyApi']
 
@@ -175,8 +175,8 @@ class DestinationType(str, Enum):
     """
     Matching destination type for the call.
     """
-    #: Matching destination is a person or workspace with details in the hostedAgent field.
-    hosted_agent = 'HOSTED_AGENT'
+    #: Matching destination is a person or workspace with details in the hosted_user field.
+    hosted_user = 'HOSTED_USER'  # TODO: doc defect. Documented as HOSTED_AGENT
     #: Matching destination is a calling feature like auto-attendant or hunt group with details in the hostedFeature
     #: field.
     hosted_feature = 'HOSTED_FEATURE'
@@ -201,20 +201,24 @@ class DestinationType(str, Enum):
 
 
 class LocationAndNumbers(ApiModel):
+    @validator('phone_number', pre=True)
+    def e164(cls, v):
+        return plus1(v)
+
     location_name: str
     location_id: str
-    phone_number: str
-    extension: str
+    phone_number: Optional[str]
+    extension: Optional[str]
 
 
-class HostedAgentDestination(LocationAndNumbers):
+class HostedUserDestination(LocationAndNumbers):
     """
-    This data object is returned when destinationType is HOSTED_AGENT.
+    This data object is returned when destinationType is HOSTED_USER.
     """
     #: person/workspace's id
-    ha_id: str = Field(alias='id')
+    hu_id: str = Field(alias='id')
     #: Type of agent for call destination.
-    ha_type: UserType = Field(alias='type')
+    hu_type: UserType = Field(alias='type')
     #: Person or workspace's first name.
     first_name: str
     #: Person or workspace's last name.
@@ -233,7 +237,9 @@ class ServiceType(str, Enum):
 
 
 class HostedFeatureDestination(LocationAndNumbers):
-    service_type: ServiceType = Field(alias='tyoe')
+    service_type: ServiceType
+    service_type1: ServiceType = Field(alias='type')  # TODO: defect: duplicate, check doc
+    service_name: str  # TODO: defect: duplicate, check doc
     name: str
     service_instance_id: str = Field(alias='id')
 
@@ -258,6 +264,7 @@ class PbxUserDestination(TrunkDestination):
     dial_plan_id: str
     #: the dial pattern that the called string matches
     dial_pattern: str
+    premises_dial_pattern: str  # TODO: doc defect, not documented
 
 
 class PstnNumberDestination(TrunkDestination):
@@ -300,9 +307,9 @@ class EmergencyDestination(TrunkDestination):
 
 class TestCallRoutingResult(ApiModel):
     #: Language for call queue.
-    language: str
+    language: Optional[str]
     #: Time zone for the call queue.
-    time_zone: str
+    time_zone: Optional[str]
     #: This data object is only returned when originatorNumber is specified in the request.
     call_source_info: Optional[CallSourceInfo]
     #: Matching destination type for the call.
@@ -310,11 +317,11 @@ class TestCallRoutingResult(ApiModel):
     #: FAC code if destinationType is FAC. The routing address will be returned for all other destination types.
     routing_address: str
     #: Outside access code.
-    outside_access_code: str
+    outside_access_code: Optional[str]
     #: true if the call would be rejected.
     is_rejected: bool
-    #: This data object is returned when destinationType is HOSTED_AGENT.
-    hosted_agent: Optional[HostedAgentDestination]
+    #: This data object is returned when destinationType is HOSTED_USER.
+    hosted_user: Optional[HostedUserDestination] = Field(alias='hostedAgent')
     #: This data object is returned when destinationType is HOSTED_FEATURE.
     hosted_feature: Optional[HostedFeatureDestination]
     #: This data object is returned when destinationType is PBX_USER.
@@ -445,6 +452,7 @@ class TelephonyApi(ApiChild, base='telephony'):
                 value = value.value
                 params[param] = value
         url = self.ep(path='config/numbers')
+        # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=NumberListPhoneNumber, params=params,
                                               item_key='phoneNumbers')
 
@@ -587,6 +595,7 @@ class TelephonyApi(ApiChild, base='telephony'):
         params = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
                   if i and v is not None}
         url = self.ep('config/routeChoices')
+        # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=RouteIdentity, params=params, item_key='routeIdentities')
 
     def test_call_routing(self, *, originator_id: str, originator_type: OriginatorType, destination: str,

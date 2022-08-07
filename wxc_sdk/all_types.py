@@ -37,7 +37,7 @@ from wxc_sdk.person_settings.voicemail import StorageType, UnansweredCalls, Voic
     VoicemailEnabled, VoicemailEnabledWithGreeting, VoicemailFax, VoicemailMessageStorage, VoicemailNotifications,\
     VoicemailSettings, VoicemailTransferToNumber
 from wxc_sdk.telephony import CallSourceInfo, CallSourceType, DestinationType, EmergencyDestination,\
-    FeatureAccessCodeDestination, HostedAgentDestination, HostedFeatureDestination, LocationAndNumbers,\
+    FeatureAccessCodeDestination, HostedFeatureDestination, HostedUserDestination, LocationAndNumbers,\
     NumberDetails, NumberListPhoneNumber, NumberListPhoneNumberType, NumberLocation, NumberOwner, NumberType,\
     OriginatorType, OwnerType, PbxUserDestination, PstnNumberDestination, RouteListDestination, ServiceType,\
     TestCallRoutingResult, TrunkDestination, UCMProfile, VirtualExtensionDestination
@@ -97,7 +97,7 @@ __all__ = ['Action', 'Agent', 'AlternateNumber', 'AlternateNumberSettings', 'Ann
            'ExpirePasscode', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts',
            'FeatureAccessCodeDestination', 'FeatureSelector', 'ForwardCallsTo', 'ForwardToSelection',
            'ForwardingRule', 'ForwardingRuleDetails', 'ForwardingSetting', 'Greeting', 'Group', 'GroupMember',
-           'HGCallPolicies', 'HGandCQ', 'HistoryType', 'HostedAgentDestination', 'HostedFeatureDestination',
+           'HGCallPolicies', 'HGandCQ', 'HistoryType', 'HostedFeatureDestination', 'HostedUserDestination',
            'HuntGroup', 'IdAndName', 'IncomingPermissions', 'InterceptAnnouncements', 'InterceptNumber',
            'InterceptSetting', 'InterceptSettingIncoming', 'InterceptSettingOutgoing', 'InterceptTypeIncoming',
            'InterceptTypeOutgoing', 'InternalDialing', 'License', 'Location', 'LocationAddress', 'LocationAndNumbers',
