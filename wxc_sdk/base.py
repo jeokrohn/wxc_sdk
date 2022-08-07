@@ -4,7 +4,7 @@ from typing import Optional, Union
 
 from pydantic import BaseModel, ValidationError
 
-__all__ = ['StrOrDict', 'webex_id_to_uuid', 'to_camel', 'ApiModel', 'CodeAndReason', 'ApiModelWithErrors']
+__all__ = ['StrOrDict', 'webex_id_to_uuid', 'to_camel', 'ApiModel', 'CodeAndReason', 'ApiModelWithErrors', 'plus1']
 
 StrOrDict = Union[str, dict]
 
@@ -62,3 +62,12 @@ class CodeAndReason(ApiModel):
 
 class ApiModelWithErrors(ApiModel):
     errors: Optional[dict[str, CodeAndReason]]
+
+
+def plus1(v: Optional[str]) -> str:
+    """
+    Convert 10D number to +E.164. Can be used as validator
+    :param v:
+    :return:
+    """
+    return v and len(v) == 10 and v[0] != '+' and f'+1{v}' or v
