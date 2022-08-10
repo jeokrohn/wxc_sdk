@@ -8,11 +8,16 @@ import os
 import re
 import sys
 import time
+from collections import defaultdict
+from collections.abc import Generator
 from concurrent.futures import ThreadPoolExecutor
-from itertools import chain
+from functools import reduce
+from itertools import chain, zip_longest
 
 from tests.base import get_tokens
 from wxc_sdk import WebexSimpleApi
+from wxc_sdk.common import NumberState
+from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 
 TO_DELETE = re.compile(r'^(?:(?:\w{2}|many|test|test_user)_\d{3})|National Holidays$')
 DRY_RUN = False
@@ -136,6 +141,46 @@ def main():
                     schedule_type=user_and_schedule[1].schedule_type,
                     schedule_id=user_and_schedule[1].schedule_id),
                 users_and_schedules))
+
+        # groups
+        groups = [g for g in api.groups.list()
+                  if TO_DELETE.match(g.display_name)]
+        groups.sort(key=lambda g: g.display_name)
+        print(f'Deleting {len(groups)} groups')
+        if not DRY_RUN:
+            list(pool.map(lambda g: api.groups.delete_group(group_id=g.group_id),
+                          groups))
+
+        # inactive unused numbers
+        numbers = [number
+                   for number in api.telephony.phone_numbers(state=NumberState.inactive, number_type=NumberType.number)
+                   if number.owner is None and not number.main_number]
+        print(f'Deleting {len(numbers)} phone numbers')
+        numbers_by_location: dict[str, list[NumberListPhoneNumber]] = reduce(
+            lambda red, number: red[(number.location.location_id, number.location.name)].append(number) or red,
+            numbers,
+            defaultdict(list))
+        if numbers_by_location:
+            loc_len = max(map(lambda k: len(k[1]), numbers_by_location))
+            print('\n'.join(f'  {l_name:{loc_len}} ({len(numbers)} numbers): '
+                            f'{", ".join(number.phone_number for number in numbers)}'
+                            for (l_id, l_name), numbers in numbers_by_location.items()))
+        if not DRY_RUN:
+            # delete numbers in batches of 5
+            def batches_to_delete() -> Generator[tuple[str, list[str]]]:
+                for (l_id, l_name), numbers in numbers_by_location.items():
+                    n_iter = iter(numbers)
+                    for batch in zip_longest(*([n_iter] * 5),
+                                             fillvalue=None):
+                        batch = [n.phone_number for n in batch if n]
+                        yield l_id, batch
+
+            batches = list(batches_to_delete())
+            list(pool.map(
+                lambda v: api.telephony.location.number.remove(
+                    location_id=v[0],
+                    phone_numbers=v[1]),
+                batches))
 
 
 if __name__ == '__main__':
