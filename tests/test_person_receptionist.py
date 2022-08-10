@@ -8,6 +8,7 @@ from itertools import chain
 
 from wxc_sdk.all_types import Person, ReceptionistSettings
 from .base import TestCaseWithUsers
+from wxc_sdk.rest import RestError
 
 
 class TestRead(TestCaseWithUsers):
@@ -112,28 +113,37 @@ class TestRead(TestCaseWithUsers):
     def test_003_extension_format(self):
         """
         Verify extension format
+        Apparently extensions returned for members can have different formats:
+            * ESN (site code - extension): the member is in a different location than the user
+            * extension: the member is in the same location as the user
 
         # TODO: defect, wrong extension format. Some extensions are returned as ESN with hyphen before the extension,
-            # CALL-68675
+            # CALL-68675 -- provide feedback in Jira and close
         """
-        with self.target_user() as user:
+        with self.target_user() as target_user:
+            target_user: Person
+            # get user details with calling data for all users
+            with self.no_log():
+                target_user = self.api.people.details(person_id=target_user.person_id, calling_data=True)
+                with ThreadPoolExecutor() as pool:
+                    users = list(pool.map(lambda u: self.api.people.details(person_id=u.person_id, calling_data=True),
+                                          self.users))
             # API shortcut
             rc = self.api.person_settings.receptionist
             # get current settings
-            before = rc.read(person_id=user.person_id)
+            before = rc.read(person_id=target_user.person_id)
             present_ids = [m.member_id for m in before.monitored_members or []]
-            user_candidates = [user for user in self.users
-                               if user.person_id not in present_ids]
-            to_add = random.sample(user_candidates, 3)
+            user_candidates = [user_candidate for user_candidate in users
+                               if user_candidate.person_id not in present_ids and
+                               target_user.person_id != user_candidate.person_id]
+            if True:
+                # add all users...
+                to_add = user_candidates
+            else:
+                to_add = random.sample(user_candidates, 3)
             print('Adding:')
             for u in to_add:
                 print(f'  {u.display_name}: {u.phone_numbers}')
-
-            # get details of all users to add to have them iun the API log
-            with ThreadPoolExecutor() as pool:
-                details = list(pool.map(
-                    lambda user:self.api.people.details(person_id=user.person_id, calling_data=True),
-                    to_add))
 
             # ths is what we want to add
             new_monitoring = [u.person_id
@@ -143,17 +153,46 @@ class TestRead(TestCaseWithUsers):
             settings.monitored_members = (settings.monitored_members or []) + new_monitoring
 
             # update
-            rc.configure(person_id=user.person_id, settings=settings)
+            try:
+                rc.configure(person_id=target_user.person_id, settings=settings)
+            except RestError as e:
+                if e.code == 4470 and e.response.status_code == 400:
+                    # apparently at least one of the users could not get added
+                    # now try ot add them one by one and see which ones fail
+                    print('Adding all users all at once failed. Now try to add them one by one...')
+                    users_failed_to_add = []
+                    monitored_members = before.monitored_members or []
+                    for user_id in new_monitoring:
+                        user_to_add = next(u for u in users if u.person_id == user_id)
+                        settings.monitored_members = monitored_members + [user_id]
+                        try:
+                            rc.configure(person_id=target_user.person_id, settings=settings)
+                        except RestError as ie:
+                            if ie.code == 4470:
+                                users_failed_to_add.append(user_id)
+                        else:
+                            monitored_members.append(user_id)
+                    print('failed users: ', end='')
+                    print(', '.join((failed_user := next(u for u in users if u.person_id == user_id)).display_name
+                                    for user_id in users_failed_to_add))
+                    raise e
+                else:
+                    raise
 
             # how does it look like after the update?
-            after = rc.read(person_id=user.person_id)
+            after = rc.read(person_id=target_user.person_id)
 
             max_disp = max(len(m.display_name) for m in after.monitored_members)
+            after.monitored_members.sort(key=lambda m: m.display_name)
+            print('Members:')
+            err = False
             for member in after.monitored_members:
-                print(f'{member.display_name:{max_disp}}: '
-                      f'{", ".join(n.extension for n in member.numbers if n.extension)}')
-            extensions = list(chain.from_iterable((n.extension
-                                                   for n in m.numbers if n.extension)
-                                                  for m in after.monitored_members))
+                member_user = next(u for u in users if u.person_id == member.member_id)
+                print(f'  {member.display_name:{max_disp}}: '
+                      f'{", ".join(n.extension or n.phone_number for n in member.numbers)} '
+                      f'{"" if member_user.location_id==target_user.location_id else " not"} '
+                      f'in same location as target user')
+                if any(n.extension and '-' in n.extension for n in member.numbers) != (member_user.location_id != target_user.location_id):
+                    err = True
             # a hyphen in an extension is an indicator of an issue
-            self.assertTrue(not any('-' in e for e in extensions), 'At least one extension has the wrong format')
+            self.assertFalse(err, 'At least one extension has the wrong format')
