@@ -392,7 +392,7 @@ class TelephonyApi(ApiChild, base='telephony'):
         self.voicemail_rules = VoicemailRulesApi(session=session)
         self.voiceportal = VoicePortalApi(session=session)
 
-    def phone_numbers(self, *, location_id: str = None, phone_number: str = None, available: bool = None,
+    def phone_numbers(self, location_id: str = None, phone_number: str = None, available: bool = None,
                       order: str = None,
                       owner_name: str = None, owner_id: str = None, owner_type: OwnerType = None,
                       extension: str = None, number_type: NumberType = None,
@@ -456,7 +456,7 @@ class TelephonyApi(ApiChild, base='telephony'):
         return self.session.follow_pagination(url=url, model=NumberListPhoneNumber, params=params,
                                               item_key='phoneNumbers')
 
-    def phone_number_details(self, *, org_id: str = None) -> NumberDetails:
+    def phone_number_details(self, org_id: str = None) -> NumberDetails:
         """
         get summary (counts) of phone numbers
 
@@ -473,7 +473,7 @@ class TelephonyApi(ApiChild, base='telephony'):
         data = self.get(url, params=params)
         return NumberDetails.parse_obj(data['count'])
 
-    def validate_extensions(self, *, extensions: list[str]) -> ValidateExtensionsResponse:
+    def validate_extensions(self, extensions: list[str]) -> ValidateExtensionsResponse:
         """
         Validate the List of Extensions
 
@@ -514,7 +514,7 @@ class TelephonyApi(ApiChild, base='telephony'):
         data = self.post(url=url, params=params, json=body)
         return ValidatePhoneNumbersResponse.parse_obj(data)
 
-    def ucm_profiles(self, *, org_id: str = None) -> list[UCMProfile]:
+    def ucm_profiles(self, org_id: str = None) -> list[UCMProfile]:
         """
         Read the List of UC Manager Profiles
 
@@ -539,7 +539,7 @@ class TelephonyApi(ApiChild, base='telephony'):
         data = self.get(url, params=params)
         return parse_obj_as(list[UCMProfile], data['callingProfiles'])
 
-    def change_announcement_language(self, *, location_id: str, language_code: str, agent_enabled: bool = None,
+    def change_announcement_language(self, location_id: str, language_code: str, agent_enabled: bool = None,
                                      service_enabled: bool = None, org_id: str = None):
         """
         Change Announcement Language
@@ -598,7 +598,7 @@ class TelephonyApi(ApiChild, base='telephony'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=RouteIdentity, params=params, item_key='routeIdentities')
 
-    def test_call_routing(self, *, originator_id: str, originator_type: OriginatorType, destination: str,
+    def test_call_routing(self, originator_id: str, originator_type: OriginatorType, destination: str,
                           originator_number: str = None, org_id: str = None) -> TestCallRoutingResult:
         """
         Validates that an incoming call can be routed.

@@ -51,7 +51,7 @@ class PushToTalkApi(PersonSettingsApiChild):
 
     feature = 'pushToTalk'
 
-    def read(self, *, person_id: str, org_id: str = None) -> PushToTalkSettings:
+    def read(self, person_id: str, org_id: str = None) -> PushToTalkSettings:
         """
         Read Push-to-Talk Settings for a Person
         Retrieve a Person's Push-to-Talk Settings
@@ -73,7 +73,7 @@ class PushToTalkApi(PersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return PushToTalkSettings.parse_obj(self.get(ep, params=params))
 
-    def configure(self, *, person_id: str, settings: PushToTalkSettings, org_id: str = None):
+    def configure(self, person_id: str, settings: PushToTalkSettings, org_id: str = None):
         """
         Configure Push-to-Talk Settings for a Person
 

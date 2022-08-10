@@ -113,7 +113,7 @@ class CallInterceptApi(PersonSettingsApiChild):
 
     feature = 'intercept'
 
-    def read(self, *, person_id: str, org_id: str = None) -> InterceptSetting:
+    def read(self, person_id: str, org_id: str = None) -> InterceptSetting:
         """
         Read Call Intercept Settings for a Person
 
@@ -138,7 +138,7 @@ class CallInterceptApi(PersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return InterceptSetting.parse_obj(self.get(ep, params=params))
 
-    def configure(self, *, person_id: str, intercept: InterceptSetting, org_id: str = None):
+    def configure(self, person_id: str, intercept: InterceptSetting, org_id: str = None):
         """
         Configure Call Intercept Settings for a Person
 

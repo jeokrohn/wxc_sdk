@@ -56,7 +56,7 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
     API for everything route groups
     """
 
-    def list(self, *, name: str = None, order: str = None,
+    def list(self, name: str = None, order: str = None,
              org_id: str = None, **params) -> Generator[RouteGroup, None, None]:
         """
         List all Route Groups for an organization. A Route Group is a group of trunks that allows further scale and
@@ -79,7 +79,7 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, params=params, model=RouteGroup)
 
-    def create(self, *, route_group: RouteGroup, org_id: str = None) -> str:
+    def create(self, route_group: RouteGroup, org_id: str = None) -> str:
         """
         Creates a Route Group for the organization.
 
@@ -114,7 +114,7 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         data = self.post(url=url, params=params, data=body)
         return data['id']
 
-    def details(self, *, rg_id: str, org_id: str = None) -> RouteGroup:
+    def details(self, rg_id: str, org_id: str = None) -> RouteGroup:
         """
         Reads a Route Group for the organization based on id.
 
@@ -139,7 +139,7 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         data = self.get(url=url, params=params)
         return RouteGroup.parse_obj(data)
 
-    def update(self, *, rg_id: str, update: RouteGroup, org_id: str = None):
+    def update(self, rg_id: str, update: RouteGroup, org_id: str = None):
         """
         Modifies an existing Route Group for an organization based on id.
 
@@ -163,7 +163,7 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         data = self.post(url=url, params=params, data=body)
         self.put(url=url, params=params, data=data)
 
-    def delete_route_group(self, *, rg_id: str, org_id: str = None):
+    def delete_route_group(self, rg_id: str, org_id: str = None):
         """
         Remove a Route Group from an Organization based on id.
 
@@ -183,7 +183,7 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         url = self.ep(rg_id)
         self.delete(url=url, params=params)
 
-    def usage(self, *, rg_id: str, org_id: str = None) -> RouteGroupUsage:
+    def usage(self, rg_id: str, org_id: str = None) -> RouteGroupUsage:
         """
         List the number of "Call to" on-premises Extensions, Dial Plans, PSTN Connections, and Route Lists used by a
         specific Route Group. Users within Call to Extension locations are registered to a PBX which allows you to

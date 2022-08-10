@@ -35,7 +35,7 @@ class Group(ApiModel):
 
 class GroupsApi(ApiChild, base='groups'):
 
-    def list(self, *, include_members: bool = None, attributes: str = None, sort_by: str = None,
+    def list(self, include_members: bool = None, attributes: str = None, sort_by: str = None,
              sort_order: str = None, list_filter: str = None, org_id: str = None,
              **params) -> Generator[Group, None, None]:
         """
@@ -66,7 +66,7 @@ class GroupsApi(ApiChild, base='groups'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Group, item_key='groups', params=params)
 
-    def create(self, *, settings: Group) -> Group:
+    def create(self, settings: Group) -> Group:
         """
         Create a new group using the provided settings. Only display_name is mandatory
 
@@ -103,7 +103,7 @@ class GroupsApi(ApiChild, base='groups'):
         data = self.get(url, params=params)
         return Group.parse_obj(data)
 
-    def members(self, *, group_id: str, **params) -> Generator[GroupMember, None, None]:
+    def members(self, group_id: str, **params) -> Generator[GroupMember, None, None]:
         """
         Query members of a group
 
@@ -115,7 +115,7 @@ class GroupsApi(ApiChild, base='groups'):
         url = self.ep(f'{group_id}/Members')
         return self.session.follow_pagination(url=url, model=GroupMember, params=params, item_key='members')
 
-    def update(self, *, group_id: str, settings: Group = None, remove_all: bool = None) -> Group:
+    def update(self, group_id: str, settings: Group = None, remove_all: bool = None) -> Group:
         """
         update group information.
 

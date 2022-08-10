@@ -25,7 +25,7 @@ class DndApi(PersonSettingsApiChild):
 
     feature = 'doNotDisturb'
 
-    def read(self, *, person_id: str, org_id: str = None) -> DND:
+    def read(self, person_id: str, org_id: str = None) -> DND:
         """
         Read Do Not Disturb Settings for a Person
         Retrieve a Person's Do Not Disturb Settings
@@ -46,7 +46,7 @@ class DndApi(PersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return DND.parse_obj(self.get(ep, params=params))
 
-    def configure(self, *, person_id: str, dnd_settings: DND, org_id: str = None):
+    def configure(self, person_id: str, dnd_settings: DND, org_id: str = None):
         """
         Configure Do Not Disturb Settings for a Person
         Configure a Person's Do Not Disturb Settings

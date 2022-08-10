@@ -349,7 +349,7 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
             self.transfer_numbers = None
             self.auth_codes = None
 
-    def read(self, *, person_id: str, org_id: str = None) -> OutgoingPermissions:
+    def read(self, person_id: str, org_id: str = None) -> OutgoingPermissions:
         """
         Retrieve a Person's Outgoing Calling Permissions Settings
 
@@ -370,7 +370,7 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return OutgoingPermissions.parse_obj(self.get(ep, params=params))
 
-    def configure(self, *, person_id: str, settings: OutgoingPermissions, org_id: str = None):
+    def configure(self, person_id: str, settings: OutgoingPermissions, org_id: str = None):
         """
         Configure a Person's Outgoing Calling Permissions Settings
 

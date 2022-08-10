@@ -37,7 +37,7 @@ class AppServicesApi(PersonSettingsApiChild):
 
     feature = 'applications'
 
-    def read(self, *, person_id: str, org_id: str = None) -> AppServicesSettings:
+    def read(self, person_id: str, org_id: str = None) -> AppServicesSettings:
         """
         Retrieve a Person's Application Services Settings
 
@@ -59,7 +59,7 @@ class AppServicesApi(PersonSettingsApiChild):
         data = self.get(ep, params=params)
         return AppServicesSettings.parse_obj(data)
 
-    def configure(self, *, person_id: str, settings: AppServicesSettings, org_id: str = None):
+    def configure(self, person_id: str, settings: AppServicesSettings, org_id: str = None):
         """
         Modify a Person's Application Services Settings
 

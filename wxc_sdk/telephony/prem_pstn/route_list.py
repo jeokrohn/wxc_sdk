@@ -66,7 +66,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
     API for everything route lists
     """
 
-    def list(self, *, name: list[str] = None, location_id: list[str] = None, order: str = None,
+    def list(self, name: list[str] = None, location_id: list[str] = None, order: str = None,
              org_id: str = None, **params) -> Generator[RouteList, None, None]:
         """
         List all Route Lists for the organization.
@@ -94,7 +94,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, params=params, model=RouteList)
 
-    def create(self, *, name: str, location_id: str, rg_id: str, org_id: str = None) -> str:
+    def create(self, name: str, location_id: str, rg_id: str, org_id: str = None) -> str:
         """
         Create a Route List for the organization.
 
@@ -123,7 +123,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         data = self.post(url=url, params=params, json=body)
         return data['id']
 
-    def details(self, *, rl_id: str, org_id: str = None) -> RouteListDetail:
+    def details(self, rl_id: str, org_id: str = None) -> RouteListDetail:
         """
         Get Route List Details.
 
@@ -145,7 +145,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         data = self.get(url=url, params=params)
         return RouteListDetail.parse_obj(data)
 
-    def update(self, *, rl_id: str, name: str, rg_id: str, org_id: str = None):
+    def update(self, rl_id: str, name: str, rg_id: str, org_id: str = None):
         """
         Modify the details for a Route List.
 
@@ -170,7 +170,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         url = self.ep(rl_id)
         self.put(url=url, params=params, json=body)
 
-    def delete_route_list(self, *, rl_id: str, org_id: str = None):
+    def delete_route_list(self, rl_id: str, org_id: str = None):
         """
         Delete Route List for a Customer
 
@@ -189,7 +189,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         url = self.ep(rl_id)
         self.delete(url=url, params=params)
 
-    def numbers(self, *, rl_id: str, order: str = None, number: str = None,
+    def numbers(self, rl_id: str, order: str = None, number: str = None,
                 org_id: str = None, **params) -> Generator[str, None, None]:
         """
         Get numbers assigned to a Route List
@@ -216,7 +216,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, params=params)
 
-    def update_numbers(self, *, rl_id: str, numbers: List[NumberAndAction],
+    def update_numbers(self, rl_id: str, numbers: List[NumberAndAction],
                        org_id: str = None) -> List[UpdateNumbersResponse]:
         """
         Modify numbers for a specific Route List of a Customer.
@@ -249,7 +249,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         else:
             return []
 
-    def delete_all_numbers(self, *, rl_id: str, org_id: str = None):
+    def delete_all_numbers(self, rl_id: str, org_id: str = None):
         url = self.ep(f'{rl_id}/numbers')
         params = org_id and {'orgId': org_id} or None
         body = {'deleteAllNumbers': True}

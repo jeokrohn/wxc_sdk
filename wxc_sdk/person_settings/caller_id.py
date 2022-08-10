@@ -126,7 +126,7 @@ class CallerIdApi(PersonSettingsApiChild):
 
     feature = 'callerId'
 
-    def read(self, *, person_id: str, org_id: str = None) -> CallerId:
+    def read(self, person_id: str, org_id: str = None) -> CallerId:
         """
         Retrieve a Person's Caller ID Settings
 
@@ -145,7 +145,7 @@ class CallerIdApi(PersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return CallerId.parse_obj(self.get(ep, params=params))
 
-    def configure(self, *, person_id: str, org_id: str = None,
+    def configure(self, person_id: str, org_id: str = None,
                   selected: CallerIdSelectedType = None,
                   custom_number: str = None,
                   first_name: str = None,

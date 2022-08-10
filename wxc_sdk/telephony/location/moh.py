@@ -59,7 +59,7 @@ class LocationMoHApi(ApiChild, base='telephony/config/locations'):
         ep = self.session.ep(f'telephony/config/locations/{location_id}/musicOnHold{path}')
         return ep
 
-    def read(self, *, location_id: str, org_id: str = None) -> LocationMoHSetting:
+    def read(self, location_id: str, org_id: str = None) -> LocationMoHSetting:
         """
         Get Music On Hold
 
@@ -82,7 +82,7 @@ class LocationMoHApi(ApiChild, base='telephony/config/locations'):
         data = self.get(url, params=params)
         return LocationMoHSetting.parse_obj(data)
 
-    def update(self, *, location_id: str, settings: LocationMoHSetting, org_id: str = None) -> LocationMoHSetting:
+    def update(self, location_id: str, settings: LocationMoHSetting, org_id: str = None) -> LocationMoHSetting:
         """
         Get Music On Hold
 
@@ -106,7 +106,7 @@ class LocationMoHApi(ApiChild, base='telephony/config/locations'):
         url = self._endpoint(location_id=location_id)
         self.put(url, params=params, data=data)
 
-    def create(self, *, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> list[AuthCode]:
+    def create(self, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> list[AuthCode]:
         """
 
         :param location_id: Add new access code for this location.
@@ -121,7 +121,7 @@ class LocationMoHApi(ApiChild, base='telephony/config/locations'):
         body = {'accessCodes': [json.loads(ac.json()) for ac in access_codes]}
         self.post(url, json=body, params=params)
 
-    def delete_codes(self, *, location_id: str, access_codes: list[Union[str, AuthCode]],
+    def delete_codes(self, location_id: str, access_codes: list[Union[str, AuthCode]],
                      org_id: str = None) -> list[AuthCode]:
         """
         Delete Access Code Location

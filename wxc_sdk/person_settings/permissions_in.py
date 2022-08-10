@@ -66,7 +66,7 @@ class IncomingPermissionsApi(PersonSettingsApiChild):
 
     feature = 'incomingPermission'
 
-    def read(self, *, person_id: str, org_id: str = None) -> IncomingPermissions:
+    def read(self, person_id: str, org_id: str = None) -> IncomingPermissions:
         """
         Read Incoming Permission Settings for a Person
 
@@ -89,7 +89,7 @@ class IncomingPermissionsApi(PersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return IncomingPermissions.parse_obj(self.get(ep, params=params))
 
-    def configure(self, *, person_id: str, settings: IncomingPermissions, org_id: str = None):
+    def configure(self, person_id: str, settings: IncomingPermissions, org_id: str = None):
         """
         Configure a Person's Barge In Settings
 

@@ -35,7 +35,7 @@ class ExecAssistantApi(PersonSettingsApiChild):
 
     feature = 'executiveAssistant'
 
-    def read(self, *, person_id: str, org_id: str = None) -> ExecAssistantType:
+    def read(self, person_id: str, org_id: str = None) -> ExecAssistantType:
         """
         Retrieve Executive Assistant Settings for a Person
 
@@ -61,7 +61,7 @@ class ExecAssistantApi(PersonSettingsApiChild):
         h: _Helper = _Helper.parse_obj(data)
         return h.exec_type
 
-    def configure(self, *, person_id: str, setting: ExecAssistantType, org_id: str = None):
+    def configure(self, person_id: str, setting: ExecAssistantType, org_id: str = None):
         """
         Modify Executive Assistant Settings for a Person
 

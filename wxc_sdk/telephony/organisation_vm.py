@@ -36,7 +36,7 @@ class OrganisationVoicemailSettingsAPI(ApiChild, base='telephony/config/voicemai
     API for Organisation voicemail settings
     """
 
-    def read(self, *, org_id: str = None) -> OrganisationVoicemailSettings:
+    def read(self, org_id: str = None) -> OrganisationVoicemailSettings:
         """
         Get Voicemail Settings
 
@@ -57,7 +57,7 @@ class OrganisationVoicemailSettingsAPI(ApiChild, base='telephony/config/voicemai
         url = self.ep()
         return OrganisationVoicemailSettings.parse_obj(self.get(url, params=params))
 
-    def update(self, *, settings: OrganisationVoicemailSettings, org_id: str = None):
+    def update(self, settings: OrganisationVoicemailSettings, org_id: str = None):
         """
         Update the organization's voicemail settings.
 

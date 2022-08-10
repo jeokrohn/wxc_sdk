@@ -25,7 +25,7 @@ class BargeApi(PersonSettingsApiChild):
 
     feature = 'bargeIn'
 
-    def read(self, *, person_id: str, org_id: str = None) -> BargeSettings:
+    def read(self, person_id: str, org_id: str = None) -> BargeSettings:
         """
         Retrieve a Person's Barge In Settings
 
@@ -47,7 +47,7 @@ class BargeApi(PersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return BargeSettings.parse_obj(self.get(ep, params=params))
 
-    def configure(self, *, person_id: str, barge_settings: BargeSettings, org_id: str = None):
+    def configure(self, person_id: str, barge_settings: BargeSettings, org_id: str = None):
         """
         Configure a Person's Barge In Settings
 

@@ -142,7 +142,7 @@ class PagingApi(ApiChild, base='telephony/config'):
         paging_id = paging_id and f'/{paging_id}' or ''
         return super().ep(f'locations/{location_id}/paging{paging_id}')
 
-    def list(self, *, location_id: str = None, name: str = None, phone_number: str = None,
+    def list(self, location_id: str = None, name: str = None, phone_number: str = None,
              org_id: str = None, **params) -> Generator[Paging, None, None]:
         """
         Read the List of Paging Groups
@@ -173,7 +173,7 @@ class PagingApi(ApiChild, base='telephony/config'):
         return self.session.follow_pagination(url=url, model=Paging, params=params, item_key='locationPaging')
         pass
 
-    def create(self, *, location_id: str, settings: Paging, org_id: str = None) -> str:
+    def create(self, location_id: str, settings: Paging, org_id: str = None) -> str:
         """
         Create a new Paging Group
         Create a new Paging Group for the given location.
@@ -202,7 +202,7 @@ class PagingApi(ApiChild, base='telephony/config'):
         data = self.post(url, data=data, params=params)
         return data['id']
 
-    def delete_paging(self, *, location_id: str, paging_id: str, org_id: str = None):
+    def delete_paging(self, location_id: str, paging_id: str, org_id: str = None):
         """
         Delete a Paging Group
         Delete the designated Paging Group.
@@ -223,7 +223,7 @@ class PagingApi(ApiChild, base='telephony/config'):
         url = self._endpoint(location_id=location_id, paging_id=paging_id)
         self.delete(url, params=params)
 
-    def details(self, *, location_id: str, paging_id: str, org_id: str = None) -> Paging:
+    def details(self, location_id: str, paging_id: str, org_id: str = None) -> Paging:
         """
         Get Details for a Paging Group
         Retrieve Paging Group details.
@@ -243,7 +243,7 @@ class PagingApi(ApiChild, base='telephony/config'):
         url = self._endpoint(location_id=location_id, paging_id=paging_id)
         return Paging.parse_obj(self.get(url, params=params))
 
-    def update(self, *, location_id: str, update: Paging, paging_id: str, org_id: str = None):
+    def update(self, location_id: str, update: Paging, paging_id: str, org_id: str = None):
         """
         Update the designated Paging Group.
 

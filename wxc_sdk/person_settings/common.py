@@ -28,7 +28,7 @@ class PersonSettingsApiChild(ApiChild, base=''):
         if cls.feature is None:
             raise TypeError('feature has to be defined')
 
-    def f_ep(self, *, person_id: str, path: str = None) -> str:
+    def f_ep(self, person_id: str, path: str = None) -> str:
         """
         person specific feature endpoint like v1/people/{uid}/features/....
 

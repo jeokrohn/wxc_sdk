@@ -57,7 +57,7 @@ class MonitoringApi(PersonSettingsApiChild):
 
     feature = 'monitoring'
 
-    def read(self, *, person_id: str, org_id: str = None) -> Monitoring:
+    def read(self, person_id: str, org_id: str = None) -> Monitoring:
         """
         Retrieve a Person's Monitoring Settings
 
@@ -80,7 +80,7 @@ class MonitoringApi(PersonSettingsApiChild):
         data = self.get(ep, params=params)
         return Monitoring.parse_obj(data)
 
-    def configure(self, *, person_id: str, settings: Monitoring, org_id: str = None):
+    def configure(self, person_id: str, settings: Monitoring, org_id: str = None):
         """
         Configure Call Waiting Settings for a Person
 

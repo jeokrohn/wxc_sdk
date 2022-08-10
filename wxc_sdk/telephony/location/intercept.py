@@ -30,7 +30,7 @@ class LocationInterceptApi(ApiChild, base='telephony/config/locations'):
         ep = self.session.ep(f'telephony/config/locations/{location_id}/intercept{path}')
         return ep
 
-    def read(self, *, location_id: str, org_id: str = None) -> InterceptSetting:
+    def read(self, location_id: str, org_id: str = None) -> InterceptSetting:
         """
         Get Location Intercept
 
@@ -53,7 +53,7 @@ class LocationInterceptApi(ApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         return InterceptSetting.parse_obj(self.get(ep, params=params))
 
-    def configure(self, *, location_id: str, settings: InterceptSetting, org_id: str = None):
+    def configure(self, location_id: str, settings: InterceptSetting, org_id: str = None):
         """
         Put Location Intercept
 

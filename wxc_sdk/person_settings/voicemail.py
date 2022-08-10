@@ -163,7 +163,7 @@ class VoicemailApi(PersonSettingsApiChild):
 
     feature = 'voicemail'
 
-    def read(self, *, person_id: str, org_id: str = None) -> VoicemailSettings:
+    def read(self, person_id: str, org_id: str = None) -> VoicemailSettings:
         """
         Read Voicemail Settings for a Person
         Retrieve a Person's Voicemail Settings
@@ -189,7 +189,7 @@ class VoicemailApi(PersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return VoicemailSettings.parse_obj(self.get(url, params=params))
 
-    def configure(self, *, person_id: str, settings: VoicemailSettings, org_id: str = None):
+    def configure(self, person_id: str, settings: VoicemailSettings, org_id: str = None):
         """
         Configure Voicemail Settings for a Person
         Configure a person's Voicemail Settings
@@ -252,7 +252,7 @@ class VoicemailApi(PersonSettingsApiChild):
             if must_close:
                 content.close()
 
-    def configure_busy_greeting(self, *, person_id: str, content: Union[BufferedReader, str],
+    def configure_busy_greeting(self, person_id: str, content: Union[BufferedReader, str],
                                 upload_as: str = None, org_id: str = None):
         """
         Configure Busy Voicemail Greeting for a Person

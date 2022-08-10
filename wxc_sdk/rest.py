@@ -347,7 +347,7 @@ class RestSession(Session):
         """
         return self._rest_request('PATCH', *args, **kwargs)
 
-    def follow_pagination(self, *, url: str, model: Type[ApiModel] = None,
+    def follow_pagination(self, url: str, model: Type[ApiModel] = None,
                           params: dict = None, item_key: str = None, **kwargs) -> Generator[ApiModel, None, None]:
         """
         Handling RFC5988 pagination of list requests. Generator of parsed objects

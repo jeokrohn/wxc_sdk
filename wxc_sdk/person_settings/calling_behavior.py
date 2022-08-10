@@ -44,7 +44,7 @@ class CallingBehaviorApi(PersonSettingsApiChild):
 
     feature = 'callingBehavior'
 
-    def read(self, *, person_id: str, org_id: str = None) -> CallingBehavior:
+    def read(self, person_id: str, org_id: str = None) -> CallingBehavior:
         """
         Read Person's Calling Behavior
 
@@ -75,7 +75,7 @@ class CallingBehaviorApi(PersonSettingsApiChild):
         data = self.get(ep, params=params)
         return CallingBehavior.parse_obj(data)
 
-    def configure(self, *, person_id: str, settings: CallingBehavior,
+    def configure(self, person_id: str, settings: CallingBehavior,
                   org_id: str = None):
         """
         Configure a Person's Calling Behavior

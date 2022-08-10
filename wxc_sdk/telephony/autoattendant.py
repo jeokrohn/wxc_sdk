@@ -233,7 +233,7 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
                 ep = f'{ep}/{auto_attendant_id}'
             return ep
 
-    def list(self, *, org_id: str = None, location_id: str = None, name: str = None,
+    def list(self, org_id: str = None, location_id: str = None, name: str = None,
              phone_number: str = None, **params) -> Generator[AutoAttendant, None, None]:
         """
         Read the List of Auto Attendants
@@ -262,7 +262,7 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=AutoAttendant, params=params, item_key='autoAttendants')
 
-    def by_name(self, *, name: str, location_id: str = None, org_id: str = None) -> Optional[AutoAttendant]:
+    def by_name(self, name: str, location_id: str = None, org_id: str = None) -> Optional[AutoAttendant]:
         """
         Get auto attendant info by name
 
@@ -274,7 +274,7 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         return next((hg for hg in self.list(name=name, location_id=location_id, org_id=org_id)
                      if hg.name == name), None)
 
-    def details(self, *, location_id: str, auto_attendant_id: str, org_id: str = None) -> AutoAttendant:
+    def details(self, location_id: str, auto_attendant_id: str, org_id: str = None) -> AutoAttendant:
         """
         Get Details for an Auto Attendant
         Retrieve an Auto Attendant details.
@@ -298,7 +298,7 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         params = org_id and {'orgId': org_id} or None
         return AutoAttendant.parse_obj(self.get(url, params=params))
 
-    def create(self, *, location_id: str, settings: AutoAttendant, org_id: str = None) -> str:
+    def create(self, location_id: str, settings: AutoAttendant, org_id: str = None) -> str:
         """
         Create an Auto Attendant
         Create new Auto Attendant for the given location.
@@ -324,7 +324,7 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         data = self.post(url, data=data, params=params)
         return data['id']
 
-    def update(self, *, location_id: str, auto_attendant_id: str, settings: AutoAttendant, org_id: str = None):
+    def update(self, location_id: str, auto_attendant_id: str, settings: AutoAttendant, org_id: str = None):
         """
         Update an Auto Attendant
         Update the designated Auto Attendant.
@@ -349,7 +349,7 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         params = org_id and {'orgId': org_id} or None
         self.put(url, data=data, params=params)
 
-    def delete_auto_attendant(self, *, location_id: str, auto_attendant_id: str, org_id: str = None):
+    def delete_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None):
         """
         elete the designated Auto Attendant.
 

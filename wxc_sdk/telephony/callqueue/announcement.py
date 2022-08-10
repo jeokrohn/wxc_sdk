@@ -41,7 +41,7 @@ class AnnouncementApi:
         ep = self._session.ep(path=f'telephony/config/locations/{location_id}/queues/{queue_id}/announcements{path}')
         return ep
 
-    def list(self, *, location_id: str, queue_id: str, org_id: str = None) -> Generator[Announcement]:
+    def list(self, location_id: str, queue_id: str, org_id: str = None) -> Generator[Announcement]:
         """
 
         :param location_id:
@@ -54,7 +54,7 @@ class AnnouncementApi:
         # noinspection PyTypeChecker
         return self._session.follow_pagination(url=url, model=Announcement, params=params)
 
-    def delete_announcement(self, *, location_id: str, queue_id: str, file_name: str, org_id: str = None):
+    def delete_announcement(self, location_id: str, queue_id: str, file_name: str, org_id: str = None):
         """
 
         :param location_id:

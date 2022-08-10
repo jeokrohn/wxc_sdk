@@ -32,7 +32,7 @@ class ReceptionistApi(PersonSettingsApiChild):
 
     feature = 'reception'
 
-    def read(self, *, person_id: str, org_id: str = None) -> ReceptionistSettings:
+    def read(self, person_id: str, org_id: str = None) -> ReceptionistSettings:
         """
         Read Receptionist Client Settings for a Person
 
@@ -56,7 +56,7 @@ class ReceptionistApi(PersonSettingsApiChild):
         data = self.get(ep, params=params)
         return ReceptionistSettings.parse_obj(data)
 
-    def configure(self, *, person_id: str, settings: ReceptionistSettings, org_id: str = None):
+    def configure(self, person_id: str, settings: ReceptionistSettings, org_id: str = None):
         """
         Modify Executive Assistant Settings for a Person
 

@@ -94,7 +94,7 @@ class PersonForwardingApi(PersonSettingsApiChild):
 
     feature = 'callForwarding'
 
-    def read(self, *, person_id: str, org_id: str = None) -> PersonForwardingSetting:
+    def read(self, person_id: str, org_id: str = None) -> PersonForwardingSetting:
         """
         Retrieve a Person's Call Forwarding Settings
 
@@ -125,7 +125,7 @@ class PersonForwardingApi(PersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return PersonForwardingSetting.parse_obj(self.get(ep, params=params))
 
-    def configure(self, *, person_id: str, forwarding: PersonForwardingSetting, org_id: str = None):
+    def configure(self, person_id: str, forwarding: PersonForwardingSetting, org_id: str = None):
         """
         Configure a Person's Call Forwarding Settings
 

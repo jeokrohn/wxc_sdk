@@ -172,7 +172,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
     the relevant endpoints.
     """
 
-    def list(self, *, workspace_location_id: str = None, floor_id: str = None, display_name: str = None,
+    def list(self, workspace_location_id: str = None, floor_id: str = None, display_name: str = None,
              capacity: int = None,
              workspace_type: WorkSpaceType = None, calling: CallingType = None, calendar: CalendarType = None,
              org_id: str = None, **params) -> Generator[Workspace, None, None]:
@@ -215,7 +215,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=ep, model=Workspace, params=params)
 
-    def create(self, *, settings: Workspace, org_id: str = None):
+    def create(self, settings: Workspace, org_id: str = None):
         """
         Create a Workspace
 
@@ -255,7 +255,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         url = self.ep(workspace_id)
         return Workspace.parse_obj(self.get(url))
 
-    def update(self, *, workspace_id, settings: Workspace) -> Workspace:
+    def update(self, workspace_id, settings: Workspace) -> Workspace:
         """
         Update a Workspace
 

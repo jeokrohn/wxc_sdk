@@ -25,7 +25,7 @@ class PrivateNetworkConnectApi(ApiChild, base='telephony/config/locations'):
     API for location private network connect API settings
     """
 
-    def read(self, *, location_id: str, org_id: str = None) -> NetworkConnectionType:
+    def read(self, location_id: str, org_id: str = None) -> NetworkConnectionType:
         """
         Get Private Network Connect
 
@@ -48,7 +48,7 @@ class PrivateNetworkConnectApi(ApiChild, base='telephony/config/locations'):
         data = self.get(url, params=params)
         return parse_obj_as(NetworkConnectionType, data['networkConnectionType'])
 
-    def update(self, *, location_id: str, connection_type: NetworkConnectionType, org_id: str = None):
+    def update(self, location_id: str, connection_type: NetworkConnectionType, org_id: str = None):
         """
         Get Private Network Connect
 

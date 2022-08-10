@@ -7,7 +7,7 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
         path = path and f'/{path}' or ''
         return self.ep(f'{location_id}/numbers{path}')
 
-    def add(self, *, location_id: str, phone_numbers: list[str], state: NumberState = NumberState.inactive,
+    def add(self, location_id: str, phone_numbers: list[str], state: NumberState = NumberState.inactive,
             org_id: str = None):
         """
         Adds specified set of phone numbers to a location for an organization.
@@ -34,7 +34,7 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
                 'state': state}
         self.post(url=url, params=params, json=body)
 
-    def activate(self, *, location_id: str, phone_numbers: list[str], org_id: str = None):
+    def activate(self, location_id: str, phone_numbers: list[str], org_id: str = None):
         """
         Activate the specified set of phone numbers in a location for an organization.
 
@@ -57,7 +57,7 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
         body = {'phoneNumbers': phone_numbers}
         self.put(url=url, params=params, json=body)
 
-    def remove(self, *, location_id: str, phone_numbers: list[str], org_id: str = None):
+    def remove(self, location_id: str, phone_numbers: list[str], org_id: str = None):
         """
         Remove the specified set of phone numbers from a location for an organization.
 

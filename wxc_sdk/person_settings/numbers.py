@@ -79,7 +79,7 @@ class NumbersApi(PersonSettingsApiChild):
     #  says the URL is /v1/people/{personId}/numbers
     #  while it actually is /v1/people/{personId}/features/numbers
 
-    def read(self, *, person_id: str, org_id: str = None) -> PersonNumbers:
+    def read(self, person_id: str, org_id: str = None) -> PersonNumbers:
         """
         Get a person's phone numbers including alternate numbers.
 
@@ -98,7 +98,7 @@ class NumbersApi(PersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return PersonNumbers.parse_obj(self.get(ep, params=params))
 
-    def update(self, *, person_id: str, update: UpdatePersonNumbers, org_id: str = None):
+    def update(self, person_id: str, update: UpdatePersonNumbers, org_id: str = None):
         """
         Assign or unassign alternate phone numbers to a person.
 

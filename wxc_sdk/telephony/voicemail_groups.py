@@ -36,7 +36,7 @@ class VoicemailGroupsApi(ApiChild, base='telephony/config/voicemailGroups'):
     API for location private network connect API settings
     """
 
-    def list(self, *, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None):
+    def list(self, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None):
         params = {to_camel(p): v for p, v in locals().items() if p != 'self' and v is not None}
         url = self.ep()
         return self.session.follow_pagination(url=url, model=VoicemailGroup, params=params, item_key='voicemailGroups')

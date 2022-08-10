@@ -98,7 +98,7 @@ class CallRecordingApi(PersonSettingsApiChild):
 
     feature = 'callRecording'
 
-    def read(self, *, person_id: str, org_id: str = None) -> CallRecordingSetting:
+    def read(self, person_id: str, org_id: str = None) -> CallRecordingSetting:
         """
         Read Call Recording Settings for a Person
 
@@ -119,7 +119,7 @@ class CallRecordingApi(PersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return CallRecordingSetting.parse_obj(self.get(ep, params=params))
 
-    def configure(self, *, person_id: str, recording: CallRecordingSetting, org_id: str = None):
+    def configure(self, person_id: str, recording: CallRecordingSetting, org_id: str = None):
         """
         Configure Call Recording Settings for a Person
 

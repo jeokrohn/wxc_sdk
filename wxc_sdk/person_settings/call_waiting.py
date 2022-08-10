@@ -15,7 +15,7 @@ class CallWaitingApi(PersonSettingsApiChild):
 
     feature = 'callWaiting'
 
-    def read(self, *, person_id: str, org_id: str = None) -> bool:
+    def read(self, person_id: str, org_id: str = None) -> bool:
         """
         Read Call Waiting Settings for a Person
 
@@ -40,7 +40,7 @@ class CallWaitingApi(PersonSettingsApiChild):
         data = self.get(ep, params=params)
         return data['enabled']
 
-    def configure(self, *, person_id: str, enabled: bool, org_id: str = None):
+    def configure(self, person_id: str, enabled: bool, org_id: str = None):
         """
         Configure Call Waiting Settings for a Person
 

@@ -139,7 +139,7 @@ class AsApiChild:
 
 class AsGroupsApi(AsApiChild, base='groups'):
 
-    def list_gen(self, *, include_members: bool = None, attributes: str = None, sort_by: str = None,
+    def list_gen(self, include_members: bool = None, attributes: str = None, sort_by: str = None,
              sort_order: str = None, list_filter: str = None, org_id: str = None,
              **params) -> AsyncGenerator[Group, None, None]:
         """
@@ -170,7 +170,7 @@ class AsGroupsApi(AsApiChild, base='groups'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Group, item_key='groups', params=params)
 
-    async def list(self, *, include_members: bool = None, attributes: str = None, sort_by: str = None,
+    async def list(self, include_members: bool = None, attributes: str = None, sort_by: str = None,
              sort_order: str = None, list_filter: str = None, org_id: str = None,
              **params) -> List[Group]:
         """
@@ -201,7 +201,7 @@ class AsGroupsApi(AsApiChild, base='groups'):
         url = self.ep()
         return [o async for o in self.session.follow_pagination(url=url, model=Group, item_key='groups', params=params)]
 
-    async def create(self, *, settings: Group) -> Group:
+    async def create(self, settings: Group) -> Group:
         """
         Create a new group using the provided settings. Only display_name is mandatory
 
@@ -220,7 +220,7 @@ class AsGroupsApi(AsApiChild, base='groups'):
         data = await self.post(url, data=body)
         return Group.parse_obj(data)
 
-    async def details(self, *, group_id: str, include_members: bool = None) -> Group:
+    async def details(self, group_id: str, include_members: bool = None) -> Group:
         """
         Get group details
 
@@ -238,7 +238,7 @@ class AsGroupsApi(AsApiChild, base='groups'):
         data = await self.get(url, params=params)
         return Group.parse_obj(data)
 
-    def members_gen(self, *, group_id: str, **params) -> AsyncGenerator[GroupMember, None, None]:
+    def members_gen(self, group_id: str, **params) -> AsyncGenerator[GroupMember, None, None]:
         """
         Query members of a group
 
@@ -250,7 +250,7 @@ class AsGroupsApi(AsApiChild, base='groups'):
         url = self.ep(f'{group_id}/Members')
         return self.session.follow_pagination(url=url, model=GroupMember, params=params, item_key='members')
 
-    async def members(self, *, group_id: str, **params) -> List[GroupMember]:
+    async def members(self, group_id: str, **params) -> List[GroupMember]:
         """
         Query members of a group
 
@@ -262,7 +262,7 @@ class AsGroupsApi(AsApiChild, base='groups'):
         url = self.ep(f'{group_id}/Members')
         return [o async for o in self.session.follow_pagination(url=url, model=GroupMember, params=params, item_key='members')]
 
-    async def update(self, *, group_id: str, settings: Group = None, remove_all: bool = None) -> Group:
+    async def update(self, group_id: str, settings: Group = None, remove_all: bool = None) -> Group:
         """
         update group information.
 
@@ -287,7 +287,7 @@ class AsGroupsApi(AsApiChild, base='groups'):
         data = await self.patch(url, data=body)
         return Group.parse_obj(data)
 
-    async def delete_group(self, *, group_id: str):
+    async def delete_group(self, group_id: str):
         """
         Delete a group
 
@@ -307,7 +307,7 @@ class AsLicensesApi(AsApiChild, base='licenses'):
     only by an admin.
     """
 
-    def list_gen(self, *, org_id: str = None) -> AsyncGenerator[License, None, None]:
+    def list_gen(self, org_id: str = None) -> AsyncGenerator[License, None, None]:
         """
         List all licenses for a given organization. If no org_id is specified, the default is the organization of
         the authenticated user.
@@ -323,7 +323,7 @@ class AsLicensesApi(AsApiChild, base='licenses'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=ep, model=License, params=params)
 
-    async def list(self, *, org_id: str = None) -> List[License]:
+    async def list(self, org_id: str = None) -> List[License]:
         """
         List all licenses for a given organization. If no org_id is specified, the default is the organization of
         the authenticated user.
@@ -339,7 +339,7 @@ class AsLicensesApi(AsApiChild, base='licenses'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=ep, model=License, params=params)]
 
-    async def details(self, *, license_id) -> License:
+    async def details(self, license_id) -> License:
         """
         Shows details for a license, by ID.
 
@@ -366,7 +366,7 @@ class AsLocationsApi(AsApiChild, base='locations'):
     scope combinations.
     """
 
-    def list_gen(self, *, name: str = None, location_id: str = None, org_id: str = None,
+    def list_gen(self, name: str = None, location_id: str = None, org_id: str = None,
              **params) -> AsyncGenerator[Location, None, None]:
         """
         List locations for an organization.
@@ -390,7 +390,7 @@ class AsLocationsApi(AsApiChild, base='locations'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=ep, model=Location, params=params)
 
-    async def list(self, *, name: str = None, location_id: str = None, org_id: str = None,
+    async def list(self, name: str = None, location_id: str = None, org_id: str = None,
              **params) -> List[Location]:
         """
         List locations for an organization.
@@ -414,7 +414,7 @@ class AsLocationsApi(AsApiChild, base='locations'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=ep, model=Location, params=params)]
 
-    async def by_name(self, *, name: str, org_id: str = None) -> Optional[Location]:
+    async def by_name(self, name: str, org_id: str = None) -> Optional[Location]:
         """
         Get a location by name
 
@@ -429,7 +429,7 @@ class AsLocationsApi(AsApiChild, base='locations'):
         return next((location for location in await self.list(name=name, org_id=org_id)
                      if location.name == name), None)
 
-    async def details(self, *, location_id) -> Location:
+    async def details(self, location_id) -> Location:
         """
         Shows details for a location, by ID.
 
@@ -451,7 +451,7 @@ class AsPeopleApi(AsApiChild, base='people'):
     People API
     """
 
-    def list_gen(self, *, email: str = None, display_name: str = None, id_list: list[str] = None, org_id: str = None,
+    def list_gen(self, email: str = None, display_name: str = None, id_list: list[str] = None, org_id: str = None,
              calling_data: bool = None, location_id: str = None, **params) -> AsyncGenerator[Person, None, None]:
         """
         List people in your organization. For most users, either the email or display_name parameter is required. Admin
@@ -496,7 +496,7 @@ class AsPeopleApi(AsApiChild, base='people'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=ep, model=Person, params=params)
 
-    async def list(self, *, email: str = None, display_name: str = None, id_list: list[str] = None, org_id: str = None,
+    async def list(self, email: str = None, display_name: str = None, id_list: list[str] = None, org_id: str = None,
              calling_data: bool = None, location_id: str = None, **params) -> List[Person]:
         """
         List people in your organization. For most users, either the email or display_name parameter is required. Admin
@@ -541,7 +541,7 @@ class AsPeopleApi(AsApiChild, base='people'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=ep, model=Person, params=params)]
 
-    async def create(self, *, settings: Person, calling_data: bool = False) -> Person:
+    async def create(self, settings: Person, calling_data: bool = False) -> Person:
         """
         Create a Person
 
@@ -581,7 +581,7 @@ class AsPeopleApi(AsApiChild, base='people'):
                                       'person_type': True})
         return Person.parse_obj(await self.post(url, data=data, params=params))
 
-    async def details(self, *, person_id: str, calling_data: bool = False) -> Person:
+    async def details(self, person_id: str, calling_data: bool = False) -> Person:
         """
         Shows details for a person, by ID.
 
@@ -603,7 +603,7 @@ class AsPeopleApi(AsApiChild, base='people'):
         params = calling_data and {'callingData': 'true'} or None
         return Person.parse_obj(await self.get(ep, params=params))
 
-    async def delete_person(self, *, person_id: str):
+    async def delete_person(self, person_id: str):
         """
         Remove a person from the system. Only an admin can remove a person.
 
@@ -613,7 +613,7 @@ class AsPeopleApi(AsApiChild, base='people'):
         ep = self.ep(path=person_id)
         await self.delete(ep)
 
-    async def update(self, *, person: Person, calling_data: bool = False, show_all_types: bool = False) -> Person:
+    async def update(self, person: Person, calling_data: bool = False, show_all_types: bool = False) -> Person:
         """
         Update details for a person, by ID.
 
@@ -665,7 +665,7 @@ class AsPeopleApi(AsApiChild, base='people'):
         ep = self.ep(path=person.person_id)
         return Person.parse_obj(await self.put(url=ep, data=data, params=params))
 
-    async def me(self, *, calling_data: bool = False) -> Person:
+    async def me(self, calling_data: bool = False) -> Person:
         """
         Show the profile for the authenticated user. This is the same as GET /people/{personId} using the Person ID
         associated with your Auth token.
@@ -709,7 +709,7 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
         if cls.feature is None:
             raise TypeError('feature has to be defined')
 
-    def f_ep(self, *, person_id: str, path: str = None) -> str:
+    def f_ep(self, person_id: str, path: str = None) -> str:
         """
         person specific feature endpoint like v1/people/{uid}/features/....
 
@@ -731,7 +731,7 @@ class AsAppServicesApi(AsPersonSettingsApiChild):
 
     feature = 'applications'
 
-    async def read(self, *, person_id: str, org_id: str = None) -> AppServicesSettings:
+    async def read(self, person_id: str, org_id: str = None) -> AppServicesSettings:
         """
         Retrieve a Person's Application Services Settings
 
@@ -753,7 +753,7 @@ class AsAppServicesApi(AsPersonSettingsApiChild):
         data = await self.get(ep, params=params)
         return AppServicesSettings.parse_obj(data)
 
-    async def configure(self, *, person_id: str, settings: AppServicesSettings, org_id: str = None):
+    async def configure(self, person_id: str, settings: AppServicesSettings, org_id: str = None):
         """
         Modify a Person's Application Services Settings
 
@@ -783,7 +783,7 @@ class AsBargeApi(AsPersonSettingsApiChild):
 
     feature = 'bargeIn'
 
-    async def read(self, *, person_id: str, org_id: str = None) -> BargeSettings:
+    async def read(self, person_id: str, org_id: str = None) -> BargeSettings:
         """
         Retrieve a Person's Barge In Settings
 
@@ -805,7 +805,7 @@ class AsBargeApi(AsPersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return BargeSettings.parse_obj(await self.get(ep, params=params))
 
-    async def configure(self, *, person_id: str, barge_settings: BargeSettings, org_id: str = None):
+    async def configure(self, person_id: str, barge_settings: BargeSettings, org_id: str = None):
         """
         Configure a Person's Barge In Settings
 
@@ -834,7 +834,7 @@ class AsCallInterceptApi(AsPersonSettingsApiChild):
 
     feature = 'intercept'
 
-    async def read(self, *, person_id: str, org_id: str = None) -> InterceptSetting:
+    async def read(self, person_id: str, org_id: str = None) -> InterceptSetting:
         """
         Read Call Intercept Settings for a Person
 
@@ -859,7 +859,7 @@ class AsCallInterceptApi(AsPersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return InterceptSetting.parse_obj(await self.get(ep, params=params))
 
-    async def configure(self, *, person_id: str, intercept: InterceptSetting, org_id: str = None):
+    async def configure(self, person_id: str, intercept: InterceptSetting, org_id: str = None):
         """
         Configure Call Intercept Settings for a Person
 
@@ -944,7 +944,7 @@ class AsCallRecordingApi(AsPersonSettingsApiChild):
 
     feature = 'callRecording'
 
-    async def read(self, *, person_id: str, org_id: str = None) -> CallRecordingSetting:
+    async def read(self, person_id: str, org_id: str = None) -> CallRecordingSetting:
         """
         Read Call Recording Settings for a Person
 
@@ -965,7 +965,7 @@ class AsCallRecordingApi(AsPersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return CallRecordingSetting.parse_obj(await self.get(ep, params=params))
 
-    async def configure(self, *, person_id: str, recording: CallRecordingSetting, org_id: str = None):
+    async def configure(self, person_id: str, recording: CallRecordingSetting, org_id: str = None):
         """
         Configure Call Recording Settings for a Person
 
@@ -1000,7 +1000,7 @@ class AsCallWaitingApi(AsPersonSettingsApiChild):
 
     feature = 'callWaiting'
 
-    async def read(self, *, person_id: str, org_id: str = None) -> bool:
+    async def read(self, person_id: str, org_id: str = None) -> bool:
         """
         Read Call Waiting Settings for a Person
 
@@ -1025,7 +1025,7 @@ class AsCallWaitingApi(AsPersonSettingsApiChild):
         data = await self.get(ep, params=params)
         return data['enabled']
 
-    async def configure(self, *, person_id: str, enabled: bool, org_id: str = None):
+    async def configure(self, person_id: str, enabled: bool, org_id: str = None):
         """
         Configure Call Waiting Settings for a Person
 
@@ -1058,7 +1058,7 @@ class AsCallerIdApi(AsPersonSettingsApiChild):
 
     feature = 'callerId'
 
-    async def read(self, *, person_id: str, org_id: str = None) -> CallerId:
+    async def read(self, person_id: str, org_id: str = None) -> CallerId:
         """
         Retrieve a Person's Caller ID Settings
 
@@ -1077,7 +1077,7 @@ class AsCallerIdApi(AsPersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return CallerId.parse_obj(await self.get(ep, params=params))
 
-    async def configure(self, *, person_id: str, org_id: str = None,
+    async def configure(self, person_id: str, org_id: str = None,
                   selected: CallerIdSelectedType = None,
                   custom_number: str = None,
                   first_name: str = None,
@@ -1130,7 +1130,7 @@ class AsCallingBehaviorApi(AsPersonSettingsApiChild):
 
     feature = 'callingBehavior'
 
-    async def read(self, *, person_id: str, org_id: str = None) -> CallingBehavior:
+    async def read(self, person_id: str, org_id: str = None) -> CallingBehavior:
         """
         Read Person's Calling Behavior
 
@@ -1161,7 +1161,7 @@ class AsCallingBehaviorApi(AsPersonSettingsApiChild):
         data = await self.get(ep, params=params)
         return CallingBehavior.parse_obj(data)
 
-    async def configure(self, *, person_id: str, settings: CallingBehavior,
+    async def configure(self, person_id: str, settings: CallingBehavior,
                   org_id: str = None):
         """
         Configure a Person's Calling Behavior
@@ -1201,7 +1201,7 @@ class AsDndApi(AsPersonSettingsApiChild):
 
     feature = 'doNotDisturb'
 
-    async def read(self, *, person_id: str, org_id: str = None) -> DND:
+    async def read(self, person_id: str, org_id: str = None) -> DND:
         """
         Read Do Not Disturb Settings for a Person
         Retrieve a Person's Do Not Disturb Settings
@@ -1222,7 +1222,7 @@ class AsDndApi(AsPersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return DND.parse_obj(await self.get(ep, params=params))
 
-    async def configure(self, *, person_id: str, dnd_settings: DND, org_id: str = None):
+    async def configure(self, person_id: str, dnd_settings: DND, org_id: str = None):
         """
         Configure Do Not Disturb Settings for a Person
         Configure a Person's Do Not Disturb Settings
@@ -1252,7 +1252,7 @@ class AsExecAssistantApi(AsPersonSettingsApiChild):
 
     feature = 'executiveAssistant'
 
-    async def read(self, *, person_id: str, org_id: str = None) -> ExecAssistantType:
+    async def read(self, person_id: str, org_id: str = None) -> ExecAssistantType:
         """
         Retrieve Executive Assistant Settings for a Person
 
@@ -1278,7 +1278,7 @@ class AsExecAssistantApi(AsPersonSettingsApiChild):
         h: _Helper = _Helper.parse_obj(data)
         return h.exec_type
 
-    async def configure(self, *, person_id: str, setting: ExecAssistantType, org_id: str = None):
+    async def configure(self, person_id: str, setting: ExecAssistantType, org_id: str = None):
         """
         Modify Executive Assistant Settings for a Person
 
@@ -1312,7 +1312,7 @@ class AsHotelingApi(AsPersonSettingsApiChild):
 
     feature = 'hoteling'
 
-    async def read(self, *, person_id: str, org_id: str = None) -> bool:
+    async def read(self, person_id: str, org_id: str = None) -> bool:
         """
         Read Hoteling Settings for a Person
 
@@ -1336,7 +1336,7 @@ class AsHotelingApi(AsPersonSettingsApiChild):
         data = await self.get(ep, params=params)
         return data['enabled']
 
-    async def configure(self, *, person_id: str, enabled: bool, org_id: str = None):
+    async def configure(self, person_id: str, enabled: bool, org_id: str = None):
         """
         Configure Hoteling Settings for a Person
 
@@ -1368,7 +1368,7 @@ class AsIncomingPermissionsApi(AsPersonSettingsApiChild):
 
     feature = 'incomingPermission'
 
-    async def read(self, *, person_id: str, org_id: str = None) -> IncomingPermissions:
+    async def read(self, person_id: str, org_id: str = None) -> IncomingPermissions:
         """
         Read Incoming Permission Settings for a Person
 
@@ -1391,7 +1391,7 @@ class AsIncomingPermissionsApi(AsPersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return IncomingPermissions.parse_obj(await self.get(ep, params=params))
 
-    async def configure(self, *, person_id: str, settings: IncomingPermissions, org_id: str = None):
+    async def configure(self, person_id: str, settings: IncomingPermissions, org_id: str = None):
         """
         Configure a Person's Barge In Settings
 
@@ -1421,7 +1421,7 @@ class AsMonitoringApi(AsPersonSettingsApiChild):
 
     feature = 'monitoring'
 
-    async def read(self, *, person_id: str, org_id: str = None) -> Monitoring:
+    async def read(self, person_id: str, org_id: str = None) -> Monitoring:
         """
         Retrieve a Person's Monitoring Settings
 
@@ -1444,7 +1444,7 @@ class AsMonitoringApi(AsPersonSettingsApiChild):
         data = await self.get(ep, params=params)
         return Monitoring.parse_obj(data)
 
-    async def configure(self, *, person_id: str, settings: Monitoring, org_id: str = None):
+    async def configure(self, person_id: str, settings: Monitoring, org_id: str = None):
         """
         Configure Call Waiting Settings for a Person
 
@@ -1493,7 +1493,7 @@ class AsNumbersApi(AsPersonSettingsApiChild):
     #  says the URL is /v1/people/{personId}/numbers
     #  while it actually is /v1/people/{personId}/features/numbers
 
-    async def read(self, *, person_id: str, org_id: str = None) -> PersonNumbers:
+    async def read(self, person_id: str, org_id: str = None) -> PersonNumbers:
         """
         Get a person's phone numbers including alternate numbers.
 
@@ -1512,7 +1512,7 @@ class AsNumbersApi(AsPersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return PersonNumbers.parse_obj(await self.get(ep, params=params))
 
-    async def update(self, *, person_id: str, update: UpdatePersonNumbers, org_id: str = None):
+    async def update(self, person_id: str, update: UpdatePersonNumbers, org_id: str = None):
         """
         Assign or unassign alternate phone numbers to a person.
 
@@ -1542,7 +1542,7 @@ class AsAuthCodesApi(AsPersonSettingsApiChild):
     """
     feature = 'outgoingPermission/authorizationCodes'
 
-    async def read(self, *, person_id: str, org_id: str = None) -> list[AuthCode]:
+    async def read(self, person_id: str, org_id: str = None) -> list[AuthCode]:
         """
         Retrieve Authorization codes for a Workspace.
 
@@ -1564,7 +1564,7 @@ class AsAuthCodesApi(AsPersonSettingsApiChild):
         data = await self.get(url, params=params)
         return parse_obj_as(list[AuthCode], data['authorizationCodes'])
 
-    async def delete_codes(self, *, person_id: str, access_codes: list[Union[str, AuthCode]], org_id: str = None):
+    async def delete_codes(self, person_id: str, access_codes: list[Union[str, AuthCode]], org_id: str = None):
         """
         Modify Authorization codes for a workspace.
 
@@ -1587,7 +1587,7 @@ class AsAuthCodesApi(AsPersonSettingsApiChild):
                                 for ac in access_codes]}
         await self.put(url, params=params, json=body)
 
-    async def create(self, *, person_id: str, code: str, description: str, org_id: str = None):
+    async def create(self, person_id: str, code: str, description: str, org_id: str = None):
         """
         Modify Authorization codes for a workspace.
 
@@ -1622,7 +1622,7 @@ class AsTransferNumbersApi(AsPersonSettingsApiChild):
     """
     feature = 'outgoingPermission/autoTransferNumbers'
 
-    async def read(self, *, person_id: str, org_id: str = None) -> AutoTransferNumbers:
+    async def read(self, person_id: str, org_id: str = None) -> AutoTransferNumbers:
         """
         Retrieve Transfer Numbers Settings for a Workspace.
 
@@ -1646,7 +1646,7 @@ class AsTransferNumbersApi(AsPersonSettingsApiChild):
         data = await self.get(url, params=params)
         return AutoTransferNumbers.parse_obj(data)
 
-    async def configure(self, *, person_id: str, settings: AutoTransferNumbers, org_id: str = None):
+    async def configure(self, person_id: str, settings: AutoTransferNumbers, org_id: str = None):
         """
         Modify Transfer Numbers Settings for a Place.
 
@@ -1700,7 +1700,7 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
             self.transfer_numbers = None
             self.auth_codes = None
 
-    async def read(self, *, person_id: str, org_id: str = None) -> OutgoingPermissions:
+    async def read(self, person_id: str, org_id: str = None) -> OutgoingPermissions:
         """
         Retrieve a Person's Outgoing Calling Permissions Settings
 
@@ -1721,7 +1721,7 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return OutgoingPermissions.parse_obj(await self.get(ep, params=params))
 
-    async def configure(self, *, person_id: str, settings: OutgoingPermissions, org_id: str = None):
+    async def configure(self, person_id: str, settings: OutgoingPermissions, org_id: str = None):
         """
         Configure a Person's Outgoing Calling Permissions Settings
 
@@ -1750,7 +1750,7 @@ class AsPersonForwardingApi(AsPersonSettingsApiChild):
 
     feature = 'callForwarding'
 
-    async def read(self, *, person_id: str, org_id: str = None) -> PersonForwardingSetting:
+    async def read(self, person_id: str, org_id: str = None) -> PersonForwardingSetting:
         """
         Retrieve a Person's Call Forwarding Settings
 
@@ -1781,7 +1781,7 @@ class AsPersonForwardingApi(AsPersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return PersonForwardingSetting.parse_obj(await self.get(ep, params=params))
 
-    async def configure(self, *, person_id: str, forwarding: PersonForwardingSetting, org_id: str = None):
+    async def configure(self, person_id: str, forwarding: PersonForwardingSetting, org_id: str = None):
         """
         Configure a Person's Call Forwarding Settings
 
@@ -1825,7 +1825,7 @@ class AsPrivacyApi(AsPersonSettingsApiChild):
 
     feature = 'privacy'
 
-    async def read(self, *, person_id: str, org_id: str = None) -> Privacy:
+    async def read(self, person_id: str, org_id: str = None) -> Privacy:
         """
         Get a person's Privacy Settings
 
@@ -1849,7 +1849,7 @@ class AsPrivacyApi(AsPersonSettingsApiChild):
         data = await self.get(ep, params=params)
         return Privacy.parse_obj(data)
 
-    async def configure(self, *, person_id: str, settings: Privacy, org_id: str = None):
+    async def configure(self, person_id: str, settings: Privacy, org_id: str = None):
         """
         Configure Call Waiting Settings for a Person
 
@@ -1890,7 +1890,7 @@ class AsPushToTalkApi(AsPersonSettingsApiChild):
 
     feature = 'pushToTalk'
 
-    async def read(self, *, person_id: str, org_id: str = None) -> PushToTalkSettings:
+    async def read(self, person_id: str, org_id: str = None) -> PushToTalkSettings:
         """
         Read Push-to-Talk Settings for a Person
         Retrieve a Person's Push-to-Talk Settings
@@ -1912,7 +1912,7 @@ class AsPushToTalkApi(AsPersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return PushToTalkSettings.parse_obj(await self.get(ep, params=params))
 
-    async def configure(self, *, person_id: str, settings: PushToTalkSettings, org_id: str = None):
+    async def configure(self, person_id: str, settings: PushToTalkSettings, org_id: str = None):
         """
         Configure Push-to-Talk Settings for a Person
 
@@ -1952,7 +1952,7 @@ class AsReceptionistApi(AsPersonSettingsApiChild):
 
     feature = 'reception'
 
-    async def read(self, *, person_id: str, org_id: str = None) -> ReceptionistSettings:
+    async def read(self, person_id: str, org_id: str = None) -> ReceptionistSettings:
         """
         Read Receptionist Client Settings for a Person
 
@@ -1976,7 +1976,7 @@ class AsReceptionistApi(AsPersonSettingsApiChild):
         data = await self.get(ep, params=params)
         return ReceptionistSettings.parse_obj(data)
 
-    async def configure(self, *, person_id: str, settings: ReceptionistSettings, org_id: str = None):
+    async def configure(self, person_id: str, settings: ReceptionistSettings, org_id: str = None):
         """
         Modify Executive Assistant Settings for a Person
 
@@ -2053,7 +2053,7 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
                 ep = f'{ep}/events{event_id}'
         return ep
 
-    def list_gen(self, *, obj_id: str, org_id: str = None, schedule_type: ScheduleType = None,
+    def list_gen(self, obj_id: str, org_id: str = None, schedule_type: ScheduleType = None,
              name: str = None, **params) -> AsyncGenerator[Schedule, None, None]:
         """
         List of Schedules for a Person or location
@@ -2088,7 +2088,7 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Schedule, params=params or None)
 
-    async def list(self, *, obj_id: str, org_id: str = None, schedule_type: ScheduleType = None,
+    async def list(self, obj_id: str, org_id: str = None, schedule_type: ScheduleType = None,
              name: str = None, **params) -> List[Schedule]:
         """
         List of Schedules for a Person or location
@@ -2123,7 +2123,7 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=Schedule, params=params or None)]
 
-    async def details(self, *, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
+    async def details(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                 org_id: str = None) -> Schedule:
         """
         Get Details for a Schedule
@@ -2154,7 +2154,7 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
         result = Schedule.parse_obj(data)
         return result
 
-    async def create(self, *, obj_id: str, schedule: Schedule, org_id: str = None) -> str:
+    async def create(self, obj_id: str, schedule: Schedule, org_id: str = None) -> str:
         """
         Create a Schedule
 
@@ -2181,7 +2181,7 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
         result = data['id']
         return result
 
-    async def update(self, *, obj_id: str, schedule: Schedule, schedule_type: ScheduleTypeOrStr = None,
+    async def update(self, obj_id: str, schedule: Schedule, schedule_type: ScheduleTypeOrStr = None,
                schedule_id: str = None, org_id: str = None) -> str:
         """
         Update a Schedule
@@ -2217,7 +2217,7 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
         data = await self.put(url, data=schedule_data, params=params)
         return data['id']
 
-    async def delete_schedule(self, *, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
+    async def delete_schedule(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                         org_id: str = None):
         """
         Delete a Schedule
@@ -2245,7 +2245,7 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         await self.delete(url, params=params)
 
-    async def event_details(self, *, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
+    async def event_details(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                       event_id: str, org_id: str = None) -> Event:
         """
         Get Details for a Schedule Event
@@ -2279,7 +2279,7 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
         result = Event.parse_obj(data)
         return result
 
-    async def event_create(self, *, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
+    async def event_create(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                      event: Event, org_id: str = None) -> str:
         """
         Create a Schedule Event
@@ -2314,7 +2314,7 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
         data = await self.post(url, data=data, params=params)
         return data['id']
 
-    async def event_update(self, *, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
+    async def event_update(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                      event: Event, event_id: str = None, org_id: str = None) -> str:
         """
         Update a Schedule Event
@@ -2353,7 +2353,7 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
         data = await self.put(url, data=event_data, params=params)
         return data['id']
 
-    async def event_delete(self, *, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
+    async def event_delete(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                      event_id: str, org_id: str = None):
         """
         Delete a Schedule Event
@@ -2392,7 +2392,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
 
     feature = 'voicemail'
 
-    async def read(self, *, person_id: str, org_id: str = None) -> VoicemailSettings:
+    async def read(self, person_id: str, org_id: str = None) -> VoicemailSettings:
         """
         Read Voicemail Settings for a Person
         Retrieve a Person's Voicemail Settings
@@ -2418,7 +2418,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return VoicemailSettings.parse_obj(await self.get(url, params=params))
 
-    async def configure(self, *, person_id: str, settings: VoicemailSettings, org_id: str = None):
+    async def configure(self, person_id: str, settings: VoicemailSettings, org_id: str = None):
         """
         Configure Voicemail Settings for a Person
         Configure a person's Voicemail Settings
@@ -2481,7 +2481,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
             if must_close:
                 content.close()
 
-    def configure_busy_greeting(self, *, person_id: str, content: Union[BufferedReader, str],
+    def configure_busy_greeting(self, person_id: str, content: Union[BufferedReader, str],
                                 upload_as: str = None, org_id: str = None):
         """
         Configure Busy Voicemail Greeting for a Person
@@ -2508,7 +2508,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         self._configure_greeting(person_id=person_id, content=content, upload_as=upload_as, org_id=org_id,
                                  greeting_key='uploadBusyGreeting')
 
-    def configure_no_answer_greeting(self, *, person_id: str, content: Union[BufferedReader, str],
+    def configure_no_answer_greeting(self, person_id: str, content: Union[BufferedReader, str],
                                      upload_as: str = None, org_id: str = None):
         """
         Configure No Answer Voicemail Greeting for a Person
@@ -2648,7 +2648,7 @@ class AsAccessCodesApi(AsApiChild, base='telephony/config/locations'):
         ep = self.session.ep(f'telephony/config/locations/{location_id}/outgoingPermission/accessCodes{path}')
         return ep
 
-    async def read(self, *, location_id: str, org_id: str = None) -> list[AuthCode]:
+    async def read(self, location_id: str, org_id: str = None) -> list[AuthCode]:
         """
         Get Location Access Code
 
@@ -2671,7 +2671,7 @@ class AsAccessCodesApi(AsApiChild, base='telephony/config/locations'):
         data = await self.get(url, params=params)
         return parse_obj_as(list[AuthCode], data['accessCodes'])
 
-    async def create(self, *, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> list[AuthCode]:
+    async def create(self, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> list[AuthCode]:
         """
         Create access code in location
 
@@ -2687,7 +2687,7 @@ class AsAccessCodesApi(AsApiChild, base='telephony/config/locations'):
         body = {'accessCodes': [json.loads(ac.json()) for ac in access_codes]}
         await self.post(url, json=body, params=params)
 
-    async def delete_codes(self, *, location_id: str, access_codes: list[Union[str, AuthCode]],
+    async def delete_codes(self, location_id: str, access_codes: list[Union[str, AuthCode]],
                      org_id: str = None) -> list[AuthCode]:
         """
         Delete Access Code Location
@@ -2924,7 +2924,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
                 ep = f'{ep}/{auto_attendant_id}'
             return ep
 
-    def list_gen(self, *, org_id: str = None, location_id: str = None, name: str = None,
+    def list_gen(self, org_id: str = None, location_id: str = None, name: str = None,
              phone_number: str = None, **params) -> AsyncGenerator[AutoAttendant, None, None]:
         """
         Read the List of Auto Attendants
@@ -2953,7 +2953,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=AutoAttendant, params=params, item_key='autoAttendants')
 
-    async def list(self, *, org_id: str = None, location_id: str = None, name: str = None,
+    async def list(self, org_id: str = None, location_id: str = None, name: str = None,
              phone_number: str = None, **params) -> List[AutoAttendant]:
         """
         Read the List of Auto Attendants
@@ -2982,7 +2982,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=AutoAttendant, params=params, item_key='autoAttendants')]
 
-    async def by_name(self, *, name: str, location_id: str = None, org_id: str = None) -> Optional[AutoAttendant]:
+    async def by_name(self, name: str, location_id: str = None, org_id: str = None) -> Optional[AutoAttendant]:
         """
         Get auto attendant info by name
 
@@ -2994,7 +2994,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
         return next((hg for hg in await self.list(name=name, location_id=location_id, org_id=org_id)
                      if hg.name == name), None)
 
-    async def details(self, *, location_id: str, auto_attendant_id: str, org_id: str = None) -> AutoAttendant:
+    async def details(self, location_id: str, auto_attendant_id: str, org_id: str = None) -> AutoAttendant:
         """
         Get Details for an Auto Attendant
         Retrieve an Auto Attendant details.
@@ -3018,7 +3018,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
         params = org_id and {'orgId': org_id} or None
         return AutoAttendant.parse_obj(await self.get(url, params=params))
 
-    async def create(self, *, location_id: str, settings: AutoAttendant, org_id: str = None) -> str:
+    async def create(self, location_id: str, settings: AutoAttendant, org_id: str = None) -> str:
         """
         Create an Auto Attendant
         Create new Auto Attendant for the given location.
@@ -3044,7 +3044,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
         data = await self.post(url, data=data, params=params)
         return data['id']
 
-    async def update(self, *, location_id: str, auto_attendant_id: str, settings: AutoAttendant, org_id: str = None):
+    async def update(self, location_id: str, auto_attendant_id: str, settings: AutoAttendant, org_id: str = None):
         """
         Update an Auto Attendant
         Update the designated Auto Attendant.
@@ -3069,7 +3069,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
         params = org_id and {'orgId': org_id} or None
         await self.put(url, data=data, params=params)
 
-    async def delete_auto_attendant(self, *, location_id: str, auto_attendant_id: str, org_id: str = None):
+    async def delete_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None):
         """
         elete the designated Auto Attendant.
 
@@ -3115,7 +3115,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         ep = self.session.ep(f'telephony/config/locations/{location_id}/callParks{call_park_id}{path}')
         return ep
 
-    def list_gen(self, *, location_id: str, order: Literal['ASC', 'DSC'] = None, name: str = None,
+    def list_gen(self, location_id: str, order: Literal['ASC', 'DSC'] = None, name: str = None,
              org_id: str = None, **params) -> AsyncGenerator[CallPark, None, None]:
         """
         Read the List of Call Parks
@@ -3146,7 +3146,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=CallPark, params=params, item_key='callParks')
 
-    async def list(self, *, location_id: str, order: Literal['ASC', 'DSC'] = None, name: str = None,
+    async def list(self, location_id: str, order: Literal['ASC', 'DSC'] = None, name: str = None,
              org_id: str = None, **params) -> List[CallPark]:
         """
         Read the List of Call Parks
@@ -3177,7 +3177,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=CallPark, params=params, item_key='callParks')]
 
-    async def create(self, *, location_id: str, settings: CallPark, org_id: str = None) -> str:
+    async def create(self, location_id: str, settings: CallPark, org_id: str = None) -> str:
         """
         Create a Call Park
 
@@ -3204,7 +3204,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         data = await self.post(url, data=body, params=params)
         return data['id']
 
-    async def delete_callpark(self, *, location_id: str, callpark_id: str, org_id: str = None):
+    async def delete_callpark(self, location_id: str, callpark_id: str, org_id: str = None):
         """
         Delete a Call Park
 
@@ -3228,7 +3228,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         params = org_id and {'orgId': org_id} or None
         await self.delete(url, params=params)
 
-    async def details(self, *, location_id: str, callpark_id: str, org_id: str = None) -> CallPark:
+    async def details(self, location_id: str, callpark_id: str, org_id: str = None) -> CallPark:
         """
         Get Details for a Call Park
 
@@ -3254,7 +3254,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         params = org_id and {'orgId': org_id} or None
         return CallPark.parse_obj(await self.get(url, params=params))
 
-    async def update(self, *, location_id: str, callpark_id: str, settings: CallPark, org_id: str = None) -> str:
+    async def update(self, location_id: str, callpark_id: str, settings: CallPark, org_id: str = None) -> str:
         """
         Update a Call Park
 
@@ -3282,7 +3282,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         data = await self.put(url, data=body, params=params)
         return data['id']
 
-    def available_agents_gen(self, *, location_id: str, call_park_name: str = None, name: str = None, phone_number: str = None,
+    def available_agents_gen(self, location_id: str, call_park_name: str = None, name: str = None, phone_number: str = None,
                          order: str = None, org_id: str = None) -> AsyncGenerator[PersonPlaceAgent, None, None]:
         """
         Get available agents from Call Parks
@@ -3315,7 +3315,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=PersonPlaceAgent, params=params, item_key='agents')
 
-    async def available_agents(self, *, location_id: str, call_park_name: str = None, name: str = None, phone_number: str = None,
+    async def available_agents(self, location_id: str, call_park_name: str = None, name: str = None, phone_number: str = None,
                          order: str = None, org_id: str = None) -> List[PersonPlaceAgent]:
         """
         Get available agents from Call Parks
@@ -3348,7 +3348,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=PersonPlaceAgent, params=params, item_key='agents')]
 
-    def available_recalls_gen(self, *, location_id: str, name: str = None, order: str = None,
+    def available_recalls_gen(self, location_id: str, name: str = None, order: str = None,
                           org_id: str = None) -> AsyncGenerator[AvailableRecallHuntGroup, None, None]:
         """
         Get available recall hunt groups from Call Parks
@@ -3378,7 +3378,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         return self.session.follow_pagination(url=url, model=AvailableRecallHuntGroup,
                                               params=params, item_key='huntGroups')
 
-    async def available_recalls(self, *, location_id: str, name: str = None, order: str = None,
+    async def available_recalls(self, location_id: str, name: str = None, order: str = None,
                           org_id: str = None) -> List[AvailableRecallHuntGroup]:
         """
         Get available recall hunt groups from Call Parks
@@ -3408,7 +3408,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         return [o async for o in self.session.follow_pagination(url=url, model=AvailableRecallHuntGroup,
                                               params=params, item_key='huntGroups')]
 
-    async def call_park_settings(self, *, location_id: str, org_id: str = None) -> LocationCallParkSettings:
+    async def call_park_settings(self, location_id: str, org_id: str = None) -> LocationCallParkSettings:
         """
         Get Call Park Settings
 
@@ -3734,7 +3734,7 @@ class AsAnnouncementApi:
         ep = self._session.ep(path=f'telephony/config/locations/{location_id}/queues/{queue_id}/announcements{path}')
         return ep
 
-    def list_gen(self, *, location_id: str, queue_id: str, org_id: str = None) -> AsyncGenerator[Announcement]:
+    def list_gen(self, location_id: str, queue_id: str, org_id: str = None) -> AsyncGenerator[Announcement]:
         """
 
         :param location_id:
@@ -3747,7 +3747,7 @@ class AsAnnouncementApi:
         # noinspection PyTypeChecker
         return self._session.follow_pagination(url=url, model=Announcement, params=params)
 
-    async def list(self, *, location_id: str, queue_id: str, org_id: str = None) -> List[Announcement]:
+    async def list(self, location_id: str, queue_id: str, org_id: str = None) -> List[Announcement]:
         """
 
         :param location_id:
@@ -3760,7 +3760,7 @@ class AsAnnouncementApi:
         # noinspection PyTypeChecker
         return [o async for o in self._session.follow_pagination(url=url, model=Announcement, params=params)]
 
-    async def delete_announcement(self, *, location_id: str, queue_id: str, file_name: str, org_id: str = None):
+    async def delete_announcement(self, location_id: str, queue_id: str, file_name: str, org_id: str = None):
         """
 
         :param location_id:
@@ -3835,7 +3835,7 @@ class AsCallQueueApi:
                          {'overflow':
                               {'is_transfer_number_set': True}}})
 
-    def list_gen(self, *, location_id: str = None, name: str = None,
+    def list_gen(self, location_id: str = None, name: str = None,
              org_id: str = None, **params) -> AsyncGenerator[CallQueue, None, None]:
         """
         Read the List of Call Queues
@@ -3867,7 +3867,7 @@ class AsCallQueueApi:
         # noinspection PyTypeChecker
         return self._session.follow_pagination(url=url, model=CallQueue, params=params)
 
-    async def list(self, *, location_id: str = None, name: str = None,
+    async def list(self, location_id: str = None, name: str = None,
              org_id: str = None, **params) -> List[CallQueue]:
         """
         Read the List of Call Queues
@@ -3899,7 +3899,7 @@ class AsCallQueueApi:
         # noinspection PyTypeChecker
         return [o async for o in self._session.follow_pagination(url=url, model=CallQueue, params=params)]
 
-    async def by_name(self, *, name: str, location_id: str = None, org_id: str = None) -> Optional[CallQueue]:
+    async def by_name(self, name: str, location_id: str = None, org_id: str = None) -> Optional[CallQueue]:
         """
         Get queue info by name
 
@@ -3911,7 +3911,7 @@ class AsCallQueueApi:
         return next((cq for cq in await self.list(location_id=location_id, org_id=org_id, name=name)
                      if cq.name == name), None)
 
-    async def create(self, *, location_id: str, settings: CallQueue, org_id: str = None) -> str:
+    async def create(self, location_id: str, settings: CallQueue, org_id: str = None) -> str:
         """
         Create a Call Queue
         Create new Call Queues for the given location.
@@ -3940,7 +3940,7 @@ class AsCallQueueApi:
         data = await self._session.rest_post(url, data=cq_data, params=params)
         return data['id']
 
-    async def delete_queue(self, *, location_id: str, queue_id: str, org_id: str = None):
+    async def delete_queue(self, location_id: str, queue_id: str, org_id: str = None):
         """
         Delete a Call Queue
         Delete the designated Call Queue.
@@ -3965,7 +3965,7 @@ class AsCallQueueApi:
         params = org_id and {'orgId': org_id} or None
         await self._session.rest_delete(url=url, params=params)
 
-    async def details(self, *, location_id: str, queue_id: str, org_id: str = None) -> CallQueue:
+    async def details(self, location_id: str, queue_id: str, org_id: str = None) -> CallQueue:
         """
         Get Details for a Call Queue
         Retrieve Call Queue details.
@@ -3995,7 +3995,7 @@ class AsCallQueueApi:
         # noinspection PyTypeChecker
         return result
 
-    async def update(self, *, location_id: str, queue_id: str, update: CallQueue, org_id: str = None):
+    async def update(self, location_id: str, queue_id: str, update: CallQueue, org_id: str = None):
         """
         Update a Call Queue
 
@@ -4748,7 +4748,7 @@ class AsOrganisationVoicemailSettingsAPI(AsApiChild, base='telephony/config/voic
     API for Organisation voicemail settings
     """
 
-    async def read(self, *, org_id: str = None) -> OrganisationVoicemailSettings:
+    async def read(self, org_id: str = None) -> OrganisationVoicemailSettings:
         """
         Get Voicemail Settings
 
@@ -4769,7 +4769,7 @@ class AsOrganisationVoicemailSettingsAPI(AsApiChild, base='telephony/config/voic
         url = self.ep()
         return OrganisationVoicemailSettings.parse_obj(await self.get(url, params=params))
 
-    async def update(self, *, settings: OrganisationVoicemailSettings, org_id: str = None):
+    async def update(self, settings: OrganisationVoicemailSettings, org_id: str = None):
         """
         Update the organization's voicemail settings.
 
@@ -4807,7 +4807,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         paging_id = paging_id and f'/{paging_id}' or ''
         return super().ep(f'locations/{location_id}/paging{paging_id}')
 
-    def list_gen(self, *, location_id: str = None, name: str = None, phone_number: str = None,
+    def list_gen(self, location_id: str = None, name: str = None, phone_number: str = None,
              org_id: str = None, **params) -> AsyncGenerator[Paging, None, None]:
         """
         Read the List of Paging Groups
@@ -4838,7 +4838,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         return self.session.follow_pagination(url=url, model=Paging, params=params, item_key='locationPaging')
         pass
 
-    async def list(self, *, location_id: str = None, name: str = None, phone_number: str = None,
+    async def list(self, location_id: str = None, name: str = None, phone_number: str = None,
              org_id: str = None, **params) -> List[Paging]:
         """
         Read the List of Paging Groups
@@ -4869,7 +4869,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         return [o async for o in self.session.follow_pagination(url=url, model=Paging, params=params, item_key='locationPaging')]
         pass
 
-    async def create(self, *, location_id: str, settings: Paging, org_id: str = None) -> str:
+    async def create(self, location_id: str, settings: Paging, org_id: str = None) -> str:
         """
         Create a new Paging Group
         Create a new Paging Group for the given location.
@@ -4898,7 +4898,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         data = await self.post(url, data=data, params=params)
         return data['id']
 
-    async def delete_paging(self, *, location_id: str, paging_id: str, org_id: str = None):
+    async def delete_paging(self, location_id: str, paging_id: str, org_id: str = None):
         """
         Delete a Paging Group
         Delete the designated Paging Group.
@@ -4919,7 +4919,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         url = self._endpoint(location_id=location_id, paging_id=paging_id)
         await self.delete(url, params=params)
 
-    async def details(self, *, location_id: str, paging_id: str, org_id: str = None) -> Paging:
+    async def details(self, location_id: str, paging_id: str, org_id: str = None) -> Paging:
         """
         Get Details for a Paging Group
         Retrieve Paging Group details.
@@ -4939,7 +4939,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         url = self._endpoint(location_id=location_id, paging_id=paging_id)
         return Paging.parse_obj(await self.get(url, params=params))
 
-    async def update(self, *, location_id: str, update: Paging, paging_id: str, org_id: str = None):
+    async def update(self, location_id: str, update: Paging, paging_id: str, org_id: str = None):
         """
         Update the designated Paging Group.
 
@@ -4967,7 +4967,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
 
 class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
 
-    def list_gen(self, *, dial_plan_name: str = None, route_group_name: str = None, trunk_name: str = None,
+    def list_gen(self, dial_plan_name: str = None, route_group_name: str = None, trunk_name: str = None,
              order: str = None, org_id: str = None, **params) -> AsyncGenerator[DialPlan, None, None]:
         """
         List all Dial Plans for the organization.
@@ -4998,7 +4998,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=DialPlan, params=params, item_key='dialPlans')
 
-    async def list(self, *, dial_plan_name: str = None, route_group_name: str = None, trunk_name: str = None,
+    async def list(self, dial_plan_name: str = None, route_group_name: str = None, trunk_name: str = None,
              order: str = None, org_id: str = None, **params) -> List[DialPlan]:
         """
         List all Dial Plans for the organization.
@@ -5029,7 +5029,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=DialPlan, params=params, item_key='dialPlans')]
 
-    async def create(self, *, name: str, route_id: str, route_type: RouteType, dial_patterns: List[str] = None,
+    async def create(self, name: str, route_id: str, route_type: RouteType, dial_patterns: List[str] = None,
                org_id: str = None) -> CreateResponse:
         """
         Create a Dial Plan for the organization.
@@ -5066,7 +5066,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         data = await self.post(url=url, params=params, json=body)
         return CreateResponse.parse_obj(data)
 
-    async def details(self, *, dial_plan_id: str, org_id: str = None) -> DialPlan:
+    async def details(self, dial_plan_id: str, org_id: str = None) -> DialPlan:
         """
         Get a Dial Plan for the organization.
 
@@ -5088,11 +5088,11 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         url = self.ep(dial_plan_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(url=url, params=params)
-        dp:DialPlan = DialPlan.parse_obj(data)
+        dp: DialPlan = DialPlan.parse_obj(data)
         dp.dial_plan_id = dial_plan_id
         return dp
 
-    async def update(self, *, update: DialPlan, org_id: str = None):
+    async def update(self, update: DialPlan, org_id: str = None):
         """
         Modify a Dial Plan for the organization.
 
@@ -5114,7 +5114,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         body = update.json(include={'name', 'route_id', 'route_type'})
         await self.put(url=url, params=params, data=body)
 
-    async def delete_dial_plan(self, *, dial_plan_id: str, org_id: str = None):
+    async def delete_dial_plan(self, dial_plan_id: str, org_id: str = None):
         """
         Delete a Dial Plan for the organization.
 
@@ -5135,7 +5135,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         params = org_id and {'orgId': org_id} or None
         await self.delete(url=url, params=params)
 
-    def patterns_gen(self, *, dial_plan_id: str, org_id: str = None,
+    def patterns_gen(self, dial_plan_id: str, org_id: str = None,
                  dial_pattern: str = None, **params) -> AsyncGenerator[str, None, None]:
         """
         List all Dial Patterns for the organization.
@@ -5165,7 +5165,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
 
         return self.session.follow_pagination(url=url, params=params, item_key='dialPatterns')
 
-    async def patterns(self, *, dial_plan_id: str, org_id: str = None,
+    async def patterns(self, dial_plan_id: str, org_id: str = None,
                  dial_pattern: str = None, **params) -> List[str]:
         """
         List all Dial Patterns for the organization.
@@ -5195,7 +5195,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
 
         return [o async for o in self.session.follow_pagination(url=url, params=params, item_key='dialPatterns')]
 
-    async def modify_patterns(self, *, dial_plan_id: str, dial_patterns: List[PatternAndAction], org_id: str = None):
+    async def modify_patterns(self, dial_plan_id: str, dial_patterns: List[PatternAndAction], org_id: str = None):
         """
         Modify dial patterns for the Dial Plan.
 
@@ -5224,7 +5224,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         body = Body(dial_patterns=dial_patterns).json()
         await self.put(url=url, params=params, data=body)
 
-    async def delete_all_patterns(self, *, dial_plan_id: str, org_id: str = None):
+    async def delete_all_patterns(self, dial_plan_id: str, org_id: str = None):
         """
         Delete all dial patterns from the Dial Plan.
 
@@ -5252,7 +5252,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
     API for everything route groups
     """
 
-    def list_gen(self, *, name: str = None, order: str = None,
+    def list_gen(self, name: str = None, order: str = None,
              org_id: str = None, **params) -> AsyncGenerator[RouteGroup, None, None]:
         """
         List all Route Groups for an organization. A Route Group is a group of trunks that allows further scale and
@@ -5275,7 +5275,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, params=params, model=RouteGroup)
 
-    async def list(self, *, name: str = None, order: str = None,
+    async def list(self, name: str = None, order: str = None,
              org_id: str = None, **params) -> List[RouteGroup]:
         """
         List all Route Groups for an organization. A Route Group is a group of trunks that allows further scale and
@@ -5298,7 +5298,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, params=params, model=RouteGroup)]
 
-    async def create(self, *, route_group: RouteGroup, org_id: str = None) -> str:
+    async def create(self, route_group: RouteGroup, org_id: str = None) -> str:
         """
         Creates a Route Group for the organization.
 
@@ -5333,7 +5333,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         data = await self.post(url=url, params=params, data=body)
         return data['id']
 
-    async def details(self, *, rg_id: str, org_id: str = None) -> RouteGroup:
+    async def details(self, rg_id: str, org_id: str = None) -> RouteGroup:
         """
         Reads a Route Group for the organization based on id.
 
@@ -5358,7 +5358,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         data = await self.get(url=url, params=params)
         return RouteGroup.parse_obj(data)
 
-    async def update(self, *, rg_id: str, update: RouteGroup, org_id: str = None):
+    async def update(self, rg_id: str, update: RouteGroup, org_id: str = None):
         """
         Modifies an existing Route Group for an organization based on id.
 
@@ -5382,7 +5382,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         data = await self.post(url=url, params=params, data=body)
         await self.put(url=url, params=params, data=data)
 
-    async def delete_route_group(self, *, rg_id: str, org_id: str = None):
+    async def delete_route_group(self, rg_id: str, org_id: str = None):
         """
         Remove a Route Group from an Organization based on id.
 
@@ -5402,7 +5402,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         url = self.ep(rg_id)
         await self.delete(url=url, params=params)
 
-    async def usage(self, *, rg_id: str, org_id: str = None) -> RouteGroupUsage:
+    async def usage(self, rg_id: str, org_id: str = None) -> RouteGroupUsage:
         """
         List the number of "Call to" on-premises Extensions, Dial Plans, PSTN Connections, and Route Lists used by a
         specific Route Group. Users within Call to Extension locations are registered to a PBX which allows you to
@@ -5595,7 +5595,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
     API for everything route lists
     """
 
-    def list_gen(self, *, name: list[str] = None, location_id: list[str] = None, order: str = None,
+    def list_gen(self, name: list[str] = None, location_id: list[str] = None, order: str = None,
              org_id: str = None, **params) -> AsyncGenerator[RouteList, None, None]:
         """
         List all Route Lists for the organization.
@@ -5623,7 +5623,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, params=params, model=RouteList)
 
-    async def list(self, *, name: list[str] = None, location_id: list[str] = None, order: str = None,
+    async def list(self, name: list[str] = None, location_id: list[str] = None, order: str = None,
              org_id: str = None, **params) -> List[RouteList]:
         """
         List all Route Lists for the organization.
@@ -5651,7 +5651,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, params=params, model=RouteList)]
 
-    async def create(self, *, name: str, location_id: str, rg_id: str, org_id: str = None) -> str:
+    async def create(self, name: str, location_id: str, rg_id: str, org_id: str = None) -> str:
         """
         Create a Route List for the organization.
 
@@ -5680,7 +5680,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         data = await self.post(url=url, params=params, json=body)
         return data['id']
 
-    async def details(self, *, rl_id: str, org_id: str = None) -> RouteListDetail:
+    async def details(self, rl_id: str, org_id: str = None) -> RouteListDetail:
         """
         Get Route List Details.
 
@@ -5702,7 +5702,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         data = await self.get(url=url, params=params)
         return RouteListDetail.parse_obj(data)
 
-    async def update(self, *, rl_id: str, name: str, rg_id: str, org_id: str = None):
+    async def update(self, rl_id: str, name: str, rg_id: str, org_id: str = None):
         """
         Modify the details for a Route List.
 
@@ -5727,7 +5727,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         url = self.ep(rl_id)
         await self.put(url=url, params=params, json=body)
 
-    async def delete_route_list(self, *, rl_id: str, org_id: str = None):
+    async def delete_route_list(self, rl_id: str, org_id: str = None):
         """
         Delete Route List for a Customer
 
@@ -5746,7 +5746,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         url = self.ep(rl_id)
         await self.delete(url=url, params=params)
 
-    def numbers_gen(self, *, rl_id: str, order: str = None, number: str = None,
+    def numbers_gen(self, rl_id: str, order: str = None, number: str = None,
                 org_id: str = None, **params) -> AsyncGenerator[str, None, None]:
         """
         Get numbers assigned to a Route List
@@ -5773,7 +5773,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, params=params)
 
-    async def numbers(self, *, rl_id: str, order: str = None, number: str = None,
+    async def numbers(self, rl_id: str, order: str = None, number: str = None,
                 org_id: str = None, **params) -> List[str]:
         """
         Get numbers assigned to a Route List
@@ -5800,7 +5800,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, params=params)]
 
-    async def update_numbers(self, *, rl_id: str, numbers: List[NumberAndAction],
+    async def update_numbers(self, rl_id: str, numbers: List[NumberAndAction],
                        org_id: str = None) -> List[UpdateNumbersResponse]:
         """
         Modify numbers for a specific Route List of a Customer.
@@ -5833,7 +5833,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         else:
             return []
 
-    async def delete_all_numbers(self, *, rl_id: str, org_id: str = None):
+    async def delete_all_numbers(self, rl_id: str, org_id: str = None):
         url = self.ep(f'{rl_id}/numbers')
         params = org_id and {'orgId': org_id} or None
         body = {'deleteAllNumbers': True}
@@ -5845,7 +5845,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
     API for everything trunks
     """
 
-    def list_gen(self, *, name: str = None, location_name: str = None, trunk_type: str = None, order: str = None,
+    def list_gen(self, name: str = None, location_name: str = None, trunk_type: str = None, order: str = None,
              org_id: str = None, **params) -> AsyncGenerator[Trunk, None, None]:
         """
         List all Trunks for the organization.
@@ -5877,7 +5877,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, params=params, model=Trunk, item_key='trunks')
 
-    async def list(self, *, name: str = None, location_name: str = None, trunk_type: str = None, order: str = None,
+    async def list(self, name: str = None, location_name: str = None, trunk_type: str = None, order: str = None,
              org_id: str = None, **params) -> List[Trunk]:
         """
         List all Trunks for the organization.
@@ -5909,7 +5909,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, params=params, model=Trunk, item_key='trunks')]
 
-    async def create(self, *, name: str, location_id: str, password: str, trunk_type: TrunkType = TrunkType.registering,
+    async def create(self, name: str, location_id: str, password: str, trunk_type: TrunkType = TrunkType.registering,
                dual_identity_support_enabled: bool = None, device_type: TrunkDeviceType = None, address: str = None,
                domain: str = None, port: int = None, max_concurrent_calls: int = None, org_id: str = None) -> str:
         """
@@ -5954,7 +5954,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         data = await self.post(url=url, params=params, json=body)
         return data['id']
 
-    async def details(self, *, trunk_id: str, org_id: str = None) -> TrunkDetail:
+    async def details(self, trunk_id: str, org_id: str = None) -> TrunkDetail:
         """
         Get a Trunk for the organization.
 
@@ -5977,7 +5977,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         data = await self.get(url=url, params=params)
         return TrunkDetail.parse_obj(data)
 
-    async def update(self, *, trunk_id: str, name: str, location_id: str, password: str, trunk_type: TrunkType,
+    async def update(self, trunk_id: str, name: str, location_id: str, password: str, trunk_type: TrunkType,
                dual_identity_support_enabled: bool = None, max_concurrent_calls: int = None, org_id: str = None):
         """
         Modify a Trunk for the organization.
@@ -6010,7 +6010,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         url = self.ep()
         await self.put(url=url, params=params, json=body)
 
-    async def delete_trunk(self, *, trunk_id: str, org_id: str = None):
+    async def delete_trunk(self, trunk_id: str, org_id: str = None):
         """
         Delete a Trunk for the organization.
 
@@ -6050,7 +6050,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         data = await self.get(url=ep, params=params)
         return parse_obj_as(list[TrunkTypeWithDeviceType], data['trunkTypes'])
 
-    async def usage(self, *, trunk_id: str, org_id: str = None) -> TrunkUsage:
+    async def usage(self, trunk_id: str, org_id: str = None) -> TrunkUsage:
         """
         Get Local Gateway Usage Count
 
@@ -6073,7 +6073,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         data = await self.get(url=url, params=params)
         return TrunkUsage.parse_obj(data)
 
-    def usage_dial_plan_gen(self, *, trunk_id: str, org_id: str = None) -> AsyncGenerator[IdAndName, None, None]:
+    def usage_dial_plan_gen(self, trunk_id: str, org_id: str = None) -> AsyncGenerator[IdAndName, None, None]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 
@@ -6096,7 +6096,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
-    async def usage_dial_plan(self, *, trunk_id: str, org_id: str = None) -> List[IdAndName]:
+    async def usage_dial_plan(self, trunk_id: str, org_id: str = None) -> List[IdAndName]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 
@@ -6119,7 +6119,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
 
-    def usage_location_pstn_gen(self, *, trunk_id: str, org_id: str = None) -> AsyncGenerator[IdAndName, None, None]:
+    def usage_location_pstn_gen(self, trunk_id: str, org_id: str = None) -> AsyncGenerator[IdAndName, None, None]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 
@@ -6144,7 +6144,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
-    async def usage_location_pstn(self, *, trunk_id: str, org_id: str = None) -> List[IdAndName]:
+    async def usage_location_pstn(self, trunk_id: str, org_id: str = None) -> List[IdAndName]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 
@@ -6169,7 +6169,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
 
-    def usage_route_group_gen(self, *, trunk_id: str, org_id: str = None) -> AsyncGenerator[IdAndName, None, None]:
+    def usage_route_group_gen(self, trunk_id: str, org_id: str = None) -> AsyncGenerator[IdAndName, None, None]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 
@@ -6192,7 +6192,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
-    async def usage_route_group(self, *, trunk_id: str, org_id: str = None) -> List[IdAndName]:
+    async def usage_route_group(self, trunk_id: str, org_id: str = None) -> List[IdAndName]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 
@@ -6242,7 +6242,7 @@ class AsPremisePstnApi(AsApiChild, base='telephony/config/premisePstn'):
         self.route_group = AsRouteGroupApi(session=session)
         self.route_list = AsRouteListApi(session=session)
 
-    async def validate_pattern(self, *, dial_patterns: Union[str, List[str]], org_id: str = None) -> DialPatternValidationResult:
+    async def validate_pattern(self, dial_patterns: Union[str, List[str]], org_id: str = None) -> DialPatternValidationResult:
         """
         Validate a Dial Pattern.
 
@@ -6275,7 +6275,7 @@ class AsPrivateNetworkConnectApi(AsApiChild, base='telephony/config/locations'):
     API for location private network connect API settings
     """
 
-    async def read(self, *, location_id: str, org_id: str = None) -> NetworkConnectionType:
+    async def read(self, location_id: str, org_id: str = None) -> NetworkConnectionType:
         """
         Get Private Network Connect
 
@@ -6298,7 +6298,7 @@ class AsPrivateNetworkConnectApi(AsApiChild, base='telephony/config/locations'):
         data = await self.get(url, params=params)
         return parse_obj_as(NetworkConnectionType, data['networkConnectionType'])
 
-    async def update(self, *, location_id: str, connection_type: NetworkConnectionType, org_id: str = None):
+    async def update(self, location_id: str, connection_type: NetworkConnectionType, org_id: str = None):
         """
         Get Private Network Connect
 
@@ -6327,10 +6327,10 @@ class AsInternalDialingApi(AsApiChild, base='telephony/config/locations'):
     Internal dialing settings for location
     """
 
-    def url(self, *, location_id: str) -> str:
+    def url(self, location_id: str) -> str:
         return super().ep(f'{location_id}/internalDialing')
 
-    async def read(self, *, location_id: str, org_id: str = None) -> InternalDialing:
+    async def read(self, location_id: str, org_id: str = None) -> InternalDialing:
         """
         Get current configuration for routing unknown extensions to the Premises as internal calls
 
@@ -6352,7 +6352,7 @@ class AsInternalDialingApi(AsApiChild, base='telephony/config/locations'):
         data = await self.get(url=url, params=params)
         return InternalDialing.parse_obj(data)
 
-    async def update(self, *, location_id: str, update: InternalDialing, org_id: str = None):
+    async def update(self, location_id: str, update: InternalDialing, org_id: str = None):
         """
         Modify current configuration for routing unknown extensions to the Premises as internal calls
 
@@ -6397,7 +6397,7 @@ class AsLocationInterceptApi(AsApiChild, base='telephony/config/locations'):
         ep = self.session.ep(f'telephony/config/locations/{location_id}/intercept{path}')
         return ep
 
-    async def read(self, *, location_id: str, org_id: str = None) -> InterceptSetting:
+    async def read(self, location_id: str, org_id: str = None) -> InterceptSetting:
         """
         Get Location Intercept
 
@@ -6420,7 +6420,7 @@ class AsLocationInterceptApi(AsApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         return InterceptSetting.parse_obj(await self.get(ep, params=params))
 
-    async def configure(self, *, location_id: str, settings: InterceptSetting, org_id: str = None):
+    async def configure(self, location_id: str, settings: InterceptSetting, org_id: str = None):
         """
         Put Location Intercept
 
@@ -6468,7 +6468,7 @@ class AsLocationMoHApi(AsApiChild, base='telephony/config/locations'):
         ep = self.session.ep(f'telephony/config/locations/{location_id}/musicOnHold{path}')
         return ep
 
-    async def read(self, *, location_id: str, org_id: str = None) -> LocationMoHSetting:
+    async def read(self, location_id: str, org_id: str = None) -> LocationMoHSetting:
         """
         Get Music On Hold
 
@@ -6491,7 +6491,7 @@ class AsLocationMoHApi(AsApiChild, base='telephony/config/locations'):
         data = await self.get(url, params=params)
         return LocationMoHSetting.parse_obj(data)
 
-    async def update(self, *, location_id: str, settings: LocationMoHSetting, org_id: str = None) -> LocationMoHSetting:
+    async def update(self, location_id: str, settings: LocationMoHSetting, org_id: str = None) -> LocationMoHSetting:
         """
         Get Music On Hold
 
@@ -6515,7 +6515,7 @@ class AsLocationMoHApi(AsApiChild, base='telephony/config/locations'):
         url = self._endpoint(location_id=location_id)
         await self.put(url, params=params, data=data)
 
-    async def create(self, *, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> list[AuthCode]:
+    async def create(self, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> list[AuthCode]:
         """
 
         :param location_id: Add new access code for this location.
@@ -6530,7 +6530,7 @@ class AsLocationMoHApi(AsApiChild, base='telephony/config/locations'):
         body = {'accessCodes': [json.loads(ac.json()) for ac in access_codes]}
         await self.post(url, json=body, params=params)
 
-    async def delete_codes(self, *, location_id: str, access_codes: list[Union[str, AuthCode]],
+    async def delete_codes(self, location_id: str, access_codes: list[Union[str, AuthCode]],
                      org_id: str = None) -> list[AuthCode]:
         """
         Delete Access Code Location
@@ -6561,7 +6561,7 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
         path = path and f'/{path}' or ''
         return self.ep(f'{location_id}/numbers{path}')
 
-    async def add(self, *, location_id: str, phone_numbers: list[str], state: NumberState = NumberState.inactive,
+    async def add(self, location_id: str, phone_numbers: list[str], state: NumberState = NumberState.inactive,
             org_id: str = None):
         """
         Adds specified set of phone numbers to a location for an organization.
@@ -6588,7 +6588,7 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
                 'state': state}
         await self.post(url=url, params=params, json=body)
 
-    async def activate(self, *, location_id: str, phone_numbers: list[str], org_id: str = None):
+    async def activate(self, location_id: str, phone_numbers: list[str], org_id: str = None):
         """
         Activate the specified set of phone numbers in a location for an organization.
 
@@ -6611,7 +6611,7 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
         body = {'phoneNumbers': phone_numbers}
         await self.put(url=url, params=params, json=body)
 
-    async def remove(self, *, location_id: str, phone_numbers: list[str], org_id: str = None):
+    async def remove(self, location_id: str, phone_numbers: list[str], org_id: str = None):
         """
         Remove the specified set of phone numbers from a location for an organization.
 
@@ -6657,7 +6657,7 @@ class AsLocationVoicemailSettingsApi(AsApiChild, base='telephony/config/location
         ep = self.session.ep(f'telephony/config/locations/{location_id}/voicemail{path}')
         return ep
 
-    async def read(self, *, location_id: str, org_id: str = None) -> LocationVoiceMailSettings:
+    async def read(self, location_id: str, org_id: str = None) -> LocationVoiceMailSettings:
         """
         Get Location Voicemail
 
@@ -6681,7 +6681,7 @@ class AsLocationVoicemailSettingsApi(AsApiChild, base='telephony/config/location
         data = await self.get(url, params=params)
         return LocationVoiceMailSettings.parse_obj(data)
 
-    async def update(self, *, location_id: str, settings: LocationVoiceMailSettings, org_id: str = None):
+    async def update(self, location_id: str, settings: LocationVoiceMailSettings, org_id: str = None):
         """
         Get Location Voicemail
 
@@ -6727,7 +6727,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         self.voicemail = AsLocationVoicemailSettingsApi(session=session)
         self.internal_dialing = AsInternalDialingApi(session=session)
 
-    async def generate_password(self, *, location_id: str, generate: list[str] = None, org_id: str = None):
+    async def generate_password(self, location_id: str, generate: list[str] = None, org_id: str = None):
         """
         Generates an example password using the effective password settings for the location. If you don't specify
         anything in the generate field or don't provide a request body, then you will receive a SIP password by default.
@@ -6798,7 +6798,7 @@ class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
         ep = self.session.ep(f'telephony/config/locations/{location_id}/voicePortal{path}')
         return ep
 
-    async def read(self, *, location_id: str, org_id: str = None) -> VoicePortalSettings:
+    async def read(self, location_id: str, org_id: str = None) -> VoicePortalSettings:
         """
 
         :param location_id: Location to which the voice portal belongs.
@@ -6812,7 +6812,7 @@ class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
         url = self._endpoint(location_id=location_id)
         return VoicePortalSettings.parse_obj(await self.get(url, params=params))
 
-    async def update(self, *, location_id: str, settings: VoicePortalSettings, passcode: str = None, org_id: str = None):
+    async def update(self, location_id: str, settings: VoicePortalSettings, passcode: str = None, org_id: str = None):
         """
         Update VoicePortal
 
@@ -6842,7 +6842,7 @@ class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
         url = self._endpoint(location_id=location_id)
         await self.put(url, params=params, json=data)
 
-    async def passcode_rules(self, *, location_id: str, org_id: str = None) -> PasscodeRules:
+    async def passcode_rules(self, location_id: str, org_id: str = None) -> PasscodeRules:
         """
         Get VoicePortal Passcode Rule
 
@@ -6871,7 +6871,7 @@ class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
     API for location private network connect API settings
     """
 
-    def list(self, *, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None):
+    def list(self, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None):
         params = {to_camel(p): v for p, v in locals().items() if p != 'self' and v is not None}
         url = self.ep()
         return self.session.follow_pagination(url=url, model=VoicemailGroup, params=params, item_key='voicemailGroups')
@@ -6882,7 +6882,7 @@ class AsVoicemailRulesApi(AsApiChild, base='telephony/config/voicemail/rules'):
     API for voicemail rules settings
     """
 
-    async def read(self, *, org_id: str = None) -> VoiceMailRules:
+    async def read(self, org_id: str = None) -> VoiceMailRules:
         """
         Get Voicemail Rules
 
@@ -6902,7 +6902,7 @@ class AsVoicemailRulesApi(AsApiChild, base='telephony/config/voicemail/rules'):
         url = self.ep()
         return VoiceMailRules.parse_obj(await self.get(url, params=params))
 
-    async def update(self, *, settings: VoiceMailRules, org_id: str = None):
+    async def update(self, settings: VoiceMailRules, org_id: str = None):
         """
         Update Voicemail Rules
 
@@ -6975,7 +6975,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         self.voicemail_rules = AsVoicemailRulesApi(session=session)
         self.voiceportal = AsVoicePortalApi(session=session)
 
-    def phone_numbers_gen(self, *, location_id: str = None, phone_number: str = None, available: bool = None,
+    def phone_numbers_gen(self, location_id: str = None, phone_number: str = None, available: bool = None,
                       order: str = None,
                       owner_name: str = None, owner_id: str = None, owner_type: OwnerType = None,
                       extension: str = None, number_type: NumberType = None,
@@ -7035,10 +7035,11 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
                 value = value.value
                 params[param] = value
         url = self.ep(path='config/numbers')
+        # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=NumberListPhoneNumber, params=params,
                                               item_key='phoneNumbers')
 
-    async def phone_numbers(self, *, location_id: str = None, phone_number: str = None, available: bool = None,
+    async def phone_numbers(self, location_id: str = None, phone_number: str = None, available: bool = None,
                       order: str = None,
                       owner_name: str = None, owner_id: str = None, owner_type: OwnerType = None,
                       extension: str = None, number_type: NumberType = None,
@@ -7098,10 +7099,11 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
                 value = value.value
                 params[param] = value
         url = self.ep(path='config/numbers')
+        # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=NumberListPhoneNumber, params=params,
                                               item_key='phoneNumbers')]
 
-    async def phone_number_details(self, *, org_id: str = None) -> NumberDetails:
+    async def phone_number_details(self, org_id: str = None) -> NumberDetails:
         """
         get summary (counts) of phone numbers
 
@@ -7118,7 +7120,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         data = await self.get(url, params=params)
         return NumberDetails.parse_obj(data['count'])
 
-    async def validate_extensions(self, *, extensions: list[str]) -> ValidateExtensionsResponse:
+    async def validate_extensions(self, extensions: list[str]) -> ValidateExtensionsResponse:
         """
         Validate the List of Extensions
 
@@ -7134,7 +7136,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         data = await self.post(url, json={'extensions': extensions})
         return ValidateExtensionsResponse.parse_obj(data)
 
-    async def validate_phone_numbers(self, *, phone_numbers: list[str], org_id: str = None) -> ValidatePhoneNumbersResponse:
+    async def validate_phone_numbers(self, phone_numbers: list[str], org_id: str = None) -> ValidatePhoneNumbersResponse:
         """
         Validate the list of phone numbers in an organization. Each phone number's availability is indicated in the
         response.
@@ -7159,7 +7161,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         data = await self.post(url=url, params=params, json=body)
         return ValidatePhoneNumbersResponse.parse_obj(data)
 
-    async def ucm_profiles(self, *, org_id: str = None) -> list[UCMProfile]:
+    async def ucm_profiles(self, org_id: str = None) -> list[UCMProfile]:
         """
         Read the List of UC Manager Profiles
 
@@ -7184,7 +7186,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         data = await self.get(url, params=params)
         return parse_obj_as(list[UCMProfile], data['callingProfiles'])
 
-    async def change_announcement_language(self, *, location_id: str, language_code: str, agent_enabled: bool = None,
+    async def change_announcement_language(self, location_id: str, language_code: str, agent_enabled: bool = None,
                                      service_enabled: bool = None, org_id: str = None):
         """
         Change Announcement Language
@@ -7218,7 +7220,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         url = self.session.ep(f'telephony/config/locations/{location_id}/actions/modifyAnnouncementLanguage/invoke')
         await self.put(url, json=body, params=params)
 
-    def route_choices_gen(self, *, route_group_name: str = None, trunk_name: str = None, order: str = None,
+    def route_choices_gen(self, route_group_name: str = None, trunk_name: str = None, order: str = None,
                       org_id: str = None) -> AsyncGenerator[RouteIdentity, None, None]:
         """
         List all Routes for the organization.
@@ -7240,9 +7242,10 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         params = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
                   if i and v is not None}
         url = self.ep('config/routeChoices')
+        # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=RouteIdentity, params=params, item_key='routeIdentities')
 
-    async def route_choices(self, *, route_group_name: str = None, trunk_name: str = None, order: str = None,
+    async def route_choices(self, route_group_name: str = None, trunk_name: str = None, order: str = None,
                       org_id: str = None) -> List[RouteIdentity]:
         """
         List all Routes for the organization.
@@ -7264,9 +7267,10 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         params = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
                   if i and v is not None}
         url = self.ep('config/routeChoices')
+        # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=RouteIdentity, params=params, item_key='routeIdentities')]
 
-    async def test_call_routing(self, *, originator_id: str, originator_type: OriginatorType, destination: str,
+    async def test_call_routing(self, originator_id: str, originator_type: OriginatorType, destination: str,
                           originator_number: str = None, org_id: str = None) -> TestCallRoutingResult:
         """
         Validates that an incoming call can be routed.
@@ -7326,7 +7330,7 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=ep, model=WebHook)]
 
-    async def create(self, *, name: str, target_url: str, resource: WebHookResource, event: WebHookEvent, filter: str = None,
+    async def create(self, name: str, target_url: str, resource: WebHookResource, event: WebHookEvent, filter: str = None,
                secret: str = None,
                owned_by: str = None) -> WebHook:
         """
@@ -7352,7 +7356,7 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
         result = WebHook.parse_obj(data)
         return result
 
-    async def details(self, *, webhook_id: str) -> WebHook:
+    async def details(self, webhook_id: str) -> WebHook:
         """
         Get Webhook Details
         Shows details for a webhook, by ID.
@@ -7364,7 +7368,7 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
         url = self.ep(webhook_id)
         return WebHook.parse_obj(await self.get(url))
 
-    async def update(self, *, webhook_id: str, update: WebHook) -> WebHook:
+    async def update(self, webhook_id: str, update: WebHook) -> WebHook:
         """
         Updates a webhook, by ID. You cannot use this call to deactivate a webhook, only to activate a webhook that
         was auto deactivated. The fields that can be updated are name, targetURL, secret and status. All other fields,
@@ -7380,7 +7384,7 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
         webhook_data = update.json(include={'name', 'target_url', 'secret', 'owned_by', 'status'})
         return WebHook.parse_obj(await self.put(url, data=webhook_data))
 
-    async def webhook_delete(self, *, webhook_id: str):
+    async def webhook_delete(self, webhook_id: str):
         """
         Deletes a webhook, by ID.
 
@@ -7438,7 +7442,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
     the relevant endpoints.
     """
 
-    def list_gen(self, *, workspace_location_id: str = None, floor_id: str = None, display_name: str = None,
+    def list_gen(self, workspace_location_id: str = None, floor_id: str = None, display_name: str = None,
              capacity: int = None,
              workspace_type: WorkSpaceType = None, calling: CallingType = None, calendar: CalendarType = None,
              org_id: str = None, **params) -> AsyncGenerator[Workspace, None, None]:
@@ -7481,7 +7485,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=ep, model=Workspace, params=params)
 
-    async def list(self, *, workspace_location_id: str = None, floor_id: str = None, display_name: str = None,
+    async def list(self, workspace_location_id: str = None, floor_id: str = None, display_name: str = None,
              capacity: int = None,
              workspace_type: WorkSpaceType = None, calling: CallingType = None, calendar: CalendarType = None,
              org_id: str = None, **params) -> List[Workspace]:
@@ -7524,7 +7528,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=ep, model=Workspace, params=params)]
 
-    async def create(self, *, settings: Workspace, org_id: str = None):
+    async def create(self, settings: Workspace, org_id: str = None):
         """
         Create a Workspace
 
@@ -7564,7 +7568,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         url = self.ep(workspace_id)
         return Workspace.parse_obj(await self.get(url))
 
-    async def update(self, *, workspace_id, settings: Workspace) -> Workspace:
+    async def update(self, workspace_id, settings: Workspace) -> Workspace:
         """
         Update a Workspace
 

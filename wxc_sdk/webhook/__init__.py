@@ -123,7 +123,7 @@ class WebhookApi(ApiChild, base='webhooks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=ep, model=WebHook)
 
-    def create(self, *, name: str, target_url: str, resource: WebHookResource, event: WebHookEvent, filter: str = None,
+    def create(self, name: str, target_url: str, resource: WebHookResource, event: WebHookEvent, filter: str = None,
                secret: str = None,
                owned_by: str = None) -> WebHook:
         """
@@ -149,7 +149,7 @@ class WebhookApi(ApiChild, base='webhooks'):
         result = WebHook.parse_obj(data)
         return result
 
-    def details(self, *, webhook_id: str) -> WebHook:
+    def details(self, webhook_id: str) -> WebHook:
         """
         Get Webhook Details
         Shows details for a webhook, by ID.
@@ -161,7 +161,7 @@ class WebhookApi(ApiChild, base='webhooks'):
         url = self.ep(webhook_id)
         return WebHook.parse_obj(self.get(url))
 
-    def update(self, *, webhook_id: str, update: WebHook) -> WebHook:
+    def update(self, webhook_id: str, update: WebHook) -> WebHook:
         """
         Updates a webhook, by ID. You cannot use this call to deactivate a webhook, only to activate a webhook that
         was auto deactivated. The fields that can be updated are name, targetURL, secret and status. All other fields,
@@ -177,7 +177,7 @@ class WebhookApi(ApiChild, base='webhooks'):
         webhook_data = update.json(include={'name', 'target_url', 'secret', 'owned_by', 'status'})
         return WebHook.parse_obj(self.put(url, data=webhook_data))
 
-    def webhook_delete(self, *, webhook_id: str):
+    def webhook_delete(self, webhook_id: str):
         """
         Deletes a webhook, by ID.
 

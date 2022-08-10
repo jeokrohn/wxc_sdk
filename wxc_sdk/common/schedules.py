@@ -300,7 +300,7 @@ class Schedule(ApiModel):
             dt_day = dt_day + datetime.timedelta(days=1)
         return schedule
 
-    def create_update(self, *, update: bool = False) -> str:
+    def create_update(self, update: bool = False) -> str:
         """
         JSON for create or update
 
@@ -363,7 +363,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
                 ep = f'{ep}/events{event_id}'
         return ep
 
-    def list(self, *, obj_id: str, org_id: str = None, schedule_type: ScheduleType = None,
+    def list(self, obj_id: str, org_id: str = None, schedule_type: ScheduleType = None,
              name: str = None, **params) -> Generator[Schedule, None, None]:
         """
         List of Schedules for a Person or location
@@ -398,7 +398,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Schedule, params=params or None)
 
-    def details(self, *, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
+    def details(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                 org_id: str = None) -> Schedule:
         """
         Get Details for a Schedule
@@ -429,7 +429,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         result = Schedule.parse_obj(data)
         return result
 
-    def create(self, *, obj_id: str, schedule: Schedule, org_id: str = None) -> str:
+    def create(self, obj_id: str, schedule: Schedule, org_id: str = None) -> str:
         """
         Create a Schedule
 
@@ -456,7 +456,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         result = data['id']
         return result
 
-    def update(self, *, obj_id: str, schedule: Schedule, schedule_type: ScheduleTypeOrStr = None,
+    def update(self, obj_id: str, schedule: Schedule, schedule_type: ScheduleTypeOrStr = None,
                schedule_id: str = None, org_id: str = None) -> str:
         """
         Update a Schedule
@@ -492,7 +492,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         data = self.put(url, data=schedule_data, params=params)
         return data['id']
 
-    def delete_schedule(self, *, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
+    def delete_schedule(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                         org_id: str = None):
         """
         Delete a Schedule
@@ -520,7 +520,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         self.delete(url, params=params)
 
-    def event_details(self, *, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
+    def event_details(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                       event_id: str, org_id: str = None) -> Event:
         """
         Get Details for a Schedule Event
@@ -554,7 +554,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         result = Event.parse_obj(data)
         return result
 
-    def event_create(self, *, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
+    def event_create(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                      event: Event, org_id: str = None) -> str:
         """
         Create a Schedule Event
@@ -589,7 +589,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         data = self.post(url, data=data, params=params)
         return data['id']
 
-    def event_update(self, *, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
+    def event_update(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                      event: Event, event_id: str = None, org_id: str = None) -> str:
         """
         Update a Schedule Event
@@ -628,7 +628,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         data = self.put(url, data=event_data, params=params)
         return data['id']
 
-    def event_delete(self, *, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
+    def event_delete(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                      event_id: str, org_id: str = None):
         """
         Delete a Schedule Event

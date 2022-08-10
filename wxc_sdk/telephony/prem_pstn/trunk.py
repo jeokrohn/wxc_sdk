@@ -130,7 +130,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
     API for everything trunks
     """
 
-    def list(self, *, name: str = None, location_name: str = None, trunk_type: str = None, order: str = None,
+    def list(self, name: str = None, location_name: str = None, trunk_type: str = None, order: str = None,
              org_id: str = None, **params) -> Generator[Trunk, None, None]:
         """
         List all Trunks for the organization.
@@ -162,7 +162,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, params=params, model=Trunk, item_key='trunks')
 
-    def create(self, *, name: str, location_id: str, password: str, trunk_type: TrunkType = TrunkType.registering,
+    def create(self, name: str, location_id: str, password: str, trunk_type: TrunkType = TrunkType.registering,
                dual_identity_support_enabled: bool = None, device_type: TrunkDeviceType = None, address: str = None,
                domain: str = None, port: int = None, max_concurrent_calls: int = None, org_id: str = None) -> str:
         """
@@ -207,7 +207,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         data = self.post(url=url, params=params, json=body)
         return data['id']
 
-    def details(self, *, trunk_id: str, org_id: str = None) -> TrunkDetail:
+    def details(self, trunk_id: str, org_id: str = None) -> TrunkDetail:
         """
         Get a Trunk for the organization.
 
@@ -230,7 +230,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         data = self.get(url=url, params=params)
         return TrunkDetail.parse_obj(data)
 
-    def update(self, *, trunk_id: str, name: str, location_id: str, password: str, trunk_type: TrunkType,
+    def update(self, trunk_id: str, name: str, location_id: str, password: str, trunk_type: TrunkType,
                dual_identity_support_enabled: bool = None, max_concurrent_calls: int = None, org_id: str = None):
         """
         Modify a Trunk for the organization.
@@ -263,7 +263,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         url = self.ep()
         self.put(url=url, params=params, json=body)
 
-    def delete_trunk(self, *, trunk_id: str, org_id: str = None):
+    def delete_trunk(self, trunk_id: str, org_id: str = None):
         """
         Delete a Trunk for the organization.
 
@@ -303,7 +303,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         data = self.get(url=ep, params=params)
         return parse_obj_as(list[TrunkTypeWithDeviceType], data['trunkTypes'])
 
-    def usage(self, *, trunk_id: str, org_id: str = None) -> TrunkUsage:
+    def usage(self, trunk_id: str, org_id: str = None) -> TrunkUsage:
         """
         Get Local Gateway Usage Count
 
@@ -326,7 +326,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         data = self.get(url=url, params=params)
         return TrunkUsage.parse_obj(data)
 
-    def usage_dial_plan(self, *, trunk_id: str, org_id: str = None) -> Generator[IdAndName, None, None]:
+    def usage_dial_plan(self, trunk_id: str, org_id: str = None) -> Generator[IdAndName, None, None]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 
@@ -349,7 +349,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
-    def usage_location_pstn(self, *, trunk_id: str, org_id: str = None) -> Generator[IdAndName, None, None]:
+    def usage_location_pstn(self, trunk_id: str, org_id: str = None) -> Generator[IdAndName, None, None]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 
@@ -374,7 +374,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
-    def usage_route_group(self, *, trunk_id: str, org_id: str = None) -> Generator[IdAndName, None, None]:
+    def usage_route_group(self, trunk_id: str, org_id: str = None) -> Generator[IdAndName, None, None]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 

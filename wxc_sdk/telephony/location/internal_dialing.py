@@ -20,10 +20,10 @@ class InternalDialingApi(ApiChild, base='telephony/config/locations'):
     Internal dialing settings for location
     """
 
-    def url(self, *, location_id: str) -> str:
+    def url(self, location_id: str) -> str:
         return super().ep(f'{location_id}/internalDialing')
 
-    def read(self, *, location_id: str, org_id: str = None) -> InternalDialing:
+    def read(self, location_id: str, org_id: str = None) -> InternalDialing:
         """
         Get current configuration for routing unknown extensions to the Premises as internal calls
 
@@ -45,7 +45,7 @@ class InternalDialingApi(ApiChild, base='telephony/config/locations'):
         data = self.get(url=url, params=params)
         return InternalDialing.parse_obj(data)
 
-    def update(self, *, location_id: str, update: InternalDialing, org_id: str = None):
+    def update(self, location_id: str, update: InternalDialing, org_id: str = None):
         """
         Modify current configuration for routing unknown extensions to the Premises as internal calls
 

@@ -33,7 +33,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         self.voicemail = LocationVoicemailSettingsApi(session=session)
         self.internal_dialing = InternalDialingApi(session=session)
 
-    def generate_password(self, *, location_id: str, generate: list[str] = None, org_id: str = None):
+    def generate_password(self, location_id: str, generate: list[str] = None, org_id: str = None):
         """
         Generates an example password using the effective password settings for the location. If you don't specify
         anything in the generate field or don't provide a request body, then you will receive a SIP password by default.

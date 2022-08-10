@@ -39,7 +39,7 @@ class LocationVoicemailSettingsApi(ApiChild, base='telephony/config/locations'):
         ep = self.session.ep(f'telephony/config/locations/{location_id}/voicemail{path}')
         return ep
 
-    def read(self, *, location_id: str, org_id: str = None) -> LocationVoiceMailSettings:
+    def read(self, location_id: str, org_id: str = None) -> LocationVoiceMailSettings:
         """
         Get Location Voicemail
 
@@ -63,7 +63,7 @@ class LocationVoicemailSettingsApi(ApiChild, base='telephony/config/locations'):
         data = self.get(url, params=params)
         return LocationVoiceMailSettings.parse_obj(data)
 
-    def update(self, *, location_id: str, settings: LocationVoiceMailSettings, org_id: str = None):
+    def update(self, location_id: str, settings: LocationVoiceMailSettings, org_id: str = None):
         """
         Get Location Voicemail
 

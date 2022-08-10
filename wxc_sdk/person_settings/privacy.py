@@ -34,7 +34,7 @@ class PrivacyApi(PersonSettingsApiChild):
 
     feature = 'privacy'
 
-    def read(self, *, person_id: str, org_id: str = None) -> Privacy:
+    def read(self, person_id: str, org_id: str = None) -> Privacy:
         """
         Get a person's Privacy Settings
 
@@ -58,7 +58,7 @@ class PrivacyApi(PersonSettingsApiChild):
         data = self.get(ep, params=params)
         return Privacy.parse_obj(data)
 
-    def configure(self, *, person_id: str, settings: Privacy, org_id: str = None):
+    def configure(self, person_id: str, settings: Privacy, org_id: str = None):
         """
         Configure Call Waiting Settings for a Person
 

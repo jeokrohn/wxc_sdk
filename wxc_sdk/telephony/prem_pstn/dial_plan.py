@@ -55,7 +55,7 @@ class PatternAndAction(ApiModel):
 @dataclass(init=False)
 class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
 
-    def list(self, *, dial_plan_name: str = None, route_group_name: str = None, trunk_name: str = None,
+    def list(self, dial_plan_name: str = None, route_group_name: str = None, trunk_name: str = None,
              order: str = None, org_id: str = None, **params) -> Generator[DialPlan, None, None]:
         """
         List all Dial Plans for the organization.
@@ -86,7 +86,7 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=DialPlan, params=params, item_key='dialPlans')
 
-    def create(self, *, name: str, route_id: str, route_type: RouteType, dial_patterns: List[str] = None,
+    def create(self, name: str, route_id: str, route_type: RouteType, dial_patterns: List[str] = None,
                org_id: str = None) -> CreateResponse:
         """
         Create a Dial Plan for the organization.
@@ -123,7 +123,7 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         data = self.post(url=url, params=params, json=body)
         return CreateResponse.parse_obj(data)
 
-    def details(self, *, dial_plan_id: str, org_id: str = None) -> DialPlan:
+    def details(self, dial_plan_id: str, org_id: str = None) -> DialPlan:
         """
         Get a Dial Plan for the organization.
 
@@ -149,7 +149,7 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         dp.dial_plan_id = dial_plan_id
         return dp
 
-    def update(self, *, update: DialPlan, org_id: str = None):
+    def update(self, update: DialPlan, org_id: str = None):
         """
         Modify a Dial Plan for the organization.
 
@@ -171,7 +171,7 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         body = update.json(include={'name', 'route_id', 'route_type'})
         self.put(url=url, params=params, data=body)
 
-    def delete_dial_plan(self, *, dial_plan_id: str, org_id: str = None):
+    def delete_dial_plan(self, dial_plan_id: str, org_id: str = None):
         """
         Delete a Dial Plan for the organization.
 
@@ -192,7 +192,7 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         params = org_id and {'orgId': org_id} or None
         self.delete(url=url, params=params)
 
-    def patterns(self, *, dial_plan_id: str, org_id: str = None,
+    def patterns(self, dial_plan_id: str, org_id: str = None,
                  dial_pattern: str = None, **params) -> Generator[str, None, None]:
         """
         List all Dial Patterns for the organization.
@@ -222,7 +222,7 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
 
         return self.session.follow_pagination(url=url, params=params, item_key='dialPatterns')
 
-    def modify_patterns(self, *, dial_plan_id: str, dial_patterns: List[PatternAndAction], org_id: str = None):
+    def modify_patterns(self, dial_plan_id: str, dial_patterns: List[PatternAndAction], org_id: str = None):
         """
         Modify dial patterns for the Dial Plan.
 
@@ -251,7 +251,7 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         body = Body(dial_patterns=dial_patterns).json()
         self.put(url=url, params=params, data=body)
 
-    def delete_all_patterns(self, *, dial_plan_id: str, org_id: str = None):
+    def delete_all_patterns(self, dial_plan_id: str, org_id: str = None):
         """
         Delete all dial patterns from the Dial Plan.
 

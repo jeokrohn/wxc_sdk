@@ -73,7 +73,7 @@ class Integration:
         self.auth_service = auth_service or 'https://webexapis.com/v1/authorize'
         self.token_service = token_service or 'https://webexapis.com/v1/access_token'
 
-    def auth_url(self, *, state: str) -> str:
+    def auth_url(self, state: str) -> str:
         """
         Get the URL to start an OAuth flow for the integration
 
@@ -95,7 +95,7 @@ class Integration:
         full_url = f'{self.auth_service}?{urllib.parse.urlencode(params)}'
         return full_url
 
-    def tokens_from_code(self, *, code: str) -> Tokens:
+    def tokens_from_code(self, code: str) -> Tokens:
         """
         Get a new set of tokens from code at end of OAuth flow
 
@@ -122,7 +122,7 @@ class Integration:
         tokens.set_expiration()
         return tokens
 
-    def refresh(self, *, tokens: Tokens):
+    def refresh(self, tokens: Tokens):
         """
         Try to get a new access token using the refresh token.
 
@@ -152,7 +152,7 @@ class Integration:
             new_tokens.set_expiration()
             tokens.update(new_tokens)
 
-    def validate_tokens(self, *, tokens: Tokens, min_lifetime_seconds: int = 300) -> bool:
+    def validate_tokens(self, tokens: Tokens, min_lifetime_seconds: int = 300) -> bool:
         """
         Validate tokens
 
@@ -261,7 +261,7 @@ class Integration:
             return None
         return new_tokens
 
-    def get_cached_tokens(self, *, read_from_cache: Callable[[], Optional[Tokens]],
+    def get_cached_tokens(self, read_from_cache: Callable[[], Optional[Tokens]],
                           write_to_cache: Callable[[Tokens], None]) -> Optional[Tokens]:
         """
         Get tokens.

@@ -311,7 +311,7 @@ class AsRestSession(ClientSession):
         """
         return await self._rest_request('PATCH', *args, **kwargs)
 
-    async def follow_pagination(self, *, url: str, model: Type[ApiModel],
+    async def follow_pagination(self, url: str, model: Type[ApiModel],
                                 params: dict = None,
                                 item_key: str = None, **kwargs) -> AsyncGenerator[ApiModel, None, None]:
         """

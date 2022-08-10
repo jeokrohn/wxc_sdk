@@ -116,7 +116,7 @@ class VoicemailRulesApi(ApiChild, base='telephony/config/voicemail/rules'):
     API for voicemail rules settings
     """
 
-    def read(self, *, org_id: str = None) -> VoiceMailRules:
+    def read(self, org_id: str = None) -> VoiceMailRules:
         """
         Get Voicemail Rules
 
@@ -136,7 +136,7 @@ class VoicemailRulesApi(ApiChild, base='telephony/config/voicemail/rules'):
         url = self.ep()
         return VoiceMailRules.parse_obj(self.get(url, params=params))
 
-    def update(self, *, settings: VoiceMailRules, org_id: str = None):
+    def update(self, settings: VoiceMailRules, org_id: str = None):
         """
         Update Voicemail Rules
 

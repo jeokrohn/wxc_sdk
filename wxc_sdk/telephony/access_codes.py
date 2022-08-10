@@ -36,7 +36,7 @@ class AccessCodesApi(ApiChild, base='telephony/config/locations'):
         ep = self.session.ep(f'telephony/config/locations/{location_id}/outgoingPermission/accessCodes{path}')
         return ep
 
-    def read(self, *, location_id: str, org_id: str = None) -> list[AuthCode]:
+    def read(self, location_id: str, org_id: str = None) -> list[AuthCode]:
         """
         Get Location Access Code
 
@@ -59,7 +59,7 @@ class AccessCodesApi(ApiChild, base='telephony/config/locations'):
         data = self.get(url, params=params)
         return parse_obj_as(list[AuthCode], data['accessCodes'])
 
-    def create(self, *, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> list[AuthCode]:
+    def create(self, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> list[AuthCode]:
         """
         Create access code in location
 
@@ -75,7 +75,7 @@ class AccessCodesApi(ApiChild, base='telephony/config/locations'):
         body = {'accessCodes': [json.loads(ac.json()) for ac in access_codes]}
         self.post(url, json=body, params=params)
 
-    def delete_codes(self, *, location_id: str, access_codes: list[Union[str, AuthCode]],
+    def delete_codes(self, location_id: str, access_codes: list[Union[str, AuthCode]],
                      org_id: str = None) -> list[AuthCode]:
         """
         Delete Access Code Location

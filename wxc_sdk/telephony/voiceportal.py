@@ -93,7 +93,7 @@ class VoicePortalApi(ApiChild, base='telephony/config/locations'):
         ep = self.session.ep(f'telephony/config/locations/{location_id}/voicePortal{path}')
         return ep
 
-    def read(self, *, location_id: str, org_id: str = None) -> VoicePortalSettings:
+    def read(self, location_id: str, org_id: str = None) -> VoicePortalSettings:
         """
 
         :param location_id: Location to which the voice portal belongs.
@@ -107,7 +107,7 @@ class VoicePortalApi(ApiChild, base='telephony/config/locations'):
         url = self._endpoint(location_id=location_id)
         return VoicePortalSettings.parse_obj(self.get(url, params=params))
 
-    def update(self, *, location_id: str, settings: VoicePortalSettings, passcode: str = None, org_id: str = None):
+    def update(self, location_id: str, settings: VoicePortalSettings, passcode: str = None, org_id: str = None):
         """
         Update VoicePortal
 
@@ -137,7 +137,7 @@ class VoicePortalApi(ApiChild, base='telephony/config/locations'):
         url = self._endpoint(location_id=location_id)
         self.put(url, params=params, json=data)
 
-    def passcode_rules(self, *, location_id: str, org_id: str = None) -> PasscodeRules:
+    def passcode_rules(self, location_id: str, org_id: str = None) -> PasscodeRules:
         """
         Get VoicePortal Passcode Rule
 

@@ -368,7 +368,7 @@ class CallQueueApi:
                          {'overflow':
                               {'is_transfer_number_set': True}}})
 
-    def list(self, *, location_id: str = None, name: str = None,
+    def list(self, location_id: str = None, name: str = None,
              org_id: str = None, **params) -> Generator[CallQueue, None, None]:
         """
         Read the List of Call Queues
@@ -400,7 +400,7 @@ class CallQueueApi:
         # noinspection PyTypeChecker
         return self._session.follow_pagination(url=url, model=CallQueue, params=params)
 
-    def by_name(self, *, name: str, location_id: str = None, org_id: str = None) -> Optional[CallQueue]:
+    def by_name(self, name: str, location_id: str = None, org_id: str = None) -> Optional[CallQueue]:
         """
         Get queue info by name
 
@@ -412,7 +412,7 @@ class CallQueueApi:
         return next((cq for cq in self.list(location_id=location_id, org_id=org_id, name=name)
                      if cq.name == name), None)
 
-    def create(self, *, location_id: str, settings: CallQueue, org_id: str = None) -> str:
+    def create(self, location_id: str, settings: CallQueue, org_id: str = None) -> str:
         """
         Create a Call Queue
         Create new Call Queues for the given location.
@@ -441,7 +441,7 @@ class CallQueueApi:
         data = self._session.rest_post(url, data=cq_data, params=params)
         return data['id']
 
-    def delete_queue(self, *, location_id: str, queue_id: str, org_id: str = None):
+    def delete_queue(self, location_id: str, queue_id: str, org_id: str = None):
         """
         Delete a Call Queue
         Delete the designated Call Queue.
@@ -466,7 +466,7 @@ class CallQueueApi:
         params = org_id and {'orgId': org_id} or None
         self._session.rest_delete(url=url, params=params)
 
-    def details(self, *, location_id: str, queue_id: str, org_id: str = None) -> CallQueue:
+    def details(self, location_id: str, queue_id: str, org_id: str = None) -> CallQueue:
         """
         Get Details for a Call Queue
         Retrieve Call Queue details.
@@ -496,7 +496,7 @@ class CallQueueApi:
         # noinspection PyTypeChecker
         return result
 
-    def update(self, *, location_id: str, queue_id: str, update: CallQueue, org_id: str = None):
+    def update(self, location_id: str, queue_id: str, update: CallQueue, org_id: str = None):
         """
         Update a Call Queue
 
