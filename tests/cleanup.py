@@ -19,16 +19,22 @@ from wxc_sdk import WebexSimpleApi
 from wxc_sdk.common import NumberState
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 
-TO_DELETE = re.compile(r'^(?:(?:\w{2}|many|test|test_user)_\d{3})|National Holidays$')
+TO_DELETE = re.compile(r'^(?:(?:\w{2}_|many_|test_|test_user_|workspace test )\d{3})|National Holidays$')
 DRY_RUN = False
 
 
-def filter(targets):
+def filter(targets, name_getter=None):
+    def default_name_getter(item):
+        return item.name
+
+    name_getter = name_getter or default_name_getter
+
     for t in targets:
-        if TO_DELETE.match(t.name):
+        name = name_getter(t)
+        if TO_DELETE.match(name):
             yield t
         else:
-            print(f'Keeping {t.__class__.__name__}({t.name})')
+            print(f'Keeping {t.__class__.__name__}({name})')
 
 
 def main():
@@ -143,13 +149,21 @@ def main():
                 users_and_schedules))
 
         # groups
-        groups = [g for g in api.groups.list()
-                  if TO_DELETE.match(g.display_name)]
+        groups = list(filter(api.groups.list(),
+                             name_getter=lambda g: g.display_name))
         groups.sort(key=lambda g: g.display_name)
         print(f'Deleting {len(groups)} groups')
         if not DRY_RUN:
             list(pool.map(lambda g: api.groups.delete_group(group_id=g.group_id),
                           groups))
+
+        # workspaces
+        workspaces = list(filter(api.workspaces.list(),
+                                 name_getter=lambda w: w.display_name))
+        print(f'Deleting {len(workspaces)} workspaces')
+        if True or not DRY_RUN:
+            list(pool.map(lambda ws:api.workspaces.delete_workspace(workspace_id=ws.workspace_id),
+                          workspaces))
 
         # inactive unused numbers
         numbers = [number
