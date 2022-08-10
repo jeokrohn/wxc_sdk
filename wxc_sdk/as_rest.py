@@ -337,6 +337,10 @@ class AsRestSession(ClientSession):
                 url = str(response.links['next']['url'])
             except KeyError:
                 url = None
+            else:
+                # TODO: remove workaround as soon as pagination URL issue gets fixed (WXCAPIBULK-27)
+                if len((pagination_fix := url.split('https,https:/'))) > 1:
+                    url = f'https://{pagination_fix[1]}'
             # return all items
             if item_key is None:
                 if 'items' in data:
