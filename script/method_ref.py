@@ -3,7 +3,6 @@
 Create a reference of all methods available in the SDK
 """
 
-# TODO: create a RST file with the cross-reference
 import os
 
 from wxc_sdk import WebexSimpleApi
