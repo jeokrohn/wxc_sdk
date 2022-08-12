@@ -224,15 +224,6 @@ class AsRestSession(ClientSession):
             request_headers.update((k.lower(), v) for k, v in headers.items())
         async with self._sem:
             async with self.request(method, url=url, headers=request_headers, data=data, json=json, **kwargs) as response:
-                try:
-                    response.raise_for_status()
-                except ClientResponseError as error:
-                    as_dump_response(response=response, data=data, json=json)
-                    # create a RestError based on HTTP error
-                    error = AsRestError(request_info=error.request_info,
-                                        history=error.history, status=error.status,
-                                        message=error.message, headers=error.headers)
-                    raise error
                 # get response body as text or dict (parsed JSON)
                 ct = response.headers.get('Content-Type')
                 if not ct:
@@ -242,6 +233,15 @@ class AsRestSession(ClientSession):
                 else:
                     response_data = await response.text()
                 as_dump_response(response=response, data=data, json=json, response_data=response_data)
+                try:
+                    response.raise_for_status()
+                except ClientResponseError as error:
+                    as_dump_response(response=response, data=data, json=json, response_data=resp_data)
+                    # create a RestError based on HTTP error
+                    error = AsRestError(request_info=error.request_info,
+                                        history=error.history, status=error.status,
+                                        message=error.message, headers=error.headers)
+                    raise error
 
         return response, response_data
 
@@ -311,7 +311,7 @@ class AsRestSession(ClientSession):
         """
         return await self._rest_request('PATCH', *args, **kwargs)
 
-    async def follow_pagination(self, url: str, model: Type[ApiModel],
+    async def follow_pagination(self, url: str, model: Type[ApiModel] = None,
                                 params: dict = None,
                                 item_key: str = None, **kwargs) -> AsyncGenerator[ApiModel, None, None]:
         """
@@ -327,6 +327,13 @@ class AsRestSession(ClientSession):
         :type item_key: str
         :return: yields parsed objects
         """
+        def noop(x):
+            return x
+        if model is None:
+            model = noop
+        else:
+            model = model.parse_obj
+
         while url:
             log.debug(f'{self}.pagination: getting {url}')
             response, data = await self._request_w_response('GET', url=url, params=params, **kwargs)
@@ -351,4 +358,4 @@ class AsRestSession(ClientSession):
                                      if isinstance(v, list)))
             items = data.get(item_key)
             for item in items:
-                yield model.parse_obj(item)
+                yield model(item)
