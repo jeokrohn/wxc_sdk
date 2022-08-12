@@ -127,15 +127,15 @@ class TestUpdate(TestCaseWithUsers):
         verify format of agent IDs
         # TODO: defect, wrong agent id format; broadcloud ID instead of UUID, CALL-68642
         """
-        with self.target_user() as user:
+        with self.target_user() as target_user:
             # API shortcut
             priv = self.api.person_settings.privacy
 
             # get current settings
-            before = priv.read(person_id=user.person_id)
+            before = priv.read(person_id=target_user.person_id)
             present_ids = [agent.agent_id for agent in before.monitoring_agents or []]
             user_candidates = [user for user in self.users
-                               if user.person_id not in present_ids]
+                               if user.person_id not in present_ids and user.person_id != target_user.person_id]
             to_add = random.sample(user_candidates, 3)
 
             # ths is what we want to add
@@ -145,10 +145,10 @@ class TestUpdate(TestCaseWithUsers):
                 monitoring_agents=(before.monitoring_agents or []) + new_agents)
 
             # update
-            priv.configure(person_id=user.person_id, settings=settings)
+            priv.configure(person_id=target_user.person_id, settings=settings)
 
             # how does it look like after the update?
-            after = priv.read(person_id=user.person_id)
+            after = priv.read(person_id=target_user.person_id)
 
         decoded_agent_ids = list(map(lambda agent: base64.b64decode(agent.agent_id + '==').decode(),
                                      after.monitoring_agents))

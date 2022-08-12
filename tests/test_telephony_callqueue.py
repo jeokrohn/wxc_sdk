@@ -127,7 +127,7 @@ class TestCreate(TestCaseWithUsers):
     def test_003_create_many(self):
         """
         Create large number of call queues and check pagination
-        CALL-68209
+        # TODO: monitor CALL-68209, WXCAPIBULK-27
         """
         # pick a random location
         target_location = random.choice(self.locations)
@@ -139,7 +139,7 @@ class TestCreate(TestCaseWithUsers):
         cq_list = list(tcq.list(location_id=target_location.location_id))
         to_create = max(0, CQ_MANY - len(cq_list))
 
-        print(f'{len(cq_list)} existing queues')
+        print(f'{len(cq_list)} existing queues in location')
         queue_names = set(queue.name for queue in cq_list)
         new_names = (name for i in range(1000)
                      if (name := f'many_{i:03}') not in queue_names)

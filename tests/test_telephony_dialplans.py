@@ -1,3 +1,4 @@
+import asyncio
 import contextlib
 import random
 from collections.abc import Generator
@@ -68,6 +69,9 @@ class TestList(TestCreate):
 
 
 class TestUpdateDialPlans(TestCreate):
+    """
+    Tests around updating dial plans (name, rout choice)
+    """
 
     @contextlib.contextmanager
     def assert_dial_plan(self) -> DialPlan:
@@ -108,6 +112,9 @@ class TestUpdateDialPlans(TestCreate):
         self.assertEqual(target.route_type, after.route_type)
 
     def test_001_update_name(self):
+        """
+        CHange the name of a dial plan
+        """
         with self.pick_target() as target:
             target: DialPlan
             new_name = next(self.new_dp_names)
@@ -115,6 +122,9 @@ class TestUpdateDialPlans(TestCreate):
             self.update_and_check(target=target)
 
     def test_002_update_route_choice(self):
+        """
+        Update route choice of a dial plan
+        """
         route_choices = list(self.api.telephony.route_choices())
         random.shuffle(route_choices)
 
@@ -397,6 +407,50 @@ class TestModifyPatterns(TestCaseWithLog):
         finally:
             # clean up: delete dial plan
             dp_api.delete_dial_plan(dial_plan_id=dp_id)
+
+
+class TestCreateLargeDialPlan(TestCaseWithLog):
+
+    @TestCaseWithLog.async_test
+    async def test_001_create_dp_6000_patterns(self):
+        """
+        Create a dial plan and add 6000 pattern
+        """
+        api = self.async_api.telephony.prem_pstn.dial_plan
+        dial_plans = await api.list()
+        dp_names = set(dp.name for dp in dial_plans)
+        patterns = set(chain.from_iterable(await asyncio.gather(*[api.patterns(dial_plan_id=dp.dial_plan_id)
+                                                                  for dp in dial_plans])))
+        new_dp_names = (name for i in range(1, 1000)
+                        if (name := f'test_{i:03}') not in dp_names)
+        dp_name = next(new_dp_names)
+        route_choices = await self.async_api.telephony.route_choices()
+        route_choice = random.choice(route_choices)
+
+        # create dp
+        dp_id = (await api.create(name=dp_name,
+                                  route_id=route_choice.route_id,
+                                  route_type=route_choice.route_type)).dial_plan_id
+
+        try:
+            new_patterns = (pattern for i in range(1, 1000000)
+                            if (pattern := f'+4961001{i:06}') not in patterns)
+            # add new patterns in batches of
+            batch_size = 200
+            batches = int(6000 / batch_size)
+            tasks = [api.modify_patterns(dial_plan_id=dp_id,
+                                         dial_patterns=[PatternAndAction.add(next(new_patterns))
+                                                        for _ in range(batch_size)])
+                     for _ in range(batches)]
+            await asyncio.gather(*tasks)
+            patterns_after = await api.patterns(dial_plan_id=dp_id)
+            print(f'Created dial plan "{dp_name}" with {len(patterns_after)} patterns')
+            self.assertEqual(6000, len(patterns_after))
+            foo = 1
+        except:
+            # if adding patterns fails then remove the dial plan again
+            await api.delete_dial_plan(dial_plan_id=dp_id)
+            raise
 
 
 class TestDeleteAllTestDialPlans(TestCaseWithLog):
