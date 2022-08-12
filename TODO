@@ -1,14 +1,18 @@
 # TODO: how do you create a workspace w/ WxC using the API?
-# TODO: what about outgoing permissions auto transfer numbers for persons
-# TODO: what about outgoing permissions authorization codes for persons
+# TODO: what about outgoing permissions auto transfer numbers for persons -> OneNote 12
+# TODO: what about outgoing permissions authorization codes for persons -> OneNote 13
 # TODO: what about location level settings?
     #   what about outgoing and incoming permissions for locations
     #   what about call park for locations
     #   what about MoH for locations
     #   what about location level calling behavior settings
-# TODO: where is the endpoint to upload a greeting for location intercept? This exists for persons.
+# TODO: where is the endpoint to upload a greeting for intercept for locations and workspaces?
+    # This exists for persons. -> OneNote 14
 # TODO: updating voicemail rules is incomplete; default_voicemail_pin_rules can't be updated?
 # TODO: GET /v1/telephony/config/voicemailGroups. Doc defect: itemKey "voicemailGroups"
+# TODO: when creating an extension only user in CH the user get an ESN work number. This is not the case if the user
+    # is created using the people APi. Question: how can one create an extension only WxC user using the API so that
+    # the user gets a WSN work number
 
 
 
