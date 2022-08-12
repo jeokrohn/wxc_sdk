@@ -28,10 +28,10 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
     def __init__(self, session: RestSession):
         super().__init__(session=session)
         self.intercept = LocationInterceptApi(session=session)
+        self.internal_dialing = InternalDialingApi(session=session)
         self.moh = LocationMoHApi(session=session)
         self.number = LocationNumbersApi(session=session)
         self.voicemail = LocationVoicemailSettingsApi(session=session)
-        self.internal_dialing = InternalDialingApi(session=session)
 
     def generate_password(self, location_id: str, generate: list[str] = None, org_id: str = None):
         """

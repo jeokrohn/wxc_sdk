@@ -144,7 +144,7 @@ The second column of the table has a link to the documentation of the method.
         Retrieve a Person's Monitoring Settings
      - :meth:`~wxc_sdk.person_settings.monitoring.MonitoringApi.read`
    * - api.person_settings.numbers.read
-        Read Do Not Disturb Settings for a Person
+        Get a person's phone numbers including alternate numbers
      - :meth:`~wxc_sdk.person_settings.numbers.NumbersApi.read`
    * - api.person_settings.numbers.update
         Assign or unassign alternate phone numbers to a person
@@ -629,9 +629,24 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.schedules.update
         Update a Schedule
      - :meth:`~wxc_sdk.common.schedules.ScheduleApi.update`
+   * - api.telephony.voicemail_groups.create
+        Create new voicemail group for the given location for a customer
+     - :meth:`~wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.create`
+   * - api.telephony.voicemail_groups.delete
+        Delete the designated voicemail group
+     - :meth:`~wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.delete`
+   * - api.telephony.voicemail_groups.details
+        Retrieve voicemail group details for a location
+     - :meth:`~wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.details`
+   * - api.telephony.voicemail_groups.ep
+        :param location_id:
+     - :meth:`~wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.ep`
    * - api.telephony.voicemail_groups.list
-        
+        List the voicemail group information for the organization
      - :meth:`~wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.list`
+   * - api.telephony.voicemail_groups.update
+        Modifies the voicemail group location details for a particular location for a customer
+     - :meth:`~wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.update`
    * - api.telephony.voicemail_rules.read
         Get Voicemail Rules
      - :meth:`~wxc_sdk.telephony.vm_rules.VoicemailRulesApi.read`
@@ -696,7 +711,7 @@ The second column of the table has a link to the documentation of the method.
         Retrieve a Person's Monitoring Settings
      - :meth:`~wxc_sdk.person_settings.monitoring.MonitoringApi.read`
    * - api.workspace_settings.numbers.read
-        Read Do Not Disturb Settings for a Person
+        Get a person's phone numbers including alternate numbers
      - :meth:`~wxc_sdk.person_settings.numbers.NumbersApi.read`
    * - api.workspace_settings.numbers.update
         Assign or unassign alternate phone numbers to a person

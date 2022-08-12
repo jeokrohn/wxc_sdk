@@ -6722,10 +6722,10 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
         self.intercept = AsLocationInterceptApi(session=session)
+        self.internal_dialing = AsInternalDialingApi(session=session)
         self.moh = AsLocationMoHApi(session=session)
         self.number = AsLocationNumbersApi(session=session)
         self.voicemail = AsLocationVoicemailSettingsApi(session=session)
-        self.internal_dialing = AsInternalDialingApi(session=session)
 
     async def generate_password(self, location_id: str, generate: list[str] = None, org_id: str = None):
         """
@@ -6868,13 +6868,169 @@ class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
 
 class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
     """
-    API for location private network connect API settings
+    API for voicemail groups
     """
 
-    def list(self, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None):
+    def ep(self, location_id: str = None, path: str = None):
+        """
+        :param location_id:
+        :param path:
+        :return:
+        """
+        path = path and f'/{path}' or ''
+        if location_id is None:
+            return super().ep(path)
+        return self.session.ep(f'telephony/config/locations/{location_id}/voicemailGroups{path}')
+
+    def list_gen(self, location_id: str = None, name: str = None, phone_number: str = None,
+             org_id: str = None) -> AsyncGenerator[VoicemailGroup, None, None]:
+        """
+        List the voicemail group information for the organization.
+
+        You can create a shared voicemail box and inbound fax box to assign to users or call routing features like an
+        auto attendant, call queue, or hunt group.
+
+        Retrieving voicemail Group for the organization requires a full read-only administrator auth token with a
+        scope of spark-admin:telephony_config_read.
+
+        :param location_id: Location to which the voicemail group belongs.
+        :type location_id: str
+        :param name: Search (Contains) based on voicemail group name
+        :type name: str
+        :param phone_number: Search (Contains) based on number or extension
+        :type phone_number: str
+        :param org_id: Organization to which the voicemail group belongs.
+        :type org_id: str
+        :return: yields ::class::`VoicemailGroup` instances
+        """
         params = {to_camel(p): v for p, v in locals().items() if p != 'self' and v is not None}
         url = self.ep()
         return self.session.follow_pagination(url=url, model=VoicemailGroup, params=params, item_key='voicemailGroups')
+
+    async def list(self, location_id: str = None, name: str = None, phone_number: str = None,
+             org_id: str = None) -> List[VoicemailGroup]:
+        """
+        List the voicemail group information for the organization.
+
+        You can create a shared voicemail box and inbound fax box to assign to users or call routing features like an
+        auto attendant, call queue, or hunt group.
+
+        Retrieving voicemail Group for the organization requires a full read-only administrator auth token with a
+        scope of spark-admin:telephony_config_read.
+
+        :param location_id: Location to which the voicemail group belongs.
+        :type location_id: str
+        :param name: Search (Contains) based on voicemail group name
+        :type name: str
+        :param phone_number: Search (Contains) based on number or extension
+        :type phone_number: str
+        :param org_id: Organization to which the voicemail group belongs.
+        :type org_id: str
+        :return: yields ::class::`VoicemailGroup` instances
+        """
+        params = {to_camel(p): v for p, v in locals().items() if p != 'self' and v is not None}
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=VoicemailGroup, params=params, item_key='voicemailGroups')]
+
+    async def details(self, location_id: str, voicemail_group_id: str, org_id: str = None) -> VoicemailGroupDetail:
+        """
+        Retrieve voicemail group details for a location.
+
+        Manage your voicemail group settings for a specific location, like when you want your voicemail to be active,
+        message storage settings, and how you would like to be notified of new voicemail messages.
+
+        Retrieving voicemail group details requires a full, user or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param location_id: Retrieve voicemail group details for this location.
+        :type location_id: str
+        :param voicemail_group_id: Retrieve voicemail group details for this voicemail group Id.
+        :type voicemail_group_id: str
+        :param org_id: Retrieve voicemail group details for a customer location.
+        :type org_id: str
+        :return: Voicemail group settings
+        :type: :class:`VoicemailGroupDetail`
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(location_id, voicemail_group_id)
+        data = await self.get(url=url, params=params)
+        return VoicemailGroupDetail.parse_obj(data)
+
+    async def update(self, location_id: str, voicemail_group_id: str, settings: VoicemailGroupDetail, org_id: str = None):
+        """
+        Modifies the voicemail group location details for a particular location for a customer.
+
+        Manage your voicemail settings, like when you want your voicemail to be active, message storage settings, and
+        how you would like to be notified of new voicemail messages.
+
+        Modifying the voicemail group location details requires a full, user administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Modifies the voicemail group details for this location.
+        :type location_id: str
+        :param voicemail_group_id: Modifies the voicemail group details for this voicemail group Id.
+        :type voicemail_group_id: str
+        :param settings: New settings
+        :type settings: :class:`VoicemailGroupDetail`
+        :param org_id: Modifies the voicemail group details for a customer location.
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(location_id, voicemail_group_id)
+        body = settings.json_for_update()
+        await self.put(url=url, data=body, params=params)
+
+    async def create(self, location_id: str, settings: VoicemailGroupDetail, org_id: str = None) -> str:
+        """
+        Create new voicemail group for the given location for a customer.
+
+        Voicemail group can be created for given location for a customer.
+
+        Creating voicemail group for the given location requires a full or user administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Create new voice mail group for this location.
+        :type location_id: str
+        :param settings: settings for new voicemail group
+            Example:
+
+            .. code-block:: python
+
+                settings = VoicemailGroupDetail.create(
+                                        name=vmg_name, extension=extension,
+                                        first_name='first', last_name='last',
+                                        passcode=740384)
+                vmg_id = api.telephony.voicemail_groups.create(location_id=location_id,
+                                                               settings=settings)
+
+        :type settings: :class:`VoicemailGroupDetail`
+        :param org_id: Create new voice mail group for this organization.
+        :type org_id: str
+        :return: UUID of the newly created voice mail group.
+        :rtype: str
+        """
+        body = settings.json_for_create()
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(location_id)
+        data = await self.post(url=url, data=body, params=params)
+        return data['id']
+
+    def delete(self, location_id: str, voicemail_group_id: str, org_id: str = None):
+        """
+        Delete the designated voicemail group.
+
+        Deleting a voicemail group requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Location from which to delete a voicemail group.
+        :type location_id: str
+        :param voicemail_group_id: Delete the voicemail group with the matching ID.
+        :type voicemail_group_id: str
+        :param org_id: Delete the voicemail group from this organization.
+        :type org_id: str
+        """
+        url = self.ep(location_id, voicemail_group_id)
+        super().delete(url=url)
 
 
 class AsVoicemailRulesApi(AsApiChild, base='telephony/config/voicemail/rules'):
@@ -6950,6 +7106,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
     prem_pstn: AsPremisePstnApi
     pnc: AsPrivateNetworkConnectApi
     schedules: AsScheduleApi
+    # location voicemail groups
     voicemail_groups: AsVoicemailGroupsApi
     voicemail_rules: AsVoicemailRulesApi
     voiceportal: AsVoicePortalApi

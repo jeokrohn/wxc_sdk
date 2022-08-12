@@ -2,7 +2,6 @@
 Voicemail API
 """
 import os
-from enum import Enum
 from io import BufferedReader
 from typing import Optional, Union
 
@@ -10,15 +9,10 @@ from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 from .common import PersonSettingsApiChild
 from ..base import ApiModel
-from ..common import Greeting
+from ..common import Greeting, VoicemailMessageStorage, StorageType, VoicemailEnabled, VoicemailNotifications, \
+    VoicemailFax, VoicemailTransferToNumber, VoicemailCopyOfMessage
 
-__all__ = ['VoicemailApi', 'VoicemailEnabled', 'VoicemailEnabledWithGreeting', 'UnansweredCalls',
-           'StorageType', 'VoicemailMessageStorage', 'VoicemailCopyOfMessage', 'VoicemailFax',
-           'VoicemailTransferToNumber', 'VoicemailNotifications', 'VoiceMailFax', 'VoicemailSettings']
-
-
-class VoicemailEnabled(ApiModel):
-    enabled: bool
+__all__ = ['VoicemailApi', 'VoicemailEnabledWithGreeting', 'UnansweredCalls', 'VoicemailSettings']
 
 
 class VoicemailEnabledWithGreeting(VoicemailEnabled):
@@ -39,70 +33,6 @@ class UnansweredCalls(VoicemailEnabledWithGreeting):
     number_of_rings: Optional[int]
     #: System-wide maximum number of rings allowed for number_of_rings setting.
     system_max_number_of_rings: Optional[int]
-
-
-class StorageType(str, Enum):
-    """
-    Designates which type of voicemail message storage is used.
-    """
-    #: For message access via phone or the Calling User Portal.
-    internal = 'INTERNAL'
-    #: For sending all messages to the person's email.
-    external = 'EXTERNAL'
-
-
-class VoicemailMessageStorage(ApiModel):
-    """
-    Settings for message storage
-    """
-    #: When true desktop phone will indicate there are new voicemails.
-    mwi_enabled: Optional[bool]
-    #: Designates which type of voicemail message storage is used.
-    storage_type: Optional[StorageType]
-    #: External email address to which the new voicemail audio will be sent. A value for this field must be provided
-    # in the request if a storageType of EXTERNAL is given in the request.
-    external_email: Optional[str]
-
-
-class VoicemailCopyOfMessage(VoicemailEnabled):
-    """
-    Settings for sending a copy of new voicemail message audio via email.
-    """
-    #: Email address to which the new voicemail audio will be sent.
-    email_id: Optional[str]
-
-
-class VoicemailFax(VoicemailEnabled):
-    phone_number: Optional[str]
-    extension: Optional[str]
-
-
-class VoicemailTransferToNumber(VoicemailEnabled):
-    """
-    Settings for voicemail caller to transfer to a different number by pressing zero (0).
-    """
-    #: Number voicemail caller will be transferred to when they press zero (0).
-    destination: Optional[str]
-
-
-class VoicemailNotifications(VoicemailEnabled):
-    """
-    Settings for notifications when there are any new voicemails.
-    """
-    #: Email address to which the notification will be sent. For text messages, use an email to text message gateway
-    #: like 2025551212@txt.att.net.
-    destination: Optional[str]
-
-
-class VoiceMailFax(VoicemailEnabled):
-    """
-    Fax message settings
-    """
-    #: Designates optional extension for fax.
-    extension: Optional[str]
-    #: Designates phone number for fax. A value for this field must be provided in the request if faxMessage enabled
-    #: field is given as true in the request.
-    phone_number: Optional[str]
 
 
 class VoicemailSettings(ApiModel):
@@ -126,7 +56,7 @@ class VoicemailSettings(ApiModel):
     #: Settings for message storage
     message_storage: Optional[VoicemailMessageStorage]
     #: Fax message settings
-    fax_message: Optional[VoiceMailFax]
+    fax_message: Optional[VoicemailFax]
     voice_message_forwarding_enabled: Optional[bool]  # TODO: raise documentation defect
 
     @staticmethod
@@ -146,9 +76,9 @@ class VoicemailSettings(ApiModel):
                                  notifications=VoicemailNotifications(enabled=False),
                                  transfer_to_number=VoicemailTransferToNumber(enabled=False),
                                  email_copy_of_message=VoicemailCopyOfMessage(enabled=False),
-                                 message_storage=VoicemailMessageStorage(mwi_enabled=True,
-                                                                         storage_type=StorageType.internal),
-                                 fax_message=VoiceMailFax(enabled=False),
+                                 message_storage=VoicemailMessageStoragei(mwi_enabled=True,
+                                                                          storage_type=StorageType.internal),
+                                 fax_message=VoicemailFax(enabled=False),
                                  voice_message_forwarding_enabled=False)
 
 

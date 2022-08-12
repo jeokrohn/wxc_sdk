@@ -367,6 +367,7 @@ class TelephonyApi(ApiChild, base='telephony'):
     prem_pstn: PremisePstnApi
     pnc: PrivateNetworkConnectApi
     schedules: ScheduleApi
+    # location voicemail groups
     voicemail_groups: VoicemailGroupsApi
     voicemail_rules: VoicemailRulesApi
     voiceportal: VoicePortalApi

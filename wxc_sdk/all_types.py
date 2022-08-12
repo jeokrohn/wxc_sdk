@@ -1,9 +1,12 @@
-from wxc_sdk.base import ApiModel, ApiModelWithErrors, CodeAndReason, StrOrDict, to_camel, webex_id_to_uuid
+from wxc_sdk.base import ApiModel, ApiModelWithErrors, CodeAndReason, StrOrDict, plus1, to_camel,\
+    webex_id_to_uuid
 from wxc_sdk.common import AlternateNumber, AuthCode, CallParkExtension, Customer, DialPatternStatus,\
     DialPatternValidate, Greeting, IdAndName, MonitoredMember, NumberState, PatternAction, PersonPlaceAgent,\
-    RingPattern, RouteIdentity, RouteType, UserBase, UserNumber, UserType, ValidateExtensionResponseStatus,\
-    ValidateExtensionStatus, ValidateExtensionStatusState, ValidateExtensionsResponse, ValidatePhoneNumberStatus,\
-    ValidatePhoneNumberStatusState, ValidatePhoneNumbersResponse
+    RingPattern, RouteIdentity, RouteType, StorageType, UserBase, UserNumber, UserType,\
+    ValidateExtensionResponseStatus, ValidateExtensionStatus, ValidateExtensionStatusState,\
+    ValidateExtensionsResponse, ValidatePhoneNumberStatus, ValidatePhoneNumberStatusState,\
+    ValidatePhoneNumbersResponse, VoicemailCopyOfMessage, VoicemailEnabled, VoicemailFax, VoicemailMessageStorage,\
+    VoicemailNotifications, VoicemailTransferToNumber
 from wxc_sdk.common.schedules import Event, RecurWeekly, RecurYearlyByDate, RecurYearlyByDay, Recurrence,\
     Schedule, ScheduleApiBase, ScheduleDay, ScheduleMonth, ScheduleType, ScheduleTypeOrStr, ScheduleWeek
 from wxc_sdk.groups import Group, GroupMember
@@ -33,9 +36,7 @@ from wxc_sdk.person_settings.permissions_out import Action, AutoTransferNumbers,
 from wxc_sdk.person_settings.privacy import Privacy
 from wxc_sdk.person_settings.push_to_talk import PTTConnectionType, PushToTalkAccessType, PushToTalkSettings
 from wxc_sdk.person_settings.receptionist import ReceptionistSettings
-from wxc_sdk.person_settings.voicemail import StorageType, UnansweredCalls, VoiceMailFax, VoicemailCopyOfMessage,\
-    VoicemailEnabled, VoicemailEnabledWithGreeting, VoicemailFax, VoicemailMessageStorage, VoicemailNotifications,\
-    VoicemailSettings, VoicemailTransferToNumber
+from wxc_sdk.person_settings.voicemail import UnansweredCalls, VoicemailEnabledWithGreeting, VoicemailSettings
 from wxc_sdk.telephony import CallSourceInfo, CallSourceType, DestinationType, EmergencyDestination,\
     FeatureAccessCodeDestination, HostedFeatureDestination, HostedUserDestination, LocationAndNumbers,\
     NumberDetails, NumberListPhoneNumber, NumberListPhoneNumberType, NumberLocation, NumberOwner, NumberType,\
@@ -73,7 +74,7 @@ from wxc_sdk.telephony.prem_pstn.trunk import DeviceStatus, OutboundProxy, Respo
     Trunk, TrunkDetail, TrunkDeviceType, TrunkLocation, TrunkType, TrunkTypeWithDeviceType, TrunkUsage
 from wxc_sdk.telephony.vm_rules import BlockContiguousSequences, BlockPreviousPasscodes, BlockRepeatedDigits,\
     DefaultVoicemailPinRules, EnabledAndNumberOfDays, PinLength, VoiceMailRules
-from wxc_sdk.telephony.voicemail_groups import VoicemailGroup
+from wxc_sdk.telephony.voicemail_groups import VoicemailGroup, VoicemailGroupDetail
 from wxc_sdk.telephony.voiceportal import ExpirePasscode, FailedAttempts, PasscodeRules, VoicePortalSettings
 from wxc_sdk.tokens import Tokens
 from wxc_sdk.webhook import WebHook, WebHookCreate, WebHookEvent, WebHookResource, WebHookStatus
@@ -125,9 +126,9 @@ __all__ = ['Action', 'Agent', 'AlternateNumber', 'AlternateNumberSettings', 'Ann
            'UserNumber', 'UserType', 'ValidateExtensionResponseStatus', 'ValidateExtensionStatus',
            'ValidateExtensionStatusState', 'ValidateExtensionsResponse', 'ValidatePhoneNumberStatus',
            'ValidatePhoneNumberStatusState', 'ValidatePhoneNumbersResponse', 'VirtualExtensionDestination',
-           'VoiceMailFax', 'VoiceMailRules', 'VoicePortalSettings', 'VoicemailCopyOfMessage', 'VoicemailEnabled',
-           'VoicemailEnabledWithGreeting', 'VoicemailFax', 'VoicemailGroup', 'VoicemailMessageStorage',
-           'VoicemailNotifications', 'VoicemailSettings', 'VoicemailTransferToNumber', 'WaitMessageSetting',
-           'WaitMode', 'WebHook', 'WebHookCreate', 'WebHookEvent', 'WebHookResource', 'WebHookStatus',
-           'WelcomeMessageSetting', 'WorkSpaceType', 'Workspace', 'WorkspaceEmail', '_Helper', 'to_camel',
-           'webex_id_to_uuid']
+           'VoiceMailRules', 'VoicePortalSettings', 'VoicemailCopyOfMessage', 'VoicemailEnabled',
+           'VoicemailEnabledWithGreeting', 'VoicemailFax', 'VoicemailGroup', 'VoicemailGroupDetail',
+           'VoicemailMessageStorage', 'VoicemailNotifications', 'VoicemailSettings', 'VoicemailTransferToNumber',
+           'WaitMessageSetting', 'WaitMode', 'WebHook', 'WebHookCreate', 'WebHookEvent', 'WebHookResource',
+           'WebHookStatus', 'WelcomeMessageSetting', 'WorkSpaceType', 'Workspace', 'WorkspaceEmail', '_Helper',
+           'plus1', 'to_camel', 'webex_id_to_uuid']
