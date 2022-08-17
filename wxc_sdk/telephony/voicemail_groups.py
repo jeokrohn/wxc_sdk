@@ -129,7 +129,7 @@ class VoicemailGroupsApi(ApiChild, base='telephony/config/voicemailGroups'):
         return self.session.ep(f'telephony/config/locations/{location_id}/voicemailGroups{path}')
 
     def list(self, location_id: str = None, name: str = None, phone_number: str = None,
-             org_id: str = None) -> Generator[VoicemailGroup, None, None]:
+             org_id: str = None, **params) -> Generator[VoicemailGroup, None, None]:
         """
         List the voicemail group information for the organization.
 
@@ -149,7 +149,7 @@ class VoicemailGroupsApi(ApiChild, base='telephony/config/voicemailGroups'):
         :type org_id: str
         :return: yields ::class::`VoicemailGroup` instances
         """
-        params = {to_camel(p): v for p, v in locals().items() if p != 'self' and v is not None}
+        params.update((to_camel(p), v) for p, v in locals().items() if p not in {'self', 'params'} and v is not None)
         url = self.ep()
         return self.session.follow_pagination(url=url, model=VoicemailGroup, params=params, item_key='voicemailGroups')
 
