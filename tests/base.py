@@ -22,13 +22,14 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import wraps
+from itertools import takewhile
 from typing import Optional, Any, Union, ClassVar
 from unittest import TestCase
 
 import requests
 import yaml
 from dotenv import load_dotenv
-from pydantic import parse_obj_as, ValidationError, BaseModel, Field
+from pydantic import parse_obj_as, ValidationError, BaseModel, Field, root_validator
 from yaml import safe_load
 from yaml.scanner import ScannerError
 
@@ -43,7 +44,8 @@ from wxc_sdk.tokens import Tokens
 
 log = logging.getLogger(__name__)
 
-__all__ = ['TestCaseWithTokens', 'TestCaseWithLog', 'gather', 'TestWithLocations', 'TestCaseWithUsers', 'get_tokens']
+__all__ = ['TestCaseWithTokens', 'TestCaseWithLog', 'gather', 'TestWithLocations', 'TestCaseWithUsers', 'get_tokens',
+           'async_test', 'LoggedRequest']
 
 
 def gather(mapping: Iterable[Any], return_exceptions: bool = False) -> Generator[Union[Any, Exception]]:
@@ -221,31 +223,30 @@ def get_tokens() -> Optional[Tokens]:
     return tokens
 
 
+@dataclass(init=False)
 class TestCaseWithTokens(TestCase):
-    api: Optional[WebexSimpleApi]
-    me: Optional[Person]
-    tokens: Optional[Tokens]
-    async_api: Optional[AsWebexSimpleApi]
+    api: ClassVar[WebexSimpleApi]
+    me: ClassVar[Person]
+    tokens: ClassVar[Tokens]
+    async_api: AsWebexSimpleApi = field(default=None)
     """
-    A test case that required access tokens to run
+    A test case that requires access tokens to run
     """
 
-    class wrapper:
-        pass
-
-    def async_test(async_test):
+    @staticmethod
+    def async_test(as_test):
         """
         Decorator to run async tests
         also initializes the async_api attribute
         :return:
         """
 
-        @wraps(async_test)
+        @wraps(as_test)
         def run_async_test(test_self: TestCaseWithTokens):
             async def prepare_and_run():
                 async with AsWebexSimpleApi(tokens=test_self.tokens) as async_api:
                     test_self.async_api = async_api
-                    await async_test(test_self)
+                    await as_test(test_self)
 
             asyncio.run(prepare_and_run())
 
@@ -253,6 +254,7 @@ class TestCaseWithTokens(TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
+        super().setUpClass()
         tokens = get_tokens()
         cls.tokens = tokens
         if tokens:
@@ -264,6 +266,9 @@ class TestCaseWithTokens(TestCase):
     def setUp(self) -> None:
         self.assertTrue(self.tokens and self.api, 'Failed to obtain tokens')
         random.seed()
+
+
+async_test = TestCaseWithTokens.async_test
 
 
 def log_name(prefix: str, test_case_id: str) -> str:
@@ -304,13 +309,156 @@ def log_name(prefix: str, test_case_id: str) -> str:
     return log
 
 
+class LoggedRequest(BaseModel):
+    class Config:
+        arbitrary_types_allowed = True
+
+    method: str
+    url: str
+    status: int
+    response: str
+    time_ms: float
+    parsed_url: Optional[urllib.parse.ParseResult]
+    url_query: dict = Field(default_factory=dict)
+    url_dict: Optional[dict]  # groupdict() of match on url_filter if one was provided
+    #: request headers
+    headers: Optional[dict]
+    #: request body
+    request_body: Optional[Union[dict, str]]
+    #: response headers
+    response_headers: Optional[dict]
+    #: response body
+    response_body: Optional[Union[dict, str]]
+    record: logging.LogRecord
+
+    # regular expressions to match on reqeust record
+    request_record: ClassVar[re.Pattern] = re.compile(r"""
+        ^Request\s              # keyword at start of line
+        (?P<status>\d{3})       # three digti status code
+        \[(?P<response>\w+)]    # HTTP response string in squared brackets
+        \s*\((?P<time_ms>\d+\.\d+)\sms\):\s     # response time in ms
+        (?P<method>\w+)\s       # HTTP methods
+        (?P<url>\S+)$           # url is the rest of the line""", re.VERBOSE + re.MULTILINE)
+    header_line: ClassVar[re.Pattern] = re.compile(r'\s+(?P<header>.+): (?P<value>.+)$')
+    response_line: ClassVar[re.Pattern] = re.compile(r'^\s+Response')
+    body_line: ClassVar[re.Pattern] = re.compile(r'\s*-+\s*response body')
+    end_line: ClassVar[re.Pattern] = re.compile(r'\s*-+\s*end\s*')
+
+    @root_validator(pre=True)
+    def validate_all(cls, values):
+        """
+        Validator to populate request/response_records/body
+        :param values:
+        :return:
+        """
+        parsed_url = urllib.parse.urlparse(values['url'])
+        values['parsed_url'] = parsed_url
+        if parsed_url.query:
+            values['url_query'] = urllib.parse.parse_qs(parsed_url.query)
+        record: logging.LogRecord = values.get('record', None)
+        if record is None:
+            # we are done here
+            return
+        lines = iter(record.message.splitlines())
+        # skip 1st line (already parsed)
+        next(lines)
+        headers = {}
+        while header := cls.header_line.match((line := next(lines))):
+            headers[header['header']] = header['value']
+        values['headers'] = headers
+
+        # we are either at the response line or need to parse the body
+        if line.strip() == '--- body ---':
+            # collect everything until Response line
+            ct = headers['content-type']
+            if ct.startswith('application/json'):
+                body = '\n'.join(takewhile(lambda l: not cls.response_line.match(l),
+                                           lines))
+                values['request_body'] = json.loads(body)
+            elif ct.startswith('application/x-www-form-urlencoded'):
+                values['request_body'] = {header['header']: header['value']
+                                          for line in takewhile(lambda l: not cls.response_line.match(l),
+                                                                lines)
+                                          if (header := cls.header_line.match(line))}
+            else:
+                values['request_body'] = '\n'.join(takewhile(lambda l: not cls.response_line.match(l),
+                                                             lines))
+
+        # now we are at the response line
+        values['response_headers'] = {header['header']: header['value']
+                                      for line in takewhile(lambda l: not cls.body_line.match(l),
+                                                            lines)
+                                      if (header := cls.header_line.match(line))}
+
+        # there might be a response body
+        body = '\n'.join(takewhile(lambda l: not cls.end_line.match(l),
+                                   lines))
+        if body:
+            try:
+                body = json.loads(body)
+            except json.JSONDecodeError:
+                pass
+        values['response_body'] = body or None
+
+        return values
+
+    @classmethod
+    def from_records(cls, records: list[logging.LogRecord], method: str = None,
+                     url_filter: Union[str, re.Pattern] = None) -> Generator['LoggedRequest', None, None]:
+        """
+        Generate LoggedRequest objects from a list of LogRecords
+        :param records:
+        :param method: method filter
+        :param url_filter: filter for request URLs
+        :return:
+        """
+        records = iter(records)
+
+        # compile if a string is provided, else keep the value provided (Pattern or None)
+        url_filter = isinstance(url_filter, str) and re.compile(url_filter) or url_filter
+
+        for record in records:
+            if not (request := cls.request_record.match(record.message)) or \
+                    (method and method != request['method']) or \
+                    (url_filter and not (url := url_filter.match(request['url']))):
+                # not a request, wrong method or url doesn't match
+                continue
+            yield LoggedRequest(**request.groupdict(),
+                                record=record,
+                                url_dict=url_filter and url.groupdict())
+
+
+class RecordHandler(logging.Handler):
+    """
+    Primitive handler to collect log records
+    """
+
+    def __init__(self, *, level: Union[int, str] = logging.NOTSET):
+        super().__init__(level=level)
+        self.records: list[logging.LogRecord] = list()
+
+    def emit(self, record: logging.LogRecord) -> None:
+        self.records.append(record)
+
+    def requests(self, method: str = None,
+                 url_filter: Union[str, re.Pattern] = None) -> Generator[LoggedRequest, None, None]:
+        """
+        Generator for logged requests
+        :param method:
+        :param url_filter:
+        :return:
+        """
+        yield from LoggedRequest.from_records(records=self.records, method=method, url_filter=url_filter)
+
+
 @dataclass(init=False)
 class TestCaseWithLog(TestCaseWithTokens):
     """
     Test case with automatic logging
     """
-    log_path: str
+    log_path: str = field(default=None)
     file_log_handler: logging.Handler = field(default=None)
+    record_log_handler: RecordHandler = field(default=None)
 
     rest_logger_names = ['wxc_sdk.rest', 'wxc_sdk.as_rest', 'webexteamsasyncapi.rest']
 
@@ -328,11 +476,14 @@ class TestCaseWithLog(TestCaseWithTokens):
         file_handler.setFormatter(file_fmt)
         self.file_log_handler = file_handler
 
+        self.record_log_handler = RecordHandler(level=logging.DEBUG)
+
         # enable debug logging on the REST loggers
         for rest_logger_name in self.rest_logger_names:
             rest_logger = logging.getLogger(rest_logger_name)
             rest_logger.setLevel(logging.DEBUG)
             rest_logger.addHandler(file_handler)
+            rest_logger.addHandler(self.record_log_handler)
 
     def tearDown(self) -> None:
         super().tearDown()
@@ -343,9 +494,11 @@ class TestCaseWithLog(TestCaseWithTokens):
             for rest_logger_name in self.rest_logger_names:
                 rest_logger = logging.getLogger(rest_logger_name)
                 rest_logger.removeHandler(self.file_log_handler)
+                rest_logger.removeHandler(self.record_log_handler)
 
             self.file_log_handler.close()
             self.file_log_handler = None
+            self.record_log_handler.close()
 
     @contextmanager
     def no_log(self):
@@ -374,6 +527,16 @@ class TestCaseWithLog(TestCaseWithTokens):
         finally:
             if self.file_log_handler:
                 self.file_log_handler.setLevel(old_level)
+
+    def requests(self, method: str = None,
+                 url_filter: Union[str, re.Pattern] = None) -> Generator[LoggedRequest, None, None]:
+        """
+        Generator for requests logged during the test
+        :param method: request method, GET, POST, ...
+        :param url_filter: filter for URls, can be a string or a compiled pattern
+        :return: yields logged requests
+        """
+        return LoggedRequest.from_records(self.record_log_handler.records, method=method, url_filter=url_filter)
 
 
 @dataclass(init=False)
