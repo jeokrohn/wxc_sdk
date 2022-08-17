@@ -6,7 +6,7 @@ from contextlib import contextmanager
 from typing import ClassVar
 
 from wxc_sdk.all_types import *
-from .base import TestCaseWithLog, TestCaseWithUsers
+from .base import TestCaseWithLog, TestCaseWithUsers, async_test
 
 # number of call queues to create by create many test
 CQ_MANY = 100
@@ -30,7 +30,7 @@ class TestList(TestCaseWithLog):
         print(f'Total number of queues read with pagination: {len(queues_pag)}')
         self.assertEqual(len(queues), len(queues_pag))
 
-    @TestCaseWithLog.async_test
+    @async_test
     async def test_002_all_details(self):
         """
         get details of all call queues

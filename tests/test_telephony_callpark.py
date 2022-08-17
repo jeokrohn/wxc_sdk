@@ -1,7 +1,7 @@
 import json
 import random
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from itertools import chain, groupby
 from typing import ClassVar, Optional
 from unittest import skip
@@ -148,8 +148,8 @@ class TestUpdate(TestWithLocations):
     Test call park updates
     """
     cp_list: ClassVar[list[CallPark]]
-    cp_by_location: dict[str, list[CallPark]]
-    target: Optional[CallPark]
+    cp_by_location: ClassVar[dict[str, list[CallPark]]]
+    target: CallPark = field(default=None)
 
     @classmethod
     def setUpClass(cls) -> None:

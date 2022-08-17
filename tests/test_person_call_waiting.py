@@ -4,7 +4,7 @@ Test cases for call waiting settings
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 
-from .base import TestCaseWithUsers
+from .base import TestCaseWithUsers, async_test
 
 
 class TestRead(TestCaseWithUsers):
@@ -19,7 +19,7 @@ class TestRead(TestCaseWithUsers):
                                     self.users))
         print(f'Got details for {len(details)} users.')
 
-    @TestCaseWithUsers.async_test
+    @async_test
     async def test_002_read_all_async(self):
         """
         read settings for all users

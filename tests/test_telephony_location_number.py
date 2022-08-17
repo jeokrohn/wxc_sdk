@@ -1,5 +1,5 @@
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from random import choice
 from typing import ClassVar, Optional
 
@@ -25,8 +25,8 @@ class NumberTest(TestCaseWithLog):
 
 @dataclass(init=False)
 class TestAddAndActivate(NumberTest):
-    target_location_info: Optional[LocationInfo]
-    new_numbers: list[str]
+    target_location_info: LocationInfo = field(default=None)
+    new_numbers: list[str] = field(default=None)
 
     def setUp(self) -> None:
         """

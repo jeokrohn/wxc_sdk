@@ -1,11 +1,11 @@
 import asyncio
 
-from .base import TestCaseWithLog
+from .base import TestCaseWithLog, async_test
 
 
 class TestPeople(TestCaseWithLog):
 
-    @TestCaseWithLog.async_test
+    @async_test
     async def test_001_all_details(self):
         me = await self.async_api.people.me()
         users = [u async for u in self.async_api.people.list_gen()]

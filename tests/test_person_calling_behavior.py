@@ -7,12 +7,12 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 
 from wxc_sdk.all_types import *
-from .base import TestCaseWithUsers
+from .base import TestCaseWithUsers, async_test
 
 
 class TestRead(TestCaseWithUsers):
 
-    @TestCaseWithUsers.async_test
+    @async_test
     async def test_001_read_one(self):
         """
         Read app services settings for one user
@@ -26,7 +26,7 @@ class TestRead(TestCaseWithUsers):
         print(f'Got settings: {settings.json()}')
         self.assertTrue(settings.effective_behavior_type is not None)
 
-    @TestCaseWithUsers.async_test
+    @async_test
     async def test_002_read_all(self):
         """
         Read app services settings of all users

@@ -8,9 +8,9 @@ import datetime
 import random
 import re
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from itertools import chain
-from typing import Optional
+from typing import Optional, ClassVar
 
 from wxc_sdk.all_types import *
 from .base import TestWithLocations
@@ -127,7 +127,7 @@ class TestWithTestSchedules(TestWithLocations):
     """
     Base class for tests with test schedules (test_xxx)
     """
-    test_schedules: Optional[list[Schedule]]
+    test_schedules: ClassVar[list[Schedule]]
 
     @classmethod
     def setUpClass(cls) -> None:

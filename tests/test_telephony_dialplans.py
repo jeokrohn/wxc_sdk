@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from itertools import chain
 from typing import ClassVar
 
-from tests.base import TestCaseWithLog
+from tests.base import TestCaseWithLog, async_test
 from wxc_sdk.common import DialPatternStatus, DialPatternValidate, RouteIdentity
 from wxc_sdk.telephony.prem_pstn import DialPatternValidationStatus
 from wxc_sdk.telephony.prem_pstn.dial_plan import DialPlan, PatternAndAction
@@ -411,7 +411,7 @@ class TestModifyPatterns(TestCaseWithLog):
 
 class TestCreateLargeDialPlan(TestCaseWithLog):
 
-    @TestCaseWithLog.async_test
+    @async_test
     async def test_001_create_dp_6000_patterns(self):
         """
         Create a dial plan and add 6000 pattern

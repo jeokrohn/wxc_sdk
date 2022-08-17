@@ -1,6 +1,6 @@
 import asyncio
 
-from tests.base import TestCaseWithLog
+from tests.base import TestCaseWithLog, async_test
 from tests.testutil import us_location_info, as_available_tns
 from wxc_sdk.as_api import AsWebexSimpleApi
 
@@ -10,7 +10,7 @@ class TestNewTNs(TestCaseWithLog):
     Try to get available TNs for each US Location
     """
 
-    @TestCaseWithLog.async_test
+    @async_test
     async def test_001_tns_for_us_locations(self):
         TNS_TO_REQUEST = 10
 

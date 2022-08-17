@@ -9,7 +9,7 @@ from json import dumps, loads
 from random import shuffle, choice, randint
 from typing import ClassVar, Optional, Generator, Union
 
-from tests.base import TestCaseWithLog
+from tests.base import TestCaseWithLog, async_test
 from wxc_sdk.common import RouteType, RouteIdentity, UserType, NumberState
 from wxc_sdk.common.schedules import Schedule, ScheduleType
 from wxc_sdk.locations import Location
@@ -204,7 +204,7 @@ class TestCallRouting(TestCaseWithLog):
 
 
 class TestUsersAndTrunks(TestCallRouting):
-    @TestCaseWithLog.async_test
+    @async_test
     async def test_001_user_to_user_extension_same_location(self):
         """
         User A calls user B by dialing user B's extension

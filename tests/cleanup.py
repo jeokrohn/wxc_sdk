@@ -161,9 +161,17 @@ def main():
         workspaces = list(filter(api.workspaces.list(),
                                  name_getter=lambda w: w.display_name))
         print(f'Deleting {len(workspaces)} workspaces')
-        if True or not DRY_RUN:
+        if not DRY_RUN:
             list(pool.map(lambda ws:api.workspaces.delete_workspace(workspace_id=ws.workspace_id),
                           workspaces))
+
+        # voicemail groups
+        groups = list(filter(api.telephony.voicemail_groups.list()))
+        print(f'Deleting {len(groups)} voicemail groups')
+        if not DRY_RUN:
+            list(pool.map(lambda g: api.telephony.voicemail_groups.delete(location_id=g.location_id,
+                                                                          voicemail_group_id=g.group_id),
+                          groups))
 
         # inactive unused numbers
         numbers = [number

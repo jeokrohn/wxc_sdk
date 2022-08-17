@@ -5,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from typing import Callable
 
-from .base import TestCaseWithUsers, gather
+from .base import TestCaseWithUsers, gather, async_test
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.barge import BargeSettings
 from wxc_sdk.person_settings.call_intercept import InterceptSetting, InterceptTypeIncoming, Greeting
@@ -166,7 +166,7 @@ class TestConfigure(TestCaseWithUsers):
             intercept = ps.call_intercept.read(person_id=user.person_id)
         self.assertEqual(os.path.basename(self.wav_path), intercept.incoming.announcements.file_name)
 
-    @TestCaseWithUsers.async_test
+    @async_test
     async def test_006a_async_upload_intercept_greeting(self):
         """
         test to upload a custom greeting for call intercept

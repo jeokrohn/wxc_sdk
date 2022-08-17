@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.numbers import PersonNumbers
 from wxc_sdk.rest import RestError
-from .base import TestCaseWithLog
+from .base import TestCaseWithLog, async_test
 from .testutil import calling_users
 
 
@@ -115,7 +115,7 @@ class TestPeoplePhoneNumbers(TestCaseWithLog):
     Take a look at people phone numbers
     """
 
-    @TestCaseWithLog.async_test
+    @async_test
     async def test_001_show_numbers(self):
         users = calling_users(api=self.api)
 
