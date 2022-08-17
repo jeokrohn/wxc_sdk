@@ -58,7 +58,11 @@ MAX_USERS_WITH_CALLING_DATA = 10
 """
 
 # identify sync calls to be translated to "await .." calls
-RE_SYNC_CALLS = re.compile(r'self\.(?:(?:_)?session\.)?(?:rest_)?(?:get|put|post|delete|patch|close|list)')
+RE_SYNC_CALLS = re.compile(r"""
+    (?:(?:self\.(?:(?:_)?session\.)?)|  # self., self._session., self.session.
+       (?:super\(\)\.))                 # super().
+    (?:rest_)?(?:get|put|post|delete|patch|close|list)""",
+                           flags=re.VERBOSE)
 
 # start of a class until the 1st method
 RE_CLASS_START = re.compile(r"""
@@ -502,7 +506,8 @@ def transform_classes_to_async(sources: Iterable[str]) -> Generator[str, None, N
         """
         Transform source of one method
 
-        :param source:
+        :param class_name:
+        :param method_match:
         :return:
         """
         method_name = method_match.group('method_name')
