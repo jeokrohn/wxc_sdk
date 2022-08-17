@@ -9,6 +9,7 @@ import uuid
 from asyncio import Semaphore
 from collections.abc import AsyncGenerator
 from io import TextIOBase, StringIO
+from time import perf_counter_ns
 from typing import Tuple, Type, Optional
 
 import backoff
@@ -80,15 +81,21 @@ class AsRestError(ClientResponseError):
 
 
 def as_dump_response(*, response: ClientResponse, response_data=None, data=None,
-                     json=None, file: TextIOBase = None, dump_log: logging.Logger = None):
+                     json=None, file: TextIOBase = None, dump_log: logging.Logger = None,
+                     diff_ns: int = None):
     """
     Dump response object to log file
 
     :param response: HTTP request response
+    :param response_data:
+    :param data:
+    :param json:
     :param file: stream to dump to
     :type file: TextIOBase
     :param dump_log: logger to dump to
     :type dump_log: logging.Logger
+    :param diff_ns: time the request took (in ns)
+    :type diff_ns: int
     """
     if not log.isEnabledFor(logging.DEBUG):
         return
@@ -99,7 +106,8 @@ def as_dump_response(*, response: ClientResponse, response_data=None, data=None,
     for h in response.history:
         as_dump_response(response=h, file=output)
 
-    print(f'Request {response.status}[{response.reason}]: '
+    time_str = diff_ns is None and '' or f'({diff_ns / 1000000.0:.3f} ms)'
+    print(f'Request {response.status}[{response.reason}]{time_str}: '
           f'{response.request_info.method} {response.request_info.url}', file=output)
 
     # request headers
@@ -127,7 +135,7 @@ def as_dump_response(*, response: ClientResponse, response_data=None, data=None,
         print(f'  {k}: {response.headers[k]}', file=output)
     # dump response body
     if response_data:
-        print('  ---response body ---', file=output)
+        print('  --- response body ---', file=output)
         try:
             body = response_data
             if 'access_token' in body:
@@ -138,7 +146,7 @@ def as_dump_response(*, response: ClientResponse, response_data=None, data=None,
             pass
         for line in body.splitlines():
             print(f'  {line}', file=output)
-    print(' ---- end ----', file=output)
+    print(' --- end ---', file=output)
     if file is None:
         dump_log.debug(output.getvalue())
 
@@ -223,7 +231,9 @@ class AsRestSession(ClientSession):
         if headers:
             request_headers.update((k.lower(), v) for k, v in headers.items())
         async with self._sem:
-            async with self.request(method, url=url, headers=request_headers, data=data, json=json, **kwargs) as response:
+            start = perf_counter_ns()
+            async with self.request(method, url=url, headers=request_headers,
+                                    data=data, json=json, **kwargs) as response:
                 # get response body as text or dict (parsed JSON)
                 ct = response.headers.get('Content-Type')
                 if not ct:
@@ -232,11 +242,11 @@ class AsRestSession(ClientSession):
                     response_data = await response.json()
                 else:
                     response_data = await response.text()
-                as_dump_response(response=response, data=data, json=json, response_data=response_data)
+                diff_ns = perf_counter_ns() - start
+                as_dump_response(response=response, data=data, json=json, response_data=response_data, diff_ns=diff_ns)
                 try:
                     response.raise_for_status()
                 except ClientResponseError as error:
-                    as_dump_response(response=response, data=data, json=json, response_data=resp_data)
                     # create a RestError based on HTTP error
                     error = AsRestError(request_info=error.request_info,
                                         history=error.history, status=error.status,

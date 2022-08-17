@@ -111,7 +111,7 @@ class RestError(HTTPError):
         return self.detail and isinstance(self.detail, ErrorDetail) and self.detail.code or 0
 
 
-def dump_response(response: Response, file: TextIOBase = None, dump_log: logging.Logger = None):
+def dump_response(response: Response, file: TextIOBase = None, dump_log: logging.Logger = None, diff_ns: int = None):
     """
     Dump response object to log file
 
@@ -120,6 +120,8 @@ def dump_response(response: Response, file: TextIOBase = None, dump_log: logging
     :type file: TextIOBase
     :param dump_log: logger to dump to
     :type dump_log: logging.Logger
+    :param diff_ns: time the request took (in ns)
+    :type diff_ns: int
     """
     if not log.isEnabledFor(logging.DEBUG):
         return
@@ -130,7 +132,8 @@ def dump_response(response: Response, file: TextIOBase = None, dump_log: logging
     for h in response.history:
         dump_response(response=h, file=output)
 
-    print(f'Request {response.status_code}[{response.reason}]: '
+    time_str = diff_ns is None and '' or f' ({diff_ns / 1000000.0:.3f} ms)'
+    print(f'Request {response.status_code}[{response.reason}]{time_str}: '
           f'{response.request.method} {response.request.url}', file=output)
 
     # request headers
@@ -161,7 +164,7 @@ def dump_response(response: Response, file: TextIOBase = None, dump_log: logging
     body = response.text
     # dump response body
     if body:
-        print('  ---response body ---', file=output)
+        print('  --- response body ---', file=output)
         try:
             body = json.loads(body)
             if 'access_token' in body:
@@ -260,9 +263,11 @@ class RestSession(Session):
         if headers:
             request_headers.update((k.lower(), v) for k, v in headers.items())
         with self._sem:
+            start = time.perf_counter_ns()
             response = self.request(method, url=url, headers=request_headers, **kwargs)
+            diff_ns = time.perf_counter_ns() - start
         try:
-            dump_response(response)
+            dump_response(response, diff_ns=diff_ns)
             try:
                 response.raise_for_status()
             except HTTPError as error:
