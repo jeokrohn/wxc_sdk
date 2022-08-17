@@ -76,7 +76,7 @@ class VoicemailSettings(ApiModel):
                                  notifications=VoicemailNotifications(enabled=False),
                                  transfer_to_number=VoicemailTransferToNumber(enabled=False),
                                  email_copy_of_message=VoicemailCopyOfMessage(enabled=False),
-                                 message_storage=VoicemailMessageStoragei(mwi_enabled=True,
+                                 message_storage=VoicemailMessageStorage(mwi_enabled=True,
                                                                           storage_type=StorageType.internal),
                                  fax_message=VoicemailFax(enabled=False),
                                  voice_message_forwarding_enabled=False)
