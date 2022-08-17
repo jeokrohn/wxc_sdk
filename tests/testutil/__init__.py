@@ -3,9 +3,14 @@ Generic helper for test cases
 """
 import asyncio
 from collections import defaultdict
+from collections.abc import Iterable
 from dataclasses import dataclass
 from functools import reduce
 from itertools import zip_longest
+from random import randint
+from typing import Generator
+
+from digittree import DigitTree
 
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
@@ -14,7 +19,28 @@ from wxc_sdk.people import Person
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 
 __all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'LocationInfo', 'us_location_info',
-           'calling_users']
+           'calling_users', 'available_numbers']
+
+
+def available_numbers(numbers: Iterable[str], seed: str = None) -> Generator[str, None, None]:
+    """
+
+    :param numbers:
+    :param seed:
+    :return:
+    """
+    # group numbers by len
+    by_len: dict[int, list[str]] = reduce(lambda red, pn: red[len(pn)].append(pn) or red,
+                                          numbers, defaultdict(list))
+    if by_len:
+        ext_len = max(by_len)
+        numbers = by_len[ext_len]
+        seed = numbers[0]
+    else:
+        numbers = []
+        seed = seed or str(randint(1, 9) * 1000)
+    tree = DigitTree.from_list(nodes=numbers)
+    return tree.available(seed=seed)
 
 
 async def as_available_tns(*, as_api: AsWebexSimpleApi, tn_prefix: str, tns_requested: int = 1):
@@ -89,21 +115,12 @@ def available_extensions(*, api: WebexSimpleApi, location_id, ext_requested: int
     :param ext_requested:
     :return: list of extensions
     """
-    extensions = set(pn.extension for pn in api.telephony.phone_numbers(location_id=location_id)
-                     if pn.extension)
+    extensions = [pn.extension for pn in api.telephony.phone_numbers(location_id=location_id)
+                  if pn.extension]
     if not extensions:
         # defauilt: 1XXX
-        start = 1001
-        ext_len = 4
-    else:
-        # group extensions by len
-        by_len: dict[int, list[str]] = reduce(lambda red, pn: red[len(pn)].append(pn) or red,
-                                              extensions, defaultdict(list))
-        ext_len = max(by_len)
-        extensions = by_len[ext_len]
-        start = int(min(extensions))
-    available = (number for i in range(start, 10 ** ext_len)
-                 if (number := f'{i:0{ext_len}}') not in extensions)
+        extensions = ['1000']
+    available = available_numbers(numbers=extensions)
     result = [next(available) for _ in range(ext_requested)]
     return result
 
