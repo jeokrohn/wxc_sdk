@@ -17,6 +17,7 @@ Subpackages
    wxc_sdk.integration
    wxc_sdk.licenses
    wxc_sdk.locations
+   wxc_sdk.organizations
    wxc_sdk.people
    wxc_sdk.person_settings
    wxc_sdk.telephony

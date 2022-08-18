@@ -8,6 +8,7 @@ from typing import Union
 from .groups import GroupsApi
 from .licenses import LicensesApi
 from .locations import LocationsApi
+from .organizations import OrganizationApi
 from .people import PeopleApi
 from .person_settings import PersonSettingsApi
 from .rest import RestSession
@@ -40,6 +41,8 @@ class WebexSimpleApi:
     licenses: LicensesApi
     #: Location API :class:`locations.LocationsApi`
     locations: LocationsApi
+    #: organization settings API
+    organizations: OrganizationApi
     #: Person settings API :class:`person_settings.PersonSettingsApi`
     person_settings: PersonSettingsApi
     #: People API :class:`people.PeopleApi`
@@ -76,6 +79,7 @@ class WebexSimpleApi:
         self.groups = GroupsApi(session=session)
         self.licenses = LicensesApi(session=session)
         self.locations = LocationsApi(session=session)
+        self.organizations = OrganizationApi(session=session)
         self.person_settings = PersonSettingsApi(session=session)
         self.people = PeopleApi(session=session)
         self.telephony = TelephonyApi(session=session)
