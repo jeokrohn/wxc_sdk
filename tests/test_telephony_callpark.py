@@ -1,13 +1,17 @@
+import asyncio
 import json
 import random
+from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
+from functools import reduce
 from itertools import chain, groupby
+from re import match
 from typing import ClassVar, Optional
 from unittest import skip
 
 from wxc_sdk.all_types import *
-from .base import TestWithLocations
+from .base import TestWithLocations, async_test
 
 # Number of call parks to create by create many test
 CP_MANY = 100
@@ -100,7 +104,8 @@ class TestCreate(TestWithLocations):
         print('New call park')
         print(json.dumps(json.loads(details.json()), indent=2))
 
-    def test_002_many(self):
+    @async_test
+    async def test_002_many(self):
         """
         create many call parks and test pagination
         """
@@ -108,38 +113,61 @@ class TestCreate(TestWithLocations):
         target_location = random.choice(self.locations)
         print(f'Target location: {target_location.name}')
 
-        tcp = self.api.telephony.callpark
+        # shortcut for callpark API
+        api = self.async_api.telephony.callpark
 
         # Get names for new call parks
-        parks = list(tcp.list(location_id=target_location.location_id))
+        parks = await api.list(location_id=target_location.location_id)
         print(f'{len(parks)} existing call parks')
-        park_names = set(park.name for park in parks)
-        new_names = (name for i in range(1000)
-                     if (name := f'many_{i:03}') not in park_names)
-        names = [name for name, _ in zip(new_names, range(CP_MANY))]
-        print(f'got {len(names)} new names')
 
-        def new_park(*, park_name: str):
-            """
-            Create a new call park with the given name
-            :param park_name:
-            :return:
-            """
-            settings = CallPark.default(name=park_name)
-            # creat new call park
-            new_park_id = tcp.create(location_id=target_location.location_id, settings=settings)
-            print(f'Created {park_name}')
-            return new_park_id
+        if len(parks) < CP_MANY:
+            park_names = set(park.name for park in parks)
+            new_names = (name for i in range(1000)
+                         if (name := f'many_{i:03}') not in park_names)
+            names = [name for name, _ in zip(new_names, range(CP_MANY))]
+            print(f'got {len(names)} new names')
 
-        with ThreadPoolExecutor() as pool:
-            new_parks = list(pool.map(lambda name: new_park(park_name=name),
-                                      names))
-        print(f'Created {len(new_parks)} call parks.')
-        parks = list(self.api.telephony.callpark.list(location_id=target_location.location_id))
+            async def new_park(*, park_name: str):
+                """
+                Create a new call park with the given name
+                :param park_name:
+                :return: ID of new call park
+                """
+                settings = CallPark.default(name=park_name)
+                # creat new call park
+                new_park_id = await api.create(location_id=target_location.location_id, settings=settings)
+                print(f'Created {park_name}')
+                return new_park_id
+
+            new_parks = await asyncio.gather(*[new_park(park_name=name) for name in names])
+            print(f'Created {len(new_parks)} call parks.')
+        parks = await api.list(location_id=target_location.location_id)
         print(f'Total number of call parks: {len(parks)}')
-        parks_pag = list(self.api.telephony.callpark.list(location_id=target_location.location_id, max=50))
+        parks_pag = await api.list(location_id=target_location.location_id, max=20)
         print(f'Total number of call parks read with pagination: {len(parks_pag)}')
         self.assertEqual(len(parks), len(parks_pag))
+
+        park_ids = set(p.callpark_id for p in parks)
+        park_ids_paginated = set(p.callpark_id for p in parks_pag)
+        self.assertEqual(park_ids, park_ids_paginated)
+
+        # also check the link headers of the collected requests
+        paginated_requests = [request
+                              for request in self.requests(method='GET',
+                                                           url_filter=r'.+/config/locations/('
+                                                                      r'?P<location_id>\w+)/callParks\?')
+                              if request.url_query.get('max')]
+        pagination_link_error = False
+        for i, request in enumerate(paginated_requests, 1):
+            start = (start := request.url_query.get('start')) and int(start[0])
+            items = len(request.response_body['callParks'])
+            print(f'page {i}: start={start}, items={items}')
+            link_header = request.response_headers.get('Link')
+            if link_header and (link_match := match(r'<(?P<link>\S+)>;rel="(?P<rel>\w+)"', link_header)):
+                print(f'  {link_match["rel"]}: {link_match["link"]}')
+                if link_match['link'].startswith('https,'):
+                    pagination_link_error = True
+        self.assertFalse(pagination_link_error)
 
 
 @dataclass(init=False)
@@ -147,22 +175,24 @@ class TestUpdate(TestWithLocations):
     """
     Test call park updates
     """
+    # list of all call parks
     cp_list: ClassVar[list[CallPark]]
+    # lists of call parks per location
     cp_by_location: ClassVar[dict[str, list[CallPark]]]
     target: CallPark = field(default=None)
 
     @classmethod
     def setUpClass(cls) -> None:
+
         super().setUpClass()
         with ThreadPoolExecutor() as pool:
             cp_lists = list(pool.map(
                 lambda location: cls.api.telephony.callpark.list(location_id=location.location_id),
                 cls.locations))
         cls.cp_list = list(chain.from_iterable(cp_lists))
-        cls.cp_by_location = {location_id: cp_list
-                              for location_id, cpi in groupby(cls.cp_list,
-                                                              key=lambda cp: cp.location_id)
-                              if (cp_list := list(cpi))}
+        cls.cp_by_location = reduce(lambda red, cp: red[cp.location_id].append(cp) or red,
+                                    cls.cp_list,
+                                    defaultdict(list))
 
     def setUp(self) -> None:
         """

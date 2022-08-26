@@ -335,7 +335,7 @@ class LoggedRequest(BaseModel):
     request_record: ClassVar[re.Pattern] = re.compile(r"""
         ^Request\s              # keyword at start of line
         (?P<status>\d{3})       # three digti status code
-        \[(?P<response>\w+)]    # HTTP response string in squared brackets
+        \[(?P<response>[\w\s]+)]    # HTTP response string in squared brackets
         \s*\((?P<time_ms>\d+\.\d+)\sms\):\s     # response time in ms
         (?P<method>\w+)\s       # HTTP methods
         (?P<url>\S+)$           # url is the rest of the line""", re.VERBOSE + re.MULTILINE)
@@ -347,9 +347,7 @@ class LoggedRequest(BaseModel):
     @root_validator(pre=True)
     def validate_all(cls, values):
         """
-        Validator to populate request/response_records/body
-        :param values:
-        :return:
+        Validator to populate request, parse the message and set some additional attributes
         """
         parsed_url = urllib.parse.urlparse(values['url'])
         values['parsed_url'] = parsed_url
@@ -364,13 +362,13 @@ class LoggedRequest(BaseModel):
         next(lines)
         headers = {}
         while header := cls.header_line.match((line := next(lines))):
-            headers[header['header']] = header['value']
+            headers[header['header'].capitalize()] = header['value']
         values['headers'] = headers
 
         # we are either at the response line or need to parse the body
         if line.strip() == '--- body ---':
             # collect everything until Response line
-            ct = headers['content-type']
+            ct = headers['Content-type']
             if ct.startswith('application/json'):
                 body = '\n'.join(takewhile(lambda l: not cls.response_line.match(l),
                                            lines))
@@ -385,7 +383,7 @@ class LoggedRequest(BaseModel):
                                                              lines))
 
         # now we are at the response line
-        values['response_headers'] = {header['header']: header['value']
+        values['response_headers'] = {header['header'].capitalize(): header['value']
                                       for line in takewhile(lambda l: not cls.body_line.match(l),
                                                             lines)
                                       if (header := cls.header_line.match(line))}

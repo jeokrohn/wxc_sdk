@@ -1,15 +1,20 @@
 import os.path
 import random
 import uuid
+from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
+from functools import reduce
+from itertools import chain
 from typing import Callable
 
-from .base import TestCaseWithUsers, gather, async_test
+from wxc_sdk.base import to_camel
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.barge import BargeSettings
 from wxc_sdk.person_settings.call_intercept import InterceptSetting, InterceptTypeIncoming, Greeting
-from wxc_sdk.person_settings.caller_id import CallerIdSelectedType
+from wxc_sdk.person_settings.caller_id import CallerIdSelectedType, CallerId, ExternalCallerIdNamePolicy
+from wxc_sdk.telephony import NumberType, NumberListPhoneNumber, OwnerType
+from .base import TestCaseWithUsers, gather, async_test
 
 
 class TestRead(TestCaseWithUsers):
@@ -146,7 +151,6 @@ class TestConfigure(TestCaseWithUsers):
     def test_005_configure_call_intercept(self):
         """
         try to update call intercept settings of a user
-        :return:
         """
 
         with self.call_intercept_user_context() as user:
@@ -158,7 +162,6 @@ class TestConfigure(TestCaseWithUsers):
     def test_006_upload_intercept_greeting(self):
         """
         test to upload a custom greeting for call intercept
-        :return:
         """
         with self.call_intercept_user_context() as user:
             ps = self.api.person_settings
@@ -170,7 +173,6 @@ class TestConfigure(TestCaseWithUsers):
     async def test_006a_async_upload_intercept_greeting(self):
         """
         test to upload a custom greeting for call intercept
-        :return:
         """
         with self.call_intercept_user_context() as user:
             ps = self.async_api.person_settings
@@ -181,7 +183,6 @@ class TestConfigure(TestCaseWithUsers):
     def test_007_upload_intercept_greeting_from_open_file(self):
         """
         test to upload a custom greeting for call intercept from an open file
-        :return:
         """
         with self.call_intercept_user_context() as user:
             with open(self.wav_path, mode='rb') as wav_file:
@@ -194,7 +195,7 @@ class TestConfigure(TestCaseWithUsers):
 
     def test_008_incoming_intercept_with_custom_greeting(self):
         """
-        set tup incoming intercept w/ custom greeting
+        settup incoming intercept w/ custom greeting
         """
         with self.call_intercept_user_context() as user:
             ps = self.api.person_settings
@@ -220,7 +221,7 @@ class TestConfigure(TestCaseWithUsers):
 
 class TestCallerIdConfigure(TestCaseWithUsers):
     """
-    Tests for
+    Tests for caller id settings update
     """
 
     @contextmanager
@@ -236,16 +237,17 @@ class TestCallerIdConfigure(TestCaseWithUsers):
 
         # get caller id settings
         ps = self.api.person_settings
-        caller_id = ps.caller_id.read(person_id=target_user.person_id)
+        with self.no_log():
+            caller_id = ps.caller_id.read(person_id=target_user.person_id)
         try:
-            yield random.choice(candidates)
+            yield target_user
         finally:
             # restore caller id settings
-            restore = caller_id.configure_params()
-            ps.caller_id.configure(person_id=target_user.person_id, **restore)
+            with self.no_log():
+                ps.caller_id.configure_settings(person_id=target_user.person_id, settings=caller_id)
         return
 
-    def test_set_direct_line(self):
+    def test_001_set_direct_line(self):
         """
         Try to set the caller ID to direct line
         """
@@ -255,7 +257,7 @@ class TestCallerIdConfigure(TestCaseWithUsers):
             after = ps.caller_id.read(person_id=user.person_id)
             self.assertEqual(CallerIdSelectedType.direct_line, after.selected)
 
-    def test_set_location_number(self):
+    def test_002_set_location_number(self):
         """
         Try to set the caller ID to location number
         """
@@ -264,3 +266,125 @@ class TestCallerIdConfigure(TestCaseWithUsers):
             ps.caller_id.configure(person_id=user.person_id, selected=CallerIdSelectedType.location_number)
             after = ps.caller_id.read(person_id=user.person_id)
             self.assertEqual(CallerIdSelectedType.location_number, after.selected)
+
+    @staticmethod
+    def verify_e164(body: dict) -> list[tuple[str, str]]:
+        """
+        verify that numbers are E.164
+
+        :return: list od tuples (field, value) for numbers that are not E.164
+        """
+        fields = ['direct_number', 'location_number', 'mobile_number', 'custom_number']
+        return [(field, number) for field in fields
+                if (number := body.get(to_camel(field))) is not None and number[0] != '+']
+
+    def assert_number_format_e164(self):
+        """
+        Check number formats in all logged get requests
+        """
+        requests = list(self.requests(method='GET', url_filter=r'.+people/(?P<user_id>\w+)/features/callerId'))
+        e164_issue = False
+        for request in requests:
+            non_e164 = self.verify_e164(request.response_body)
+            if non_e164:
+                e164_issue = True
+                print('Not E.164: ', end='')
+                print(", ".join(": ".join(ne) for ne in non_e164))
+        self.assertFalse(e164_issue, 'Some numbers are not E.164')
+
+    def test_003_set_location_number_verify_number_format(self):
+        """
+        Try to set the caller ID to location number and check number formats
+        """
+        with self.user_context(users_with_tn=True) as user:
+            ps = self.api.person_settings
+            ps.caller_id.configure(person_id=user.person_id, selected=CallerIdSelectedType.location_number)
+            after = ps.caller_id.read(person_id=user.person_id)
+
+        self.assertEqual(CallerIdSelectedType.location_number, after.selected)
+        self.assert_number_format_e164()
+
+    @async_test
+    async def test_004_set_custom_number(self):
+        """
+        Try to set number to another assigned numbers
+        """
+        # get phone numbers assigned to users
+        numbers = await self.async_api.telephony.phone_numbers(number_type=NumberType.number,
+                                                               owner_type=OwnerType.people)
+        # group phone numbers by location
+        numbers_by_location: dict[str, list[NumberListPhoneNumber]] = reduce(
+            lambda red, r: red[r.location.location_id].append(r) or red,
+            numbers, defaultdict(list))
+        # pick random number(and user) from users within locations with at least two users
+        target_number: NumberListPhoneNumber = random.choice(list(chain.from_iterable(number_list
+                                                                                      for number_list in
+                                                                                      numbers_by_location.values()
+                                                                                      if len(number_list) > 1)))
+
+        # pick second number and user with number in same location
+        second_number: NumberListPhoneNumber = random.choice(
+            [n for n in numbers_by_location[target_number.location.location_id]
+             if n.owner.owner_id != target_number.owner.owner_id])
+        # try to set the caller id of owner of 1st number
+        api = self.async_api.person_settings.caller_id
+        before = await api.read(person_id=target_number.owner.owner_id)
+        try:
+            await api.configure(person_id=target_number.owner.owner_id,
+                                selected=CallerIdSelectedType.custom, custom_number=second_number.phone_number)
+            after = await api.read(person_id=target_number.owner.owner_id)
+        finally:
+            await api.configure(person_id=target_number.owner.owner_id,
+                                **(before.configure_params()))
+        self.assertEqual(CallerIdSelectedType.custom, after.selected)
+        self.assertEqual(second_number.phone_number, after.custom_number)
+        self.assert_number_format_e164()
+
+    def test_005_set_first_name(self):
+        """
+        Try to update first name
+        """
+        with self.user_context(users_with_tn=True) as user:
+            user: Person
+            api = self.api.person_settings.caller_id
+            before = api.read(person_id=user.person_id)
+            update = CallerId(selected=before.selected, first_name='foo')
+            api.configure_settings(person_id=user.person_id, settings=update)
+            after = api.read(person_id=user.person_id)
+        expected = before.copy(deep=True)
+        expected.first_name = update.first_name
+        self.assertEqual(expected, after)
+
+    def test_006_block_in_forward_calls_enabled(self):
+        """
+        Try to update block_in_forward_calls_enabled
+        """
+        with self.user_context(users_with_tn=True) as user:
+            user: Person
+            api = self.api.person_settings.caller_id
+            before = api.read(person_id=user.person_id)
+            update = CallerId(selected=before.selected,
+                              block_in_forward_calls_enabled=not before.block_in_forward_calls_enabled)
+            api.configure_settings(person_id=user.person_id, settings=update)
+            after = api.read(person_id=user.person_id)
+        expected = before.copy(deep=True)
+        expected.block_in_forward_calls_enabled = update.block_in_forward_calls_enabled
+        self.assertEqual(expected, after)
+
+    def test_006_custom_external_caller_id_name(self):
+        """
+        Try to update custom_external_caller_id_name
+        """
+        with self.user_context(users_with_tn=True) as user:
+            user: Person
+            api = self.api.person_settings.caller_id
+            before = api.read(person_id=user.person_id)
+            update = CallerId(selected=before.selected,
+                              external_caller_id_name_policy=ExternalCallerIdNamePolicy.other,
+                              custom_external_caller_id_name='foo custom')
+            api.configure_settings(person_id=user.person_id, settings=update)
+            after = api.read(person_id=user.person_id)
+        expected = before.copy(deep=True)
+        expected.external_caller_id_name_policy = update.external_caller_id_name_policy
+        expected.custom_external_caller_id_name = update.custom_external_caller_id_name
+        self.assertEqual(expected, after)

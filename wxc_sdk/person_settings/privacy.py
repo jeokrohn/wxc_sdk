@@ -21,7 +21,6 @@ class Privacy(ApiModel):
     aa_naming_dialing_enabled: Optional[bool]
     #: When true phone status directory privacy will be enabled.
     enable_phone_status_directory_privacy: Optional[bool]
-    # TODO: documentation defect: called "monitoredAgents" in docs
     #: List of people that are being monitored.
     #: for updates IDs can be used directly instead of :class:`wxc_sdk.common.PersonPlaceAgent` objects
     monitoring_agents: Optional[list[Union[str, PersonPlaceAgent]]]

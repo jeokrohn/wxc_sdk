@@ -1,10 +1,15 @@
+import asyncio
 import re
+from collections import namedtuple
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass, field
 from random import choice
+from typing import ClassVar
 from unittest import skip
 
-from tests.base import TestCaseWithLog
-from wxc_sdk.telephony.prem_pstn.trunk import TrunkType
+from tests.base import TestCaseWithLog, async_test
+from wxc_sdk.rest import RestError
+from wxc_sdk.telephony.prem_pstn.trunk import TrunkType, TrunkDetail
 
 
 class TestListTrunks(TestCaseWithLog):
@@ -119,8 +124,109 @@ class TestTrunkTypes(TestCaseWithLog):
                 print(f'  device type: {dt.device_type} min; {dt.min_concurrent_calls} max: {dt.max_concurrent_calls}')
 
 
+AddressTuple = namedtuple('AddressTuple', ['address', 'domain'])
+
+
+@dataclass(init=False)
+class TestValidateFQDNandDomain(TestCaseWithLog):
+    verified_domain = 'jkrohn-sandbox.wbx.ai'
+
+    _cert_trunks: ClassVar[list[TrunkDetail]] = field(default=None)
+
+    async def cert_trunks(self) -> list[TrunkDetail]:
+        """
+        Details of all certificate based trunks
+        """
+        if self._cert_trunks is None:
+
+            cert_trunks = [t for t in await self.async_api.telephony.prem_pstn.trunk.list()
+                           if t.trunk_type == TrunkType.certificate_base]
+            if not cert_trunks:
+                self.__class__._cert_trunks = []
+            else:
+                # noinspection PyTypeChecker
+                self.__class__._cert_trunks = await asyncio.gather(
+                    *[self.async_api.telephony.prem_pstn.trunk.details(trunk_id=t.trunk_id)
+                      for t in cert_trunks])
+        # noinspection PyTypeChecker
+        return self._cert_trunks
+
+    async def cert_trunk_params(self) -> set[AddressTuple]:
+        """
+        Set of connection parameters of all cert based trunks
+        :return:
+        """
+        return set(AddressTuple(t.address, t.domain) for t in await self.cert_trunks())
+
+    async def available_fqdn(self) -> AddressTuple:
+        existing = await self.cert_trunk_params()
+        return next(p for i in range(1, 100)
+                    if (p := AddressTuple(f'cube_{i:02}', self.verified_domain)) not in existing)
+
+    def test_001_invalid_domain(self):
+        """
+        Invalid domain
+        """
+        with self.assertRaises(RestError) as ctx:
+            self.api.telephony.prem_pstn.trunk.validate_fqdn_and_domain(address='cube', domain='foo', port=6001)
+        rest_error: RestError = ctx.exception
+        self.assertTrue(rest_error.code == 25252 and rest_error.response.status_code == 409, f'{rest_error}')
+
+    @async_test
+    async def test_002_valid_fqdn(self):
+        """
+        Valid FQDN
+        """
+        fqdn = await self.available_fqdn()
+        self.api.telephony.prem_pstn.trunk.validate_fqdn_and_domain(address=fqdn.address,
+                                                                    domain=fqdn.domain,
+                                                                    port=6001)
+
+    @async_test
+    async def test_003_valid_srv(self):
+        """
+        Valid SRV
+        """
+        fqdn = await self.available_fqdn()
+        self.api.telephony.prem_pstn.trunk.validate_fqdn_and_domain(address=fqdn.address, domain=fqdn.domain)
+
+    @async_test
+    async def test_004_existing_fqdn_and_port(self):
+        """
+        Existing FQDN and port
+        """
+        cert_trunks = [t for t in await self.cert_trunks()
+                       if t.port]
+        if not cert_trunks:
+            self.skipTest('Need a certificate based trunk (FQDN and port) to run test')
+        target = choice(cert_trunks)
+        with self.assertRaises(RestError) as ctx:
+            self.api.telephony.prem_pstn.trunk.validate_fqdn_and_domain(address=target.address, domain=target.domain,
+                                                                        port=target.port)
+        rest_error: RestError = ctx.exception
+        self.assertTrue(rest_error.code == 27571 and rest_error.response.status_code == 409,
+                        f'{rest_error}')
+
+    @async_test
+    async def test_005_existing_srv(self):
+        """
+        Existing SRV
+        """
+        cert_trunks = [t for t in await self.cert_trunks()
+                       if t.port is None]
+        if not cert_trunks:
+            self.skipTest('Need a certificate based trunk (SRV) to run test')
+        target = choice(cert_trunks)
+        with self.assertRaises(RestError) as ctx:
+            self.api.telephony.prem_pstn.trunk.validate_fqdn_and_domain(address=target.address, domain=target.domain)
+        rest_error: RestError = ctx.exception
+        self.assertTrue(rest_error.code == 27571 and rest_error.response.status_code == 409,
+                        f'{rest_error}')
+
+
 @skip
 class TestDeleteTestTrunks(TestCaseWithLog):
+
     def test_001_delete_test_trunks(self):
         trunks = list(self.api.telephony.prem_pstn.trunk.list())
         to_delete = [trunk for trunk in trunks

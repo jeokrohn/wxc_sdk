@@ -57,7 +57,7 @@ class VoicemailSettings(ApiModel):
     message_storage: Optional[VoicemailMessageStorage]
     #: Fax message settings
     fax_message: Optional[VoicemailFax]
-    voice_message_forwarding_enabled: Optional[bool]  # TODO: raise documentation defect
+    voice_message_forwarding_enabled: Optional[bool]
 
     @staticmethod
     def default() -> 'VoicemailSettings':

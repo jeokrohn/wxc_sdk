@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "wxc_sdk"
-version = "1.5.2"
+version = "1.6.0"
 description = "SDK for Webex APIs with special focus on Webex Calling specific endpoints"
 license = 'MIT'
 authors = ["Johannes Krohn <jkrohn@cisco.com>"]
@@ -27,6 +27,7 @@ python-dotenv = "^0.20.0"
 aiohttp = "^3.8.1"
 PyJWT = "^2.4.0"
 webexteamssdk = "^1.6.1"
+beautifulsoup4 = "^4.11.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

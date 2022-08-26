@@ -4,7 +4,7 @@ Tests for organisation voicemail rules
 
 import json
 
-from wxc_sdk.telephony.vm_rules import VoiceMailRules, BlockPreviousPasscodes
+from wxc_sdk.telephony.vm_rules import VoiceMailRules, BlockPreviousPasscodes, DefaultVoicemailPinRules
 from .base import TestCaseWithLog
 
 

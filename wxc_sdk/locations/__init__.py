@@ -26,15 +26,15 @@ class LocationAddress(ApiModel):
     """
 
     #: address line 1
-    address1: Optional[str]
+    address1: str
     #: address line 2
     address2: Optional[str]
     #: city
-    city: Optional[str]
+    city: str
     #: state
-    state: Optional[str]
+    state: str
     #: ZIP/Postal code
-    postal_code: Optional[str]
+    postal_code: str
     #: country
     country: Optional[str]
 
@@ -45,13 +45,15 @@ class Location(ApiModel):
 
     """
     #: A unique identifier for the location.
-    location_id: str = Field(alias='id')
+    location_id: Optional[str] = Field(alias='id')
     #: The name of the location.
-    name: str
+    name: Optional[str]
     #: The ID of the organization to which this location belongs.
-    org_id: str
+    org_id: Optional[str]
     #: The address of the location, :class:`LocationAddress`
-    address: LocationAddress
+    address: Optional[LocationAddress]
+    time_zone: Optional[str]
+    preferred_language: Optional[str]
 
     @property
     def location_id_uuid(self) -> str:
@@ -130,7 +132,97 @@ class LocationsApi(ApiChild, base='locations'):
         :param location_id: A unique identifier for the location.
         :type location_id: str
         :return: location details
-        :rtype: Location
+        :rtype: :class:`Location`
         """
         ep = self.ep(location_id)
         return Location.parse_obj(self.get(ep))
+
+    def create(self, name: str, time_zone: str, preferred_language: str, announcement_language: str, address1: str,
+               city: str, state: str, postal_code: str, country: str, address2: str = None, org_id: str = None):
+        """
+        Create a new Location for a given organization. Only an admin in a Webex Calling licensed organization can
+        create a new Location.
+
+        The following body parameters are required to create a new location: name, timeZone, preferredLanguage,
+        address, announcementLanguage.
+
+        Creating a location in your organization requires an administrator auth token with
+        the spark-admin:locations_write.
+
+        :param name: The name of the location.
+        :type name: str
+        :param time_zone: Time zone associated with this location
+        :type time_zone: str
+        :param preferred_language: Default email language.
+        :type preferred_language: str
+        :param announcement_language: Location's phone announcement language.
+        :type announcement_language: str
+        :param address1: Address 1
+        :type address1: str
+        :param address2: Address 2
+        :type address2: str
+        :param city: City
+        :type city: str
+        :param state: State Code
+        :type state: str
+        :param postal_code: Postal Code
+        :type postal_code: str
+        :param country: ISO-3166 2-Letter Country Code.
+        :type country: str
+        :param org_id: Create a location common attribute for this organization.
+        :type org_id: str
+        :return: ID of new location
+        :rtype: :class:`Location`
+        """
+        # TODO: unit tests
+        body = {}
+        address = {}
+        for p, v in list(locals().items()):
+            if p in {'address', 'body', 'self'} or v is None:
+                continue
+            p = to_camel(p)
+            if p == 'address1' or address:
+                address[p] = v
+            else:
+                body[p] = v
+        body['address'] = address
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep()
+        data = self.post(url=url, json=body, params=params)
+        return data['id']
+
+    def update(self, location_id: str, settings: Location, org_id: str = None):
+        """
+        Update details for a location, by ID.
+
+        Specify the location ID in the locationId parameter in the URI. Only an admin can update a location details.
+
+        Updating a location in your organization requires an administrator auth token with
+        the spark-admin:locations_write.
+
+        Example :
+
+            .. code-block:: python
+
+                api.telephony.location.update(location_id=location_id,
+                                              settings=TelephonyLocation(
+                                                  calling_line_id=CallingLineId(
+                                                      phone_number=tn),
+                                                  routing_prefix=routing_prefix,
+                                                  outside_dial_digit='9'))
+
+        :param location_id: Update location common attributes for this location.
+        :type location_id: str
+        :param settings: new settings for the org:
+        :type settings: :class:`Location`
+        :param org_id: Update location common attributes for this organization
+        :type org_id: str
+        """
+        settings_copy = settings.copy(deep=True)
+        if settings_copy.address and not settings_copy.address.address2:
+            settings_copy.address.address2 = None
+
+        data = settings_copy.json(exclude={'location_id', 'org_id'}, exclude_none=False, exclude_unset=True)
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(location_id)
+        self.put(url=url, data=data, params=params)

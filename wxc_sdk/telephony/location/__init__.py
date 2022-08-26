@@ -1,4 +1,7 @@
 from dataclasses import dataclass
+from typing import Optional
+
+from pydantic import Field
 
 from .intercept import LocationInterceptApi
 from .internal_dialing import InternalDialingApi
@@ -6,10 +9,58 @@ from .moh import LocationMoHApi
 from .numbers import LocationNumbersApi
 from .vm import LocationVoicemailSettingsApi
 from ...api_child import ApiChild
-from ...common import ValidateExtensionsResponse
+from ...base import ApiModel
+from ...common import ValidateExtensionsResponse, RouteType
 from ...rest import RestSession
 
-__all__ = ['TelephonyLocationApi']
+__all__ = ['CallingLineId', 'PSTNConnection', 'TelephonyLocation', 'TelephonyLocationApi']
+
+
+class CallingLineId(ApiModel):
+    """
+    Location calling line information.
+    """
+    #: Group calling line ID name. By default it will be org name.
+    #: when updating the name make sure to also include the phone number
+    name: Optional[str]
+    #: Directory Number / Main number in E164 Forma
+    phone_number: Optional[str]
+
+
+class PSTNConnection(ApiModel):
+    """
+    Connection details
+    """
+    #: Webex Calling location only suppports TRUNK and ROUTE_GROUP connection type.
+    type: RouteType
+    #: A unique identifier of route type.
+    id: str
+
+
+class TelephonyLocation(ApiModel):
+    #: A unique identifier for the location.
+    location_id: Optional[str] = Field(alias='id')
+    #: The name of the location.
+    name: Optional[str]
+    #: Location's phone announcement language.
+    announcement_language: Optional[str]
+    default_location: Optional[bool]
+    #: Location calling line information.
+    calling_line_id: Optional[CallingLineId]
+    #: Connection details are only returned for local PSTN types of TRUNK or ROUTE_GROUP.
+    connection: Optional[PSTNConnection]
+    #: External Caller ID Name value. Unicode characters.
+    external_caller_id_name: Optional[str]
+    #: Limit on the number of people at the location, Read-Only.
+    user_limit: Optional[int]
+    #: Location Identifier.
+    p_access_network_info: Optional[str]
+    #: Must dial to reach an outside line, default is None.
+    outside_dial_digit: Optional[str]
+    #: Must dial a prefix when calling between locations having same extension within same location.
+    routing_prefix: Optional[str]
+    #: IP Address, hostname, or domain, Read-Only
+    default_domain: Optional[str]
 
 
 @dataclass(init=False)
@@ -80,3 +131,48 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         data = self.post(url=url, params=params, json=body)
         return ValidateExtensionsResponse.parse_obj(data)
+
+    def details(self, location_id: str, org_id: str = None) -> TelephonyLocation:
+        """
+        Shows Webex Calling details for a location, by ID.
+
+        Specify the location ID in the locationId parameter in the URI.
+
+        Searching and viewing location in your organization requires an administrator auth token with
+        the spark-admin:telephony_config_read scope.
+
+        :param location_id: Retrieve Webex Calling location attributes for this location.
+        :type location_id: str
+        :param org_id: Retrieve Webex Calling location attributes for this organization.
+        :type org_id: str
+        :return: Webex Calling details for location
+        :rtype: :class:`TelephonyLocation`
+        """
+        params = org_id and {'orgId': org_id}
+        url = self.ep(location_id)
+        data = self.get(url=url, params=params)
+        return TelephonyLocation.parse_obj(data)
+
+    def update(self, location_id: str, settings: TelephonyLocation, org_id: str = None):
+        """
+        Update Webex Calling details for a location, by ID.
+
+        Specify the location ID in the locationId parameter in the URI.
+
+        Modifying the connection via API is only supported for the local PSTN types of TRUNK and ROUTE_GROUP.
+
+        Updating a location in your organization requires an administrator auth token with
+        the spark-admin:telephony_config_write scope.
+
+        :param location_id: Updating Webex Calling location attributes for this location.
+        :type location_id: str
+        :param settings: settings to update
+        :type settings: :class:`TelephonyLocation`
+        :param org_id: Updating Webex Calling location attributes for this organization.
+        :type org_id: str
+        :return:
+        """
+        data = settings.json(exclude={'location_id', 'user_limit', 'default_domain'})
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(location_id)
+        self.put(url=url, data=data, params=params)

@@ -14,6 +14,7 @@ from urllib.parse import parse_qsl
 import backoff
 from pydantic import BaseModel, ValidationError, Field
 from requests import HTTPError, Response, Session
+from requests.models import PreparedRequest
 from requests.adapters import HTTPAdapter
 
 from .base import ApiModel, StrOrDict
@@ -71,6 +72,8 @@ class RestError(HTTPError):
     """
     A REST error
     """
+    request: PreparedRequest
+    response: Response
 
     def __init__(self, msg: str, response: Response):
         super().__init__(msg, response=response)
@@ -367,6 +370,7 @@ class RestSession(Session):
         :type item_key: str
         :return: yields parsed objects
         """
+
         def noop(x):
             return x
 

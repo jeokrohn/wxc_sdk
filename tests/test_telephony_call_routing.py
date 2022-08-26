@@ -256,8 +256,9 @@ class TestUsersAndTrunks(TestCallRouting):
             self.assertEqual(expected, test_result)
         except AssertionError:
             if called.location_id != test_result.hosted_user.location_id:
-                print(f'Location id: {base64.b64decode(location_id + "==")}')
-                print(f'hosted user Location id: {base64.b64decode(test_result.hosted_user.location_id + "==")}')
+                print(f'Location id: {base64.b64decode(location_id + "==").decode()}')
+                print(
+                    f'hosted user Location id: {base64.b64decode(test_result.hosted_user.location_id + "==").decode()}')
             test_result.hosted_user.location_id = location_id
             try:
                 self.assertEqual(expected, test_result)
@@ -308,7 +309,7 @@ class TestUsersAndTrunks(TestCallRouting):
                                                                originator_number=originator)
             self.print_result(result=test_result)
             # before testing we ignore the location id in the hosted user destination
-            # we alrady know that this is broken
+            # we already know that this is broken
             # TODO: monitor defect for wrong id format and remove if not needed any more
             test_result.hosted_user.location_id = called.location_id
             self.assertEqual(TestCallRoutingResult(
@@ -568,6 +569,7 @@ class AAContext:
                     location_id=self.location.location_id,
                     settings=aa)
                 aa.auto_attendant_id = aa_id
+                aa.location_id = self.location.location_id
                 self.aa_id = aa_id
                 self.auto_attendant = aa
             except:
@@ -643,6 +645,7 @@ class HGContext:
                     location_id=self.location.location_id,
                     settings=hg)
                 hg.id = hg_id
+                hg.location_id = self.location.location_id
                 self.hg = hg
             except:
                 self.clean_up()
@@ -702,6 +705,9 @@ class TestHostedFeature(TestCallRouting):
         """
         if not self.aa_context:
             self.__class__.aa_context = AAContext(test=self, location=location)
+        # get AA details to have the details in the log
+        aa = self.aa_context.auto_attendant
+        self.api.telephony.auto_attendant.details(location_id=aa.location_id, auto_attendant_id=aa.auto_attendant_id)
         return self.aa_context.auto_attendant
 
     def get_hunt_group(self, *, location: Location) -> HuntGroup:
@@ -711,6 +717,9 @@ class TestHostedFeature(TestCallRouting):
         """
         if not self.hg_context:
             self.__class__.hg_context = HGContext(test=self, location=location)
+        # get HG details to have the details in the log
+        hg = self.hg_context.hg
+        self.api.telephony.huntgroup.details(location_id=hg.location_id, huntgroup_id=hg.id)
         return self.hg_context.hg
 
     def assert_result_wrong_service_instance_id_format(self, *, expected: TestCallRoutingResult,
@@ -719,14 +728,13 @@ class TestHostedFeature(TestCallRouting):
             self.assertEqual(expected, result)
         except AssertionError:
             if result.hosted_feature.service_instance_id != expected.hosted_feature.service_instance_id:
-                # TODO: defect, wrong ID format. Service instance is Broadsoft id
                 print('=' * 80)
                 print('Wrong service instance id format (Broadsoft id)')
                 expected_id = base64.b64decode(expected.hosted_feature.service_instance_id + "==").decode()
                 print(f'Expected service instance id:'
                       f' {expected_id}')
                 print(f'Trailing end of expected service instance id: '
-                      f'{base64.b64decode(expected_id.split("/")[-1]+"==").decode()}')
+                      f'{base64.b64decode(expected_id.split("/")[-1] + "==").decode()}')
                 print(f'Actual service instance id:'
                       f' {base64.b64decode(result.hosted_feature.service_instance_id + "==").decode()}')
 
@@ -884,7 +892,6 @@ class TestHostedFeature(TestCallRouting):
                                              service_instance_id=hg.id))
 
         self.assert_result_wrong_service_instance_id_format(expected=expected, result=result)
-
 
     def test_005_user_to_hg_same_location_by_tn(self):
         """

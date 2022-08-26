@@ -9,6 +9,7 @@ from functools import reduce
 from itertools import chain
 from random import choice
 from re import match
+from statistics import mean
 from typing import Union
 
 from wxc_sdk.as_rest import AsRestError
@@ -232,10 +233,16 @@ class TestVmGroup(TestCaseWithLog):
             paginated_requests = [request
                                   for request in self.requests(method='GET', url_filter=r'.+config/voicemailGroups')
                                   if request.url_query.get('max')]
+            pagination_link_error = False
             for i, request in enumerate(paginated_requests, 1):
                 start = (start := request.url_query.get('start')) and int(start[0])
                 items = len(request.response_body['voicemailGroups'])
                 print(f'page {i}: start={start}, items={items}')
+                link_header = request.response_headers.get('Link')
+                if link_header and (link_match := match(r'<(?P<link>\S+)>;rel="(?P<rel>\w+)"', link_header)):
+                    print(f'  {link_match["rel"]}: {link_match["link"]}')
+                    if link_match['link'].startswith('https,'):
+                        pagination_link_error = True
 
             vmg_ids = set(g.group_id for g in voicemail_group_list)
             vmg_ids_small_page = set(g.group_id for g in voicemail_group_list_small_page)
@@ -263,6 +270,7 @@ class TestVmGroup(TestCaseWithLog):
 
             self.assertEqual(len(voicemail_group_list), len(voicemail_group_list_small_page), 'Length differs')
             self.assertEqual(vmg_ids, vmg_ids_small_page, 'Did not get the same set of groups')
+
             # also we want to check fpr errors while creating the voicemail groups
             errors = [r for r in vmg_ids
                       if isinstance(r, Exception)]
@@ -270,10 +278,12 @@ class TestVmGroup(TestCaseWithLog):
                 print('\n'.join(f'{i} - Error creating a voicemail group{e}'
                                 for i, e in enumerate(errors, 1)))
                 self.assertTrue(not errors)
+
+            # finally verify that pagination links were ok
+            self.assertFalse(pagination_link_error, 'wrong format in pagination links')
         finally:
             # clean up: remove voicemail groups again?
             ...
-        foo = 1
 
     def test_002_details(self):
         """
@@ -384,25 +394,39 @@ class TestVmGroup(TestCaseWithLog):
             :param g:
             """
             tries = 5
+            error = None
             for i in range(1, tries + 1):
                 try:
                     await self.async_api.telephony.voicemail_groups.delete(
                         location_id=g.location_id,
                         voicemail_group_id=g.group_id)
                 except AsRestError as e:
+                    error = e
                     print(f'"{g.name}" in "{g.location_name}" ({i}): failed {e}')
                     if i < tries:
                         await asyncio.sleep(5)
-                    else:
-                        raise
                 else:
                     print(f'"{g.name}" in "{g.location_name}" ({i}): deleted')
                     break
+            if error:
+                raise error
             return
 
+        print(f'Deleting {len(groups)} voicemail groups')
         results = await asyncio.gather(*[delete_one(g)
                                          for g in groups], return_exceptions=True)
         for group, result in zip(groups, results):
             if isinstance(result, Exception):
-                print(f'"{group.name}" in "{group.location_name}": failed {result}')
+                print(f'"{group.name}" in "{group.location_name}": error deleting {result}')
+
+        requests = list(self.requests(method='DELETE'))
+        failure_response_times = [request.time_ms for request in requests
+                                  if request.status != 204]
+        success_response_times = [request.time_ms for request in requests
+                                  if request.status == 204]
+        print(f'Success: min={min(success_response_times)}, max={max(success_response_times)}, '
+              f'mean={mean(success_response_times)}')
+        print(f'Failure: min={min(failure_response_times)}, max={max(failure_response_times)}, '
+              f'mean={mean(failure_response_times)}')
+
         self.assertFalse(any(isinstance(r, Exception) for r in results))

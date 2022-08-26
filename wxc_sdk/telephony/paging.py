@@ -54,7 +54,6 @@ class Paging(ApiModel):
     phone_number: Optional[str]
     #: Paging group extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
     extension: Optional[str]
-    # TODO: raise documentation issue
     #: is the phone numer a toll free number?
     toll_free_number: Optional[bool]
     #: Paging language. Minimum length is 1. Maximum length is 40.

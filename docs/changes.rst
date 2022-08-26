@@ -1,6 +1,25 @@
 Release history
 ===============
 
+1.6.0
+-----
+- new API: :class:`wxc_sdk.organizations.OrganizationApi`
+- updated attributes in :class:`wxc_sdk.locations.Location`
+- new: details() and update() in :class:`wxc_sdk.telephony.location.TelephonyLocationApi`
+- new: create() and update() in :class:`wxc_sdk.locations.LocationsApi`
+- new test cases
+- :meth:`wxc_sdk.telephony.prem_pstn.dial_plan.DialPlanApi.details` now always returns dialplan id
+- changes to data types for results of :meth:`wxc_sdk.telephony.TelephonyApi.test_call_routing` based on learnings
+  from tests
+- workaround for broken poagination URLs ported to async API
+- consistently allow positional parameters everywhere; still recommended to use named parameters though
+- async api: improved REST error handling, allow follow_pagination w/o model (compatible to sync version)
+- new: CRUD for voicemail groups in :class:`wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi`
+- REST logs now contain response times
+- 10D numbers returned in person caller id settings get normalized to E.164
+
+
+
 1.5.2
 -----
 - deprecate broken build 1.5.1

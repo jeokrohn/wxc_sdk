@@ -147,3 +147,6 @@ cython_debug/
 /Test Results* - .xml
 /private/
 /PUBLISH.rst
+/geocodify.env
+/ipgeolocation.env
+/tests/geocodify.env

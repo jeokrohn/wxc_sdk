@@ -41,12 +41,27 @@ The second column of the table has a link to the documentation of the method.
    * - api.locations.by_name
         Get a location by name
      - :meth:`~wxc_sdk.locations.LocationsApi.by_name`
+   * - api.locations.create
+        Create a new Location for a given organization
+     - :meth:`~wxc_sdk.locations.LocationsApi.create`
    * - api.locations.details
         Shows details for a location, by ID
      - :meth:`~wxc_sdk.locations.LocationsApi.details`
    * - api.locations.list
         List locations for an organization
      - :meth:`~wxc_sdk.locations.LocationsApi.list`
+   * - api.locations.update
+        Update details for a location, by ID
+     - :meth:`~wxc_sdk.locations.LocationsApi.update`
+   * - api.organizations.delete
+        Delete Organization
+     - :meth:`~wxc_sdk.organizations.OrganizationApi.delete`
+   * - api.organizations.details
+        Get Organization Details
+     - :meth:`~wxc_sdk.organizations.OrganizationApi.details`
+   * - api.organizations.list
+        List all organizations visible by your account
+     - :meth:`~wxc_sdk.organizations.OrganizationApi.list`
    * - api.people.create
         Create a Person
      - :meth:`~wxc_sdk.people.PeopleApi.create`
@@ -104,6 +119,9 @@ The second column of the table has a link to the documentation of the method.
    * - api.person_settings.caller_id.configure
         Configure a Person's Caller ID Settings
      - :meth:`~wxc_sdk.person_settings.caller_id.CallerIdApi.configure`
+   * - api.person_settings.caller_id.configure_settings
+        
+     - :meth:`~wxc_sdk.person_settings.caller_id.CallerIdApi.configure_settings`
    * - api.person_settings.caller_id.read
         Retrieve a Person's Caller ID Settings
      - :meth:`~wxc_sdk.person_settings.caller_id.CallerIdApi.read`
@@ -269,6 +287,12 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.auto_attendant.update
         Update an Auto Attendant
      - :meth:`~wxc_sdk.telephony.autoattendant.AutoAttendantApi.update`
+   * - api.telephony.call_intercept.configure
+        Put Location Intercept
+     - :meth:`~wxc_sdk.telephony.location.intercept.LocationInterceptApi.configure`
+   * - api.telephony.call_intercept.read
+        Get Location Intercept
+     - :meth:`~wxc_sdk.telephony.location.intercept.LocationInterceptApi.read`
    * - api.telephony.callpark.available_agents
         Get available agents from Call Parks
      - :meth:`~wxc_sdk.telephony.callpark.CallParkApi.available_agents`
@@ -383,9 +407,15 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.huntgroup.update
         Update a Hunt Group
      - :meth:`~wxc_sdk.telephony.huntgroup.HuntGroupApi.update`
+   * - api.telephony.location.details
+        Shows Webex Calling details for a location, by ID
+     - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.details`
    * - api.telephony.location.generate_password
         Generates an example password using the effective password settings for the location
      - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.generate_password`
+   * - api.telephony.location.update
+        Update Webex Calling details for a location, by ID
+     - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.update`
    * - api.telephony.location.validate_extensions
         Validate extensions for a specific location
      - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.validate_extensions`
@@ -600,7 +630,7 @@ The second column of the table has a link to the documentation of the method.
         Get Local Gateway Dial Plan Usage for a Trunk
      - :meth:`~wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.usage_route_group`
    * - api.telephony.prem_pstn.trunk.validate_fqdn_and_domain
-        
+        Validate Local Gateway FQDN and Domain for the organization trunks
      - :meth:`~wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.validate_fqdn_and_domain`
    * - api.telephony.schedules.create
         Create a Schedule
@@ -695,6 +725,9 @@ The second column of the table has a link to the documentation of the method.
    * - api.workspace_settings.caller_id.configure
         Configure a Person's Caller ID Settings
      - :meth:`~wxc_sdk.person_settings.caller_id.CallerIdApi.configure`
+   * - api.workspace_settings.caller_id.configure_settings
+        
+     - :meth:`~wxc_sdk.person_settings.caller_id.CallerIdApi.configure_settings`
    * - api.workspace_settings.caller_id.read
         Retrieve a Person's Caller ID Settings
      - :meth:`~wxc_sdk.person_settings.caller_id.CallerIdApi.read`

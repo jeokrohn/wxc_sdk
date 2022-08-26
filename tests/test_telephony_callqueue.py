@@ -3,19 +3,16 @@ import json
 import random
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
+from re import match
 from typing import ClassVar
 
 from wxc_sdk.all_types import *
 from .base import TestCaseWithLog, TestCaseWithUsers, async_test
 
 # number of call queues to create by create many test
+from .testutil import available_extensions_gen
+
 CQ_MANY = 100
-
-
-def available_extensions(*, cq_list: list[CallQueue]):
-    extensions = set(cq.extension for cq in cq_list)
-    return (extension for i in range(1000)
-            if (extension := f'{8000 + i}') not in extensions)
 
 
 class TestList(TestCaseWithLog):
@@ -66,7 +63,8 @@ class TestCreate(TestCaseWithUsers):
         queue_names = set(queue.name for queue in cq_list)
         new_name = next(name for i in range(1000)
                         if (name := f'cq_{i:03}') not in queue_names)
-        extension = next(available_extensions(cq_list=cq_list))
+        with self.no_log():
+            extension = next(available_extensions_gen(api=self.api, location_id=target_location.location_id))
 
         # pick two calling users
         members = random.sample(self.users, 2)
@@ -100,7 +98,8 @@ class TestCreate(TestCaseWithUsers):
         queue_names = set(queue.name for queue in cq_list)
         new_name = next(name for i in range(1000)
                         if (name := f'cq_{i:03}') not in queue_names)
-        extension = next(available_extensions(cq_list=cq_list))
+        with self.no_log():
+            extension = next(available_extensions_gen(api=self.api, location_id=target_queue.location_id))
 
         # prepare settings for new queue
         print(f'Creating copy of call queue "{target_queue.name}" in location "{target_queue.location_name}"'
@@ -145,7 +144,8 @@ class TestCreate(TestCaseWithUsers):
                      if (name := f'many_{i:03}') not in queue_names)
         names = [name for name, _ in zip(new_names, range(to_create))]
         print(f'got {len(names)} new names')
-        extensions = available_extensions(cq_list=cq_list)
+        with self.no_log():
+            extensions = available_extensions_gen(api=self.api, location_id=target_location.location_id)
 
         def new_queue(queue_name: str, extension: str):
             """
@@ -176,9 +176,24 @@ class TestCreate(TestCaseWithUsers):
         print(f'Created {len(names)} call queues.')
         cq_list = list(tcq.list(location_id=target_location.location_id))
         print(f'Total number of queues: {len(cq_list)}')
-        queues_pag = list(tcq.list(location_id=target_location.location_id, max=50))
+        queues_pag = list(tcq.list(location_id=target_location.location_id, max=20))
         print(f'Total number of queues read with pagination: {len(queues_pag)}')
+        # look at the paginations
+        paginated_requests = [request
+                              for request in self.requests(method='GET', url_filter=r'.+telephony/config/queues')
+                              if request.url_query.get('max')]
+        pagination_link_error = False
+        for i, request in enumerate(paginated_requests, 1):
+            start = (start := request.url_query.get('start')) and int(start[0])
+            items = len(request.response_body['queues'])
+            print(f'page {i}: start={start}, items={items}')
+            link_header = request.response_headers.get('Link')
+            if link_header and (link_match := match(r'<(?P<link>\S+)>;rel="(?P<rel>\w+)"', link_header)):
+                print(f'  {link_match["rel"]}: {link_match["link"]}')
+                if link_match['link'].startswith('https,'):
+                    pagination_link_error = True
         self.assertEqual(len(cq_list), len(queues_pag))
+        self.assertFalse(pagination_link_error, 'Wrong pagination link format')
 
 
 class TestUpdate(TestCaseWithLog):
@@ -331,6 +346,49 @@ class TestUpdate(TestCaseWithLog):
                                                            queue_id=target.id)
         self.assertEqual(not bounce_enabled, details.call_policies.call_bounce.enabled)
         details.call_policies.call_bounce.enabled = bounce_enabled
+        details.location_id = target.location_id
+        details.location_name = target.location_name
+        self.assertEqual(target, details)
+
+    def test_006_queue_size(self):
+        """
+        Change queue size
+        """
+        with self.random_queue() as target:
+            target: CallQueue
+
+            queue_size = target.queue_settings.queue_size - 1
+            update = CallQueue(queue_settings=QueueSettings(queue_size=queue_size))
+            print(f' Change queue size from {target.queue_settings.queue_size} to {queue_size}')
+            self.api.telephony.callqueue.update(location_id=target.location_id,
+                                                queue_id=target.id,
+                                                update=update)
+            details = self.api.telephony.callqueue.details(location_id=target.location_id,
+                                                           queue_id=target.id)
+        self.assertEqual(queue_size, details.queue_settings.queue_size)
+        details.queue_settings.queue_size = target.queue_settings.queue_size
+        details.location_id = target.location_id
+        details.location_name = target.location_name
+        self.assertEqual(target, details)
+
+    def test_007_allow_call_waiting_for_agents_enabled(self):
+        """
+        Change allow_call_waiting_for_agents_enabled
+        """
+        with self.random_queue() as target:
+            target: CallQueue
+
+            current = target.allow_call_waiting_for_agents_enabled
+            new_value = not current
+            update = CallQueue(allow_call_waiting_for_agents_enabled=new_value)
+            print(f' Change allow_call_waiting_for_agents_enabled from {current} to {new_value}')
+            self.api.telephony.callqueue.update(location_id=target.location_id,
+                                                queue_id=target.id,
+                                                update=update)
+            details = self.api.telephony.callqueue.details(location_id=target.location_id,
+                                                           queue_id=target.id)
+        self.assertEqual(new_value, details.allow_call_waiting_for_agents_enabled)
+        details.allow_call_waiting_for_agents_enabled = current
         details.location_id = target.location_id
         details.location_name = target.location_name
         self.assertEqual(target, details)

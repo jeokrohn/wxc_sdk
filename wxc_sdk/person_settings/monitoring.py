@@ -27,7 +27,6 @@ class MonitoredElementMember(MonitoredMember):
 class MonitoredElement(ApiModel):
     #: monitored person or place
     member: Optional[MonitoredElementMember]
-    # TODO: documentation defect: attribute is documented as "cpe"
     #: monitored call park extension
     cpe: Optional[CallParkExtension] = Field(alias='callparkextension')
 

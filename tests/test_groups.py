@@ -1,8 +1,12 @@
+import asyncio
 import random
+from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
+from functools import reduce
+from typing import Optional
 
-from .base import TestCaseWithLog
 from wxc_sdk.groups import Group, GroupMember
+from .base import TestCaseWithLog, async_test
 
 
 class TestGroups(TestCaseWithLog):
@@ -27,48 +31,81 @@ class TestGroups(TestCaseWithLog):
         group_list = list(self.api.groups.list(include_members=True))
         print(f'got {len(group_list)} groups')
 
-    def test_003_pagination(self):
+    @async_test
+    async def test_003_pagination(self):
         """
-        test pagination
+        Pagination when listing groups
         """
-        ga = self.api.groups
-        group_list = list(ga.list(include_members=True))
-        # we want to have at least 30 groups to test with
-        missing = max(0, 30 - len(group_list))
-        if missing:
-            # create missing groups to get to 30
+        ga = self.async_api.groups
+        new_groups = None
+        with self.no_log():
+            group_list = await ga.list(include_members=True)
+            # we want to have at least 30 groups to test with
+            missing = max(0, 30 - len(group_list))
 
-            # existing group names
-            names = set(g.display_name for g in group_list)
+            if missing:
+                # create missing groups to get to 30
 
-            # generator for new group names
-            new_names = (name for i in range(1000)
-                         if (name := f'test_{i:03}') not in names)
+                # existing group names
+                names = set(g.display_name for g in group_list)
 
-            # create them...
-            with ThreadPoolExecutor() as pool:
-                list(pool.map(lambda i: ga.create(settings=Group(display_name=next(new_names))),
-                              range(missing)))
-            # complete list of groups
-            group_list = list(ga.list(include_members=True))
+                # generator for new group names
+                new_names = (name for i in range(1000)
+                             if (name := f'test_{i:03}') not in names)
+
+                # create them...
+                # noinspection PyTypeChecker
+                new_groups: list[Group] = await asyncio.gather(*[ga.create(settings=Group(display_name=next(new_names)))
+                                                                 for _ in range(missing)])
+        # complete list of groups after creating new groups
+        group_list = await ga.list(include_members=True)
 
         # get list with pagination
-        paginated_list = list(ga.list(count=5, include_members=True))
+        paginated_list = await ga.list(count=5, include_members=True)
         try:
-            self.assertEqual(group_list, paginated_list)
-        except AssertionError:
-            print(f'{group_list}')
-            print(f'{paginated_list}')
+            requests = list(self.requests(method='GET', url_filter=r'.+v1/groups\?.*count='))
+            # get start index parameter, count parameter and number of returned elements in each request
+            start_count_len: list[tuple[Optional[int], int, int]] = [((s := r.url_query.get('startIndex',
+                                                                                            [None])[0]) and int(s),
+                                                                      (c := r.url_query.get('count',
+                                                                                            [None])[0]) and int(c),
+                                                                      len(r.response_body['groups'])) for r in
+                                                                     requests]
+            for i, (s, c, l) in enumerate(start_count_len, 1):
+                print(f'request {i}: start={str(s):4}, count={c}, len={l}')
 
-    def test_004_all_details(self):
+            group_ids = set(group.group_id for group in group_list)
+            group_ids_paginated = set(group.group_id for group in paginated_list)
+            id_positions: dict[str, list[int]] = reduce(lambda red, ig: red[ig[1].group_id].append(ig[0]) or red,
+                                                        enumerate(paginated_list),
+                                                        defaultdict(list))
+            groups_by_id = {group.group_id: group for group in group_list}
+            issues = {g: p for g, p in id_positions.items() if len(p) > 1}
+            for gid, positions in issues.items():
+                group = groups_by_id[gid]
+                print(f'group {gid}, {group.display_name} returned at positions '
+                      f'{", ".join(str(p) for p in positions)}')
+
+            self.assertTrue(all(c == l for _, c, l in start_count_len))
+            self.assertTrue(not issues)
+            self.assertEqual(group_ids, group_ids_paginated)
+            self.assertEqual(group_list, paginated_list)
+        finally:
+            # clean up: remove groups we created above
+            if new_groups:
+                with self.no_log():
+                    await asyncio.gather(*[ga.delete_group(group_id=group.group_id) for group in new_groups])
+
+    @async_test
+    async def test_004_all_details(self):
         """
         Get details for all groups
         """
-        ga = self.api.groups
-        group_list = list(ga.list(include_members=True))
-        with ThreadPoolExecutor() as pool:
-            details = list(pool.map(lambda group: ga.details(group_id=group.group_id, include_members=True),
-                                    group_list))
+        ga = self.async_api.groups
+        group_list = await ga.list(include_members=True)
+        details = await asyncio.gather(*[ga.details(group_id=group.group_id,
+                                                    include_members=True)
+                                         for group in group_list])
         print(f'Got details for {len(group_list)} groups')
 
     def test_005_add_users(self):
@@ -161,5 +198,6 @@ class TestGroups(TestCaseWithLog):
                                     target_groups))
             members_w_pagination = list(pool.map(lambda g: list(ga.members(group_id=g.group_id, count=2)),
                                                  target_groups))
+        requests = list(self.requests())
         print(f'Got members for {len(target_groups)} groups')
         self.assertEqual(members, members_w_pagination)

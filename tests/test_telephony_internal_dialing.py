@@ -1,4 +1,3 @@
-import asyncio
 from collections.abc import Iterable
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
@@ -52,8 +51,7 @@ class TestInternalDialing(TestCaseWithLog):
         """
         read settings for all locations
         """
-        with ThreadPoolExecutor() as pool:
-            self.read_all_settings()
+        self.read_all_settings()
         print(f'Got internal dialing settings for {len(self.locations)} locations')
 
     @contextmanager
@@ -78,7 +76,7 @@ class TestInternalDialing(TestCaseWithLog):
 
         def get_trunk_details(trunk_ids: Iterable[str]) -> list[TrunkDetail]:
             with ThreadPoolExecutor() as pool:
-                return list(pool.map(lambda tid:self.api.telephony.prem_pstn.trunk.details(trunk_id=tid),
+                return list(pool.map(lambda tid: self.api.telephony.prem_pstn.trunk.details(trunk_id=tid),
                                      trunk_ids))
 
         india_location_ids = set(loc.location_id for loc in self.locations

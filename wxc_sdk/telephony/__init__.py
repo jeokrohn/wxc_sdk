@@ -17,6 +17,7 @@ from .callqueue import CallQueueApi
 from .calls import CallsApi
 from .huntgroup import HuntGroupApi
 from .location import TelephonyLocationApi
+from .location.intercept import LocationInterceptApi
 from .organisation_vm import OrganisationVoicemailSettingsAPI
 from .paging import PagingApi
 from .pnc import PrivateNetworkConnectApi
@@ -176,7 +177,7 @@ class DestinationType(str, Enum):
     Matching destination type for the call.
     """
     #: Matching destination is a person or workspace with details in the hosted_user field.
-    hosted_user = 'HOSTED_USER'  # TODO: doc defect. Documented as HOSTED_AGENT
+    hosted_user = 'HOSTED_USER'
     #: Matching destination is a calling feature like auto-attendant or hunt group with details in the hostedFeature
     #: field.
     hosted_feature = 'HOSTED_FEATURE'
@@ -237,10 +238,16 @@ class ServiceType(str, Enum):
 
 
 class HostedFeatureDestination(LocationAndNumbers):
+    """
+    This data object is returned when destinationType is HOSTED_FEATURE
+    """
     service_type: ServiceType
-    service_type1: ServiceType = Field(alias='type')  # TODO: defect: duplicate, check doc
-    service_name: str  # TODO: defect: duplicate, check doc
+    service_type1: ServiceType = Field(alias='type')
+    #: service instance name
+    service_name: str
+    #: service instance name
     name: str
+    #: service instance id
     service_instance_id: str = Field(alias='id')
 
 
@@ -264,7 +271,8 @@ class PbxUserDestination(TrunkDestination):
     dial_plan_id: str
     #: the dial pattern that the called string matches
     dial_pattern: str
-    premises_dial_pattern: str  # TODO: doc defect, not documented
+    #: the dial pattern that the called string matches (redundant)
+    premises_dial_pattern: str
 
 
 class PstnNumberDestination(TrunkDestination):
@@ -352,6 +360,8 @@ class TelephonyApi(ApiChild, base='telephony'):
     #: access or authentication codes
     access_codes: AccessCodesApi
     auto_attendant: AutoAttendantApi
+    #: location call intercept settings
+    call_intercept: LocationInterceptApi
     calls: CallsApi
     callpark: CallParkApi
     callpark_extension: CallparkExtensionApi
@@ -376,6 +386,7 @@ class TelephonyApi(ApiChild, base='telephony'):
         super().__init__(session=session)
         self.access_codes = AccessCodesApi(session=session)
         self.auto_attendant = AutoAttendantApi(session=session)
+        self.call_intercept = LocationInterceptApi(session=session)
         self.calls = CallsApi(session=session)
         self.callpark = CallParkApi(session=session)
         self.callpark_extension = CallparkExtensionApi(session=session)

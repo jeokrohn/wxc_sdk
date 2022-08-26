@@ -22,9 +22,7 @@ class RouteGroup(ApiModel):
     # only returned in list() not in detail
     rg_id: Optional[str] = Field(alias='id')
     name: str
-    # TODO: doc defect not listed at https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read
-    #  -the-list-of-routing-groups
-    #: only returned by list() not as part of detail
+    #: only returned by list() not as part of detail()
     in_use: Optional[bool]
     #: only returned by detail()
     organization: Optional[Customer]
@@ -105,8 +103,6 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         :return: id of new route group
         :rtype: str
         """
-        # TODO: doc defect. wrong URL at https://developer.webex.com/docs/api/v1/webex-calling-organization-settings
-        #  /create-route-group-for-a-organization
         params = org_id and {'orgId': org_id} or None
         body = route_group.json(include={'name': True,
                                          'local_gateways': {'__all__': {'trunk_id', 'priority'}}})
@@ -131,9 +127,6 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         :return: route group details
         :rtype: :class:`RouteGroup`
         """
-        # TODO: wrong data structure at
-        #  https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-a-route-group-for-a
-        #  -organization
         params = org_id and {'orgId': org_id} or None
         url = self.ep(rg_id)
         data = self.get(url=url, params=params)
@@ -178,7 +171,6 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         :param org_id: Organization of the Route Group.
         :type org_id: str
         """
-        # TODO: doc defect. wrong URL
         params = org_id and {'orgId': org_id} or None
         url = self.ep(rg_id)
         self.delete(url=url, params=params)

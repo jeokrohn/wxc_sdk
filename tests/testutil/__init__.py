@@ -19,7 +19,7 @@ from wxc_sdk.people import Person
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 
 __all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'LocationInfo', 'us_location_info',
-           'calling_users', 'available_numbers']
+           'calling_users', 'available_numbers', 'available_extensions_gen']
 
 
 def available_numbers(numbers: Iterable[str], seed: str = None) -> Generator[str, None, None]:
@@ -43,7 +43,7 @@ def available_numbers(numbers: Iterable[str], seed: str = None) -> Generator[str
     return tree.available(seed=seed)
 
 
-async def as_available_tns(*, as_api: AsWebexSimpleApi, tn_prefix: str, tns_requested: int = 1):
+async def as_available_tns(*, as_api: AsWebexSimpleApi, tn_prefix: str, tns_requested: int = 1) -> list[str]:
     """
     Get some available US TNs
     :param as_api:
@@ -107,6 +107,12 @@ def available_tns(*, api: WebexSimpleApi, tn_prefix: str, tns_requested: int = 1
     return asyncio.run(as_run())
 
 
+def available_extensions_gen(*, api: WebexSimpleApi, location_id, ext_requested: int = 1) -> Generator[str, None, None]:
+    extensions = [pn.extension for pn in api.telephony.phone_numbers(location_id=location_id)
+                  if pn.extension]
+    return available_numbers(numbers=extensions)
+
+
 def available_extensions(*, api: WebexSimpleApi, location_id, ext_requested: int = 1) -> list[str]:
     """
     Get some available extensions in given location
@@ -115,13 +121,7 @@ def available_extensions(*, api: WebexSimpleApi, location_id, ext_requested: int
     :param ext_requested:
     :return: list of extensions
     """
-    extensions = [pn.extension for pn in api.telephony.phone_numbers(location_id=location_id)
-                  if pn.extension]
-    if not extensions:
-        # defauilt: 1XXX
-        extensions = ['1000']
-    available = available_numbers(numbers=extensions)
-    result = [next(available) for _ in range(ext_requested)]
+    result = [next(available_extensions_gen(api=api, location_id=location_id)) for _ in range(ext_requested)]
     return result
 
 

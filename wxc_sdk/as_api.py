@@ -43,8 +43,8 @@ __all__ = ['AsAccessCodesApi', 'AsAnnouncementApi', 'AsApiChild', 'AsAppServices
            'AsForwardingApi', 'AsGroupsApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
            'AsInternalDialingApi', 'AsLicensesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
            'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMonitoringApi',
-           'AsNumbersApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOutgoingPermissionsApi', 'AsPagingApi',
-           'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
+           'AsNumbersApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi',
+           'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
            'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsReceptionistApi',
            'AsRestSession', 'AsRouteGroupApi', 'AsRouteListApi', 'AsScheduleApi', 'AsTelephonyApi',
            'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi', 'AsVoicePortalApi', 'AsVoicemailApi',
@@ -440,10 +440,139 @@ class AsLocationsApi(AsApiChild, base='locations'):
         :param location_id: A unique identifier for the location.
         :type location_id: str
         :return: location details
-        :rtype: Location
+        :rtype: :class:`Location`
         """
         ep = self.ep(location_id)
         return Location.parse_obj(await self.get(ep))
+
+    async def create(self, name: str, time_zone: str, preferred_language: str, announcement_language: str, address1: str,
+               city: str, state: str, postal_code: str, country: str, address2: str = None, org_id: str = None):
+        """
+        Create a new Location for a given organization. Only an admin in a Webex Calling licensed organization can
+        create a new Location.
+
+        The following body parameters are required to create a new location: name, timeZone, preferredLanguage,
+        address, announcementLanguage.
+
+        Creating a location in your organization requires an administrator auth token with
+        the spark-admin:locations_write.
+
+        :param name: The name of the location.
+        :type name: str
+        :param time_zone: Time zone associated with this location
+        :type time_zone: str
+        :param preferred_language: Default email language.
+        :type preferred_language: str
+        :param announcement_language: Location's phone announcement language.
+        :type announcement_language: str
+        :param address1: Address 1
+        :type address1: str
+        :param address2: Address 2
+        :type address2: str
+        :param city: City
+        :type city: str
+        :param state: State Code
+        :type state: str
+        :param postal_code: Postal Code
+        :type postal_code: str
+        :param country: ISO-3166 2-Letter Country Code.
+        :type country: str
+        :param org_id: Create a location common attribute for this organization.
+        :type org_id: str
+        :return: ID of new location
+        :rtype: :class:`Location`
+        """
+        # TODO: unit tests
+        body = {}
+        address = {}
+        for p, v in list(locals().items()):
+            if p in {'address', 'body', 'self'} or v is None:
+                continue
+            p = to_camel(p)
+            if p == 'address1' or address:
+                address[p] = v
+            else:
+                body[p] = v
+        body['address'] = address
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep()
+        data = await self.post(url=url, json=body, params=params)
+        return data['id']
+
+    async def update(self, location_id: str, settings: Location, org_id: str = None):
+        """
+        Update details for a location, by ID.
+
+        Specify the location ID in the locationId parameter in the URI. Only an admin can update a location details.
+
+        Updating a location in your organization requires an administrator auth token with
+        the spark-admin:locations_write.
+
+        Example :
+
+            .. code-block:: python
+
+                api.telephony.location.update(location_id=location_id,
+                                              settings=TelephonyLocation(
+                                                  calling_line_id=CallingLineId(
+                                                      phone_number=tn),
+                                                  routing_prefix=routing_prefix,
+                                                  outside_dial_digit='9'))
+
+        :param location_id: Update location common attributes for this location.
+        :type location_id: str
+        :param settings: new settings for the org:
+        :type settings: :class:`Location`
+        :param org_id: Update location common attributes for this organization
+        :type org_id: str
+        """
+        settings_copy = settings.copy(deep=True)
+        if settings_copy.address and not settings_copy.address.address2:
+            settings_copy.address.address2 = None
+
+        data = settings_copy.json(exclude={'location_id', 'org_id'}, exclude_none=False, exclude_unset=True)
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(location_id)
+        await self.put(url=url, data=data, params=params)
+
+
+class AsOrganizationApi(AsApiChild, base='organizations'):
+    async def list(self) -> list[Organization]:
+        """
+        List all organizations visible by your account. The results will not be paginated.
+
+        :return: list of Organizations
+        """
+        data = await self.get(url=self.ep())
+        return parse_obj_as(list[Organization], data['items'])
+
+    async def details(self, org_id: str) -> Organization:
+        """
+        Get Organization Details
+
+        Shows details for an organization, by ID.
+
+        :param org_id: The unique identifier for the organization.
+        :type org_id: str
+        :return: org details
+        :rtype: :class:`Organization`
+        """
+        url = self.ep(org_id)
+        data = await self.get(url=url)
+        return Organization.parse_obj(data)
+
+    async def delete(self, org_id: str):
+        """
+        Delete Organization
+
+        Deletes an organization, by ID. It may take up to 10 minutes for the organization to be deleted after the
+        response is returned.
+
+        :param org_id: The unique identifier for the organization.
+        :type org_id: str
+        """
+        url = self.ep(org_id)
+        await super().delete(url=url)
 
 
 class AsPeopleApi(AsApiChild, base='people'):
@@ -1122,6 +1251,19 @@ class AsCallerIdApi(AsPersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         await self.put(ep, params=params, json=data)
 
+    async def configure_settings(self, person_id: str, settings: CallerId, org_id: str = None):
+        params = org_id and {'orgId': org_id} or None
+        data = settings.json(exclude_unset=True, include={'selected': True,
+                                                          'custom_number': True,
+                                                          'first_name': True,
+                                                          'last_name': True,
+                                                          'block_in_forward_calls_enabled': True,
+                                                          'external_caller_id_name_policy': True,
+                                                          'custom_external_caller_id_name': True,
+                                                          })
+        ep = self.f_ep(person_id=person_id)
+        await self.put(ep, params=params, data=data)
+
 
 class AsCallingBehaviorApi(AsPersonSettingsApiChild):
     """
@@ -1487,12 +1629,6 @@ class AsNumbersApi(AsPersonSettingsApiChild):
 
     feature = 'numbers'
 
-    # TODO: documentation defect:
-    #  https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-additional-settings/get-a-list-of
-    #  -phone-numbers-for-a-person
-    #  says the URL is /v1/people/{personId}/numbers
-    #  while it actually is /v1/people/{personId}/features/numbers
-
     async def read(self, person_id: str, org_id: str = None) -> PersonNumbers:
         """
         Get a person's phone numbers including alternate numbers.
@@ -1500,13 +1636,15 @@ class AsNumbersApi(AsPersonSettingsApiChild):
         A person can have one or more phone numbers and/or extensions via which they can be called.
 
         This API requires a full or user administrator auth token with
-        the spark-admin:people_read scope.:param person_id: Unique identifier for the person.
+        the spark-admin:people_read scope.
 
+        :param person_id: Unique identifier for the person.
         :type person_id: str
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners) may
         use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
-        :return:
+        :return: Alternate numbers of teh user
+        :rtype: :class:`PersonNumbers`
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
@@ -1660,7 +1798,7 @@ class AsTransferNumbersApi(AsPersonSettingsApiChild):
         :param person_id: Unique identifier for the workspace.
         :type person_id: str
         :param settings: new auto transfer numbers
-        :type settings: AutoTransferNumbers
+        :type settings: :class:`AutoTransferNumbers`
         :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
@@ -4743,6 +4881,77 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
         await self.put(url, data=data, params=params)
 
 
+class AsLocationInterceptApi(AsApiChild, base='telephony/config/locations'):
+    """
+    API for location's call intercept settings
+    """
+
+    def _endpoint(self, *, location_id: str, path: str = None) -> str:
+        """
+        location specific
+        telephony/config/locations/{locationId}/intercept
+
+        :meta private:
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param path: additional path
+        :type: path: str
+        :return: full endpoint
+        :rtype: str
+        """
+        path = path and f'/{path}' or ''
+        ep = self.session.ep(f'telephony/config/locations/{location_id}/intercept{path}')
+        return ep
+
+    async def read(self, location_id: str, org_id: str = None) -> InterceptSetting:
+        """
+        Get Location Intercept
+
+        Retrieve intercept location details for a customer location.
+
+        Intercept incoming or outgoing calls for persons in your organization. If this is enabled, calls are either
+        routed to a designated number the person chooses, or to the person's voicemail.
+
+        Retrieving intercept location details requires a full, user or read-only administrator auth token with a
+        scope of spark-admin:telephony_config_read.
+
+        :param location_id: Retrieve intercept details for this location.
+        :type location_id: str
+        :param org_id: Retrieve intercept location details for a customer location.
+        :type org_id: str
+        :return: user's call intercept settings
+        :rtype: :class:`wxc_sdk.person_settings.call_intercept.InterceptSetting`
+        """
+        ep = self._endpoint(location_id=location_id)
+        params = org_id and {'orgId': org_id} or None
+        return InterceptSetting.parse_obj(await self.get(ep, params=params))
+
+    async def configure(self, location_id: str, settings: InterceptSetting, org_id: str = None):
+        """
+        Put Location Intercept
+
+        Modifies the intercept location details for a customer location.
+
+        Intercept incoming or outgoing calls for users in your organization. If this is enabled, calls are either
+        routed to a designated number the user chooses, or to the user's voicemail.
+
+        Modifying the intercept location details requires a full, user administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Unique identifier for the person.
+        :type location_id: str
+        :param settings: new intercept settings
+        :type settings: InterceptSetting
+        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+            may use this parameter as the default is the same organization as the token used to access API.
+        :type org_id: str
+        """
+        ep = self._endpoint(location_id=location_id)
+        params = org_id and {'orgId': org_id} or None
+        data = settings.json()
+        await self.put(ep, params=params, data=data)
+
+
 class AsOrganisationVoicemailSettingsAPI(AsApiChild, base='telephony/config/voicemail/settings'):
     """
     API for Organisation voicemail settings
@@ -5324,8 +5533,6 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         :return: id of new route group
         :rtype: str
         """
-        # TODO: doc defect. wrong URL at https://developer.webex.com/docs/api/v1/webex-calling-organization-settings
-        #  /create-route-group-for-a-organization
         params = org_id and {'orgId': org_id} or None
         body = route_group.json(include={'name': True,
                                          'local_gateways': {'__all__': {'trunk_id', 'priority'}}})
@@ -5350,9 +5557,6 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         :return: route group details
         :rtype: :class:`RouteGroup`
         """
-        # TODO: wrong data structure at
-        #  https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-a-route-group-for-a
-        #  -organization
         params = org_id and {'orgId': org_id} or None
         url = self.ep(rg_id)
         data = await self.get(url=url, params=params)
@@ -5397,7 +5601,6 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         :param org_id: Organization of the Route Group.
         :type org_id: str
         """
-        # TODO: doc defect. wrong URL
         params = org_id and {'orgId': org_id} or None
         url = self.ep(rg_id)
         await self.delete(url=url, params=params)
@@ -6215,9 +6418,31 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
 
-    def validate_fqdn_and_domain(self):
-        # TODO: implement
-        ...
+    async def validate_fqdn_and_domain(self, address: str, domain: str, port: int = None, org_id: str = None):
+        """
+        Validate Local Gateway FQDN and Domain for the organization trunks.
+
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group - a group of trunks that allow
+        Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Validating Local Gateway FQDN and Domain requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param address: FQDN or SRV address of the trunk.
+        :type address: str
+        :param domain: Domain name of the trunk.
+        :type domain; str
+        :param port: FQDN port of the trunk
+        :type port: int
+        :param org_id: Organization to which trunk types belongs.
+        :type org_id: str
+        """
+        body = {p: v for p, v in locals().items()
+                if p not in {'self', 'org_id'} and v is not None}
+        url = self.ep('actions/fqdnValidation/invoke')
+        params = org_id and {'orgId': org_id} or None
+        await self.post(url=url, params=params, json=body)
 
     # TODO: are we missing a usage for trunks used for calls to unknown extensions??
 
@@ -6373,77 +6598,6 @@ class AsInternalDialingApi(AsApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         data = update.json(exclude_none=False)
         await self.put(url=url, params=params, data=data)
-
-
-class AsLocationInterceptApi(AsApiChild, base='telephony/config/locations'):
-    """
-    API for location's call intercept settings
-    """
-
-    def _endpoint(self, *, location_id: str, path: str = None) -> str:
-        """
-        location specific
-        telephony/config/locations/{locationId}/intercept
-
-        :meta private:
-        :param location_id: Unique identifier for the location.
-        :type location_id: str
-        :param path: additional path
-        :type: path: str
-        :return: full endpoint
-        :rtype: str
-        """
-        path = path and f'/{path}' or ''
-        ep = self.session.ep(f'telephony/config/locations/{location_id}/intercept{path}')
-        return ep
-
-    async def read(self, location_id: str, org_id: str = None) -> InterceptSetting:
-        """
-        Get Location Intercept
-
-        Retrieve intercept location details for a customer location.
-
-        Intercept incoming or outgoing calls for persons in your organization. If this is enabled, calls are either
-        routed to a designated number the person chooses, or to the person's voicemail.
-
-        Retrieving intercept location details requires a full, user or read-only administrator auth token with a
-        scope of spark-admin:telephony_config_read.
-
-        :param location_id: Retrieve intercept details for this location.
-        :type location_id: str
-        :param org_id: Retrieve intercept location details for a customer location.
-        :type org_id: str
-        :return: user's call intercept settings
-        :rtype: :class:`wxc_sdk.person_settings.call_intercept.InterceptSetting`
-        """
-        ep = self._endpoint(location_id=location_id)
-        params = org_id and {'orgId': org_id} or None
-        return InterceptSetting.parse_obj(await self.get(ep, params=params))
-
-    async def configure(self, location_id: str, settings: InterceptSetting, org_id: str = None):
-        """
-        Put Location Intercept
-
-        Modifies the intercept location details for a customer location.
-
-        Intercept incoming or outgoing calls for users in your organization. If this is enabled, calls are either
-        routed to a designated number the user chooses, or to the user's voicemail.
-
-        Modifying the intercept location details requires a full, user administrator auth token with a scope
-        of spark-admin:telephony_config_write.
-
-        :param location_id: Unique identifier for the person.
-        :type location_id: str
-        :param settings: new intercept settings
-        :type settings: InterceptSetting
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
-            may use this parameter as the default is the same organization as the token used to access API.
-        :type org_id: str
-        """
-        ep = self._endpoint(location_id=location_id)
-        params = org_id and {'orgId': org_id} or None
-        data = settings.json()
-        await self.put(ep, params=params, data=data)
 
 
 class AsLocationMoHApi(AsApiChild, base='telephony/config/locations'):
@@ -6706,7 +6860,6 @@ class AsLocationVoicemailSettingsApi(AsApiChild, base='telephony/config/location
         await self.put(url, params=params, data=body)
 
 
-@dataclass(init=False)
 class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
     #: call intercept settings
     intercept: AsLocationInterceptApi
@@ -6774,6 +6927,51 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         data = await self.post(url=url, params=params, json=body)
         return ValidateExtensionsResponse.parse_obj(data)
+
+    async def details(self, location_id: str, org_id: str = None) -> TelephonyLocation:
+        """
+        Shows Webex Calling details for a location, by ID.
+
+        Specify the location ID in the locationId parameter in the URI.
+
+        Searching and viewing location in your organization requires an administrator auth token with
+        the spark-admin:telephony_config_read scope.
+
+        :param location_id: Retrieve Webex Calling location attributes for this location.
+        :type location_id: str
+        :param org_id: Retrieve Webex Calling location attributes for this organization.
+        :type org_id: str
+        :return: Webex Calling details for location
+        :rtype: :class:`TelephonyLocation`
+        """
+        params = org_id and {'orgId': org_id}
+        url = self.ep(location_id)
+        data = await self.get(url=url, params=params)
+        return TelephonyLocation.parse_obj(data)
+
+    async def update(self, location_id: str, settings: TelephonyLocation, org_id: str = None):
+        """
+        Update Webex Calling details for a location, by ID.
+
+        Specify the location ID in the locationId parameter in the URI.
+
+        Modifying the connection via API is only supported for the local PSTN types of TRUNK and ROUTE_GROUP.
+
+        Updating a location in your organization requires an administrator auth token with
+        the spark-admin:telephony_config_write scope.
+
+        :param location_id: Updating Webex Calling location attributes for this location.
+        :type location_id: str
+        :param settings: settings to update
+        :type settings: :class:`TelephonyLocation`
+        :param org_id: Updating Webex Calling location attributes for this organization.
+        :type org_id: str
+        :return:
+        """
+        data = settings.json(exclude={'location_id', 'user_limit', 'default_domain'})
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(location_id)
+        await self.put(url=url, data=data, params=params)
 
 
 class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
@@ -6883,7 +7081,7 @@ class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
         return self.session.ep(f'telephony/config/locations/{location_id}/voicemailGroups{path}')
 
     def list_gen(self, location_id: str = None, name: str = None, phone_number: str = None,
-             org_id: str = None) -> AsyncGenerator[VoicemailGroup, None, None]:
+             org_id: str = None, **params) -> AsyncGenerator[VoicemailGroup, None, None]:
         """
         List the voicemail group information for the organization.
 
@@ -6903,12 +7101,12 @@ class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
         :type org_id: str
         :return: yields ::class::`VoicemailGroup` instances
         """
-        params = {to_camel(p): v for p, v in locals().items() if p != 'self' and v is not None}
+        params.update((to_camel(p), v) for p, v in locals().items() if p not in {'self', 'params'} and v is not None)
         url = self.ep()
         return self.session.follow_pagination(url=url, model=VoicemailGroup, params=params, item_key='voicemailGroups')
 
     async def list(self, location_id: str = None, name: str = None, phone_number: str = None,
-             org_id: str = None) -> List[VoicemailGroup]:
+             org_id: str = None, **params) -> List[VoicemailGroup]:
         """
         List the voicemail group information for the organization.
 
@@ -6928,7 +7126,7 @@ class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
         :type org_id: str
         :return: yields ::class::`VoicemailGroup` instances
         """
-        params = {to_camel(p): v for p, v in locals().items() if p != 'self' and v is not None}
+        params.update((to_camel(p), v) for p, v in locals().items() if p not in {'self', 'params'} and v is not None)
         url = self.ep()
         return [o async for o in self.session.follow_pagination(url=url, model=VoicemailGroup, params=params, item_key='voicemailGroups')]
 
@@ -7015,7 +7213,7 @@ class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
         data = await self.post(url=url, data=body, params=params)
         return data['id']
 
-    def delete(self, location_id: str, voicemail_group_id: str, org_id: str = None):
+    async def delete(self, location_id: str, voicemail_group_id: str, org_id: str = None):
         """
         Delete the designated voicemail group.
 
@@ -7030,7 +7228,7 @@ class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
         :type org_id: str
         """
         url = self.ep(location_id, voicemail_group_id)
-        super().delete(url=url)
+        await super().delete(url=url)
 
 
 class AsVoicemailRulesApi(AsApiChild, base='telephony/config/voicemail/rules'):
@@ -7091,6 +7289,8 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
     #: access or authentication codes
     access_codes: AsAccessCodesApi
     auto_attendant: AsAutoAttendantApi
+    #: location call intercept settings
+    call_intercept: AsLocationInterceptApi
     calls: AsCallsApi
     callpark: AsCallParkApi
     callpark_extension: AsCallparkExtensionApi
@@ -7115,6 +7315,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         super().__init__(session=session)
         self.access_codes = AsAccessCodesApi(session=session)
         self.auto_attendant = AsAutoAttendantApi(session=session)
+        self.call_intercept = AsLocationInterceptApi(session=session)
         self.calls = AsCallsApi(session=session)
         self.callpark = AsCallParkApi(session=session)
         self.callpark_extension = AsCallparkExtensionApi(session=session)
@@ -7774,6 +7975,8 @@ class AsWebexSimpleApi:
     licenses: AsLicensesApi
     #: Location API :class:`AsLocationsApi`
     locations: AsLocationsApi
+    #: organization settings API
+    organizations: AsOrganizationApi
     #: Person settings API :class:`AsPersonSettingsApi`
     person_settings: AsPersonSettingsApi
     #: People API :class:`AsPeopleApi`
@@ -7810,6 +8013,7 @@ class AsWebexSimpleApi:
         self.groups = AsGroupsApi(session=session)
         self.licenses = AsLicensesApi(session=session)
         self.locations = AsLocationsApi(session=session)
+        self.organizations = AsOrganizationApi(session=session)
         self.person_settings = AsPersonSettingsApi(session=session)
         self.people = AsPeopleApi(session=session)
         self.telephony = AsTelephonyApi(session=session)

@@ -35,7 +35,6 @@ class OutgoingPermissionCallType(str, Enum):
     premium_services_i = 'PREMIUM_SERVICES_I'
     premium_services_ii = 'PREMIUM_SERVICES_II'
     casual = 'CASUAL'
-    # TODO: file documentation defect. documented as URI_DIALING
     url_dialing = 'URL_DIALING'
     unknown = 'UNKNOWN'
 
@@ -164,11 +163,14 @@ class AutoTransferNumbers(ApiModel):
     """
     Outgoing permission auto transfer numbers
     """
-    #: When calling a specific call type, this workspace will be automatically transferred to another number.
+    #: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_1 will be transferred to
+    #: this number
     auto_transfer_number1: Optional[str]
-    #: When calling a specific call type, this workspace will be automatically transferred to another number.
+    #: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_2 will be transferred to
+    #: this number
     auto_transfer_number2: Optional[str]
-    #: When calling a specific call type, this workspace will be automatically transferred to another number.
+    #: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_3 will be transferred to
+    #: this number
     auto_transfer_number3: Optional[str]
 
     @property
@@ -231,7 +233,7 @@ class TransferNumbersApi(PersonSettingsApiChild):
         :param person_id: Unique identifier for the workspace.
         :type person_id: str
         :param settings: new auto transfer numbers
-        :type settings: AutoTransferNumbers
+        :type settings: :class:`AutoTransferNumbers`
         :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str

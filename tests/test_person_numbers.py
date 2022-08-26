@@ -38,14 +38,20 @@ class TestRead(TestCaseWithUsers):
             numbers = list(pool.map(lambda user: nu.read(person_id=user.person_id),
                                     self.users))
 
-        # find all users and their direct numbers not starting with '+'
-        direct_number_issues = [(user, direct_numbers) for user, numbers in zip(self.users, numbers)
-                                if (direct_numbers := [number.direct_number
-                                                       for number in numbers.phone_numbers
-                                                       if number.direct_number and not
-                                                       number.direct_number.startswith('+')])]
-        print('\n'.join(f'{user.display_name}: {", ".join(numbers)}' for user, numbers in direct_number_issues))
-        self.assertTrue(not direct_number_issues), 'Some direct numbers are not +E.164'
+        # validate by looking at the actual response data, b/c +E.164 is enforced in the model
+        requests = list(self.requests(method='GET', url_filter=r'.+people/(?P<user_id>\w+)/features/numbers'))
+        err = False
+        user_dict = {user.person_id: user for user in self.users}
+        for request in requests:
+            user = user_dict[request.url_dict['user_id']]
+            direct_numbers = [dn for pn in request.response_body['phoneNumbers']
+                              if (dn := pn['directNumber'])]
+            non_e14 = [n for n in direct_numbers
+                       if not n.startswith('+')]
+            if non_e14:
+                err = True
+                print(f'{user.display_name}: {", ".join(direct_numbers)}')
+        self.assertFalse(err, 'Some direct numbers are not +E.164')
 
 
 @dataclass(init=False)

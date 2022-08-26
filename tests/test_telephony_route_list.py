@@ -2,7 +2,7 @@ from collections.abc import Generator
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from random import choice, sample
+from random import choice
 from typing import ClassVar
 
 from tests.base import TestCaseWithLog

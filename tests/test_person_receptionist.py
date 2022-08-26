@@ -4,11 +4,10 @@ Test for receptionist client settings
 import random
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
-from itertools import chain
 
 from wxc_sdk.all_types import Person, ReceptionistSettings
-from .base import TestCaseWithUsers
 from wxc_sdk.rest import RestError
+from .base import TestCaseWithUsers
 
 
 class TestRead(TestCaseWithUsers):
@@ -188,11 +187,19 @@ class TestRead(TestCaseWithUsers):
             err = False
             for member in after.monitored_members:
                 member_user = next(u for u in users if u.person_id == member.member_id)
+
+                def user_number(n):
+                    numbers = [ee for ee in (n.extension, n.external) if ee]
+                    if len(numbers) > 1:
+                        return f'({"/".join(numbers)})'
+                    return numbers[0]
+
                 print(f'  {member.display_name:{max_disp}}: '
-                      f'{", ".join(n.extension or n.phone_number for n in member.numbers)} '
-                      f'{"" if member_user.location_id==target_user.location_id else " not"} '
+                      f'{", ".join(user_number(n) for n in member.numbers)}'
+                      f'{"" if member_user.location_id == target_user.location_id else " not"} '
                       f'in same location as target user')
-                if any(n.extension and '-' in n.extension for n in member.numbers) != (member_user.location_id != target_user.location_id):
+                if any(n.extension and '-' in n.extension
+                       for n in member.numbers) != (member_user.location_id != target_user.location_id):
                     err = True
             # a hyphen in an extension is an indicator of an issue
             self.assertFalse(err, 'At least one extension has the wrong format')

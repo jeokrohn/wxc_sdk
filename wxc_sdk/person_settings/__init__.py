@@ -30,7 +30,6 @@ __all__ = ['PersonSettingsApi']
 
 
 # TODO: UC profile
-# TODO: what about auto transfer numbers? These seem to exist in workspace settings
 
 @dataclass(init=False)
 class PersonSettingsApi(ApiChild, base='people'):

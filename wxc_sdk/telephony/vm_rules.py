@@ -16,9 +16,9 @@ class BlockRepeatedDigits(ApiModel):
     Settings for not allowing single or groups of repeated digits in passcode (for example, 22888, 121212, or 408408).
     """
     #: If enabled, passcode should not contain repeated digits.
-    enabled: bool
+    enabled: Optional[bool]
     #: Maximum number of repeated digits. Min 1, Max 6.
-    max: int
+    max: Optional[int]
 
 
 class BlockContiguousSequences(ApiModel):
@@ -26,11 +26,11 @@ class BlockContiguousSequences(ApiModel):
     Settings for not allowing numerical sequence in passcode (for example, 012345 or 987654).
     """
     #: If enabled, passcode should not contain a numerical sequence.
-    enabled: bool
+    enabled: Optional[bool]
     #: Number of ascending digits in sequence. Min 2, Max 5.
-    number_of_ascending_digits: int
+    number_of_ascending_digits: Optional[int]
     #: Number of descending digits in sequence. Min 2, Max 5.
-    number_of_descending_digits: int
+    number_of_descending_digits: Optional[int]
 
 
 class PinLength(ApiModel):
@@ -38,9 +38,9 @@ class PinLength(ApiModel):
     Length of the passcode.
     """
     #: Min 2, Max 15.
-    min: int
+    min: Optional[int]
     #: Min 3, Max 30.
-    max: int
+    max: Optional[int]
 
 
 class DefaultVoicemailPinRules(ApiModel):
@@ -48,16 +48,16 @@ class DefaultVoicemailPinRules(ApiModel):
     Default voicemail passcode requirements.
     """
     #: If enabled, the passcode should not contain repeated pattern.
-    block_repeated_patterns_enabled: bool
+    block_repeated_patterns_enabled: Optional[bool]
     #: Settings for not allowing single or groups of repeated digits in passcode (for example, 22888, 121212, or
     #: 408408).
-    block_repeated_digits: BlockRepeatedDigits
+    block_repeated_digits: Optional[BlockRepeatedDigits]
     #: Settings for not allowing numerical sequence in passcode (for example, 012345 or 987654).
-    block_contiguous_sequences: BlockContiguousSequences
+    block_contiguous_sequences: Optional[BlockContiguousSequences]
     #: Length of the passcode.
-    length: PinLength
+    length: Optional[PinLength]
     #: If enabled, default voicemail passcode can be set.
-    default_voicemail_pin_enabled: bool
+    default_voicemail_pin_enabled: Optional[bool]
 
     @staticmethod
     def default() -> 'DefaultVoicemailPinRules':

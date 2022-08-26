@@ -16,7 +16,6 @@ class TestRead(TestCaseWithUsers):
     async def test_001_read_one(self):
         """
         Read app services settings for one user
-        TODO: track https://jira-eng-gpk2.cisco.com/jira/browse/PROVISION-9609
         """
         cb = self.async_api.person_settings.calling_behavior
         # pick the 1st user
@@ -34,8 +33,13 @@ class TestRead(TestCaseWithUsers):
         cb = self.async_api.person_settings.calling_behavior
 
         settings = await gather(*[cb.read(person_id=user.person_id) for user in self.users],
-                                return_exceptions=False)
-        print(f'Got app services settings for {len(self.users)} users')
+                                return_exceptions=True)
+        failed: list[tuple[Person, Exception]] = [(user, error) for user, error in zip(self.users, settings)
+                                                  if isinstance(error, Exception)]
+        if failed:
+            print(f'Reading calling behavior failed for {len(failed)} users:')
+            print('\n'.join(f'  {user.display_name}: {error}' for user, error in failed))
+        print(f'Got calling behavior for {len(self.users)} users')
         print('\n'.join(s.json(exclude_none=False) for s in settings))
         self.assertTrue(all(s.behavior_type is not None and s.effective_behavior_type is not None for s in settings),
                         'invalid/incomplete calling behavior for at least one user (check CALL-36213')

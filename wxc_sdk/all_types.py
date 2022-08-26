@@ -12,6 +12,7 @@ from wxc_sdk.common.schedules import Event, RecurWeekly, RecurYearlyByDate, Recu
 from wxc_sdk.groups import Group, GroupMember
 from wxc_sdk.licenses import License, SiteType
 from wxc_sdk.locations import Location, LocationAddress
+from wxc_sdk.organizations import Organization
 from wxc_sdk.people import PeopleStatus, Person, PersonType, PhoneNumber, PhoneNumberType, SipAddress, SipType
 from wxc_sdk.person_settings.appservices import AppServicesSettings
 from wxc_sdk.person_settings.barge import BargeSettings
@@ -59,6 +60,7 @@ from wxc_sdk.telephony.forwarding import CallForwarding, CallForwardingNumber, C
     ForwardingRuleDetails, ForwardingSetting
 from wxc_sdk.telephony.hg_and_cq import Agent, AlternateNumberSettings, HGandCQ, Policy
 from wxc_sdk.telephony.huntgroup import BusinessContinuity, HGCallPolicies, HuntGroup, NoAnswer
+from wxc_sdk.telephony.location import CallingLineId, PSTNConnection, TelephonyLocation
 from wxc_sdk.telephony.location.internal_dialing import InternalDialing
 from wxc_sdk.telephony.location.moh import LocationMoHGreetingType, LocationMoHSetting
 from wxc_sdk.telephony.location.vm import LocationVoiceMailSettings
@@ -70,8 +72,9 @@ from wxc_sdk.telephony.prem_pstn.dial_plan import CreateResponse, DialPlan, Patt
 from wxc_sdk.telephony.prem_pstn.route_group import RGTrunk, RouteGroup, RouteGroupUsage, UsageRouteLists
 from wxc_sdk.telephony.prem_pstn.route_list import NumberAndAction, RouteList, RouteListDetail,\
     UpdateNumbersResponse
-from wxc_sdk.telephony.prem_pstn.trunk import DeviceStatus, OutboundProxy, ResponseStatus, ResponseStatusType,\
-    Trunk, TrunkDetail, TrunkDeviceType, TrunkLocation, TrunkType, TrunkTypeWithDeviceType, TrunkUsage
+from wxc_sdk.telephony.prem_pstn.trunk import CnameRecord, DeviceStatus, OutboundProxy, ResponseStatus,\
+    ResponseStatusType, Trunk, TrunkDetail, TrunkDeviceType, TrunkLocation, TrunkType, TrunkTypeWithDeviceType,\
+    TrunkUsage
 from wxc_sdk.telephony.vm_rules import BlockContiguousSequences, BlockPreviousPasscodes, BlockRepeatedDigits,\
     DefaultVoicemailPinRules, EnabledAndNumberOfDays, PinLength, VoiceMailRules
 from wxc_sdk.telephony.voicemail_groups import VoicemailGroup, VoicemailGroupDetail
@@ -90,12 +93,12 @@ __all__ = ['Action', 'Agent', 'AlternateNumber', 'AlternateNumberSettings', 'Ann
            'CallInfo', 'CallPark', 'CallParkExtension', 'CallParkRecall', 'CallParkSettings', 'CallPickup',
            'CallQueue', 'CallQueueCallPolicies', 'CallRecordingSetting', 'CallSourceInfo', 'CallSourceType',
            'CallState', 'CallType', 'CallTypePermission', 'CallerId', 'CallerIdSelectedType', 'CallingBehavior',
-           'CallingPermissions', 'CallingType', 'CallsFrom', 'CodeAndReason', 'ComfortMessageSetting',
-           'CreateResponse', 'CustomNumberInfo', 'CustomNumberType', 'CustomNumbers', 'Customer', 'DND',
-           'DefaultVoicemailPinRules', 'DestinationType', 'DeviceStatus', 'DialPatternStatus', 'DialPatternValidate',
-           'DialPatternValidationResult', 'DialPatternValidationStatus', 'DialPlan', 'DialResponse', 'Dialing',
-           'DistinctiveRing', 'EmergencyDestination', 'EnabledAndNumberOfDays', 'Event', 'ExecAssistantType',
-           'ExpirePasscode', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts',
+           'CallingLineId', 'CallingPermissions', 'CallingType', 'CallsFrom', 'CnameRecord', 'CodeAndReason',
+           'ComfortMessageSetting', 'CreateResponse', 'CustomNumberInfo', 'CustomNumberType', 'CustomNumbers',
+           'Customer', 'DND', 'DefaultVoicemailPinRules', 'DestinationType', 'DeviceStatus', 'DialPatternStatus',
+           'DialPatternValidate', 'DialPatternValidationResult', 'DialPatternValidationStatus', 'DialPlan',
+           'DialResponse', 'Dialing', 'DistinctiveRing', 'EmergencyDestination', 'EnabledAndNumberOfDays', 'Event',
+           'ExecAssistantType', 'ExpirePasscode', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts',
            'FeatureAccessCodeDestination', 'FeatureSelector', 'ForwardCallsTo', 'ForwardToSelection',
            'ForwardingRule', 'ForwardingRuleDetails', 'ForwardingSetting', 'Greeting', 'Group', 'GroupMember',
            'HGCallPolicies', 'HGandCQ', 'HistoryType', 'HostedFeatureDestination', 'HostedUserDestination',
@@ -107,19 +110,20 @@ __all__ = ['Action', 'Agent', 'AlternateNumber', 'AlternateNumberSettings', 'Ann
            'Monitoring', 'NetworkConnectionType', 'NoAnswer', 'Notification', 'NotificationRepeat',
            'NotificationType', 'NumberAndAction', 'NumberDetails', 'NumberListPhoneNumber',
            'NumberListPhoneNumberType', 'NumberLocation', 'NumberOwner', 'NumberState', 'NumberType',
-           'OrganisationVoicemailSettings', 'OrganisationVoicemailSettingsAPI', 'OriginatorType', 'OutboundProxy',
-           'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction', 'OverflowSetting', 'OwnerType',
-           'PTTConnectionType', 'Paging', 'PagingAgent', 'ParkedAgainst', 'PasscodeRules', 'PatternAction',
-           'PatternAndAction', 'PbxUserDestination', 'PeopleStatus', 'Person', 'PersonForwardingSetting',
-           'PersonNumbers', 'PersonPhoneNumber', 'PersonPlaceAgent', 'PersonSettingsApiChild', 'PersonType',
-           'Personality', 'PhoneNumber', 'PhoneNumberType', 'PinLength', 'Policy', 'Privacy', 'PstnNumberDestination',
-           'PushToTalkAccessType', 'PushToTalkSettings', 'QueueSettings', 'RGTrunk', 'Recall', 'RecallHuntGroup',
-           'ReceptionistSettings', 'Record', 'RecordingState', 'RecurWeekly', 'RecurYearlyByDate', 'RecurYearlyByDay',
-           'Recurrence', 'RedirectReason', 'Redirection', 'RejectAction', 'ResponseStatus', 'ResponseStatusType',
-           'RingPattern', 'RouteGroup', 'RouteGroupUsage', 'RouteIdentity', 'RouteList', 'RouteListDestination',
-           'RouteListDetail', 'RouteType', 'Schedule', 'ScheduleApiBase', 'ScheduleDay', 'ScheduleMonth',
-           'ScheduleType', 'ScheduleTypeOrStr', 'ScheduleWeek', 'ServiceType', 'SipAddress', 'SipType', 'SiteType',
-           'StorageType', 'StrOrDict', 'TelephonyCall', 'TelephonyEvent', 'TelephonyEventData', 'TelephonyParty',
+           'OrganisationVoicemailSettings', 'OrganisationVoicemailSettingsAPI', 'Organization', 'OriginatorType',
+           'OutboundProxy', 'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction', 'OverflowSetting',
+           'OwnerType', 'PSTNConnection', 'PTTConnectionType', 'Paging', 'PagingAgent', 'ParkedAgainst',
+           'PasscodeRules', 'PatternAction', 'PatternAndAction', 'PbxUserDestination', 'PeopleStatus', 'Person',
+           'PersonForwardingSetting', 'PersonNumbers', 'PersonPhoneNumber', 'PersonPlaceAgent',
+           'PersonSettingsApiChild', 'PersonType', 'Personality', 'PhoneNumber', 'PhoneNumberType', 'PinLength',
+           'Policy', 'Privacy', 'PstnNumberDestination', 'PushToTalkAccessType', 'PushToTalkSettings',
+           'QueueSettings', 'RGTrunk', 'Recall', 'RecallHuntGroup', 'ReceptionistSettings', 'Record',
+           'RecordingState', 'RecurWeekly', 'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence', 'RedirectReason',
+           'Redirection', 'RejectAction', 'ResponseStatus', 'ResponseStatusType', 'RingPattern', 'RouteGroup',
+           'RouteGroupUsage', 'RouteIdentity', 'RouteList', 'RouteListDestination', 'RouteListDetail', 'RouteType',
+           'Schedule', 'ScheduleApiBase', 'ScheduleDay', 'ScheduleMonth', 'ScheduleType', 'ScheduleTypeOrStr',
+           'ScheduleWeek', 'ServiceType', 'SipAddress', 'SipType', 'SiteType', 'StorageType', 'StrOrDict',
+           'TelephonyCall', 'TelephonyEvent', 'TelephonyEventData', 'TelephonyLocation', 'TelephonyParty',
            'TestCallRoutingResult', 'Tokens', 'Trunk', 'TrunkDestination', 'TrunkDetail', 'TrunkDeviceType',
            'TrunkLocation', 'TrunkType', 'TrunkTypeWithDeviceType', 'TrunkUsage', 'UCMProfile', 'UnansweredCalls',
            'UpdateNumbersResponse', 'UpdatePersonNumbers', 'UpdatePersonPhoneNumber', 'UsageRouteLists', 'UserBase',

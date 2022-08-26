@@ -1,10 +1,10 @@
 from enum import Enum
 from typing import Optional
 
-from pydantic import Field
+from pydantic import Field, validator
 
 from .common import PersonSettingsApiChild
-from ..base import ApiModel, to_camel
+from ..base import ApiModel, to_camel, plus1
 
 __all__ = ['CallerIdApi', 'CallerId', 'ExternalCallerIdNamePolicy', 'CustomNumberInfo', 'CustomNumberType',
            'CallerIdSelectedType']
@@ -57,8 +57,13 @@ class CallerId(ApiModel):
     """
     Caller id settings of a user
     """
+
+    @validator('direct_number', 'location_number', 'mobile_number', 'custom_number', pre=True)
+    def e164(cls, v):
+        return plus1(v)
+
     #: Allowed types for the selected field.
-    caller_id_types: list[CallerIdSelectedType] = Field(alias='types')
+    caller_id_types: Optional[list[CallerIdSelectedType]] = Field(alias='types')
     #: Which type of outgoing Caller ID will be used.
     selected: CallerIdSelectedType
     #: Direct number which will be shown if DIRECT_LINE is selected.
@@ -68,7 +73,7 @@ class CallerId(ApiModel):
     #: Location number which will be shown if LOCATION_NUMBER is selected.
     location_number: Optional[str]
     #: True id the location number is toll free
-    toll_free_location_number: Optional[bool]  # TODO: file documentation defect
+    toll_free_location_number: Optional[bool]
     #: Mobile number which will be shown if MOBILE_NUMBER is selected.
     mobile_number: Optional[str]
     #: This value must be an assigned number from the person's location.
@@ -76,16 +81,15 @@ class CallerId(ApiModel):
     #: Information about the custom caller ID number.
     custom_number_info: Optional[CustomNumberInfo]
     #: Person's Caller ID first name. Characters of %, +, \`, \" and Unicode characters are not allowed.
-    first_name: str
+    first_name: Optional[str]
     #: Person's Caller ID last name. Characters of %, +, \`, \" and Unicode characters are not allowed.
-    last_name: str
+    last_name: Optional[str]
     #: block caller id in forwarded calls
-    block_in_forward_calls_enabled: bool  # TODO: file documentation defect, not documented
+    block_in_forward_calls_enabled: Optional[bool]
     #: Designates which type of External Caller Id Name policy is used. Default is DIRECT_LINE.
     external_caller_id_name_policy: Optional[ExternalCallerIdNamePolicy]
     #: Custom External Caller Name, which will be shown if External Caller Id Name is OTHER.
     custom_external_caller_id_name: Optional[str]
-    # TODO: file documentation defect, value seems to be present if caller id is set to location number
     #: location external caller ID name
     location_external_caller_id_name: Optional[str]
 
@@ -189,3 +193,16 @@ class CallerIdApi(PersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         ep = self.f_ep(person_id=person_id)
         self.put(ep, params=params, json=data)
+
+    def configure_settings(self, person_id: str, settings: CallerId, org_id: str = None):
+        params = org_id and {'orgId': org_id} or None
+        data = settings.json(exclude_unset=True, include={'selected': True,
+                                                          'custom_number': True,
+                                                          'first_name': True,
+                                                          'last_name': True,
+                                                          'block_in_forward_calls_enabled': True,
+                                                          'external_caller_id_name_policy': True,
+                                                          'custom_external_caller_id_name': True,
+                                                          })
+        ep = self.f_ep(person_id=person_id)
+        self.put(ep, params=params, data=data)

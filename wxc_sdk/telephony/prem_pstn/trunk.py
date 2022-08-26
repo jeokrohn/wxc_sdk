@@ -10,7 +10,8 @@ from ...base import to_camel, ApiModel
 from ...common import Customer, IdAndName
 
 __all__ = ['TrunkLocation', 'TrunkType', 'Trunk', 'TrunkDeviceType', 'TrunkTypeWithDeviceType', 'DeviceStatus',
-           'ResponseStatusType', 'ResponseStatus', 'OutboundProxy', 'TrunkDetail', 'TrunkUsage', 'TrunkApi']
+           'ResponseStatusType', 'ResponseStatus', 'CnameRecord', 'OutboundProxy', 'TrunkDetail', 'TrunkUsage',
+           'TrunkApi']
 
 
 class TrunkLocation(ApiModel):
@@ -70,12 +71,18 @@ class ResponseStatus(ApiModel):
     tracking_id: str
 
 
+class CnameRecord(ApiModel):
+    host: str
+    ttl: int
+    port: int
+
+
 class OutboundProxy(ApiModel):
     sip_access_service_type: str
     dns_type: str
     outbound_proxy: str
     srv_prefix: str
-    cname_records: Any
+    cname_records: Optional[list[CnameRecord]]
     attachment_updated: bool
 
 
@@ -92,7 +99,7 @@ class TrunkDetail(ApiModel):
     line_port: str
     locations_using_trunk: list[TrunkLocation]
     pilot_user_id: str
-    outbound_proxy: OutboundProxy
+    outbound_proxy: Any
     #: User's authentication service information.
     sip_authentication_user_name: str
     status: DeviceStatus
@@ -397,8 +404,30 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
-    def validate_fqdn_and_domain(self):
-        # TODO: implement
-        ...
+    def validate_fqdn_and_domain(self, address: str, domain: str, port: int = None, org_id: str = None):
+        """
+        Validate Local Gateway FQDN and Domain for the organization trunks.
+
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device. The trunk can be assigned to a Route Group - a group of trunks that allow
+        Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+
+        Validating Local Gateway FQDN and Domain requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param address: FQDN or SRV address of the trunk.
+        :type address: str
+        :param domain: Domain name of the trunk.
+        :type domain; str
+        :param port: FQDN port of the trunk
+        :type port: int
+        :param org_id: Organization to which trunk types belongs.
+        :type org_id: str
+        """
+        body = {p: v for p, v in locals().items()
+                if p not in {'self', 'org_id'} and v is not None}
+        url = self.ep('actions/fqdnValidation/invoke')
+        params = org_id and {'orgId': org_id} or None
+        self.post(url=url, params=params, json=body)
 
     # TODO: are we missing a usage for trunks used for calls to unknown extensions??

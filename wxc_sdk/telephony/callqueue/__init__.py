@@ -154,15 +154,10 @@ class WaitMessageSetting(ApiModel):
     handling_time: Optional[int]
     queue_position: Optional[int]
     high_volume_message_enabled: Optional[bool]
-    # TODO: undocumented
     estimated_waiting_time: Optional[int]
-    # TODO: undocumented
     callback_option_enabled: Optional[bool]
-    # TODO: undocumented
     minimum_estimated_callback_time: Optional[int]
-    # TODO: undocumented
     international_callback_enabled: Optional[bool]
-    # TODO: undocumented
     play_updated_estimated_wait_message: Optional[bool]
     default_handling_time: Optional[int]
 
@@ -241,12 +236,8 @@ class CallQueue(HGandCQ):
     """
     #: Policy controlling how calls are routed to agents.
     call_policies: Optional[CallQueueCallPolicies]
-    # TODO: file documentation defect. This is missing at
-    #  https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-call-queue
     #: Overall call queue settings.
     queue_settings: Optional[QueueSettings]
-    # TODO: file documentation defect. This is missing at
-    #  https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-call-queue
     allow_call_waiting_for_agents_enabled: Optional[bool]
 
     @staticmethod

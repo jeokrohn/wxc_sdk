@@ -59,7 +59,7 @@ class Integration:
         :param redirect_url: integration's redirect URL
         :param auth_service: authorization service to be used in the authorization URL.
             Default: 'https://webexapis.com/v1/authorize'
-        :param token_service: URL of token service to use to obrtain tokens from.
+        :param token_service: URL of token service to use to obtain tokens from.
             Default: 'https://webexapis.com/v1/access_token'
         """
         self.client_id = client_id
