@@ -707,6 +707,42 @@ The second column of the table has a link to the documentation of the method.
    * - api.webhook.webhook_delete
         Deletes a webhook, by ID
      - :meth:`~wxc_sdk.webhook.WebhookApi.webhook_delete`
+   * - api.workspace_locations.create
+        Create a location
+     - :meth:`~wxc_sdk.workspace_locations.WorkspaceLocationApi.create`
+   * - api.workspace_locations.delete
+        Delete a Workspace Location
+     - :meth:`~wxc_sdk.workspace_locations.WorkspaceLocationApi.delete`
+   * - api.workspace_locations.details
+        Get a Workspace Location Details
+     - :meth:`~wxc_sdk.workspace_locations.WorkspaceLocationApi.details`
+   * - api.workspace_locations.ep
+        
+     - :meth:`~wxc_sdk.workspace_locations.WorkspaceLocationApi.ep`
+   * - api.workspace_locations.list
+        List workspace locations
+     - :meth:`~wxc_sdk.workspace_locations.WorkspaceLocationApi.list`
+   * - api.workspace_locations.update
+        Update a Workspace Location
+     - :meth:`~wxc_sdk.workspace_locations.WorkspaceLocationApi.update`
+   * - api.workspace_locations.floors.create
+        Create a Workspace Location Floor
+     - :meth:`~wxc_sdk.workspace_locations.WorkspaceLocationFloorApi.create`
+   * - api.workspace_locations.floors.delete
+        Delete a Workspace Location Floor
+     - :meth:`~wxc_sdk.workspace_locations.WorkspaceLocationFloorApi.delete`
+   * - api.workspace_locations.floors.details
+        Get a Workspace Location Floor Details
+     - :meth:`~wxc_sdk.workspace_locations.WorkspaceLocationFloorApi.details`
+   * - api.workspace_locations.floors.ep
+        
+     - :meth:`~wxc_sdk.workspace_locations.WorkspaceLocationFloorApi.ep`
+   * - api.workspace_locations.floors.list
+        :param location_id:
+     - :meth:`~wxc_sdk.workspace_locations.WorkspaceLocationFloorApi.list`
+   * - api.workspace_locations.floors.update
+        Updates details for a floor, by ID
+     - :meth:`~wxc_sdk.workspace_locations.WorkspaceLocationFloorApi.update`
    * - api.workspace_settings.call_intercept.configure
         Configure Call Intercept Settings for a Person
      - :meth:`~wxc_sdk.person_settings.call_intercept.CallInterceptApi.configure`

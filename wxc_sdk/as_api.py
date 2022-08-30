@@ -49,7 +49,7 @@ __all__ = ['AsAccessCodesApi', 'AsAnnouncementApi', 'AsApiChild', 'AsAppServices
            'AsRestSession', 'AsRouteGroupApi', 'AsRouteListApi', 'AsScheduleApi', 'AsTelephonyApi',
            'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi', 'AsVoicePortalApi', 'AsVoicemailApi',
            'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi',
-           'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
+           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
 
 @dataclass(init=False)
@@ -1641,9 +1641,9 @@ class AsNumbersApi(AsPersonSettingsApiChild):
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners) may
-        use this parameter as the default is the same organization as the token used to access API.
+            use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
-        :return: Alternate numbers of teh user
+        :return: Alternate numbers of the user
         :rtype: :class:`PersonNumbers`
         """
         ep = self.f_ep(person_id=person_id)
@@ -6432,7 +6432,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         :param address: FQDN or SRV address of the trunk.
         :type address: str
         :param domain: Domain name of the trunk.
-        :type domain; str
+        :type domain: str
         :param port: FQDN port of the trunk
         :type port: int
         :param org_id: Organization to which trunk types belongs.
@@ -7754,6 +7754,255 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
         await self.delete(ep)
 
 
+class AsWorkspaceLocationFloorApi(AsApiChild, base='workspaceLocations'):
+    def ep(self, location_id: str, floor_id: str = None):
+        path = f'{location_id}/floors'
+        if floor_id:
+            path = f'{path}/{floor_id}'
+        return super().ep(path=path)
+
+    def list_gen(self, location_id: str, org_id: str = None) -> AsyncGenerator[WorkspaceLocationFloor, None, None]:
+        """
+
+        :param location_id:
+        :param org_id:
+        :return:
+        """
+        url = self.ep(location_id=location_id)
+        params = org_id and {'orgId': org_id} or None
+        return self.session.follow_pagination(url=url, model=WorkspaceLocationFloor, params=params, item_key='items')
+
+    async def list(self, location_id: str, org_id: str = None) -> List[WorkspaceLocationFloor]:
+        """
+
+        :param location_id:
+        :param org_id:
+        :return:
+        """
+        url = self.ep(location_id=location_id)
+        params = org_id and {'orgId': org_id} or None
+        return [o async for o in self.session.follow_pagination(url=url, model=WorkspaceLocationFloor, params=params, item_key='items')]
+
+    async def create(self, location_id: str, floor_number: int, display_name: str = None,
+               org_id: str = None) -> WorkspaceLocationFloor:
+        """
+        Create a Workspace Location Floor
+
+        Create a new floor in the given location. The displayName parameter is optional, and omitting it will result
+        in the creation of a floor without that value set.
+
+        :param location_id: A unique identifier for the location.
+        :param floor_number:
+        :param display_name:
+        :type location_id: str
+        :param org_id:
+        :type org_id: str
+        :return: new workspace location floor
+        :rtype: WorkspaceLocationFloor
+        """
+        body = {to_camel(p): v for p, v in locals().items()
+                if p not in {'self', 'location_id', 'org_id'}
+                and v is not None}
+        url = self.ep(location_id=location_id)
+        params = org_id and {'orgId': org_id} or None
+        data = await self.post(url=url, params=params, json=body)
+        return WorkspaceLocationFloor.parse_obj(data)
+
+    async def details(self, location_id: str, floor_id: str, org_id: str = None) -> WorkspaceLocationFloor:
+        """
+        Get a Workspace Location Floor Details
+
+        Shows details for a floor, by ID. Specify the floor ID in the floorId parameter in the URI.
+
+        :param location_id: A unique identifier for the location.
+        :type location_id: str
+        :param floor_id: A unique identifier for the floor.
+        :type floor_id: str
+        :param org_id:
+        :type org_id: str
+        :return: workspace location floor details
+        :rtype: WorkspaceLocationFloor
+        """
+        url = self.ep(location_id=location_id, floor_id=floor_id)
+        params = org_id and {'orgId': org_id} or None
+        data = await self.get(url=url, params=params)
+        return WorkspaceLocationFloor.parse_obj(data)
+
+    async def update(self, location_id: str, floor_id: str, settings: WorkspaceLocationFloor,
+               org_id: str = None) -> WorkspaceLocationFloor:
+        """
+        Updates details for a floor, by ID. Specify the floor ID in the floorId parameter in the URI. Include all
+        details for the floor that are present in a Get Workspace Location Floor Details. Not including the optional
+        displayName field will result in the field no longer being defined for the floor.
+
+        :param location_id: A unique identifier for the location.
+        :type location_id: str
+        :param floor_id: A unique identifier for the floor.
+        :type floor_id: str
+        :param settings: new settings
+        :type settings: WorkspaceLocationFloor
+        :param org_id:
+        :type org_id: str
+        :return: updated workspace location floor
+        """
+        data = settings.json(exclude_none=True, exclude_unset=True, exclude={'id', 'location_id'})
+        url = self.ep(location_id=location_id, floor_id=floor_id)
+        params = org_id and {'orgId': org_id} or None
+        data = await self.put(url=url, data=data, params=params)
+        return WorkspaceLocationFloor.parse_obj(data)
+
+    async def delete(self, location_id: str, floor_id: str, org_id: str = None):
+        """
+        Delete a Workspace Location Floor
+        Deletes a floor, by ID.
+
+        :param location_id: A unique identifier for the location.
+        :type location_id: str
+        :param floor_id: A unique identifier for the floor.
+        :type floor_id: str
+        :param org_id:
+        :type org_id: str
+        """
+        url = self.ep(location_id=location_id, floor_id=floor_id)
+        params = org_id and {'orgId': org_id} or None
+        await super().delete(url=url, params=params)
+
+
+@dataclass(init=False)
+
+
+class AsWorkspaceLocationApi(AsApiChild, base='workspaceLocations'):
+    #: Workspace location floor API :class:`AsWorkspaceLocationFloorApi`
+    floors: AsWorkspaceLocationFloorApi
+
+    def __init__(self, *, session: AsRestSession, base: str = None):
+        super().__init__(session=session, base=base)
+        self.floors = AsWorkspaceLocationFloorApi(session=session)
+
+    def ep(self, location_id: str = None):
+        return super().ep(path=location_id)
+
+    def list_gen(self, display_name: str = None, address: str = None, country_code: str = None, city_name: str = None,
+             org_id: str = None, **params) -> AsyncGenerator[WorkspaceLocation, None, None]:
+        """
+        List workspace locations
+
+        :param display_name: Location display name.
+        :type display_name: str
+        :param address: Location address
+        :type address: str
+        :param country_code: Location country code (ISO 3166-1).
+        :type country_code: str
+        :param city_name: Location city name.
+        :type city_name: str
+        :param org_id: Organization id
+        :type org_id: str
+        :param params: addtl. parameters
+        :return: generator of :class:`WorkspaceLocation` instances
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if p not in {'self', 'params'} and v is not None)
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=WorkspaceLocation, params=params, item_key='items')
+
+    async def list(self, display_name: str = None, address: str = None, country_code: str = None, city_name: str = None,
+             org_id: str = None, **params) -> List[WorkspaceLocation]:
+        """
+        List workspace locations
+
+        :param display_name: Location display name.
+        :type display_name: str
+        :param address: Location address
+        :type address: str
+        :param country_code: Location country code (ISO 3166-1).
+        :type country_code: str
+        :param city_name: Location city name.
+        :type city_name: str
+        :param org_id: Organization id
+        :type org_id: str
+        :param params: addtl. parameters
+        :return: generator of :class:`WorkspaceLocation` instances
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if p not in {'self', 'params'} and v is not None)
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=WorkspaceLocation, params=params, item_key='items')]
+
+    async def create(self, display_name: str, address: str, country_code: str, latitude: float, longitude: float,
+               city_name: str = None, notes: str = None, org_id: str = None) -> WorkspaceLocation:
+        """
+        Create a location. The cityName and notes parameters are optional, and omitting them will result in the
+        creation of a location without these values set.
+
+        :param display_name: A friendly name for the location.
+        :param address: The location address.
+        :param country_code: The location country code (ISO 3166-1).
+        :param latitude: The location latitude.
+        :param longitude: The location longitude.
+        :param city_name: The location city name.
+        :param notes: Notes associated to the location.
+        :param org_id:
+        :return: created workspace location
+        :rtype: WorkspaceLocation
+        """
+        body = {to_camel(p): v for p, v in locals().items()
+                if p not in {'self', 'org_id'} and v is not None}
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep()
+        data = await self.post(url=url, json=body, params=params)
+        return WorkspaceLocation.parse_obj(data)
+
+    async def details(self, location_id: str, org_id: str = None) -> WorkspaceLocation:
+        """
+        Get a Workspace Location Details
+        Shows details for a location, by ID. Specify the location ID in the locationId parameter in the URI.
+
+        :param location_id: A unique identifier for the location.
+        :type location_id: str
+        :param org_id:
+        :type org_id: str
+        :return: Workspace location details
+        :rtype: WorkspaceLocation
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(location_id=location_id)
+        data = await self.get(url=url, params=params)
+        return WorkspaceLocation.parse_obj(data)
+
+    async def update(self, location_id: str, settings: WorkspaceLocation, org_id: str = None):
+        """
+        Update a Workspace Location
+        Updates details for a location, by ID. Specify the location ID in the locationId parameter in the URI.
+        Include all details for the location that are present in a Get Workspace Location Details. Not including the
+        optional cityName or notes fields (setting them to None) will result in the fields no longer being defined for
+        the location.
+
+        :param location_id: A unique identifier for the location.
+        :type location_id: str
+        :param settings: new settings
+        :type settings: WorkspaceLocation
+        :param org_id:
+        :type org_id: str
+        :return: updated workspace location
+        :rtype: WorkspaceLocation
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(location_id=location_id)
+        body = settings.json(exclude_none=True, exclude_unset=True, exclude={'id'})
+        data = await self.put(url=url, data=body, params=params)
+        return WorkspaceLocation.parse_obj(data)
+
+    async def delete(self, location_id: str, org_id: str = None):
+        """
+        Delete a Workspace Location
+        Deletes a location, by ID. The workspaces associated to that location will no longer have a location, but a new
+        location can be reassigned to them.
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(location_id=location_id)
+        await super().delete(url=url, params=params)
+
+
 @dataclass(init=False)
 class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
     """
@@ -7987,6 +8236,8 @@ class AsWebexSimpleApi:
     webhook: AsWebhookApi
     #: Workspaces API :class:`AsWorkspacesApi`
     workspaces: AsWorkspacesApi
+    #: Workspace locations API; :class:`AsWorkspaceLocationApi`
+    workspace_locations: AsWorkspaceLocationApi
     #: Workspace setting API :class:`AsWorkspaceSettingsApi`
     workspace_settings: AsWorkspaceSettingsApi
     #: :class:`AsRestSession` used for all API requests
@@ -8019,6 +8270,7 @@ class AsWebexSimpleApi:
         self.telephony = AsTelephonyApi(session=session)
         self.webhook = AsWebhookApi(session=session)
         self.workspaces = AsWorkspacesApi(session=session)
+        self.workspace_locations = AsWorkspaceLocationApi(session=session)
         self.workspace_settings = AsWorkspaceSettingsApi(session=session)
         self.session = session
 

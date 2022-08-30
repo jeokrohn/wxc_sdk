@@ -85,9 +85,9 @@ class NumbersApi(PersonSettingsApiChild):
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners) may
-        use this parameter as the default is the same organization as the token used to access API.
+            use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
-        :return: Alternate numbers of teh user
+        :return: Alternate numbers of the user
         :rtype: :class:`PersonNumbers`
         """
         ep = self.f_ep(person_id=person_id)

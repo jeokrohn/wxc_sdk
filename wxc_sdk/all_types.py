@@ -81,6 +81,7 @@ from wxc_sdk.telephony.voicemail_groups import VoicemailGroup, VoicemailGroupDet
 from wxc_sdk.telephony.voiceportal import ExpirePasscode, FailedAttempts, PasscodeRules, VoicePortalSettings
 from wxc_sdk.tokens import Tokens
 from wxc_sdk.webhook import WebHook, WebHookCreate, WebHookEvent, WebHookResource, WebHookStatus
+from wxc_sdk.workspace_locations import WorkspaceLocation, WorkspaceLocationFloor
 from wxc_sdk.workspaces import Calendar, CalendarType, CallingType, WorkSpaceType, Workspace, WorkspaceEmail
 
 __all__ = ['Action', 'Agent', 'AlternateNumber', 'AlternateNumberSettings', 'Announcement', 'ApiModel',
@@ -134,5 +135,5 @@ __all__ = ['Action', 'Agent', 'AlternateNumber', 'AlternateNumberSettings', 'Ann
            'VoicemailEnabledWithGreeting', 'VoicemailFax', 'VoicemailGroup', 'VoicemailGroupDetail',
            'VoicemailMessageStorage', 'VoicemailNotifications', 'VoicemailSettings', 'VoicemailTransferToNumber',
            'WaitMessageSetting', 'WaitMode', 'WebHook', 'WebHookCreate', 'WebHookEvent', 'WebHookResource',
-           'WebHookStatus', 'WelcomeMessageSetting', 'WorkSpaceType', 'Workspace', 'WorkspaceEmail', '_Helper',
-           'plus1', 'to_camel', 'webex_id_to_uuid']
+           'WebHookStatus', 'WelcomeMessageSetting', 'WorkSpaceType', 'Workspace', 'WorkspaceEmail',
+           'WorkspaceLocation', 'WorkspaceLocationFloor', '_Helper', 'plus1', 'to_camel', 'webex_id_to_uuid']

@@ -418,7 +418,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         :param address: FQDN or SRV address of the trunk.
         :type address: str
         :param domain: Domain name of the trunk.
-        :type domain; str
+        :type domain: str
         :param port: FQDN port of the trunk
         :type port: int
         :param org_id: Organization to which trunk types belongs.

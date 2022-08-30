@@ -15,6 +15,7 @@ from .rest import RestSession
 from .telephony import TelephonyApi
 from .tokens import Tokens
 from .webhook import WebhookApi
+from .workspace_locations import WorkspaceLocationApi
 from .workspaces import WorkspacesApi
 from .workspace_settings import WorkspaceSettingsApi
 from dataclasses import dataclass
@@ -53,6 +54,8 @@ class WebexSimpleApi:
     webhook: WebhookApi
     #: Workspaces API :class:`workspaces.WorkspacesApi`
     workspaces: WorkspacesApi
+    #: Workspace locations API; :class:`workspace_locations.WorkspaceLocationApi`
+    workspace_locations: WorkspaceLocationApi
     #: Workspace setting API :class:`workspace_settings.WorkspaceSettingsApi`
     workspace_settings: WorkspaceSettingsApi
     #: :class:`rest.RestSession` used for all API requests
@@ -85,6 +88,7 @@ class WebexSimpleApi:
         self.telephony = TelephonyApi(session=session)
         self.webhook = WebhookApi(session=session)
         self.workspaces = WorkspacesApi(session=session)
+        self.workspace_locations = WorkspaceLocationApi(session=session)
         self.workspace_settings = WorkspaceSettingsApi(session=session)
         self.session = session
 
