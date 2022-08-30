@@ -446,7 +446,7 @@ class AsLocationsApi(AsApiChild, base='locations'):
         return Location.parse_obj(await self.get(ep))
 
     async def create(self, name: str, time_zone: str, preferred_language: str, announcement_language: str, address1: str,
-               city: str, state: str, postal_code: str, country: str, address2: str = None, org_id: str = None):
+               city: str, state: str, postal_code: str, country: str, address2: str = None, org_id: str = None) -> str:
         """
         Create a new Location for a given organization. Only an admin in a Webex Calling licensed organization can
         create a new Location.

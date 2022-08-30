@@ -12,7 +12,7 @@ from randomlocation import RandomLocation, NpaInfo, Address
 from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.common import RouteType, RouteIdentity
 from wxc_sdk.locations import Location, LocationAddress
-from wxc_sdk.telephony import NumberType, NumberListPhoneNumber, NumberListPhoneNumberType, OwnerType
+from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 from wxc_sdk.telephony.location import TelephonyLocation, PSTNConnection, CallingLineId
 from wxc_sdk.telephony.location.internal_dialing import InternalDialing
 from wxc_sdk.telephony.prem_pstn.route_group import RouteGroup
@@ -74,6 +74,7 @@ class TestLocation(TestCaseWithLog):
                 npa_data: list[NpaInfo]
 
                 # determine routing prefixes
+                # noinspection PyTypeChecker
                 location_details = await asyncio.gather(
                     *[self.async_api.telephony.location.details(location_id=loc.location_id)
                       for loc in locations])
@@ -283,7 +284,7 @@ class TestUpdateTelephony(TestCaseWithLog):
             with self.no_log():
                 locations = await self.async_api.locations.list()
                 us_locations = [loc for loc in locations
-                                if loc.address.country=='US']
+                                if loc.address.country == 'US']
                 if not us_locations:
                     self.skipTest('Need some US locations to run test')
                 details = await asyncio.gather(*[self.async_api.telephony.location.details(location_id=loc.location_id)
