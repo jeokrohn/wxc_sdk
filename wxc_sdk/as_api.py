@@ -7163,6 +7163,40 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         url = self.ep(location_id)
         await self.put(url=url, data=data, params=params)
 
+    async def change_announcement_language(self, location_id: str, language_code: str, agent_enabled: bool = None,
+                                     service_enabled: bool = None, org_id: str = None):
+        """
+        Change Announcement Language
+
+        Change announcement language for the given location.
+
+        Change announcement language for current people/workspaces and/or existing feature configurations. This does
+        not change the default announcement language which is applied to new users/workspaces and new feature
+        configurations.
+
+        Changing announcement language for the given location requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Change announcement language for this location.
+        :type location_id: str
+        :param language_code: Language code.
+        :type language_code: str
+        :param agent_enabled: Set to true to change announcement language for existing people and workspaces.
+        :type agent_enabled: bool
+        :param service_enabled: Set to true to change announcement language for existing feature configurations.
+        :type service_enabled: bool
+        :param org_id: Change announcement language for this organization.
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        body = {'announcementLanguageCode': language_code}
+        if agent_enabled is not None:
+            body['agentEnabled'] = agent_enabled
+        if service_enabled is not None:
+            body['serviceEnabled'] = service_enabled
+        url = self.session.ep(f'{location_id}/actions/modifyAnnouncementLanguage/invoke')
+        await self.put(url, json=body, params=params)
+
 
 class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
     """
@@ -7733,40 +7767,6 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         url = self.ep(path='config/callingProfiles')
         data = await self.get(url, params=params)
         return parse_obj_as(list[UCMProfile], data['callingProfiles'])
-
-    async def change_announcement_language(self, location_id: str, language_code: str, agent_enabled: bool = None,
-                                     service_enabled: bool = None, org_id: str = None):
-        """
-        Change Announcement Language
-
-        Change announcement language for the given location.
-
-        Change announcement language for current people/workspaces and/or existing feature configurations. This does
-        not change the default announcement language which is applied to new users/workspaces and new feature
-        configurations.
-
-        Changing announcement language for the given location requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
-
-        :param location_id: Change announcement language for this location.
-        :type location_id: str
-        :param language_code: Language code.
-        :type language_code: str
-        :param agent_enabled: Set to true to change announcement language for existing people and workspaces.
-        :type agent_enabled: bool
-        :param service_enabled: Set to true to change announcement language for existing feature configurations.
-        :type service_enabled: bool
-        :param org_id: Change announcement language for this organization.
-        :type org_id: str
-        """
-        params = org_id and {'orgId': org_id} or None
-        body = {'announcementLanguageCode': language_code}
-        if agent_enabled is not None:
-            body['agentEnabled'] = agent_enabled
-        if service_enabled is not None:
-            body['serviceEnabled'] = service_enabled
-        url = self.session.ep(f'telephony/config/locations/{location_id}/actions/modifyAnnouncementLanguage/invoke')
-        await self.put(url, json=body, params=params)
 
     def route_choices_gen(self, route_group_name: str = None, trunk_name: str = None, order: str = None,
                       org_id: str = None) -> AsyncGenerator[RouteIdentity, None, None]:

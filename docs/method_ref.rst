@@ -251,9 +251,6 @@ The second column of the table has a link to the documentation of the method.
    * - api.person_settings.voicemail.read
         Read Voicemail Settings for a Person
      - :meth:`~wxc_sdk.person_settings.voicemail.VoicemailApi.read`
-   * - api.telephony.change_announcement_language
-        Change Announcement Language
-     - :meth:`~wxc_sdk.telephony.TelephonyApi.change_announcement_language`
    * - api.telephony.phone_number_details
         get summary (counts) of phone numbers
      - :meth:`~wxc_sdk.telephony.TelephonyApi.phone_number_details`
@@ -422,6 +419,9 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.huntgroup.update
         Update a Hunt Group
      - :meth:`~wxc_sdk.telephony.huntgroup.HuntGroupApi.update`
+   * - api.telephony.location.change_announcement_language
+        Change Announcement Language
+     - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.change_announcement_language`
    * - api.telephony.location.details
         Shows Webex Calling details for a location, by ID
      - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.details`
