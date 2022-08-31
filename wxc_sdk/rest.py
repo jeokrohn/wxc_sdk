@@ -244,7 +244,7 @@ class RestSession(Session):
         return self._tokens.access_token
 
     @backoff.on_exception(backoff.constant, RestError, interval=0, giveup=_giveup_429)
-    def _request_w_response(self, method: str, url: str, headers=None,
+    def _request_w_response(self, method: str, url: str, headers=None, content_type: str = None,
                             **kwargs) -> Tuple[Response, StrOrDict]:
         """
         low level API REST request with support for 429 rate limiting
@@ -255,6 +255,8 @@ class RestSession(Session):
         :type url: str
         :param headers: prepared headers for request
         :type headers: Optional[dict]
+        :param content_type:
+        :type content_type: str
         :param kwargs: additional keyward args
         :type kwargs: dict
         :return: Tuple of response object and body. Body can be text or dict (parsed from JSON body)
@@ -265,6 +267,8 @@ class RestSession(Session):
                            'TrackingID': f'SIMPLE_{uuid.uuid4()}'}
         if headers:
             request_headers.update((k.lower(), v) for k, v in headers.items())
+        if content_type:
+            request_headers['content-type'] = content_type
         with self._sem:
             start = time.perf_counter_ns()
             response = self.request(method, url=url, headers=request_headers, **kwargs)

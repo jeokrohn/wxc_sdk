@@ -209,7 +209,7 @@ class AsRestSession(ClientSession):
         return self._tokens.access_token
 
     @backoff.on_exception(backoff.constant, ClientResponseError, interval=0, giveup=_giveup_429)
-    async def _request_w_response(self, method: str, url: str, headers=None,
+    async def _request_w_response(self, method: str, url: str, headers=None, content_type: str = None,
                                   data=None, json=None, **kwargs) -> Tuple[ClientResponse, StrOrDict]:
         """
         low level API REST request with support for 429 rate limiting
@@ -220,6 +220,8 @@ class AsRestSession(ClientSession):
         :type url: str
         :param headers: prepared headers for request
         :type headers: Optional[dict]
+        :param content_type:
+        :type content_type: str
         :param kwargs: additional keyward args
         :type kwargs: dict
         :return: Tuple of response object and body. Body can be text or dict (parsed from JSON body)
@@ -230,6 +232,8 @@ class AsRestSession(ClientSession):
                            'TrackingID': f'SIMPLE_{uuid.uuid4()}'}
         if headers:
             request_headers.update((k.lower(), v) for k, v in headers.items())
+        if content_type:
+            request_headers['content-type'] = content_type
         async with self._sem:
             start = perf_counter_ns()
             async with self.request(method, url=url, headers=request_headers,
