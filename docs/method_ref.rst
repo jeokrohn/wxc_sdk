@@ -14,6 +14,21 @@ The second column of the table has a link to the documentation of the method.
    * - api.close
         
      - :meth:`~wxc_sdk.WebexSimpleApi.close`
+   * - api.devices.activation_code
+        Create a Device Activation Code
+     - :meth:`~wxc_sdk.devices.DevicesApi.activation_code`
+   * - api.devices.delete
+        Delete a Device
+     - :meth:`~wxc_sdk.devices.DevicesApi.delete`
+   * - api.devices.details
+        Get Device Details
+     - :meth:`~wxc_sdk.devices.DevicesApi.details`
+   * - api.devices.list
+        List Devices
+     - :meth:`~wxc_sdk.devices.DevicesApi.list`
+   * - api.devices.modify_device_tags
+        Modify Device Tags
+     - :meth:`~wxc_sdk.devices.DevicesApi.modify_device_tags`
    * - api.groups.create
         Create a new group using the provided settings
      - :meth:`~wxc_sdk.groups.GroupsApi.create`

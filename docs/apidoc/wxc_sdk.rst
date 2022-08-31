@@ -13,6 +13,7 @@ Subpackages
    :maxdepth: 4
 
    wxc_sdk.common
+   wxc_sdk.devices
    wxc_sdk.groups
    wxc_sdk.integration
    wxc_sdk.licenses

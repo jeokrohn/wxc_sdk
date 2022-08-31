@@ -226,7 +226,7 @@ class TestCreateUpdate(TestCaseWithLog):
         name = next(self.new_names())
         settings = Workspace(display_name=name, calling=CallingType.edge_for_devices)
         workspace = ws.create(settings=settings)
-        print(f'new worksspace: {workspace.json()}')
+        print(f'new workspace: {workspace.json()}')
         self.assertEqual(name, workspace.display_name)
 
     def test_003_change_name_full(self):

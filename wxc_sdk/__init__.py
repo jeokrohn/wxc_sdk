@@ -5,6 +5,7 @@ import logging
 import os
 from typing import Union
 
+from .devices import DevicesApi
 from .groups import GroupsApi
 from .licenses import LicensesApi
 from .locations import LocationsApi
@@ -27,15 +28,14 @@ __version__ = '1.6.0'
 log = logging.getLogger(__name__)
 
 
-# TODO: devices
-
-
 @dataclass(init=False)
 class WebexSimpleApi:
     """
     The main API object
     """
 
+    #: devices API :class:`devices.DevicesApi`
+    devices: DevicesApi
     #: groups API :class:`groups.GroupsApi`
     groups: GroupsApi
     #: Licenses API :class:`licenses.LicensesApi`
@@ -79,6 +79,7 @@ class WebexSimpleApi:
             tokens = Tokens(access_token=tokens)
 
         session = RestSession(tokens=tokens, concurrent_requests=concurrent_requests)
+        self.devices = DevicesApi(session=session)
         self.groups = GroupsApi(session=session)
         self.licenses = LicensesApi(session=session)
         self.locations = LocationsApi(session=session)

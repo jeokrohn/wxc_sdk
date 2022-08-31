@@ -39,7 +39,7 @@ MAX_USERS_WITH_CALLING_DATA = 10
 __all__ = ['AsAccessCodesApi', 'AsAnnouncementApi', 'AsApiChild', 'AsAppServicesApi', 'AsAuthCodesApi',
            'AsAutoAttendantApi', 'AsBargeApi', 'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi',
            'AsCallQueueApi', 'AsCallRecordingApi', 'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallingBehaviorApi',
-           'AsCallparkExtensionApi', 'AsCallsApi', 'AsDialPlanApi', 'AsDndApi', 'AsExecAssistantApi',
+           'AsCallparkExtensionApi', 'AsCallsApi', 'AsDevicesApi', 'AsDialPlanApi', 'AsDndApi', 'AsExecAssistantApi',
            'AsForwardingApi', 'AsGroupsApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
            'AsInternalDialingApi', 'AsLicensesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
            'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMonitoringApi',
@@ -135,6 +135,196 @@ class AsApiChild:
         :param kwargs:
         """
         return await self.session.rest_patch(*args, **kwargs)
+
+
+class AsDevicesApi(AsApiChild, base='devices'):
+    """
+    Devices represent cloud-registered Webex RoomOS devices. Devices may be associated with Workspaces.
+
+    Searching and viewing details for your devices requires an auth token with the spark:devices_read scope. Updating or
+    deleting your devices requires an auth token with the spark:devices_write scope. Viewing the list of all devices in
+    an organization requires an administrator auth token with the spark-admin:devices_read scope. Adding, updating,
+    or deleting all devices in an organization requires an administrator auth token with the spark-admin:devices_write
+    scope. Generating an activation code requires an auth token with the identity:placeonetimepassword_create scope.
+    """
+
+    def list_gen(self, person_id: str = None, workspace_id: str = None, display_name: str = None, product: str = None,
+             product_type: str = None, tag: str = None, connection_status: str = None, serial: str = None,
+             software: str = None, upgrade_channel: str = None, error_code: str = None, capability: str = None,
+             permission: str = None, org_id: str = None, **params) -> AsyncGenerator[Device, None, None]:
+        """
+        List Devices
+
+        Lists all active Webex devices associated with the authenticated user, such as devices activated in personal
+        mode. Administrators can list all devices within an organization.
+
+        :param person_id: List devices by person ID.
+        :type person_id: str
+        :param workspace_id: List devices by workspace ID.
+        :type workspace_id: str
+        :param display_name: List devices with this display name.
+        :type display_name: str
+        :param product: List devices with this product name.
+        :type product: str
+        :param product_type: List devices with this type.
+        :type product_type: str
+        :param tag: List devices which have a tag. Searching for multiple tags (logical AND) can be done by comma
+        :type tag: str
+            separating the tag values or adding several tag parameters.
+        :param connection_status: List devices with this connection statu
+        :type connection_status: str
+        :param serial: List devices with this serial number.
+        :type serial: str
+        :param software: List devices with this software version.
+        :type software: str
+        :param upgrade_channel: List devices with this upgrade channel.
+        :type upgrade_channel: str
+        :param error_code: List devices with this error code.
+        :type error_code: str
+        :param capability: List devices with this capability.
+        :type capability: str
+        :param permission: List devices with this permission.
+        :type permission: str
+        :param org_id: List devices in this organization. Only admin users of another organization (such as partners)
+            may use this parameter.
+        :type org_id: str
+        :return: Generator yielding :class:`Device` instances
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if p not in {'self', 'params'} and v is not None)
+        pt = params.pop(product_type, None)
+        if pt is not None:
+            params['type'] = pt
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=Device, params=params, item_key='items')
+
+    async def list(self, person_id: str = None, workspace_id: str = None, display_name: str = None, product: str = None,
+             product_type: str = None, tag: str = None, connection_status: str = None, serial: str = None,
+             software: str = None, upgrade_channel: str = None, error_code: str = None, capability: str = None,
+             permission: str = None, org_id: str = None, **params) -> List[Device]:
+        """
+        List Devices
+
+        Lists all active Webex devices associated with the authenticated user, such as devices activated in personal
+        mode. Administrators can list all devices within an organization.
+
+        :param person_id: List devices by person ID.
+        :type person_id: str
+        :param workspace_id: List devices by workspace ID.
+        :type workspace_id: str
+        :param display_name: List devices with this display name.
+        :type display_name: str
+        :param product: List devices with this product name.
+        :type product: str
+        :param product_type: List devices with this type.
+        :type product_type: str
+        :param tag: List devices which have a tag. Searching for multiple tags (logical AND) can be done by comma
+        :type tag: str
+            separating the tag values or adding several tag parameters.
+        :param connection_status: List devices with this connection statu
+        :type connection_status: str
+        :param serial: List devices with this serial number.
+        :type serial: str
+        :param software: List devices with this software version.
+        :type software: str
+        :param upgrade_channel: List devices with this upgrade channel.
+        :type upgrade_channel: str
+        :param error_code: List devices with this error code.
+        :type error_code: str
+        :param capability: List devices with this capability.
+        :type capability: str
+        :param permission: List devices with this permission.
+        :type permission: str
+        :param org_id: List devices in this organization. Only admin users of another organization (such as partners)
+            may use this parameter.
+        :type org_id: str
+        :return: Generator yielding :class:`Device` instances
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if p not in {'self', 'params'} and v is not None)
+        pt = params.pop(product_type, None)
+        if pt is not None:
+            params['type'] = pt
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=Device, params=params, item_key='items')]
+
+    async def details(self, device_id: str, org_id: str = None) -> Device:
+        """
+        Get Device Details
+        Shows details for a device, by ID.
+
+        Specify the device ID in the deviceId parameter in the URI.
+
+        :param device_id: A unique identifier for the device.
+        :type device_id: str
+        :param org_id:
+        :type org_id: str
+        :return: Device details
+        :rtype: Device
+        """
+        url = self.ep(device_id)
+        params = org_id and {'orgId': org_id} or None
+        data = await self.get(url=url, params=params)
+        return Device.parse_obj(data)
+
+    async def delete(self, device_id: str, org_id: str = None):
+        """
+        Delete a Device
+
+        Deletes a device, by ID.
+
+        Specify the device ID in the deviceId parameter in the URI.
+
+        :param device_id: A unique identifier for the device.
+        :type device_id: str
+        :param org_id:
+        :type org_id: str
+        """
+        url = self.ep(device_id)
+        params = org_id and {'orgId': org_id} or None
+        await super().delete(url=url, params=params)
+
+    async def modify_device_tags(self, device_id: str, op: TagOp, value: List[str], org_id: str = None) -> Device:
+        """
+        Modify Device Tags
+
+        Update requests use JSON Patch syntax.
+
+        :param device_id: A unique identifier for the device.
+        :type device_id: str
+        :param op: tag operation
+        :type op: TagOp
+        :param value: list of tags
+        :type value: list[str]
+        :param org_id:
+        :type org_id: str
+        :return: device details
+        :rtype: Device
+        """
+        body = {'op': op.value if isinstance(op, TagOp) else op,
+                'path': 'tags',
+                'value': value}
+        url = self.ep(device_id)
+        params = org_id and {'orgId': org_id} or None
+        data = await self.patch(url=url, json=body, params=params, content_type='application/json-patch+json')
+        return Device.parse_obj(data)
+
+    async def activation_code(self, workspace_id: str, org_id: str = None) -> ActivationCodeResponse:
+        """
+        Create a Device Activation Code
+
+        Generate an activation code for a device in a specific workspace by workspaceId. Currently, activation codes
+        may only be generated for shared workspaces--personal mode is not supported.
+
+        :param workspace_id: The workspaceId of the workspace where the device will be activated.
+        :param org_id:
+        :return: activation code and expiry time
+        :rtype: ActivationCodeResponse
+        """
+        url = self.ep('activationCode')
+        params = org_id and {'orgId': org_id} or None
+        data = await self.post(url=url, params=params, json={'workspaceId': workspace_id})
+        return ActivationCodeResponse.parse_obj(data)
 
 
 class AsGroupsApi(AsApiChild, base='groups'):
@@ -8218,6 +8408,8 @@ class AsWebexSimpleApi:
     The main API object
     """
 
+    #: devices API :class:`AsDevicesApi`
+    devices: AsDevicesApi
     #: groups API :class:`AsGroupsApi`
     groups: AsGroupsApi
     #: Licenses API :class:`AsLicensesApi`
@@ -8261,6 +8453,7 @@ class AsWebexSimpleApi:
             tokens = Tokens(access_token=tokens)
 
         session = AsRestSession(tokens=tokens, concurrent_requests=concurrent_requests)
+        self.devices = AsDevicesApi(session=session)
         self.groups = AsGroupsApi(session=session)
         self.licenses = AsLicensesApi(session=session)
         self.locations = AsLocationsApi(session=session)
