@@ -21,6 +21,8 @@ class AppServicesSettings(ApiModel):
     ring_devices_for_call_park_enabled: Optional[bool]
     #: Indicates that the desktop Webex Calling application is enabled for use.
     desktop_client_enabled: Optional[bool]
+    #: desktop client id
+    desktop_client_id: Optional[str]
     #: Indicates that the tablet Webex Calling application is enabled for use.
     tablet_client_enabled: Optional[bool]
     #: indicates that the mobile Webex Calling application is enabled for use.
