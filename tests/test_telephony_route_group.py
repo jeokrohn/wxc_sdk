@@ -34,7 +34,7 @@ class TestCreate(TestCaseWithLog):
                                                 priority=1, name='ff', location_id='sas')])
         rg_id = self.api.telephony.prem_pstn.route_group.create(route_group=rg)
         try:
-            ...
+            pass
         finally:
             # clean up: delete the route group again
             self.api.telephony.prem_pstn.route_group.delete_route_group(rg_id=rg_id)

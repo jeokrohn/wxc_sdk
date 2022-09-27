@@ -27,4 +27,3 @@ class TestRead(TestCaseWithUsers):
         cw = self.async_api.person_settings.call_waiting
         details = await asyncio.gather(*[cw.read(person_id=u.person_id) for u in self.users])
         print(f'Got details for {len(details)} users.')
-        ...

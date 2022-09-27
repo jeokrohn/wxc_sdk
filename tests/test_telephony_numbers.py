@@ -156,8 +156,6 @@ class TestValidatePhoneNumbers(TestCaseWithLog):
                 toll_free_number=False,
                 detail=['[Error 8362] DN is invalid : +1800'])]),
             result)
-        foo = 1
-        ...
 
     def test_006_unavailable(self):
         """
