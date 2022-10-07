@@ -106,7 +106,11 @@ def as_dump_response(*, response: ClientResponse, response_data=None, data=None,
     for h in response.history:
         as_dump_response(response=h, file=output)
 
-    time_str = diff_ns is None and '' or f'({diff_ns / 1000000.0:.3f} ms)'
+    if diff_ns is None:
+        time_str = ''
+    else:
+        time_str = f'({diff_ns / 1000000.0:.3f} ms)'
+
     print(f'Request {response.status}[{response.reason}]{time_str}: '
           f'{response.request_info.method} {response.request_info.url}', file=output)
 
@@ -141,6 +145,8 @@ def as_dump_response(*, response: ClientResponse, response_data=None, data=None,
             if 'access_token' in body:
                 # mask access token
                 body['access_token'] = '***'
+            elif 'refresh_token' in body:
+                body['refresh_token'] = '***'
             body = json_mod.dumps(body, indent=2)
         except json_mod.JSONDecodeError:
             pass
@@ -359,9 +365,10 @@ class AsRestSession(ClientSession):
             except KeyError:
                 url = None
             else:
-                # TODO: remove workaround as soon as pagination URL issue gets fixed (WXCAPIBULK-27)
-                if len((pagination_fix := url.split('https,https:/'))) > 1:
-                    url = f'https://{pagination_fix[1]}'
+                # not needed any more, WXCAPIBULK-27 has been fixed
+                # if len((pagination_fix := url.split('https,https:/'))) > 1:
+                #     url = f'https://{pagination_fix[1]}'
+                pass
             # return all items
             if item_key is None:
                 if 'items' in data:

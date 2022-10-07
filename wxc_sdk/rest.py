@@ -135,7 +135,11 @@ def dump_response(response: Response, file: TextIOBase = None, dump_log: logging
     for h in response.history:
         dump_response(response=h, file=output)
 
-    time_str = diff_ns is None and '' or f' ({diff_ns / 1000000.0:.3f} ms)'
+    if diff_ns is None:
+        time_str = ''
+    else:
+        time_str = f'({diff_ns / 1000000.0:.3f} ms)'
+
     print(f'Request {response.status_code}[{response.reason}]{time_str}: '
           f'{response.request.method} {response.request.url}', file=output)
 
@@ -173,6 +177,8 @@ def dump_response(response: Response, file: TextIOBase = None, dump_log: logging
             if 'access_token' in body:
                 # mask access token
                 body['access_token'] = '***'
+            elif 'refresh_token' in body:
+                body['refresh_token'] = '***'
             body = json.dumps(body, indent=2)
         except json.JSONDecodeError:
             pass
@@ -384,9 +390,9 @@ class RestSession(Session):
             model = model.parse_obj
 
         while url:
-            if url.startswith('https,'):
-                # TODO: this has to go as soon as WXCAPIBULK-27 gets fixed
-                url = url[6:]
+            # not needed any more, WXCAPIBULK-27 has been fixed
+            # if url.startswith('https,'):
+            #     url = url[6:]
             log.debug(f'{self}.pagination: getting {url}')
             response, data = self._request_w_response('GET', url=url, params=params, **kwargs)
             # params only in first request. In subsequent requests we rely on the completeness of the 'next' URL
