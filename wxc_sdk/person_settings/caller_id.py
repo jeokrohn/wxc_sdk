@@ -6,8 +6,7 @@ from pydantic import Field, validator
 from .common import PersonSettingsApiChild
 from ..base import ApiModel, to_camel, plus1
 
-__all__ = ['CallerIdApi', 'CallerId', 'ExternalCallerIdNamePolicy', 'CustomNumberInfo', 'CustomNumberType',
-           'CallerIdSelectedType']
+__all__ = ['CallerIdApi', 'CallerId', 'ExternalCallerIdNamePolicy', 'CallerIdSelectedType']
 
 
 class CallerIdSelectedType(str, Enum):
@@ -22,23 +21,6 @@ class CallerIdSelectedType(str, Enum):
     mobile_number = 'MOBILE_NUMBER'
     #: Outgoing caller ID will show the value from the customNumber field.
     custom = 'CUSTOM'
-
-
-class CustomNumberType(str, Enum):
-    """
-    EXTERNAL if the custom caller ID number is external, otherwise INTERNAL.
-    """
-    internal = 'INTERNAL'
-    external = 'EXTERNAL'
-
-
-class CustomNumberInfo(ApiModel):
-    #: EXTERNAL if the custom caller ID number is external, otherwise INTERNAL.
-    custom_number_type: CustomNumberType = Field(alias='type')
-    #: First name of custom caller ID number.
-    first_name: str
-    #: Last name of custom caller ID number.
-    last_name: str
 
 
 class ExternalCallerIdNamePolicy(str, Enum):
@@ -78,8 +60,6 @@ class CallerId(ApiModel):
     mobile_number: Optional[str]
     #: This value must be an assigned number from the person's location.
     custom_number: Optional[str]
-    #: Information about the custom caller ID number.
-    custom_number_info: Optional[CustomNumberInfo]
     #: Person's Caller ID first name. Characters of %, +, \`, \" and Unicode characters are not allowed.
     first_name: Optional[str]
     #: Person's Caller ID last name. Characters of %, +, \`, \" and Unicode characters are not allowed.
