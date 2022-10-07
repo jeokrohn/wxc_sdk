@@ -15,11 +15,11 @@ class DialPlan(ApiModel):
     #: Unique identifier for the dial plan.
     dial_plan_id: Optional[str] = Field(alias='id')
     #: A unique name for the dial plan.
-    name: str
+    name: Optional[str]
     #: ID of route type associated with the dial plan.
     route_id: str
     #: Name of route type associated with the dial plan.
-    route_name: str
+    route_name: Optional[str]
     #: Route Type associated with the dial plan.
     route_type: RouteType
     #: Customer information.
