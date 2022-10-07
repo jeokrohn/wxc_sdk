@@ -48,6 +48,9 @@ class InterceptAnnouncements(ApiModel):
 
     @staticmethod
     def default() -> 'InterceptAnnouncements':
+        """
+        Default for incoming call intercept announcement settings
+        """
         return InterceptAnnouncements(greeting=Greeting.default, new_number=InterceptNumber(enabled=False),
                                       zero_transfer=InterceptNumber(enabled=False))
 
@@ -64,6 +67,9 @@ class InterceptSettingIncoming(ApiModel):
 
     @staticmethod
     def default() -> 'InterceptSettingIncoming':
+        """
+        Default incoming call intercept settings
+        """
         return InterceptSettingIncoming(intercept_type=InterceptTypeIncoming.intercept_all, voicemail_enabled=False,
                                         announcements=InterceptAnnouncements.default())
 
@@ -85,6 +91,9 @@ class InterceptSettingOutgoing(ApiModel):
 
     @staticmethod
     def default() -> 'InterceptSettingOutgoing':
+        """
+        Default outgoing call intercept settings
+        """
         return InterceptSettingOutgoing(intercept_type=InterceptTypeOutgoing.intercept_all, transfer_enabled=False)
 
 
@@ -101,6 +110,9 @@ class InterceptSetting(ApiModel):
 
     @staticmethod
     def default() -> 'InterceptSetting':
+        """
+        Default call intercept settings.
+        """
         return InterceptSetting(enabled=False,
                                 incoming=InterceptSettingIncoming.default(),
                                 outgoing=InterceptSettingOutgoing.default())
