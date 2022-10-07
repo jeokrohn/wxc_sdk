@@ -2,9 +2,10 @@
 utility function to parse scopes from various input forms
 """
 import urllib.parse
+from typing import Optional
 
 
-def parse_scopes(scopes: str) -> str:
+def parse_scopes(scopes: Optional[str]) -> Optional[str]:
     """
     parse various ways scopes might be defined.
 
@@ -26,6 +27,8 @@ def parse_scopes(scopes: str) -> str:
     :return: space separated list of scopes
     :rtype: str
     """
+    if scopes is None:
+        return None
     parsed = urllib.parse.urlparse(scopes)
     if parsed.query:
         # looks like we got full url
