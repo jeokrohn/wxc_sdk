@@ -1,0 +1,4 @@
+# rename this file to .env and enter the parameters of the integration to use to obtain tokens
+TOKEN_INTEGRATION_CLIENT_ID=<integration ID>>
+TOKEN_INTEGRATION_CLIENT_SECRET=<integration secret>>
+TOKEN_INTEGRATION_CLIENT_SCOPES="<integration scopes. Can be a space separated list, url quoted string or the full auth url of the integration>"
