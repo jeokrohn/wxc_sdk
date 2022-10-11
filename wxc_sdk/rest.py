@@ -402,6 +402,8 @@ class RestSession(Session):
                 url = str(response.links['next']['url'])
             except KeyError:
                 url = None
+            if not data:
+                continue
             # return all items
             if item_key is None:
                 if 'items' in data:

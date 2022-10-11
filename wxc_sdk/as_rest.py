@@ -369,6 +369,8 @@ class AsRestSession(ClientSession):
                 # if len((pagination_fix := url.split('https,https:/'))) > 1:
                 #     url = f'https://{pagination_fix[1]}'
                 pass
+            if not data:
+                continue
             # return all items
             if item_key is None:
                 if 'items' in data:
