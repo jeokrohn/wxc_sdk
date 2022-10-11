@@ -86,7 +86,8 @@ RE_METHOD = re.compile(r"""
         (?:                         # followed by one of ...
             \Z|                     # ... end of string
             (?P=indent)def|         # ... line with def with same indent as initial def
-            (?P=indent)@))          # ... or line starting with @ with same indent as initial def
+            # (?P=indent)@|           # ... or line starting with @ with same indent as initial def
+            ^[ ]*@))                # .. or just a line starting with a @ indicating the start of a decoration
     """, flags=re.VERBOSE + re.MULTILINE)
 
 # method def
