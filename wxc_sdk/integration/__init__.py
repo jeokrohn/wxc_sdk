@@ -290,6 +290,5 @@ class Integration:
             # get new tokens via integration if needed
             tokens = self.get_tokens_from_oauth_flow()
             if tokens:
-                tokens.set_expiration()
                 write_to_cache(tokens)
         return tokens
