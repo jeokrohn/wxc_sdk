@@ -200,17 +200,6 @@ class LocationsApi(ApiChild, base='locations'):
         Updating a location in your organization requires an administrator auth token with
         the spark-admin:locations_write.
 
-        Example :
-
-            .. code-block:: python
-
-                api.telephony.location.update(location_id=location_id,
-                                              settings=TelephonyLocation(
-                                                  calling_line_id=CallingLineId(
-                                                      phone_number=tn),
-                                                  routing_prefix=routing_prefix,
-                                                  outside_dial_digit='9'))
-
         :param location_id: Update location common attributes for this location.
         :type location_id: str
         :param settings: new settings for the org:
