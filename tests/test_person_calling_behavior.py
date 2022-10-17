@@ -5,9 +5,11 @@ import random
 from asyncio import gather
 from contextlib import contextmanager
 from dataclasses import dataclass
+from typing import ClassVar
 
 from wxc_sdk.all_types import *
-from .base import TestCaseWithUsers, async_test
+from .base import TestCaseWithUsers, async_test, TestCaseWithLog
+from .testutil import calling_users
 
 
 class TestRead(TestCaseWithUsers):
@@ -39,14 +41,25 @@ class TestRead(TestCaseWithUsers):
         if failed:
             print(f'Reading calling behavior failed for {len(failed)} users:')
             print('\n'.join(f'  {user.display_name}: {error}' for user, error in failed))
-        print(f'Got calling behavior for {len(self.users)} users')
-        print('\n'.join(s.json(exclude_none=False) for s in settings))
-        self.assertTrue(all(s.behavior_type is not None and s.effective_behavior_type is not None for s in settings),
-                        'invalid/incomplete calling behavior for at least one user (check CALL-36213')
+
+        settings_ok = [s for s in settings if not isinstance(s, Exception)]
+        settings_ok: list[CallingBehavior]
+
+        print(f'Got calling behavior for {len(settings_ok)} users')
+        print('\n'.join(s.json(exclude_none=False) for s in settings_ok))
+        self.assertTrue(all(isinstance(s, CallingBehavior) and s.effective_behavior_type is not None
+                            for s in settings),
+                        'invalid/incomplete calling behavior for at least one user')
 
 
 @dataclass(init=False)
-class TestUpdate(TestCaseWithUsers):
+class TestUpdate(TestCaseWithLog):
+    users: ClassVar[list[Person]]
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        cls.users = calling_users(api=cls.api)
 
     @contextmanager
     def target_user(self):
@@ -59,7 +72,9 @@ class TestUpdate(TestCaseWithUsers):
             yield user
         finally:
             # restore old settings
-            self.api.person_settings.calling_behavior.configure(person_id=user.person_id, settings=settings)
+            settings.behavior_type = settings.behavior_type or None
+            restore = CallingBehavior(behavior_type=settings.behavior_type)
+            self.api.person_settings.calling_behavior.configure(person_id=user.person_id, settings=restore)
             restored = self.api.person_settings.calling_behavior.read(person_id=user.person_id)
             self.assertEqual(settings, restored)
 
@@ -71,8 +86,10 @@ class TestUpdate(TestCaseWithUsers):
             cba = self.api.person_settings.calling_behavior
             user: Person
             before = cba.read(person_id=user.person_id)
-            self.assertIsNotNone(before.behavior_type, 'Invalid calling behavior')
-            new_behavior = next((b for b in BehaviorType
+            self.assertIsNotNone(before.effective_behavior_type, 'Invalid calling behavior')
+            behavior_types = list(BehaviorType)
+            random.shuffle(behavior_types)
+            new_behavior = next((b for b in behavior_types
                                  if before.behavior_type is None or before.behavior_type != b))
             settings = CallingBehavior(behavior_type=new_behavior)
             cba.configure(person_id=user.person_id, settings=settings)

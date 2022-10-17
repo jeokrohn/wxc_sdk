@@ -36,20 +36,22 @@ class MultipartEncoder(MultipartWriter):
 MAX_USERS_WITH_CALLING_DATA = 10
 
 
-__all__ = ['AsAccessCodesApi', 'AsAnnouncementApi', 'AsApiChild', 'AsAppServicesApi', 'AsAuthCodesApi',
-           'AsAutoAttendantApi', 'AsBargeApi', 'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi',
-           'AsCallQueueApi', 'AsCallRecordingApi', 'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallingBehaviorApi',
-           'AsCallparkExtensionApi', 'AsCallsApi', 'AsDevicesApi', 'AsDialPlanApi', 'AsDndApi', 'AsExecAssistantApi',
-           'AsForwardingApi', 'AsGroupsApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
-           'AsInternalDialingApi', 'AsLicensesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
-           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMonitoringApi',
-           'AsNumbersApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi',
-           'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
+__all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsApiChild', 'AsAppServicesApi',
+           'AsAuthCodesApi', 'AsAutoAttendantApi', 'AsBargeApi', 'AsCQPolicyApi', 'AsCallInterceptApi',
+           'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi', 'AsCallRecordingApi', 'AsCallWaitingApi',
+           'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsDeviceSettingsJobsApi',
+           'AsDevicesApi', 'AsDialPlanApi', 'AsDndApi', 'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi',
+           'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi',
+           'AsLicensesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
+           'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMonitoringApi', 'AsNumbersApi',
+           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi',
+           'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
            'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsReceptionistApi',
            'AsRestSession', 'AsRouteGroupApi', 'AsRouteListApi', 'AsScheduleApi', 'AsTelephonyApi',
-           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi', 'AsVoicePortalApi', 'AsVoicemailApi',
-           'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi',
-           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
+           'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi',
+           'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi',
+           'AsWebhookApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
+           'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
 
 @dataclass(init=False)
@@ -137,6 +139,123 @@ class AsApiChild:
         return await self.session.rest_patch(*args, **kwargs)
 
 
+class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/callDeviceSettings'):
+    """
+    API for jobs to update device settings at the location and organization level
+
+    """
+
+    async def change(self, location_id: Optional[str], customization: DeviceCustomization,
+               org_id: str=None)->StartJobResponse:
+        # TODO: validate, tracked as issue #91, API not yet supported
+        raise NotImplementedError
+        url = self.ep()
+        params = org_id and {'prgId': org_id} or None
+        body = {}
+        if location_id:
+            body['locationId'] = location_id
+        body['locationCustomizationsEnabled'] = customization.custom_enabled
+        if customization.custom_enabled:
+            body['customizations'] = json.loads(customization.customizations.json())
+        data = await self.post(url=url, params=params, json=body)
+        return StartJobResponse.parse_obj(data)
+
+    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[StartJobResponse, None, None]:
+        """
+        List change device settings jobs.
+
+        Lists all the jobs for jobType calldevicesettings for the given organization in order of most recent one to
+        oldest one irrespective of its status.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+
+        :param org_id: Retrieve list of 'calldevicesettings' jobs for this organization.
+        :type org_id: str
+        :param params: optional parameters
+        :return: Generator of :class:`StartJobResponse` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=StartJobResponse, params=params)
+
+    async def list(self, org_id: str = None, **params) -> List[StartJobResponse]:
+        """
+        List change device settings jobs.
+
+        Lists all the jobs for jobType calldevicesettings for the given organization in order of most recent one to
+        oldest one irrespective of its status.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+
+        :param org_id: Retrieve list of 'calldevicesettings' jobs for this organization.
+        :type org_id: str
+        :param params: optional parameters
+        :return: Generator of :class:`StartJobResponse` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=StartJobResponse, params=params)]
+
+    async def get_status(self, job_id: str, org_id: str = None) -> StartJobResponse:
+        """
+        Get change device settings job status.
+
+        Provides details of the job with jobId of jobType calldevicesettings.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param job_id: Retrieve job details for this jobId.
+        :type job_id: str
+        :param org_id: Retrieve job details for this org
+        :type org_id: str
+        :return: job details
+        :rtype: StartJobResponse
+        """
+        url = self.ep(job_id)
+        params = org_id and {'orgId': org_id} or None
+        data = await self.get(url=url, params=params)
+        return StartJobResponse.parse_obj(data)
+
+    def job_errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
+        """
+        List change device settings job errors.
+
+        Lists all error details of the job with jobId of jobType calldevicesettings.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param job_id: Retrieve job details for this jobId.
+        :param org_id: Retrieve list of jobs for this organization.
+        :return:
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(f'{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
+
+    async def job_errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
+        """
+        List change device settings job errors.
+
+        Lists all error details of the job with jobId of jobType calldevicesettings.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param job_id: Retrieve job details for this jobId.
+        :param org_id: Retrieve list of jobs for this organization.
+        :return:
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(f'{job_id}/errors')
+        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, params=params)]
+
+
 class AsDevicesApi(AsApiChild, base='devices'):
     """
     Devices represent cloud-registered Webex RoomOS devices. Devices may be associated with Workspaces.
@@ -147,6 +266,13 @@ class AsDevicesApi(AsApiChild, base='devices'):
     or deleting all devices in an organization requires an administrator auth token with the spark-admin:devices_write
     scope. Generating an activation code requires an auth token with the identity:placeonetimepassword_create scope.
     """
+
+    #: device jobs Api
+    settings_jobs: AsDeviceSettingsJobsApi
+
+    def __init__(self, *, session: AsRestSession):
+        super().__init__(session=session)
+        self.settings_jobs = AsDeviceSettingsJobsApi(session=session)
 
     def list_gen(self, person_id: str = None, workspace_id: str = None, display_name: str = None, product: str = None,
              product_type: str = None, tag: str = None, connection_status: str = None, serial: str = None,
@@ -698,17 +824,6 @@ class AsLocationsApi(AsApiChild, base='locations'):
         Updating a location in your organization requires an administrator auth token with
         the spark-admin:locations_write.
 
-        Example :
-
-            .. code-block:: python
-
-                api.telephony.location.update(location_id=location_id,
-                                              settings=TelephonyLocation(
-                                                  calling_line_id=CallingLineId(
-                                                      phone_number=tn),
-                                                  routing_prefix=routing_prefix,
-                                                  outside_dial_digit='9'))
-
         :param location_id: Update location common attributes for this location.
         :type location_id: str
         :param settings: new settings for the org:
@@ -960,12 +1075,16 @@ class AsPeopleApi(AsApiChild, base='people'):
         :type person: Person
         :param calling_data: Include Webex Calling user details in the response. Default: False
         :type calling_data: bool
-        :param show_all_types: Include Webex Calling user details in the response. Default: False
+        :param show_all_types: Include additional user data like #attendee role
         :type show_all_types: bool
         :return: Person details
         :rtype: Person
         """
-        params = calling_data and {'callingData': 'true'} or None
+        params = {}
+        if calling_data is not None:
+            params['callingData'] = calling_data
+        if show_all_types is not None:
+            params['showAllTypes'] = show_all_types
 
         if not all(v is not None
                    for v in (person.display_name, person.first_name, person.last_name)):
@@ -1002,6 +1121,107 @@ class AsPeopleApi(AsApiChild, base='people'):
         data = await self.get(ep, params=params)
         result = Person.parse_obj(data)
         return result
+
+
+class AsAgentCallerIdApi(AsApiChild, base='telephony/config/people'):
+    """
+    API to manage call queue agent caller ID information
+    """
+
+    # noinspection PyMethodOverriding
+    def ep(self, person_id: str, path: str):
+        """
+        :meta private:
+        """
+        return super().ep(f'{person_id}/queues/{path}')
+
+    def available_queues_gen(self, person_id: str, org_id: str = None) -> AsyncGenerator[AgentQueue, None, None]:
+        """
+        Retrieve the list of the person's available call queues and the associated Caller ID information
+
+        If the Agent is to enable queueCallerIdEnabled, they must choose which queue to use as the source for
+        outgoing Caller ID. This API returns a list of Call Queues from which the person must select. If this setting
+        is disabled or Agent does not belong to any queue this list will be empty.
+
+        This API requires a full admin or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: organization id
+        :type org_id: str
+        :return: yields person's available call queues and the associated Caller ID information
+        :rtype: Generator[AgentQueue, None, None]
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(person_id=person_id, path='availableCallerIds')
+        return self.session.follow_pagination(url=url, model=AgentQueue, params=params, item_key='availableQueues')
+
+    async def available_queues(self, person_id: str, org_id: str = None) -> List[AgentQueue]:
+        """
+        Retrieve the list of the person's available call queues and the associated Caller ID information
+
+        If the Agent is to enable queueCallerIdEnabled, they must choose which queue to use as the source for
+        outgoing Caller ID. This API returns a list of Call Queues from which the person must select. If this setting
+        is disabled or Agent does not belong to any queue this list will be empty.
+
+        This API requires a full admin or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: organization id
+        :type org_id: str
+        :return: yields person's available call queues and the associated Caller ID information
+        :rtype: Generator[AgentQueue, None, None]
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(person_id=person_id, path='availableCallerIds')
+        return [o async for o in self.session.follow_pagination(url=url, model=AgentQueue, params=params, item_key='availableQueues')]
+
+    async def read(self, person_id: str, org_id: str = None) -> QueueCallerId:
+        """
+        Retrieve a call queue agent's Caller ID information
+
+        Each agent in the Call Queue will be able to set their outgoing Caller ID as either the Call Queue's phone
+        number or their own configured Caller ID. This API fetches the configured Caller ID for the agent in the system.
+
+        This API requires a full admin or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: organization id
+        :type org_id: str
+        :return: call queue agent's Caller ID information
+        :rtype: QueueCallerId
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(person_id=person_id, path='callerId')
+        data = await self.get(url=url, params=params)
+        return QueueCallerId.parse_obj(data)
+
+    async def update(self, person_id: str, update: QueueCallerId, org_id: str = None):
+        """
+        Modify a call queue agent's Caller ID information
+
+        Each Agent in the Call Queue will be able to set their outgoing Caller ID as either the designated Call
+        Queue's phone number or their own configured Caller ID. This API modifies the configured Caller ID for the
+        agent in the system.
+
+        This API requires a full or user administrator auth token with the spark-admin:telephony_config_write scope.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param update: new settings
+        :type update: QueueCallerId
+        :param org_id: organization id
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(person_id=person_id, path='callerId')
+        body = update.for_update()
+        await self.put(url=url, params=params, data=body)
 
 
 class AsPersonSettingsApiChild(AsApiChild, base=''):
@@ -1941,9 +2161,6 @@ class AsAuthCodesApi(AsPersonSettingsApiChild):
         await self.post(url, params=params, json=body)
 
 
-@dataclass(init=False)
-
-
 class AsTransferNumbersApi(AsPersonSettingsApiChild):
     """
     API for outgoing permission auto transfer numbers
@@ -2864,12 +3081,13 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
                                  greeting_key='uploadNoAnswerGreeting')
 
 
-@dataclass(init=False)
 class AsPersonSettingsApi(AsApiChild, base='people'):
     """
     API for all user level settings
     """
 
+    #: agent caller id Api
+    agent_caller_id: AsAgentCallerIdApi
     #: Person's Application Services Settings
     appservices: AsAppServicesApi
     #: Barge In Settings for a Person
@@ -2913,6 +3131,7 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
+        self.agent_caller_id = AsAgentCallerIdApi(session=session)
         self.appservices = AsAppServicesApi(session=session)
         self.barge = AsBargeApi(session=session)
         self.dnd = AsDndApi(session=session)
@@ -2952,6 +3171,24 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(f'{person_id}/features/voicemail/actions/resetPin/invoke')
         await self.post(url, params=params)
+
+    async def devices(self, person_id: str, org_id: str = None) -> PersonDevicesResponse:
+        """
+        Get all devices for a person.
+
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param person_id: Person to retrieve devices for
+        :type person_id: str
+        :param org_id: organization that person belongs to
+        :type org_id: str
+        :return: device info for user
+        :rtype: PersonDevicesResponse
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.session.ep(f'telephony/config/people/{person_id}/devices')
+        data = await self.get(url=url, params=params)
+        return PersonDevicesResponse.parse_obj(data)
 
 
 class AsAccessCodesApi(AsApiChild, base='telephony/config/locations'):
@@ -4104,17 +4341,214 @@ class AsAnnouncementApi:
         await self._session.delete(url=url, params=params)
 
 
+class AsCQPolicyApi:
+    _session: AsRestSession
+
+    def _ep(self, location_id: str, queue_id: str, path: str):
+        return self._session.ep(f'telephony/config/locations/{location_id}/queues/{queue_id}/{path}')
+
+    def __init__(self, session: AsRestSession):
+        self._session = session
+
+    async def holiday_service_details(self, location_id: str, queue_id: str, org_id: str = None) -> HolidayService:
+        """
+        Retrieve Call Queue Holiday Service details.
+
+        Configure the call queue to route calls differently during the holidays.
+
+        Retrieving call queue holiday service details requires a full or read-only administrator auth token with a
+        scope of spark-admin:telephony_config_read.
+
+        :param location_id: Retrieve settings for a call queue in this location.
+        :type location_id: str
+        :param queue_id: Retrieve settings for the call queue with this identifier.
+        :type queue_id: str
+        :param org_id: Retrieve call queue settings from this organization.
+        :type org_id: str
+        :return:Call Queue Holiday Service details
+        :rtype: HolidayService
+        """
+        url = self._ep(location_id, queue_id, 'holidayService')
+        params = org_id and {'orgId': org_id} or None
+        data = await self._session.rest_get(url=url, params=params)
+        return HolidayService.parse_obj(data)
+
+    async def holiday_service_update(self, location_id: str, queue_id: str, update: HolidayService, org_id: str = None):
+        """
+        Update the designated Call Queue Holiday Service.
+
+        Configure the call queue to route calls differently during the holidays.
+
+        Updating a call queue holiday service requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Location in which this call queue exists.
+        :type location_id: str
+        :param queue_id: Update setting for the call queue with the matching ID.
+        :type queue_id: str
+        :param update: holiday service settings.
+        :type update: HolidayService
+        :param org_id: Update call queue settings from this organisation.
+        :type org_id: str
+        """
+        url = self._ep(location_id, queue_id, 'holidayService')
+        params = org_id and {'orgId': org_id} or None
+        body = update.json(exclude={'holiday_schedules'})
+        await self._session.rest_put(url=url, params=params, data=body)
+
+    async def night_service_detail(self, location_id: str, queue_id: str, org_id: str = None) -> NightService:
+        """
+        Retrieve Call Queue Night service details.
+
+        Configure the call queue to route calls differently during the hours when the queue is not in service. This
+        is determined by a schedule that defines the business hours of the queue.
+
+        Retrieving call queue details requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param location_id: Retrieve settings for a call queue in this location.
+        :type location_id: str
+        :param queue_id: Retrieve settings for the call queue night service with this identifier.
+        :type queue_id: str
+        :param org_id: Retrieve call queue night service settings from this organisation
+        :type org_id: str
+        :return: Call Queue Night service details
+        :rtype: NightService
+        """
+        url = self._ep(location_id, queue_id, 'nightService')
+        params = org_id and {'orgId': org_id} or None
+        data = await self._session.rest_get(url=url, params=params)
+        return NightService.parse_obj(data)
+
+    async def night_service_update(self, location_id: str, queue_id: str, update: NightService, org_id: str = None):
+        """
+        Update Call Queue Night Service details.
+
+        Configure the call queue to route calls differently during the hours when the queue is not in service. This
+        is determined by a schedule that defines the business hours of the queue.
+
+        Retrieving call queue night service details requires a full or read-only administrator auth token with a
+        scope of spark-admin:telephony_config_read.
+
+        :param location_id: update settings for a call queue in this location.
+        :type location_id: str
+        :param queue_id: update settings for the call queue night service with this identifier.
+        :type queue_id: str
+        :param update: new night service settings
+        :type update: NightService
+        :param org_id: update call queue night service settings from this organisation.
+        :type org_id: str
+        """
+        url = self._ep(location_id, queue_id, 'nightService')
+        params = org_id and {'orgId': org_id} or None
+        body = update.json(exclude={'business_hours_schedules'})
+        await self._session.rest_put(url=url, params=params, data=body)
+
+    async def stranded_calls_details(self, location_id: str, queue_id: str, org_id: str = None) -> StrandedCalls:
+        """
+        Allow admin to view default/configured Stranded Calls settings.
+
+        Stranded-All agents logoff Policy: If the last agent staffing a queue “unjoins” the queue or signs out,
+        then all calls in the queue become stranded. Stranded-Unavailable Policy: This policy allows for the
+        configuration of the processing of calls that are in a staffed queue when all agents are unavailable.
+
+        Retrieving call queue Stranded Calls details requires a full or read-only administrator auth token with a
+        scope of spark-admin:telephony_config_read.
+
+        :param location_id: Retrieve settings for a call queue in this location.
+        :type location_id: str
+        :param queue_id: Retrieve settings for the call queue with this identifier.
+        :type queue_id: str
+        :param org_id: Retrieve call queue settings from this organization.
+        :type org_id: str
+        :return: Stranded Calls settings
+        :rtype: StrandedCalls
+        """
+        url = self._ep(location_id, queue_id, 'strandedCalls')
+        params = org_id and {'orgId': org_id} or None
+        data = await self._session.rest_get(url=url, params=params)
+        return StrandedCalls.parse_obj(data)
+
+    async def stranded_calls_update(self, location_id: str, queue_id: str, update: StrandedCalls, org_id: str = None):
+        """
+        Update the designated Call Stranded Calls Service.
+
+        Allow admin to modify configured Stranded Calls settings.
+
+        Updating a call queue stranded calls requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Location in which this call queue exists.
+        :type location_id: str
+        :param queue_id: Update setting for the call queue with the matching ID.
+        :type queue_id: str
+        :param update: Call Stranded Calls settings
+        :type update: StrandedCalls
+        :param org_id: Update call queue settings from this organisation.
+        :type org_id: str
+        """
+        url = self._ep(location_id, queue_id, 'strandedCalls')
+        params = org_id and {'orgId': org_id} or None
+        await self._session.rest_put(url=url, params=params, data=update.json())
+
+    async def forced_forward_details(self, location_id: str, queue_id: str, org_id: str = None) -> ForcedForward:
+        """
+        Retrieve Call Queue policy Forced Forward details.
+
+        This policy allows calls to be temporarily diverted to a configured destination.
+
+        Retrieving call queue Forced Forward details requires a full or read-only administrator auth token with a
+        scope of spark-admin:telephony_config_read.
+
+        :param location_id: Location in which this call queue exists.
+        :param queue_id: Retrieve setting for the call queue with the matching ID.
+        :param org_id: Retrieve call queue settings from this organisation.
+        :return: Call Queue policy Forced Forward details.
+        :rtype: ForcedForward
+        """
+        url = self._ep(location_id, queue_id, 'forcedForward')
+        params = org_id and {'orgId': org_id} or None
+        data = await self._session.rest_get(url=url, params=params)
+        return ForcedForward.parse_obj(data)
+
+    async def forced_forward_update(self, location_id: str, queue_id: str, update: ForcedForward, org_id: str = None):
+        """
+        Update the designated Forced Forward Service.
+
+        If the option is enabled, then incoming calls to the queue are forwarded to the configured destination. Calls
+        that are already in the queue remain queued. The policy can be configured to play an announcement prior to
+        proceeding with the forward.
+
+        Updating a call queue Forced Forward service requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Location in which this call queue exists.
+        :type location_id: str
+        :param queue_id: Update setting for the call queue with the matching ID.
+        :type queue_id: str
+        :param update: new call queue Forced Forward settings
+        :type update: ForcedForward
+        :param org_id: Update call queue settings from this organisation.
+        :type org_id: str
+        """
+        url = self._ep(location_id, queue_id, 'forcedForward')
+        params = org_id and {'orgId': org_id} or None
+        await self._session.rest_put(url=url, params=params, data=update.json())
+
+
 class AsCallQueueApi:
     """
     Call Queue APÍ
     """
     forwarding: AsForwardingApi
     announcement: AsAnnouncementApi
+    policy: AsCQPolicyApi
 
     def __init__(self, session: AsRestSession):
         self._session = session
         self.forwarding = AsForwardingApi(session=session, feature_selector=FeatureSelector.queues)
         self.announcement = AsAnnouncementApi(session=session)
+        self.policy = AsCQPolicyApi(session=session)
 
     def _endpoint(self, *, location_id: str = None, queue_id: str = None):
         """
@@ -4261,6 +4695,21 @@ class AsCallQueueApi:
         :type org_id: str
         :return: queue id
         :rtype: str
+
+        Example:
+
+            .. code-block:: python
+
+                settings = CallQueue(name=new_name,
+                                     extension=extension,
+                                     call_policies=CallQueueCallPolicies.default(),
+                                     queue_settings=QueueSettings.default(queue_size=10),
+                                     agents=[Agent(agent_id=user.person_id) for user in members])
+
+                # create new queue
+                queue_id = api.telephony.callqueue.create(location_id=target_location.location_id,
+                                                          settings=settings)
+
         """
         params = org_id and {'orgId': org_id} or {}
         cq_data = settings.create_or_update()
@@ -4338,6 +4787,14 @@ class AsCallQueueApi:
         Updating a call queue requires a full administrator auth token with a scope
         of spark-admin:telephony_config_write.
 
+        :param location_id: Location in which this call queue exists.
+        :type location_id: str
+        :param queue_id: Update setting for the call queue with the matching ID.
+        :type queue_id: str
+        :param update: updates
+        :type update: :class:`CallQueue`
+        :param org_id: Update call queue settings from this organization.
+
         Examples:
 
         .. code-block::
@@ -4379,13 +4836,6 @@ class AsCallQueueApi:
                       queue_id=...,
                       update=details)
 
-        :param location_id: Location in which this call queue exists.
-        :type location_id: str
-        :param queue_id: Update setting for the call queue with the matching ID.
-        :type queue_id: str
-        :param update: updates
-        :type update: :class:`CallQueue`
-        :param org_id: Update call queue settings from this organization.
         """
         params = org_id and {'orgId': org_id} or None
         cq_data = update.create_or_update()
@@ -5069,6 +5519,18 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
         data = update.create_or_update()
         url = self._endpoint(location_id=location_id, huntgroup_id=huntgroup_id)
         await self.put(url, data=data, params=params)
+
+
+class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
+    """
+    Jobs API
+    """
+    #: API for device settings jobs
+    device_settings: AsDeviceSettingsJobsApi
+
+    def __init__(self, *, session: AsRestSession):
+        super().__init__(session=session)
+        self.device_settings = AsDeviceSettingsJobsApi(session=session)
 
 
 class AsLocationInterceptApi(AsApiChild, base='telephony/config/locations'):
@@ -6737,6 +7199,275 @@ class AsPrivateNetworkConnectApi(AsApiChild, base='telephony/config/locations'):
         await self.put(url, json=body, params=params)
 
 
+class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
+    """
+    Telephony devices API
+    """
+
+    async def members(self, device_id: str, org_id: str = None) -> DeviceMembersResponse:
+        """
+        Get Device Members
+
+        Get the list of all the members of the device including primary and secondary users.
+
+        A device member can be either a person or a workspace. An admin can access the list of member details, modify
+        member details and search for available members on a device.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param org_id: Retrieves the list of all members of the device in this Organization.
+        :type org_id: str
+        :return: Device model, line count, and members
+        :rtype: DeviceMembersResponse
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(f'{device_id}/members')
+        data = await self.get(url=url, params=params)
+        return DeviceMembersResponse.parse_obj(data)
+
+    async def update_members(self, device_id: str, members: Optional[list[Union[DeviceMember, AvailableMember]]],
+                       org_id: str = None):
+        """
+        Modify member details on the device.
+
+        A device member can be either a person or a workspace. An admin can access the list of member details,
+        modify member details and search for available members on a device.
+
+        Modifying members on the device requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param members: New member details for the device. If the member's list is missing then all the users are
+            removed except the primary user.
+        :type members: list[Union[DeviceMember, AvailableMember]
+        :param org_id: Modify members on the device in this organization.
+        :type org_id: str
+        """
+        members_for_update = []
+        for member in members:
+            if isinstance(member, AvailableMember):
+                member = DeviceMember.from_available(member)
+            else:
+                member = member.copy(deep=True)
+            members_for_update.append(member)
+
+        if members_for_update:
+            # now assign port indices
+            port = 1
+            for member in members_for_update:
+                member.port = port
+                port += member.line_weight
+
+        # create body
+        if members_for_update:
+            members = ','.join(m.json(include={'member_id', 'port', 't38_fax_compression_enabled', 'primary_owner',
+                                               'line_type', 'line_weight', 'hotline_enabled', 'hotline_destination',
+                                               'allow_call_decline_enabled'})
+                               for m in members_for_update)
+            body = f'{{"members": [{members}]}}'
+        else:
+            body = None
+
+        url = self.ep(f'{device_id}/members')
+        params = org_id and {'orgId': org_id} or None
+        await self.put(url=url, data=body, params=params)
+
+    def available_members_gen(self, device_id: str, location_id: str, member_name: str = None, phone_number: str = None,
+                          extension: str = None, org_id: str = None,
+                          **params) -> AsyncGenerator[AvailableMember, None, None]:
+        """
+        Search members that can be assigned to the device.
+
+        A device member can be either a person or a workspace. A admin can access the list of member details,
+        modify member details and search for available members on a device.
+
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param location_id: Search (Contains) based on number.
+        :type location_id: str
+        :param member_name: Search (Contains) numbers based on member name.
+        :type member_name: str
+        :param phone_number: Search (Contains) based on number.
+        :type phone_number: str
+        :param extension: Search (Contains) based on extension.
+        :type extension: str
+        :param org_id: Retrieves the list of available members on the device in this Organization.
+        :type org_id: str
+        :return: list of available members
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if p not in {'self', 'params', 'device_id'} and v is not None)
+        url = self.ep(f'{device_id}/availableMembers')
+        # noinspection PyTypeChecker
+        return self.session.follow_pagination(url=url, model=AvailableMember, params=params, item_key='members')
+
+    async def available_members(self, device_id: str, location_id: str, member_name: str = None, phone_number: str = None,
+                          extension: str = None, org_id: str = None,
+                          **params) -> List[AvailableMember]:
+        """
+        Search members that can be assigned to the device.
+
+        A device member can be either a person or a workspace. A admin can access the list of member details,
+        modify member details and search for available members on a device.
+
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param location_id: Search (Contains) based on number.
+        :type location_id: str
+        :param member_name: Search (Contains) numbers based on member name.
+        :type member_name: str
+        :param phone_number: Search (Contains) based on number.
+        :type phone_number: str
+        :param extension: Search (Contains) based on extension.
+        :type extension: str
+        :param org_id: Retrieves the list of available members on the device in this Organization.
+        :type org_id: str
+        :return: list of available members
+        """
+        params.update((to_camel(p), v) for p, v in locals().items()
+                      if p not in {'self', 'params', 'device_id'} and v is not None)
+        url = self.ep(f'{device_id}/availableMembers')
+        # noinspection PyTypeChecker
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableMember, params=params, item_key='members')]
+
+    async def apply_changes(self, device_id: str, org_id: str = None):
+        """
+        Apply Changes for a specific device
+
+        Issues request to the device to download and apply changes to the configuration.
+
+        Applying changes for a specific device requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param org_id: Apply changes for a device in this Organization.
+        :type org_id: str
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(f'{device_id}/actions/applyChanges/invoke')
+        await self.post(url=url, params=params)
+
+    async def device_settings(self, device_id: str, device_model: str, org_id: str = None) -> DeviceCustomization:
+        """
+        Get override settings for a device.
+
+        Device settings lists all the applicable settings for an MPP and an ATA devices at the device level. An admin
+        can also modify the settings. DECT devices do not support settings at the device level.
+
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param device_model: Model type of the device.
+        :type device_model: str
+        :param org_id: Settings on the device in this organization.
+        :type org_id: str
+        :return: Device settings
+        :rtype: DeviceCustomization
+        """
+        params = {'model': device_model}
+        if org_id:
+            params['orgId'] = org_id
+        url = self.ep(f'{device_id}/settings')
+        data = await self.get(url=url, params=params)
+        return DeviceCustomization.parse_obj(data)
+
+    async def update_device_settings(self, device_id: str, device_model: str, customization: DeviceCustomization,
+                               org_id: str = None):
+        """
+        Modify override settings for a device.
+
+        Device settings list all the applicable settings for an MPP and an ATA devices at the device level. Admins
+        can also modify the settings. NOTE: DECT devices do not support settings at the device level.
+
+        Updating settings on the device requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param device_model: Device model name.
+        :type device_model: str
+        :param customization: Indicates the customization object of the device settings.
+        :type customization: DeviceCustomization
+        :param org_id: Organization in which the device resides..
+        :type org_id: str
+
+        Example :
+
+            .. code-block:: python
+
+                # target_device is a TelephonyDevice object
+                target_device: TelephonyDevice
+
+                # get device level settings
+                settings = api.telephony.devices.device_settings(device_id=target_device.device_id,
+                                                                 device_model=target_device.model)
+
+                # update settings (display name format) and enable device level customization
+                settings.customizations.mpp.display_name_format = DisplayNameSelection.person_last_then_first_name
+                settings.custom_enabled = True
+
+                # update the device level settings
+                api.telephony.devices.update_device_settings(device_id=target_device.device_id,
+                                                             device_model=target_device.model,
+                                                             customization=settings)
+
+                # apply changes to device
+                api.telephony.devices.apply_changes(device_id=target_device.device_id)
+
+        """
+        params = {'model': device_model}
+        if org_id:
+            params['orgId'] = org_id
+        url = self.ep(f'{device_id}/settings')
+        body = customization.json(include={'customizations', 'custom_enabled'})
+        await self.put(url=url, params=params, data=body)
+
+    async def dect_devices(self, org_id: str = None) -> list[DectDevice]:
+        """
+        Read the DECT device type list
+
+        Get DECT device type list with base stations and line ports supported count. This is a static list.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param org_id:
+        :return:
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep('dects/supportedDevices')
+        data = await self.get(url=url, params=params)
+        return parse_obj_as(list[DectDevice], data['devices'])
+
+    async def validate_macs(self, macs: list[str], org_id: str = None) -> MACValidationResponse:
+        """
+        Validate a list of MAC addresses.
+
+        Validating this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param macs: MAC addresses to be validated.
+        :type macs: list[str]
+        :param org_id: Validate the mac address(es) for this organization.
+        :type org_id: str
+        :return: validation response
+        :rtype: :class:`MACValidationResponse`
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep('actions/validateMacs/invoke')
+        data = await self.post(url=url, params=params, json={'macs': macs})
+        return MACValidationResponse.parse_obj(data)
+
+
 class AsInternalDialingApi(AsApiChild, base='telephony/config/locations'):
     """
     Internal dialing settings for location
@@ -7150,6 +7881,17 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         Updating a location in your organization requires an administrator auth token with
         the spark-admin:telephony_config_write scope.
 
+        Example :
+
+            .. code-block:: python
+
+                api.telephony.location.update(location_id=location_id,
+                                              settings=TelephonyLocation(
+                                                  calling_line_id=CallingLineId(
+                                                      phone_number=tn),
+                                                  routing_prefix=routing_prefix,
+                                                  outside_dial_digit='9'))
+
         :param location_id: Updating Webex Calling location attributes for this location.
         :type location_id: str
         :param settings: settings to update
@@ -7196,6 +7938,26 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
             body['serviceEnabled'] = service_enabled
         url = self.session.ep(f'{location_id}/actions/modifyAnnouncementLanguage/invoke')
         await self.put(url, json=body, params=params)
+
+    async def device_settings(self, location_id: str, org_id: str = None) -> DeviceCustomization:
+        """
+        Get device override settings for a location.
+
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param location_id: Unique identifier for the location
+        :type location_id: str
+        :param org_id: Settings on the device in this organization
+        :type org_id: str
+        :return: device customization response
+        :rtype: DeviceCustomization
+        """
+        # TODO: reactivate/test as soon as jobs API starts to be supported
+        raise NotImplementedError
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(f'{location_id}/devices/settings')
+        data = await self.get(url=url, params=params)
+        return DeviceCustomization.parse_obj(data)
 
 
 class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
@@ -7506,7 +8268,7 @@ class AsVoicemailRulesApi(AsApiChild, base='telephony/config/voicemail/rules'):
         await self.put(url, params=params, data=data)
 
 
-class AsTelephonyApi(AsApiChild, base='telephony'):
+class AsTelephonyApi(AsApiChild, base='telephony/config'):
     """
     The telephony settings (features) API.
     """
@@ -7519,7 +8281,10 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
     callpark: AsCallParkApi
     callpark_extension: AsCallparkExtensionApi
     callqueue: AsCallQueueApi
+    #: WxC device operations
+    devices: AsTelephonyDevicesApi
     huntgroup: AsHuntGroupApi
+    jobs: AsJobsApi
     #: location specific settings
     location: AsTelephonyLocationApi
     #: organisation voicemail settings
@@ -7544,7 +8309,9 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         self.callpark = AsCallParkApi(session=session)
         self.callpark_extension = AsCallparkExtensionApi(session=session)
         self.callqueue = AsCallQueueApi(session=session)
+        self.devices = AsTelephonyDevicesApi(session=session)
         self.huntgroup = AsHuntGroupApi(session=session)
+        self.jobs = AsJobsApi(session=session)
         self.location = AsTelephonyLocationApi(session=session)
         self.organisation_voicemail = AsOrganisationVoicemailSettingsAPI(session=session)
         self.paging = AsPagingApi(session=session)
@@ -7616,7 +8383,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
             elif isinstance(value, Enum):
                 value = value.value
                 params[param] = value
-        url = self.ep(path='config/numbers')
+        url = self.ep(path='numbers')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=NumberListPhoneNumber, params=params,
                                               item_key='phoneNumbers')
@@ -7680,7 +8447,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
             elif isinstance(value, Enum):
                 value = value.value
                 params[param] = value
-        url = self.ep(path='config/numbers')
+        url = self.ep(path='numbers')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=NumberListPhoneNumber, params=params,
                                               item_key='phoneNumbers')]
@@ -7698,7 +8465,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
                   if i and v is not None}
         params['details'] = 'true'
         params['max'] = 1
-        url = self.ep(path='config/numbers')
+        url = self.ep(path='numbers')
         data = await self.get(url, params=params)
         return NumberDetails.parse_obj(data['count'])
 
@@ -7714,7 +8481,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         :return: validation response
         :rtype: :class:`wxc_sdk.common.ValidateExtensionsResponse`
         """
-        url = self.ep(path='config/actions/validateExtensions/invoke')
+        url = self.ep(path='actions/validateExtensions/invoke')
         data = await self.post(url, json={'extensions': extensions})
         return ValidateExtensionsResponse.parse_obj(data)
 
@@ -7737,7 +8504,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         :return: validation result
         :rtype: :class:`wxc_sdk.common.ValidatePhoneNumbersResponse`
         """
-        url = self.ep('config/actions/validateNumbers/invoke')
+        url = self.ep('actions/validateNumbers/invoke')
         body = {'phoneNumbers': phone_numbers}
         params = org_id and {'orgId': org_id} or None
         data = await self.post(url=url, params=params, json=body)
@@ -7764,7 +8531,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         :return: list of :class:`UCMProfile`
         """
         params = org_id and {'orgId': org_id} or None
-        url = self.ep(path='config/callingProfiles')
+        url = self.ep(path='callingProfiles')
         data = await self.get(url, params=params)
         return parse_obj_as(list[UCMProfile], data['callingProfiles'])
 
@@ -7789,7 +8556,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         """
         params = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
                   if i and v is not None}
-        url = self.ep('config/routeChoices')
+        url = self.ep('routeChoices')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=RouteIdentity, params=params, item_key='routeIdentities')
 
@@ -7814,7 +8581,7 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         """
         params = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
                   if i and v is not None}
-        url = self.ep('config/routeChoices')
+        url = self.ep('routeChoices')
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=RouteIdentity, params=params, item_key='routeIdentities')]
 
@@ -7848,9 +8615,41 @@ class AsTelephonyApi(AsApiChild, base='telephony'):
         body = {to_camel(p): v for p, v in locals().items()
                 if p not in {'self', 'org_id'} and v is not None}
         params = org_id and {'orgId': org_id} or None
-        url = self.ep('config/actions/testCallRouting/invoke')
+        url = self.ep('actions/testCallRouting/invoke')
         data = await self.post(url=url, params=params, json=body)
         return TestCallRoutingResult.parse_obj(data)
+
+    async def supported_devices(self, org_id: str = None) -> list[SupportedDevice]:
+        """
+        Gets the list of supported devices for an organization location.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param org_id: List supported devices for an organization
+        :return: List of supported devices
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep('supportedDevices')
+        data = await self.get(url=url, params=params)
+        return parse_obj_as(list[SupportedDevice], data['devices'])
+
+    async def device_settings(self, org_id: str = None) -> DeviceCustomization:
+        """
+        Get device override settings for an organization.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param org_id: List supported devices for an organization location.
+        :type org_id: str
+        :return: device customization response
+        :rtype: DeviceCustomization
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep('devices/settings')
+        data = await self.get(url=url, params=params)
+        return DeviceCustomization.parse_obj(data)
 
 
 class AsWebhookApi(AsApiChild, base='webhooks'):
@@ -7991,8 +8790,7 @@ class AsWorkspaceLocationFloorApi(AsApiChild, base='workspaceLocations'):
         :rtype: WorkspaceLocationFloor
         """
         body = {to_camel(p): v for p, v in locals().items()
-                if p not in {'self', 'location_id', 'org_id'}
-                and v is not None}
+                if p not in {'self', 'location_id', 'org_id'} and v is not None}
         url = self.ep(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.post(url=url, params=params, json=body)
@@ -8056,9 +8854,6 @@ class AsWorkspaceLocationFloorApi(AsApiChild, base='workspaceLocations'):
         url = self.ep(location_id=location_id, floor_id=floor_id)
         params = org_id and {'orgId': org_id} or None
         await super().delete(url=url, params=params)
-
-
-@dataclass(init=False)
 
 
 class AsWorkspaceLocationApi(AsApiChild, base='workspaceLocations'):
@@ -8193,6 +8988,36 @@ class AsWorkspaceLocationApi(AsApiChild, base='workspaceLocations'):
         await super().delete(url=url, params=params)
 
 
+class AsWorkspaceNumbersApi(AsApiChild, base='workspaces'):
+
+    def ep(self, workspace_id: str, path: str = None):
+        """
+        :meta private:
+        """
+        path = path and '/path' or ''
+        return super().ep(path=f'{workspace_id}/features/numbers/{path}')
+
+    async def read(self, workspace_id: str, org_id: str = None) -> list[WorkSpaceNumber]:
+        """
+        List the PSTN phone numbers associated with a specific workspace, by ID, within the organization. Also shows
+        the location and Organization associated with the workspace.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:workspaces_read.
+
+        :param workspace_id: List numbers for this workspace.
+        :type workspace_id: str
+        :param org_id: List numbers for a workspace within this organization.
+        :type org_id: str
+        :return: Array of numbers (primary/alternate).
+        :rtype: list[WorkSpaceNumber]
+        """
+        params = org_id and {'org_id': org_id} or None
+        url = self.ep(workspace_id=workspace_id)
+        data = await self.get(url=url, params=params)
+        return parse_obj_as(list[WorkSpaceNumber], data['phoneNumbers'])
+
+
 @dataclass(init=False)
 class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
     """
@@ -8207,7 +9032,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
     caller_id: AsCallerIdApi
     forwarding: AsPersonForwardingApi
     monitoring: AsMonitoringApi
-    numbers: AsNumbersApi
+    numbers: AsWorkspaceNumbersApi
     permissions_in: AsIncomingPermissionsApi
     permissions_out: AsOutgoingPermissionsApi
 
@@ -8218,7 +9043,7 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
         self.caller_id = AsCallerIdApi(session=session, workspaces=True)
         self.forwarding = AsPersonForwardingApi(session=session, workspaces=True)
         self.monitoring = AsMonitoringApi(session=session, workspaces=True)
-        self.numbers = AsNumbersApi(session=session, workspaces=True)
+        self.numbers = AsWorkspaceNumbersApi(session=session)
         self.permissions_in = AsIncomingPermissionsApi(session=session, workspaces=True)
         self.permissions_out = AsOutgoingPermissionsApi(session=session, workspaces=True)
 

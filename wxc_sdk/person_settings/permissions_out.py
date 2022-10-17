@@ -26,7 +26,7 @@ class OutgoingPermissionCallType(str, Enum):
     local = 'LOCAL'
     toll_free = 'TOLL_FREE'
     toll = 'TOLL'
-    national = 'NATIONAL'
+    # national = 'NATIONAL'
     international = 'INTERNATIONAL'
     operator_assisted = 'OPERATOR_ASSISTED'
     chargeable_directory_assisted = 'CHARGEABLE_DIRECTORY_ASSISTED'
@@ -34,9 +34,9 @@ class OutgoingPermissionCallType(str, Enum):
     special_services_ii = 'SPECIAL_SERVICES_II'
     premium_services_i = 'PREMIUM_SERVICES_I'
     premium_services_ii = 'PREMIUM_SERVICES_II'
-    casual = 'CASUAL'
-    url_dialing = 'URL_DIALING'
-    unknown = 'UNKNOWN'
+    # casual = 'CASUAL'
+    # url_dialing = 'URL_DIALING'
+    # unknown = 'UNKNOWN'
 
 
 class Action(str, Enum):
@@ -73,7 +73,7 @@ class CallingPermissions(ApiModel):
     local: Optional[CallTypePermission]
     toll_free: Optional[CallTypePermission]
     toll: Optional[CallTypePermission]
-    national: Optional[CallTypePermission]
+    # national: Optional[CallTypePermission]
     international: Optional[CallTypePermission]
     operator_assisted: Optional[CallTypePermission]
     chargeable_directory_assisted: Optional[CallTypePermission]
@@ -81,9 +81,9 @@ class CallingPermissions(ApiModel):
     special_services_ii: Optional[CallTypePermission]
     premium_services_i: Optional[CallTypePermission]
     premium_services_ii: Optional[CallTypePermission]
-    casual: Optional[CallTypePermission]
-    url_dialing: Optional[CallTypePermission]
-    unknown: Optional[CallTypePermission]
+    # casual: Optional[CallTypePermission]
+    # url_dialing: Optional[CallTypePermission]
+    # unknown: Optional[CallTypePermission]
 
     def for_call_type(self, call_type: OutgoingPermissionCallType) -> CallTypePermission:
         """
@@ -117,7 +117,7 @@ class CallingPermissions(ApiModel):
         """
         r = CallingPermissions.allow_all()
         for call_type in (OutgoingPermissionCallType.international, OutgoingPermissionCallType.premium_services_i,
-                          OutgoingPermissionCallType.premium_services_ii, OutgoingPermissionCallType.casual):
+                          OutgoingPermissionCallType.premium_services_ii):
             ctp = r.for_call_type(call_type)
             ctp.transfer_enabled = False
             ctp.action = Action.block
@@ -144,10 +144,17 @@ class OutgoingPermissions(ApiModel):
         r = {}
         for entry in v:
             call_type = entry.pop('callType')
+            if call_type in {'CASUAL', 'URL_DIALING', 'UNKNOWN', 'NATIONAL'}:
+                # skip permissions that are not supported any more (see WXCAPIBULK-102)
+                # TODO: remove workaround after WXCAPIBULK-206 got fixed
+                continue
             r[call_type.lower()] = entry
         return r
 
     def json(self, *args, exclude_none=True, by_alias=True, **kwargs) -> str:
+        """
+        :meta private:
+        """
         # convert calling_permissions back to a list
         j_data = json.loads(super().json(*args, exclude_none=exclude_none, by_alias=by_alias, **kwargs))
         if j_data.get('callingPermissions'):

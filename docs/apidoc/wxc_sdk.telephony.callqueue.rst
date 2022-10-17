@@ -13,3 +13,4 @@ Submodules
    :maxdepth: 4
 
    wxc_sdk.telephony.callqueue.announcement
+   wxc_sdk.telephony.callqueue.policies

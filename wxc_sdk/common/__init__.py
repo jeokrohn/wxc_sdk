@@ -1,22 +1,27 @@
 """
 Common date types and APIs
 """
-
+from datetime import datetime
 from enum import Enum
 from typing import Optional
 
-from pydantic import Field, root_validator
+from pydantic import Field, root_validator, validator
 
 from wxc_sdk.base import ApiModel
 from ..base import webex_id_to_uuid
 
 __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting', 'UserNumber', 'PersonPlaceAgent',
            'MonitoredMember', 'CallParkExtension', 'AuthCode', 'RouteType', 'DialPatternValidate', 'DialPatternStatus',
-           'RouteIdentity', 'Customer', 'IdAndName', 'PatternAction', 'NumberState', 'ValidateExtensionResponseStatus',
+           'RouteIdentity', 'Customer', 'IdAndName', 'PatternAction', 'NumberState', 'ValidationStatus',
            'ValidateExtensionStatusState', 'ValidateExtensionStatus', 'ValidateExtensionsResponse',
            'ValidatePhoneNumberStatusState', 'ValidatePhoneNumberStatus', 'ValidatePhoneNumbersResponse', 'StorageType',
            'VoicemailMessageStorage', 'VoicemailEnabled', 'VoicemailNotifications', 'VoicemailFax',
-           'VoicemailTransferToNumber', 'VoicemailCopyOfMessage']
+           'VoicemailTransferToNumber', 'VoicemailCopyOfMessage', 'AudioCodecPriority', 'AtaDtmfMode', 'AtaDtmfMethod',
+           'VlanSetting', 'AtaCustomization', 'DeviceCustomizations', 'DeviceCustomization',
+           'CommonDeviceCustomization', 'BacklightTimer', 'Background', 'BackgroundSelection', 'DisplayNameSelection',
+           'LoggingLevel', 'DisplayCallqueueAgentSoftkey', 'AcdCustomization', 'LineKeyLabelSelection',
+           'LineKeyLedPattern', 'PhoneLanguage', 'ScreenTimeout', 'WifiNetwork', 'MppCustomization', 'PrimaryOrShared',
+           'MediaFileType', 'AnnAudioFile']
 
 
 class UserType(str, Enum):
@@ -221,7 +226,7 @@ class NumberState(str, Enum):
     inactive = 'INACTIVE'
 
 
-class ValidateExtensionResponseStatus(str, Enum):
+class ValidationStatus(str, Enum):
     ok = 'OK'
     errors = 'ERRORS'
 
@@ -234,9 +239,9 @@ class ValidateExtensionStatusState(str, Enum):
 
 
 class ValidateExtensionStatus(ApiModel):
-    #: Indicates the extention Id for which the status is about .
+    #: Indicates the extension id for which the status is about .
     extension: str
-    #: Indicate the status for the given extention id .
+    #: Indicate the status for the given extension id .
     state: ValidateExtensionStatusState
     #: Error Code .
     error_code: Optional[int]
@@ -248,12 +253,12 @@ class ValidateExtensionStatus(ApiModel):
 
 
 class ValidateExtensionsResponse(ApiModel):
-    status: ValidateExtensionResponseStatus
+    status: ValidationStatus
     extension_status: Optional[list[ValidateExtensionStatus]]
 
     @property
     def ok(self) -> bool:
-        return self.status == ValidateExtensionResponseStatus.ok
+        return self.status == ValidationStatus.ok
 
 
 class ValidatePhoneNumberStatusState(str, Enum):
@@ -286,13 +291,13 @@ class ValidatePhoneNumberStatus(ApiModel):
 
 class ValidatePhoneNumbersResponse(ApiModel):
     #: This indicates the status of the numbers.
-    status: ValidateExtensionResponseStatus
+    status: ValidationStatus
     #: This is an array of number objects with number details.
     phone_numbers: Optional[list[ValidatePhoneNumberStatus]]
 
     @property
     def ok(self) -> bool:
-        return self.status == ValidateExtensionResponseStatus.ok
+        return self.status == ValidationStatus.ok
 
 
 class StorageType(str, Enum):
@@ -356,3 +361,336 @@ class VoicemailCopyOfMessage(VoicemailEnabled):
     """
     #: Email address to which the new voicemail audio will be sent.
     email_id: Optional[str]
+
+
+class AudioCodecPriority(ApiModel):
+    """
+    Choose up to three predefined codec priority options available for your region.
+    """
+    #: Indicates the selection of an Audio Code Priority Object.
+    selection: str
+    #: Indicates the primary Audio Codec.
+    primary: str
+    #: Indicates the secondary Audio Codec.
+    secondary: str
+    #: Indicates the tertiary Audio Codec.
+    tertiary: str
+
+
+class AtaDtmfMode(str, Enum):
+    """
+    DTMF Detection Tx Mode selection for Cisco ATA devices.
+    """
+    #: It means a) DTMF digit requires an extra hold time after detection and b) DTMF level threshold is raised to
+    #: -20 dBm.
+    strict = 'STRICT'
+    #: It means normal threshold mode.
+    normal = 'NORMAL'
+
+
+class AtaDtmfMethod(str, Enum):
+    """
+    Method for transmitting DTMF signals to the far end.
+    """
+    #: Sends DTMF by using the audio path.
+    inband = 'INBAND'
+    #: Audio video transport. Sends DTMF as AVT events.
+    avt = 'AVT'
+    auto = 'AUTO'
+
+
+class VlanSetting(ApiModel):
+    #: Denotes whether the VLAN object is enabled
+    enabled: bool
+    #: The value of the VLAN Object
+    value: int
+    #: Indicates the PC port value of a VLAN object for an MPP object
+    pc_port: Optional[int]
+
+
+class CommonDeviceCustomization(ApiModel):
+    #: Choose up to three predefined codec priority options available for your region.
+    audio_codec_priority: AudioCodecPriority
+    #: Enable/disable Cisco Discovery Protocol for local devices.
+    cdp_enabled: bool
+    #: Enable/disable Link Layer Discovery Protocol for local devices.
+    lldp_enabled: bool
+    #: Enable/disable quality of service tagging of packets from the local device to the Webex Calling platform.
+    qos_enabled: bool
+    #: Specify a numeric Virtual LAN ID for devices.
+    vlan: VlanSetting
+
+
+class AtaCustomization(CommonDeviceCustomization):
+    """
+    settings that are applicable to ATA devices.
+    """
+    #: DTMF Detection Tx Mode selection for Cisco ATA devices.
+    ata_dtmf_mode: AtaDtmfMode
+    #: Method for transmitting DTMF signals to the far end.
+    ata_dtmf_method: AtaDtmfMethod
+
+
+class BacklightTimer(str, Enum):
+    one_m = 'ONE_M'
+    five_m = 'FIVE_M'
+    thirty_m = 'THIRTY_M'
+    always_on = 'ALWAYS_ON'
+    off = 'OFF'
+
+
+class Background(str, Enum):
+    #: Indicates that there will be no background image set for the devices.
+    no_background = 'NONE'
+    #: Indicates that dark blue background image will be set for the devices.
+    dark_blue = 'DARK_BLUE'
+    #: Indicates that Cisco themed dark blue background image will be set for the devices.
+    cisco_dark_blue = 'CISCO_DARK_BLUE'
+    #: Indicates that Cisco webex dark blue background image will be set for the devices.
+    webex_dark_blue = 'WEBEX_DARK_BLUE'
+    #: Indicates that a custom background image will be set for the devices.
+    custom_background = 'CUSTOM_BACKGROUND'
+
+
+class BackgroundSelection(ApiModel):
+    """
+    Background selection for MPP devices
+    """
+    image: Background
+    custom_url: Optional[str]
+
+
+class DisplayNameSelection(str, Enum):
+    #: Indicates that devices will display the person’s phone number, or if a person doesn’t have a phone number, the
+    #: location number will be displayed.
+    person_number = 'PERSON_NUMBER'
+    #: Indicates that devices will display the name in first name then last name format.
+    person_first_then_last_name = 'PERSON_FIRST_THEN_LAST_NAME'
+    #: Indicates that devices will display the name in last name then first name format.
+    person_last_then_first_name = 'PERSON_LAST_THEN_FIRST_NAME'
+
+
+class LoggingLevel(str, Enum):
+    #: Enables standard logging.
+    standard = 'STANDARD'
+    #: Enables detailed debugging logging.
+    debugging = 'DEBUGGING'
+
+
+class DisplayCallqueueAgentSoftkey(str, Enum):
+    """
+    Chooses the location of the Call Queue Agent Login/Logout softkey on Multi-Platform Phones.
+    """
+    front_page = 'FRONT_PAGE'
+    last_page = 'LAST_PAGE'
+
+
+class AcdCustomization(ApiModel):
+    #: Indicates whether the ACD object is enabled.
+    enabled: bool
+    #: Indicates the call queue agent soft key value of an ACD object.
+    display_callqueue_agent_softkeys: str
+
+
+class LineKeyLabelSelection(str, Enum):
+    """
+    Line key labels define the format of what’s shown next to line keys.
+    """
+    #: This will display the person extension, or if a person doesn’t have an extension, the person’s first name will
+    #: be displayed.
+    person_extension = 'PERSON_EXTENSION'
+    #: Indicates that devices will display the name in first name then last name format.
+    person_first_then_last_name = 'PERSON_FIRST_THEN_LAST_NAME'
+    #: Indicates that devices will display the name in last name then first name format.
+    person_last_then_first_name = 'PERSON_LAST_THEN_FIRST_NAME'
+
+
+class LineKeyLedPattern(str, Enum):
+    default = 'DEFAULT'
+    preset_1 = 'PRESET_1'
+
+
+class PhoneLanguage(str, Enum):
+    #: Indicates a person's announcement language.
+    person = 'PERSON_LANGUAGE'
+    arabic = 'ARABIC'
+    bulgarian = 'BULGARIAN'
+    catalan = 'CATALAN'
+    chinese_simplified = 'CHINESE_SIMPLIFIED'
+    chinese_traditional = 'CHINESE_TRADITIONAL'
+    croatian = 'CROATIAN'
+    czech = 'CZECH'
+    danish = 'DANISH'
+    dutch = 'DUTCH'
+    english_united_states = 'ENGLISH_UNITED_STATES'
+    english_united_kingdom = 'ENGLISH_UNITED_KINGDOM'
+    finnish = 'FINNISH'
+    french_canada = 'FRENCH_CANADA'
+    french_france = 'FRENCH_FRANCE'
+    german = 'GERMAN'
+    greek = 'GREEK'
+    hebrew = 'HEBREW'
+    hungarian = 'HUNGARIAN'
+    italian = 'ITALIAN'
+    japanese = 'JAPANESE'
+    korean = 'KOREAN'
+    norwegian = 'NORWEGIAN'
+    polish = 'POLISH'
+    portuguese_portugal = 'PORTUGUESE_PORTUGAL'
+    russian = 'RUSSIAN'
+    spanish_colombia = 'SPANISH_COLOMBIA'
+    spanish_spain = 'SPANISH_SPAIN'
+    slovak = 'SLOVAK'
+    swedish = 'SWEDISH'
+    slovenian = 'SLOVENIAN'
+    turkish = 'TURKISH'
+    ukraine = 'UKRAINE'
+
+
+class ScreenTimeout(ApiModel):
+    """
+    Specify the amount of inactive time needed (in seconds) before the phone’s screen saver activates.
+    """
+    #: Indicates whether the Screen Time object is enabled.
+    enabled: bool
+    #: Indicates the value of screen timeout.
+    value: int
+
+
+class WifiNetwork(ApiModel):
+    """
+    Specify the Wi-Fi SSID and password for wireless-enabled MPP phones.
+    """
+    #: Indicates whether the wifi network is enabled.
+    enabled: bool
+    #: Authentication method of wifi network.
+    authentication_method: str
+    #: SSID name of the wifi network.
+    ssid_name: Optional[str]
+    #: User Id of the wifi network.
+    user_id: Optional[str]
+
+
+class MppCustomization(CommonDeviceCustomization):
+    """
+    settings that are applicable to MPP devices.
+    """
+    #: Indicates whether PNAC of MPP object is enabled or not
+    pnac_enabled: bool
+    #: Choose the length of time (in minutes) for the phone’s backlight to remain on.
+    backlight_timer: BacklightTimer
+    #: Holds the background object of MPP Object.
+    background: BackgroundSelection
+    #: The display name that appears on the phone screen.
+    display_name_format: DisplayNameSelection
+    #: Choose the desired logging level for an MPP devices
+    default_logging_level: LoggingLevel
+    #: Enable/disable Do-Not-Disturb capabilities for Multi-Platform Phones.
+    dnd_services_enabled: bool
+    #: Chooses the location of the Call Queue Agent Login/Logout softkey on Multi-Platform Phones.
+    display_callqueue_agent_softkeys: Optional[DisplayCallqueueAgentSoftkey]
+    #: Choose the duration (in hours) of Hoteling guest login.
+    hoteling_guest_association_timer: Optional[int]
+    acd: AcdCustomization
+    #: Indicates the short inter digit timer value.
+    short_interdigit_timer: int
+    #: Indicates the long inter digit timer value.
+    long_interdigit_timer: int
+    #: Line key labels define the format of what’s shown next to line keys.
+    line_key_label_format: LineKeyLabelSelection
+    #: LED patterns define lighting schemes for the line keys on the MPP devices. Note – This parameter is not
+    #: supported on the MPP 8875
+    line_key_led_pattern: LineKeyLedPattern = Field(alias='lineKeyLEDPattern')
+    #: Enable/disable user-level access to the web interface of Multi-Platform Phones.
+    mpp_user_web_access_enabled: bool
+    #: Select up to 10 Multicast Group URLs (each with a unique Listening Port).
+    multicast: Optional[list[str]]
+    #: Specify the amount of time (in seconds) that a phone can remain off-hook.
+    off_hook_timer: int
+    #: Select the language for your MPP phone. Setting this overrides the default language setting in place for your
+    #: provisioned location.
+    phone_language: PhoneLanguage
+    #: Enable/disable the Power-Over-Ethernet mode for Multi-Platform Phones.
+    poe_mode: str
+    #: Specify the amount of inactive time needed (in seconds) before the phone’s screen saver activates.
+    screen_timeout: ScreenTimeout
+    #: Enable/disable the use of the USB ports on Multi-Platform phones.
+    usb_ports_enabled: bool
+    #: Specify the Wi-Fi SSID and password for wireless-enabled MPP phones.
+    wifi_network: WifiNetwork
+
+
+class DeviceCustomizations(ApiModel):
+    """
+    Customization object of the device settings.
+
+    At the device level only one of ata, dect, and mpp is set. At location and org level all three
+    customizations are set.
+    """
+    ata: Optional[AtaCustomization]
+    dect: Optional[CommonDeviceCustomization]
+    mpp: Optional[MppCustomization]
+
+
+class DeviceCustomization(ApiModel):
+    """
+    Device customization
+    """
+
+    @validator('last_update_time', pre=True)
+    def update_time(cls, v):
+        """
+        :meta private:
+        """
+        if not v:
+            return v
+        try:
+            v = datetime.fromtimestamp(v / 1000)
+        finally:
+            pass
+        return v
+
+    #: customization object of the device settings.
+    customizations: DeviceCustomizations
+    #: Indicates if customization is allowed at repective (location or device) level.
+    #: If true - customized at this level.
+    #: If false - not customized, using higher level config (location or org).
+    #: Only present in location and device level customization response
+    custom_enabled: Optional[bool]
+    #: Indicates the progress of the device update. Not present at device level
+    update_in_progress: Optional[bool]
+    #: Indicates the device count. Not present at device level
+    device_count: Optional[int]
+    #: Indicates the last updated time.
+    last_update_time: Optional[datetime]
+
+
+class PrimaryOrShared(str, Enum):
+    #: This indicates a Primary line for the member
+    primary = 'PRIMARY'
+    #: This indicates a Shared line for the member. Shared line appearance allows users to receive and place calls to
+    #: and from another user's extension, using their device.
+    shared = 'SHARED_CALL_APPEARANCE'
+    mobility = 'MOBILITY'
+
+
+class MediaFileType(str, Enum):
+    """
+    Media Type of the audio file.
+    """
+    #: WMA File Extension.
+    wma = 'WMA'
+    #: WAV File Extension.
+    wav = 'WAV'
+    #: 3GP File Extension.
+    three_gp = '3GP'
+
+
+class AnnAudioFile(ApiModel):
+    """
+    Announcement Audio Files
+    """
+    #: Name of the file.
+    file_name: str
+    #: Media Type of the audio file.
+    media_file_type: MediaFileType

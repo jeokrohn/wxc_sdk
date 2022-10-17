@@ -36,7 +36,7 @@ async def get_calling_users():
         details = await asyncio.gather(*[api.people.details(person_id=user.person_id, calling_data=True)
                                          for user in calling_users])
         expired = time.perf_counter() - start
-        print(f'Got details for {len(calling_users)} users in {expired * 1000:.3f} ms')
+        print(f'Got details for {len(details)} users in {expired * 1000:.3f} ms')
 
 
 asyncio.run(get_calling_users())

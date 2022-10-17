@@ -4,13 +4,13 @@ Workspace settings, mostly identical to user settings
 """
 from dataclasses import dataclass
 
+from .numbers import WorkspaceNumbersApi
 from ..api_child import ApiChild
 from ..person_settings.call_intercept import CallInterceptApi
 from ..person_settings.call_waiting import CallWaitingApi
 from ..person_settings.caller_id import CallerIdApi
 from ..person_settings.forwarding import PersonForwardingApi
 from ..person_settings.monitoring import MonitoringApi
-from ..person_settings.numbers import NumbersApi
 from ..person_settings.permissions_in import IncomingPermissionsApi
 from ..person_settings.permissions_out import OutgoingPermissionsApi
 from ..rest import RestSession
@@ -32,7 +32,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
     caller_id: CallerIdApi
     forwarding: PersonForwardingApi
     monitoring: MonitoringApi
-    numbers: NumbersApi
+    numbers: WorkspaceNumbersApi
     permissions_in: IncomingPermissionsApi
     permissions_out: OutgoingPermissionsApi
 
@@ -43,6 +43,6 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
         self.caller_id = CallerIdApi(session=session, workspaces=True)
         self.forwarding = PersonForwardingApi(session=session, workspaces=True)
         self.monitoring = MonitoringApi(session=session, workspaces=True)
-        self.numbers = NumbersApi(session=session, workspaces=True)
+        self.numbers = WorkspaceNumbersApi(session=session)
         self.permissions_in = IncomingPermissionsApi(session=session, workspaces=True)
         self.permissions_out = OutgoingPermissionsApi(session=session, workspaces=True)

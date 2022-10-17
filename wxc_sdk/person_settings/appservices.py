@@ -30,6 +30,7 @@ class AppServicesSettings(ApiModel):
     #: Number of available device licenses for assigning devices/apps.
     #: this value cannot be updated
     available_line_count: Optional[int]
+    browser_client_id: Optional[str]
 
 
 class AppServicesApi(PersonSettingsApiChild):

@@ -380,13 +380,53 @@ class TestVmGroup(TestCaseWithLog):
 
             # make sure the group is gone
             groups = list(api.list(location_id=group.location_id))
-            self.assertIsNone(next((g for g in groups if g.name == group.name), None))
+            after = next((g for g in groups if g.group_id == group.group_id), None)
+            self.assertIsNone(after)
 
-    @async_test
-    async def test_007_delete_test_groups(self):
+    async def delete_vm_groups(self, create: int = 0):
+        """
+        Delete a bunch of vm groups
+        :param create: make sure that at least this number of vm groups exists before deleting them
+        """
         groups = await self.async_api.telephony.voicemail_groups.list(name='test_')
+
+        if len(groups) < create:
+            # create a bunch of groups so that there is something to delete
+            # pick target location
+            locations = list(self.api.locations.list())
+            location = choice(locations)
+
+            # get unique name for new group
+            vmg = self.async_api.telephony.voicemail_groups
+            groups = await vmg.list()
+            vmg_names = (name for i in range(1, 1000)
+                         if (name := f'test_{i:03}') not in set(g.name for g in groups))
+            # get extension within location
+            extensions = set(n.extension for n in self.api.telephony.phone_numbers(location_id=location.location_id)
+                             if n.extension)
+            extensions = extensions or {'1xxx'}
+            first_digits: dict[str, set[str]] = reduce(lambda red, e: red[e[:1]].add(e) or red,
+                                                       extensions, defaultdict(set))
+            first_digit = max(first_digits, key=lambda fd: len(first_digits[fd]))
+            extensions = first_digits[first_digit]
+            new_extensions = (ext for i in range(1, 1000)
+                              if (ext := f'{first_digit}{i:03}') not in extensions)
+            # create a bunch of voicemail groups
+            await asyncio.gather(*[vmg.create(location_id=location.location_id,
+                                              settings=VoicemailGroupDetail.create(
+                                                  name=(vmg_name := next(vmg_names)),
+                                                  extension=next(new_extensions),
+                                                  first_name='test',
+                                                  last_name=vmg_name,
+                                                  passcode=740384,
+                                                  language_code='en_us')) for _ in range(create - len(groups))])
+            groups = await self.async_api.telephony.voicemail_groups.list(name='test_')
         groups = [g for g in groups
                   if match(r'^test_\d{3}$', g.name)]
+
+        if not groups:
+            self.skipTest('No group to delete')
+            return
 
         async def delete_one(g: VoicemailGroup):
             """
@@ -424,9 +464,23 @@ class TestVmGroup(TestCaseWithLog):
                                   if request.status != 204]
         success_response_times = [request.time_ms for request in requests
                                   if request.status == 204]
-        print(f'Success: min={min(success_response_times)}, max={max(success_response_times)}, '
-              f'mean={mean(success_response_times)}')
-        print(f'Failure: min={min(failure_response_times)}, max={max(failure_response_times)}, '
-              f'mean={mean(failure_response_times)}')
+        print(f'Success: min={min(success_response_times):.2f}, max={max(success_response_times):.2f}, '
+              f'mean={mean(success_response_times):.2f}')
+        print(f'Failure: min={min(failure_response_times):.2f}, max={max(failure_response_times):.2f}, '
+              f'mean={mean(failure_response_times):.2f}')
 
         self.assertFalse(any(isinstance(r, Exception) for r in results))
+
+    @async_test
+    async def test_007_delete_batch(self):
+        """
+        Bulk delete a bunch of test voicemail groups; at least 50
+        """
+        await self.delete_vm_groups(create=50)
+
+    @async_test
+    async def test_008_cleanup(self):
+        """
+        Bulk delete all remaining test voicemail groups
+        """
+        await self.delete_vm_groups()

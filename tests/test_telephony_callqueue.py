@@ -3,17 +3,24 @@ import json
 import random
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
+from dataclasses import dataclass
 from re import match
 from typing import ClassVar
 
 from wxc_sdk.all_types import *
+from wxc_sdk.telephony.callqueue import CQRoutingType
+from wxc_sdk.telephony.callqueue.policies import HolidayService, CPActionType, ScheduleLevel, NightService, \
+    StrandedCalls, StrandedCallsAction, ForcedForward
 from .base import TestCaseWithLog, TestCaseWithUsers, async_test
 
 # number of call queues to create by create many test
-from .testutil import available_extensions_gen
+from .testutil import available_extensions_gen, get_or_create_holiday_schedule, get_or_create_business_schedule
 
 CQ_MANY = 100
 
+
+# TODO: add tests for new group call management features
+# TODO: add tests for call queue policies
 
 class TestList(TestCaseWithLog):
 
@@ -74,8 +81,9 @@ class TestCreate(TestCaseWithUsers):
                              extension=extension,
                              call_policies=CallQueueCallPolicies.default(),
                              queue_settings=QueueSettings.default(queue_size=10),
+                             phone_number_for_outgoing_calls_enabled=True,
                              agents=[Agent(agent_id=user.person_id) for user in members])
-        # creat new queue
+        # create new queue
         new_queue = tcq.create(location_id=target_location.location_id,
                                settings=settings)
 
@@ -112,16 +120,27 @@ class TestCreate(TestCaseWithUsers):
         settings.name = new_name
         new_id = tcq.create(location_id=target_queue.location_id,
                             settings=settings)
-        details = tcq.details(location_id=target_queue.location_id, queue_id=new_id)
+        try:
+            details = tcq.details(location_id=target_queue.location_id, queue_id=new_id)
+            print(json.dumps(json.loads(details.json()), indent=2))
 
-        # details of new queue should be identical to existing with a few exceptions
-        details.name = target_queue_details.name
-        details.phone_number = target_queue_details.phone_number
-        details.extension = target_queue_details.extension
-        details.id = target_queue_details.id
-        self.assertEqual(target_queue_details, details)
-
-        print(json.dumps(json.loads(details.json()), indent=2))
+            # details of new queue should be identical to existing with a few exceptions
+            details.name = target_queue_details.name
+            details.phone_number = target_queue_details.phone_number
+            details.extension = target_queue_details.extension
+            details.id = target_queue_details.id
+            try:
+                self.assertEqual(target_queue_details, details)
+            except AssertionError as e:
+                details.queue_settings.comfort_message_bypass = \
+                    target_queue_details.queue_settings.comfort_message_bypass
+                if target_queue_details == details:
+                    print('Only difference is in comfort message bypass settings')
+                raise
+        finally:
+            # delete the duplicate queue again
+            tcq.delete_queue(location_id=target_queue.location_id,
+                             queue_id=new_id)
 
     def test_003_create_many(self):
         """
@@ -162,6 +181,7 @@ class TestCreate(TestCaseWithUsers):
                                  extension=extension,
                                  call_policies=CallQueueCallPolicies.default(),
                                  queue_settings=QueueSettings.default(queue_size=10),
+                                 phone_number_for_outgoing_calls_enabled=True,
                                  agents=[Agent(agent_id=user.person_id) for user in members])
             # creat new queue
             new_queue = tcq.create(location_id=target_location.location_id,
@@ -196,16 +216,21 @@ class TestCreate(TestCaseWithUsers):
         self.assertFalse(pagination_link_error, 'Wrong pagination link format')
 
 
-class TestUpdate(TestCaseWithLog):
-    """
-    Try to update call queues
-    """
-    queues = ClassVar[list[CallQueue]]
+@dataclass(init=False)
+class TestWithQueues(TestCaseWithLog):
+    queues: ClassVar[list[CallQueue]]
 
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
         cls.queues = list(cls.api.telephony.callqueue.list(name='cq_'))
+
+
+@dataclass(init=False)
+class TestUpdate(TestWithQueues):
+    """
+    Try to update call queues
+    """
 
     def setUp(self) -> None:
         super().setUp()
@@ -311,7 +336,9 @@ class TestUpdate(TestCaseWithLog):
             other_policies = [p for p in Policy if p != policy]
             new_policy: Policy = random.choice(other_policies)
             print(f'Switch policy from {policy.value} to {new_policy.value}')
-            update = CallQueue(call_policies=CallQueueCallPolicies(policy=new_policy))
+            # Apparently when setting a new policy you also have to provide the routing type
+            update = CallQueue(call_policies=CallQueueCallPolicies(policy=new_policy,
+                                                                   routing_type=CQRoutingType.priority_based))
             self.api.telephony.callqueue.update(location_id=target.location_id,
                                                 queue_id=target.id,
                                                 update=update)
@@ -392,3 +419,180 @@ class TestUpdate(TestCaseWithLog):
         details.location_id = target.location_id
         details.location_name = target.location_name
         self.assertEqual(target, details)
+
+
+class TestCallQueuePolicies(TestWithQueues):
+
+    def setUp(self) -> None:
+        super().setUp()
+        if not self.queues:
+            self.skipTest('Need at least one call queue to run test')
+
+    def test_001_holiday_service_details(self):
+        """
+        Get holiday service details for a queue
+        """
+        target: CallQueue = random.choice(self.queues)
+        details = self.api.telephony.callqueue.policy.holiday_service_details(location_id=target.location_id,
+                                                                              queue_id=target.id)
+        print(json.dumps(json.loads(details.json()), indent=2))
+
+    def test_002_holiday_service_update(self):
+        """
+        Enable holiday service on one queuee
+        """
+        papi = self.api.telephony.callqueue.policy
+        target: CallQueue = random.choice(self.queues)
+
+        with self.no_log():
+            schedule = get_or_create_holiday_schedule(api=self.api, location_id=target.location_id)
+
+        # get holiday service settings for queue
+        holiday_service = papi.holiday_service_details(location_id=target.location_id,
+                                                       queue_id=target.id)
+
+        print(f'Enabling holiday service for call queue "{target.name}" in "{target.location_name}"')
+        update = HolidayService(holiday_service_enabled=True,
+                                action=CPActionType.busy,
+                                holiday_schedule_level=ScheduleLevel.location,
+                                holiday_schedule_name=schedule.name,
+                                play_announcement_before_enabled=False)
+        papi.holiday_service_update(location_id=target.location_id,
+                                    queue_id=target.id,
+                                    update=update)
+        try:
+            after = papi.holiday_service_details(location_id=target.location_id,
+                                                 queue_id=target.id)
+            self.assertTrue(after.holiday_service_enabled)
+            self.assertEqual(CPActionType.busy, after.action)
+            self.assertEqual(ScheduleLevel.location, after.holiday_schedule_level)
+            self.assertEqual(schedule.name, after.holiday_schedule_name)
+            self.assertFalse(after.play_announcement_before_enabled)
+        finally:
+            papi.holiday_service_update(location_id=target.location_id,
+                                        queue_id=target.id,
+                                        update=holiday_service)
+
+    def test_003_night_service_details(self):
+        """
+        Get night service details for a queue
+        """
+        target: CallQueue = random.choice(self.queues)
+        details = self.api.telephony.callqueue.policy.night_service_detail(location_id=target.location_id,
+                                                                           queue_id=target.id)
+        print(json.dumps(json.loads(details.json()), indent=2))
+
+    def test_004_force_night_service_enabled(self):
+        """
+        Enable night service on one queuee
+        """
+        papi = self.api.telephony.callqueue.policy
+        target: CallQueue = random.choice(self.queues)
+
+        with self.no_log():
+            schedule = get_or_create_business_schedule(api=self.api, location_id=target.location_id)
+
+        # get settings for queue
+        before = papi.night_service_detail(location_id=target.location_id,
+                                           queue_id=target.id)
+
+        print(f'Enabling night service for call queue "{target.name}" in "{target.location_name}"')
+        update = NightService(night_service_enabled=True,
+                              action=CPActionType.busy,
+                              play_announcement_before_enabled=False,
+                              business_hours_name=schedule.name,
+                              business_hours_level=ScheduleLevel.location)
+        papi.night_service_update(location_id=target.location_id,
+                                  queue_id=target.id,
+                                  update=update)
+        try:
+            after = papi.night_service_detail(location_id=target.location_id,
+                                              queue_id=target.id)
+            self.assertTrue(after.night_service_enabled)
+            self.assertEqual(CPActionType.busy, after.action)
+            self.assertFalse(after.play_announcement_before_enabled)
+        finally:
+            papi.night_service_update(location_id=target.location_id,
+                                      queue_id=target.id,
+                                      update=before)
+            restored = papi.night_service_detail(location_id=target.location_id,
+                                                 queue_id=target.id)
+            self.assertEqual(before.night_service_enabled, restored.night_service_enabled)
+
+    def test_005_stranded_calls_details(self):
+        """
+        Get stranded calls details for a queue
+        """
+        target: CallQueue = random.choice(self.queues)
+        details = self.api.telephony.callqueue.policy.stranded_calls_details(location_id=target.location_id,
+                                                                             queue_id=target.id)
+        print(json.dumps(json.loads(details.json()), indent=2))
+
+    def test_006_stranded_calls_busy(self):
+        """
+        Set stranded calls treatment to busy
+        """
+        api = self.api.telephony.callqueue.policy
+        target: CallQueue = random.choice(self.queues)
+
+        # get settings for queue
+        before = api.stranded_calls_details(location_id=target.location_id,
+                                            queue_id=target.id)
+
+        print(f'stranded calls treatment to busy for call queue "{target.name}" in "{target.location_name}"')
+        update = StrandedCalls(action=StrandedCallsAction.busy)
+        api.stranded_calls_update(location_id=target.location_id,
+                                  queue_id=target.id,
+                                  update=update)
+        try:
+            after = api.stranded_calls_details(location_id=target.location_id,
+                                               queue_id=target.id)
+            self.assertEqual(StrandedCallsAction.busy, after.action)
+        finally:
+            api.stranded_calls_update(location_id=target.location_id,
+                                      queue_id=target.id,
+                                      update=before)
+            restored = api.stranded_calls_details(location_id=target.location_id,
+                                                  queue_id=target.id)
+            self.assertEqual(before, restored)
+
+    def test_007_forced_forward_details(self):
+        """
+        Get forced forward details for a queue
+        """
+        target: CallQueue = random.choice(self.queues)
+        details = self.api.telephony.callqueue.policy.forced_forward_details(location_id=target.location_id,
+                                                                             queue_id=target.id)
+        print(json.dumps(json.loads(details.json()), indent=2))
+
+    def test_008_forced_forward_enabled(self):
+        """
+        Enable forced forward
+        """
+        api = self.api.telephony.callqueue.policy
+        target: CallQueue = random.choice(self.queues)
+
+        # get settings for queue
+        before = api.forced_forward_details(location_id=target.location_id,
+                                            queue_id=target.id)
+
+        print(f'Enable forced forward for call queue "{target.name}" in "{target.location_name}"')
+        update = ForcedForward(forced_forward_enabled=True,
+                               transfer_phone_number='1234')
+        api.forced_forward_update(location_id=target.location_id,
+                                  queue_id=target.id,
+                                  update=update)
+        try:
+            after = api.forced_forward_details(location_id=target.location_id,
+                                               queue_id=target.id)
+            self.assertTrue(after.forced_forward_enabled)
+            self.assertEqual(update.transfer_phone_number, after.transfer_phone_number)
+        finally:
+            api.forced_forward_update(location_id=target.location_id,
+                                      queue_id=target.id,
+                                      update=before)
+            restored = api.forced_forward_details(location_id=target.location_id,
+                                                  queue_id=target.id)
+            self.assertEqual(before.forced_forward_enabled, restored.forced_forward_enabled)
+            self.assertEqual(before.transfer_phone_number or update.transfer_phone_number,
+                             restored.transfer_phone_number)

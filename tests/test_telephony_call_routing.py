@@ -239,8 +239,16 @@ class TestUsersAndTrunks(TestCallRouting):
                                                                        originator_type=OriginatorType.user,
                                                                        destination=called.extension)
         self.print_result(result=test_result)
+
+        requests = list(self.requests(method='POST', url_filter=r'.+/actions/testCallRouting/invoke'))
+        self.assertFalse(not requests)
+        request = requests[0]
+        # TODO: remove
+        # self.assertEqual('HOSTED_USER', request.response_body['destinationType'],
+        #                  'destinationType has been fixwd ->WXCAPIBULK-105')
+
         expected = TestCallRoutingResult(
-            destination_type=DestinationType.hosted_user,
+            destination_type=DestinationType.hosted_agent,
             routing_address=called.extension,
             is_rejected=False,
             hosted_user=HostedUserDestination(
@@ -255,6 +263,7 @@ class TestUsersAndTrunks(TestCallRouting):
         try:
             self.assertEqual(expected, test_result)
         except AssertionError:
+            # wrong location format fixed via WXCAPIBULK-86
             if called.location_id != test_result.hosted_user.location_id:
                 print(f'Location id: {base64.b64decode(location_id + "==").decode()}')
                 print(
@@ -319,7 +328,7 @@ class TestUsersAndTrunks(TestCallRouting):
                     dial_pattern=ctx.prem_pattern,
                     dial_plan_id=ctx.dial_plan.dial_plan_id
                 ),
-                destination_type=DestinationType.hosted_user,
+                destination_type=DestinationType.hosted_agent,
                 routing_address=called.extension,
                 is_rejected=False,
                 hosted_user=HostedUserDestination(
@@ -383,7 +392,7 @@ class TestUsersAndTrunks(TestCallRouting):
                 self.assertIsNotNone(test_result.call_source_info)
                 self.assertEqual(CallSourceType.unknown_extension, test_result.call_source_info.call_source_type)
                 self.assertFalse(test_result.is_rejected)
-                self.assertEqual(DestinationType.hosted_user, test_result.destination_type)
+                self.assertEqual(DestinationType.hosted_agent, test_result.destination_type)
                 self.assertEqual(called.person_id, test_result.hosted_user.hu_id)
             finally:
                 # restore internal dialing settings
@@ -474,6 +483,13 @@ class TestUsersAndTrunks(TestCallRouting):
                                                                           originator_number=originator_number,
                                                                           destination=prem_number)
                         self.print_result(result=result)
+
+                        requests = list(self.requests(method='POST', url_filter=r'.+/actions/testCallRouting/invoke'))
+                        self.assertFalse(not requests)
+                        request = requests[0]
+                        # TODO: remove
+                        # self.assertTrue('premisesDialPattern' in request.response_body['pbxUser'],
+                        #                 'redundant premisesDialPattern attribute has been removed -> WXCAPIBULK-105')
                         self.assertEqual(TestCallRoutingResult(
                             call_source_info=CallSourceInfo(
                                 call_source_type=CallSourceType.dial_pattern,
@@ -491,17 +507,17 @@ class TestUsersAndTrunks(TestCallRouting):
                                 trunk_location_id=location.location_id,
                                 dial_plan_name=dp_name,
                                 dial_plan_id=dp_id,
-                                dial_pattern=prem_pattern,
-                                premises_dial_pattern=prem_pattern
+                                dial_pattern=prem_pattern
                             )),
                             result)
                     finally:
-                        print(f'Deleting dial plan "{dp_name}"')
+                        # cleanup: delete dialplan
+                        print(f'Deleting dialplan "{dp_name}"')
                         with self.no_log():
                             self.api.telephony.prem_pstn.dial_plan.delete_dial_plan(dial_plan_id=dp_id)
                     # test
                 finally:
-                    # clean: remove trunk
+                    # cleanup: remove trunk
                     print(f'Deleting trunk "{trunk_name}"')
                     with self.no_log():
                         self.api.telephony.prem_pstn.trunk.delete_trunk(trunk_id=trunk_id)
@@ -739,6 +755,7 @@ class TestHostedFeature(TestCallRouting):
                       f' {base64.b64decode(result.hosted_feature.service_instance_id + "==").decode()}')
 
             # check whether there is anything else wrong (other than the service instance id)
+            # wrong service instance id format tracked in WXCAPIBULK-88
             result.hosted_feature.service_instance_id = expected.hosted_feature.service_instance_id
             try:
                 self.assertEqual(expected, result)
@@ -770,8 +787,6 @@ class TestHostedFeature(TestCallRouting):
                                          phone_number=service.phone_number,
                                          extension=service.extension,
                                          service_type=service_type,
-                                         service_type1=service_type,
-                                         service_name=service.name,
                                          name=service.name,
                                          service_instance_id=service_instance_id))
 
@@ -790,6 +805,11 @@ class TestHostedFeature(TestCallRouting):
                                                       originator_type=OriginatorType.user,
                                                       destination=aa.extension)
         self.print_result(result=result)
+
+        requests = list(self.requests(method='POST', url_filter=r'.+/actions/testCallRouting/invoke'))
+        self.assertFalse(not requests)
+        request = requests[0]
+
         # apparently the service instance ID seems to be wrong?
         expected = TestCallRoutingResult(destination_type=DestinationType.hosted_feature,
                                          routing_address=aa.extension,
@@ -800,8 +820,6 @@ class TestHostedFeature(TestCallRouting):
                                              phone_number=aa.phone_number,
                                              extension=aa.extension,
                                              service_type=ServiceType.auto_attendant,
-                                             service_type1=ServiceType.auto_attendant,
-                                             service_name=aa.name,
                                              name=aa.name,
                                              service_instance_id=aa.auto_attendant_id))
 
@@ -886,8 +904,6 @@ class TestHostedFeature(TestCallRouting):
                                              phone_number=hg.phone_number,
                                              extension=hg.extension,
                                              service_type=ServiceType.hunt_group,
-                                             service_type1=ServiceType.hunt_group,
-                                             service_name=hg.name,
                                              name=hg.name,
                                              service_instance_id=hg.id))
 

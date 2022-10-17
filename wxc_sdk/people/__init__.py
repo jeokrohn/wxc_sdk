@@ -327,12 +327,16 @@ class PeopleApi(ApiChild, base='people'):
         :type person: Person
         :param calling_data: Include Webex Calling user details in the response. Default: False
         :type calling_data: bool
-        :param show_all_types: Include Webex Calling user details in the response. Default: False
+        :param show_all_types: Include additional user data like #attendee role
         :type show_all_types: bool
         :return: Person details
         :rtype: Person
         """
-        params = calling_data and {'callingData': 'true'} or None
+        params = {}
+        if calling_data is not None:
+            params['callingData'] = calling_data
+        if show_all_types is not None:
+            params['showAllTypes'] = show_all_types
 
         if not all(v is not None
                    for v in (person.display_name, person.first_name, person.last_name)):

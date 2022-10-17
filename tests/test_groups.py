@@ -141,7 +141,6 @@ class TestGroups(TestCaseWithLog):
     def test_006_add_and_delete_user(self):
         """
         Try to add and delete users at the same time
-        :return:
         """
         ga = self.api.groups
         group_list = list(ga.list(include_members=True))

@@ -11,14 +11,17 @@ scope. Generating an activation code requires an auth token with the identity:pl
 __all__ = ['DevicesApi', 'Device', 'TagOp', 'ActivationCodeResponse']
 
 from collections.abc import Generator
+from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from typing import Optional, Any, List
 
 from pydantic import root_validator, Field
 
+from ..rest import RestSession
 from ..api_child import ApiChild
 from ..base import to_camel, ApiModel
+from ..telephony.jobs import DeviceSettingsJobsApi
 
 
 class Device(ApiModel):
@@ -65,6 +68,7 @@ class Device(ApiModel):
     upgrade_channel: Optional[str]
     #: The date and time that the device was registered, in ISO8601 format.
     created: datetime
+    first_seen: datetime
     #: The date and time that the device was last seen, in ISO8601 format.
     last_seen: datetime
 
@@ -87,6 +91,7 @@ class ActivationCodeResponse(ApiModel):
     expiry_time: datetime
 
 
+@dataclass(init=False)
 class DevicesApi(ApiChild, base='devices'):
     """
     Devices represent cloud-registered Webex RoomOS devices. Devices may be associated with Workspaces.
@@ -97,6 +102,13 @@ class DevicesApi(ApiChild, base='devices'):
     or deleting all devices in an organization requires an administrator auth token with the spark-admin:devices_write
     scope. Generating an activation code requires an auth token with the identity:placeonetimepassword_create scope.
     """
+
+    #: device jobs Api
+    settings_jobs: DeviceSettingsJobsApi
+
+    def __init__(self, *, session: RestSession):
+        super().__init__(session=session)
+        self.settings_jobs = DeviceSettingsJobsApi(session=session)
 
     def list(self, person_id: str = None, workspace_id: str = None, display_name: str = None, product: str = None,
              product_type: str = None, tag: str = None, connection_status: str = None, serial: str = None,

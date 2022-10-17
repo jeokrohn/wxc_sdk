@@ -1,11 +1,9 @@
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 from random import choice
-from unittest import skip
 
 from tests.base import TestCaseWithLog
 from wxc_sdk.devices import TagOp
-from wxc_sdk.rest import RestError
 
 
 class TestDevice(TestCaseWithLog):
@@ -39,7 +37,7 @@ class TestDevice(TestCaseWithLog):
         if not devices:
             self.skipTest('No devices')
         with ThreadPoolExecutor() as pool:
-            details = list(pool.map(lambda d: self.api.devices.details(device_id=d.id),
+            details = list(pool.map(lambda d: self.api.devices.details(device_id=d.device_id),
                                     devices))
         print(f'Got details for {len(details)} devices')
 

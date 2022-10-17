@@ -12,6 +12,7 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   wxc_sdk.person_settings.agent_caller_id
    wxc_sdk.person_settings.appservices
    wxc_sdk.person_settings.barge
    wxc_sdk.person_settings.call_intercept

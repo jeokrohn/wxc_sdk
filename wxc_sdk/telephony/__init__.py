@@ -15,7 +15,9 @@ from .callpark_extension import CallparkExtensionApi
 from .callpickup import CallPickupApi
 from .callqueue import CallQueueApi
 from .calls import CallsApi
+from .devices import TelephonyDevicesApi
 from .huntgroup import HuntGroupApi
+from .jobs import JobsApi
 from .location import TelephonyLocationApi
 from .location.intercept import LocationInterceptApi
 from .organisation_vm import OrganisationVoicemailSettingsAPI
@@ -27,7 +29,8 @@ from .voicemail_groups import VoicemailGroupsApi
 from .voiceportal import VoicePortalApi
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel, plus1
-from ..common import UserType, RouteIdentity, NumberState, ValidateExtensionsResponse, ValidatePhoneNumbersResponse
+from ..common import UserType, RouteIdentity, NumberState, ValidateExtensionsResponse, ValidatePhoneNumbersResponse, \
+    DeviceCustomization
 from ..common.schedules import ScheduleApi, ScheduleApiBase
 from ..person_settings.permissions_out import OutgoingPermissionsApi
 from ..rest import RestSession
@@ -38,7 +41,8 @@ __all__ = ['OwnerType', 'NumberLocation', 'NumberOwner', 'NumberListPhoneNumberT
            'TestCallRoutingResult', 'OriginatorType', 'CallSourceType', 'CallSourceInfo', 'DestinationType',
            'LocationAndNumbers', 'HostedUserDestination', 'ServiceType', 'HostedFeatureDestination',
            'TrunkDestination', 'PbxUserDestination', 'PstnNumberDestination', 'VirtualExtensionDestination',
-           'RouteListDestination', 'FeatureAccessCodeDestination', 'EmergencyDestination', 'TelephonyApi']
+           'RouteListDestination', 'FeatureAccessCodeDestination', 'EmergencyDestination',
+           'DeviceType', 'DeviceManufacturer', 'DeviceManagedBy', 'OnboardingMethod', 'SupportedDevice', 'TelephonyApi']
 
 
 class OwnerType(str, Enum):
@@ -114,7 +118,7 @@ class NumberDetails(ApiModel):
     un_assigned: int
     in_active: int
     extension_only: int
-    toll_free_numbers: int
+    toll_free_numbers: Optional[int]
     total: int
 
 
@@ -177,7 +181,7 @@ class DestinationType(str, Enum):
     Matching destination type for the call.
     """
     #: Matching destination is a person or workspace with details in the hosted_user field.
-    hosted_user = 'HOSTED_USER'
+    hosted_agent = 'HOSTED_AGENT'
     #: Matching destination is a calling feature like auto-attendant or hunt group with details in the hostedFeature
     #: field.
     hosted_feature = 'HOSTED_FEATURE'
@@ -241,10 +245,7 @@ class HostedFeatureDestination(LocationAndNumbers):
     """
     This data object is returned when destinationType is HOSTED_FEATURE
     """
-    service_type: ServiceType
-    service_type1: ServiceType = Field(alias='type')
-    #: service instance name
-    service_name: str
+    service_type: ServiceType = Field(alias='type')
     #: service instance name
     name: str
     #: service instance id
@@ -271,8 +272,6 @@ class PbxUserDestination(TrunkDestination):
     dial_plan_id: str
     #: the dial pattern that the called string matches
     dial_pattern: str
-    #: the dial pattern that the called string matches (redundant)
-    premises_dial_pattern: str
 
 
 class PstnNumberDestination(TrunkDestination):
@@ -352,8 +351,72 @@ class TestCallRoutingResult(ApiModel):
     unknown_number: Optional[TrunkDestination]
 
 
+class DeviceType(str, Enum):
+    mpp = 'MPP'
+    ata = 'ATA'
+    generic_sip = 'GENERIC_SIP'
+    esim = 'ESIM'
+
+
+class DeviceManufacturer(str, Enum):
+    cisco = 'CISCO'
+    third_party = 'THIRD_PARTY'
+
+
+class DeviceManagedBy(str, Enum):
+    cisco = 'CISCO'
+    customer = 'CUSTOMER'
+
+
+class OnboardingMethod(str, Enum):
+    mac_address = 'MAC_ADDRESS'
+    activation_code = 'ACTIVATION_CODE'
+    no_method = 'NONE'
+
+
+class SupportedDevice(ApiModel):
+    #: Model name of the device.
+    model: str
+    #: Display name of the device.
+    display_name: str
+    #: Type of the device.
+    device_type: DeviceType = Field(alias='type')
+    #: Manufacturer of the device.
+    manufacturer: DeviceManufacturer
+    #: Users who manage the device.
+    managed_by: DeviceManagedBy
+    #: List of places the device is supported for.
+    supported_for: list[UserType]
+    #: Onboarding method.
+    onboarding_method: list[OnboardingMethod]
+    #: Enables / Disables layout configuration for devices.
+    allow_configure_layout_enabled: bool
+    #: Number of port lines.
+    number_of_line_ports: int
+    #: Indicates whether Kem support is enabled or not.
+    kem_support_enabled: bool
+    #: Module count.
+    kem_module_count: Optional[int]
+    #: Key expansion module type of the device.
+    kem_module_type: Optional[list[str]]
+    #: Enables / Disables the upgrade channel.
+    upgrade_channel_enabled: Optional[bool]
+    #: The default upgrade channel.
+    default_upgrade_channel: Optional[str]
+    #: Enables / disables the additional primary line appearances.
+    additional_primary_line_appearances_enabled: bool
+    #: Enables / disables Basic emergency nomadic.
+    basic_emergency_nomadic_enabled: bool
+    #: Enables / disables customized behavior support on devices
+    customized_behaviors_enabled: bool
+    #: Enables / disables configuring port support on device.
+    allow_configure_ports_enabled: bool
+    customizable_line_label_enabled: bool
+    supports_line_port_reordering_enabled: bool
+
+
 @dataclass(init=False)
-class TelephonyApi(ApiChild, base='telephony'):
+class TelephonyApi(ApiChild, base='telephony/config'):
     """
     The telephony settings (features) API.
     """
@@ -366,7 +429,10 @@ class TelephonyApi(ApiChild, base='telephony'):
     callpark: CallParkApi
     callpark_extension: CallparkExtensionApi
     callqueue: CallQueueApi
+    #: WxC device operations
+    devices: TelephonyDevicesApi
     huntgroup: HuntGroupApi
+    jobs: JobsApi
     #: location specific settings
     location: TelephonyLocationApi
     #: organisation voicemail settings
@@ -391,7 +457,9 @@ class TelephonyApi(ApiChild, base='telephony'):
         self.callpark = CallParkApi(session=session)
         self.callpark_extension = CallparkExtensionApi(session=session)
         self.callqueue = CallQueueApi(session=session)
+        self.devices = TelephonyDevicesApi(session=session)
         self.huntgroup = HuntGroupApi(session=session)
+        self.jobs = JobsApi(session=session)
         self.location = TelephonyLocationApi(session=session)
         self.organisation_voicemail = OrganisationVoicemailSettingsAPI(session=session)
         self.paging = PagingApi(session=session)
@@ -463,7 +531,7 @@ class TelephonyApi(ApiChild, base='telephony'):
             elif isinstance(value, Enum):
                 value = value.value
                 params[param] = value
-        url = self.ep(path='config/numbers')
+        url = self.ep(path='numbers')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=NumberListPhoneNumber, params=params,
                                               item_key='phoneNumbers')
@@ -481,7 +549,7 @@ class TelephonyApi(ApiChild, base='telephony'):
                   if i and v is not None}
         params['details'] = 'true'
         params['max'] = 1
-        url = self.ep(path='config/numbers')
+        url = self.ep(path='numbers')
         data = self.get(url, params=params)
         return NumberDetails.parse_obj(data['count'])
 
@@ -497,7 +565,7 @@ class TelephonyApi(ApiChild, base='telephony'):
         :return: validation response
         :rtype: :class:`wxc_sdk.common.ValidateExtensionsResponse`
         """
-        url = self.ep(path='config/actions/validateExtensions/invoke')
+        url = self.ep(path='actions/validateExtensions/invoke')
         data = self.post(url, json={'extensions': extensions})
         return ValidateExtensionsResponse.parse_obj(data)
 
@@ -520,7 +588,7 @@ class TelephonyApi(ApiChild, base='telephony'):
         :return: validation result
         :rtype: :class:`wxc_sdk.common.ValidatePhoneNumbersResponse`
         """
-        url = self.ep('config/actions/validateNumbers/invoke')
+        url = self.ep('actions/validateNumbers/invoke')
         body = {'phoneNumbers': phone_numbers}
         params = org_id and {'orgId': org_id} or None
         data = self.post(url=url, params=params, json=body)
@@ -547,7 +615,7 @@ class TelephonyApi(ApiChild, base='telephony'):
         :return: list of :class:`UCMProfile`
         """
         params = org_id and {'orgId': org_id} or None
-        url = self.ep(path='config/callingProfiles')
+        url = self.ep(path='callingProfiles')
         data = self.get(url, params=params)
         return parse_obj_as(list[UCMProfile], data['callingProfiles'])
 
@@ -572,7 +640,7 @@ class TelephonyApi(ApiChild, base='telephony'):
         """
         params = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
                   if i and v is not None}
-        url = self.ep('config/routeChoices')
+        url = self.ep('routeChoices')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=RouteIdentity, params=params, item_key='routeIdentities')
 
@@ -606,6 +674,38 @@ class TelephonyApi(ApiChild, base='telephony'):
         body = {to_camel(p): v for p, v in locals().items()
                 if p not in {'self', 'org_id'} and v is not None}
         params = org_id and {'orgId': org_id} or None
-        url = self.ep('config/actions/testCallRouting/invoke')
+        url = self.ep('actions/testCallRouting/invoke')
         data = self.post(url=url, params=params, json=body)
         return TestCallRoutingResult.parse_obj(data)
+
+    def supported_devices(self, org_id: str = None) -> list[SupportedDevice]:
+        """
+        Gets the list of supported devices for an organization location.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param org_id: List supported devices for an organization
+        :return: List of supported devices
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep('supportedDevices')
+        data = self.get(url=url, params=params)
+        return parse_obj_as(list[SupportedDevice], data['devices'])
+
+    def device_settings(self, org_id: str = None) -> DeviceCustomization:
+        """
+        Get device override settings for an organization.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param org_id: List supported devices for an organization location.
+        :type org_id: str
+        :return: device customization response
+        :rtype: DeviceCustomization
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep('devices/settings')
+        data = self.get(url=url, params=params)
+        return DeviceCustomization.parse_obj(data)

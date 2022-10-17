@@ -2,9 +2,11 @@
 Generic helper for test cases
 """
 import asyncio
+import random
 from collections import defaultdict
 from collections.abc import Iterable
 from dataclasses import dataclass
+from datetime import date
 from functools import reduce
 from itertools import zip_longest
 from random import randint
@@ -12,14 +14,17 @@ from typing import Generator
 
 from digittree import DigitTree
 
+from examples.calendarific import CalendarifiyApi
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
+from wxc_sdk.common.schedules import ScheduleType, Schedule, Event
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 
 __all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'LocationInfo', 'us_location_info',
-           'calling_users', 'available_numbers', 'available_extensions_gen']
+           'calling_users', 'available_numbers', 'available_extensions_gen', 'get_or_create_holiday_schedule',
+           'get_or_create_business_schedule']
 
 
 def available_numbers(numbers: Iterable[str], seed: str = None) -> Generator[str, None, None]:
@@ -179,3 +184,52 @@ def calling_users(*, api: WebexSimpleApi) -> list[Person]:
     users = [user for user in api.people.list()
              if any(license_id in calling_license_ids for license_id in user.licenses)]
     return users
+
+
+def get_or_create_holiday_schedule(*, api: WebexSimpleApi, location_id: str) -> Schedule:
+    """
+    Create a holiday schedule in given location
+    :param api:
+    :param location_id:
+    :return:
+    """
+    schedules = list(api.telephony.schedules.list(obj_id=location_id, schedule_type=ScheduleType.holidays))
+    if schedules:
+        return random.choice(schedules)
+    # create a new schedule
+    this_year = date.today().year
+
+    events = []
+    for year in (this_year, this_year + 1):
+        # get national holidays for specified year
+        holidays = CalendarifiyApi().holidays(country='US', year=year, holiday_type='national')
+        today = date.today()
+        events.extend((Event(name=f'{holiday.name} {holiday.date.year}',
+                             start_date=holiday.date,
+                             end_date=holiday.date,
+                             all_day_enabled=True)
+                       for holiday in holidays
+                       if holiday.date >= today and holiday.date.weekday() != 6))
+    schedule = Schedule(name='National Holidays',
+                        schedule_type=ScheduleType.holidays,
+                        events=events)
+    schedule_id = api.telephony.schedules.create(obj_id=location_id, schedule=schedule)
+    return api.telephony.schedules.details(obj_id=location_id, schedule_type=ScheduleType.holidays,
+                                           schedule_id=schedule_id)
+
+
+def get_or_create_business_schedule(*, api: WebexSimpleApi, location_id: str) -> Schedule:
+    """
+    Create a business schedule in given location
+    :param api:
+    :param location_id:
+    :return:
+    """
+    schedules = list(api.telephony.schedules.list(obj_id=location_id, schedule_type=ScheduleType.business_hours))
+    if schedules:
+        return random.choice(schedules)
+    # create a new schedule
+    schedule = Schedule.business(name='Business hours')
+    schedule_id = api.telephony.schedules.create(obj_id=location_id, schedule=schedule)
+    return api.telephony.schedules.details(obj_id=location_id, schedule_type=ScheduleType.business_hours,
+                                           schedule_id=schedule_id)

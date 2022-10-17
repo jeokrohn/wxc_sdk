@@ -1,6 +1,40 @@
 Release history
 ===============
 
+1.7.0
+-----
+- feat: workspace locations (and floors) API, :attr:`wxc_sdk.WebexSimpleApi.workspace_locations`
+- feat: devices API, :attr:`wxc_sdk.WebexSimpleApi.devices`
+- feat: new API for jobs to udpate device settings at org and location level: :attr:`wxc_sdk.devices.DevicesApi.settings_jobs`
+- feat: new telephony devices API: :attr:`wxc_sdk.telephony.TelephonyApi.devices`
+- feat: new telephony jobs API: :attr:`wxc_sdk.telephony.TelephonyApi.jobs`
+- feat: new API to get workspace numbers: :attr:`wxc_sdk.workspace_settings.WorkspaceSettingsApi.numbers`
+- feat: new API to manage agent caller id settings for users: :attr:`wxc_sdk.person_settings.PersonSettingsApi.agent_caller_id`
+- feat: new method to get devices of a user: :meth:`wxc_sdk.person_settings.PersonSettingsApi.devices`
+- feat: new method to get location level device settings: :meth:`wxc_sdk.telephony.location.TelephonyLocationApi.device_settings`
+- feat: get supported devices: :meth:`wxc_sdk.telephony.TelephonyApi.supported_devices`
+- feat: get organisation level device settings: :meth:`wxc_sdk.telephony.TelephonyApi.device_settings`
+- feat: new call queue settings: :attr:`wxc_sdk.telephony.callqueue.QueueSettings.comfort_message_bypass`, :attr:`wxc_sdk.telephony.callqueue.QueueSettings.whisper_message`
+- feat: new call queue policy setting to support skill based routing: :attr:`wxc_sdk.telephony.callqueue.CallQueueCallPolicies.routing_type`
+- feat: new call queue agent attributes: :attr:`wxc_sdk.telephony.hg_and_cq.Agent.skill_level`, :attr:`wxc_sdk.telephony.hg_and_cq.Agent.join_enabled`
+- feat: new attribute :attr:`wxc_sdk.person_settings.appservices.AppServicesSettings.desktop_client_id`
+- feat: support explicit content-type for REST requests
+- feat: new example call_intercept.py
+- feat: DialPlan attributes name and route_name now optional to simplify instantiation for updates
+- feat: example call_intercept.py, enable debug output if run in debugger
+- fix: added missing return type str to :meth:`wxc_sdk.locations.LocationsApi.create`
+- fix: moving change_announcement_language to :class:`wxc_sdk.telephony.location.TelephonyLocationApi`
+- fix: workaround for wrong pagination urls not required any more
+- fix: dumping REST messages with no valid time diff caused an exception
+- fix: exclude refresh token values from REST debug
+- fix: parse_scopes with None parameter raised an exception
+- fix: custom_number_info removed from ExternalCallerIdNamePolicy
+- fix: catch error in pagination if empty response is returned
+- fix: async_gen.py, matching failed for last method in class if followed by decorated class
+- fix: updated outgoing permission call types to latest call types: :class:`wxc_sdk.person_settings.permissions_out.OutgoingPermissionCallType`
+- fix: proper handling of show_all_types parameter in :meth:`wxc_sdk.people.PeopleApi.update`
+- fix: ignore calltypes not supported in calling permissions any more: national, casual, url_dialing, unknown
+
 1.6.0
 -----
 - new API: :class:`wxc_sdk.organizations.OrganizationApi`

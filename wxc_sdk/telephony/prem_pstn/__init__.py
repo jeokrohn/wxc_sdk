@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from enum import Enum
 from typing import List, Union
 
 from wxc_sdk.api_child import ApiChild
@@ -8,31 +7,21 @@ from .route_group import RouteGroupApi
 from .route_list import RouteListApi
 from .trunk import TrunkApi
 from ...base import ApiModel
-from ...common import DialPatternValidate
+from ...common import DialPatternValidate, ValidationStatus
 from ...rest import RestSession
 
-__all__ = ['DialPatternValidationStatus', 'DialPatternValidationResult',
+__all__ = ['DialPatternValidationResult',
            'PremisePstnApi']
-
-
-class DialPatternValidationStatus(str, Enum):
-    """
-    Overall validation result status.
-    """
-    #: In case one or more dial pattern validation failed.
-    errors = 'ERRORS'
-    #: If all the patterns are validated successfully.
-    ok = 'OK'
 
 
 class DialPatternValidationResult(ApiModel):
     #: Overall validation result status.
-    status: DialPatternValidationStatus
+    status: ValidationStatus
     dial_pattern_status: list[DialPatternValidate]
 
     @property
     def ok(self) -> bool:
-        return self.status == DialPatternValidationStatus.ok
+        return self.status == ValidationStatus.ok
 
 
 @dataclass(init=False)

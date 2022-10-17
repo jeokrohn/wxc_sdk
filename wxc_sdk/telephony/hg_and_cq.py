@@ -39,6 +39,10 @@ class Agent(UserBase):
     phone_number: Optional[str]
     #: Weight of person or workspace. Only applied when call policy is WEIGHTED.
     weight: Optional[int]
+    #: Skill Level of person or workspace. Only applies when call routing type is SKILL_BASED. Only for call queues
+    skill_level: Optional[int]
+    #: Indicates the join status of the agent for this queue. Only for call queues
+    join_enabled: Optional[bool]
 
     @property
     def cpapi_id(self) -> str:
@@ -65,9 +69,7 @@ class HGandCQ(ApiModel):
     phone_number: Optional[str]
     #: Extension
     extension: Optional[str]
-    # TODO: undocumented
     calling_line_id_policy: Optional[CallingLineIdPolicy]
-    # TODO: undocumented
     calling_line_id_phone_number: Optional[str]
     #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
     #: number will reach the same greeting and each menu will function identically to the main number. The alternate

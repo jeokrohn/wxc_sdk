@@ -2,7 +2,12 @@
 Person settings
 """
 from dataclasses import dataclass
+from enum import Enum
+from typing import Optional
 
+from pydantic import Field
+
+from .agent_caller_id import AgentCallerIdApi
 from .appservices import AppServicesApi
 from .barge import BargeApi
 from .call_intercept import CallInterceptApi
@@ -16,20 +21,70 @@ from .forwarding import PersonForwardingApi
 from .hoteling import HotelingApi
 from .monitoring import MonitoringApi
 from .numbers import NumbersApi
+from .permissions_in import IncomingPermissionsApi
+from .permissions_out import OutgoingPermissionsApi
 from .privacy import PrivacyApi
+from .push_to_talk import PushToTalkApi
 from .receptionist import ReceptionistApi
 from .voicemail import VoicemailApi
 from ..api_child import ApiChild
-from ..rest import RestSession
-from .permissions_in import IncomingPermissionsApi
-from .permissions_out import OutgoingPermissionsApi
-from .push_to_talk import PushToTalkApi
+from ..base import ApiModel
+from ..common import UserType, PrimaryOrShared
 from ..common.schedules import ScheduleApi, ScheduleApiBase
+from ..rest import RestSession
 
-__all__ = ['PersonSettingsApi']
+__all__ = ['PersonSettingsApi', 'DeviceOwner', 'DeviceActivationState', 'TelephonyDevice', 'PersonDevicesResponse']
 
 
 # TODO: UC profile
+
+
+class DeviceOwner(ApiModel):
+    #: unique identifier for user or workspace the device is owned by
+    owner_id: str = Field(alias='id')
+    #: last name of device owner.
+    last_name: str
+    #: First name of device owner.
+    first_name: str
+    #: user or workspace?
+    owner_type: UserType = Field(alias='type')
+
+
+class DeviceActivationState(str, Enum):
+    activating = 'ACTIVATING'
+    activated = 'ACTIVATED'
+    deactivated = 'DEACTIVATED'
+
+
+class TelephonyDevice(ApiModel):
+    #: Unique identifier for a device.
+    device_id: str = Field(alias='id')
+    #: Comma separated array of tags used to describe device.
+    description: list[str]
+    #: Identifier for device model.
+    model: str
+    #: MAC address of device.
+    mac: Optional[str]
+    #: IP address of device.
+    ip_address: Optional[str]
+    #: This field indicates whether the person or the workspace is the owner of the device, and points to a primary
+    #: Line/Port of the device.
+    primary_owner: bool
+    #: Indicates if the line is acting as a primary line or a shared line for this device.
+    device_type: PrimaryOrShared = Field(alias='type')
+    #: Owner of device.
+    owner: DeviceOwner
+    #: Activation state of device.
+    activation_state: DeviceActivationState
+    pre_onboarding_device_id: str
+
+
+class PersonDevicesResponse(ApiModel):
+    #: Array of devices available to person.
+    devices: list[TelephonyDevice]
+    #: Maximum number of devices a person can be assigned to.
+    max_device_count: int
+
 
 @dataclass(init=False)
 class PersonSettingsApi(ApiChild, base='people'):
@@ -37,6 +92,8 @@ class PersonSettingsApi(ApiChild, base='people'):
     API for all user level settings
     """
 
+    #: agent caller id Api
+    agent_caller_id: AgentCallerIdApi
     #: Person's Application Services Settings
     appservices: AppServicesApi
     #: Barge In Settings for a Person
@@ -80,6 +137,7 @@ class PersonSettingsApi(ApiChild, base='people'):
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
+        self.agent_caller_id = AgentCallerIdApi(session=session)
         self.appservices = AppServicesApi(session=session)
         self.barge = BargeApi(session=session)
         self.dnd = DndApi(session=session)
@@ -119,3 +177,21 @@ class PersonSettingsApi(ApiChild, base='people'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(f'{person_id}/features/voicemail/actions/resetPin/invoke')
         self.post(url, params=params)
+
+    def devices(self, person_id: str, org_id: str = None) -> PersonDevicesResponse:
+        """
+        Get all devices for a person.
+
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param person_id: Person to retrieve devices for
+        :type person_id: str
+        :param org_id: organization that person belongs to
+        :type org_id: str
+        :return: device info for user
+        :rtype: PersonDevicesResponse
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self.session.ep(f'telephony/config/people/{person_id}/devices')
+        data = self.get(url=url, params=params)
+        return PersonDevicesResponse.parse_obj(data)

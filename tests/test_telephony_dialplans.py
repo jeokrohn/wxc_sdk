@@ -8,8 +8,7 @@ from itertools import chain
 from typing import ClassVar
 
 from tests.base import TestCaseWithLog, async_test
-from wxc_sdk.common import DialPatternStatus, DialPatternValidate, RouteIdentity
-from wxc_sdk.telephony.prem_pstn import DialPatternValidationStatus
+from wxc_sdk.common import DialPatternStatus, DialPatternValidate, RouteIdentity, ValidationStatus
 from wxc_sdk.telephony.prem_pstn.dial_plan import DialPlan, PatternAndAction
 
 
@@ -173,7 +172,7 @@ class TestPatternValidation(TestCaseWithLog):
         """
         result = self.api.telephony.prem_pstn.validate_pattern(dial_patterns=['+1456!!'])
         print(result)
-        self.assertEqual(result.status, DialPatternValidationStatus.errors)
+        self.assertEqual(result.status, ValidationStatus.errors)
         self.assertEqual(1, len(result.dial_pattern_status))
         self.assertEqual(DialPatternStatus.invalid, result.dial_pattern_status[0].pattern_status)
 
@@ -183,7 +182,7 @@ class TestPatternValidation(TestCaseWithLog):
         """
         result = self.api.telephony.prem_pstn.validate_pattern(dial_patterns='+1456X234')
         print(result)
-        self.assertEqual(result.status, DialPatternValidationStatus.errors)
+        self.assertEqual(result.status, ValidationStatus.errors)
         self.assertEqual(1, len(result.dial_pattern_status))
         self.assertEqual(DialPatternStatus.invalid, result.dial_pattern_status[0].pattern_status)
 
@@ -194,7 +193,7 @@ class TestPatternValidation(TestCaseWithLog):
         result = self.api.telephony.prem_pstn.validate_pattern(dial_patterns=['+1456!!',
                                                                               '845X8'])
         print(result)
-        self.assertEqual(result.status, DialPatternValidationStatus.errors)
+        self.assertEqual(result.status, ValidationStatus.errors)
         self.assertEqual(2, len(result.dial_pattern_status))
         self.assertTrue(all(s.pattern_status == DialPatternStatus.invalid for s in result.dial_pattern_status))
 
@@ -208,7 +207,7 @@ class TestPatternValidation(TestCaseWithLog):
         random.shuffle(patterns)
         result = self.api.telephony.prem_pstn.validate_pattern(dial_patterns=patterns)
         print(result)
-        self.assertEqual(result.status, DialPatternValidationStatus.errors)
+        self.assertEqual(result.status, ValidationStatus.errors)
 
         result_by_pattern = {r.dial_pattern: r for r in result.dial_pattern_status}
         result_by_pattern: dict[str, DialPatternValidate]
@@ -256,14 +255,14 @@ class TestPatternValidation(TestCaseWithLog):
         patterns = random.sample(existing_patterns, 10)
         result = self.api.telephony.prem_pstn.validate_pattern(dial_patterns=patterns)
         print(result)
-        self.assertEqual(result.status, DialPatternValidationStatus.errors)
+        self.assertEqual(result.status, ValidationStatus.errors)
         self.assertEqual(len(patterns), len(result.dial_pattern_status))
         self.assertTrue(all(s.pattern_status == DialPatternStatus.duplicate for s in result.dial_pattern_status))
 
     def test_006_duplicate_in_list(self):
         result = self.api.telephony.prem_pstn.validate_pattern(dial_patterns=['+1456!', '+1456!'])
         print(result)
-        self.assertEqual(result.status, DialPatternValidationStatus.errors)
+        self.assertEqual(result.status, ValidationStatus.errors)
         self.assertEqual(1, len(result.dial_pattern_status))
         self.assertEqual(DialPatternStatus.duplicate_in_list, result.dial_pattern_status[0].pattern_status)
 

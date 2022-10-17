@@ -6,6 +6,7 @@ from typing import Optional
 from pydantic import Field
 
 from .announcement import AnnouncementApi
+from .policies import CQPolicyApi
 from ..forwarding import ForwardingApi, FeatureSelector
 from ..hg_and_cq import HGandCQ, Policy, Agent
 from ...base import to_camel, ApiModel
@@ -14,7 +15,7 @@ from ...rest import RestSession
 
 __all__ = ['CallBounce', 'DistinctiveRing', 'CallQueueCallPolicies', 'OverflowAction', 'OverflowSetting', 'WaitMode',
            'WaitMessageSetting', 'AudioSource', 'WelcomeMessageSetting', 'ComfortMessageSetting', 'MohMessageSetting',
-           'QueueSettings', 'CallQueue', 'CallQueueApi']
+           'ComfortMessageBypass', 'QueueSettings', 'CallQueue', 'CallQueueApi', 'CQRoutingType']
 
 
 class CallBounce(ApiModel):
@@ -66,10 +67,24 @@ class DistinctiveRing(ApiModel):
                                ring_pattern=RingPattern.normal)
 
 
+class CQRoutingType(str, Enum):
+    """
+    Call routing type to use to dispatch calls to agents.
+    """
+
+    #: Default routing type which directly uses the routing policy to dispatch calls to the agents.
+    priority_based = 'PRIORITY_BASED'
+    #: This option uses skill level as the criteria to route calls to agents. When there are more than one agent with
+    #: same skill level, the selected routing policy helps dispatching the calls to the agents.
+    skill_based = 'SKILL_BASED'
+
+
 class CallQueueCallPolicies(ApiModel):
     """
     Policy controlling how calls are routed to agents.
     """
+    #: Call routing type to use to dispatch calls to agents.
+    routing_type: Optional[CQRoutingType]
     #: Call routing policy to use to dispatch calls to agents.
     policy: Optional[Policy]
     #: Settings for when the call into the call queue is not answered.
@@ -82,13 +97,15 @@ class CallQueueCallPolicies(ApiModel):
         """
         Default CallPolicies
         """
-        return CallQueueCallPolicies(policy=Policy.circular,
+        return CallQueueCallPolicies(routing_type=CQRoutingType.priority_based,
+                                     policy=Policy.circular,
                                      call_bounce=CallBounce.default(),
                                      distinctive_ring=DistinctiveRing.default())
 
     @staticmethod
     def simple() -> 'CallQueueCallPolicies':
-        return CallQueueCallPolicies(policy=Policy.circular,
+        return CallQueueCallPolicies(routing_type=CQRoutingType.priority_based,
+                                     policy=Policy.circular,
                                      call_bounce=CallBounce.default())
 
 
@@ -199,6 +216,15 @@ class MohMessageSetting(ApiModel):
                                  alternate_source=AudioSource(enabled=False))
 
 
+class ComfortMessageBypass(AudioSource):
+    """
+    Comfort message bypass settings
+    """
+    call_waiting_age_threshold: int = Field(default=30)
+    play_announcement_after_ringing: bool = Field(default=False)
+    ring_time_before_playing_announcement: int = Field(default=10)
+
+
 class QueueSettings(ApiModel):
     """
     Overall call queue settings.
@@ -212,11 +238,14 @@ class QueueSettings(ApiModel):
     reset_call_statistics_enabled: Optional[bool]
     #: Settings for incoming calls exceed queue_size.
     overflow: Optional[OverflowSetting]
-    #:
     wait_message: Optional[WaitMessageSetting]
     welcome_message: Optional[WelcomeMessageSetting]
     comfort_message: Optional[ComfortMessageSetting]
     moh_message: Optional[MohMessageSetting]
+    #: Comfort message bypass settings
+    comfort_message_bypass: Optional[ComfortMessageBypass]
+    #: whisper message to identify the queue for incoming calls.
+    whisper_message: Optional[AudioSource]
 
     @staticmethod
     def default(*, queue_size: int) -> 'QueueSettings':
@@ -238,7 +267,12 @@ class CallQueue(HGandCQ):
     call_policies: Optional[CallQueueCallPolicies]
     #: Overall call queue settings.
     queue_settings: Optional[QueueSettings]
+    #: whether ot not call waiting for agents is enabled
     allow_call_waiting_for_agents_enabled: Optional[bool]
+    #: Whether or not to allow agents to join or unjoin a queue
+    allow_agent_join_enabled: Optional[bool]
+    #: Allow queue phone number for outgoing calls
+    phone_number_for_outgoing_calls_enabled: Optional[bool]
 
     @staticmethod
     def exclude_update_or_create() -> dict:
@@ -266,7 +300,9 @@ class CallQueue(HGandCQ):
                extension: str = None,
                call_policies: CallQueueCallPolicies = None,
                queue_settings: QueueSettings = None,
-               allow_call_waiting_for_agents_enabled: bool = None) -> 'CallQueue':
+               allow_call_waiting_for_agents_enabled: bool = None,
+               allow_agent_join_enabled: bool = None,
+               phone_number_for_outgoing_calls_enabled: bool = None) -> 'CallQueue':
         """
         Get an instance which can be uses for a create() call. Allows simplified creation of default queue settings
         based on queue_size
@@ -284,6 +320,8 @@ class CallQueue(HGandCQ):
         :param call_policies:
         :param queue_settings:
         :param allow_call_waiting_for_agents_enabled:
+        :param allow_agent_join_enabled:
+        :param phone_number_for_outgoing_calls_enabled:
         :return:
         """
         if not (queue_size or queue_settings):
@@ -306,11 +344,13 @@ class CallQueueApi:
     """
     forwarding: ForwardingApi
     announcement: AnnouncementApi
+    policy: CQPolicyApi
 
     def __init__(self, session: RestSession):
         self._session = session
         self.forwarding = ForwardingApi(session=session, feature_selector=FeatureSelector.queues)
         self.announcement = AnnouncementApi(session=session)
+        self.policy = CQPolicyApi(session=session)
 
     def _endpoint(self, *, location_id: str = None, queue_id: str = None):
         """
@@ -425,6 +465,21 @@ class CallQueueApi:
         :type org_id: str
         :return: queue id
         :rtype: str
+
+        Example:
+
+            .. code-block:: python
+
+                settings = CallQueue(name=new_name,
+                                     extension=extension,
+                                     call_policies=CallQueueCallPolicies.default(),
+                                     queue_settings=QueueSettings.default(queue_size=10),
+                                     agents=[Agent(agent_id=user.person_id) for user in members])
+
+                # create new queue
+                queue_id = api.telephony.callqueue.create(location_id=target_location.location_id,
+                                                          settings=settings)
+
         """
         params = org_id and {'orgId': org_id} or {}
         cq_data = settings.create_or_update()
@@ -502,6 +557,14 @@ class CallQueueApi:
         Updating a call queue requires a full administrator auth token with a scope
         of spark-admin:telephony_config_write.
 
+        :param location_id: Location in which this call queue exists.
+        :type location_id: str
+        :param queue_id: Update setting for the call queue with the matching ID.
+        :type queue_id: str
+        :param update: updates
+        :type update: :class:`CallQueue`
+        :param org_id: Update call queue settings from this organization.
+
         Examples:
 
         .. code-block::
@@ -543,13 +606,6 @@ class CallQueueApi:
                       queue_id=...,
                       update=details)
 
-        :param location_id: Location in which this call queue exists.
-        :type location_id: str
-        :param queue_id: Update setting for the call queue with the matching ID.
-        :type queue_id: str
-        :param update: updates
-        :type update: :class:`CallQueue`
-        :param org_id: Update call queue settings from this organization.
         """
         params = org_id and {'orgId': org_id} or None
         cq_data = update.create_or_update()

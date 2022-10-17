@@ -6,6 +6,7 @@ from itertools import chain
 from json import dumps, loads
 from random import choice
 from typing import ClassVar
+from unittest import skip
 
 from randomlocation import RandomLocation, NpaInfo, Address
 
@@ -271,6 +272,22 @@ class TestUpdate(TestCaseWithLog):
                                for loc in targets])
 
 
+@skip('Not an actual test')
+class ClearAddress2(TestCaseWithLog):
+    @async_test
+    async def test_clear_address2(self):
+        targets = [loc for loc in await self.async_api.locations.list()
+                   if loc.address.address2 is not None]
+
+        async def clear_address2(location: Location):
+            address = location.address.copy(deep=True)
+            address.address2 = None
+            await self.async_api.locations.update(location_id=location.location_id,
+                                                  settings=Location(address=address))
+
+        await asyncio.gather(*[clear_address2(loc) for loc in targets])
+
+
 @dataclass(init=False)
 class TestUpdateTelephony(TestCaseWithLog):
     """
@@ -280,6 +297,9 @@ class TestUpdateTelephony(TestCaseWithLog):
 
     @asynccontextmanager
     async def target_location(self) -> TelephonyLocation:
+        """
+        Get a target location for tests
+        """
         if self.locations is None:
             with self.no_log():
                 locations = await self.async_api.locations.list()
@@ -420,3 +440,18 @@ class TestUpdateTelephony(TestCaseWithLog):
             expected = target.copy(deep=True)
             expected.calling_line_id.name = name
             await self.update_and_verify(target=target, update=update, expected=expected)
+
+    @async_test
+    async def test_007_set_pstn(self):
+        """
+        Create a new location and try to set PSTN choice on that location once
+        """
+        # TODO: implement test
+
+    @async_test
+    async def test_008_change_pstn(self):
+        """
+        create a test location with some trunk, then set the PSTN choice to that trunk and finally try to change the
+        PSTN choice to a different trunk
+        """
+        # TODO: implement test

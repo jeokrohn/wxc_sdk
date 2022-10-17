@@ -7,6 +7,7 @@
 # TODO: when creating an extension only user in CH the user get an ESN work number. This is not the case if the user
     # is created using the people APi. Question: how can one create an extension only WxC user using the API so that
     # the user gets a WSN work number
+# TODO: validate workspace operations
 
 
 

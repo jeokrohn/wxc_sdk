@@ -46,7 +46,7 @@ class TestValidateExtensions(TestCaseWithLog):
         to_validate = [next(new_extensions) for _ in range(20)]
         result = at.validate_extensions(extensions=to_validate)
         print(result)
-        self.assertEqual(ValidateExtensionResponseStatus.ok, result.status)
+        self.assertEqual(ValidationStatus.ok, result.status)
 
     def test_002_duplicate_extensions(self):
         at = self.api.telephony
@@ -58,7 +58,7 @@ class TestValidateExtensions(TestCaseWithLog):
         to_validate.extend(random.sample(list(extensions), 5))
         result = at.validate_extensions(extensions=to_validate)
         print(result)
-        self.assertEqual(ValidateExtensionResponseStatus.ok, result.status)
+        self.assertEqual(ValidationStatus.ok, result.status)
 
     def test_002_duplicate_in_list(self):
         at = self.api.telephony
@@ -69,7 +69,7 @@ class TestValidateExtensions(TestCaseWithLog):
         to_validate = [next(new_extensions)] * 3
         result = at.validate_extensions(extensions=to_validate)
         print(result)
-        self.assertEqual(ValidateExtensionResponseStatus.errors, result.status)
+        self.assertEqual(ValidationStatus.errors, result.status)
         self.assertTrue(result.extension_status)
         self.assertEqual(len(to_validate), len(result.extension_status))
         for i in range(1, 3):
@@ -101,7 +101,7 @@ class TestValidatePhoneNumbers(TestCaseWithLog):
         """
         number = self.available
         result = self.api.telephony.validate_phone_numbers(phone_numbers=[number])
-        self.assertEqual(ValidateExtensionResponseStatus.ok, result.status)
+        self.assertEqual(ValidationStatus.ok, result.status)
         self.assertTrue(result.ok)
         self.assertEqual(1, len(result.phone_numbers))
         self.assertEqual([ValidatePhoneNumberStatus(phone_number=number,
@@ -116,7 +116,7 @@ class TestValidatePhoneNumbers(TestCaseWithLog):
         number = self.target.main_number
         result = self.api.telephony.validate_phone_numbers(phone_numbers=[number])
         self.assertEqual(ValidatePhoneNumbersResponse(
-            status=ValidateExtensionResponseStatus.errors,
+            status=ValidationStatus.errors,
             phone_numbers=[ValidatePhoneNumberStatus(
                 phone_number=number,
                 state=ValidatePhoneNumberStatusState.duplicate,
@@ -130,7 +130,7 @@ class TestValidatePhoneNumbers(TestCaseWithLog):
         """
         result = self.api.telephony.validate_phone_numbers(phone_numbers=[self.available, self.available])
         self.assertEqual(ValidatePhoneNumbersResponse(
-            status=ValidateExtensionResponseStatus.errors,
+            status=ValidationStatus.errors,
             phone_numbers=[
                 ValidatePhoneNumberStatus(phone_number=self.available,
                                           state=ValidatePhoneNumberStatusState.available,
@@ -149,7 +149,7 @@ class TestValidatePhoneNumbers(TestCaseWithLog):
         """
         result = self.api.telephony.validate_phone_numbers(phone_numbers=['+1800'])
         self.assertEqual(ValidatePhoneNumbersResponse(
-            status=ValidateExtensionResponseStatus.errors,
+            status=ValidationStatus.errors,
             phone_numbers=[ValidatePhoneNumberStatus(
                 phone_number='+1800',
                 state=ValidatePhoneNumberStatusState.invalid,
@@ -164,7 +164,7 @@ class TestValidatePhoneNumbers(TestCaseWithLog):
         number = '+17207783411'
         result = self.api.telephony.validate_phone_numbers(phone_numbers=[number])
         self.assertEqual(ValidatePhoneNumbersResponse(
-            status=ValidateExtensionResponseStatus.errors,
+            status=ValidationStatus.errors,
             phone_numbers=[ValidatePhoneNumberStatus(
                 phone_number=number,
                 state=ValidatePhoneNumberStatusState.unavailable,

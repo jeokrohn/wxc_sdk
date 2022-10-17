@@ -83,8 +83,7 @@ class WorkspaceLocationFloorApi(ApiChild, base='workspaceLocations'):
         :rtype: WorkspaceLocationFloor
         """
         body = {to_camel(p): v for p, v in locals().items()
-                if p not in {'self', 'location_id', 'org_id'}
-                and v is not None}
+                if p not in {'self', 'location_id', 'org_id'} and v is not None}
         url = self.ep(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
         data = self.post(url=url, params=params, json=body)

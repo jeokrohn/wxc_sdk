@@ -10,7 +10,7 @@ from .numbers import LocationNumbersApi
 from .vm import LocationVoicemailSettingsApi
 from ...api_child import ApiChild
 from ...base import ApiModel
-from ...common import ValidateExtensionsResponse, RouteType
+from ...common import ValidateExtensionsResponse, RouteType, DeviceCustomization
 from ...rest import RestSession
 
 __all__ = ['CallingLineId', 'PSTNConnection', 'TelephonyLocation', 'TelephonyLocationApi']
@@ -44,7 +44,6 @@ class TelephonyLocation(ApiModel):
     name: Optional[str]
     #: Location's phone announcement language.
     announcement_language: Optional[str]
-    default_location: Optional[bool]
     #: Location calling line information.
     calling_line_id: Optional[CallingLineId]
     #: Connection details are only returned for local PSTN types of TRUNK or ROUTE_GROUP.
@@ -164,6 +163,17 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         Updating a location in your organization requires an administrator auth token with
         the spark-admin:telephony_config_write scope.
 
+        Example :
+
+            .. code-block:: python
+
+                api.telephony.location.update(location_id=location_id,
+                                              settings=TelephonyLocation(
+                                                  calling_line_id=CallingLineId(
+                                                      phone_number=tn),
+                                                  routing_prefix=routing_prefix,
+                                                  outside_dial_digit='9'))
+
         :param location_id: Updating Webex Calling location attributes for this location.
         :type location_id: str
         :param settings: settings to update
@@ -210,3 +220,23 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
             body['serviceEnabled'] = service_enabled
         url = self.session.ep(f'{location_id}/actions/modifyAnnouncementLanguage/invoke')
         self.put(url, json=body, params=params)
+
+    def device_settings(self, location_id: str, org_id: str = None) -> DeviceCustomization:
+        """
+        Get device override settings for a location.
+
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param location_id: Unique identifier for the location
+        :type location_id: str
+        :param org_id: Settings on the device in this organization
+        :type org_id: str
+        :return: device customization response
+        :rtype: DeviceCustomization
+        """
+        # TODO: reactivate/test as soon as jobs API starts to be supported
+        raise NotImplementedError
+        params = org_id and {'orgId': org_id} or None
+        url = self.ep(f'{location_id}/devices/settings')
+        data = self.get(url=url, params=params)
+        return DeviceCustomization.parse_obj(data)

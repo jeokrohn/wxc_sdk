@@ -8,9 +8,9 @@ import datetime
 import random
 import re
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from itertools import chain
-from typing import Optional, ClassVar
+from typing import ClassVar
 
 from wxc_sdk.all_types import *
 from .base import TestWithLocations

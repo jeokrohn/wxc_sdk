@@ -29,6 +29,18 @@ The second column of the table has a link to the documentation of the method.
    * - api.devices.modify_device_tags
         Modify Device Tags
      - :meth:`~wxc_sdk.devices.DevicesApi.modify_device_tags`
+   * - api.devices.settings_jobs.change
+        
+     - :meth:`~wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.change`
+   * - api.devices.settings_jobs.get_status
+        Get change device settings job status
+     - :meth:`~wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.get_status`
+   * - api.devices.settings_jobs.job_errors
+        List change device settings job errors
+     - :meth:`~wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.job_errors`
+   * - api.devices.settings_jobs.list
+        List change device settings jobs
+     - :meth:`~wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.list`
    * - api.groups.create
         Create a new group using the provided settings
      - :meth:`~wxc_sdk.groups.GroupsApi.create`
@@ -95,9 +107,24 @@ The second column of the table has a link to the documentation of the method.
    * - api.people.update
         Update details for a person, by ID
      - :meth:`~wxc_sdk.people.PeopleApi.update`
+   * - api.person_settings.devices
+        Get all devices for a person
+     - :meth:`~wxc_sdk.person_settings.PersonSettingsApi.devices`
    * - api.person_settings.reset_vm_pin
         Reset Voicemail PIN
      - :meth:`~wxc_sdk.person_settings.PersonSettingsApi.reset_vm_pin`
+   * - api.person_settings.agent_caller_id.available_queues
+        Retrieve the list of the person's available call queues and the associated Caller ID information
+     - :meth:`~wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.available_queues`
+   * - api.person_settings.agent_caller_id.ep
+        :meta private:
+     - :meth:`~wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.ep`
+   * - api.person_settings.agent_caller_id.read
+        Retrieve a call queue agent's Caller ID information
+     - :meth:`~wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.read`
+   * - api.person_settings.agent_caller_id.update
+        Modify a call queue agent's Caller ID information
+     - :meth:`~wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.update`
    * - api.person_settings.appservices.configure
         Modify a Person's Application Services Settings
      - :meth:`~wxc_sdk.person_settings.appservices.AppServicesApi.configure`
@@ -251,6 +278,9 @@ The second column of the table has a link to the documentation of the method.
    * - api.person_settings.voicemail.read
         Read Voicemail Settings for a Person
      - :meth:`~wxc_sdk.person_settings.voicemail.VoicemailApi.read`
+   * - api.telephony.device_settings
+        Get device override settings for an organization
+     - :meth:`~wxc_sdk.telephony.TelephonyApi.device_settings`
    * - api.telephony.phone_number_details
         get summary (counts) of phone numbers
      - :meth:`~wxc_sdk.telephony.TelephonyApi.phone_number_details`
@@ -260,6 +290,9 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.route_choices
         List all Routes for the organization
      - :meth:`~wxc_sdk.telephony.TelephonyApi.route_choices`
+   * - api.telephony.supported_devices
+        Gets the list of supported devices for an organization location
+     - :meth:`~wxc_sdk.telephony.TelephonyApi.supported_devices`
    * - api.telephony.test_call_routing
         Validates that an incoming call can be routed
      - :meth:`~wxc_sdk.telephony.TelephonyApi.test_call_routing`
@@ -401,6 +434,30 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.calls.transmit_dtmf
         Transmit DTMF digits to a call
      - :meth:`~wxc_sdk.telephony.calls.CallsApi.transmit_dtmf`
+   * - api.telephony.devices.apply_changes
+        Apply Changes for a specific device
+     - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.apply_changes`
+   * - api.telephony.devices.available_members
+        Search members that can be assigned to the device
+     - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.available_members`
+   * - api.telephony.devices.dect_devices
+        Read the DECT device type list
+     - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.dect_devices`
+   * - api.telephony.devices.device_settings
+        Get override settings for a device
+     - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.device_settings`
+   * - api.telephony.devices.members
+        Get Device Members
+     - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.members`
+   * - api.telephony.devices.update_device_settings
+        Modify override settings for a device
+     - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.update_device_settings`
+   * - api.telephony.devices.update_members
+        Modify member details on the device
+     - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.update_members`
+   * - api.telephony.devices.validate_macs
+        Validate a list of MAC addresses
+     - :meth:`~wxc_sdk.telephony.devices.TelephonyDevicesApi.validate_macs`
    * - api.telephony.huntgroup.by_name
         Get hunt group info by name
      - :meth:`~wxc_sdk.telephony.huntgroup.HuntGroupApi.by_name`
@@ -419,12 +476,27 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.huntgroup.update
         Update a Hunt Group
      - :meth:`~wxc_sdk.telephony.huntgroup.HuntGroupApi.update`
+   * - api.telephony.jobs.device_settings.change
+        
+     - :meth:`~wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.change`
+   * - api.telephony.jobs.device_settings.get_status
+        Get change device settings job status
+     - :meth:`~wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.get_status`
+   * - api.telephony.jobs.device_settings.job_errors
+        List change device settings job errors
+     - :meth:`~wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.job_errors`
+   * - api.telephony.jobs.device_settings.list
+        List change device settings jobs
+     - :meth:`~wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.list`
    * - api.telephony.location.change_announcement_language
         Change Announcement Language
      - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.change_announcement_language`
    * - api.telephony.location.details
         Shows Webex Calling details for a location, by ID
      - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.details`
+   * - api.telephony.location.device_settings
+        Get device override settings for a location
+     - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.device_settings`
    * - api.telephony.location.generate_password
         Generates an example password using the effective password settings for the location
      - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.generate_password`
@@ -794,12 +866,12 @@ The second column of the table has a link to the documentation of the method.
    * - api.workspace_settings.monitoring.read
         Retrieve a Person's Monitoring Settings
      - :meth:`~wxc_sdk.person_settings.monitoring.MonitoringApi.read`
+   * - api.workspace_settings.numbers.ep
+        :meta private:
+     - :meth:`~wxc_sdk.workspace_settings.numbers.WorkspaceNumbersApi.ep`
    * - api.workspace_settings.numbers.read
-        Get a person's phone numbers including alternate numbers
-     - :meth:`~wxc_sdk.person_settings.numbers.NumbersApi.read`
-   * - api.workspace_settings.numbers.update
-        Assign or unassign alternate phone numbers to a person
-     - :meth:`~wxc_sdk.person_settings.numbers.NumbersApi.update`
+        List the PSTN phone numbers associated with a specific workspace, by ID, within the organization
+     - :meth:`~wxc_sdk.workspace_settings.numbers.WorkspaceNumbersApi.read`
    * - api.workspace_settings.permissions_in.configure
         Configure a Person's Barge In Settings
      - :meth:`~wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.configure`

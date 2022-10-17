@@ -162,7 +162,7 @@ def main():
                                  name_getter=lambda w: w.display_name))
         print(f'Deleting {len(workspaces)} workspaces')
         if not DRY_RUN:
-            list(pool.map(lambda ws:api.workspaces.delete_workspace(workspace_id=ws.workspace_id),
+            list(pool.map(lambda ws: api.workspaces.delete_workspace(workspace_id=ws.workspace_id),
                           workspaces))
 
         # voicemail groups

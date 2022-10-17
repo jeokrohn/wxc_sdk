@@ -111,6 +111,7 @@ class Workspace(ApiModel):
     calendar: Optional[Calendar]
     #: Notes associated to the workspace.
     notes: Optional[str]
+    hotdesking_enabled: Optional[bool]
 
     @validator('calling', pre=True)
     def validate_calling(cls, value):

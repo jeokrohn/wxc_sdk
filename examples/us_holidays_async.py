@@ -201,8 +201,6 @@ if __name__ == '__main__':
                             if location.address.country == 'US']
 
             # create national holiday schedule for given year(s) and locations
-            start_year = 2022
-            last_year = 2024
             if USE_TASKS:
                 await asyncio.gather(*[observe_national_holidays(api=wx_api, year=year, locations=us_locations)
                                        for year in range(FIRST_YEAR, LAST_YEAR + 1)])
