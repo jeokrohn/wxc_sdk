@@ -204,6 +204,13 @@ def main():
                     phone_numbers=v[1]),
                 batches))
 
+        # dial plans
+        dial_plans = list(filter(list(api.telephony.prem_pstn.dial_plan.list())))
+        print(f'Deleting {len(dial_plans)} dialplans')
+        if not DRY_RUN:
+            list(pool.map(lambda dp: api.telephony.prem_pstn.dial_plan.delete_dial_plan(dial_plan_id=dp.dial_plan_id),
+                          dial_plans))
+
 
 if __name__ == '__main__':
     main()
