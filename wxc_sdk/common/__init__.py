@@ -12,7 +12,7 @@ from ..base import webex_id_to_uuid
 
 __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting', 'UserNumber', 'PersonPlaceAgent',
            'MonitoredMember', 'CallParkExtension', 'AuthCode', 'RouteType', 'DialPatternValidate', 'DialPatternStatus',
-           'RouteIdentity', 'Customer', 'IdAndName', 'PatternAction', 'NumberState', 'ValidationStatus',
+           'RouteIdentity', 'Customer', 'IdOnly', 'IdAndName', 'PatternAction', 'NumberState', 'ValidationStatus',
            'ValidateExtensionStatusState', 'ValidateExtensionStatus', 'ValidateExtensionsResponse',
            'ValidatePhoneNumberStatusState', 'ValidatePhoneNumberStatus', 'ValidatePhoneNumbersResponse', 'StorageType',
            'VoicemailMessageStorage', 'VoicemailEnabled', 'VoicemailNotifications', 'VoicemailFax',
@@ -209,8 +209,11 @@ class Customer(ApiModel):
     name: str
 
 
-class IdAndName(ApiModel):
+class IdOnly(ApiModel):
     id: str
+
+
+class IdAndName(IdOnly):
     name: str
 
 

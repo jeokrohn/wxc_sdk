@@ -3,7 +3,7 @@ from wxc_sdk.base import ApiModel, ApiModelWithErrors, CodeAndReason, StrOrDict,
 from wxc_sdk.common import AcdCustomization, AlternateNumber, AnnAudioFile, AtaCustomization, AtaDtmfMethod,\
     AtaDtmfMode, AudioCodecPriority, AuthCode, Background, BackgroundSelection, BacklightTimer, CallParkExtension,\
     CommonDeviceCustomization, Customer, DeviceCustomization, DeviceCustomizations, DialPatternStatus,\
-    DialPatternValidate, DisplayCallqueueAgentSoftkey, DisplayNameSelection, Greeting, IdAndName,\
+    DialPatternValidate, DisplayCallqueueAgentSoftkey, DisplayNameSelection, Greeting, IdAndName, IdOnly,\
     LineKeyLabelSelection, LineKeyLedPattern, LoggingLevel, MediaFileType, MonitoredMember, MppCustomization,\
     NumberState, PatternAction, PersonPlaceAgent, PhoneLanguage, PrimaryOrShared, RingPattern, RouteIdentity,\
     RouteType, ScreenTimeout, StorageType, UserBase, UserNumber, UserType, ValidateExtensionStatus,\
@@ -95,7 +95,7 @@ from wxc_sdk.telephony.voiceportal import ExpirePasscode, FailedAttempts, Passco
 from wxc_sdk.tokens import Tokens
 from wxc_sdk.webhook import WebHook, WebHookCreate, WebHookEvent, WebHookResource, WebHookStatus
 from wxc_sdk.workspace_locations import WorkspaceLocation, WorkspaceLocationFloor
-from wxc_sdk.workspace_settings.numbers import WorkSpaceNumber
+from wxc_sdk.workspace_settings.numbers import WorkSpaceNumbers
 from wxc_sdk.workspaces import Calendar, CalendarType, CallingType, WorkSpaceType, Workspace, WorkspaceEmail
 
 __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'Agent', 'AgentQueue', 'AlternateNumber',
@@ -123,7 +123,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'Agent', 'Age
            'FeatureSelector', 'ForcedForward', 'ForwardCallsTo', 'ForwardToSelection', 'ForwardingRule',
            'ForwardingRuleDetails', 'ForwardingSetting', 'Greeting', 'Group', 'GroupMember', 'HGCallPolicies',
            'HGandCQ', 'HistoryType', 'HolidayService', 'HostedFeatureDestination', 'HostedUserDestination',
-           'HuntGroup', 'IdAndName', 'IncomingPermissions', 'InterceptAnnouncements', 'InterceptNumber',
+           'HuntGroup', 'IdAndName', 'IdOnly', 'IncomingPermissions', 'InterceptAnnouncements', 'InterceptNumber',
            'InterceptSetting', 'InterceptSettingIncoming', 'InterceptSettingOutgoing', 'InterceptTypeIncoming',
            'InterceptTypeOutgoing', 'InternalDialing', 'JobError', 'JobErrorItem', 'JobErrorMessage',
            'JobExecutionStatus', 'License', 'LineKeyLabelSelection', 'LineKeyLedPattern', 'Location',
@@ -161,5 +161,5 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'Agent', 'Age
            'VoicemailGroup', 'VoicemailGroupDetail', 'VoicemailMessageStorage', 'VoicemailNotifications',
            'VoicemailSettings', 'VoicemailTransferToNumber', 'WaitMessageSetting', 'WaitMode', 'WebHook',
            'WebHookCreate', 'WebHookEvent', 'WebHookResource', 'WebHookStatus', 'WelcomeMessageSetting',
-           'WifiNetwork', 'WorkSpaceNumber', 'WorkSpaceType', 'Workspace', 'WorkspaceEmail', 'WorkspaceLocation',
+           'WifiNetwork', 'WorkSpaceNumbers', 'WorkSpaceType', 'Workspace', 'WorkspaceEmail', 'WorkspaceLocation',
            'WorkspaceLocationFloor', '_Helper', 'plus1', 'to_camel', 'webex_id_to_uuid']

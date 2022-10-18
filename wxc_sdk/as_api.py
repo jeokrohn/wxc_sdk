@@ -8997,7 +8997,7 @@ class AsWorkspaceNumbersApi(AsApiChild, base='workspaces'):
         path = path and '/path' or ''
         return super().ep(path=f'{workspace_id}/features/numbers/{path}')
 
-    async def read(self, workspace_id: str, org_id: str = None) -> list[WorkSpaceNumber]:
+    async def read(self, workspace_id: str, org_id: str = None) -> WorkSpaceNumbers:
         """
         List the PSTN phone numbers associated with a specific workspace, by ID, within the organization. Also shows
         the location and Organization associated with the workspace.
@@ -9009,13 +9009,13 @@ class AsWorkspaceNumbersApi(AsApiChild, base='workspaces'):
         :type workspace_id: str
         :param org_id: List numbers for a workspace within this organization.
         :type org_id: str
-        :return: Array of numbers (primary/alternate).
-        :rtype: list[WorkSpaceNumber]
+        :return: Workspace numbers
+        :rtype: WorkSpaceNumbers
         """
         params = org_id and {'org_id': org_id} or None
         url = self.ep(workspace_id=workspace_id)
         data = await self.get(url=url, params=params)
-        return parse_obj_as(list[WorkSpaceNumber], data['phoneNumbers'])
+        return parse_obj_as(WorkSpaceNumbers, data)
 
 
 @dataclass(init=False)
