@@ -73,7 +73,7 @@ class CallingPermissions(ApiModel):
     local: Optional[CallTypePermission]
     toll_free: Optional[CallTypePermission]
     toll: Optional[CallTypePermission]
-    # national: Optional[CallTypePermission]
+    national: Optional[CallTypePermission]
     international: Optional[CallTypePermission]
     operator_assisted: Optional[CallTypePermission]
     chargeable_directory_assisted: Optional[CallTypePermission]

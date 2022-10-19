@@ -1,6 +1,10 @@
 Release history
 ===============
 
+1.7.2
+-----
+- fix: call type national consistently fixed
+
 1.7.1
 -----
 - fix: accidentally removed support for call type NATIONAL; re-added
