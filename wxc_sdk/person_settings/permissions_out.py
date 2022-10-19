@@ -26,7 +26,7 @@ class OutgoingPermissionCallType(str, Enum):
     local = 'LOCAL'
     toll_free = 'TOLL_FREE'
     toll = 'TOLL'
-    # national = 'NATIONAL'
+    national = 'NATIONAL'
     international = 'INTERNATIONAL'
     operator_assisted = 'OPERATOR_ASSISTED'
     chargeable_directory_assisted = 'CHARGEABLE_DIRECTORY_ASSISTED'
@@ -144,9 +144,8 @@ class OutgoingPermissions(ApiModel):
         r = {}
         for entry in v:
             call_type = entry.pop('callType')
-            if call_type in {'CASUAL', 'URL_DIALING', 'UNKNOWN', 'NATIONAL'}:
+            if call_type in {'CASUAL', 'URL_DIALING', 'UNKNOWN'}:
                 # skip permissions that are not supported any more (see WXCAPIBULK-102)
-                # TODO: remove workaround after WXCAPIBULK-206 got fixed
                 continue
             r[call_type.lower()] = entry
         return r
