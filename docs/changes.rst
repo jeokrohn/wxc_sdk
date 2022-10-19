@@ -1,6 +1,13 @@
 Release history
 ===============
 
+1.7.1
+-----
+- fix: accidentally removed support for call type NATIONAL; re-added
+- fix: listing workspace numbers only makes sense for workspaces with calling type "webex"; WXCAPIBULK-136
+- fix: corrected response type for :meth:`wxc_sdk.workspace_settings.numbers.WorkspaceNumbersApi.read`
+- feat: cleanup.py also deletes test dial plans
+
 1.7.0
 -----
 - feat: workspace locations (and floors) API, :attr:`wxc_sdk.WebexSimpleApi.workspace_locations`
