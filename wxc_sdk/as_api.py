@@ -1233,6 +1233,12 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
 
     def __init__(self, *, session: AsRestSession,
                  workspaces: bool = False, locations: bool = False):
+        # set parameters to get the correct URL templates
+        #
+        #               selector                    feature_prefix  url template
+        # workspaces    workspaces                  /features/      workspaces/{person_id}/features/{feature}{path}
+        # locations     telephony/config/locations  /               telephony/config/locations/{person_id}{path}
+        # person        people                      /features       people/{person_id}/features/{feature}{path}
         self.feature_prefix = '/features/'
         if workspaces:
             self.selector = 'workspaces'
@@ -1260,6 +1266,12 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
         :rtype: str
         """
         path = path and f'/{path}' or ''
+        # url templates:
+        #
+        #               selector                    feature_prefix  url template
+        # workspaces    workspaces                  /features/      workspaces/{person_id}/features/{feature}{path}
+        # locations     telephony/config/locations  /               telephony/config/locations/{person_id}{path}
+        # person        people                      /features       people/{person_id}/features/{feature}{path}
         return self.session.ep(f'{self.selector}/{person_id}{self.feature_prefix}{self.feature}{path}')
 
 
@@ -2222,7 +2234,7 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
 
     also used for workspace and location outgoing permissions
     """
-    #: Only available for workspaces
+    #: Only available for workspaces and locations
     transfer_numbers: AsTransferNumbersApi
     #: Only available for workspaces
     auth_codes: AsAuthCodesApi
@@ -2266,7 +2278,8 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return OutgoingPermissions.parse_obj(await self.get(ep, params=params))
 
-    async def configure(self, person_id: str, settings: OutgoingPermissions, org_id: str = None):
+    async def configure(self, person_id: str, settings: OutgoingPermissions, drop_call_types: set[str] = None,
+                  org_id: str = None):
         """
         Configure a Person's Outgoing Calling Permissions Settings
 
@@ -2280,12 +2293,15 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
         :type person_id: str
         :param settings: new setting to be applied
         :type settings: :class:`OutgoingPermissions`
+        :param drop_call_types: set of call type names to be excluded from updates. Default is the set of call_types
+            known to be not supported for updates
+        :type drop_call_types: set[str]
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        await self.put(ep, params=params, data=settings.json())
+        await self.put(ep, params=params, data=settings.json(drop_call_types=drop_call_types))
 
 
 class AsPersonForwardingApi(AsPersonSettingsApiChild):
