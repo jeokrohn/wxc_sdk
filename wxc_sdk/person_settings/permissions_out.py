@@ -1,12 +1,17 @@
 """
-Person outgoing permissions API
+Outgoing permissions API and datatypes
+
+API is used in:
+* person settings
+* location settings
+* workspace settings
 """
 import json
 from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, Union
 
-from pydantic import validator, parse_obj_as
+from pydantic import validator, parse_obj_as, root_validator
 
 from .common import PersonSettingsApiChild
 from ..base import ApiModel
@@ -34,9 +39,6 @@ class OutgoingPermissionCallType(str, Enum):
     special_services_ii = 'SPECIAL_SERVICES_II'
     premium_services_i = 'PREMIUM_SERVICES_I'
     premium_services_ii = 'PREMIUM_SERVICES_II'
-    # casual = 'CASUAL'
-    # url_dialing = 'URL_DIALING'
-    # unknown = 'UNKNOWN'
 
 
 class Action(str, Enum):
@@ -69,6 +71,25 @@ class CallingPermissions(ApiModel):
     """
     Calling permissions for all call types
     """
+
+    class Config:
+        # allow undefined attributes (new call types)
+        extra = 'allow'
+        ...
+
+    @root_validator
+    def rv(cls, v):
+        """
+        :meta private:
+
+        Make sure that values for unknown call types are also parsed into CallTypePermission instances
+        """
+        for call_type in v:
+            if call_type not in cls.__fields__:
+                # try to parse unknown call type into CallTypePermission instance
+                v[call_type] = CallTypePermission.parse_obj(v[call_type])
+        return v
+
     internal_call: Optional[CallTypePermission]
     local: Optional[CallTypePermission]
     toll_free: Optional[CallTypePermission]
@@ -81,11 +102,8 @@ class CallingPermissions(ApiModel):
     special_services_ii: Optional[CallTypePermission]
     premium_services_i: Optional[CallTypePermission]
     premium_services_ii: Optional[CallTypePermission]
-    # casual: Optional[CallTypePermission]
-    # url_dialing: Optional[CallTypePermission]
-    # unknown: Optional[CallTypePermission]
 
-    def for_call_type(self, call_type: OutgoingPermissionCallType) -> CallTypePermission:
+    def for_call_type(self, call_type: OutgoingPermissionCallType) -> Optional[CallTypePermission]:
         """
         get call type setting for a specific call type
 
@@ -94,18 +112,24 @@ class CallingPermissions(ApiModel):
         :return: permissions
         :rtype: :class:`CallTypePermission`
         """
-        call_type_name = call_type.name
-        return self.__dict__[call_type_name]
+        try:
+            # if parameter is an actual Enum we want to use the name for attribute access
+            call_type = call_type.name
+        except AttributeError:
+            # ignore AttributeError; call_type most probably was a string already -> use lower case as attribute name
+            call_type = call_type.lower()
+        return self.__dict__.get(call_type, None)
 
     @staticmethod
     def allow_all() -> 'CallingPermissions':
         """
         most permissive permissions
 
-        :return: :class:`CallingPermissions`
+        :return: :class:`CallingPermissions` instance allowing all call types
+        :rtype: CallingPermissions
         """
-        init_dict = {call_type.name: CallTypePermission(action=Action.allow, transfer_enabled=True)
-                     for call_type in OutgoingPermissionCallType}
+        init_dict = {call_type: CallTypePermission(action=Action.allow, transfer_enabled=True)
+                     for call_type in CallingPermissions.__fields__}
         return CallingPermissions(**init_dict)
 
     @staticmethod
@@ -114,7 +138,9 @@ class CallingPermissions(ApiModel):
         default settings
 
         :return: :class:`CallingPermissions`
+        :rtype: CallingPermissions
         """
+        # allow all call types except for a few
         r = CallingPermissions.allow_all()
         for call_type in (OutgoingPermissionCallType.international, OutgoingPermissionCallType.premium_services_i,
                           OutgoingPermissionCallType.premium_services_ii):
@@ -136,33 +162,61 @@ class OutgoingPermissions(ApiModel):
     @validator('calling_permissions', pre=True)
     def transform_calling_permissions(cls, v):
         """
-        calling permissions are returned by the API as a list of triples. The validator transforms this to a dict
-        that can be deserialized to a :class:`CallingPermissions` instance
+        calling permissions are returned by the API as a list of triples:
+            "callingPermissions": [
+              {
+                "action": "ALLOW",
+                "transferEnabled": true,
+                "callType": "INTERNAL_CALL"
+              },
+              {
+                "action": "ALLOW",
+                "transferEnabled": true,
+                "callType": "LOCAL"
+              }, ...
+        The validator transforms this to a dict
+        that can be deserialized to a :class:`CallingPermissions` instance:
+            "callingPermissions": {
+                "internal_call": {
+                    "action": "ALLOW",
+                    "transferEnabled": true
+                },
+                "local": {
+                    "action": "ALLOW",
+                    "transferEnabled": true
+                }
+            }
 
         :meta private:
         """
+        if not isinstance(v, list):
+            return v
         r = {}
         for entry in v:
             call_type = entry.pop('callType')
-            if call_type in {'CASUAL', 'URL_DIALING', 'UNKNOWN'}:
-                # skip permissions that are not supported any more (see WXCAPIBULK-102)
-                continue
             r[call_type.lower()] = entry
         return r
 
-    def json(self, *args, exclude_none=True, by_alias=True, **kwargs) -> str:
+    def json(self, drop_call_types: set[str] = None) -> str:
         """
         :meta private:
+        calling permissions are converted back to a list of objects.
+        drop_call_types can be a set of call types to be excluded from callingPermissions
         """
-        # convert calling_permissions back to a list
-        j_data = json.loads(super().json(*args, exclude_none=exclude_none, by_alias=by_alias, **kwargs))
-        if j_data.get('callingPermissions'):
-            c_perms = []
-            for call_type, setting in j_data['callingPermissions'].items():
-                setting['callType'] = call_type.upper()
-                c_perms.append(setting)
-            j_data['callingPermissions'] = c_perms
-        return json.dumps(j_data)
+        if drop_call_types is None:
+            # default call types to be excluded from updates
+            drop_call_types = {'url_dialing', 'unknown', 'casual'}
+        data = self.dict(exclude={'calling_permissions'}, by_alias=True)
+        permissions = []
+        for call_type, call_type_permission in self.calling_permissions.__dict__.items():
+            call_type_permission: CallTypePermission
+            if not call_type_permission or (call_type in drop_call_types):
+                continue
+            ct_dict = call_type_permission.dict(by_alias=True)
+            ct_dict['callType'] = call_type.upper()
+            permissions.append(ct_dict)
+        data['callingPermissions'] = permissions
+        return json.dumps(data)
 
 
 class AutoTransferNumbers(ApiModel):
@@ -334,7 +388,7 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
 
     also used for workspace and location outgoing permissions
     """
-    #: Only available for workspaces
+    #: Only available for workspaces and locations
     transfer_numbers: TransferNumbersApi
     #: Only available for workspaces
     auth_codes: AuthCodesApi
@@ -378,7 +432,8 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return OutgoingPermissions.parse_obj(self.get(ep, params=params))
 
-    def configure(self, person_id: str, settings: OutgoingPermissions, org_id: str = None):
+    def configure(self, person_id: str, settings: OutgoingPermissions, drop_call_types: set[str] = None,
+                  org_id: str = None):
         """
         Configure a Person's Outgoing Calling Permissions Settings
 
@@ -392,9 +447,12 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
         :type person_id: str
         :param settings: new setting to be applied
         :type settings: :class:`OutgoingPermissions`
+        :param drop_call_types: set of call type names to be excluded from updates. Default is the set of call_types
+            known to be not supported for updates
+        :type drop_call_types: set[str]
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        self.put(ep, params=params, data=settings.json())
+        self.put(ep, params=params, data=settings.json(drop_call_types=drop_call_types))
