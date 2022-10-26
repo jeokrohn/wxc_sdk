@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 """
-Read API specs from YML file and print summary of endpoints
-
-usage: endpoint_summary.py [-h] [-f [OUTPUT_PATH]]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -f [OUTPUT_PATH], --file [OUTPUT_PATH]
-                        Write output to file. Default: endpoint_summary.txt
+Read API specs from YML file and print type summary
 """
 import argparse
 import os
@@ -16,9 +9,9 @@ from collections.abc import Iterable
 from contextlib import contextmanager
 from dataclasses import dataclass
 from functools import reduce
-from sys import stdout, stderr
+from sys import stdout
 
-from scraper import DocMethodDetails, MethodDetails
+from scraper import DocMethodDetails, MethodDetails, AttributeInfo
 
 
 @dataclass(init=False)
@@ -45,7 +38,7 @@ def main():
     default_output = f'{os.path.splitext(os.path.basename(__file__))[0]}.txt'
     default_input = 'read_api_spec.yml'
 
-    # specify file a file to write the endpoint summary to
+    # specify file a file to write the summary to
     parser.add_argument('-o', '--output', dest='output_path', action='store', required=False, type=str, nargs='?',
                         const=f'{default_output}', help=f'Write output to file. Default: {default_output}')
     parser.add_argument('input', action='store', type=str,
@@ -64,25 +57,17 @@ def main():
     # read API documentation details from file
     doc_details = DocMethodDetails.from_yml(args.input)
 
-    # group endpoints by key (common start of endpoint URL)
-    epg = EndPointGrouper(doc_details.methods())
-    summary: dict[str, list[MethodDetails]]
-    summary = reduce(lambda s, el: s[epg.key(el.documentation.endpoint)].append(el) or s,
-                     doc_details.methods(),
-                     defaultdict(list))
-
     with output_file() as output:
-        for prefix in sorted(summary):
-            print(f'{prefix.strip("/")}', file=output)
-            print('\n'.join(f'  {m.documentation.method:6} {m.documentation.endpoint} --- {m.documentation.doc}'
-                            for m in sorted(summary[prefix], key=lambda m: m.documentation.endpoint)),
-                  file=output)
+        attributes = list(doc_details.attributes())
+        print('\n'.join(f'{a.path} - {a.parameter.type}{f" ({a.parameter.type_spec})" if a.parameter.type_spec else ""}'
+                        for a in attributes), file=output)
 
-    rl_delete = next(m for m in doc_details.methods()
-                     if m.header == 'Delete a Route List')
-    if 'trunks' in rl_delete.documentation.endpoint:
-        # TODO: track resolution of WXCAPIBULK-219
-        print('Wrong endpoint URL for "Delete a Route List", WXCAPIBULK-219', file=stderr)
+        types_and_paths: dict[str, list[AttributeInfo]]
+        types_and_paths = reduce(lambda s, e: s[e.parameter.type].append(e) or s, attributes, defaultdict(list))
+        # regenerate with sorted keys
+        types_and_paths = {k: types_and_paths[k] for k in sorted(types_and_paths, key=lambda k: k.lower())}
+        print(file=output)
+        print('\n'.join(f'{k}: {len(types_and_paths[k])}' for k in types_and_paths), file=output)
 
 
 if __name__ == '__main__':

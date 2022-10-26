@@ -14,7 +14,8 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
-__all__ = ['MethodDoc', 'SectionDoc', 'Parameter', 'MethodDetails', 'DocMethodDetails', 'DevWebexComScraper']
+__all__ = ['MethodDoc', 'SectionDoc', 'AttributeInfo', 'Parameter', 'MethodDetails', 'DocMethodDetails',
+           'DevWebexComScraper']
 
 # menu titles we want to pull method details from
 from yaml import safe_load, safe_dump
@@ -74,6 +75,12 @@ class SectionDoc(BaseModel):
     methods: list[MethodDoc]
 
 
+@dataclass
+class AttributeInfo:
+    path: str
+    parameter: 'Parameter'
+
+
 class Parameter(BaseModel):
     name: str
     type: str
@@ -84,12 +91,24 @@ class Parameter(BaseModel):
     # parsed from params-type-object: child object
     param_object: Optional[list['Parameter']]
 
+    def attributes(self, *, path: str) -> Generator[AttributeInfo, None, None]:
+        yield AttributeInfo(parameter=self, path=f'{path}/{self.name}')
+        for p in self.param_attrs or list():
+            yield from p.attributes(path=f'{path}/{self.name}/attrs')
+        for p in self.param_object or list():
+            yield from p.attributes(path=f'{path}/{self.name}/object')
+
 
 class MethodDetails(BaseModel):
     header: str
     doc: str
     parameters_and_response: dict[str, list[Parameter]]
     documentation: MethodDoc
+
+    def attributes(self, *, path: str) -> Generator[AttributeInfo, None, None]:
+        for pr_key in self.parameters_and_response:
+            for p in self.parameters_and_response[pr_key]:
+                yield from p.attributes(path=f'{path}/{self.header}/{pr_key}')
 
 
 class DocMethodDetails(BaseModel):
@@ -115,6 +134,12 @@ class DocMethodDetails(BaseModel):
     def methods(self) -> Generator[MethodDetails, None, None]:
         for method_details in self.docs.values():
             yield from method_details
+
+    def attributes(self) -> Generator[AttributeInfo, None, None]:
+        for method_details_key in self.docs:
+            method_details = self.docs[method_details_key]
+            for md in method_details:
+                yield from md.attributes(path=f'{method_details_key}')
 
 
 @dataclass
