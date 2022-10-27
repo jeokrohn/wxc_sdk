@@ -2,7 +2,7 @@ import logging
 import sys
 from collections.abc import Generator, Iterable
 from dataclasses import dataclass
-from typing import Union, Optional
+from typing import Union, Optional, NamedTuple
 
 from bs4 import BeautifulSoup, ResultSet, Tag
 from pydantic import BaseModel, Field
@@ -13,18 +13,19 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-
-__all__ = ['MethodDoc', 'SectionDoc', 'AttributeInfo', 'Parameter', 'MethodDetails', 'DocMethodDetails',
-           'DevWebexComScraper']
-
-# menu titles we want to pull method details from
 from yaml import safe_load, safe_dump
 
+__all__ = ['MethodDoc', 'SectionDoc', 'AttributeInfo', 'Parameter', 'MethodDetails', 'DocMethodDetails',
+           'DevWebexComScraper', 'Credentials', 'SectionAndMethodDetails']
+
+# "Standard" menu titles we want to pull method details from
 TARGET_MENUS = {
     'Call Controls',
     'Locations',
     'Webex Calling Organization Settings',
     'Webex Calling Person Settings',
+    'Webex Calling Person Settings With Shared Line',
+    'Webex Calling Person Settings with Calling Behavior',
     'Webex Calling Voice Messaging',
     'Webex Calling Workspace Settings with Numbers'
 }
@@ -52,6 +53,11 @@ def div_repr(d) -> str:
     return f'<div{class_str}>'
 
 
+class Credentials(NamedTuple):
+    user: str
+    password: str
+
+
 class MethodDoc(BaseModel):
     #: HTTP method
     method: str
@@ -69,7 +75,7 @@ class SectionDoc(BaseModel):
 
     For example for Calling/Reference/Locations
     """
-    #: menu text at top of page
+    #: menu text from the menu at the left under Reference linking to the page with the list of methods
     menu_text: str
     #: list of methods parsed from the page
     methods: list[MethodDoc]
@@ -111,10 +117,23 @@ class MethodDetails(BaseModel):
                 yield from p.attributes(path=f'{path}/{self.header}/{pr_key}')
 
 
+class SectionAndMethodDetails(NamedTuple):
+    section: str
+    method_details: MethodDetails
+
+    def __lt__(self, other: 'SectionAndMethodDetails'):
+        return self.section < other.section or self.section == other.section and (
+                self.method_details.documentation.endpoint < other.method_details.documentation.endpoint or
+                self.method_details.documentation.endpoint == other.method_details.documentation.endpoint and
+                self.method_details.documentation.method < other.method_details.documentation.method)
+
+
 class DocMethodDetails(BaseModel):
     """
     Container for all information; interface to YML file
     """
+    info: Optional[str]
+    #: dictionary indexed by menu text with list of methods in that section
     docs: dict[str, list[MethodDetails]] = Field(default_factory=dict)
 
     @staticmethod
@@ -126,14 +145,18 @@ class DocMethodDetails(BaseModel):
         data = self.dict()
         if path:
             with open(path, mode='w') as f:
+                if self.info:
+                    line = '# ' + f'{self.info}' + '\n'
+                    f.write(line)
                 safe_dump(data, f)
             return None
         else:
             return safe_dump(data)
 
-    def methods(self) -> Generator[MethodDetails, None, None]:
-        for method_details in self.docs.values():
-            yield from method_details
+    def methods(self) -> Generator[SectionAndMethodDetails, None, None]:
+        for section, method_details in self.docs.items():
+            for m in method_details:
+                yield SectionAndMethodDetails(section=section, method_details=m)
 
     def attributes(self) -> Generator[AttributeInfo, None, None]:
         for method_details_key in self.docs:
@@ -141,15 +164,25 @@ class DocMethodDetails(BaseModel):
             for md in method_details:
                 yield from md.attributes(path=f'{method_details_key}')
 
+    def dict(self):
+        return super().dict(exclude={'info'})
+
 
 @dataclass
 class DevWebexComScraper:
     driver: ChromiumDriver
     logger: logging.Logger
+    credentials: Credentials
+    baseline: Optional[DocMethodDetails]
+    new_only: bool
 
-    def __init__(self):
+    def __init__(self, credentials: Credentials = None, baseline: DocMethodDetails = None,
+                 new_only: bool = True):
         self.driver = webdriver.Chrome()
         self.logger = logging.getLogger(f'{__name__}.{self.__class__.__name__}')
+        self.credentials = credentials
+        self.baseline = baseline
+        self.new_only = new_only
 
     def close(self):
         self.log('close()')
@@ -180,6 +213,37 @@ class DevWebexComScraper:
         """
         return next((element for element in find_in.find_elements(by=By.CLASS_NAME, value=class_name)
                      if element.text == text))
+
+    def login(self):
+        """
+        Log in
+        :return:
+        """
+        if not self.credentials:
+            return
+
+        # look for: <a href="/login" id="header-login-link"><span>Log in</span></a>
+        login = self.driver.find_element(by=By.ID, value='header-login-link')
+        login.click()
+
+        # enter email
+        email = self.driver.find_element(by=By.ID, value='IDToken1')
+        email.send_keys(self.credentials.user)
+
+        # wait for "Sign In" button
+        sign_in = WebDriverWait(driver=self.driver, timeout=10).until(
+            method=EC.element_to_be_clickable((By.ID, 'IDButton2')))
+        sign_in.click()
+        password = WebDriverWait(driver=self.driver, timeout=10).until(
+            method=EC.visibility_of_element_located((By.ID, 'IDToken2')))
+        password.send_keys(self.credentials.password)
+
+        # wait for "Sign In" button
+        sign_in = WebDriverWait(driver=self.driver, timeout=10).until(
+            method=EC.element_to_be_clickable((By.ID, 'Button1')))
+        sign_in.click()
+
+        return
 
     def methods_from_api_reference_container(self, container: BeautifulSoup,
                                              header: str) -> Generator[MethodDoc, None, None]:
@@ -300,8 +364,28 @@ class DevWebexComScraper:
             return _predicate
 
         for submenu in submenus:
-            if submenu.text not in TARGET_MENUS:
-                log(f'skipping')
+            # decide whether we need to work on the sub menu
+            submenu_text = submenu.text
+            ignore = False
+            if self.baseline:
+                if self.new_only:
+                    # only work on menus not present in the diff
+                    if submenu_text in self.baseline.docs:
+                        ignore = True
+                else:
+                    # skip if the baseline has the menu, but no methods. This is of the groups we want to ignore
+                    if (submenu_text in self.baseline.docs) and not self.baseline.docs[submenu_text]:
+                        ignore = True
+            else:
+                # .. skip all non-"standard" menus
+                if submenu.text not in TARGET_MENUS:
+                    ignore = True
+            if ignore:
+                # .. skip
+                log(f'skipping', level=logging.INFO)
+                # .. but yield an empty list, so that we at least have a marker for that section
+                yield SectionDoc(menu_text=submenu.text,
+                                 methods=list())
                 continue
 
             log(f'Extracting methods from "{submenu.text}" menu', level=logging.INFO)
@@ -313,8 +397,13 @@ class DevWebexComScraper:
             submenu.click()
 
             # after clicking on the submenu we need to wait for a new api reference container to show up
-            api_reference_container, header = WebDriverWait(driver=self.driver, timeout=10).until(
-                method=wait_for_new_api_reference_container())
+            try:
+                api_reference_container, header = WebDriverWait(driver=self.driver, timeout=10).until(
+                    method=wait_for_new_api_reference_container())
+            except TimeoutException:
+                api_reference_container = None
+                log('!!!!! Timeout waiting for documentation window to show up !!!!!', level=logging.ERROR)
+                continue
             api_reference_container: WebElement
             header: str
 
@@ -325,7 +414,7 @@ class DevWebexComScraper:
             yield SectionDoc(menu_text=submenu.text,
                              methods=list(self.methods_from_api_reference_container(
                                  container=soup,
-                                 header=header)))
+                                 header=submenu.text)))
             log('end')
         return
 
@@ -388,6 +477,9 @@ class DevWebexComScraper:
             log('accept cookies')
             accept_cookies.click()
 
+        if self.credentials:
+            self.login()
+
         log('looking for "Calling"')
         calling = self.by_class_and_text(find_in=self.driver,
                                          class_name='md-list-item__center',
@@ -397,7 +489,8 @@ class DevWebexComScraper:
 
         # after clicking on "Calling" an expanded nav group exists
         log('looking for expanded sidebar nav group')
-        calling_nav_group = self.driver.find_element(by=By.CLASS_NAME, value='md-sidebar-nav__group--expanded')
+        calling_nav_group = WebDriverWait(driver=self.driver, timeout=10).until(
+            method=EC.presence_of_element_located((By.CLASS_NAME, 'md-sidebar-nav__group--expanded')))
 
         # in that nav group we want to click on "Reference"
         log('looking for "Reference" in expanded sidebar group')

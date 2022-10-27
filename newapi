@@ -1,0 +1,1895 @@
+Script started on Thu Oct 27 11:26:53 2022
+/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/bin/python: Error while finding module specification for 'virtualenvwrapper.hook_loader' (ModuleNotFoundError: No module named 'virtualenvwrapper')
+virtualenvwrapper.sh: There was a problem running the initialization hooks.
+
+If Python could not import the module virtualenvwrapper.hook_loader,
+check that virtualenvwrapper has been installed for
+VIRTUALENVWRAPPER_PYTHON=/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/bin/python and that PATH is
+set properly.
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004hppoetry shell[?2004l
+Virtual environment already activated: [34m/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9[0m
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004hpoetry shell[12Dtail -f /Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/read_api_spec.log                                                                 t  ssc...[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % sc[K
+[Jsc_auth          sc_usage         scandeps.pl      scandeps5.18.pl  scandeps5.30.pl  sched            schemagen        scp              screen           screencapture    script           scselect         scutil[A[0m[27m[24m[31Csc[Kri...[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % script[1m [0m[K[0m /new...[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % script/new_apis[1m [0m[K[0m [?2004l
+developer.webex.com/diff_api_spec.yml doesn't exist'
+reading base api spec from developer.webex.com/api_spec.yml
+  endpoints_from_submenu_items(BroadWorks Billing Reports): skipping
+  endpoints_from_submenu_items(BroadWorks Device Provisioning): skipping
+  endpoints_from_submenu_items(BroadWorks Enterprises): skipping
+  endpoints_from_submenu_items(BroadWorks Enterprises With Delete Org Improvements): Extracting methods from "BroadWorks Enterprises With Delete Org Improvements" menu
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): List BroadWorks Enterprises
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): Update Directory Sync for a BroadWorks Enterprise
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): Trigger Directory Sync for an Enterprise
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): Get Directory Sync Status for an Enterprise
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): Trigger Directory Sync for a User
+  endpoints_from_submenu_items(BroadWorks Subscribers): skipping
+  endpoints_from_submenu_items(BroadWorks Workspaces): Extracting methods from "BroadWorks Workspaces" menu
+    methods_from_api_reference_container("BroadWorks Workspaces"): Provision a BroadWorks Workspace
+    methods_from_api_reference_container("BroadWorks Workspaces"): Update a Broadworks Workspace
+    methods_from_api_reference_container("BroadWorks Workspaces"): Remove a BroadWorks Workspace
+  endpoints_from_submenu_items(Call Controls): skipping
+  endpoints_from_submenu_items(Locations): skipping
+  endpoints_from_submenu_items(People): skipping
+  endpoints_from_submenu_items(People with Calling): Extracting methods from "People with Calling" menu
+    methods_from_api_reference_container("People with Calling"): List People
+    methods_from_api_reference_container("People with Calling"): Create a Person
+    methods_from_api_reference_container("People with Calling"): Get Person Details
+    methods_from_api_reference_container("People with Calling"): Update a Person
+    methods_from_api_reference_container("People with Calling"): Delete a Person
+    methods_from_api_reference_container("People with Calling"): Get My Own Details
+  endpoints_from_submenu_items(Recording Report): skipping
+  endpoints_from_submenu_items(Video Mesh): skipping
+  endpoints_from_submenu_items(Webex Calling Organization Settings): skipping
+  endpoints_from_submenu_items(Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features): Extracting methods from "Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features" menu
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Create a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Delete a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Get Details for a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Update a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Read the List of Call Queue Announcement Files
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Delete a Call Queue Announcement File
+  endpoints_from_submenu_items(Webex Calling Organization Settings With Call Queue Policies Features): Extracting methods from "Webex Calling Organization Settings With Call Queue Policies Features" menu
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Read the List of Call Queue Announcement Files
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Get Details for a Call Queue Holiday Service
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Update a Call Queue Holiday Service
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Get Details for a Call Queue Night Service
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Update a Call Queue Night Service
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Get Details for a Call Queue Stranded Calls
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Update a Call Queue Stranded Calls service
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Get Details for a Call Queue Forced Forward
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Update a Call Queue Forced Forward service
+  endpoints_from_submenu_items(Webex Calling Organization Settings with Devices Features): Extracting methods from "Webex Calling Organization Settings with Devices Features" menu
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Get Device Members
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Update Members on the device
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Search Members
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Apply Changes for a specific device
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Get Device Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Update device settings
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Get Location Device Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Get User Devices
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Get Workspace Devices
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Modify Workspace Devices
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Read the List of Supported Devices
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Read the device override settings for a organization
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Read the DECT device type list
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Validate a list of MAC address
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Change Device Settings Across Organization Or Location Job
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): List Change Device Settings Jobs
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Get Change Device Settings Job Status
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): List Change Device Settings Job Errors
+  endpoints_from_submenu_items(Webex Calling Person Settings): skipping
+  endpoints_from_submenu_items(Webex Calling Person Settings With Shared Line): Extracting methods from "Webex Calling Person Settings With Shared Line" menu
+    methods_from_api_reference_container("Webex Calling Person Settings With Shared Line"): Search Shared-Line Appearance Members
+    methods_from_api_reference_container("Webex Calling Person Settings With Shared Line"): Get Shared-Line Appearance Members
+    methods_from_api_reference_container("Webex Calling Person Settings With Shared Line"): Put Shared-Line Appearance Members
+  endpoints_from_submenu_items(Webex Calling Person Settings with Calling Behavior): Extracting methods from "Webex Calling Person Settings with Calling Behavior" menu
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Call Forwarding Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Call Forwarding Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Call Waiting Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Call Waiting Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Caller ID Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Caller ID Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Monitoring Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Monitoring Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Incoming Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Incoming Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Outgoing Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Outgoing Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Access Codes for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Access Codes for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Create Access Codes for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Read Call Intercept Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Configure Call Intercept Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Transfer Numbers Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Transfer Numbers Settings for a Workspace
+  endpoints_from_submenu_items(Webex Calling Settings with Outgoing Callcenter Manual): Extracting methods from "Webex Calling Settings with Outgoing Callcenter Manual" menu
+    methods_from_api_reference_container("Webex Calling Settings with Outgoing Callcenter Manual"): Create a Call Queue
+    methods_from_api_reference_container("Webex Calling Settings with Outgoing Callcenter Manual"): Get Details for a Call Queue
+    methods_from_api_reference_container("Webex Calling Settings with Outgoing Callcenter Manual"): Update a Call Queue
+    methods_from_api_reference_container("Webex Calling Settings with Outgoing Callcenter Manual"): Retrieve List of Call Queue Caller ID information
+    methods_from_api_reference_container("Webex Calling Settings with Outgoing Callcenter Manual"): Retrieve a Call Queue Agent's Caller ID information
+    methods_from_api_reference_container("Webex Calling Settings with Outgoing Callcenter Manual"): Modify a Call Queue Agent's Caller ID information
+  endpoints_from_submenu_items(Webex Calling Voice Messaging): skipping
+  endpoints_from_submenu_items(Webex Calling Workspace Settings with Numbers): skipping
+  endpoints_from_submenu_items(Webex Calling Workspaces Settings): Extracting methods from "Webex Calling Workspaces Settings" menu
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Call Forwarding Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Call Forwarding Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Call Waiting Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Call Waiting Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Caller ID Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Caller ID Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Monitoring Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Monitoring Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Incoming Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Incoming Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Outgoing Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Outgoing Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Authorization Codes for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Authorization Codes for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Create Authorization Codes for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Read Call Intercept Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Configure Call Intercept Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Transfer Numbers Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Transfer Numbers Settings for a Workspace
+  endpoints_from_submenu_items(Webex for Broadworks phone list sync): Extracting methods from "Webex for Broadworks phone list sync" menu
+    methods_from_api_reference_container("Webex for Broadworks phone list sync"): List BroadWorks Enterprises
+    methods_from_api_reference_container("Webex for Broadworks phone list sync"): Update Directory Sync for a BroadWorks Enterprise
+    methods_from_api_reference_container("Webex for Broadworks phone list sync"): Trigger Directory Sync for an Enterprise
+    methods_from_api_reference_container("Webex for Broadworks phone list sync"): Get Directory Sync Status for an Enterprise
+  endpoints_from_submenu_items(Wholesale Billing Reports): skipping
+  endpoints_from_submenu_items(Wholesale Customers): skipping
+  endpoints_from_submenu_items(Wholesale Subscribers): skipping
+"BroadWorks Billing Reports"
+"BroadWorks Device Provisioning"
+"BroadWorks Enterprises"
+"BroadWorks Enterprises With Delete Org Improvements"
+  get_method_details("List BroadWorks Enterprises"): 
+  get_method_details("Update Directory Sync for a BroadWorks Enterprise"): 
+  get_method_details("Trigger Directory Sync for an Enterprise"): 
+  get_method_details("Get Directory Sync Status for an Enterprise"): 
+  get_method_details("Trigger Directory Sync for a User"): 
+"BroadWorks Subscribers"
+"BroadWorks Workspaces"
+  get_method_details("Provision a BroadWorks Workspace"): 
+  get_method_details("Update a Broadworks Workspace"): 
+  get_method_details("Remove a BroadWorks Workspace"): 
+"Call Controls"
+"Locations"
+"People"
+"People with Calling"
+  get_method_details("List People"): 
+  get_method_details("Create a Person"): 
+  get_method_details("Get Person Details"): 
+  get_method_details("Update a Person"): 
+  get_method_details("Delete a Person"): 
+  get_method_details("Get My Own Details"): 
+"Recording Report"
+"Video Mesh"
+"Webex Calling Organization Settings"
+"Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"
+  get_method_details("Create a Call Queue"): 
+  get_method_details("Delete a Call Queue"): 
+  get_method_details("Get Details for a Call Queue"): 
+  get_method_details("Update a Call Queue"): 
+  get_method_details("Read the List of Call Queue Announcement Files"): 
+  get_method_details("Delete a Call Queue Announcement File"): 
+"Webex Calling Organization Settings With Call Queue Policies Features"
+  get_method_details("Read the List of Call Queue Announcement Files"): 
+  get_method_details("Get Details for a Call Queue Holiday Service"): 
+  get_method_details("Update a Call Queue Holiday Service"): 
+  get_method_details("Get Details for a Call Queue Night Service"): 
+  get_method_details("Update a Call Queue Night Service"): 
+  get_method_details("Get Details for a Call Queue Stranded Calls"): 
+  get_method_details("Update a Call Queue Stranded Calls service"): 
+  get_method_details("Get Details for a Call Queue Forced Forward"): 
+  get_method_details("Update a Call Queue Forced Forward service"): 
+"Webex Calling Organization Settings with Devices Features"
+  get_method_details("Get Device Members"): 
+  get_method_details("Update Members on the device"): 
+  get_method_details("Search Members"): 
+  get_method_details("Search Members"): GET failed? API reference description not found on page
+  get_method_details("Apply Changes for a specific device"): 
+  get_method_details("Get Device Settings"): 
+  get_method_details("Update device settings"): 
+  get_method_details("Get Location Device Settings"): 
+  get_method_details("Get User Devices"): 
+  get_method_details("Get Workspace Devices"): 
+  get_method_details("Modify Workspace Devices"): 
+  get_method_details("Modify Workspace Devices"): GET failed? API reference description not found on page
+  get_method_details("Read the List of Supported Devices"): 
+  get_method_details("Read the device override settings for a organization"): 
+  get_method_details("Read the DECT device type list"): 
+  get_method_details("Validate a list of MAC address"): 
+  get_method_details("Change Device Settings Across Organization Or Location Job"): 
+  get_method_details("List Change Device Settings Jobs"): 
+  get_method_details("Get Change Device Settings Job Status"): 
+  get_method_details("List Change Device Settings Job Errors"): 
+"Webex Calling Person Settings"
+"Webex Calling Person Settings With Shared Line"
+  get_method_details("Search Shared-Line Appearance Members"): 
+  get_method_details("Get Shared-Line Appearance Members"): 
+  get_method_details("Put Shared-Line Appearance Members"): 
+"Webex Calling Person Settings with Calling Behavior"
+  get_method_details("Retrieve Call Forwarding Settings for a Workspace"): 
+  get_method_details("Modify Call Forwarding Settings for a Workspace"): 
+  get_method_details("Retrieve Call Waiting Settings for a Workspace"): 
+  get_method_details("Modify Call Waiting Settings for a Workspace"): 
+  get_method_details("Retrieve Caller ID Settings for a Workspace"): 
+  get_method_details("Modify Caller ID Settings for a Workspace"): 
+  get_method_details("Retrieve Monitoring Settings for a Workspace"): 
+  get_method_details("Modify Monitoring Settings for a Workspace"): 
+  get_method_details("Retrieve Incoming Permission Settings for a Workspace"): 
+  get_method_details("Modify Incoming Permission Settings for a Workspace"): 
+  get_method_details("Retrieve Outgoing Permission Settings for a Workspace"): 
+  get_method_details("Modify Outgoing Permission Settings for a Workspace"): 
+  get_method_details("Retrieve Access Codes for a Workspace"): 
+  get_method_details("Modify Access Codes for a Workspace"): 
+  get_method_details("Create Access Codes for a Workspace"): 
+  get_method_details("Read Call Intercept Settings for a Workspace"): 
+  get_method_details("Configure Call Intercept Settings for a Workspace"): 
+  get_method_details("Retrieve Transfer Numbers Settings for a Workspace"): 
+  get_method_details("Modify Transfer Numbers Settings for a Workspace"): 
+"Webex Calling Settings with Outgoing Callcenter Manual"
+  get_method_details("Create a Call Queue"): 
+  get_method_details("Get Details for a Call Queue"): 
+  get_method_details("Update a Call Queue"): 
+  get_method_details("Retrieve List of Call Queue Caller ID information"): 
+  get_method_details("Retrieve a Call Queue Agent's Caller ID information"): 
+  get_method_details("Modify a Call Queue Agent's Caller ID information"): 
+"Webex Calling Voice Messaging"
+"Webex Calling Workspace Settings with Numbers"
+"Webex Calling Workspaces Settings"
+  get_method_details("Retrieve Call Forwarding Settings for a Workspace"): 
+  get_method_details("Modify Call Forwarding Settings for a Workspace"): 
+  get_method_details("Retrieve Call Waiting Settings for a Workspace"): 
+  get_method_details("Modify Call Waiting Settings for a Workspace"): 
+  get_method_details("Retrieve Caller ID Settings for a Workspace"): 
+  get_method_details("Modify Caller ID Settings for a Workspace"): 
+  get_method_details("Retrieve Monitoring Settings for a Workspace"): 
+  get_method_details("Modify Monitoring Settings for a Workspace"): 
+  get_method_details("Retrieve Incoming Permission Settings for a Workspace"): 
+  get_method_details("Modify Incoming Permission Settings for a Workspace"): 
+  get_method_details("Retrieve Outgoing Permission Settings for a Workspace"): 
+  get_method_details("Modify Outgoing Permission Settings for a Workspace"): 
+  get_method_details("Retrieve Authorization Codes for a Workspace"): 
+  get_method_details("Modify Authorization Codes for a Workspace"): 
+  get_method_details("Create Authorization Codes for a Workspace"): 
+  get_method_details("Read Call Intercept Settings for a Workspace"): 
+  get_method_details("Configure Call Intercept Settings for a Workspace"): 
+  get_method_details("Retrieve Transfer Numbers Settings for a Workspace"): 
+  get_method_details("Modify Transfer Numbers Settings for a Workspace"): 
+"Webex for Broadworks phone list sync"
+  get_method_details("List BroadWorks Enterprises"): 
+  get_method_details("Update Directory Sync for a BroadWorks Enterprise"): 
+  get_method_details("Trigger Directory Sync for an Enterprise"): 
+  get_method_details("Get Directory Sync Status for an Enterprise"): 
+"Wholesale Billing Reports"
+"Wholesale Customers"
+"Wholesale Subscribers"
+writing to developer.webex.com/diff_api_spec.yml
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004hscript/new_apis[?2004l
+developer.webex.com/diff_api_spec.yml doesn't exist'
+reading base api spec from developer.webex.com/api_spec.yml
+  endpoints_from_submenu_items(BroadWorks Billing Reports): skipping
+  endpoints_from_submenu_items(BroadWorks Device Provisioning): skipping
+  endpoints_from_submenu_items(BroadWorks Enterprises): skipping
+  endpoints_from_submenu_items(BroadWorks Enterprises With Delete Org Improvements): Extracting methods from "BroadWorks Enterprises With Delete Org Improvements" menu
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): List BroadWorks Enterprises
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): Update Directory Sync for a BroadWorks Enterprise
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): Trigger Directory Sync for an Enterprise
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): Get Directory Sync Status for an Enterprise
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): Trigger Directory Sync for a User
+  endpoints_from_submenu_items(BroadWorks Subscribers): skipping
+  endpoints_from_submenu_items(BroadWorks Workspaces): Extracting methods from "BroadWorks Workspaces" menu
+    methods_from_api_reference_container("BroadWorks Workspaces"): Provision a BroadWorks Workspace
+    methods_from_api_reference_container("BroadWorks Workspaces"): Update a Broadworks Workspace
+    methods_from_api_reference_container("BroadWorks Workspaces"): Remove a BroadWorks Workspace
+  endpoints_from_submenu_items(Call Controls): skipping
+  endpoints_from_submenu_items(Locations): skipping
+  endpoints_from_submenu_items(People): skipping
+  endpoints_from_submenu_items(People with Calling): Extracting methods from "People with Calling" menu
+    methods_from_api_reference_container("People with Calling"): List People
+    methods_from_api_reference_container("People with Calling"): Create a Person
+    methods_from_api_reference_container("People with Calling"): Get Person Details
+    methods_from_api_reference_container("People with Calling"): Update a Person
+    methods_from_api_reference_container("People with Calling"): Delete a Person
+    methods_from_api_reference_container("People with Calling"): Get My Own Details
+  endpoints_from_submenu_items(Recording Report): skipping
+  endpoints_from_submenu_items(Video Mesh): skipping
+  endpoints_from_submenu_items(Webex Calling Organization Settings): skipping
+  endpoints_from_submenu_items(Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features): Extracting methods from "Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features" menu
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Create a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Delete a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Get Details for a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Update a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Read the List of Call Queue Announcement Files
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Delete a Call Queue Announcement File
+  endpoints_from_submenu_items(Webex Calling Organization Settings With Call Queue Policies Features): Extracting methods from "Webex Calling Organization Settings With Call Queue Policies Features" menu
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Read the List of Call Queue Announcement Files
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Get Details for a Call Queue Holiday Service
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Update a Call Queue Holiday Service
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Get Details for a Call Queue Night Service
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Update a Call Queue Night Service
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Get Details for a Call Queue Stranded Calls
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Update a Call Queue Stranded Calls service
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Get Details for a Call Queue Forced Forward
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Update a Call Queue Forced Forward service
+  endpoints_from_submenu_items(Webex Calling Organization Settings with Devices Features): Extracting methods from "Webex Calling Organization Settings with Devices Features" menu
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Get Device Members
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Update Members on the device
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Search Members
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Apply Changes for a specific device
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Get Device Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Update device settings
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Get Location Device Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Get User Devices
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Get Workspace Devices
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Modify Workspace Devices
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Read the List of Supported Devices
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Read the device override settings for a organization
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Read the DECT device type list
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Validate a list of MAC address
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Change Device Settings Across Organization Or Location Job
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): List Change Device Settings Jobs
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Get Change Device Settings Job Status
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): List Change Device Settings Job Errors
+  endpoints_from_submenu_items(Webex Calling Person Settings): skipping
+  endpoints_from_submenu_items(Webex Calling Person Settings With Shared Line): Extracting methods from "Webex Calling Person Settings With Shared Line" menu
+    methods_from_api_reference_container("Webex Calling Person Settings With Shared Line"): Search Shared-Line Appearance Members
+    methods_from_api_reference_container("Webex Calling Person Settings With Shared Line"): Get Shared-Line Appearance Members
+    methods_from_api_reference_container("Webex Calling Person Settings With Shared Line"): Put Shared-Line Appearance Members
+  endpoints_from_submenu_items(Webex Calling Person Settings with Calling Behavior): Extracting methods from "Webex Calling Person Settings with Calling Behavior" menu
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Call Forwarding Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Call Forwarding Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Call Waiting Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Call Waiting Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Caller ID Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Caller ID Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Monitoring Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Monitoring Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Incoming Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Incoming Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Outgoing Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Outgoing Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Access Codes for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Access Codes for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Create Access Codes for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Read Call Intercept Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Configure Call Intercept Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Transfer Numbers Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Transfer Numbers Settings for a Workspace
+  endpoints_from_submenu_items(Webex Calling Settings with Outgoing Callcenter Manual): Extracting methods from "Webex Calling Settings with Outgoing Callcenter Manual" menu
+    methods_from_api_reference_container("Webex Calling Settings with Outgoing Callcenter Manual"): Create a Call Queue
+    methods_from_api_reference_container("Webex Calling Settings with Outgoing Callcenter Manual"): Get Details for a Call Queue
+    methods_from_api_reference_container("Webex Calling Settings with Outgoing Callcenter Manual"): Update a Call Queue
+    methods_from_api_reference_container("Webex Calling Settings with Outgoing Callcenter Manual"): Retrieve List of Call Queue Caller ID information
+    methods_from_api_reference_container("Webex Calling Settings with Outgoing Callcenter Manual"): Retrieve a Call Queue Agent's Caller ID information
+    methods_from_api_reference_container("Webex Calling Settings with Outgoing Callcenter Manual"): Modify a Call Queue Agent's Caller ID information
+  endpoints_from_submenu_items(Webex Calling Voice Messaging): skipping
+  endpoints_from_submenu_items(Webex Calling Workspace Settings with Numbers): skipping
+  endpoints_from_submenu_items(Webex Calling Workspaces Settings): Extracting methods from "Webex Calling Workspaces Settings" menu
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Call Forwarding Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Call Forwarding Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Call Waiting Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Call Waiting Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Caller ID Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Caller ID Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Monitoring Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Monitoring Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Incoming Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Incoming Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Outgoing Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Outgoing Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Authorization Codes for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Authorization Codes for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Create Authorization Codes for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Read Call Intercept Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Configure Call Intercept Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Transfer Numbers Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Transfer Numbers Settings for a Workspace
+  endpoints_from_submenu_items(Webex for Broadworks phone list sync): Extracting methods from "Webex for Broadworks phone list sync" menu
+    methods_from_api_reference_container("Webex for Broadworks phone list sync"): List BroadWorks Enterprises
+    methods_from_api_reference_container("Webex for Broadworks phone list sync"): Update Directory Sync for a BroadWorks Enterprise
+    methods_from_api_reference_container("Webex for Broadworks phone list sync"): Trigger Directory Sync for an Enterprise
+    methods_from_api_reference_container("Webex for Broadworks phone list sync"): Get Directory Sync Status for an Enterprise
+  endpoints_from_submenu_items(Wholesale Billing Reports): skipping
+  endpoints_from_submenu_items(Wholesale Customers): skipping
+  endpoints_from_submenu_items(Wholesale Subscribers): skipping
+"BroadWorks Billing Reports"
+"BroadWorks Device Provisioning"
+"BroadWorks Enterprises"
+"BroadWorks Enterprises With Delete Org Improvements"
+  get_method_details("List BroadWorks Enterprises"): 
+  get_method_details("Update Directory Sync for a BroadWorks Enterprise"): 
+  get_method_details("Trigger Directory Sync for an Enterprise"): 
+  get_method_details("Get Directory Sync Status for an Enterprise"): 
+  get_method_details("Trigger Directory Sync for a User"): 
+"BroadWorks Subscribers"
+"BroadWorks Workspaces"
+  get_method_details("Provision a BroadWorks Workspace"): 
+  get_method_details("Update a Broadworks Workspace"): 
+  get_method_details("Remove a BroadWorks Workspace"): 
+"Call Controls"
+"Locations"
+"People"
+"People with Calling"
+  get_method_details("List People"): 
+  get_method_details("Create a Person"): 
+  get_method_details("Get Person Details"): 
+  get_method_details("Update a Person"): 
+  get_method_details("Delete a Person"): 
+  get_method_details("Get My Own Details"): 
+"Recording Report"
+"Video Mesh"
+"Webex Calling Organization Settings"
+"Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"
+  get_method_details("Create a Call Queue"): 
+  get_method_details("Delete a Call Queue"): 
+  get_method_details("Get Details for a Call Queue"): 
+  get_method_details("Update a Call Queue"): 
+  get_method_details("Read the List of Call Queue Announcement Files"): 
+  get_method_details("Delete a Call Queue Announcement File"): 
+"Webex Calling Organization Settings With Call Queue Policies Features"
+  get_method_details("Read the List of Call Queue Announcement Files"): 
+  get_method_details("Get Details for a Call Queue Holiday Service"): 
+  get_method_details("Update a Call Queue Holiday Service"): 
+  get_method_details("Get Details for a Call Queue Night Service"): 
+  get_method_details("Update a Call Queue Night Service"): 
+  get_method_details("Get Details for a Call Queue Stranded Calls"): 
+  get_method_details("Update a Call Queue Stranded Calls service"): 
+  get_method_details("Get Details for a Call Queue Forced Forward"): 
+  get_method_details("Get Details for a Call Queue Forced Forward"): GET failed? API reference description not found on page
+  get_method_details("Update a Call Queue Forced Forward service"): 
+"Webex Calling Organization Settings with Devices Features"
+  get_method_details("Get Device Members"): 
+  get_method_details("Update Members on the device"): 
+  get_method_details("Search Members"): 
+  get_method_details("Apply Changes for a specific device"): 
+  get_method_details("Get Device Settings"): 
+  get_method_details("Update device settings"): 
+  get_method_details("Get Location Device Settings"): 
+  get_method_details("Get User Devices"): 
+  get_method_details("Get Workspace Devices"): 
+  get_method_details("Modify Workspace Devices"): 
+  get_method_details("Read the List of Supported Devices"): 
+  get_method_details("Read the device override settings for a organization"): 
+  get_method_details("Read the DECT device type list"): 
+  get_method_details("Validate a list of MAC address"): 
+  get_method_details("Change Device Settings Across Organization Or Location Job"): 
+  get_method_details("List Change Device Settings Jobs"): 
+  get_method_details("Get Change Device Settings Job Status"): 
+  get_method_details("List Change Device Settings Job Errors"): 
+"Webex Calling Person Settings"
+"Webex Calling Person Settings With Shared Line"
+  get_method_details("Search Shared-Line Appearance Members"): 
+  get_method_details("Get Shared-Line Appearance Members"): 
+  get_method_details("Put Shared-Line Appearance Members"): 
+"Webex Calling Person Settings with Calling Behavior"
+  get_method_details("Retrieve Call Forwarding Settings for a Workspace"): 
+  get_method_details("Modify Call Forwarding Settings for a Workspace"): 
+  get_method_details("Retrieve Call Waiting Settings for a Workspace"): 
+  get_method_details("Modify Call Waiting Settings for a Workspace"): 
+  get_method_details("Retrieve Caller ID Settings for a Workspace"): 
+  get_method_details("Modify Caller ID Settings for a Workspace"): 
+  get_method_details("Retrieve Monitoring Settings for a Workspace"): 
+  get_method_details("Modify Monitoring Settings for a Workspace"): 
+  get_method_details("Retrieve Incoming Permission Settings for a Workspace"): 
+  get_method_details("Modify Incoming Permission Settings for a Workspace"): 
+  get_method_details("Retrieve Outgoing Permission Settings for a Workspace"): 
+  get_method_details("Modify Outgoing Permission Settings for a Workspace"): 
+  get_method_details("Retrieve Access Codes for a Workspace"): 
+  get_method_details("Modify Access Codes for a Workspace"): 
+  get_method_details("Create Access Codes for a Workspace"): 
+  get_method_details("Read Call Intercept Settings for a Workspace"): 
+  get_method_details("Configure Call Intercept Settings for a Workspace"): 
+  get_method_details("Retrieve Transfer Numbers Settings for a Workspace"): 
+  get_method_details("Modify Transfer Numbers Settings for a Workspace"): 
+"Webex Calling Settings with Outgoing Callcenter Manual"
+  get_method_details("Create a Call Queue"): 
+  get_method_details("Get Details for a Call Queue"): 
+  get_method_details("Update a Call Queue"): 
+  get_method_details("Retrieve List of Call Queue Caller ID information"): 
+  get_method_details("Retrieve a Call Queue Agent's Caller ID information"): 
+  get_method_details("Modify a Call Queue Agent's Caller ID information"): 
+"Webex Calling Voice Messaging"
+"Webex Calling Workspace Settings with Numbers"
+"Webex Calling Workspaces Settings"
+  get_method_details("Retrieve Call Forwarding Settings for a Workspace"): 
+  get_method_details("Modify Call Forwarding Settings for a Workspace"): 
+  get_method_details("Retrieve Call Waiting Settings for a Workspace"): 
+  get_method_details("Modify Call Waiting Settings for a Workspace"): 
+  get_method_details("Retrieve Caller ID Settings for a Workspace"): 
+  get_method_details("Modify Caller ID Settings for a Workspace"): 
+  get_method_details("Retrieve Monitoring Settings for a Workspace"): 
+  get_method_details("Modify Monitoring Settings for a Workspace"): 
+  get_method_details("Retrieve Incoming Permission Settings for a Workspace"): 
+  get_method_details("Modify Incoming Permission Settings for a Workspace"): 
+  get_method_details("Retrieve Outgoing Permission Settings for a Workspace"): 
+  get_method_details("Modify Outgoing Permission Settings for a Workspace"): 
+  get_method_details("Retrieve Authorization Codes for a Workspace"): 
+  get_method_details("Modify Authorization Codes for a Workspace"): 
+  get_method_details("Create Authorization Codes for a Workspace"): 
+  get_method_details("Read Call Intercept Settings for a Workspace"): 
+  get_method_details("Configure Call Intercept Settings for a Workspace"): 
+  get_method_details("Retrieve Transfer Numbers Settings for a Workspace"): 
+  get_method_details("Modify Transfer Numbers Settings for a Workspace"): 
+"Webex for Broadworks phone list sync"
+  get_method_details("List BroadWorks Enterprises"): 
+  get_method_details("Update Directory Sync for a BroadWorks Enterprise"): 
+  get_method_details("Trigger Directory Sync for an Enterprise"): 
+  get_method_details("Get Directory Sync Status for an Enterprise"): 
+"Wholesale Billing Reports"
+"Wholesale Customers"
+"Wholesale Subscribers"
+writing to developer.webex.com/diff_api_spec.yml
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004hscript/new_apis             s  script/new_apis[?2004l
+writing to developer.webex.com/new_endpoints.txt
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004hscript/new_apis foce  rcebase forxcex    cediff[?2004l
+developer.webex.com/api_spec.yml doesn't exist'
+  endpoints_from_submenu_items(BroadWorks Billing Reports): skipping
+  endpoints_from_submenu_items(BroadWorks Device Provisioning): skipping
+  endpoints_from_submenu_items(BroadWorks Enterprises): skipping
+  endpoints_from_submenu_items(BroadWorks Subscribers): skipping
+  endpoints_from_submenu_items(Call Controls): Extracting methods from "Call Controls" menu
+    methods_from_api_reference_container("Call Controls"): Dial
+    methods_from_api_reference_container("Call Controls"): Answer
+    methods_from_api_reference_container("Call Controls"): Reject
+    methods_from_api_reference_container("Call Controls"): Hangup
+    methods_from_api_reference_container("Call Controls"): Hold
+    methods_from_api_reference_container("Call Controls"): Resume
+    methods_from_api_reference_container("Call Controls"): Divert
+    methods_from_api_reference_container("Call Controls"): Transfer
+    methods_from_api_reference_container("Call Controls"): Park
+    methods_from_api_reference_container("Call Controls"): Retrieve
+    methods_from_api_reference_container("Call Controls"): Start Recording
+    methods_from_api_reference_container("Call Controls"): Stop Recording
+    methods_from_api_reference_container("Call Controls"): Pause Recording
+    methods_from_api_reference_container("Call Controls"): Resume Recording
+    methods_from_api_reference_container("Call Controls"): Transmit DTMF
+    methods_from_api_reference_container("Call Controls"): Push
+    methods_from_api_reference_container("Call Controls"): Pickup
+    methods_from_api_reference_container("Call Controls"): Barge In
+    methods_from_api_reference_container("Call Controls"): List Calls
+    methods_from_api_reference_container("Call Controls"): Get Call Details
+    methods_from_api_reference_container("Call Controls"): List Call History
+  endpoints_from_submenu_items(Locations): Extracting methods from "Locations" menu
+    methods_from_api_reference_container("Locations"): List Locations
+    methods_from_api_reference_container("Locations"): Get Location Details
+    methods_from_api_reference_container("Locations"): Create a Location
+    methods_from_api_reference_container("Locations"): Update a Location
+  endpoints_from_submenu_items(People): skipping
+  endpoints_from_submenu_items(Recording Report): skipping
+  endpoints_from_submenu_items(Video Mesh): skipping
+  endpoints_from_submenu_items(Webex Calling Organization Settings): Extracting methods from "Webex Calling Organization Settings" menu
+Traceback (most recent call last):
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/read_api_spec.py", line 139, in <module>
+    main()
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/read_api_spec.py", line 121, in main
+    docs = site.get_calling_docs()
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/scraper/__init__.py", line 487, in get_calling_docs
+    docs = list(self.docs_from_submenu_items(reference_items))
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/scraper/__init__.py", line 382, in docs_from_submenu_items
+    api_reference_container, header = WebDriverWait(driver=self.driver, timeout=10).until(
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/support/wait.py", line 81, in until
+    value = method(self._driver)
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/scraper/__init__.py", line 347, in _predicate
+    log(f'prev container header: {prev_container_header}, header: {container_header.text}')
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/remote/webelement.py", line 84, in text
+    return self._execute(Command.GET_ELEMENT_TEXT)['value']
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/remote/webelement.py", line 396, in _execute
+    return self._parent.execute(command, params)
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/remote/errorhandler.py", line 243, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.StaleElementReferenceException: Message: stale element reference: element is not attached to the page document
+  (Session info: chrome=106.0.5249.119)
+Stacktrace:
+0   chromedriver                        0x00000001005c6f44 chromedriver + 3813188
+1   chromedriver                        0x0000000100558ae0 chromedriver + 3361504
+2   chromedriver                        0x000000010025cc5c chromedriver + 232540
+3   chromedriver                        0x000000010025f934 chromedriver + 244020
+4   chromedriver                        0x000000010025f79c chromedriver + 243612
+5   chromedriver                        0x000000010025f9d0 chromedriver + 244176
+6   chromedriver                        0x0000000100289538 chromedriver + 415032
+7   chromedriver                        0x0000000100284898 chromedriver + 395416
+8   chromedriver                        0x00000001002bbf44 chromedriver + 622404
+9   chromedriver                        0x0000000100283358 chromedriver + 389976
+10  chromedriver                        0x0000000100284284 chromedriver + 393860
+11  chromedriver                        0x000000010059ae18 chromedriver + 3632664
+12  chromedriver                        0x000000010059e97c chromedriver + 3647868
+13  chromedriver                        0x00000001005a4b58 chromedriver + 3672920
+14  chromedriver                        0x000000010059f350 chromedriver + 3650384
+15  chromedriver                        0x000000010057c8dc chromedriver + 3508444
+16  chromedriver                        0x00000001005b9914 chromedriver + 3758356
+17  chromedriver                        0x00000001005b9a78 chromedriver + 3758712
+18  chromedriver                        0x00000001005cd6cc chromedriver + 3839692
+19  libsystem_pthread.dylib             0x00000001804f826c _pthread_start + 148
+20  libsystem_pthread.dylib             0x00000001804f308c thread_start + 8
+
+developer.webex.com/diff_api_spec.yml doesn't exist'
+reading base api spec from developer.webex.com/api_spec.yml
+  endpoints_from_submenu_items(BroadWorks Billing Reports): skipping
+  endpoints_from_submenu_items(BroadWorks Device Provisioning): skipping
+  endpoints_from_submenu_items(BroadWorks Enterprises): skipping
+  endpoints_from_submenu_items(BroadWorks Enterprises With Delete Org Improvements): Extracting methods from "BroadWorks Enterprises With Delete Org Improvements" menu
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): List BroadWorks Enterprises
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): Update Directory Sync for a BroadWorks Enterprise
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): Trigger Directory Sync for an Enterprise
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): Get Directory Sync Status for an Enterprise
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): Trigger Directory Sync for a User
+  endpoints_from_submenu_items(BroadWorks Subscribers): skipping
+  endpoints_from_submenu_items(BroadWorks Workspaces): Extracting methods from "BroadWorks Workspaces" menu
+    methods_from_api_reference_container("BroadWorks Workspaces"): Provision a BroadWorks Workspace
+    methods_from_api_reference_container("BroadWorks Workspaces"): Update a Broadworks Workspace
+    methods_from_api_reference_container("BroadWorks Workspaces"): Remove a BroadWorks Workspace
+  endpoints_from_submenu_items(Call Controls): skipping
+  endpoints_from_submenu_items(Locations): skipping
+  endpoints_from_submenu_items(People): skipping
+  endpoints_from_submenu_items(People with Calling): Extracting methods from "People with Calling" menu
+    methods_from_api_reference_container("People with Calling"): List People
+    methods_from_api_reference_container("People with Calling"): Create a Person
+    methods_from_api_reference_container("People with Calling"): Get Person Details
+    methods_from_api_reference_container("People with Calling"): Update a Person
+    methods_from_api_reference_container("People with Calling"): Delete a Person
+    methods_from_api_reference_container("People with Calling"): Get My Own Details
+  endpoints_from_submenu_items(Recording Report): skipping
+  endpoints_from_submenu_items(Video Mesh): skipping
+  endpoints_from_submenu_items(Webex Calling Organization Settings): skipping
+  endpoints_from_submenu_items(Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features): Extracting methods from "Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features" menu
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Create a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Delete a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Get Details for a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Update a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Read the List of Call Queue Announcement Files
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Delete a Call Queue Announcement File
+  endpoints_from_submenu_items(Webex Calling Organization Settings With Call Queue Policies Features): Extracting methods from "Webex Calling Organization Settings With Call Queue Policies Features" menu
+^CRetrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProtocolError('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))': /session/c04ae9d0874377d34d03c650dce80fd8
+Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1055e3e50>: Failed to establish a new connection: [Errno 61] Connection refused')': /session/c04ae9d0874377d34d03c650dce80fd8
+Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1107ff250>: Failed to establish a new connection: [Errno 61] Connection refused')': /session/c04ae9d0874377d34d03c650dce80fd8
+Traceback (most recent call last):
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/read_api_spec.py", line 139, in <module>
+    main()
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/read_api_spec.py", line 121, in main
+    docs = site.get_calling_docs()
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/scraper/__init__.py", line 487, in get_calling_docs
+    docs = list(self.docs_from_submenu_items(reference_items))
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/scraper/__init__.py", line 382, in docs_from_submenu_items
+    api_reference_container, header = WebDriverWait(driver=self.driver, timeout=10).until(
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/support/wait.py", line 87, in until
+    time.sleep(self._poll)
+KeyboardInterrupt
+
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004hscript/new_apis forcebase forcediff[?2004l
+developer.webex.com/api_spec.yml doesn't exist'
+  endpoints_from_submenu_items(BroadWorks Billing Reports): skipping
+  endpoints_from_submenu_items(BroadWorks Device Provisioning): skipping
+  endpoints_from_submenu_items(BroadWorks Enterprises): skipping
+  endpoints_from_submenu_items(BroadWorks Subscribers): skipping
+  endpoints_from_submenu_items(Call Controls): Extracting methods from "Call Controls" menu
+    methods_from_api_reference_container("Call Controls"): Dial
+    methods_from_api_reference_container("Call Controls"): Answer
+    methods_from_api_reference_container("Call Controls"): Reject
+    methods_from_api_reference_container("Call Controls"): Hangup
+    methods_from_api_reference_container("Call Controls"): Hold
+    methods_from_api_reference_container("Call Controls"): Resume
+    methods_from_api_reference_container("Call Controls"): Divert
+    methods_from_api_reference_container("Call Controls"): Transfer
+    methods_from_api_reference_container("Call Controls"): Park
+    methods_from_api_reference_container("Call Controls"): Retrieve
+    methods_from_api_reference_container("Call Controls"): Start Recording
+    methods_from_api_reference_container("Call Controls"): Stop Recording
+    methods_from_api_reference_container("Call Controls"): Pause Recording
+    methods_from_api_reference_container("Call Controls"): Resume Recording
+    methods_from_api_reference_container("Call Controls"): Transmit DTMF
+    methods_from_api_reference_container("Call Controls"): Push
+    methods_from_api_reference_container("Call Controls"): Pickup
+    methods_from_api_reference_container("Call Controls"): Barge In
+    methods_from_api_reference_container("Call Controls"): List Calls
+    methods_from_api_reference_container("Call Controls"): Get Call Details
+    methods_from_api_reference_container("Call Controls"): List Call History
+  endpoints_from_submenu_items(Locations): Extracting methods from "Locations" menu
+    methods_from_api_reference_container("Locations"): List Locations
+    methods_from_api_reference_container("Locations"): Get Location Details
+    methods_from_api_reference_container("Locations"): Create a Location
+    methods_from_api_reference_container("Locations"): Update a Location
+  endpoints_from_submenu_items(People): skipping
+  endpoints_from_submenu_items(Recording Report): skipping
+  endpoints_from_submenu_items(Video Mesh): skipping
+  endpoints_from_submenu_items(Webex Calling Organization Settings): Extracting methods from "Webex Calling Organization Settings" menu
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Change Announcement Language
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Auto Attendants
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Details for an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Call Forwarding Settings for an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Call Forwarding Settings for an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Selective Call Forwarding Rule for an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Selective Call Forwarding Rule for an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Selective Call Forwarding Rule for an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Selective Call Forwarding Rule for an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Call Parks
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Call Park
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Call Park
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Details for a Call Park
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Call Park
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get available agents from Call Parks
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get available recall hunt groups from Call Parks
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Call Park Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Call Park settings
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Call Park Extensions
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Details for a Call Park Extension
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Call Park Extension
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Call Park Extension
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Call Park Extension
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Call Pickups
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Call Pickup
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Call Pickup
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Details for a Call Pickup
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Call Pickup
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get available agents from Call Pickups
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Call Queues
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Details for a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Call Queue Announcement Files
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Call Queue Announcement File
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Call Forwarding Settings for a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Call Forwarding Settings for a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Selective Call Forwarding Rule for a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Selective Call Forwarding Rule for a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Selective Call Forwarding Rule for a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Selective Call Forwarding Rule for a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Call Recording Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Call Recording Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Call Recording Terms Of Service Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Call Recording Terms Of Service Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Test Call Routing
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Validate the List of Extensions
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Validate Extensions
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Hunt Groups
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Details for a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Call Forwarding Settings for a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Call Forwarding Settings for a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Selective Call Forwarding Rule for a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Selective Call Forwarding Rule for a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Selective Call Forwarding Rule for a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Selective Call Forwarding Rule for a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Location Intercept
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Put Location Intercept
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the Internal Dialing configuration for a location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Modify the Internal Dialing configuration for a location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Location Webex Calling Details
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Location Webex Calling Details
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Generate example password for Location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Location Outgoing Permission
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Location Outgoing Permission
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Outgoing Permission Auto Transfer Number
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Put Outgoing Permission Auto Transfer Number
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Outgoing Permission Location Access Code
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create Outgoing Permission a new access code for a customer location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete Outgoing Permission Access Code Location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Paging Groups
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a new Paging Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Paging Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Details for a Paging Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Paging Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Add Phone Numbers to a location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Activate Phone Numbers in a location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Remove phone numbers from a location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Validate phone numbers.
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Phone Numbers for an Organization with Given Criterias
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Private Network Connect
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Private Network Connect
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Routing Choices
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Schedules
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Details for a Schedule
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Schedule
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Schedule
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Schedule
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Details for a Schedule Event
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Schedule Event
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Schedule Event
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Schedule Event
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Voicemail Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Voicemail Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Voicemail Rules
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Voicemail Rules
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Location Voicemail
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Location Voicemail
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get VoicePortal
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update VoicePortal
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get VoicePortal Passcode Rule
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Music On Hold
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Music On Hold
+    methods_from_api_reference_container("Webex Calling Organization Settings"): List VoicemailGroup
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Location Voicemail Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Modify Location Voicemail Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a new Voicemail Group for a Location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Voicemail Group for a Location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of UC Manager Profiles
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Dial Patterns
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Modify Dial Patterns
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Validate a Dial Pattern
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Dial Plans
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Dial Plan
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get a Dial Plan
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Modify a Dial Plan
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Dial Plan
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Validate Local Gateway FQDN and Domain for a Trunk
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Trunks
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Trunk
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get a Trunk
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Modify a Trunk
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Trunk
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Trunk Types
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Routing Groups
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create Route Group for a Organization
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read a Route Group for a Organization
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Modify a Route Group for a Organization
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Remove a Route Group from an Organization
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the Usage of a Routing Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the Call to Extension Locations of a Routing Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the Dial Plan Locations of a Routing Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the PSTN Connection Locations of a Routing Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the Route Lists of a Routing Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Route Lists
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Route List
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Route List
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get a Route List
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Modify a Route List
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Modify Numbers for Route List
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Numbers assigned to a Route List
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Local Gateway Call to On-Premises Extension Usage for a Trunk
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Local Gateway Dial Plan Usage for a Trunk
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Locations Using the Local Gateway as PSTN Connection Routing
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Route Groups Using the Local Gateway
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Local Gateway Usage Count
+  endpoints_from_submenu_items(Webex Calling Person Settings): Extracting methods from "Webex Calling Person Settings" menu
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Person's Calling Behavior
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure a person's Calling Behavior
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Barge In Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Barge In Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Forwarding Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Call Forwarding Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Call Intercept Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Call Intercept Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Call Intercept Greeting for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Call Recording Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Call Recording Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Caller ID Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Caller ID Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Do Not Disturb Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Do Not Disturb Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Voicemail Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Voicemail Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Busy Voicemail Greeting for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure No Answer Voicemail Greeting for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): List of Schedules for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Create Schedule for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Get a Schedule Details
+    methods_from_api_reference_container("Webex Calling Person Settings"): Update a Schedule
+    methods_from_api_reference_container("Webex Calling Person Settings"): Delete a Schedule
+    methods_from_api_reference_container("Webex Calling Person Settings"): Fetch Event for a person's Schedule
+    methods_from_api_reference_container("Webex Calling Person Settings"): Add a New Event for Person's Schedule
+    methods_from_api_reference_container("Webex Calling Person Settings"): Update an Event for a person's Schedule
+    methods_from_api_reference_container("Webex Calling Person Settings"): Delete an Event for a person's Schedule
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Call Waiting Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Call Waiting Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Retrieve a person's Monitoring Settings
+    methods_from_api_reference_container("Webex Calling Person Settings"): Modify a person's Monitoring Settings
+    methods_from_api_reference_container("Webex Calling Person Settings"): Get a List of Phone Numbers for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Retrieve a person's Application Services Settings
+    methods_from_api_reference_container("Webex Calling Person Settings"): Modify a person's Application Services Settings
+    methods_from_api_reference_container("Webex Calling Person Settings"): Get a person's Privacy Settings
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure a person's Privacy Settings
+    methods_from_api_reference_container("Webex Calling Person Settings"): Retrieve Executive Assistant Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Modify Executive Assistant Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Receptionist Client Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Receptionist Client Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Push-to-Talk Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Push-to-Talk Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Hoteling Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Hoteling Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Reset Voicemail PIN
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Incoming Permission Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Incoming Permission Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Retrieve a person's Outgoing Calling Permissions Settings
+    methods_from_api_reference_container("Webex Calling Person Settings"): Modify a person's Outgoing Calling Permissions Settings
+    methods_from_api_reference_container("Webex Calling Person Settings"): Assign or Unassign numbers to a person
+  endpoints_from_submenu_items(Webex Calling Voice Messaging): Extracting methods from "Webex Calling Voice Messaging" menu
+    methods_from_api_reference_container("Webex Calling Voice Messaging"): Get Message Summary
+    methods_from_api_reference_container("Webex Calling Voice Messaging"): List Messages
+    methods_from_api_reference_container("Webex Calling Voice Messaging"): Delete Message
+    methods_from_api_reference_container("Webex Calling Voice Messaging"): Mark As Read
+    methods_from_api_reference_container("Webex Calling Voice Messaging"): Mark As Unread
+  endpoints_from_submenu_items(Webex Calling Workspace Settings with Numbers): Extracting methods from "Webex Calling Workspace Settings with Numbers" menu
+    methods_from_api_reference_container("Webex Calling Workspace Settings with Numbers"): Gets the list of numbers associated with a specific workspace.
+  endpoints_from_submenu_items(Wholesale Billing Reports): skipping
+  endpoints_from_submenu_items(Wholesale Customers): skipping
+  endpoints_from_submenu_items(Wholesale Subscribers): skipping
+"BroadWorks Billing Reports"
+"BroadWorks Device Provisioning"
+"BroadWorks Enterprises"
+"BroadWorks Subscribers"
+"Call Controls"
+  get_method_details("Dial"): 
+  get_method_details("Answer"): 
+  get_method_details("Reject"): 
+  get_method_details("Hangup"): 
+  get_method_details("Hold"): 
+  get_method_details("Resume"): 
+^CRetrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x105f98400>: Failed to establish a new connection: [Errno 61] Connection refused')': /session/493d61099b591df0c8b9b29167c37288
+Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x107a79970>: Failed to establish a new connection: [Errno 61] Connection refused')': /session/493d61099b591df0c8b9b29167c37288
+Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x105e97b80>: Failed to establish a new connection: [Errno 61] Connection refused')': /session/493d61099b591df0c8b9b29167c37288
+Traceback (most recent call last):
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/read_api_spec.py", line 139, in <module>
+    main()
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/read_api_spec.py", line 126, in main
+    doc_details.docs[doc.menu_text] = [md for md in map(site.get_method_details, doc.methods)
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/read_api_spec.py", line 126, in <listcomp>
+    doc_details.docs[doc.menu_text] = [md for md in map(site.get_method_details, doc.methods)
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/scraper/__init__.py", line 725, in get_method_details
+    self.driver.get(doc_link)
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 441, in get
+    self.execute(Command.GET, {'url': url})
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 427, in execute
+    response = self.command_executor.execute(driver_command, params)
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/remote/remote_connection.py", line 344, in execute
+    return self._request(command_info[0], url, body=data)
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/remote/remote_connection.py", line 366, in _request
+    response = self._conn.request(method, url, body=body, headers=headers)
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/urllib3/request.py", line 78, in request
+    return self.request_encode_body(
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/urllib3/request.py", line 170, in request_encode_body
+    return self.urlopen(method, url, **extra_kw)
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/urllib3/poolmanager.py", line 376, in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/urllib3/connectionpool.py", line 703, in urlopen
+    httplib_response = self._make_request(
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/urllib3/connectionpool.py", line 449, in _make_request
+    six.raise_from(e, None)
+  File "<string>", line 3, in raise_from
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/urllib3/connectionpool.py", line 444, in _make_request
+    httplib_response = conn.getresponse()
+  File "/opt/homebrew/Cellar/python@3.9/3.9.13_4/Frameworks/Python.framework/Versions/3.9/lib/python3.9/http/client.py", line 1377, in getresponse
+    response.begin()
+  File "/opt/homebrew/Cellar/python@3.9/3.9.13_4/Frameworks/Python.framework/Versions/3.9/lib/python3.9/http/client.py", line 320, in begin
+    version, status, reason = self._read_status()
+  File "/opt/homebrew/Cellar/python@3.9/3.9.13_4/Frameworks/Python.framework/Versions/3.9/lib/python3.9/http/client.py", line 281, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "/opt/homebrew/Cellar/python@3.9/3.9.13_4/Frameworks/Python.framework/Versions/3.9/lib/python3.9/socket.py", line 704, in readinto
+    return self._sock.recv_into(b)
+KeyboardInterrupt
+
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004hscript/new_apis forcebase forcediff[?2004l
+creating developer.webex.com/api_spec.yml
+Traceback (most recent call last):
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/read_api_spec.py", line 139, in <module>
+    main()
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/read_api_spec.py", line 121, in main
+    docs = site.get_calling_docs()
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/scraper/__init__.py", line 465, in get_calling_docs
+    calling.click()
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/remote/webelement.py", line 88, in click
+    self._execute(Command.CLICK_ELEMENT)
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/remote/webelement.py", line 396, in _execute
+    return self._parent.execute(command, params)
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/remote/errorhandler.py", line 243, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementClickInterceptedException: Message: element click intercepted: Element <div class="md-list-item__center">...</div> is not clickable at point (159, 875). Other element would receive the click: <button id="onetrust-pc-btn-handler" class="cookie-setting-link">...</button>
+  (Session info: chrome=106.0.5249.119)
+Stacktrace:
+0   chromedriver                        0x0000000102452f44 chromedriver + 3813188
+1   chromedriver                        0x00000001023e4ae0 chromedriver + 3361504
+2   chromedriver                        0x00000001020e8c5c chromedriver + 232540
+3   chromedriver                        0x000000010212074c chromedriver + 460620
+4   chromedriver                        0x000000010211e8fc chromedriver + 452860
+5   chromedriver                        0x000000010211c6b8 chromedriver + 444088
+6   chromedriver                        0x000000010211b6fc chromedriver + 440060
+7   chromedriver                        0x0000000102110f58 chromedriver + 397144
+8   chromedriver                        0x0000000102110898 chromedriver + 395416
+9   chromedriver                        0x0000000102147f44 chromedriver + 622404
+10  chromedriver                        0x000000010210f358 chromedriver + 389976
+11  chromedriver                        0x0000000102110284 chromedriver + 393860
+12  chromedriver                        0x0000000102426e18 chromedriver + 3632664
+13  chromedriver                        0x000000010242a97c chromedriver + 3647868
+14  chromedriver                        0x0000000102430b58 chromedriver + 3672920
+15  chromedriver                        0x000000010242b350 chromedriver + 3650384
+16  chromedriver                        0x00000001024088dc chromedriver + 3508444
+17  chromedriver                        0x0000000102445914 chromedriver + 3758356
+18  chromedriver                        0x0000000102445a78 chromedriver + 3758712
+19  chromedriver                        0x00000001024596cc chromedriver + 3839692
+20  libsystem_pthread.dylib             0x00000001804f826c _pthread_start + 148
+21  libsystem_pthread.dylib             0x00000001804f308c thread_start + 8
+
+creating developer.webex.com/diff_api_spec.yml
+reading base api spec from developer.webex.com/api_spec.yml
+Traceback (most recent call last):
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/read_api_spec.py", line 139, in <module>
+    main()
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/read_api_spec.py", line 121, in main
+    docs = site.get_calling_docs()
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/scraper/__init__.py", line 465, in get_calling_docs
+    calling.click()
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/remote/webelement.py", line 88, in click
+    self._execute(Command.CLICK_ELEMENT)
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/remote/webelement.py", line 396, in _execute
+    return self._parent.execute(command, params)
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/remote/errorhandler.py", line 243, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementClickInterceptedException: Message: element click intercepted: Element <div class="md-list-item__center">...</div> is not clickable at point (159, 512). Other element would receive the click: <div class="PpeGWdAZavUJkgNBIyrm">...</div>
+  (Session info: chrome=106.0.5249.119)
+Stacktrace:
+0   chromedriver                        0x000000010063af44 chromedriver + 3813188
+1   chromedriver                        0x00000001005ccae0 chromedriver + 3361504
+2   chromedriver                        0x00000001002d0c5c chromedriver + 232540
+3   chromedriver                        0x000000010030874c chromedriver + 460620
+4   chromedriver                        0x00000001003068fc chromedriver + 452860
+5   chromedriver                        0x00000001003046b8 chromedriver + 444088
+6   chromedriver                        0x00000001003036fc chromedriver + 440060
+7   chromedriver                        0x00000001002f8f58 chromedriver + 397144
+8   chromedriver                        0x00000001002f8898 chromedriver + 395416
+9   chromedriver                        0x000000010032ff44 chromedriver + 622404
+10  chromedriver                        0x00000001002f7358 chromedriver + 389976
+11  chromedriver                        0x00000001002f8284 chromedriver + 393860
+12  chromedriver                        0x000000010060ee18 chromedriver + 3632664
+13  chromedriver                        0x000000010061297c chromedriver + 3647868
+14  chromedriver                        0x0000000100618b58 chromedriver + 3672920
+15  chromedriver                        0x0000000100613350 chromedriver + 3650384
+16  chromedriver                        0x00000001005f08dc chromedriver + 3508444
+17  chromedriver                        0x000000010062d914 chromedriver + 3758356
+18  chromedriver                        0x000000010062da78 chromedriver + 3758712
+19  chromedriver                        0x00000001006416cc chromedriver + 3839692
+20  libsystem_pthread.dylib             0x00000001804f826c _pthread_start + 148
+21  libsystem_pthread.dylib             0x00000001804f308c thread_start + 8
+
+writing to developer.webex.com/new_endpoints.txt
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004hscript/new_apis forcebase forcediff[?2004l
+creating developer.webex.com/api_spec.yml
+  endpoints_from_submenu_items(BroadWorks Billing Reports): skipping
+  endpoints_from_submenu_items(BroadWorks Device Provisioning): skipping
+  endpoints_from_submenu_items(BroadWorks Enterprises): skipping
+  endpoints_from_submenu_items(BroadWorks Subscribers): skipping
+  endpoints_from_submenu_items(Call Controls): Extracting methods from "Call Controls" menu
+    methods_from_api_reference_container("Call Controls"): Dial
+    methods_from_api_reference_container("Call Controls"): Answer
+    methods_from_api_reference_container("Call Controls"): Reject
+    methods_from_api_reference_container("Call Controls"): Hangup
+    methods_from_api_reference_container("Call Controls"): Hold
+    methods_from_api_reference_container("Call Controls"): Resume
+    methods_from_api_reference_container("Call Controls"): Divert
+    methods_from_api_reference_container("Call Controls"): Transfer
+    methods_from_api_reference_container("Call Controls"): Park
+    methods_from_api_reference_container("Call Controls"): Retrieve
+    methods_from_api_reference_container("Call Controls"): Start Recording
+    methods_from_api_reference_container("Call Controls"): Stop Recording
+    methods_from_api_reference_container("Call Controls"): Pause Recording
+    methods_from_api_reference_container("Call Controls"): Resume Recording
+    methods_from_api_reference_container("Call Controls"): Transmit DTMF
+    methods_from_api_reference_container("Call Controls"): Push
+    methods_from_api_reference_container("Call Controls"): Pickup
+    methods_from_api_reference_container("Call Controls"): Barge In
+    methods_from_api_reference_container("Call Controls"): List Calls
+    methods_from_api_reference_container("Call Controls"): Get Call Details
+    methods_from_api_reference_container("Call Controls"): List Call History
+  endpoints_from_submenu_items(Locations): Extracting methods from "Locations" menu
+    methods_from_api_reference_container("Locations"): List Locations
+    methods_from_api_reference_container("Locations"): Get Location Details
+    methods_from_api_reference_container("Locations"): Create a Location
+    methods_from_api_reference_container("Locations"): Update a Location
+  endpoints_from_submenu_items(People): skipping
+  endpoints_from_submenu_items(Recording Report): skipping
+  endpoints_from_submenu_items(Video Mesh): skipping
+  endpoints_from_submenu_items(Webex Calling Organization Settings): Extracting methods from "Webex Calling Organization Settings" menu
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Change Announcement Language
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Auto Attendants
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Details for an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Call Forwarding Settings for an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Call Forwarding Settings for an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Selective Call Forwarding Rule for an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Selective Call Forwarding Rule for an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Selective Call Forwarding Rule for an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Selective Call Forwarding Rule for an Auto Attendant
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Call Parks
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Call Park
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Call Park
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Details for a Call Park
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Call Park
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get available agents from Call Parks
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get available recall hunt groups from Call Parks
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Call Park Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Call Park settings
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Call Park Extensions
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Details for a Call Park Extension
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Call Park Extension
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Call Park Extension
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Call Park Extension
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Call Pickups
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Call Pickup
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Call Pickup
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Details for a Call Pickup
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Call Pickup
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get available agents from Call Pickups
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Call Queues
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Details for a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Call Queue Announcement Files
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Call Queue Announcement File
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Call Forwarding Settings for a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Call Forwarding Settings for a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Selective Call Forwarding Rule for a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Selective Call Forwarding Rule for a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Selective Call Forwarding Rule for a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Selective Call Forwarding Rule for a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Call Recording Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Call Recording Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Call Recording Terms Of Service Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Call Recording Terms Of Service Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Test Call Routing
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Validate the List of Extensions
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Validate Extensions
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Hunt Groups
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Details for a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Call Forwarding Settings for a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Call Forwarding Settings for a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Selective Call Forwarding Rule for a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Selective Call Forwarding Rule for a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Selective Call Forwarding Rule for a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Selective Call Forwarding Rule for a Hunt Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Location Intercept
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Put Location Intercept
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the Internal Dialing configuration for a location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Modify the Internal Dialing configuration for a location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Location Webex Calling Details
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Location Webex Calling Details
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Generate example password for Location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Location Outgoing Permission
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Location Outgoing Permission
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Outgoing Permission Auto Transfer Number
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Put Outgoing Permission Auto Transfer Number
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Outgoing Permission Location Access Code
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create Outgoing Permission a new access code for a customer location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete Outgoing Permission Access Code Location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Paging Groups
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a new Paging Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Paging Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Details for a Paging Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Paging Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Add Phone Numbers to a location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Activate Phone Numbers in a location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Remove phone numbers from a location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Validate phone numbers.
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Phone Numbers for an Organization with Given Criterias
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Private Network Connect
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Private Network Connect
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Routing Choices
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Schedules
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Details for a Schedule
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Schedule
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Schedule
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Schedule
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Details for a Schedule Event
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Schedule Event
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update a Schedule Event
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Schedule Event
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Voicemail Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Voicemail Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Voicemail Rules
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Voicemail Rules
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Location Voicemail
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Location Voicemail
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get VoicePortal
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update VoicePortal
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get VoicePortal Passcode Rule
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Music On Hold
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Update Music On Hold
+    methods_from_api_reference_container("Webex Calling Organization Settings"): List VoicemailGroup
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Location Voicemail Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Modify Location Voicemail Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a new Voicemail Group for a Location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Voicemail Group for a Location
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of UC Manager Profiles
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Dial Patterns
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Modify Dial Patterns
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Validate a Dial Pattern
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Dial Plans
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Dial Plan
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get a Dial Plan
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Modify a Dial Plan
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Dial Plan
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Validate Local Gateway FQDN and Domain for a Trunk
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Trunks
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Trunk
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get a Trunk
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Modify a Trunk
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Trunk
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Trunk Types
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Routing Groups
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create Route Group for a Organization
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read a Route Group for a Organization
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Modify a Route Group for a Organization
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Remove a Route Group from an Organization
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the Usage of a Routing Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the Call to Extension Locations of a Routing Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the Dial Plan Locations of a Routing Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the PSTN Connection Locations of a Routing Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the Route Lists of a Routing Group
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Read the List of Route Lists
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Create a Route List
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Delete a Route List
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get a Route List
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Modify a Route List
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Modify Numbers for Route List
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Numbers assigned to a Route List
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Local Gateway Call to On-Premises Extension Usage for a Trunk
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Local Gateway Dial Plan Usage for a Trunk
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Locations Using the Local Gateway as PSTN Connection Routing
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Route Groups Using the Local Gateway
+    methods_from_api_reference_container("Webex Calling Organization Settings"): Get Local Gateway Usage Count
+  endpoints_from_submenu_items(Webex Calling Person Settings): Extracting methods from "Webex Calling Person Settings" menu
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Person's Calling Behavior
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure a person's Calling Behavior
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Barge In Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Barge In Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Forwarding Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Call Forwarding Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Call Intercept Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Call Intercept Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Call Intercept Greeting for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Call Recording Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Call Recording Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Caller ID Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Caller ID Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Do Not Disturb Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Do Not Disturb Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Voicemail Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Voicemail Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Busy Voicemail Greeting for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure No Answer Voicemail Greeting for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): List of Schedules for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Create Schedule for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Get a Schedule Details
+    methods_from_api_reference_container("Webex Calling Person Settings"): Update a Schedule
+    methods_from_api_reference_container("Webex Calling Person Settings"): Delete a Schedule
+    methods_from_api_reference_container("Webex Calling Person Settings"): Fetch Event for a person's Schedule
+    methods_from_api_reference_container("Webex Calling Person Settings"): Add a New Event for Person's Schedule
+    methods_from_api_reference_container("Webex Calling Person Settings"): Update an Event for a person's Schedule
+    methods_from_api_reference_container("Webex Calling Person Settings"): Delete an Event for a person's Schedule
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Call Waiting Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Call Waiting Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Retrieve a person's Monitoring Settings
+    methods_from_api_reference_container("Webex Calling Person Settings"): Modify a person's Monitoring Settings
+    methods_from_api_reference_container("Webex Calling Person Settings"): Get a List of Phone Numbers for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Retrieve a person's Application Services Settings
+    methods_from_api_reference_container("Webex Calling Person Settings"): Modify a person's Application Services Settings
+    methods_from_api_reference_container("Webex Calling Person Settings"): Get a person's Privacy Settings
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure a person's Privacy Settings
+    methods_from_api_reference_container("Webex Calling Person Settings"): Retrieve Executive Assistant Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Modify Executive Assistant Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Receptionist Client Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Receptionist Client Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Push-to-Talk Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Push-to-Talk Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Hoteling Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Hoteling Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Reset Voicemail PIN
+    methods_from_api_reference_container("Webex Calling Person Settings"): Read Incoming Permission Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Configure Incoming Permission Settings for a Person
+    methods_from_api_reference_container("Webex Calling Person Settings"): Retrieve a person's Outgoing Calling Permissions Settings
+    methods_from_api_reference_container("Webex Calling Person Settings"): Modify a person's Outgoing Calling Permissions Settings
+    methods_from_api_reference_container("Webex Calling Person Settings"): Assign or Unassign numbers to a person
+  endpoints_from_submenu_items(Webex Calling Voice Messaging): Extracting methods from "Webex Calling Voice Messaging" menu
+    methods_from_api_reference_container("Webex Calling Voice Messaging"): Get Message Summary
+    methods_from_api_reference_container("Webex Calling Voice Messaging"): List Messages
+    methods_from_api_reference_container("Webex Calling Voice Messaging"): Delete Message
+    methods_from_api_reference_container("Webex Calling Voice Messaging"): Mark As Read
+    methods_from_api_reference_container("Webex Calling Voice Messaging"): Mark As Unread
+  endpoints_from_submenu_items(Webex Calling Workspace Settings with Numbers): Extracting methods from "Webex Calling Workspace Settings with Numbers" menu
+    methods_from_api_reference_container("Webex Calling Workspace Settings with Numbers"): Gets the list of numbers associated with a specific workspace.
+  endpoints_from_submenu_items(Wholesale Billing Reports): skipping
+  endpoints_from_submenu_items(Wholesale Customers): skipping
+  endpoints_from_submenu_items(Wholesale Subscribers): skipping
+"BroadWorks Billing Reports"
+"BroadWorks Device Provisioning"
+"BroadWorks Enterprises"
+"BroadWorks Subscribers"
+"Call Controls"
+  get_method_details("Dial"): 
+  get_method_details("Answer"): 
+  get_method_details("Reject"): 
+  get_method_details("Hangup"): 
+  get_method_details("Hold"): 
+  get_method_details("Resume"): 
+  get_method_details("Divert"): 
+  get_method_details("Transfer"): 
+  get_method_details("Park"): 
+  get_method_details("Retrieve"): 
+  get_method_details("Start Recording"): 
+  get_method_details("Stop Recording"): 
+  get_method_details("Pause Recording"): 
+  get_method_details("Resume Recording"): 
+  get_method_details("Transmit DTMF"): 
+  get_method_details("Push"): 
+  get_method_details("Pickup"): 
+  get_method_details("Barge In"): 
+  get_method_details("List Calls"): 
+  get_method_details("Get Call Details"): 
+  get_method_details("List Call History"): 
+"Locations"
+  get_method_details("List Locations"): 
+  get_method_details("Get Location Details"): 
+  get_method_details("Create a Location"): 
+  get_method_details("Update a Location"): 
+"People"
+"Recording Report"
+"Video Mesh"
+"Webex Calling Organization Settings"
+  get_method_details("Change Announcement Language"): 
+  get_method_details("Read the List of Auto Attendants"): 
+  get_method_details("Get Details for an Auto Attendant"): 
+  get_method_details("Create an Auto Attendant"): 
+  get_method_details("Update an Auto Attendant"): 
+  get_method_details("Delete an Auto Attendant"): 
+  get_method_details("Get Call Forwarding Settings for an Auto Attendant"): 
+  get_method_details("Update Call Forwarding Settings for an Auto Attendant"): 
+  get_method_details("Create a Selective Call Forwarding Rule for an Auto Attendant"): 
+  get_method_details("Get Selective Call Forwarding Rule for an Auto Attendant"): 
+  get_method_details("Update Selective Call Forwarding Rule for an Auto Attendant"): 
+  get_method_details("Delete a Selective Call Forwarding Rule for an Auto Attendant"): 
+  get_method_details("Read the List of Call Parks"): 
+  get_method_details("Create a Call Park"): 
+  get_method_details("Delete a Call Park"): 
+  get_method_details("Get Details for a Call Park"): 
+  get_method_details("Update a Call Park"): 
+  get_method_details("Get available agents from Call Parks"): 
+  get_method_details("Get available recall hunt groups from Call Parks"): 
+  get_method_details("Get Call Park Settings"): 
+  get_method_details("Update Call Park settings"): 
+  get_method_details("Read the List of Call Park Extensions"): 
+  get_method_details("Get Details for a Call Park Extension"): 
+  get_method_details("Create a Call Park Extension"): 
+  get_method_details("Delete a Call Park Extension"): 
+  get_method_details("Update a Call Park Extension"): 
+  get_method_details("Read the List of Call Pickups"): 
+  get_method_details("Create a Call Pickup"): 
+  get_method_details("Delete a Call Pickup"): 
+  get_method_details("Get Details for a Call Pickup"): 
+  get_method_details("Update a Call Pickup"): 
+  get_method_details("Get available agents from Call Pickups"): 
+  get_method_details("Read the List of Call Queues"): 
+  get_method_details("Create a Call Queue"): 
+  get_method_details("Delete a Call Queue"): 
+  get_method_details("Get Details for a Call Queue"): 
+  get_method_details("Update a Call Queue"): 
+  get_method_details("Read the List of Call Queue Announcement Files"): 
+  get_method_details("Delete a Call Queue Announcement File"): 
+  get_method_details("Get Call Forwarding Settings for a Call Queue"): 
+  get_method_details("Update Call Forwarding Settings for a Call Queue"): 
+  get_method_details("Create a Selective Call Forwarding Rule for a Call Queue"): 
+  get_method_details("Get Selective Call Forwarding Rule for a Call Queue"): 
+  get_method_details("Update a Selective Call Forwarding Rule for a Call Queue"): 
+  get_method_details("Delete a Selective Call Forwarding Rule for a Call Queue"): 
+  get_method_details("Get Call Recording Settings"): 
+  get_method_details("Update Call Recording Settings"): 
+  get_method_details("Get Call Recording Terms Of Service Settings"): 
+  get_method_details("Update Call Recording Terms Of Service Settings"): 
+  get_method_details("Test Call Routing"): 
+  get_method_details("Validate the List of Extensions"): 
+  get_method_details("Validate Extensions"): 
+  get_method_details("Read the List of Hunt Groups"): 
+  get_method_details("Create a Hunt Group"): 
+  get_method_details("Delete a Hunt Group"): 
+  get_method_details("Get Details for a Hunt Group"): 
+  get_method_details("Update a Hunt Group"): 
+  get_method_details("Get Call Forwarding Settings for a Hunt Group"): 
+  get_method_details("Update Call Forwarding Settings for a Hunt Group"): 
+  get_method_details("Create a Selective Call Forwarding Rule for a Hunt Group"): 
+  get_method_details("Get Selective Call Forwarding Rule for a Hunt Group"): 
+  get_method_details("Update a Selective Call Forwarding Rule for a Hunt Group"): 
+  get_method_details("Delete a Selective Call Forwarding Rule for a Hunt Group"): 
+  get_method_details("Get Location Intercept"): 
+  get_method_details("Put Location Intercept"): 
+  get_method_details("Read the Internal Dialing configuration for a location"): 
+  get_method_details("Modify the Internal Dialing configuration for a location"): 
+  get_method_details("Get Location Webex Calling Details"): 
+  get_method_details("Update Location Webex Calling Details"): 
+  get_method_details("Generate example password for Location"): 
+  get_method_details("Get Location Outgoing Permission"): 
+  get_method_details("Update Location Outgoing Permission"): 
+  get_method_details("Get Outgoing Permission Auto Transfer Number"): 
+  get_method_details("Put Outgoing Permission Auto Transfer Number"): 
+  get_method_details("Get Outgoing Permission Location Access Code"): 
+  get_method_details("Create Outgoing Permission a new access code for a customer location"): 
+  get_method_details("Delete Outgoing Permission Access Code Location"): 
+  get_method_details("Read the List of Paging Groups"): 
+  get_method_details("Create a new Paging Group"): 
+  get_method_details("Delete a Paging Group"): 
+  get_method_details("Get Details for a Paging Group"): 
+  get_method_details("Update a Paging Group"): 
+  get_method_details("Add Phone Numbers to a location"): 
+  get_method_details("Activate Phone Numbers in a location"): 
+  get_method_details("Remove phone numbers from a location"): 
+  get_method_details("Validate phone numbers."): 
+  get_method_details("Validate phone numbers."): GET https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/validate-phone-numbers. failed. Retry w/o trailing "."
+  get_method_details("Validate phone numbers."): Failed o parse header from api spec
+  get_method_details("Get Phone Numbers for an Organization with Given Criterias"): 
+  get_method_details("Get Private Network Connect"): 
+  get_method_details("Update Private Network Connect"): 
+  get_method_details("Read the List of Routing Choices"): 
+  get_method_details("Read the List of Schedules"): 
+  get_method_details("Get Details for a Schedule"): 
+  get_method_details("Create a Schedule"): 
+  get_method_details("Update a Schedule"): 
+  get_method_details("Delete a Schedule"): 
+  get_method_details("Get Details for a Schedule Event"): 
+  get_method_details("Create a Schedule Event"): 
+  get_method_details("Update a Schedule Event"): 
+  get_method_details("Delete a Schedule Event"): 
+  get_method_details("Get Voicemail Settings"): 
+  get_method_details("Update Voicemail Settings"): 
+  get_method_details("Get Voicemail Rules"): 
+  get_method_details("Update Voicemail Rules"): 
+  get_method_details("Get Location Voicemail"): 
+  get_method_details("Update Location Voicemail"): 
+  get_method_details("Get VoicePortal"): 
+  get_method_details("Update VoicePortal"): 
+  get_method_details("Get VoicePortal Passcode Rule"): 
+  get_method_details("Get Music On Hold"): 
+  get_method_details("Update Music On Hold"): 
+  get_method_details("List VoicemailGroup"): 
+  get_method_details("Get Location Voicemail Group"): 
+  get_method_details("Modify Location Voicemail Group"): 
+  get_method_details("Create a new Voicemail Group for a Location"): 
+  get_method_details("Delete a Voicemail Group for a Location"): 
+  get_method_details("Read the List of UC Manager Profiles"): 
+  get_method_details("Read the List of Dial Patterns"): 
+  get_method_details("Modify Dial Patterns"): 
+  get_method_details("Validate a Dial Pattern"): 
+  get_method_details("Read the List of Dial Plans"): 
+  get_method_details("Create a Dial Plan"): 
+  get_method_details("Get a Dial Plan"): 
+  get_method_details("Modify a Dial Plan"): 
+  get_method_details("Delete a Dial Plan"): 
+  get_method_details("Validate Local Gateway FQDN and Domain for a Trunk"): 
+  get_method_details("Read the List of Trunks"): 
+  get_method_details("Create a Trunk"): 
+  get_method_details("Get a Trunk"): 
+  get_method_details("Modify a Trunk"): 
+  get_method_details("Delete a Trunk"): 
+  get_method_details("Read the List of Trunk Types"): 
+  get_method_details("Read the List of Routing Groups"): 
+  get_method_details("Create Route Group for a Organization"): 
+  get_method_details("Read a Route Group for a Organization"): 
+  get_method_details("Modify a Route Group for a Organization"): 
+  get_method_details("Remove a Route Group from an Organization"): 
+  get_method_details("Read the Usage of a Routing Group"): 
+  get_method_details("Read the Call to Extension Locations of a Routing Group"): 
+  get_method_details("Read the Dial Plan Locations of a Routing Group"): 
+  get_method_details("Read the PSTN Connection Locations of a Routing Group"): 
+  get_method_details("Read the Route Lists of a Routing Group"): 
+  get_method_details("Read the List of Route Lists"): 
+  get_method_details("Create a Route List"): 
+  get_method_details("Delete a Route List"): 
+  get_method_details("Get a Route List"): 
+  get_method_details("Modify a Route List"): 
+  get_method_details("Modify Numbers for Route List"): 
+  get_method_details("Get Numbers assigned to a Route List"): 
+  get_method_details("Get Local Gateway Call to On-Premises Extension Usage for a Trunk"): 
+  get_method_details("Get Local Gateway Dial Plan Usage for a Trunk"): 
+  get_method_details("Get Locations Using the Local Gateway as PSTN Connection Routing"): 
+  get_method_details("Get Route Groups Using the Local Gateway"): 
+  get_method_details("Get Local Gateway Usage Count"): 
+"Webex Calling Person Settings"
+  get_method_details("Read Person's Calling Behavior"): 
+  get_method_details("Configure a person's Calling Behavior"): 
+  get_method_details("Read Barge In Settings for a Person"): 
+  get_method_details("Configure Barge In Settings for a Person"): 
+  get_method_details("Read Forwarding Settings for a Person"): 
+  get_method_details("Configure Call Forwarding Settings for a Person"): 
+  get_method_details("Read Call Intercept Settings for a Person"): 
+  get_method_details("Configure Call Intercept Settings for a Person"): 
+  get_method_details("Configure Call Intercept Greeting for a Person"): 
+  get_method_details("Read Call Recording Settings for a Person"): 
+  get_method_details("Configure Call Recording Settings for a Person"): 
+  get_method_details("Read Caller ID Settings for a Person"): 
+  get_method_details("Configure Caller ID Settings for a Person"): 
+  get_method_details("Read Do Not Disturb Settings for a Person"): 
+  get_method_details("Configure Do Not Disturb Settings for a Person"): 
+  get_method_details("Read Voicemail Settings for a Person"): 
+  get_method_details("Configure Voicemail Settings for a Person"): 
+  get_method_details("Configure Busy Voicemail Greeting for a Person"): 
+  get_method_details("Configure No Answer Voicemail Greeting for a Person"): 
+  get_method_details("List of Schedules for a Person"): 
+  get_method_details("Create Schedule for a Person"): 
+  get_method_details("Get a Schedule Details"): 
+  get_method_details("Update a Schedule"): 
+  get_method_details("Delete a Schedule"): 
+  get_method_details("Fetch Event for a person's Schedule"): 
+  get_method_details("Add a New Event for Person's Schedule"): 
+  get_method_details("Update an Event for a person's Schedule"): 
+  get_method_details("Delete an Event for a person's Schedule"): 
+  get_method_details("Read Call Waiting Settings for a Person"): 
+  get_method_details("Configure Call Waiting Settings for a Person"): 
+  get_method_details("Retrieve a person's Monitoring Settings"): 
+  get_method_details("Modify a person's Monitoring Settings"): 
+  get_method_details("Get a List of Phone Numbers for a Person"): 
+  get_method_details("Retrieve a person's Application Services Settings"): 
+  get_method_details("Modify a person's Application Services Settings"): 
+  get_method_details("Get a person's Privacy Settings"): 
+  get_method_details("Configure a person's Privacy Settings"): 
+  get_method_details("Retrieve Executive Assistant Settings for a Person"): 
+  get_method_details("Modify Executive Assistant Settings for a Person"): 
+  get_method_details("Read Receptionist Client Settings for a Person"): 
+  get_method_details("Configure Receptionist Client Settings for a Person"): 
+  get_method_details("Read Push-to-Talk Settings for a Person"): 
+  get_method_details("Configure Push-to-Talk Settings for a Person"): 
+  get_method_details("Read Hoteling Settings for a Person"): 
+  get_method_details("Configure Hoteling Settings for a Person"): 
+  get_method_details("Reset Voicemail PIN"): 
+  get_method_details("Read Incoming Permission Settings for a Person"): 
+  get_method_details("Configure Incoming Permission Settings for a Person"): 
+  get_method_details("Retrieve a person's Outgoing Calling Permissions Settings"): 
+  get_method_details("Modify a person's Outgoing Calling Permissions Settings"): 
+  get_method_details("Assign or Unassign numbers to a person"): 
+"Webex Calling Voice Messaging"
+  get_method_details("Get Message Summary"): 
+  get_method_details("List Messages"): 
+  get_method_details("Delete Message"): 
+  get_method_details("Mark As Read"): 
+  get_method_details("Mark As Unread"): 
+"Webex Calling Workspace Settings with Numbers"
+  get_method_details("Gets the list of numbers associated with a specific workspace."): 
+  get_method_details("Gets the list of numbers associated with a specific workspace."): GET https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings-with-numbers/gets-the-list-of-numbers-associated-with-a-specific-workspace. failed. Retry w/o trailing "."
+  get_method_details("Gets the list of numbers associated with a specific workspace."): Failed o parse header from api spec
+"Wholesale Billing Reports"
+"Wholesale Customers"
+"Wholesale Subscribers"
+writing to developer.webex.com/api_spec.yml
+creating developer.webex.com/diff_api_spec.yml
+reading base api spec from developer.webex.com/api_spec.yml
+Traceback (most recent call last):
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/read_api_spec.py", line 139, in <module>
+    main()
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/read_api_spec.py", line 121, in main
+    docs = site.get_calling_docs()
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/scraper/__init__.py", line 469, in get_calling_docs
+    calling_nav_group = self.driver.find_element(by=By.CLASS_NAME, value='md-sidebar-nav__group--expanded')
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 856, in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/remote/webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9/lib/python3.9/site-packages/selenium/webdriver/remote/errorhandler.py", line 243, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":".md-sidebar-nav__group--expanded"}
+  (Session info: chrome=106.0.5249.119)
+Stacktrace:
+0   chromedriver                        0x00000001050b2f44 chromedriver + 3813188
+1   chromedriver                        0x0000000105044ae0 chromedriver + 3361504
+2   chromedriver                        0x0000000104d48c5c chromedriver + 232540
+3   chromedriver                        0x0000000104d7a380 chromedriver + 435072
+4   chromedriver                        0x0000000104da7f44 chromedriver + 622404
+5   chromedriver                        0x0000000104d6f358 chromedriver + 389976
+6   chromedriver                        0x0000000104d70284 chromedriver + 393860
+7   chromedriver                        0x0000000105086e18 chromedriver + 3632664
+8   chromedriver                        0x000000010508a97c chromedriver + 3647868
+9   chromedriver                        0x0000000105090b58 chromedriver + 3672920
+10  chromedriver                        0x000000010508b350 chromedriver + 3650384
+11  chromedriver                        0x00000001050688dc chromedriver + 3508444
+12  chromedriver                        0x00000001050a5914 chromedriver + 3758356
+13  chromedriver                        0x00000001050a5a78 chromedriver + 3758712
+14  chromedriver                        0x00000001050b96cc chromedriver + 3839692
+15  libsystem_pthread.dylib             0x00000001804f826c _pthread_start + 148
+16  libsystem_pthread.dylib             0x00000001804f308c thread_start + 8
+
+writing to developer.webex.com/new_endpoints.txt
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004hscript/new_apis forcebase forcediff[P[9C [10D[P[9C [10D[P[9C [10D[P[9C [10D[P[9C [10D[P[9C [10D[P[9C [10D[P[9C [10D[P[9C [10Dorcediff [10D[?2004l
+creating developer.webex.com/diff_api_spec.yml
+reading base api spec from developer.webex.com/api_spec.yml
+Traceback (most recent call last):
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/read_api_spec.py", line 139, in <module>
+    main()
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/read_api_spec.py", line 121, in main
+    docs = site.get_calling_docs()
+  File "/Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/scraper/__init__.py", line 471, in get_calling_docs
+    reference = self.by_class_and_text(find_in=calling_nav_group,
+NameError: name 'calling_nav_group' is not defined
+writing to developer.webex.com/new_endpoints.txt
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004hscript/new_apis forcediff[?2004l
+creating developer.webex.com/diff_api_spec.yml
+reading base api spec from developer.webex.com/api_spec.yml
+  endpoints_from_submenu_items(BroadWorks Billing Reports): skipping
+  endpoints_from_submenu_items(BroadWorks Device Provisioning): skipping
+  endpoints_from_submenu_items(BroadWorks Enterprises): skipping
+  endpoints_from_submenu_items(BroadWorks Enterprises With Delete Org Improvements): Extracting methods from "BroadWorks Enterprises With Delete Org Improvements" menu
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): List BroadWorks Enterprises
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): Update Directory Sync for a BroadWorks Enterprise
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): Trigger Directory Sync for an Enterprise
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): Get Directory Sync Status for an Enterprise
+    methods_from_api_reference_container("BroadWorks Enterprises With Delete Org Improvements"): Trigger Directory Sync for a User
+  endpoints_from_submenu_items(BroadWorks Subscribers): skipping
+  endpoints_from_submenu_items(BroadWorks Workspaces): Extracting methods from "BroadWorks Workspaces" menu
+    methods_from_api_reference_container("BroadWorks Workspaces"): Provision a BroadWorks Workspace
+    methods_from_api_reference_container("BroadWorks Workspaces"): Update a Broadworks Workspace
+    methods_from_api_reference_container("BroadWorks Workspaces"): Remove a BroadWorks Workspace
+  endpoints_from_submenu_items(Call Controls): skipping
+  endpoints_from_submenu_items(Locations): skipping
+  endpoints_from_submenu_items(People): skipping
+  endpoints_from_submenu_items(People with Calling): Extracting methods from "People with Calling" menu
+    methods_from_api_reference_container("People with Calling"): List People
+    methods_from_api_reference_container("People with Calling"): Create a Person
+    methods_from_api_reference_container("People with Calling"): Get Person Details
+    methods_from_api_reference_container("People with Calling"): Update a Person
+    methods_from_api_reference_container("People with Calling"): Delete a Person
+    methods_from_api_reference_container("People with Calling"): Get My Own Details
+  endpoints_from_submenu_items(Recording Report): skipping
+  endpoints_from_submenu_items(Video Mesh): skipping
+  endpoints_from_submenu_items(Webex Calling Organization Settings): skipping
+  endpoints_from_submenu_items(Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features): Extracting methods from "Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features" menu
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Create a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Delete a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Get Details for a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Update a Call Queue
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Read the List of Call Queue Announcement Files
+    methods_from_api_reference_container("Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"): Delete a Call Queue Announcement File
+  endpoints_from_submenu_items(Webex Calling Organization Settings With Call Queue Policies Features): Extracting methods from "Webex Calling Organization Settings With Call Queue Policies Features" menu
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Read the List of Call Queue Announcement Files
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Get Details for a Call Queue Holiday Service
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Update a Call Queue Holiday Service
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Get Details for a Call Queue Night Service
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Update a Call Queue Night Service
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Get Details for a Call Queue Stranded Calls
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Update a Call Queue Stranded Calls service
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Get Details for a Call Queue Forced Forward
+    methods_from_api_reference_container("Webex Calling Organization Settings With Call Queue Policies Features"): Update a Call Queue Forced Forward service
+  endpoints_from_submenu_items(Webex Calling Organization Settings with Devices Features): Extracting methods from "Webex Calling Organization Settings with Devices Features" menu
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Get Device Members
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Update Members on the device
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Search Members
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Apply Changes for a specific device
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Get Device Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Update device settings
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Get Location Device Settings
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Get User Devices
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Get Workspace Devices
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Modify Workspace Devices
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Read the List of Supported Devices
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Read the device override settings for a organization
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Read the DECT device type list
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Validate a list of MAC address
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Change Device Settings Across Organization Or Location Job
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): List Change Device Settings Jobs
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): Get Change Device Settings Job Status
+    methods_from_api_reference_container("Webex Calling Organization Settings with Devices Features"): List Change Device Settings Job Errors
+  endpoints_from_submenu_items(Webex Calling Person Settings): skipping
+  endpoints_from_submenu_items(Webex Calling Person Settings With Shared Line): Extracting methods from "Webex Calling Person Settings With Shared Line" menu
+    methods_from_api_reference_container("Webex Calling Person Settings With Shared Line"): Search Shared-Line Appearance Members
+    methods_from_api_reference_container("Webex Calling Person Settings With Shared Line"): Get Shared-Line Appearance Members
+    methods_from_api_reference_container("Webex Calling Person Settings With Shared Line"): Put Shared-Line Appearance Members
+  endpoints_from_submenu_items(Webex Calling Person Settings with Calling Behavior): Extracting methods from "Webex Calling Person Settings with Calling Behavior" menu
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Call Forwarding Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Call Forwarding Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Call Waiting Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Call Waiting Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Caller ID Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Caller ID Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Monitoring Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Monitoring Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Incoming Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Incoming Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Outgoing Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Outgoing Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Access Codes for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Access Codes for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Create Access Codes for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Read Call Intercept Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Configure Call Intercept Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Retrieve Transfer Numbers Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Person Settings with Calling Behavior"): Modify Transfer Numbers Settings for a Workspace
+  endpoints_from_submenu_items(Webex Calling Settings with Outgoing Callcenter Manual): Extracting methods from "Webex Calling Settings with Outgoing Callcenter Manual" menu
+    methods_from_api_reference_container("Webex Calling Settings with Outgoing Callcenter Manual"): Create a Call Queue
+    methods_from_api_reference_container("Webex Calling Settings with Outgoing Callcenter Manual"): Get Details for a Call Queue
+    methods_from_api_reference_container("Webex Calling Settings with Outgoing Callcenter Manual"): Update a Call Queue
+    methods_from_api_reference_container("Webex Calling Settings with Outgoing Callcenter Manual"): Retrieve List of Call Queue Caller ID information
+    methods_from_api_reference_container("Webex Calling Settings with Outgoing Callcenter Manual"): Retrieve a Call Queue Agent's Caller ID information
+    methods_from_api_reference_container("Webex Calling Settings with Outgoing Callcenter Manual"): Modify a Call Queue Agent's Caller ID information
+  endpoints_from_submenu_items(Webex Calling Voice Messaging): skipping
+  endpoints_from_submenu_items(Webex Calling Workspace Settings with Numbers): skipping
+  endpoints_from_submenu_items(Webex Calling Workspaces Settings): Extracting methods from "Webex Calling Workspaces Settings" menu
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Call Forwarding Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Call Forwarding Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Call Waiting Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Call Waiting Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Caller ID Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Caller ID Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Monitoring Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Monitoring Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Incoming Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Incoming Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Outgoing Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Outgoing Permission Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Authorization Codes for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Authorization Codes for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Create Authorization Codes for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Read Call Intercept Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Configure Call Intercept Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Retrieve Transfer Numbers Settings for a Workspace
+    methods_from_api_reference_container("Webex Calling Workspaces Settings"): Modify Transfer Numbers Settings for a Workspace
+  endpoints_from_submenu_items(Webex for Broadworks phone list sync): Extracting methods from "Webex for Broadworks phone list sync" menu
+    methods_from_api_reference_container("Webex for Broadworks phone list sync"): List BroadWorks Enterprises
+    methods_from_api_reference_container("Webex for Broadworks phone list sync"): Update Directory Sync for a BroadWorks Enterprise
+    methods_from_api_reference_container("Webex for Broadworks phone list sync"): Trigger Directory Sync for an Enterprise
+    methods_from_api_reference_container("Webex for Broadworks phone list sync"): Get Directory Sync Status for an Enterprise
+  endpoints_from_submenu_items(Wholesale Billing Reports): skipping
+  endpoints_from_submenu_items(Wholesale Customers): skipping
+  endpoints_from_submenu_items(Wholesale Subscribers): skipping
+"BroadWorks Billing Reports"
+"BroadWorks Device Provisioning"
+"BroadWorks Enterprises"
+"BroadWorks Enterprises With Delete Org Improvements"
+  get_method_details("List BroadWorks Enterprises"): 
+  get_method_details("Update Directory Sync for a BroadWorks Enterprise"): 
+  get_method_details("Trigger Directory Sync for an Enterprise"): 
+  get_method_details("Get Directory Sync Status for an Enterprise"): 
+  get_method_details("Trigger Directory Sync for a User"): 
+"BroadWorks Subscribers"
+"BroadWorks Workspaces"
+  get_method_details("Provision a BroadWorks Workspace"): 
+  get_method_details("Update a Broadworks Workspace"): 
+  get_method_details("Remove a BroadWorks Workspace"): 
+"Call Controls"
+"Locations"
+"People"
+"People with Calling"
+  get_method_details("List People"): 
+  get_method_details("Create a Person"): 
+  get_method_details("Get Person Details"): 
+  get_method_details("Update a Person"): 
+  get_method_details("Delete a Person"): 
+  get_method_details("Get My Own Details"): 
+"Recording Report"
+"Video Mesh"
+"Webex Calling Organization Settings"
+"Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features"
+  get_method_details("Create a Call Queue"): 
+  get_method_details("Delete a Call Queue"): 
+  get_method_details("Get Details for a Call Queue"): 
+  get_method_details("Update a Call Queue"): 
+  get_method_details("Read the List of Call Queue Announcement Files"): 
+  get_method_details("Delete a Call Queue Announcement File"): 
+"Webex Calling Organization Settings With Call Queue Policies Features"
+  get_method_details("Read the List of Call Queue Announcement Files"): 
+  get_method_details("Get Details for a Call Queue Holiday Service"): 
+  get_method_details("Update a Call Queue Holiday Service"): 
+  get_method_details("Get Details for a Call Queue Night Service"): 
+  get_method_details("Update a Call Queue Night Service"): 
+  get_method_details("Get Details for a Call Queue Stranded Calls"): 
+  get_method_details("Update a Call Queue Stranded Calls service"): 
+  get_method_details("Get Details for a Call Queue Forced Forward"): 
+  get_method_details("Update a Call Queue Forced Forward service"): 
+"Webex Calling Organization Settings with Devices Features"
+  get_method_details("Get Device Members"): 
+  get_method_details("Update Members on the device"): 
+  get_method_details("Search Members"): 
+  get_method_details("Apply Changes for a specific device"): 
+  get_method_details("Get Device Settings"): 
+  get_method_details("Update device settings"): 
+  get_method_details("Get Location Device Settings"): 
+  get_method_details("Get User Devices"): 
+  get_method_details("Get Workspace Devices"): 
+  get_method_details("Modify Workspace Devices"): 
+  get_method_details("Read the List of Supported Devices"): 
+  get_method_details("Read the device override settings for a organization"): 
+  get_method_details("Read the DECT device type list"): 
+  get_method_details("Validate a list of MAC address"): 
+  get_method_details("Change Device Settings Across Organization Or Location Job"): 
+  get_method_details("List Change Device Settings Jobs"): 
+  get_method_details("Get Change Device Settings Job Status"): 
+  get_method_details("List Change Device Settings Job Errors"): 
+"Webex Calling Person Settings"
+"Webex Calling Person Settings With Shared Line"
+  get_method_details("Search Shared-Line Appearance Members"): 
+  get_method_details("Get Shared-Line Appearance Members"): 
+  get_method_details("Put Shared-Line Appearance Members"): 
+"Webex Calling Person Settings with Calling Behavior"
+  get_method_details("Retrieve Call Forwarding Settings for a Workspace"): 
+  get_method_details("Modify Call Forwarding Settings for a Workspace"): 
+  get_method_details("Retrieve Call Waiting Settings for a Workspace"): 
+  get_method_details("Modify Call Waiting Settings for a Workspace"): 
+  get_method_details("Retrieve Caller ID Settings for a Workspace"): 
+  get_method_details("Modify Caller ID Settings for a Workspace"): 
+  get_method_details("Retrieve Monitoring Settings for a Workspace"): 
+  get_method_details("Modify Monitoring Settings for a Workspace"): 
+  get_method_details("Retrieve Incoming Permission Settings for a Workspace"): 
+  get_method_details("Modify Incoming Permission Settings for a Workspace"): 
+  get_method_details("Retrieve Outgoing Permission Settings for a Workspace"): 
+  get_method_details("Modify Outgoing Permission Settings for a Workspace"): 
+  get_method_details("Retrieve Access Codes for a Workspace"): 
+  get_method_details("Modify Access Codes for a Workspace"): 
+  get_method_details("Create Access Codes for a Workspace"): 
+  get_method_details("Read Call Intercept Settings for a Workspace"): 
+  get_method_details("Configure Call Intercept Settings for a Workspace"): 
+  get_method_details("Retrieve Transfer Numbers Settings for a Workspace"): 
+  get_method_details("Modify Transfer Numbers Settings for a Workspace"): 
+"Webex Calling Settings with Outgoing Callcenter Manual"
+  get_method_details("Create a Call Queue"): 
+  get_method_details("Get Details for a Call Queue"): 
+  get_method_details("Update a Call Queue"): 
+  get_method_details("Retrieve List of Call Queue Caller ID information"): 
+  get_method_details("Retrieve a Call Queue Agent's Caller ID information"): 
+  get_method_details("Modify a Call Queue Agent's Caller ID information"): 
+"Webex Calling Voice Messaging"
+"Webex Calling Workspace Settings with Numbers"
+"Webex Calling Workspaces Settings"
+  get_method_details("Retrieve Call Forwarding Settings for a Workspace"): 
+  get_method_details("Modify Call Forwarding Settings for a Workspace"): 
+  get_method_details("Retrieve Call Waiting Settings for a Workspace"): 
+  get_method_details("Modify Call Waiting Settings for a Workspace"): 
+  get_method_details("Retrieve Caller ID Settings for a Workspace"): 
+  get_method_details("Modify Caller ID Settings for a Workspace"): 
+  get_method_details("Retrieve Monitoring Settings for a Workspace"): 
+  get_method_details("Modify Monitoring Settings for a Workspace"): 
+  get_method_details("Retrieve Incoming Permission Settings for a Workspace"): 
+  get_method_details("Modify Incoming Permission Settings for a Workspace"): 
+  get_method_details("Retrieve Outgoing Permission Settings for a Workspace"): 
+  get_method_details("Modify Outgoing Permission Settings for a Workspace"): 
+  get_method_details("Retrieve Authorization Codes for a Workspace"): 
+  get_method_details("Modify Authorization Codes for a Workspace"): 
+  get_method_details("Create Authorization Codes for a Workspace"): 
+  get_method_details("Read Call Intercept Settings for a Workspace"): 
+  get_method_details("Configure Call Intercept Settings for a Workspace"): 
+  get_method_details("Retrieve Transfer Numbers Settings for a Workspace"): 
+  get_method_details("Modify Transfer Numbers Settings for a Workspace"): 
+"Webex for Broadworks phone list sync"
+  get_method_details("List BroadWorks Enterprises"): 
+  get_method_details("Update Directory Sync for a BroadWorks Enterprise"): 
+  get_method_details("Trigger Directory Sync for an Enterprise"): 
+  get_method_details("Get Directory Sync Status for an Enterprise"): 
+"Wholesale Billing Reports"
+"Wholesale Customers"
+"Wholesale Subscribers"
+writing to developer.webex.com/diff_api_spec.yml
+writing to developer.webex.com/new_endpoints.txt
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004hllksn .   l ln .s   -s /User...[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % ln -s /Users[1m/[0m[K[0m/jk...[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % ln -s /Users/jkrohn[1m/[0m[K[0m/O...[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % ln -s /Users/jkrohn/OneDrive\ -\ Cisco[1m/[0m[K[0m/Doc...[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % ln -s /Users/jkrohn/OneDrive\ -\ Cisco/Documents[1m/[0m[K[0m/pr...[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % ln -s /Users/jkrohn/OneDrive\ -\ Cisco/Documents/pr[K
+[Jpresentations/  proj/[A[0m[27m[24m[31Cln -s /Users/jkrohn/OneDrive\ -\ Cisco/Documents/pr[Ko...[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % ln -s /Users/jkrohn/OneDrive\ -\ Cisco/Documents/proj[1m/[0m[K[0m/202210 ...[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % ln -s /Users/jkrohn/OneDrive\ -\ Cisco/Documents/proj/202210\[K[1CWe...[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % ln -s /Users/jkrohn/OneDrive\ -\ Cisco/Documents/proj/202210\ Webex\ One[1m/[0m[K[0m /User...[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % ln -s /Users/jkrohn/OneDrive\ -\ Cisco/Documents/proj/202210\ Webex\ One /Users[1m/[0m[K[0m/jk...[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % ln -s /Users/jkrohn/OneDrive\ -\ Cisco/Documents/proj/202210\ Webex\ One /Users/jkrohn[1m/[0m[K[0m/doc...[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % ln -s /Users/jkrohn/OneDrive\ -\ Cisco/Documents/proj/202210\ Webex\ One /Users/jkrohn/doc[K   Doc...[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % ln -s /Users/jkrohn/OneDrive\ -\ Cisco/Documents/proj/202210\ Webex\ One /Users/jkrohn/Documents[1m/[0m[K[0m/p...[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % ln -s /Users/jkrohn/OneDrive\ -\ Cisco/Documents/proj/202210\ Webex\ One /Users/jkrohn/Documents/pr[Ko...[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % ln -s /Users/jkrohn/OneDrive\ -\ Cisco/Documents/proj/202210\ Webex\ One /Users/jkrohn/Documents/proj[K[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004hppoetray   y shell[?2004l
+Virtual environment already activated: [34m/Users/jkrohn/Library/Caches/pypoetry/virtualenvs/wxc-sdk-NNVrdgRm-py3.9[0m
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004h[?2004l
+[1m[7m%[27m[1m[0m                                                                                                                                                                                                                                                  ]7;file://JKROHN-M-942M/Users/jkrohn/Documents/workspace/wxc_sdk[0m[27m[24m[Jjkrohn@JKROHN-M-942M wxc_sdk % [K[?2004heexit[?2004l
+
+Saving session...
+...copying shared history...
+...saving history...truncating history files...
+...completed.
+
+Script done on Thu Oct 27 14:33:38 2022

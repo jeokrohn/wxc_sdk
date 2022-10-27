@@ -1,3 +1,4 @@
+# command: developer.webex.com/read_api_spec.py -f developer.webex.com/api_spec.yml
 docs:
   BroadWorks Billing Reports: []
   BroadWorks Device Provisioning: []
@@ -6609,14 +6610,14 @@ docs:
         param_object: null
         type: string
         type_spec: required
-      - doc: Primary phone number of the call queue. Either phone number or extension
+      - doc: Primary phone number of the call queue. Either a phone number or extension
           is mandatory.
         name: phoneNumber
         param_attrs: null
         param_object: null
         type: string
         type_spec: null
-      - doc: Primary phone extension of the call queue. Either phone number or extension
+      - doc: Primary phone extension of the call queue. Either a phone number or extension
           is mandatory.
         name: extension
         param_attrs: null
@@ -6637,7 +6638,7 @@ docs:
         type: string
         type_spec: null
       - doc: Last name to be shown when calls are forwarded out of this call queue.
-          Defaults to phone number if set, otherwise defaults to call group name.
+          Defaults to the phone number if set, otherwise defaults to call group name.
         name: lastName
         param_attrs: null
         param_object: null
@@ -6684,7 +6685,7 @@ docs:
             type: string
             type_spec: null
           - doc: Sends calls to idle agents based on percentages you assign to each
-              agent (up to 100%).
+              agent (up to 100).
             name: WEIGHTED
             param_attrs: null
             param_object: null
@@ -6750,7 +6751,7 @@ docs:
             param_object: null
             type: boolean
             type_spec: required
-          - doc: Ring pattern for when this callqueue is called. Only available when
+          - doc: Ring pattern for when this call queue is called. Only available when
               distinctiveRing is enabled for the call queue.
             name: ringPattern
             param_attrs:
@@ -6792,7 +6793,7 @@ docs:
         name: queueSettings
         param_attrs:
         - doc: The maximum number of calls for this call queue. Once this number is
-            reached, the overflow settings are triggered.
+            reached, the overflow settings are triggered (max 50).
           name: queueSize
           param_attrs: null
           param_object: null
@@ -6817,7 +6818,7 @@ docs:
           - doc: Indicates how to handle new calls when the queue is full.
             name: action
             param_attrs:
-            - doc: The caller hears a fast-busy tone.
+            - doc: The caller hears a fast busy tone.
               name: PERFORM_BUSY_TREATMENT
               param_attrs: null
               param_object: null
@@ -6865,7 +6866,7 @@ docs:
             param_object: null
             type: number
             type_spec: null
-          - doc: Indicate overflow audio to be played, otherwise callers will hear
+          - doc: Indicate overflow audio to be played, otherwise, callers will hear
               the hold music until the call is answered by a user.
             name: playOverflowGreetingEnabled
             param_attrs: null
@@ -6922,6 +6923,13 @@ docs:
         param_object: null
         type: array[PostPersonPlaceObject]
         type_spec: required
+      - doc: When true, indicates that the agent's configuration allows them to use
+          the queue's Caller ID for outgoing calls.
+        name: phoneNumberForOutgoingCallsEnabled
+        param_attrs: null
+        param_object: null
+        type: boolean
+        type_spec: null
       Query Parameters:
       - doc: Create the call queue for this organization.
         name: orgId
@@ -7000,7 +7008,7 @@ docs:
 
       number outside callers can dial to reach users assigned to the call queue.
 
-      Call queues are also assigned anvinternal extension, which can be dialed
+      Call queues are also assigned an internal extension, which can be dialed
 
       internally to reach users assigned to the call queue.
 
@@ -7092,7 +7100,7 @@ docs:
         param_attrs: null
         param_object:
         - doc: Distinctive Ringing selected for the alternate numbers in the call
-            queue overrides the normal ringing patterns set for the Alternate Number.
+            queue overrides the normal ringing patterns set for the Alternate Numbers.
           name: distinctiveRingEnabled
           param_attrs: null
           param_object: null
@@ -7198,7 +7206,7 @@ docs:
             type: string
             type_spec: null
           - doc: Sends calls to idle agents based on percentages you assign to each
-              agent (up to 100%).
+              agent (up to 100).
             name: WEIGHTED
             param_attrs: null
             param_object: null
@@ -7265,7 +7273,7 @@ docs:
             param_object: null
             type: boolean
             type_spec: null
-          - doc: Ring pattern for when this callqueue is called. Only available when
+          - doc: Ring pattern for when this call queue is called. Only available when
               distinctiveRing is enabled for the call queue.
             name: ringPattern
             param_attrs:
@@ -7306,7 +7314,7 @@ docs:
         name: queueSettings
         param_attrs:
         - doc: The maximum number of calls for this call queue. Once this number is
-            reached, the overflow settings are triggered.
+            reached, the overflow settings are triggered (max 50).
           name: queueSize
           param_attrs: null
           param_object: null
@@ -7332,7 +7340,7 @@ docs:
           - doc: Indicates how to handle new calls when the queue is full.
             name: action
             param_attrs:
-            - doc: The caller hears a fast-busy tone.
+            - doc: The caller hears a fast busy tone.
               name: PERFORM_BUSY_TREATMENT
               param_attrs: null
               param_object: null
@@ -7380,7 +7388,7 @@ docs:
             param_object: null
             type: number
             type_spec: null
-          - doc: Indicate overflow audio to be played, otherwise callers will hear
+          - doc: Indicate overflow audio to be played, otherwise, callers will hear
               the hold music until the call is answered by a user.
             name: playOverflowGreetingEnabled
             param_attrs: null
@@ -7465,6 +7473,13 @@ docs:
           type_spec: null
         param_object: null
         type: array[GetPersonPlaceObject]
+        type_spec: null
+      - doc: When true, indicates that the agent's configuration allows them to use
+          the queue's Caller ID for outgoing calls.
+        name: phoneNumberForOutgoingCallsEnabled
+        param_attrs: null
+        param_object: null
+        type: boolean
         type_spec: null
       URI Parameters:
       - doc: Retrieve settings for a call queue in this location.
@@ -7563,7 +7578,7 @@ docs:
         name: alternateNumberSettings
         param_attrs:
         - doc: Distinctive Ringing selected for the alternate numbers in the call
-            queue overrides the normal ringing patterns set for Alternate Number.
+            queue overrides the normal ringing patterns set for Alternate Numbers.
           name: distinctiveRingEnabled
           param_attrs: null
           param_object: null
@@ -7614,7 +7629,7 @@ docs:
             type: string
             type_spec: null
           - doc: Sends calls to idle agents based on percentages you assign to each
-              agent (up to 100%).
+              agent (up to 100).
             name: WEIGHTED
             param_attrs: null
             param_object: null
@@ -7680,7 +7695,7 @@ docs:
             param_object: null
             type: boolean
             type_spec: null
-          - doc: Ring pattern for when this callqueue is called. Only available when
+          - doc: Ring pattern for when this call queue is called. Only available when
               distinctiveRing is enabled for the call queue.
             name: ringPattern
             param_attrs:
@@ -7722,7 +7737,7 @@ docs:
         name: queueSettings
         param_attrs:
         - doc: The maximum number of calls for this call queue. Once this number is
-            reached, the overflow settings are triggered.
+            reached, the overflow settings are triggered (max 50).
           name: queueSize
           param_attrs: null
           param_object: null
@@ -7747,7 +7762,7 @@ docs:
           - doc: Indicates how to handle new calls when the queue is full.
             name: action
             param_attrs:
-            - doc: The caller hears a fast-busy tone.
+            - doc: The caller hears a fast busy tone.
               name: PERFORM_BUSY_TREATMENT
               param_attrs: null
               param_object: null
@@ -7795,7 +7810,7 @@ docs:
             param_object: null
             type: number
             type_spec: null
-          - doc: Indicate overflow audio to be played, otherwise callers will hear
+          - doc: Indicate overflow audio to be played, otherwise, callers will hear
               the hold music until the call is answered by a user.
             name: playOverflowGreetingEnabled
             param_attrs: null
@@ -7857,6 +7872,13 @@ docs:
           type_spec: null
         param_object: null
         type: array[PostPersonPlaceObject]
+        type_spec: null
+      - doc: When true, indicates that the agent's configuration allows them to use
+          the queue's Caller ID for outgoing calls.
+        name: phoneNumberForOutgoingCallsEnabled
+        param_attrs: null
+        param_object: null
+        type: boolean
         type_spec: null
       Query Parameters:
       - doc: Update call queue settings from this organization.
@@ -10212,7 +10234,7 @@ docs:
             type: string
             type_spec: null
           - doc: Sends calls to idle agents based on percentages you assign to each
-              agent (up to 100%).
+              agent (up to 100).
             name: WEIGHTED
             param_attrs: null
             param_object: null
@@ -10564,7 +10586,7 @@ docs:
             type: string
             type_spec: null
           - doc: Sends calls to idle agents based on percentages you assign to each
-              agent (up to 100%).
+              agent (up to 100).
             name: WEIGHTED
             param_attrs: null
             param_object: null
@@ -10885,7 +10907,7 @@ docs:
             type: string
             type_spec: null
           - doc: Sends calls to idle agents based on percentages you assign to each
-              agent (up to 100%).
+              agent (up to 100).
             name: WEIGHTED
             param_attrs: null
             param_object: null
@@ -27044,6 +27066,179 @@ docs:
         type_spec: null
       URI Parameters:
       - doc: Unique identitfier of the person.
+        name: personId
+        param_attrs: null
+        param_object: null
+        type: string
+        type_spec: required
+  - doc: 'Retrieve the list of the person''s available call queues and the associated
+      Caller ID information.
+
+      If the Agent is to enable queueCallerIdEnabled, they must choose which queue
+      to use as the source for outgoing Caller ID.  This API returns a list of Call
+      Queues from which the person must select.  If this setting is disabled or the
+      Agent does not belong to any queue, this list will be empty.
+
+      This API requires a full admin or read-only administrator auth token with a
+      scope of spark-admin:telephony_config_read.'
+    documentation:
+      doc: Retrieve List of Call Queue Caller ID information
+      doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/retrieve-list-of-call-queue-caller-id-information
+      endpoint: https://webexapis.com/v1/telephony/config/people/{personId}/queues/availableCallerIds
+      method: GET
+    header: Retrieve List of Call Queue Caller ID information
+    parameters_and_response:
+      Response Properties:
+      - doc: Indicates a list of Call Queues that the agent belongs and are available
+          to be selected as the Caller ID for outgoing calls. It is empty when the
+          agent's Call Queues have disabled the Call Queue outgoing phone number setting
+          to be used as Caller ID. In the case where this setting is enabled the array
+          will be populated.
+        name: availableQueues
+        param_attrs:
+        - doc: Indicates the Call Queue's unique identifier.
+          name: id
+          param_attrs: null
+          param_object: null
+          type: string
+          type_spec: null
+        - doc: Indicates the Call Queue's name.
+          name: name
+          param_attrs: null
+          param_object: null
+          type: string
+          type_spec: null
+        - doc: When not null, indicates the Call Queue's phone number.
+          name: phoneNumber
+          param_attrs: null
+          param_object: null
+          type: string
+          type_spec: null
+        - doc: When not null, indicates the Call Queue's extension number.
+          name: extension
+          param_attrs: null
+          param_object: null
+          type: string
+          type_spec: null
+        param_object: null
+        type: array[CallQueueObject]
+        type_spec: null
+      URI Parameters:
+      - doc: Unique identifier for the person.
+        name: personId
+        param_attrs: null
+        param_object: null
+        type: string
+        type_spec: required
+  - doc: 'Retrieve a call queue agent''s Caller ID information.
+
+      Each agent in the Call Queue will be able to set their outgoing Caller ID as
+      either the Call Queue''s phone number or their own configured Caller ID. This
+      API fetches the configured Caller ID for the agent in the system.
+
+      This API requires a full admin or read-only administrator auth token with a
+      scope of spark-admin:telephony_config_read.'
+    documentation:
+      doc: Retrieve a Call Queue Agent's Caller ID information
+      doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/retrieve-a-call-queue-agent's-caller-id-information
+      endpoint: https://webexapis.com/v1/telephony/config/people/{personId}/queues/callerId
+      method: GET
+    header: Retrieve a Call Queue Agent's Caller ID information
+    parameters_and_response:
+      Response Properties:
+      - doc: When true, indicates that this agent is using the selectedQueue for its
+          Caller ID. When false, indicates that it is using the agent's configured
+          Caller ID.
+        name: queueCallerIdEnabled
+        param_attrs: null
+        param_object: null
+        type: boolean
+        type_spec: null
+      - doc: Indicates agent's choice of using this queue's Caller ID for outgoing
+          calls. It is empty object when queueCallerIdEnabled is false. When queueCallerIdEnabled
+          is true this data must be populated.
+        name: selectedQueue
+        param_attrs:
+        - doc: Indicates the Call Queue's unique identifier.
+          name: id
+          param_attrs: null
+          param_object: null
+          type: string
+          type_spec: null
+        - doc: Indicates the Call Queue's name.
+          name: name
+          param_attrs: null
+          param_object: null
+          type: string
+          type_spec: null
+        - doc: When not null, indicates the Call Queue's phone number.
+          name: phoneNumber
+          param_attrs: null
+          param_object: null
+          type: string
+          type_spec: null
+        - doc: When not null, indicates the Call Queue's extension number.
+          name: extension
+          param_attrs: null
+          param_object: null
+          type: string
+          type_spec: null
+        param_object: null
+        type: CallQueueObject
+        type_spec: null
+      URI Parameters:
+      - doc: Unique identifier for the person.
+        name: personId
+        param_attrs: null
+        param_object: null
+        type: string
+        type_spec: required
+  - doc: 'Modify a call queue agent''s Caller ID information.
+
+      Each Agent in the Call Queue will be able to set their outgoing Caller ID as
+      either the designated Call Queue''s phone number or their own configured Caller
+      ID. This API modifies the configured Caller ID for the agent in the system.
+
+      This API requires a full or user administrator auth token with the spark-admin:telephony_config_write
+      scope.'
+    documentation:
+      doc: Modify a Call Queue Agent's Caller ID information
+      doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/modify-a-call-queue-agent's-caller-id-information
+      endpoint: https://webexapis.com/v1/telephony/config/people/{personId}/queues/callerId
+      method: PUT
+    header: Modify a Call Queue Agent's Caller ID information
+    parameters_and_response:
+      Body Parameters:
+      - doc: When true, indicates that this agent is using the selectedQueue for its
+          Caller ID. When false, indicates that it is using the agent's configured
+          Caller ID.
+        name: queueCallerIdEnabled
+        param_attrs: null
+        param_object: null
+        type: boolean
+        type_spec: required
+      - doc: Indicates agent's choice of using this queue's Caller ID for outgoing
+          calls. It is empty object when queueCallerIdEnabled is false. When queueCallerIdEnabled
+          is true this data must be populated.
+        name: selectedQueue
+        param_attrs:
+        - doc: Indicates the Call Queue's unique identifier.
+          name: id
+          param_attrs: null
+          param_object: null
+          type: string
+          type_spec: required
+        - doc: Indicates the Call Queue's name.
+          name: name
+          param_attrs: null
+          param_object: null
+          type: string
+          type_spec: required
+        param_object: null
+        type: object
+        type_spec: required
+      URI Parameters:
+      - doc: Unique identifier for the person.
         name: personId
         param_attrs: null
         param_object: null

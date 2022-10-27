@@ -2,26 +2,35 @@
 """
 Read API specs from developer.webex.com using Selenium and write as YML
 
-usage: read_api_spec.py [-h] [-f [YML_PATH]] [-d] [-l [LOG_PATH]]
+usage: read_api_spec.py [-h] [-f [YML_PATH]] [-d] [-l [LOG_PATH]] [-b BASELINE] [-n] [-u USER] [-p PASSWORD] [-a AUTH]
 
 optional arguments:
   -h, --help            show this help message and exit
   -f [YML_PATH], --file [YML_PATH]
-                        write YML to file. Default: read_api_spec.yml
+                        Write YML to file. Default: read_api_spec.yml
   -d, --debug           show debugs on console
   -l [LOG_PATH], --logfile [LOG_PATH]
-                        Write detailed logs to this file. Default:
-                        read_api_spec.log
+                        Write detailed logs to this file. Default: read_api_spec.log
+  -b BASELINE, -base BASELINE
+                        take given API spec YML as baseline
+  -n, --newonly         only read new endpoints. Can only be used together with -b
+  -u USER, --user USER  username for authentication
+  -p PASSWORD, --password PASSWORD
+                        password for authentication
+  -a AUTH, --auth AUTH  filename of file with credentials in .env file format
 
 """
 import argparse
 import logging
 import os
+import sys
+from functools import partial
+from sys import stderr
 from typing import Optional
 
-from yaml import safe_dump
+from dotenv import load_dotenv
 
-from scraper import DevWebexComScraper, DocMethodDetails
+from scraper import DevWebexComScraper, DocMethodDetails, Credentials
 
 
 def setup_logging(console_level: int = logging.INFO,
@@ -71,14 +80,56 @@ def main():
     parser.add_argument('-l', '--logfile', dest='log_path', action='store', required=False, type=str, nargs='?',
                         const=f'{default_name}.log',
                         help=f'Write detailed logs to this file. Default: {default_name}.log')
+
+    parser.add_argument('-b', '-base', dest='baseline', required=False, type=str,
+                        help='take given API spec YML as baseline')
+    parser.add_argument('-n', '--newonly', required=False, action='store_true',
+                        help='only read new endpoints. Can only be used together with -b')
+    parser.add_argument('-u', '--user', required=False, type=str, help='username for authentication')
+    parser.add_argument('-p', '--password', required=False, type=str, help='password for authentication')
+    parser.add_argument('-a', '--auth', required=False, type=str,
+                        help='filename of file with credentials in .env file format')
+
     args = parser.parse_args()
+
+    if args.newonly and not args.baseline:
+        print('-n only acceptable together with -b', file=stderr)
+        exit(1)
+
+    credentials = None
+    if any((args.user, args.password)):
+        if args.auth:
+            print('Can\'t use auth file together with user or password')
+            exit(1)
+        if all((args.user, args.password)):
+            credentials = Credentials(user=args.user, password=args.password)
+            ...
+        else:
+            print('both, user and password need to be given', file=stderr)
+            exit(1)
+
+    if args.auth:
+        # read env file and get credentials from file
+        load_dotenv(args.auth)
+        user = os.getenv('WEBEX_USER')
+        password = os.getenv('WEBEX_PASSWORD')
+        if not all((user, password)):
+            print(f'Auth file {args.auth} needs to have values for both, WEBEX_USER and WEBEX_PASSWORD', file=stderr)
+            exit(1)
+        credentials = Credentials(user=user, password=password)
 
     setup_logging(console_level=logging.DEBUG if args.debug else logging.INFO,
                   log_path=args.log_path)
 
-    doc_details = DocMethodDetails()
+    doc_details = DocMethodDetails(info=f'command: {" ".join(sys.argv)}')
 
-    with DevWebexComScraper() as site:
+    if args.baseline:
+        logging.info(f'reading base api spec from {args.baseline}')
+        baseline = DocMethodDetails.from_yml(args.baseline)
+    else:
+        baseline = None
+
+    with DevWebexComScraper(credentials=credentials, baseline=baseline, new_only=args.newonly) as site:
         # get information about existing documentation from developer.webex.com
         docs = site.get_calling_docs()
 
@@ -91,6 +142,7 @@ def main():
 
     # write API spec to file or print to stdout
     if args.yml_path:
+        logging.info(f'writing to {args.yml_path}')
         doc_details.to_yml(args.yml_path)
     else:
         print(doc_details.to_yml())

@@ -1,0 +1,94 @@
+broadworks
+  GET    https://webexapis.com/v1/broadworks/enterprises --- List BroadWorks Enterprises
+  GET    https://webexapis.com/v1/broadworks/enterprises --- List BroadWorks Enterprises
+broadworks/enterprises/{id}/broadworksDirectorySync
+  PUT    https://webexapis.com/v1/broadworks/enterprises/{id}/broadworksDirectorySync --- Update Directory Sync for a BroadWorks Enterprise
+  POST   https://webexapis.com/v1/broadworks/enterprises/{id}/broadworksDirectorySync --- Trigger Directory Sync for an Enterprise
+  GET    https://webexapis.com/v1/broadworks/enterprises/{id}/broadworksDirectorySync --- Get Directory Sync Status for an Enterprise
+  PUT    https://webexapis.com/v1/broadworks/enterprises/{id}/broadworksDirectorySync --- Update Directory Sync for a BroadWorks Enterprise
+  POST   https://webexapis.com/v1/broadworks/enterprises/{id}/broadworksDirectorySync --- Trigger Directory Sync for an Enterprise
+  GET    https://webexapis.com/v1/broadworks/enterprises/{id}/broadworksDirectorySync --- Get Directory Sync Status for an Enterprise
+  POST   https://webexapis.com/v1/broadworks/enterprises/{id}/broadworksDirectorySync/externalUser --- Trigger Directory Sync for a User
+broadworks/workspaces
+  POST   https://webexapis.com/v1/broadworks/workspaces --- Provision a BroadWorks Workspace
+  PUT    https://webexapis.com/v1/broadworks/workspaces/{workspaceId} --- Update a Broadworks Workspace
+  DELETE https://webexapis.com/v1/broadworks/workspaces/{workspaceId} --- Remove a BroadWorks Workspace
+people
+  GET    https://webexapis.com/v1/people --- List People
+  POST   https://webexapis.com/v1/people --- Create a Person
+  GET    https://webexapis.com/v1/people/me --- Get My Own Details
+  GET    https://webexapis.com/v1/people/{personId} --- Get Person Details
+  PUT    https://webexapis.com/v1/people/{personId} --- Update a Person
+  DELETE https://webexapis.com/v1/people/{personId} --- Delete a Person
+telephony/config
+  GET    https://webexapis.com/v1/telephony/config/supportedDevices --- Read the List of Supported Devices
+telephony/config/devices
+  GET    https://webexapis.com/v1/telephony/config/devices/settings --- Read the device override settings for a organization
+telephony/config/devices/actions/validateMacs
+  POST   https://webexapis.com/v1/telephony/config/devices/actions/validateMacs/invoke --- Validate a list of MAC address
+telephony/config/devices/dects
+  GET    https://webexapis.com/v1/telephony/config/devices/dects/supportedDevices --- Read the DECT device type list
+telephony/config/devices/{deviceId}
+  GET    https://webexapis.com/v1/telephony/config/devices/{deviceId}/availableMembers --- Search Members
+  GET    https://webexapis.com/v1/telephony/config/devices/{deviceId}/members --- Get Device Members
+  PUT    https://webexapis.com/v1/telephony/config/devices/{deviceId}/members --- Update Members on the device
+  GET    https://webexapis.com/v1/telephony/config/devices/{deviceId}/settings --- Get Device Settings
+  PUT    https://webexapis.com/v1/telephony/config/devices/{deviceId}/settings --- Update device settings
+telephony/config/devices/{deviceId}/actions/applyChanges
+  POST   https://webexapis.com/v1/telephony/config/devices/{deviceId}/actions/applyChanges/invoke --- Apply Changes for a specific device
+telephony/config/jobs/devices/callDeviceSettings
+  POST   https://webexapis.com/v1/telephony/config/jobs/devices/callDeviceSettings --- Change Device Settings Across Organization Or Location Job
+  GET    https://webexapis.com/v1/telephony/config/jobs/devices/callDeviceSettings --- List Change Device Settings Jobs
+telephony/config/jobs/devices/callDeviceSettings/{jobId}
+  GET    https://webexapis.com/v1/telephony/config/jobs/devices/callDeviceSettings/{jobId} --- Get Change Device Settings Job Status
+  GET    https://webexapis.com/v1/telephony/config/jobs/devices/callDeviceSettings/{jobId}/errors --- List Change Device Settings Job Errors
+telephony/config/locations/{locationId}/devices
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/devices/settings --- Get Location Device Settings
+telephony/config/locations/{locationId}/queues
+  POST   https://webexapis.com/v1/telephony/config/locations/{locationId}/queues --- Create a Call Queue
+telephony/config/locations/{locationId}/queues/{queueId}
+  DELETE https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId} --- Delete a Call Queue
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId} --- Get Details for a Call Queue
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId} --- Update a Call Queue
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/forcedForward --- Get Details for a Call Queue Forced Forward
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/forcedForward --- Update a Call Queue Forced Forward service
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/holidayService --- Get Details for a Call Queue Holiday Service
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/holidayService --- Update a Call Queue Holiday Service
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/nightService --- Get Details for a Call Queue Night Service
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/nightService --- Update a Call Queue Night Service
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/strandedCalls --- Get Details for a Call Queue Stranded Calls
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/strandedCalls --- Update a Call Queue Stranded Calls service
+telephony/config/locations/{locationId}/queues/{queueId}/announcements
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/announcements --- Read the List of Call Queue Announcement Files
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/announcements --- Read the List of Call Queue Announcement Files
+  DELETE https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/announcements/{fileName} --- Delete a Call Queue Announcement File
+telephony/config/people/{personId}
+  GET    https://webexapis.com/v1/telephony/config/people/{personId}/devices --- Get User Devices
+telephony/config/people/{personId}/applications/{applicationId}
+  GET    https://webexapis.com/v1/telephony/config/people/{personId}/applications/{applicationId}/availableMembers --- Search Shared-Line Appearance Members
+  GET    https://webexapis.com/v1/telephony/config/people/{personId}/applications/{applicationId}/members --- Get Shared-Line Appearance Members
+  PUT    https://webexapis.com/v1/telephony/config/people/{personId}/applications/{applicationId}/members --- Put Shared-Line Appearance Members
+telephony/config/workspaces/{workspaceId}
+  GET    https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/devices --- Get Workspace Devices
+  PUT    https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/devices --- Modify Workspace Devices
+workspaces/{workspaceId}/features
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/callForwarding --- Retrieve Call Forwarding Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/callForwarding --- Modify Call Forwarding Settings for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/callWaiting --- Retrieve Call Waiting Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/callWaiting --- Modify Call Waiting Settings for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/callerId --- Retrieve Caller ID Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/callerId --- Modify Caller ID Settings for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/incomingPermission --- Retrieve Incoming Permission Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/incomingPermission --- Modify Incoming Permission Settings for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept --- Read Call Intercept Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept --- Configure Call Intercept Settings for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/monitoring --- Retrieve Monitoring Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/monitoring --- Modify Monitoring Settings for a Workspace
+workspaces/{workspaceId}/features/outgoingPermission
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission --- Retrieve Outgoing Permission Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission --- Modify Outgoing Permission Settings for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/accessCodes --- Retrieve Access Codes for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/accessCodes --- Modify Access Codes for a Workspace
+  POST   https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/accessCodes --- Create Access Codes for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers --- Retrieve Transfer Numbers Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers --- Modify Transfer Numbers Settings for a Workspace

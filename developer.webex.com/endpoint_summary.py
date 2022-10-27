@@ -18,7 +18,7 @@ from dataclasses import dataclass
 from functools import reduce
 from sys import stdout, stderr
 
-from scraper import DocMethodDetails, MethodDetails
+from scraper import DocMethodDetails, MethodDetails, SectionAndMethodDetails
 
 
 @dataclass(init=False)
@@ -36,8 +36,8 @@ class EndPointGrouper:
         url = '/'.join(parts[:-1])
         return url
 
-    def __init__(self, methods: Iterable[MethodDetails]):
-        self.keys = set(self.key(m.documentation.endpoint, init=True) for m in methods)
+    def __init__(self, methods: Iterable[SectionAndMethodDetails]):
+        self.keys = set(self.key(m.method_details.documentation.endpoint, init=True) for m in methods)
 
 
 def main():
@@ -57,6 +57,7 @@ def main():
     def output_file():
         if args.output_path:
             with open(args.output_path, mode='w') as f:
+                print(f'writing to {args.output_path}', file=stderr)
                 yield f
         else:
             yield stdout
@@ -67,7 +68,7 @@ def main():
     # group endpoints by key (common start of endpoint URL)
     epg = EndPointGrouper(doc_details.methods())
     summary: dict[str, list[MethodDetails]]
-    summary = reduce(lambda s, el: s[epg.key(el.documentation.endpoint)].append(el) or s,
+    summary = reduce(lambda s, el: s[epg.key(el.method_details.documentation.endpoint)].append(el.method_details) or s,
                      doc_details.methods(),
                      defaultdict(list))
 
@@ -78,9 +79,9 @@ def main():
                             for m in sorted(summary[prefix], key=lambda m: m.documentation.endpoint)),
                   file=output)
 
-    rl_delete = next(m for m in doc_details.methods()
-                     if m.header == 'Delete a Route List')
-    if 'trunks' in rl_delete.documentation.endpoint:
+    rl_delete = next((m for m in doc_details.methods()
+                      if m.header == 'Delete a Route List'), None)
+    if rl_delete and 'trunks' in rl_delete.documentation.endpoint:
         # TODO: track resolution of WXCAPIBULK-219
         print('Wrong endpoint URL for "Delete a Route List", WXCAPIBULK-219', file=stderr)
 
