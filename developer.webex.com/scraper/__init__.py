@@ -60,7 +60,7 @@ class Credentials(NamedTuple):
 
 class MethodDoc(BaseModel):
     #: HTTP method
-    method: str
+    http_method: str
     #: API endpoint URL
     endpoint: str
     #: link to documentation page
@@ -125,7 +125,7 @@ class SectionAndMethodDetails(NamedTuple):
         return self.section < other.section or self.section == other.section and (
                 self.method_details.documentation.endpoint < other.method_details.documentation.endpoint or
                 self.method_details.documentation.endpoint == other.method_details.documentation.endpoint and
-                self.method_details.documentation.method < other.method_details.documentation.method)
+                self.method_details.documentation.http_method < other.method_details.documentation.http_method)
 
 
 class DocMethodDetails(BaseModel):
@@ -165,7 +165,7 @@ class DocMethodDetails(BaseModel):
                 yield from md.attributes(path=f'{method_details_key}')
 
     def dict(self):
-        return super().dict(exclude={'info'})
+        return super().dict(exclude={'info'}, by_alias=True)
 
 
 @dataclass
@@ -316,7 +316,7 @@ class DevWebexComScraper:
 
             log(f'{doc}', level=logging.INFO)
             log(f'yield: {method} {endpoint}: {doc}, {doc_link}', level=logging.DEBUG)
-            yield MethodDoc(method=method, endpoint=endpoint, doc_link=doc_link, doc=doc)
+            yield MethodDoc(http_method=method, endpoint=endpoint, doc_link=doc_link, doc=doc)
         log('end')
 
     def docs_from_submenu_items(self, submenus: list[WebElement]) -> Generator[SectionDoc, None, None]:

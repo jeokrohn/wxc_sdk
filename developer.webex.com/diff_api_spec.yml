@@ -11,7 +11,7 @@ docs:
       doc: List BroadWorks Enterprises
       doc_link: https://developer.webex.com/docs/api/v1/broadworks-enterprises-with-delete-org-improvements/list-broadworks-enterprises
       endpoint: https://webexapis.com/v1/broadworks/enterprises
-      method: GET
+      http_method: GET
     header: List BroadWorks Enterprises
     parameters_and_response:
       Query Parameters:
@@ -242,7 +242,7 @@ docs:
       doc: Update Directory Sync for a BroadWorks Enterprise
       doc_link: https://developer.webex.com/docs/api/v1/broadworks-enterprises-with-delete-org-improvements/update-directory-sync-for-a-broadworks-enterprise
       endpoint: https://webexapis.com/v1/broadworks/enterprises/{id}/broadworksDirectorySync
-      method: PUT
+      http_method: PUT
     header: Update Directory Sync for a BroadWorks Enterprise
     parameters_and_response:
       Body Parameters:
@@ -284,7 +284,7 @@ docs:
       doc: Trigger Directory Sync for an Enterprise
       doc_link: https://developer.webex.com/docs/api/v1/broadworks-enterprises-with-delete-org-improvements/trigger-directory-sync-for-an-enterprise
       endpoint: https://webexapis.com/v1/broadworks/enterprises/{id}/broadworksDirectorySync
-      method: POST
+      http_method: POST
     header: Trigger Directory Sync for an Enterprise
     parameters_and_response:
       Body Parameters:
@@ -327,7 +327,7 @@ docs:
       doc: Get Directory Sync Status for an Enterprise
       doc_link: https://developer.webex.com/docs/api/v1/broadworks-enterprises-with-delete-org-improvements/get-directory-sync-status-for-an-enterprise
       endpoint: https://webexapis.com/v1/broadworks/enterprises/{id}/broadworksDirectorySync
-      method: GET
+      http_method: GET
     header: Get Directory Sync Status for an Enterprise
     parameters_and_response:
       Response Properties:
@@ -512,7 +512,7 @@ docs:
       doc: Trigger Directory Sync for a User
       doc_link: https://developer.webex.com/docs/api/v1/broadworks-enterprises-with-delete-org-improvements/trigger-directory-sync-for-a-user
       endpoint: https://webexapis.com/v1/broadworks/enterprises/{id}/broadworksDirectorySync/externalUser
-      method: POST
+      http_method: POST
     header: Trigger Directory Sync for a User
     parameters_and_response:
       Body Parameters:
@@ -612,7 +612,7 @@ docs:
       doc: Provision a BroadWorks Workspace
       doc_link: https://developer.webex.com/docs/api/v1/broadworks-workspaces/provision-a-broadworks-workspace
       endpoint: https://webexapis.com/v1/broadworks/workspaces
-      method: POST
+      http_method: POST
     header: Provision a BroadWorks Workspace
     parameters_and_response:
       Body Parameters:
@@ -713,7 +713,7 @@ docs:
       doc: Update a Broadworks Workspace
       doc_link: https://developer.webex.com/docs/api/v1/broadworks-workspaces/update-a-broadworks-workspace
       endpoint: https://webexapis.com/v1/broadworks/workspaces/{workspaceId}
-      method: PUT
+      http_method: PUT
     header: Update a Broadworks Workspace
     parameters_and_response:
       Body Parameters:
@@ -800,7 +800,7 @@ docs:
       doc: Remove a BroadWorks Workspace
       doc_link: https://developer.webex.com/docs/api/v1/broadworks-workspaces/remove-a-broadworks-workspace
       endpoint: https://webexapis.com/v1/broadworks/workspaces/{workspaceId}
-      method: DELETE
+      http_method: DELETE
     header: Remove a BroadWorks Workspace
     parameters_and_response:
       URI Parameters:
@@ -827,7 +827,7 @@ docs:
       doc: List People
       doc_link: https://developer.webex.com/docs/api/v1/people-with-calling/list-people
       endpoint: https://webexapis.com/v1/people
-      method: GET
+      http_method: GET
     header: List People
     parameters_and_response:
       Query Parameters:
@@ -1146,7 +1146,7 @@ docs:
       doc: Create a Person
       doc_link: https://developer.webex.com/docs/api/v1/people-with-calling/create-a-person
       endpoint: https://webexapis.com/v1/people
-      method: POST
+      http_method: POST
     header: Create a Person
     parameters_and_response:
       Body Parameters:
@@ -1517,7 +1517,7 @@ docs:
       doc: Get Person Details
       doc_link: https://developer.webex.com/docs/api/v1/people-with-calling/get-person-details
       endpoint: https://webexapis.com/v1/people/{personId}
-      method: GET
+      http_method: GET
     header: Get Person Details
     parameters_and_response:
       Query Parameters:
@@ -1796,7 +1796,7 @@ docs:
       doc: Update a Person
       doc_link: https://developer.webex.com/docs/api/v1/people-with-calling/update-a-person
       endpoint: https://webexapis.com/v1/people/{personId}
-      method: PUT
+      http_method: PUT
     header: Update a Person
     parameters_and_response:
       Body Parameters:
@@ -2169,7 +2169,7 @@ docs:
       doc: Delete a Person
       doc_link: https://developer.webex.com/docs/api/v1/people-with-calling/delete-a-person
       endpoint: https://webexapis.com/v1/people/{personId}
-      method: DELETE
+      http_method: DELETE
     header: Delete a Person
     parameters_and_response:
       URI Parameters:
@@ -2188,7 +2188,7 @@ docs:
       doc: Get My Own Details
       doc_link: https://developer.webex.com/docs/api/v1/people-with-calling/get-my-own-details
       endpoint: https://webexapis.com/v1/people/me
-      method: GET
+      http_method: GET
     header: Get My Own Details
     parameters_and_response:
       Query Parameters:
@@ -2468,7 +2468,7 @@ docs:
       doc: Create a Call Queue
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-agent-join-unjoin-and-announcement-features/create-a-call-queue
       endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/queues
-      method: POST
+      http_method: POST
     header: Create a Call Queue
     parameters_and_response:
       Body Parameters:
@@ -3280,7 +3280,7 @@ docs:
       doc: Delete a Call Queue
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-agent-join-unjoin-and-announcement-features/delete-a-call-queue
       endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}
-      method: DELETE
+      http_method: DELETE
     header: Delete a Call Queue
     parameters_and_response:
       Query Parameters:
@@ -3325,7 +3325,7 @@ docs:
       doc: Get Details for a Call Queue
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-agent-join-unjoin-and-announcement-features/get-details-for-a-call-queue
       endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}
-      method: GET
+      http_method: GET
     header: Get Details for a Call Queue
     parameters_and_response:
       Query Parameters:
@@ -4225,7 +4225,7 @@ docs:
       doc: Update a Call Queue
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-agent-join-unjoin-and-announcement-features/update-a-call-queue
       endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}
-      method: PUT
+      http_method: PUT
     header: Update a Call Queue
     parameters_and_response:
       Body Parameters:
@@ -5069,7 +5069,7 @@ docs:
       doc: Read the List of Call Queue Announcement Files
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-agent-join-unjoin-and-announcement-features/read-the-list-of-call-queue-announcement-files
       endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/announcements
-      method: GET
+      http_method: GET
     header: Read the List of Call Queue Announcement Files
     parameters_and_response:
       Query Parameters:
@@ -5123,7 +5123,7 @@ docs:
       doc: Delete a Call Queue Announcement File
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-agent-join-unjoin-and-announcement-features/delete-a-call-queue-announcement-file
       endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/announcements/{fileName}
-      method: DELETE
+      http_method: DELETE
     header: Delete a Call Queue Announcement File
     parameters_and_response:
       Query Parameters:
@@ -5169,7 +5169,7 @@ docs:
       doc: Read the List of Call Queue Announcement Files
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-call-queue-policies-features/read-the-list-of-call-queue-announcement-files
       endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/announcements
-      method: GET
+      http_method: GET
     header: Read the List of Call Queue Announcement Files
     parameters_and_response:
       Query Parameters:
@@ -5221,7 +5221,7 @@ docs:
       doc: Get Details for a Call Queue Holiday Service
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-call-queue-policies-features/get-details-for-a-call-queue-holiday-service
       endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/holidayService
-      method: GET
+      http_method: GET
     header: Get Details for a Call Queue Holiday Service
     parameters_and_response:
       Query Parameters:
@@ -5403,7 +5403,7 @@ docs:
       doc: Update a Call Queue Holiday Service
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-call-queue-policies-features/update-a-call-queue-holiday-service
       endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/holidayService
-      method: PUT
+      http_method: PUT
     header: Update a Call Queue Holiday Service
     parameters_and_response:
       Body Parameters:
@@ -5558,7 +5558,7 @@ docs:
       doc: Get Details for a Call Queue Night Service
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-call-queue-policies-features/get-details-for-a-call-queue-night-service
       endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/nightService
-      method: GET
+      http_method: GET
     header: Get Details for a Call Queue Night Service
     parameters_and_response:
       Query Parameters:
@@ -5823,7 +5823,7 @@ docs:
       doc: Update a Call Queue Night Service
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-call-queue-policies-features/update-a-call-queue-night-service
       endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/nightService
-      method: PUT
+      http_method: PUT
     header: Update a Call Queue Night Service
     parameters_and_response:
       Body Parameters:
@@ -6056,7 +6056,7 @@ docs:
       doc: Get Details for a Call Queue Stranded Calls
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-call-queue-policies-features/get-details-for-a-call-queue-stranded-calls
       endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/strandedCalls
-      method: GET
+      http_method: GET
     header: Get Details for a Call Queue Stranded Calls
     parameters_and_response:
       Query Parameters:
@@ -6201,7 +6201,7 @@ docs:
       doc: Update a Call Queue Stranded Calls service
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-call-queue-policies-features/update-a-call-queue-stranded-calls-service
       endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/strandedCalls
-      method: PUT
+      http_method: PUT
     header: Update a Call Queue Stranded Calls service
     parameters_and_response:
       Body Parameters:
@@ -6347,7 +6347,7 @@ docs:
       doc: Get Details for a Call Queue Forced Forward
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-call-queue-policies-features/get-details-for-a-call-queue-forced-forward
       endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/forcedForward
-      method: GET
+      http_method: GET
     header: Get Details for a Call Queue Forced Forward
     parameters_and_response:
       Query Parameters:
@@ -6459,7 +6459,7 @@ docs:
       doc: Update a Call Queue Forced Forward service
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-call-queue-policies-features/update-a-call-queue-forced-forward-service
       endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/forcedForward
-      method: PUT
+      http_method: PUT
     header: Update a Call Queue Forced Forward service
     parameters_and_response:
       Body Parameters:
@@ -6567,7 +6567,7 @@ docs:
       doc: Get Device Members
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-devices-features/get-device-members
       endpoint: https://webexapis.com/v1/telephony/config/devices/{deviceId}/members
-      method: GET
+      http_method: GET
     header: Get Device Members
     parameters_and_response:
       Query Parameters:
@@ -6749,7 +6749,7 @@ docs:
       doc: Update Members on the device
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-devices-features/update-members-on-the-device
       endpoint: https://webexapis.com/v1/telephony/config/devices/{deviceId}/members
-      method: PUT
+      http_method: PUT
     header: Update Members on the device
     parameters_and_response:
       Body Parameters:
@@ -6864,7 +6864,7 @@ docs:
       doc: Search Members
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-devices-features/search-members
       endpoint: https://webexapis.com/v1/telephony/config/devices/{deviceId}/availableMembers
-      method: GET
+      http_method: GET
     header: Search Members
     parameters_and_response:
       Query Parameters:
@@ -7012,7 +7012,7 @@ docs:
       doc: Apply Changes for a specific device
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-devices-features/apply-changes-for-a-specific-device
       endpoint: https://webexapis.com/v1/telephony/config/devices/{deviceId}/actions/applyChanges/invoke
-      method: POST
+      http_method: POST
     header: Apply Changes for a specific device
     parameters_and_response:
       Query Parameters:
@@ -7040,7 +7040,7 @@ docs:
       doc: Get Device Settings
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-devices-features/get-device-settings
       endpoint: https://webexapis.com/v1/telephony/config/devices/{deviceId}/settings
-      method: GET
+      http_method: GET
     header: Get Device Settings
     parameters_and_response:
       Query Parameters:
@@ -7865,7 +7865,7 @@ docs:
       doc: Update device settings
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-devices-features/update-device-settings
       endpoint: https://webexapis.com/v1/telephony/config/devices/{deviceId}/settings
-      method: PUT
+      http_method: PUT
     header: Update device settings
     parameters_and_response:
       Body Parameters:
@@ -8671,7 +8671,7 @@ docs:
       doc: Get Location Device Settings
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-devices-features/get-location-device-settings
       endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/devices/settings
-      method: GET
+      http_method: GET
     header: Get Location Device Settings
     parameters_and_response:
       Query Parameters:
@@ -9485,7 +9485,7 @@ docs:
       doc: Get User Devices
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-devices-features/get-user-devices
       endpoint: https://webexapis.com/v1/telephony/config/people/{personId}/devices
-      method: GET
+      http_method: GET
     header: Get User Devices
     parameters_and_response:
       Query Parameters:
@@ -9646,7 +9646,7 @@ docs:
       doc: Get Workspace Devices
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-devices-features/get-workspace-devices
       endpoint: https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/devices
-      method: GET
+      http_method: GET
     header: Get Workspace Devices
     parameters_and_response:
       Query Parameters:
@@ -9840,7 +9840,7 @@ docs:
       doc: Modify Workspace Devices
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-devices-features/modify-workspace-devices
       endpoint: https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/devices
-      method: PUT
+      http_method: PUT
     header: Modify Workspace Devices
     parameters_and_response:
       Body Parameters:
@@ -9892,7 +9892,7 @@ docs:
       doc: Read the List of Supported Devices
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-devices-features/read-the-list-of-supported-devices
       endpoint: https://webexapis.com/v1/telephony/config/supportedDevices
-      method: GET
+      http_method: GET
     header: Read the List of Supported Devices
     parameters_and_response:
       Query Parameters:
@@ -10117,7 +10117,7 @@ docs:
       doc: Read the device override settings for a organization
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-devices-features/read-the-device-override-settings-for-a-organization
       endpoint: https://webexapis.com/v1/telephony/config/devices/settings
-      method: GET
+      http_method: GET
     header: Read the device override settings for a organization
     parameters_and_response:
       Query Parameters:
@@ -11017,7 +11017,7 @@ docs:
       doc: Read the DECT device type list
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-devices-features/read-the-dect-device-type-list
       endpoint: https://webexapis.com/v1/telephony/config/devices/dects/supportedDevices
-      method: GET
+      http_method: GET
     header: Read the DECT device type list
     parameters_and_response:
       Query Parameters:
@@ -11072,7 +11072,7 @@ docs:
       doc: Validate a list of MAC address
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-devices-features/validate-a-list-of-mac-address
       endpoint: https://webexapis.com/v1/telephony/config/devices/actions/validateMacs/invoke
-      method: POST
+      http_method: POST
     header: Validate a list of MAC address
     parameters_and_response:
       Body Parameters:
@@ -11190,7 +11190,7 @@ docs:
       doc: Change Device Settings Across Organization Or Location Job
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-devices-features/change-device-settings-across-organization-or-location-job
       endpoint: https://webexapis.com/v1/telephony/config/jobs/devices/callDeviceSettings
-      method: POST
+      http_method: POST
     header: Change Device Settings Across Organization Or Location Job
     parameters_and_response:
       Body Parameters:
@@ -12278,7 +12278,7 @@ docs:
       doc: List Change Device Settings Jobs
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-devices-features/list-change-device-settings-jobs
       endpoint: https://webexapis.com/v1/telephony/config/jobs/devices/callDeviceSettings
-      method: GET
+      http_method: GET
     header: List Change Device Settings Jobs
     parameters_and_response:
       Query Parameters:
@@ -12498,7 +12498,7 @@ docs:
       doc: Get Change Device Settings Job Status
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-devices-features/get-change-device-settings-job-status
       endpoint: https://webexapis.com/v1/telephony/config/jobs/devices/callDeviceSettings/{jobId}
-      method: GET
+      http_method: GET
     header: Get Change Device Settings Job Status
     parameters_and_response:
       Response Properties:
@@ -12705,7 +12705,7 @@ docs:
       doc: List Change Device Settings Job Errors
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-devices-features/list-change-device-settings-job-errors
       endpoint: https://webexapis.com/v1/telephony/config/jobs/devices/callDeviceSettings/{jobId}/errors
-      method: GET
+      http_method: GET
     header: List Change Device Settings Job Errors
     parameters_and_response:
       Query Parameters:
@@ -12800,7 +12800,7 @@ docs:
       doc: Search Shared-Line Appearance Members
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-shared-line/search-shared-line-appearance-members
       endpoint: https://webexapis.com/v1/telephony/config/people/{personId}/applications/{applicationId}/availableMembers
-      method: GET
+      http_method: GET
     header: Search Shared-Line Appearance Members
     parameters_and_response:
       Body Parameters:
@@ -12925,7 +12925,7 @@ docs:
       doc: Get Shared-Line Appearance Members
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-shared-line/get-shared-line-appearance-members
       endpoint: https://webexapis.com/v1/telephony/config/people/{personId}/applications/{applicationId}/members
-      method: GET
+      http_method: GET
     header: Get Shared-Line Appearance Members
     parameters_and_response:
       Response Properties:
@@ -13100,7 +13100,7 @@ docs:
       doc: Put Shared-Line Appearance Members
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-shared-line/put-shared-line-appearance-members
       endpoint: https://webexapis.com/v1/telephony/config/people/{personId}/applications/{applicationId}/members
-      method: PUT
+      http_method: PUT
     header: Put Shared-Line Appearance Members
     parameters_and_response:
       Body Parameters:
@@ -13211,7 +13211,7 @@ docs:
       doc: Retrieve Call Forwarding Settings for a Workspace
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/retrieve-call-forwarding-settings-for-a-workspace
       endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/callForwarding
-      method: GET
+      http_method: GET
     header: Retrieve Call Forwarding Settings for a Workspace
     parameters_and_response:
       Query Parameters:
@@ -13314,7 +13314,7 @@ docs:
       doc: Modify Call Forwarding Settings for a Workspace
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/modify-call-forwarding-settings-for-a-workspace
       endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/callForwarding
-      method: PUT
+      http_method: PUT
     header: Modify Call Forwarding Settings for a Workspace
     parameters_and_response:
       Body Parameters:
@@ -13420,7 +13420,7 @@ docs:
       doc: Retrieve Call Waiting Settings for a Workspace
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/retrieve-call-waiting-settings-for-a-workspace
       endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/callWaiting
-      method: GET
+      http_method: GET
     header: Retrieve Call Waiting Settings for a Workspace
     parameters_and_response:
       Query Parameters:
@@ -13459,7 +13459,7 @@ docs:
       doc: Modify Call Waiting Settings for a Workspace
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/modify-call-waiting-settings-for-a-workspace
       endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/callWaiting
-      method: PUT
+      http_method: PUT
     header: Modify Call Waiting Settings for a Workspace
     parameters_and_response:
       Body Parameters:
@@ -13497,7 +13497,7 @@ docs:
       doc: Retrieve Caller ID Settings for a Workspace
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/retrieve-caller-id-settings-for-a-workspace
       endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/callerId
-      method: GET
+      http_method: GET
     header: Retrieve Caller ID Settings for a Workspace
     parameters_and_response:
       Query Parameters:
@@ -13661,7 +13661,7 @@ docs:
       doc: Modify Caller ID Settings for a Workspace
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/modify-caller-id-settings-for-a-workspace
       endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/callerId
-      method: PUT
+      http_method: PUT
     header: Modify Caller ID Settings for a Workspace
     parameters_and_response:
       Body Parameters:
@@ -13771,7 +13771,7 @@ docs:
       doc: Retrieve Monitoring Settings for a Workspace
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/retrieve-monitoring-settings-for-a-workspace
       endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/monitoring
-      method: GET
+      http_method: GET
     header: Retrieve Monitoring Settings for a Workspace
     parameters_and_response:
       Query Parameters:
@@ -13951,7 +13951,7 @@ docs:
       doc: Modify Monitoring Settings for a Workspace
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/modify-monitoring-settings-for-a-workspace
       endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/monitoring
-      method: PUT
+      http_method: PUT
     header: Modify Monitoring Settings for a Workspace
     parameters_and_response:
       Body Parameters:
@@ -13995,7 +13995,7 @@ docs:
       doc: Retrieve Incoming Permission Settings for a Workspace
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/retrieve-incoming-permission-settings-for-a-workspace
       endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/incomingPermission
-      method: GET
+      http_method: GET
     header: Retrieve Incoming Permission Settings for a Workspace
     parameters_and_response:
       Query Parameters:
@@ -14069,7 +14069,7 @@ docs:
       doc: Modify Incoming Permission Settings for a Workspace
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/modify-incoming-permission-settings-for-a-workspace
       endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/incomingPermission
-      method: PUT
+      http_method: PUT
     header: Modify Incoming Permission Settings for a Workspace
     parameters_and_response:
       Body Parameters:
@@ -14143,7 +14143,7 @@ docs:
       doc: Retrieve Outgoing Permission Settings for a Workspace
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/retrieve-outgoing-permission-settings-for-a-workspace
       endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission
-      method: GET
+      http_method: GET
     header: Retrieve Outgoing Permission Settings for a Workspace
     parameters_and_response:
       Query Parameters:
@@ -14313,7 +14313,7 @@ docs:
       doc: Modify Outgoing Permission Settings for a Workspace
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/modify-outgoing-permission-settings-for-a-workspace
       endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission
-      method: PUT
+      http_method: PUT
     header: Modify Outgoing Permission Settings for a Workspace
     parameters_and_response:
       Body Parameters:
@@ -14482,7 +14482,7 @@ docs:
       doc: Retrieve Access Codes for a Workspace
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/retrieve-access-codes-for-a-workspace
       endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/accessCodes
-      method: GET
+      http_method: GET
     header: Retrieve Access Codes for a Workspace
     parameters_and_response:
       Query Parameters:
@@ -14531,7 +14531,7 @@ docs:
       doc: Modify Access Codes for a Workspace
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/modify-access-codes-for-a-workspace
       endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/accessCodes
-      method: PUT
+      http_method: PUT
     header: Modify Access Codes for a Workspace
     parameters_and_response:
       Body Parameters:
@@ -14568,7 +14568,7 @@ docs:
       doc: Create Access Codes for a Workspace
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/create-access-codes-for-a-workspace
       endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/accessCodes
-      method: POST
+      http_method: POST
     header: Create Access Codes for a Workspace
     parameters_and_response:
       Body Parameters:
@@ -14615,7 +14615,7 @@ docs:
       doc: Read Call Intercept Settings for a Workspace
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/read-call-intercept-settings-for-a-workspace
       endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept
-      method: GET
+      http_method: GET
     header: Read Call Intercept Settings for a Workspace
     parameters_and_response:
       Query Parameters:
@@ -14797,7 +14797,7 @@ docs:
       doc: Configure Call Intercept Settings for a Workspace
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/configure-call-intercept-settings-for-a-workspace
       endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept
-      method: PUT
+      http_method: PUT
     header: Configure Call Intercept Settings for a Workspace
     parameters_and_response:
       Body Parameters:
@@ -14970,7 +14970,7 @@ docs:
       doc: Retrieve Transfer Numbers Settings for a Workspace
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/retrieve-transfer-numbers-settings-for-a-workspace
       endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers
-      method: GET
+      http_method: GET
     header: Retrieve Transfer Numbers Settings for a Workspace
     parameters_and_response:
       Query Parameters:
@@ -15024,7 +15024,7 @@ docs:
       doc: Modify Transfer Numbers Settings for a Workspace
       doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/modify-transfer-numbers-settings-for-a-workspace
       endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers
-      method: PUT
+      http_method: PUT
     header: Modify Transfer Numbers Settings for a Workspace
     parameters_and_response:
       Body Parameters:
@@ -15076,7 +15076,7 @@ docs:
       doc: List BroadWorks Enterprises
       doc_link: https://developer.webex.com/docs/api/v1/webex-for-broadworks-phone-list-sync/list-broadworks-enterprises
       endpoint: https://webexapis.com/v1/broadworks/enterprises
-      method: GET
+      http_method: GET
     header: List BroadWorks Enterprises
     parameters_and_response:
       Query Parameters:
@@ -15307,7 +15307,7 @@ docs:
       doc: Update Directory Sync for a BroadWorks Enterprise
       doc_link: https://developer.webex.com/docs/api/v1/webex-for-broadworks-phone-list-sync/update-directory-sync-for-a-broadworks-enterprise
       endpoint: https://webexapis.com/v1/broadworks/enterprises/{id}/broadworksDirectorySync
-      method: PUT
+      http_method: PUT
     header: Update Directory Sync for a BroadWorks Enterprise
     parameters_and_response:
       Body Parameters:
@@ -15349,7 +15349,7 @@ docs:
       doc: Trigger Directory Sync for an Enterprise
       doc_link: https://developer.webex.com/docs/api/v1/webex-for-broadworks-phone-list-sync/trigger-directory-sync-for-an-enterprise
       endpoint: https://webexapis.com/v1/broadworks/enterprises/{id}/broadworksDirectorySync
-      method: POST
+      http_method: POST
     header: Trigger Directory Sync for an Enterprise
     parameters_and_response:
       Body Parameters:
@@ -15392,7 +15392,7 @@ docs:
       doc: Get Directory Sync Status for an Enterprise
       doc_link: https://developer.webex.com/docs/api/v1/webex-for-broadworks-phone-list-sync/get-directory-sync-status-for-an-enterprise
       endpoint: https://webexapis.com/v1/broadworks/enterprises/{id}/broadworksDirectorySync
-      method: GET
+      http_method: GET
     header: Get Directory Sync Status for an Enterprise
     parameters_and_response:
       Response Properties:

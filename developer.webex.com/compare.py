@@ -40,7 +40,7 @@ class PathAndDocMethodDetails(NamedTuple):
 
     def methods(self) -> Generator[PathAndMethod, None, None]:
         for m in self.doc_method_details.methods():
-            yield PathAndMethod(path=self.path, endpoint=Endpoint(http_method=m.method_details.documentation.method,
+            yield PathAndMethod(path=self.path, endpoint=Endpoint(http_method=m.method_details.documentation.http_method,
                                                                   url=m.method_details.documentation.endpoint),
                                 method=m)
 
@@ -98,13 +98,20 @@ def main():
                 continue
             print(f'Methods only present in {spec_path}:', file=output)
             for method in sorted(methods):
-                print(f'  {method.section}, {method.method_details.documentation.method} '
+                print(f'  {method.section}, {method.method_details.documentation.http_method} '
                       f'{method.method_details.documentation.endpoint} --- {method.method_details.documentation.doc}',
                       file=output)
             print(file=output)
 
         # now let's look at endpoints that exist in multiple specs --- and check for differences
-
+        for endpoint in sorted(endpoints):
+            # group by path
+            pm: PathAndMethod
+            p_and_ms = endpoints[endpoint]
+            by_path: dict[str, list[SectionAndMethodDetails]] = reduce(
+                lambda s, el: s[el.path].append(el.http_method) or s,
+                p_and_ms, defaultdict(list))
+            eq = p_and_ms[0].method.method_details == p_and_ms[1].method.method_details
         raise NotImplementedError
 
 

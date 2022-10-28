@@ -75,12 +75,12 @@ def main():
     with output_file() as output:
         for prefix in sorted(summary):
             print(f'{prefix.strip("/")}', file=output)
-            print('\n'.join(f'  {m.documentation.method:6} {m.documentation.endpoint} --- {m.documentation.doc}'
+            print('\n'.join(f'  {m.documentation.http_method:6} {m.documentation.endpoint} --- {m.documentation.doc}'
                             for m in sorted(summary[prefix], key=lambda m: m.documentation.endpoint)),
                   file=output)
 
     rl_delete = next((m for m in doc_details.methods()
-                      if m.header == 'Delete a Route List'), None)
+                      if m.section == 'Delete a Route List'), None)
     if rl_delete and 'trunks' in rl_delete.documentation.endpoint:
         # TODO: track resolution of WXCAPIBULK-219
         print('Wrong endpoint URL for "Delete a Route List", WXCAPIBULK-219', file=stderr)
