@@ -205,23 +205,24 @@ class TestVmGroup(TestCaseWithLog):
                                      return_exceptions=True)
             return r
 
+        # start of test
         number_of_groups_to_create = 10
 
-        locations, groups, numbers = await asyncio.gather(self.async_api.locations.list(),
-                                                          self.async_api.telephony.voicemail_groups.list(),
-                                                          self.async_api.telephony.phone_numbers())
+        with self.no_log():
+            locations, groups, numbers = await asyncio.gather(self.async_api.locations.list(),
+                                                              self.async_api.telephony.voicemail_groups.list(),
+                                                              self.async_api.telephony.phone_numbers())
         locations: list[Location]
         groups: list[VoicemailGroup]
         numbers: list[NumberListPhoneNumber]
 
         create_some = len(groups) < (len(locations) * number_of_groups_to_create * 2)
         if create_some:
-            # get locations and list of voicemail groups
-
             # create some voicemail groups in each location
-            vmg_ids = list(chain.from_iterable(await asyncio.gather(*[create_vmgs_in_location(loc)
-                                                                      for loc in locations],
-                                                                    return_exceptions=True)))
+            with self.no_log():
+                vmg_ids = list(chain.from_iterable(await asyncio.gather(*[create_vmgs_in_location(loc)
+                                                                          for loc in locations],
+                                                                        return_exceptions=True)))
 
         # now list with small paging size and large paging size
         # results should be identical
@@ -259,14 +260,15 @@ class TestVmGroup(TestCaseWithLog):
                 done.add(group.group_id)
                 index_list = group_index_lists[group.group_id]
                 if len(index_list) > 1:
-                    print(f'group "{group.name}" in "{group.location_name}" listed multiple times in paginated list: '
+                    print(f'group "{group.name}" ({group.group_id}) in "{group.location_name}" listed multiple times in paginated list: '
                           f'{", ".join(str(i) for i in index_list)}')
             missing_in_small_page_set = vmg_ids - vmg_ids_small_page
             if missing_in_small_page_set:
                 # determine location of missing ids in list
                 for i, g in enumerate(voicemail_group_list):
                     if g.group_id in missing_in_small_page_set:
-                        print(f'Small pagination list missed {i}, "{g.name}" in "{g.location_name}"')
+                        print(f'Small pagination list missed index {i} from long list, "{g.name}" ({g.group_id}) in'
+                              f' "{g.location_name}"')
 
             self.assertEqual(len(voicemail_group_list), len(voicemail_group_list_small_page), 'Length differs')
             self.assertEqual(vmg_ids, vmg_ids_small_page, 'Did not get the same set of groups')
