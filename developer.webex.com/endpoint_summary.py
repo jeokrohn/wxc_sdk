@@ -81,7 +81,7 @@ def main():
 
     rl_delete = next((m for m in doc_details.methods()
                       if m.section == 'Delete a Route List'), None)
-    if rl_delete and 'trunks' in rl_delete.documentation.endpoint:
+    if rl_delete and 'trunks' in rl_delete.documentation.method:
         # TODO: track resolution of WXCAPIBULK-219
         print('Wrong endpoint URL for "Delete a Route List", WXCAPIBULK-219', file=stderr)
 

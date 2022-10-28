@@ -8,6 +8,7 @@ api_spec="developer.webex.com/api_spec.yml"
 auth_spec="developer.webex.com/auth_api_spec.yml"
 new_api_spec="developer.webex.com/diff_api_spec.yml"
 new_endpoints="developer.webex.com/new_endpoints.txt"
+compare="developer.webex.com/compare.txt"
 
 
 for i in ${@}; do
@@ -21,6 +22,11 @@ for i in ${@}; do
         ;;
 
         forceauth)
+        forceauth=true
+        ;;
+
+        force)
+        forcenew=true
         forceauth=true
         ;;
 
@@ -48,7 +54,9 @@ fi
 
 for yml in developer.webex.com/*.yml
 do
-  echo "${yml}" "${yml%.yml}.txt"
+  echo Summarizing endpoints from "${yml}" to "${yml%.yml}.txt"
   developer.webex.com/endpoint_summary.py "${yml}" -o "${yml%.yml}.txt"
 done
-# developer.webex.com/endpoint_summary.py "${new_api_spec}" -o "${new_endpoints}"
+
+echo Comparing API definitions in "${api_spec}" "${auth_spec}" and writing result to "${compare}"
+developer.webex.com/compare.py "${api_spec}" "${auth_spec}" -o "${compare}"

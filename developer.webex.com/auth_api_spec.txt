@@ -384,7 +384,6 @@ workspaces/{workspaceId}/features/outgoingPermission
   GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission --- Retrieve Outgoing Permission Settings for a Workspace
   PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission --- Modify Outgoing Permission Settings for a Workspace
   GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission --- Retrieve Outgoing Permission Settings for a Workspace
-  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission --- Modify Outgoing Permission Settings for a Workspace
   GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/accessCodes --- Retrieve Access Codes for a Workspace
   PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/accessCodes --- Modify Access Codes for a Workspace
   POST   https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/accessCodes --- Create Access Codes for a Workspace
