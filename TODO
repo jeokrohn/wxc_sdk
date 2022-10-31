@@ -8,6 +8,8 @@
     # is created using the people APi. Question: how can one create an extension only WxC user using the API so that
     # the user gets a WSN work number
 # TODO: validate workspace operations
+# TODO: missing: API for agent/supervisor management
+
 
 
 
