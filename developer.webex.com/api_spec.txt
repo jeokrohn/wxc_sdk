@@ -3,6 +3,13 @@ locations
   POST   https://webexapis.com/v1/locations --- Create a Location
   GET    https://webexapis.com/v1/locations/{locationId} --- Get Location Details
   PUT    https://webexapis.com/v1/locations/{locationId} --- Update a Location
+people
+  GET    https://webexapis.com/v1/people --- List People
+  POST   https://webexapis.com/v1/people --- Create a Person
+  GET    https://webexapis.com/v1/people/me --- Get My Own Details
+  GET    https://webexapis.com/v1/people/{personId} --- Get Person Details
+  PUT    https://webexapis.com/v1/people/{personId} --- Update a Person
+  DELETE https://webexapis.com/v1/people/{personId} --- Delete a Person
 people/{personId}/features
   GET    https://webexapis.com/v1/people/{personId}/features/applications --- Retrieve a person's Application Services Settings
   PUT    https://webexapis.com/v1/people/{personId}/features/applications --- Modify a person's Application Services Settings
@@ -194,6 +201,14 @@ telephony/config/locations/{locationId}/queues/{queueId}
   DELETE https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId} --- Delete a Call Queue
   GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId} --- Get Details for a Call Queue
   PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId} --- Update a Call Queue
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/forcedForward --- Get Details for a Call Queue Forced Forward
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/forcedForward --- Update a Call Queue Forced Forward service
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/holidayService --- Get Details for a Call Queue Holiday Service
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/holidayService --- Update a Call Queue Holiday Service
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/nightService --- Get Details for a Call Queue Night Service
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/nightService --- Update a Call Queue Night Service
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/strandedCalls --- Get Details for a Call Queue Stranded Calls
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/strandedCalls --- Update a Call Queue Stranded Calls service
 telephony/config/locations/{locationId}/queues/{queueId}/announcements
   GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/announcements --- Read the List of Call Queue Announcement Files
   DELETE https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/announcements/{fileName} --- Delete a Call Queue Announcement File
