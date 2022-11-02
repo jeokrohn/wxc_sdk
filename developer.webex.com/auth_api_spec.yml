@@ -2384,16 +2384,12 @@ docs:
     header: List Call History
     parameters_and_response:
       Query Parameters:
-      - doc: The type of call history records to retrieve. If not specified, then
+      - doc: 'The type of call history records to retrieve. If not specified, then
           all call history records are retrieved.
+
+          Possible values: placed, missed, received'
         name: type
-        param_attrs:
-        - doc: 'Possible values: placed, missed, received'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: string
         type_spec: null
@@ -2925,7 +2921,7 @@ docs:
             name: type
             param_attrs: []
             param_object: []
-            type: enum
+            type: string
             type_spec: null
           - doc: 'The phone number.
 
@@ -3280,16 +3276,12 @@ docs:
     header: Create a Person
     parameters_and_response:
       Body Parameters:
-      - doc: The email addresses of the person. Only one email address is allowed
+      - doc: 'The email addresses of the person. Only one email address is allowed
           per person.
+
+          Possible values: john.andersen@example.com'
         name: emails
-        param_attrs:
-        - doc: 'Possible values: john.andersen@example.com'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: required
@@ -3303,7 +3295,7 @@ docs:
           name: type
           param_attrs: []
           param_object: []
-          type: enum
+          type: string
           type_spec: null
         - doc: 'The phone number.
 
@@ -3359,30 +3351,22 @@ docs:
         param_object: []
         type: string
         type_spec: null
-      - doc: An array of role strings representing the roles to which this admin user
-          belongs.
+      - doc: 'An array of role strings representing the roles to which this admin
+          user belongs.
+
+          Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+          Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
         name: roles
-        param_attrs:
-        - doc: 'Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
-            Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: null
-      - doc: An array of license strings allocated to this person.
+      - doc: 'An array of license strings allocated to this person.
+
+          Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+          Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
         name: licenses
-        param_attrs:
-        - doc: 'Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
-            Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: null
@@ -3410,30 +3394,21 @@ docs:
         param_object: []
         type: string
         type_spec: null
-      - doc: Person's address
+      - doc: 'Person''s address
+
+          Possible values: , country: `US`, locality: `Charlotte`, region: `North
+          Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode: `99212`'
         name: addresses
-        param_attrs:
-        - doc: 'Possible values: , country: `US`, locality: `Charlotte`, region: `North
-            Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode:
-            `99212`'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[object]
         type_spec: null
       - doc: 'One or several site names where this user has an attendee role. Append
-          #attendee to the sitename (eg: mysite.webex.com#attendee)'
+          #attendee to the sitename (eg: mysite.webex.com#attendee)
+
+          Possible values: mysite.webex.com#attendee'
         name: siteUrls
-        param_attrs:
-        - doc: 'Possible values: mysite.webex.com#attendee'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: null
@@ -3466,7 +3441,7 @@ docs:
           name: type
           param_attrs: []
           param_object: []
-          type: enum
+          type: string
           type_spec: null
         - doc: 'The phone number.
 
@@ -3835,7 +3810,7 @@ docs:
           name: type
           param_attrs: []
           param_object: []
-          type: enum
+          type: string
           type_spec: null
         - doc: 'The phone number.
 
@@ -4198,16 +4173,12 @@ docs:
     header: Update a Person
     parameters_and_response:
       Body Parameters:
-      - doc: The email addresses of the person. Only one email address is allowed
+      - doc: 'The email addresses of the person. Only one email address is allowed
           per person.
+
+          Possible values: john.andersen@example.com'
         name: emails
-        param_attrs:
-        - doc: 'Possible values: john.andersen@example.com'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: null
@@ -4221,7 +4192,7 @@ docs:
           name: type
           param_attrs: []
           param_object: []
-          type: enum
+          type: string
           type_spec: null
         - doc: 'The phone number.
 
@@ -4284,30 +4255,22 @@ docs:
         param_object: []
         type: string
         type_spec: null
-      - doc: An array of role strings representing the roles to which this admin user
-          belongs.
+      - doc: 'An array of role strings representing the roles to which this admin
+          user belongs.
+
+          Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+          Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
         name: roles
-        param_attrs:
-        - doc: 'Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
-            Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: null
-      - doc: An array of license strings allocated to this person.
+      - doc: 'An array of license strings allocated to this person.
+
+          Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+          Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
         name: licenses
-        param_attrs:
-        - doc: 'Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
-            Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: null
@@ -4335,31 +4298,22 @@ docs:
         param_object: []
         type: string
         type_spec: null
-      - doc: Person's address
+      - doc: 'Person''s address
+
+          Possible values: , country: `US`, locality: `Charlotte`, region: `North
+          Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode: `99212`'
         name: addresses
-        param_attrs:
-        - doc: 'Possible values: , country: `US`, locality: `Charlotte`, region: `North
-            Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode:
-            `99212`'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[object]
         type_spec: null
       - doc: 'One or several site names where this user has a role (host or attendee).
           Append #attendee to the site name to designate the attendee role on that
-          site.'
+          site.
+
+          Possible values: mysite.webex.com#attendee'
         name: siteUrls
-        param_attrs:
-        - doc: 'Possible values: mysite.webex.com#attendee'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: null
@@ -4405,7 +4359,7 @@ docs:
           name: type
           param_attrs: []
           param_object: []
-          type: enum
+          type: string
           type_spec: null
         - doc: 'The phone number.
 
@@ -4792,7 +4746,7 @@ docs:
           name: type
           param_attrs: []
           param_object: []
-          type: enum
+          type: string
           type_spec: null
         - doc: 'The phone number.
 
@@ -7334,15 +7288,11 @@ docs:
         param_object: []
         type: CallForwardSelectiveCallsFromObject
         type_spec: required
-      - doc: Settings related to the rule matching based on the destination number.
+      - doc: 'Settings related to the rule matching based on the destination number.
+
+          Array of numbers to be matched against the calling destination number.'
         name: callsTo
-        param_attrs:
-        - doc: Array of numbers to be matched against the calling destination number.
-          name: numbers
-          param_attrs: []
-          param_object: []
-          type: array[CallForwardSelectiveCallsToNumbersObject]
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: CallForwardSelectiveCallsToObject
         type_spec: null
@@ -7722,15 +7672,11 @@ docs:
         param_object: []
         type: CallForwardSelectiveCallsFromObject
         type_spec: null
-      - doc: Settings related to the rule matching based on the destination number.
+      - doc: 'Settings related to the rule matching based on the destination number.
+
+          Array of numbers to be matched against the calling destination number.'
         name: callsTo
-        param_attrs:
-        - doc: Array of numbers to be matched against the calling destination number.
-          name: numbers
-          param_attrs: []
-          param_object: []
-          type: array[CallForwardSelectiveCallsToNumbersObject]
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: CallForwardSelectiveCallsToObject
         type_spec: null
@@ -11483,15 +11429,11 @@ docs:
         param_object: []
         type: object
         type_spec: required
-      - doc: Settings related to the rule matching based on the destination number.
+      - doc: 'Settings related to the rule matching based on the destination number.
+
+          Array of numbers to be matched against the calling destination number.'
         name: callsTo
-        param_attrs:
-        - doc: Array of numbers to be matched against the calling destination number.
-          name: numbers
-          param_attrs: []
-          param_object: []
-          type: array[CallForwardingNumbers]
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: object
         type_spec: required
@@ -11868,15 +11810,11 @@ docs:
         param_object: []
         type: object
         type_spec: null
-      - doc: Settings related to the rule matching based on the destination number.
+      - doc: 'Settings related to the rule matching based on the destination number.
+
+          Array of numbers to be matched against the calling destination number.'
         name: callsTo
-        param_attrs:
-        - doc: Array of numbers to be matched against the calling destination number.
-          name: numbers
-          param_attrs: []
-          param_object: []
-          type: array[CallForwardingNumbers]
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: object
         type_spec: null
@@ -12997,15 +12935,11 @@ docs:
     header: Validate the List of Extensions
     parameters_and_response:
       Body Parameters:
-      - doc: Array of Strings of Ids of the Extensions.
+      - doc: 'Array of Strings of Ids of the Extensions.
+
+          Possible values: 12345, 3456'
         name: extensions
-        param_attrs:
-        - doc: 'Possible values: 12345, 3456'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: null
@@ -14535,15 +14469,11 @@ docs:
         param_object: []
         type: object
         type_spec: required
-      - doc: Settings related to the rule matching based on the destination number.
+      - doc: 'Settings related to the rule matching based on the destination number.
+
+          Array of numbers to be matched against the calling destination number.'
         name: callsTo
-        param_attrs:
-        - doc: Array of numbers to be matched against the calling destination number.
-          name: numbers
-          param_attrs: []
-          param_object: []
-          type: array[CallForwardingNumbers]
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: object
         type_spec: required
@@ -14920,15 +14850,11 @@ docs:
         param_object: []
         type: object
         type_spec: null
-      - doc: Settings related to the rule matching based on the destination number.
+      - doc: 'Settings related to the rule matching based on the destination number.
+
+          Array of numbers to be matched against the calling destination number.'
         name: callsTo
-        param_attrs:
-        - doc: Array of numbers to be matched against the calling destination number.
-          name: numbers
-          param_attrs: []
-          param_object: []
-          type: array[CallForwardingNumbers]
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: object
         type_spec: null
@@ -15758,15 +15684,11 @@ docs:
     header: Generate example password for Location
     parameters_and_response:
       Body Parameters:
-      - doc: password settings array.
+      - doc: 'password settings array.
+
+          SIP password setting'
         name: generate
-        param_attrs:
-        - doc: SIP password setting
-          name: SIP
-          param_attrs: []
-          param_object: []
-          type: string
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[PasswordGenerate]
         type_spec: null
@@ -17562,7 +17484,7 @@ docs:
         name: type
         param_attrs: []
         param_object: []
-        type: enum
+        type: string
         type_spec: null
       - doc: Limit the number of objects returned to this maximum count.
         name: max
@@ -18074,7 +17996,7 @@ docs:
         name: type
         param_attrs: []
         param_object: []
-        type: enum
+        type: string
         type_spec: required
       - doc: Retrieve the schedule with the matching ID.
         name: scheduleId
@@ -18932,7 +18854,7 @@ docs:
         name: type
         param_attrs: []
         param_object: []
-        type: enum
+        type: string
         type_spec: required
       - doc: Update schedule with the matching ID.
         name: scheduleId
@@ -18973,7 +18895,7 @@ docs:
         name: type
         param_attrs: []
         param_object: []
-        type: enum
+        type: string
         type_spec: required
       - doc: Delete the schedule with the matching ID.
         name: scheduleId
@@ -19381,7 +19303,7 @@ docs:
         name: type
         param_attrs: []
         param_object: []
-        type: enum
+        type: string
         type_spec: required
       - doc: Retrieve the schedule event with the matching schedule ID.
         name: scheduleId
@@ -19797,7 +19719,7 @@ docs:
         name: type
         param_attrs: []
         param_object: []
-        type: enum
+        type: string
         type_spec: required
       - doc: Create event for a given schedule ID.
         name: scheduleId
@@ -20210,7 +20132,7 @@ docs:
         name: type
         param_attrs: []
         param_object: []
-        type: enum
+        type: string
         type_spec: required
       - doc: Update schedule event with the matching schedule ID.
         name: scheduleId
@@ -20257,7 +20179,7 @@ docs:
         name: type
         param_attrs: []
         param_object: []
-        type: enum
+        type: string
         type_spec: required
       - doc: Delete the schedule with the matching ID.
         name: scheduleId
@@ -22110,15 +22032,11 @@ docs:
     header: Validate a Dial Pattern
     parameters_and_response:
       Body Parameters:
-      - doc: Array of dial patterns.
+      - doc: 'Array of dial patterns.
+
+          Possible values: +5555,7777'
         name: dialPatterns
-        param_attrs:
-        - doc: 'Possible values: +5555,7777'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: required
@@ -22354,15 +22272,11 @@ docs:
         param_object: []
         type: RouteType
         type_spec: required
-      - doc: An Array of dial patterns.
+      - doc: 'An Array of dial patterns.
+
+          Possible values: +5555,+5556'
         name: dialPatterns
-        param_attrs:
-        - doc: 'Possible values: +5555,+5556'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: null
@@ -26426,18 +26340,14 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as overflow greetings.
-              These files are from the list of announcement files associated with
-              this call queue. For CUSTOM announcement, a minimum of 1 fileName is
-              mandatory, and the maximum is 4.
+          - doc: 'Array of announcement fileName strings to be played as overflow
+              greetings. These files are from the list of announcement files associated
+              with this call queue. For CUSTOM announcement, a minimum of 1 fileName
+              is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -26482,18 +26392,14 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as welcomeMessage
+          - doc: 'Array of announcement fileName strings to be played as welcomeMessage
               greetings. These files are from the list of announcement files associated
               with this call queue. For CUSTOM announcement, a minimum of 1 fileName
               is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -26628,19 +26534,15 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as comfortMessage
+          - doc: 'Array of announcement fileName strings to be played as comfortMessage
               greetings. These files are from the list of announcement files associated
               with this call queue. These files are from the list of announcements
               files associated with this call queue. For CUSTOM announcement, a minimum
               of 1 fileName is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -26684,18 +26586,14 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as comfortMessageBypass
+          - doc: 'Array of announcement fileName strings to be played as comfortMessageBypass
               greetings. These files are from the list of announcements files associated
               with this call queue. For CUSTOM announcement, a minimum of 1 fileName
               is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -26732,18 +26630,14 @@ docs:
               param_object: []
               type: enum
               type_spec: required
-            - doc: Array of announcement fileName strings to be played as mohMessage
+            - doc: 'Array of announcement fileName strings to be played as mohMessage
                 greetings. These files are from the list of announcement files associated
                 with this call queue. For CUSTOM announcement, a minimum of 1 fileName
                 is mandatory, and the maximum is 4.
+
+                '
               name: audioFiles
-              param_attrs:
-              - doc: ''
-                name: '["Greeting-1.wav"]'
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
+              param_attrs: []
               param_object: []
               type: array[string]
               type_spec: null
@@ -26777,18 +26671,14 @@ docs:
               param_object: []
               type: enum
               type_spec: required
-            - doc: Array of announcement fileName strings to be played as mohMessage
+            - doc: 'Array of announcement fileName strings to be played as mohMessage
                 greetings. These files are from the list of announcement files associated
                 with this call queue. For CUSTOM announcement, a minimum of 1 fileName
                 is mandatory, and the maximum is 4.
+
+                '
               name: audioFiles
-              param_attrs:
-              - doc: ''
-                name: '["Greeting-1.wav"]'
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
+              param_attrs: []
               param_object: []
               type: array[string]
               type_spec: null
@@ -26827,18 +26717,14 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as whisperMessage
+          - doc: 'Array of announcement fileName strings to be played as whisperMessage
               greetings. These files are from the list of announcement files associated
               with this call queue. For CUSTOM announcement, a minimum of 1 fileName
               is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -28209,18 +28095,14 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as overflow greetings.
-              These files are from the list of announcement files associated with
-              this call queue. For CUSTOM announcement, a minimum of 1 fileName is
-              mandatory, and the maximum is 4.
+          - doc: 'Array of announcement fileName strings to be played as overflow
+              greetings. These files are from the list of announcement files associated
+              with this call queue. For CUSTOM announcement, a minimum of 1 fileName
+              is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -28265,18 +28147,14 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as welcomeMessage
+          - doc: 'Array of announcement fileName strings to be played as welcomeMessage
               greetings. These files are from the list of announcement files associated
               with this call queue. For CUSTOM announcement, a minimum of 1 fileName
               is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -28411,19 +28289,15 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as comfortMessage
+          - doc: 'Array of announcement fileName strings to be played as comfortMessage
               greetings. These files are from the list of announcement files associated
               with this call queue. These files are from the list of announcements
               files associated with this call queue. For CUSTOM announcement, a minimum
               of 1 fileName is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -28467,18 +28341,14 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as comfortMessageBypass
+          - doc: 'Array of announcement fileName strings to be played as comfortMessageBypass
               greetings. These files are from the list of announcements files associated
               with this call queue. For CUSTOM announcement, a minimum of 1 fileName
               is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -28515,18 +28385,14 @@ docs:
               param_object: []
               type: enum
               type_spec: required
-            - doc: Array of announcement fileName strings to be played as mohMessage
+            - doc: 'Array of announcement fileName strings to be played as mohMessage
                 greetings. These files are from the list of announcement files associated
                 with this call queue. For CUSTOM announcement, a minimum of 1 fileName
                 is mandatory, and the maximum is 4.
+
+                '
               name: audioFiles
-              param_attrs:
-              - doc: ''
-                name: '["Greeting-1.wav"]'
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
+              param_attrs: []
               param_object: []
               type: array[string]
               type_spec: null
@@ -28560,18 +28426,14 @@ docs:
               param_object: []
               type: enum
               type_spec: required
-            - doc: Array of announcement fileName strings to be played as mohMessage
+            - doc: 'Array of announcement fileName strings to be played as mohMessage
                 greetings. These files are from the list of announcement files associated
                 with this call queue. For CUSTOM announcement, a minimum of 1 fileName
                 is mandatory, and the maximum is 4.
+
+                '
               name: audioFiles
-              param_attrs:
-              - doc: ''
-                name: '["Greeting-1.wav"]'
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
+              param_attrs: []
               param_object: []
               type: array[string]
               type_spec: null
@@ -28610,18 +28472,14 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as whisperMessage
+          - doc: 'Array of announcement fileName strings to be played as whisperMessage
               greetings. These files are from the list of announcement files associated
               with this call queue. For CUSTOM announcement, a minimum of 1 fileName
               is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -30552,16 +30410,12 @@ docs:
             param_object: []
             type: boolean
             type_spec: required
-          - doc: Select up to 10 Multicast Group URLs (each with a unique Listening
+          - doc: 'Select up to 10 Multicast Group URLs (each with a unique Listening
               Port).
+
+              '
             name: multicast
-            param_attrs:
-            - doc: ''
-              name: '["192.86.108.226:22"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: required
@@ -33313,15 +33167,11 @@ docs:
     header: Validate a list of MAC address
     parameters_and_response:
       Body Parameters:
-      - doc: MAC addresses to be validated.
+      - doc: 'MAC addresses to be validated.
+
+          Possible values: {["ab125678cdef", "00005E0053B4"]}'
         name: macs
-        param_attrs:
-        - doc: 'Possible values: {["ab125678cdef", "00005E0053B4"]}'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: required
@@ -33994,16 +33844,12 @@ docs:
             param_object: []
             type: boolean
             type_spec: required
-          - doc: Select up to 10 Multicast Group URLs (each with a unique Listening
+          - doc: 'Select up to 10 Multicast Group URLs (each with a unique Listening
               Port).
+
+              '
             name: multicast
-            param_attrs:
-            - doc: ''
-              name: '["192.86.108.226:22"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: required
@@ -34929,102 +34775,6 @@ docs:
         param_attrs: []
         param_object: []
         type: number
-        type_spec: null
-      URI Parameters:
-      - doc: Retrieve job details for this jobId.
-        name: jobId
-        param_attrs: []
-        param_object: []
-        type: string
-        type_spec: required
-  - doc: 'List change device settings job errors.
-
-      Lists all error details of the job with jobId of jobType calldevicesettings.
-
-      This API requires a full or read-only administrator auth token with a scope
-      of spark-admin:telephony_config_read.'
-    documentation:
-      doc: List Change Device Settings Job Errors
-      doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-devices-features/list-change-device-settings-job-errors
-      endpoint: https://webexapis.com/v1/telephony/config/jobs/devices/callDeviceSettings/{jobId}/errors
-      http_method: GET
-    header: List Change Device Settings Job Errors
-    parameters_and_response:
-      Query Parameters:
-      - doc: Retrieve list of jobs for this organization.
-        name: orgId
-        param_attrs: []
-        param_object: []
-        type: string
-        type_spec: null
-      - doc: Specifies the offset from the first result that you want to fetch. Default
-          is 0.
-        name: start
-        param_attrs: []
-        param_object: []
-        type: number
-        type_spec: null
-      - doc: Specifies the maximum number of records that you want to fetch. Default
-          is 2000
-        name: max
-        param_attrs: []
-        param_object: []
-        type: number
-        type_spec: null
-      Response Properties:
-      - doc: ''
-        name: items
-        param_attrs:
-        - doc: Index of error number.
-          name: itemNumber
-          param_attrs: []
-          param_object: []
-          type: number
-          type_spec: null
-        - doc: Unique identifier to track the HTTP requests.
-          name: trackingId
-          param_attrs: []
-          param_object: []
-          type: string
-          type_spec: null
-        - doc: ''
-          name: error
-          param_attrs:
-          - doc: HTTP error code.
-            name: key
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: Message string with further error information.
-            name: message
-            param_attrs:
-            - doc: Error message.
-              name: description
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: Internal error code.
-              name: code
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: Message describing the location or point of failure.
-              name: location
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            param_object: []
-            type: array[ErrorMessageObject]
-            type_spec: null
-          param_object: []
-          type: ErrorObject
-          type_spec: null
-        param_object: []
-        type: array[ItemObject]
         type_spec: null
       URI Parameters:
       - doc: Retrieve job details for this jobId.
@@ -36268,16 +36018,12 @@ docs:
         param_object: []
         type: boolean
         type_spec: null
-      - doc: Pause/resume notification settings.
+      - doc: 'Pause/resume notification settings.
+
+          true when notification feature is in effect. false indicates notification
+          is disabled.'
         name: notification
-        param_attrs:
-        - doc: true when notification feature is in effect. false indicates notification
-            is disabled.
-          name: enabled
-          param_attrs: []
-          param_object: []
-          type: boolean
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: object
         type_spec: null
@@ -36521,15 +36267,11 @@ docs:
     header: Configure Caller ID Settings for a Person
     parameters_and_response:
       Body Parameters:
-      - doc: Which type of outgoing Caller ID will be used.
+      - doc: 'Which type of outgoing Caller ID will be used.
+
+          Possible values: DIRECT_LINE'
         name: selected
-        param_attrs:
-        - doc: 'Possible values: DIRECT_LINE'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: CallerIdSelectedType
         type_spec: null
@@ -36991,15 +36733,11 @@ docs:
         param_object: []
         type: boolean
         type_spec: null
-      - doc: Settings for sending all calls to voicemail.
+      - doc: 'Settings for sending all calls to voicemail.
+
+          All calls will be sent to voicemail.'
         name: sendAllCalls
-        param_attrs:
-        - doc: All calls will be sent to voicemail.
-          name: enabled
-          param_attrs: []
-          param_object: []
-          type: boolean
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: object
         type_spec: null
@@ -37482,17 +37220,13 @@ docs:
             param_object: []
             type: number
             type_spec: null
-          - doc: Specifies the number of days between the start of each recurrence.
+          - doc: 'Specifies the number of days between the start of each recurrence.
               Not allowed with recurWeekly.
+
+              Recurring interval in days. The number of days after the start when
+              an event will repeat.  Repetitions cannot overlap.'
             name: recurDaily
-            param_attrs:
-            - doc: Recurring interval in days. The number of days after the start
-                when an event will repeat.  Repetitions cannot overlap.
-              name: recurInterval
-              param_attrs: []
-              param_object: []
-              type: number
-              type_spec: required
+            param_attrs: []
             param_object: []
             type: object
             type_spec: null
@@ -37917,17 +37651,13 @@ docs:
             param_object: []
             type: number
             type_spec: null
-          - doc: Specifies the number of days between the start of each recurrence.
+          - doc: 'Specifies the number of days between the start of each recurrence.
               Not allowed with recurWeekly.
+
+              Recurring interval in days. The number of days after the start when
+              an event will repeat.  Repetitions cannot overlap.'
             name: recurDaily
-            param_attrs:
-            - doc: Recurring interval in days. The number of days after the start
-                when an event will repeat.  Repetitions cannot overlap.
-              name: recurInterval
-              param_attrs: []
-              param_object: []
-              type: number
-              type_spec: required
+            param_attrs: []
             param_object: []
             type: object
             type_spec: null
@@ -38346,17 +38076,13 @@ docs:
           param_object: []
           type: number
           type_spec: null
-        - doc: Specifies the number of days between the start of each recurrence.
+        - doc: 'Specifies the number of days between the start of each recurrence.
             Not allowed with recurWeekly.
+
+            Recurring interval in days. The number of days after the start when an
+            event will repeat.  Repetitions cannot overlap.'
           name: recurDaily
-          param_attrs:
-          - doc: Recurring interval in days. The number of days after the start when
-              an event will repeat.  Repetitions cannot overlap.
-            name: recurInterval
-            param_attrs: []
-            param_object: []
-            type: number
-            type_spec: required
+          param_attrs: []
           param_object: []
           type: object
           type_spec: null
@@ -38540,17 +38266,13 @@ docs:
           param_object: []
           type: number
           type_spec: null
-        - doc: Specifies the number of days between the start of each recurrence and
-            is not allowed with recurWeekly.
+        - doc: 'Specifies the number of days between the start of each recurrence
+            and is not allowed with recurWeekly.
+
+            Recurring interval in days. The number of days after the start when an
+            event will repeat.  Repetitions cannot overlap.'
           name: recurDaily
-          param_attrs:
-          - doc: Recurring interval in days. The number of days after the start when
-              an event will repeat.  Repetitions cannot overlap.
-            name: recurInterval
-            param_attrs: []
-            param_object: []
-            type: number
-            type_spec: required
+          param_attrs: []
           param_object: []
           type: object
           type_spec: null
@@ -38973,15 +38695,12 @@ docs:
         param_object: []
         type: boolean
         type_spec: required
-      - doc: Identifiers of monitored elements whose monitoring settings will be modified.
+      - doc: 'Identifiers of monitored elements whose monitoring settings will be
+          modified.
+
+          Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1jNjA5YTRiMjgzODY'
         name: monitoredElements
-        param_attrs:
-        - doc: 'Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1jNjA5YTRiMjgzODY'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: required
@@ -39065,7 +38784,7 @@ docs:
           name: ringPattern
           param_attrs: []
           param_object: []
-          type: enum
+          type: string
           type_spec: null
         param_object: []
         type: array[object]
@@ -39652,15 +39371,11 @@ docs:
         param_object: []
         type: boolean
         type_spec: required
-      - doc: List of members' unique identifiers to monitor.
+      - doc: 'List of members'' unique identifiers to monitor.
+
+          Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC04NmE5MDgxYWFkNmE'
         name: monitoredMembers
-        param_attrs:
-        - doc: 'Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC04NmE5MDgxYWFkNmE'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: null
@@ -39900,16 +39615,12 @@ docs:
         param_object: []
         type: PushToTalkAccessType
         type_spec: null
-      - doc: List of people that are allowed or disallowed to interact using the Push-to-Talk
-          feature.
+      - doc: 'List of people that are allowed or disallowed to interact using the
+          Push-to-Talk feature.
+
+          Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC04NmE5MDgxYWFkNmE'
         name: members
-        param_attrs:
-        - doc: 'Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC04NmE5MDgxYWFkNmE'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: null
@@ -40234,7 +39945,7 @@ docs:
           name: callType
           param_attrs: []
           param_object: []
-          type: enum
+          type: string
           type_spec: null
         - doc: 'Action on the given callType.
 
@@ -40243,7 +39954,7 @@ docs:
           name: action
           param_attrs: []
           param_object: []
-          type: enum
+          type: string
           type_spec: null
         - doc: 'Allow the person to transfer or forward a call of the specified call
             type.
@@ -40298,7 +40009,7 @@ docs:
           name: callType
           param_attrs: []
           param_object: []
-          type: enum
+          type: string
           type_spec: null
         - doc: 'Action on the given callType.
 
@@ -40307,7 +40018,7 @@ docs:
           name: action
           param_attrs: []
           param_object: []
-          type: enum
+          type: string
           type_spec: null
         - doc: 'Allow the person to transfer or forward a call of the specified call
             type.
@@ -41543,16 +41254,12 @@ docs:
         param_object: []
         type: boolean
         type_spec: null
-      - doc: Designates which type of External Caller ID Name policy is used. Default
+      - doc: 'Designates which type of External Caller ID Name policy is used. Default
           is DIRECT_LINE.
+
+          Possible values: DIRECT_LINE'
         name: externalCallerIdNamePolicy
-        param_attrs:
-        - doc: 'Possible values: DIRECT_LINE'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: ExternalCallerIdNamePolicy
         type_spec: null
@@ -42611,6 +42318,181 @@ docs:
         param_object: []
         type: string
         type_spec: required
+  - doc: 'Configures a Workspace''s Call Intercept Settings
+
+      The intercept feature gracefully takes a workspace''s phone out of service,
+      while providing callers with informative announcements and alternative routing
+      options. Depending on the service configuration, none, some, or all incoming
+      calls to the specified person are intercepted. Also depending on the service
+      configuration, outgoing calls are intercepted or rerouted to another location.
+
+      This API requires a full or read-only administrator auth token with a scope
+      of spark-admin:workspaces_write or a user auth token with spark:workspaces_read
+      scope can be used by a person to read their settings.'
+    documentation:
+      doc: Configure Call Intercept Settings for a Workspace
+      doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/configure-call-intercept-settings-for-a-workspace
+      endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept
+      http_method: PUT
+    header: Configure Call Intercept Settings for a Workspace
+    parameters_and_response:
+      Body Parameters:
+      - doc: true if call interception is enabled.
+        name: enabled
+        param_attrs: []
+        param_object: []
+        type: boolean
+        type_spec: null
+      - doc: Settings related to how incoming calls are handled when the intercept
+          feature is enabled.
+        name: incoming
+        param_attrs:
+        - doc: Indicated incoming calls are intercepted.
+          name: type
+          param_attrs:
+          - doc: Incoming calls are intercepted.
+            name: INTERCEPT_ALL
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Incoming calls are not intercepted.
+            name: ALLOW_ALL
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Indicates enabled or disabled state of sending incoming calls to voicemail
+            when the destination is an internal phone number and that number has the
+            voicemail service enabled.
+          name: voicemailEnabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Settings related to how incoming calls are handled when the intercept
+            feature is enabled.
+          name: announcements
+          param_attrs:
+          - doc: Indicates that a system default message will be placed when incoming
+              calls are intercepted.
+            name: greeting
+            param_attrs:
+            - doc: A custom greeting is played when incoming calls are intercepted.
+              name: CUSTOM
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: A System default greeting is played when incoming calls are intercepted.
+              name: DEFAULT
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Information about the new number announcement.
+            name: newNumber
+            param_attrs:
+            - doc: If true, the caller hears this new number when the call is intercepted.
+              name: enabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: New number caller hears announced.
+              name: destination
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: object
+            type_spec: null
+          - doc: Information about how the call will be handled if zero (0) is pressed.
+            name: zeroTransfer
+            param_attrs:
+            - doc: If true, the caller hears this new number when the call is intercepted.
+              name: enabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: New number caller hears announced.
+              name: destination
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: object
+            type_spec: null
+          param_object: []
+          type: InterceptAnnouncementsPatch
+          type_spec: null
+        param_object: []
+        type: InterceptIncomingPatch
+        type_spec: null
+      - doc: Settings related to how outgoing calls are handled when the intercept
+          feature is enabled.
+        name: outgoing
+        param_attrs:
+        - doc: All outgoing calls are intercepted.
+          name: type
+          param_attrs:
+          - doc: Outgoing calls are intercepted.
+            name: INTERCEPT_ALL
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Only non-local calls are intercepted.
+            name: ALLOW_LOCAL_ONLY
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: If true, when the person attempts to make an outbound call, a system
+            default message is played and the call is made to the destination phone
+            number.
+          name: transferEnabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Number to which the outbound call be transferred.
+          name: destination
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        param_object: []
+        type: InterceptOutGoingPatch
+        type_spec: null
+      Query Parameters:
+      - doc: ID of the organization within which the workspace resides. Only admin
+          users of another organization (such as partners) may use this parameter
+          as the default is the same organization as the token used to access API.
+        name: orgId
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      URI Parameters:
+      - doc: Unique identifier for the workspace.
+        name: workspaceId
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: required
   - doc: 'Retrieve Transfer Numbers Settings for a Workspace.
 
       When calling a specific call type, this workspace will be automatically transferred
@@ -43424,16 +43306,12 @@ docs:
         param_object: []
         type: boolean
         type_spec: null
-      - doc: Designates which type of External Caller Id Name policy is used. Default
+      - doc: 'Designates which type of External Caller Id Name policy is used. Default
           is DIRECT_LINE.
+
+          Possible values: DIRECT_LINE'
         name: externalCallerIdNamePolicy
-        param_attrs:
-        - doc: 'Possible values: DIRECT_LINE'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: ExternalCallerIdNamePolicy
         type_spec: null

@@ -49,7 +49,8 @@ fi
 
 if [ ${forceauth} ] || [ ! -f "${auth_spec}" ]; then
   echo "creating ${auth_spec}"
-  developer.webex.com/read_api_spec.py -a developer.webex.com/.env -f "${auth_spec}" -b "${api_spec}"
+#  developer.webex.com/read_api_spec.py -a developer.webex.com/.env -f "${auth_spec}" -b "${api_spec}"
+  developer.webex.com/read_api_spec.py -a developer.webex.com/.env -f "${auth_spec}"
 fi
 
 for yml in developer.webex.com/*.yml

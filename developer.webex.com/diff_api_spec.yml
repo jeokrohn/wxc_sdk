@@ -901,7 +901,7 @@ docs:
             name: type
             param_attrs: []
             param_object: []
-            type: enum
+            type: string
             type_spec: null
           - doc: 'The phone number.
 
@@ -1150,16 +1150,12 @@ docs:
     header: Create a Person
     parameters_and_response:
       Body Parameters:
-      - doc: The email addresses of the person. Only one email address is allowed
+      - doc: 'The email addresses of the person. Only one email address is allowed
           per person.
+
+          Possible values: john.andersen@example.com'
         name: emails
-        param_attrs:
-        - doc: 'Possible values: john.andersen@example.com'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: required
@@ -1172,7 +1168,7 @@ docs:
           name: type
           param_attrs: []
           param_object: []
-          type: enum
+          type: string
           type_spec: null
         - doc: 'The phone number.
 
@@ -1227,30 +1223,22 @@ docs:
         param_object: []
         type: string
         type_spec: null
-      - doc: An array of role strings representing the roles to which this person
+      - doc: 'An array of role strings representing the roles to which this person
           belongs.
+
+          Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+          Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
         name: roles
-        param_attrs:
-        - doc: 'Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
-            Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: null
-      - doc: An array of license strings allocated to this person.
+      - doc: 'An array of license strings allocated to this person.
+
+          Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+          Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
         name: licenses
-        param_attrs:
-        - doc: 'Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
-            Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: null
@@ -1283,7 +1271,7 @@ docs:
           name: type
           param_attrs: []
           param_object: []
-          type: enum
+          type: string
           type_spec: null
         - doc: 'The phone number.
 
@@ -1549,7 +1537,7 @@ docs:
           name: type
           param_attrs: []
           param_object: []
-          type: enum
+          type: string
           type_spec: null
         - doc: 'The phone number.
 
@@ -1800,16 +1788,12 @@ docs:
     header: Update a Person
     parameters_and_response:
       Body Parameters:
-      - doc: The email addresses of the person. Only one email address is allowed
+      - doc: 'The email addresses of the person. Only one email address is allowed
           per person.
+
+          Possible values: john.andersen@example.com'
         name: emails
-        param_attrs:
-        - doc: 'Possible values: john.andersen@example.com'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: null
@@ -1822,7 +1806,7 @@ docs:
           name: type
           param_attrs: []
           param_object: []
-          type: enum
+          type: string
           type_spec: null
         - doc: 'The phone number.
 
@@ -1877,30 +1861,22 @@ docs:
         param_object: []
         type: string
         type_spec: null
-      - doc: An array of role strings representing the roles to which this person
+      - doc: 'An array of role strings representing the roles to which this person
           belongs.
+
+          Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+          Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
         name: roles
-        param_attrs:
-        - doc: 'Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
-            Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: null
-      - doc: An array of license strings allocated to this person.
+      - doc: 'An array of license strings allocated to this person.
+
+          Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+          Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
         name: licenses
-        param_attrs:
-        - doc: 'Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
-            Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: null
@@ -1933,7 +1909,7 @@ docs:
           name: type
           param_attrs: []
           param_object: []
-          type: enum
+          type: string
           type_spec: null
         - doc: 'The phone number.
 
@@ -2220,7 +2196,7 @@ docs:
           name: type
           param_attrs: []
           param_object: []
-          type: enum
+          type: string
           type_spec: null
         - doc: 'The phone number.
 
@@ -2784,18 +2760,14 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as overflow greetings.
-              These files are from the list of announcement files associated with
-              this call queue. For CUSTOM announcement, a minimum of 1 fileName is
-              mandatory, and the maximum is 4.
+          - doc: 'Array of announcement fileName strings to be played as overflow
+              greetings. These files are from the list of announcement files associated
+              with this call queue. For CUSTOM announcement, a minimum of 1 fileName
+              is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -2840,18 +2812,14 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as welcomeMessage
+          - doc: 'Array of announcement fileName strings to be played as welcomeMessage
               greetings. These files are from the list of announcement files associated
               with this call queue. For CUSTOM announcement, a minimum of 1 fileName
               is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -2986,19 +2954,15 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as comfortMessage
+          - doc: 'Array of announcement fileName strings to be played as comfortMessage
               greetings. These files are from the list of announcement files associated
               with this call queue. These files are from the list of announcements
               files associated with this call queue. For CUSTOM announcement, a minimum
               of 1 fileName is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -3042,18 +3006,14 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as comfortMessageBypass
+          - doc: 'Array of announcement fileName strings to be played as comfortMessageBypass
               greetings. These files are from the list of announcements files associated
               with this call queue. For CUSTOM announcement, a minimum of 1 fileName
               is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -3090,18 +3050,14 @@ docs:
               param_object: []
               type: enum
               type_spec: required
-            - doc: Array of announcement fileName strings to be played as mohMessage
+            - doc: 'Array of announcement fileName strings to be played as mohMessage
                 greetings. These files are from the list of announcement files associated
                 with this call queue. For CUSTOM announcement, a minimum of 1 fileName
                 is mandatory, and the maximum is 4.
+
+                '
               name: audioFiles
-              param_attrs:
-              - doc: ''
-                name: '["Greeting-1.wav"]'
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
+              param_attrs: []
               param_object: []
               type: array[string]
               type_spec: null
@@ -3135,18 +3091,14 @@ docs:
               param_object: []
               type: enum
               type_spec: required
-            - doc: Array of announcement fileName strings to be played as mohMessage
+            - doc: 'Array of announcement fileName strings to be played as mohMessage
                 greetings. These files are from the list of announcement files associated
                 with this call queue. For CUSTOM announcement, a minimum of 1 fileName
                 is mandatory, and the maximum is 4.
+
+                '
               name: audioFiles
-              param_attrs:
-              - doc: ''
-                name: '["Greeting-1.wav"]'
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
+              param_attrs: []
               param_object: []
               type: array[string]
               type_spec: null
@@ -3185,18 +3137,14 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as whisperMessage
+          - doc: 'Array of announcement fileName strings to be played as whisperMessage
               greetings. These files are from the list of announcement files associated
               with this call queue. For CUSTOM announcement, a minimum of 1 fileName
               is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -4567,18 +4515,14 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as overflow greetings.
-              These files are from the list of announcement files associated with
-              this call queue. For CUSTOM announcement, a minimum of 1 fileName is
-              mandatory, and the maximum is 4.
+          - doc: 'Array of announcement fileName strings to be played as overflow
+              greetings. These files are from the list of announcement files associated
+              with this call queue. For CUSTOM announcement, a minimum of 1 fileName
+              is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -4623,18 +4567,14 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as welcomeMessage
+          - doc: 'Array of announcement fileName strings to be played as welcomeMessage
               greetings. These files are from the list of announcement files associated
               with this call queue. For CUSTOM announcement, a minimum of 1 fileName
               is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -4769,19 +4709,15 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as comfortMessage
+          - doc: 'Array of announcement fileName strings to be played as comfortMessage
               greetings. These files are from the list of announcement files associated
               with this call queue. These files are from the list of announcements
               files associated with this call queue. For CUSTOM announcement, a minimum
               of 1 fileName is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -4825,18 +4761,14 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as comfortMessageBypass
+          - doc: 'Array of announcement fileName strings to be played as comfortMessageBypass
               greetings. These files are from the list of announcements files associated
               with this call queue. For CUSTOM announcement, a minimum of 1 fileName
               is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -4873,18 +4805,14 @@ docs:
               param_object: []
               type: enum
               type_spec: required
-            - doc: Array of announcement fileName strings to be played as mohMessage
+            - doc: 'Array of announcement fileName strings to be played as mohMessage
                 greetings. These files are from the list of announcement files associated
                 with this call queue. For CUSTOM announcement, a minimum of 1 fileName
                 is mandatory, and the maximum is 4.
+
+                '
               name: audioFiles
-              param_attrs:
-              - doc: ''
-                name: '["Greeting-1.wav"]'
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
+              param_attrs: []
               param_object: []
               type: array[string]
               type_spec: null
@@ -4918,18 +4846,14 @@ docs:
               param_object: []
               type: enum
               type_spec: required
-            - doc: Array of announcement fileName strings to be played as mohMessage
+            - doc: 'Array of announcement fileName strings to be played as mohMessage
                 greetings. These files are from the list of announcement files associated
                 with this call queue. For CUSTOM announcement, a minimum of 1 fileName
                 is mandatory, and the maximum is 4.
+
+                '
               name: audioFiles
-              param_attrs:
-              - doc: ''
-                name: '["Greeting-1.wav"]'
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
+              param_attrs: []
               param_object: []
               type: array[string]
               type_spec: null
@@ -4968,18 +4892,14 @@ docs:
             param_object: []
             type: enum
             type_spec: required
-          - doc: Array of announcement fileName strings to be played as whisperMessage
+          - doc: 'Array of announcement fileName strings to be played as whisperMessage
               greetings. These files are from the list of announcement files associated
               with this call queue. For CUSTOM announcement, a minimum of 1 fileName
               is mandatory, and the maximum is 4.
+
+              '
             name: audioFiles
-            param_attrs:
-            - doc: ''
-              name: '["Greeting-1.wav"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: null
@@ -6910,16 +6830,12 @@ docs:
             param_object: []
             type: boolean
             type_spec: required
-          - doc: Select up to 10 Multicast Group URLs (each with a unique Listening
+          - doc: 'Select up to 10 Multicast Group URLs (each with a unique Listening
               Port).
+
+              '
             name: multicast
-            param_attrs:
-            - doc: ''
-              name: '["192.86.108.226:22"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: required
@@ -9671,15 +9587,11 @@ docs:
     header: Validate a list of MAC address
     parameters_and_response:
       Body Parameters:
-      - doc: MAC addresses to be validated.
+      - doc: 'MAC addresses to be validated.
+
+          Possible values: {["ab125678cdef", "00005E0053B4"]}'
         name: macs
-        param_attrs:
-        - doc: 'Possible values: {["ab125678cdef", "00005E0053B4"]}'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: array[string]
         type_spec: required
@@ -10352,16 +10264,12 @@ docs:
             param_object: []
             type: boolean
             type_spec: required
-          - doc: Select up to 10 Multicast Group URLs (each with a unique Listening
+          - doc: 'Select up to 10 Multicast Group URLs (each with a unique Listening
               Port).
+
+              '
             name: multicast
-            param_attrs:
-            - doc: ''
-              name: '["192.86.108.226:22"]'
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
             type: array[string]
             type_spec: required
@@ -12316,16 +12224,12 @@ docs:
         param_object: []
         type: boolean
         type_spec: null
-      - doc: Designates which type of External Caller ID Name policy is used. Default
+      - doc: 'Designates which type of External Caller ID Name policy is used. Default
           is DIRECT_LINE.
+
+          Possible values: DIRECT_LINE'
         name: externalCallerIdNamePolicy
-        param_attrs:
-        - doc: 'Possible values: DIRECT_LINE'
-          name: 'Possible values: '
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: null
+        param_attrs: []
         param_object: []
         type: ExternalCallerIdNamePolicy
         type_spec: null

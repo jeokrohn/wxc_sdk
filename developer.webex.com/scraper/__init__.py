@@ -1,13 +1,19 @@
 import logging
+import re
 import sys
+from collections import defaultdict
 from collections.abc import Generator, Iterable
-from dataclasses import dataclass
-from typing import Union, Optional, NamedTuple
+from dataclasses import dataclass, field
+from functools import reduce
+from io import StringIO
+from itertools import chain
+from typing import Union, Optional, NamedTuple, ClassVar
 
 from bs4 import BeautifulSoup, ResultSet, Tag
-from pydantic import BaseModel, Field
+from inflection import underscore
+from pydantic import BaseModel, Field, validator
 from selenium import webdriver
-from selenium.common import TimeoutException
+from selenium.common import TimeoutException, StaleElementReferenceException
 from selenium.webdriver.chromium.webdriver import ChromiumDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -15,19 +21,22 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from yaml import safe_load, safe_dump
 
-__all__ = ['MethodDoc', 'SectionDoc', 'AttributeInfo', 'Parameter', 'MethodDetails', 'DocMethodDetails',
-           'DevWebexComScraper', 'Credentials', 'SectionAndMethodDetails']
+# foo !!!
 
-# "Standard" menu titles we want to pull method details from
-TARGET_MENUS = {
-    'Call Controls',
-    'Locations',
-    'Webex Calling Organization Settings',
-    'Webex Calling Person Settings',
-    'Webex Calling Person Settings With Shared Line',
-    'Webex Calling Person Settings with Calling Behavior',
-    'Webex Calling Voice Messaging',
-    'Webex Calling Workspace Settings with Numbers'
+__all__ = ['MethodDoc', 'SectionDoc', 'AttributeInfo', 'Parameter', 'MethodDetails', 'DocMethodDetails',
+           'DevWebexComScraper', 'Credentials', 'SectionAndMethodDetails', 'Class']
+
+# "Standard" menu titles we want to ignore when pull method details from submenus on the left
+IGNORE_MENUS = {
+    'BroadWorks Billing Reports',
+    'BroadWorks Device Provisioning',
+    'BroadWorks Enterprises',
+    'BroadWorks Subscribers',
+    'Recording Report',
+    'Video Mesh',
+    'Wholesale Billing Reports',
+    'Wholesale Customers',
+    'Wholesale Subscribers'
 }
 
 
@@ -93,9 +102,17 @@ class Parameter(BaseModel):
     type_spec: Optional[str]
     doc: str
     # parsed from params-type-non-object: probably an enum
-    param_attrs: Optional[list['Parameter']]
+    param_attrs: Optional[list['Parameter']] = Field(default_factory=list)
     # parsed from params-type-object: child object
-    param_object: Optional[list['Parameter']]
+    param_object: Optional[list['Parameter']] = Field(default_factory=list)
+    # reference to Class object; us set during class generation. Not part of (de-)serialization
+    param_class: 'Class' = Field(default=None)
+
+    @validator('param_attrs', 'param_object')
+    def attrs_and_object(cls, v):
+        if not v:
+            return list()
+        return v
 
     def attributes(self, *, path: str) -> Generator[AttributeInfo, None, None]:
         yield AttributeInfo(parameter=self, path=f'{path}/{self.name}')
@@ -103,6 +120,165 @@ class Parameter(BaseModel):
             yield from p.attributes(path=f'{path}/{self.name}/attrs')
         for p in self.param_object or list():
             yield from p.attributes(path=f'{path}/{self.name}/object')
+
+    def dict(self, exclude=None, **kwargs):
+        return super().dict(exclude={'param_class'}, **kwargs)
+
+    def json(self, exclude=None, **kwargs):
+        return super().dict(exclude={'param_class'}, **kwargs)
+
+
+@dataclass
+class Class:
+    #: registry of Class instances by name
+    registry: ClassVar[dict[str, 'Class']] = dict()
+
+    #: logger
+    log: ClassVar[logging.Logger] = logging.getLogger(f'{__name__}.Class')
+
+    #: class name
+    name: str
+    _name: str = field(init=False, repr=False, default=None)
+
+    #: attribute list
+    attributes: list[Parameter] = field(default_factory=list)
+
+    is_enum: bool = field(default=False)
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @name.setter
+    def name(self, new_name: str) -> None:
+        if isinstance(new_name, property):
+            raise TypeError('missing mandatory parameter: ''name''')
+        if self._name is not None:
+            # unregister old name
+            self.registry.pop(self._name, None)
+        self._name = new_name
+        # register new name
+        self.register()
+
+    def register(self):
+        """
+        register instance
+        """
+        # we want to make sure that Class names are unique
+        if self.registry.get(self._name) is not None:
+            # suffix an index and pick the 1st name not taken
+            new_name = next(name for i in range(1, 100)
+                            if self.registry.get(name := f'{self._name}{i}') is None)
+            self._name = new_name
+        self.registry[self._name] = self
+
+    def source(self) -> str:
+        """
+        Source for class
+        :return:
+        """
+
+        def python_type(type_str) -> str:
+            if type_str == 'number':
+                return 'int'
+            elif type_str == 'boolean':
+                return 'bool'
+            elif type_str == 'string':
+                return 'str'
+            return type_str
+
+        def type_for_source(a: Parameter) -> str:
+            if a.param_class:
+                if a.type.startswith('array'):
+                    return f'list[{a.param_class._name}]'
+                return a.param_class._name
+            if a.type.startswith('array'):
+                base_type = python_type(a.type[6:-1])
+                return f'list[{base_type}]'
+            else:
+                return python_type(a.type)
+
+        def enum_name(a: str) -> str:
+            a = re.sub(r'[^\w0-9]', '_', a)
+            if '_' in a:
+                a = a.lower()
+            else:
+                a = underscore(a)
+            return a
+
+        def handle_starting_digit(name: str)->str:
+            if name[0] in '0123456789':
+                digit_name = {'0': 'zero',
+                              '1': 'one',
+                              '2': 'two',
+                              '3': 'three',
+                              '4': 'four',
+                              '5': 'five',
+                              '6': 'six',
+                              '7': 'seven',
+                              '8': 'eight',
+                              '9': 'nine'}[name[0]]
+                name = f'{digit_name}_{name[1:].strip("_")}'
+            return name
+
+        source = StringIO()
+        if self.is_enum:
+            bases = 'str, Enum'
+        else:
+            bases = 'ApiModel'
+        print(f'class {self._name}({bases}):', file=source)
+        for attr in self.attributes:
+            for line in attr.doc.splitlines():
+                print(f'    #: {line}', file=source)
+            if self.is_enum:
+                print(f'    {handle_starting_digit(enum_name(attr.name))} = \'{attr.name}\'', file=source)
+            else:
+                print(f'    {handle_starting_digit(underscore(attr.name))}: Optional[{type_for_source(attr)}]',
+                      file=source)
+        return source.getvalue()
+
+    @classmethod
+    def sources(cls) -> Generator[str, None, None]:
+        """
+        Generator for all class sources
+
+        recurse through tree of all classes and yield class sources in correct order
+        :return:
+        """
+        visited: set[str] = set()
+
+        def sources(cc: Class) -> Generator[str, None, None]:
+            if cc._name in visited:
+                return
+            # 1st generate sources for all classes of any attributes
+            child_classes = (attr.param_class for attr in cc.attributes
+                             if attr.param_class)
+            for child_class in child_classes:
+                yield from sources(child_class)
+            # then yield source for this class
+            visited.add(cc._name)
+            yield cc.source()
+
+        yield from chain.from_iterable(map(sources, cls.registry.values()))
+
+    @classmethod
+    def optimize(cls):
+        """
+        find redundant classes
+            * classes/enums with identical attribute lists
+        :return:
+        """
+
+        def attr_list(c: Class):
+            return '/'.join(sorted(a.name for a in c.attributes))
+
+        classes_by_attributes = reduce(
+            lambda s, e: s[attr_list(e)].append(e) or s,
+            cls.registry.values(), defaultdict(list))
+        candidates = {k: v for k, v in classes_by_attributes.items()
+                      if len(v) > 2}
+        foo = 1
+        ...
 
 
 class MethodDetails(BaseModel):
@@ -164,8 +340,8 @@ class DocMethodDetails(BaseModel):
             for md in method_details:
                 yield from md.attributes(path=f'{method_details_key}')
 
-    def dict(self):
-        return super().dict(exclude={'info'}, by_alias=True)
+    def dict(self, exclude=None, **kwargs):
+        return super().dict(exclude={'info'}, by_alias=True, **kwargs)
 
 
 @dataclass
@@ -356,9 +532,10 @@ class DevWebexComScraper:
                         by=By.CSS_SELECTOR,
                         value='div > div:nth-of-type(1) > h3')
 
-                    log(f'prev container header: {prev_container_header}, header: {container_header.text}')
-                    if container_header.text != prev_container_header:
-                        return target, container_header.text
+                    header_text = container_header.text
+                    log(f'prev container header: {prev_container_header}, header: {header_text}')
+                    if header_text != prev_container_header:
+                        return target, header_text
                 return False
 
             return _predicate
@@ -373,12 +550,12 @@ class DevWebexComScraper:
                     if submenu_text in self.baseline.docs:
                         ignore = True
                 else:
-                    # skip if the baseline has the menu, but no methods. This is of the groups we want to ignore
+                    # skip if the baseline has the menu, but no methods. This is one of the groups we want to ignore
                     if (submenu_text in self.baseline.docs) and not self.baseline.docs[submenu_text]:
                         ignore = True
             else:
                 # .. skip all non-"standard" menus
-                if submenu.text not in TARGET_MENUS:
+                if submenu.text in IGNORE_MENUS:
                     ignore = True
             if ignore:
                 # .. skip
@@ -398,8 +575,16 @@ class DevWebexComScraper:
 
             # after clicking on the submenu we need to wait for a new api reference container to show up
             try:
-                api_reference_container, header = WebDriverWait(driver=self.driver, timeout=10).until(
-                    method=wait_for_new_api_reference_container())
+                for i in range(3):
+                    try:
+                        api_reference_container, header = WebDriverWait(driver=self.driver, timeout=10).until(
+                            method=wait_for_new_api_reference_container())
+                    except StaleElementReferenceException:
+                        if i < 2:
+                            continue
+                        raise
+                    else:
+                        break
             except TimeoutException:
                 api_reference_container = None
                 log('!!!!! Timeout waiting for documentation window to show up !!!!!', level=logging.ERROR)
@@ -521,10 +706,10 @@ class DevWebexComScraper:
         param_div = None
         name = None
 
-        def log(msg: str, div: Tag = None):
+        def log(msg: str, div: Tag = None, level: int = logging.DEBUG):
             div = div or param_div
             name_str = name and f'"{name}", ' or ""
-            self.log(f'      {"  " * level}param_parser({div_repr(div)}): {name_str}{msg}')
+            self.log(f'      {"  " * level}param_parser({div_repr(div)}): {name_str}{msg}', level=level)
 
         def next_div() -> Optional[Tag]:
             div = next(div_iter, None)
@@ -549,6 +734,10 @@ class DevWebexComScraper:
             if len(param_div.find_all('div', recursive=False)) == 1:
                 param_div = param_div.div
                 log('div with single div child. moved one down')
+            # if there is a button then go one down
+            if param_div.button:
+                param_div = param_div.div
+                log(f'found a button, went one down')
 
             # special case: a div w/o child divs and just two spans
             if not param_div.find_all('div', recursive=False):
@@ -559,11 +748,6 @@ class DevWebexComScraper:
                                     doc=f'{spans[0].text}{spans[1].text}')
                 param_div = next_div()
                 continue
-
-            # if there is a button then go one down
-            if param_div.button:
-                param_div = param_div.div
-                log(f'found a button, went one down')
 
             param_attrs = None
             param_object = None
@@ -605,6 +789,10 @@ class DevWebexComScraper:
                 else:
                     type_spec = None
 
+                # catch "callOfferToneEnabled `true`"
+                if param_type == 'boolean' and len(name.split()) > 1:
+                    name = name.split()[0]
+
                 # doc is in the second div
                 doc_paragraphs = p_spec_div.find_all('p', recursive=False)
                 doc = '\n'.join(map(lambda p: p.text, doc_paragraphs))
@@ -615,6 +803,14 @@ class DevWebexComScraper:
                     log(f'divs in second div of parameter parsed ({len(child_divs)}): '
                         f'{", ".join(map(div_repr, child_divs))}')
                     param_attrs = list(self.param_parser(child_divs, level=level + 1)) or None
+                    if param_attrs and len(param_attrs) == 1:
+                        # a single child attribute doesn't make any sense
+                        # instead add something to the doc string
+                        doc_line = param_attrs[0].doc.strip()
+                        log(f'single child attribute doesn\'t make sense. Adding line to documentation: "{doc_line}"')
+                        doc = '\n'.join((doc.strip(), doc_line))
+                        param_attrs = None
+                    foo = 1
             elif len(child_divs) < 3:
                 # to short: not idea what we can do here....
                 log(f'to few divs: {len(child_divs)}: skipping')
@@ -632,18 +828,33 @@ class DevWebexComScraper:
                     </div>      
                 """
                 childs = iter(child_divs)
+
+                # get name of attribute from 1st div
+                # <div class="AzemgtvlBWwLVUYkRkbg">primary</div>
                 name = next(childs).text
                 log(f'flat sequence of divs')
 
+                # next div has a list of spans ...
+                # <div class="Xjm2mpYxY4YHNn4XsTBg"><span>boolean</span></div>
                 spans = iter(next(childs).find_all('span', recursive=False))
+
+                # .. and the 1st span has the type
                 param_type = next(spans).text
+
+                # ... if there is still one span then that's the type spec
                 span = next(spans, None)
                 type_spec = span and span.text
 
+                # the next div has a list of paragraphs with the documentation
+                # <div class="Sj3x8PGVKM_DQu1MaOpF"><p>Flag to indicate if the number is primary or not.</p></div>
                 doc = '\n'.join(p.text
                                 for p in next(childs).find_all('p', recursive=False))
+
+                # there might be one more div
+                # <div class="Mo4RauPOboRxtDGO9VvT"><span>Possible values: </span><span></span></div>
                 div = next(childs, None)
                 if div:
+                    # ... with a list of spans; add the text in these spans to the doc
                     spans = iter(div.find_all('span', recursive=False))
                     doc_line = f'{next(spans).text}{", ".join(t for s in spans if (t := s.text))}'
                     log(f'enhancing doc string: "{doc_line}"')
@@ -670,6 +881,22 @@ class DevWebexComScraper:
                     param_div = next_div()
                 # if
             # if
+
+            # ignore string parameters with invalid names
+            # we can keep spaces and slashes. These will be transformed to correct names when creating the classes
+            if not re.match(r'^[^0-9#][\w\s/]*$', name):
+                if name == '#':
+                    name = 'hash'
+                elif name in '0123456789':
+                    name = f'digit_{name}'
+                elif len(name.split()) > 1:
+                    log(f'ignoring parameter name "{name}"', level=logging.WARNING)
+                    continue
+
+            if param_type == 'enum' and not param_attrs and not param_object:
+                log(f'type "enum" without attributes transformed to "string"')
+                param_type = 'string'
+
             log(f'yield type={param_type}, type_spec={type_spec}, '
                 f'param_attrs={param_attrs and len(param_attrs) or 0}, '
                 f'param_object={param_object and len(param_object) or 0}')
@@ -734,13 +961,14 @@ class DevWebexComScraper:
             self.log(f'  get_method_details("{method_doc.doc}"): {msg}',
                      level=level)
 
-        if False and debugger() and method_doc.doc != 'Configure a person\'s Privacy Settings':
+        if debugger() and method_doc.doc != 'Update Call Forwarding Settings for a Call Queue':
             # skip
             return
 
         log('', level=logging.INFO)
 
         doc_link = method_doc.doc_link
+
         # sometimes links have a superfluous trailing dot
         # we try the original URL 1st and retry w/p trailing dots
         while True:
