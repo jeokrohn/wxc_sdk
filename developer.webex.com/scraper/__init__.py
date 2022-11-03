@@ -39,6 +39,11 @@ IGNORE_MENUS = {
     'Wholesale Subscribers'
 }
 
+# set this to limit scraping to a subset of menus; mainly for debugging
+RELEVANT_MENUS = {
+    'Webex Calling Organization Settings'
+}
+
 
 def debugger() -> bool:
     """
@@ -206,7 +211,7 @@ class Class:
                 a = underscore(a)
             return a
 
-        def handle_starting_digit(name: str)->str:
+        def handle_starting_digit(name: str) -> str:
             if name[0] in '0123456789':
                 digit_name = {'0': 'zero',
                               '1': 'one',
@@ -421,6 +426,17 @@ class DevWebexComScraper:
 
         return
 
+    @staticmethod
+    def obj_class(tag: Tag) -> set[str]:
+        """
+        Check if a tag has one of the classes that designate an object
+
+        :param tag:
+        :return: set of tag classes designating an object
+        """
+        classes = set(tag.attrs.get('class', []))
+        return classes & {'params-type-non-object', 'params-type-object'}
+
     def methods_from_api_reference_container(self, container: BeautifulSoup,
                                              header: str) -> Generator[MethodDoc, None, None]:
         """
@@ -556,6 +572,8 @@ class DevWebexComScraper:
             else:
                 # .. skip all non-"standard" menus
                 if submenu.text in IGNORE_MENUS:
+                    ignore = True
+                if False and debugger() and submenu_text not in RELEVANT_MENUS:
                     ignore = True
             if ignore:
                 # .. skip
@@ -706,38 +724,99 @@ class DevWebexComScraper:
         param_div = None
         name = None
 
-        def log(msg: str, div: Tag = None, level: int = logging.DEBUG):
+        def log(msg: str, div: Tag = None, log_level: int = logging.DEBUG):
             div = div or param_div
             name_str = name and f'"{name}", ' or ""
-            self.log(f'      {"  " * level}param_parser({div_repr(div)}): {name_str}{msg}', level=level)
+            self.log(f'      {" " * level}param_parser({div_repr(div)}): {name_str}{msg}', level=level)
 
-        def next_div() -> Optional[Tag]:
-            div = next(div_iter, None)
-            log(f'next param div', div)
-            return div
+        def div_generator(div_list: list[Tag]) -> Generator[Tag, None, None]:
+            """
+            Generator for divs to consider in parser
+
+            The generator takes care of climbing down div hierarchies and trying to hide other "anomalies" from the
+            parser
+            :param div_list:
+            :return:
+            """
+            for tag in div_list:
+                div = tag
+                yield_div = True
+                while True:
+                    if div.attrs.get('class', None) is None:
+                        log('div_generator: classless div->yield immediately')
+                        break
+
+                    # also yield divs indicating an object
+                    if classes := self.obj_class(div):
+                        log(f'div_generator: div indicating an object({next(iter(classes))})->yield immediately')
+                        break
+
+                    # if this div only has one div child then go one down
+                    # for a parameter we expect two child divs
+                    if len(div.find_all('div', recursive=False)) == 1:
+                        div = div.div
+                        log('div_generator: div with single div child. moved one down')
+                        continue
+                    # if there is a button then go one down
+                    if div.find('button', recursive=False):
+                        div = div.div
+                        log('div_generator: found a button, went one down')
+                        continue
+                    """
+                    if we have a list of classless divs as childs then yield the childs
+                    example:
+                        <div class="emjDUw5LqTp3QCCg4hNp">
+                            <div class="bfIcOqrr0LEmWxjEID2z">
+                                <div class="Sj3x8PGVKM_DQu1MaOpF">
+                                    <div>
+                                        <div class="bfIcOqrr0LEmWxjEID2z">
+                                            <div class="ETdjpkOd18yDmr_Pomer">
+                                                <div class="AzemgtvlBWwLVUYkRkbg">id</div>
+                                                <div class="Xjm2mpYxY4YHNn4XsTBg"><span>string</span><span 
+                                                class="buEuRUqtw7z8xim5DxxA">required</span>
+                                                </div>
+                                            </div>
+                                            <div class="Sj3x8PGVKM_DQu1MaOpF"><p>Unique ID for the rule.</p></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="bfIcOqrr0LEmWxjEID2z">
+                                            <div class="ETdjpkOd18yDmr_Pomer">
+                                                <div class="AzemgtvlBWwLVUYkRkbg">enabled</div>
+                                                <div class="Xjm2mpYxY4YHNn4XsTBg"><span>boolean</span></div>
+                                            </div>
+                                            <div class="Sj3x8PGVKM_DQu1MaOpF"><p>Reflects if rule is enabled.</p></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    """
+                    if (childs := div.find_all('div', recursive=False)) and all(child.attrs.get('class', None) is None
+                                                                                for child in childs):
+                        log(f'div_generator: list of classless child divs -> yield divs from childs')
+                        for child in childs:
+                            child: Tag
+                            yield from child.find_all('div', recursive=False)
+                        yield_div = False
+                    break
+                if yield_div:
+                    yield div
+            return
 
         log(f'start: divs({len(divs)}): {", ".join(map(div_repr, divs))}')
-        div_iter = iter(divs)
-        param_div = next_div()
+        div_iter = div_generator(divs)
+        param_div = next(div_iter, None)
         while param_div:
             name = None
+            # a classless div is a wrapper for a list of attributes
             if param_div.attrs.get('class', None) is None:
                 # yield members of classless div
                 yield from self.param_parser(param_div.find_all('div', recursive=False),
                                              level=level)
                 # and then continue with the next
-                param_div = next_div()
+                param_div = next(div_iter, None)
                 continue
-
-            # if this div only has one div child then go one down
-            # for a parameter we expect two child divs
-            if len(param_div.find_all('div', recursive=False)) == 1:
-                param_div = param_div.div
-                log('div with single div child. moved one down')
-            # if there is a button then go one down
-            if param_div.button:
-                param_div = param_div.div
-                log(f'found a button, went one down')
 
             # special case: a div w/o child divs and just two spans
             if not param_div.find_all('div', recursive=False):
@@ -746,7 +825,7 @@ class DevWebexComScraper:
                     yield Parameter(name=spans[0].text,
                                     type='',
                                     doc=f'{spans[0].text}{spans[1].text}')
-                param_div = next_div()
+                param_div = next(div_iter, None)
                 continue
 
             param_attrs = None
@@ -803,8 +882,9 @@ class DevWebexComScraper:
                     log(f'divs in second div of parameter parsed ({len(child_divs)}): '
                         f'{", ".join(map(div_repr, child_divs))}')
                     param_attrs = list(self.param_parser(child_divs, level=level + 1)) or None
-                    if param_attrs and len(param_attrs) == 1:
-                        # a single child attribute doesn't make any sense
+                    if param_attrs and len(param_attrs) == 1 and not any(
+                            (param_attrs[0].param_attrs, param_attrs[0].param_object)):
+                        # a single child attribute without childs doesn't make any sense
                         # instead add something to the doc string
                         doc_line = param_attrs[0].doc.strip()
                         log(f'single child attribute doesn\'t make sense. Adding line to documentation: "{doc_line}"')
@@ -814,7 +894,7 @@ class DevWebexComScraper:
             elif len(child_divs) < 3:
                 # to short: not idea what we can do here....
                 log(f'to few divs: {len(child_divs)}: skipping')
-                param_div = next_div()
+                param_div = next(div_iter, None)
                 continue
             else:
                 """
@@ -863,12 +943,11 @@ class DevWebexComScraper:
             # if
 
             # look ahead to next div
-            param_div = next_div()
+            param_div = next(div_iter, None)
             if param_div:
                 # check if class is one of the param classes
-                classes = set(param_div.attrs.get('class', []))
-                if object_class := classes & {'params-type-non-object', 'params-type-object'}:
-                    log(f'parsing next div ({next(iter(object_class))}) as part of this parameter')
+                if classes := self.obj_class(param_div):
+                    log(f'parsing next div ({next(iter(classes))}) as part of this parameter')
                     # this enhances the current parameter
                     obj_attributes = list(self.param_parser(param_div.find_all('div', recursive=False),
                                                             level=level + 1)) or None
@@ -878,7 +957,7 @@ class DevWebexComScraper:
                     else:
                         param_object = obj_attributes
                     # move to next div
-                    param_div = next_div()
+                    param_div = next(div_iter, None)
                 # if
             # if
 
@@ -890,7 +969,7 @@ class DevWebexComScraper:
                 elif name in '0123456789':
                     name = f'digit_{name}'
                 elif len(name.split()) > 1:
-                    log(f'ignoring parameter name "{name}"', level=logging.WARNING)
+                    log(f'ignoring parameter name "{name}"', log_level=logging.WARNING)
                     continue
 
             if param_type == 'enum' and not param_attrs and not param_object:
@@ -937,7 +1016,7 @@ class DevWebexComScraper:
             log(f"""{div_repr(div)}: headers({len(headers)}): {", ".join(map(lambda h: f'"{h.text}"', headers))}""")
 
             for header, parameters in zip(headers, parameter_groups):
-                if False and debugger() and header.text != 'Response Properties':
+                if False and debugger() and header.text != 'Body Parameters':
                     continue
                 # each parameter spec is in one child div
                 child_divs = parameters.find_all(name='div', recursive=False)
@@ -961,7 +1040,7 @@ class DevWebexComScraper:
             self.log(f'  get_method_details("{method_doc.doc}"): {msg}',
                      level=level)
 
-        if debugger() and method_doc.doc != 'Update Call Forwarding Settings for a Call Queue':
+        if False and debugger() and method_doc.doc != 'Create a Selective Call Forwarding Rule for an Auto Attendant':
             # skip
             return
 
