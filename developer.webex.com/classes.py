@@ -80,6 +80,14 @@ class ClassGenerator:
 
     @staticmethod
     def base_type(type_str: str) -> str:
+        """
+        get base type from type string
+
+        "array[foo]" --> "foo"
+
+        :param type_str:
+        :return:
+        """
         type_str = type_str.strip()
         if type_str.startswith('array['):
             type_str = type_str[6:-1]
@@ -88,6 +96,11 @@ class ClassGenerator:
 
     @staticmethod
     def class_name(parameter: Parameter):
+        """
+        Determine class name for a given parameter
+        :param parameter:
+        :return:
+        """
         type_str = ClassGenerator.base_type(parameter.type)
 
         if type_str == 'enum' or type_str == 'object' or type_str == 'string':
@@ -98,7 +111,6 @@ class ClassGenerator:
             # class name is in type_str
             class_name = type_str
 
-        # print(f'class_name: {type_str} -> {class_name}', file=stderr)
         return class_name
 
     def create_class(self, class_name: str, attributes: list[Parameter], as_enum: bool = False) -> Class:
@@ -184,6 +196,8 @@ class ClassGenerator:
                 new_class = self.create_class(class_name=self.class_name(attribute), attributes=attribute.param_object,
                                               as_enum=is_enum)
                 attribute.param_class = new_class
+            # if
+        # for
 
         # strip illegal characters from class names
         class_name = re.sub(r'\W', '', class_name)
@@ -223,6 +237,9 @@ class ClassGenerator:
 
     @staticmethod
     def sources() -> Generator[str, None, None]:
+        """
+        Generator for sources of all classes
+        """
         yield from Class.all_sources()
 
 
