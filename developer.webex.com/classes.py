@@ -166,6 +166,10 @@ class ClassGenerator:
                     attribute.type = type_str
 
             is_enum = attribute.type == 'enum'
+            # if name ends in "Enum" and all attributes are simple strings then we also treat this as an enum
+            if attribute.type.endswith('Enum') and all(a.type == 'string' and not any((a.param_object, a.param_attrs))
+                                                       for a in chain(attribute.param_attrs, attribute.param_object)):
+                is_enum = True
             if is_enum and not attr_names:
                 # an enum without childs is just a string
                 log.debug(f'{class_name}.{attribute.name}: type set to "string" instead of "enum" b/c there are no '
@@ -219,7 +223,7 @@ class ClassGenerator:
 
     @staticmethod
     def sources() -> Generator[str, None, None]:
-        yield from Class.sources()
+        yield from Class.all_sources()
 
 
 def validate_parameters(api_spec: DocMethodDetails):

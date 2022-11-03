@@ -41,7 +41,7 @@ IGNORE_MENUS = {
 
 # set this to limit scraping to a subset of menus; mainly for debugging
 RELEVANT_MENUS = {
-    'Webex Calling Organization Settings'
+    'Call Controls'
 }
 
 
@@ -150,6 +150,10 @@ class Class:
 
     is_enum: bool = field(default=False)
 
+    base: str = field(default=None)
+
+    source_generated: bool = field(default=False)
+
     @property
     def name(self) -> str:
         return self._name
@@ -177,7 +181,24 @@ class Class:
             self._name = new_name
         self.registry[self._name] = self
 
-    def source(self) -> str:
+    def equivalent(self, other: 'Class'):
+        """
+        check if both have the same attributes
+        :param other:
+        :return:
+        """
+        if len(self.attributes) != len(other.attributes):
+            return False
+        for a1, a2 in zip(self.attributes, other.attributes):
+            if a1.type != a2.type:
+                return False
+            if (not not a1.param_class) != (not not a2.param_class):
+                return False
+            if a1.param_class and not a1.param_class.equivalent(a2.param_class):
+                return False
+        return True
+
+    def sources(self) -> Generator[str, None, None]:
         """
         Source for class
         :return:
@@ -190,13 +211,17 @@ class Class:
                 return 'bool'
             elif type_str == 'string':
                 return 'str'
+            if (referenced_class := self.registry.get(type_str)) and referenced_class.base and \
+                    not referenced_class.attributes:
+                # if the referenced class has a base class and no attributes then use the name of the base class instead
+                return python_type(referenced_class.base)
             return type_str
 
         def type_for_source(a: Parameter) -> str:
             if a.param_class:
                 if a.type.startswith('array'):
-                    return f'list[{a.param_class._name}]'
-                return a.param_class._name
+                    return f'list[{python_type(a.param_class._name)}]'
+                return python_type(a.param_class._name)
             if a.type.startswith('array'):
                 base_type = python_type(a.type[6:-1])
                 return f'list[{base_type}]'
@@ -226,7 +251,27 @@ class Class:
                 name = f'{digit_name}_{name[1:].strip("_")}'
             return name
 
+        if self.source_generated:
+            # we are done here; source already generated
+            return
+
+        if not self.attributes:
+            # empty classes don't need to be generated
+            return
+
+        # 1st generate sources for all classes of any attributes
+        child_classes = (attr.param_class for attr in self.attributes
+                         if attr.param_class)
+        for child_class in child_classes:
+            yield from child_class.sources()
+
+        # look at base
+        if self.base:
+            yield from self.registry[self.base].sources()
+
+        # then yield source for this class
         source = StringIO()
+
         if self.is_enum:
             bases = 'str, Enum'
         else:
@@ -240,31 +285,19 @@ class Class:
             else:
                 print(f'    {handle_starting_digit(underscore(attr.name))}: Optional[{type_for_source(attr)}]',
                       file=source)
-        return source.getvalue()
+        self.source_generated = True
+        yield source.getvalue()
+        return
 
     @classmethod
-    def sources(cls) -> Generator[str, None, None]:
+    def all_sources(cls) -> Generator[str, None, None]:
         """
         Generator for all class sources
 
         recurse through tree of all classes and yield class sources in correct order
         :return:
         """
-        visited: set[str] = set()
-
-        def sources(cc: Class) -> Generator[str, None, None]:
-            if cc._name in visited:
-                return
-            # 1st generate sources for all classes of any attributes
-            child_classes = (attr.param_class for attr in cc.attributes
-                             if attr.param_class)
-            for child_class in child_classes:
-                yield from sources(child_class)
-            # then yield source for this class
-            visited.add(cc._name)
-            yield cc.source()
-
-        yield from chain.from_iterable(map(sources, cls.registry.values()))
+        yield from chain.from_iterable(map(lambda c: c.sources(), cls.registry.values()))
 
     @classmethod
     def optimize(cls):
@@ -280,9 +313,23 @@ class Class:
         classes_by_attributes = reduce(
             lambda s, e: s[attr_list(e)].append(e) or s,
             cls.registry.values(), defaultdict(list))
-        candidates = {k: v for k, v in classes_by_attributes.items()
-                      if len(v) > 2}
+        classes_by_attributes: dict[str, list[Class]]
+        # for each group of classes with the same attributes
+        # * pick the 1st class as the base class
+        # * for each class wherethe attributes of the class are identical to the attributes of the base class
+        #   * set the base class
+        #   * remove the attributes
+        classes_removed = 0
+        for candidates in (c for c in classes_by_attributes.values() if len(c)>1):
+            base = candidates[0]
+            for child_class in candidates[1:]:
+                if base.equivalent(child_class):
+                    child_class.base = base.name
+                    child_class.attributes = list()
+                    classes_removed += 1
         foo = 1
+
+
         ...
 
 
@@ -1040,7 +1087,7 @@ class DevWebexComScraper:
             self.log(f'  get_method_details("{method_doc.doc}"): {msg}',
                      level=level)
 
-        if False and debugger() and method_doc.doc != 'Create a Selective Call Forwarding Rule for an Auto Attendant':
+        if False and debugger() and method_doc.doc != 'Reject':
             # skip
             return
 
