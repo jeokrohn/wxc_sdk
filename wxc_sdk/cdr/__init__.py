@@ -1,10 +1,11 @@
 from collections.abc import Generator
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 
-from pydantic import Field
+from dateutil import tz
+from pydantic import Field, root_validator, validator
 
 from ..api_child import ApiChild
 from ..base import ApiModel
@@ -65,6 +66,8 @@ class CDRRedirectReason(str, Enum):
 class CDRRelatedReason(str, Enum):
     consultative_transfer = 'ConsultativeTransfer'
     call_forward_selective = 'CallForwardSelective'
+    call_park = 'CallPark'  # TODO: missing in documentation on developer.webex.com
+    call_park_retrieve = 'CallParkRetrieve'  # TODO: missing in documentation on developer.webex.com
     call_queue = 'CallQueue'
     unrecognised = 'Unrecognised'
     call_pickup = 'CallPickup'
@@ -93,16 +96,30 @@ class CDRUserType(str, Enum):
 
 
 class CDR(ApiModel):
+
+    # TODO: CDR API returns empty strings instead of null for unset values. Makes it hard to consume
+    @root_validator(pre=True)
+    def force_none(cls, values: dict):
+        """
+        Pop all empty strings so that they get caught by Optional[]
+        :param values:
+        :return:
+        """
+        empty_attrs = [k for k, v in values.items() if v == '' and k.endswith('time')]
+        for k in empty_attrs:
+            values.pop(k)
+        return values
+
     #: The time the call was answered. Time is in UTC.
-    answer_time: Optional[str] = Field(alias='Answer time')
+    answer_time: Optional[datetime] = Field(alias='Answer time')
     #: Whether the call leg was answered. For example, in a hunt group case, some legs will be unanswered,
     # and one will be answered.
-    answered: Optional[str] = Field(alias='Answered')
+    answered: Optional[bool] = Field(alias='Answered')
     #: SIP Call ID used to identify the call. You can share the Call ID with Cisco TAC to help them pinpoint a call
     # if necessary.
     call_id: Optional[str] = Field(alias='Call ID')
     #: Type of call. For example:
-    call_type: Optional[CDRCallType] = Field(alias='Call type')
+    call_type: Optional[Union[CDRCallType, str]] = Field(alias='Call type')
     #: For incoming calls, the calling line ID of the user. For outgoing calls, it's the calling line ID of the
     # called party.
     called_line_id: Optional[str] = Field(alias='Called line ID')
@@ -116,7 +133,7 @@ class CDR(ApiModel):
     # of the user.
     calling_number: Optional[str] = Field(alias='Calling number')
     #: The type of client that the user (creating this record) is using to make or receive the call. For example:
-    client_type: Optional[CDRClientType] = Field(alias='Client type')
+    client_type: Optional[Union[CDRClientType, str]] = Field(alias='Client type')
     #: The version of the client that the user (creating this record) is using to make or receive the call.
     client_version: Optional[str] = Field(alias='Client version')
     #: Correlation ID to tie together multiple call legs of the same call session.
@@ -124,7 +141,7 @@ class CDR(ApiModel):
     #: The MAC address of the device, if known.
     device_mac: Optional[str] = Field(alias='Device MAC')
     #: Whether the call was inbound or outbound. The possible values are:
-    direction: Optional[CDRDirection] = Field(alias='Direction')
+    direction: Optional[Union[CDRDirection, str]] = Field(alias='Direction')
     #: The length of the call in seconds.
     duration: Optional[int] = Field(alias='Duration')
     #: Inbound trunk may be presented in Originating and Terminating records.
@@ -136,19 +153,19 @@ class CDR(ApiModel):
     #: A unique identifier for the organization that made the call. This is a unique identifier across Cisco.
     org_uuid: Optional[str] = Field(alias='Org UUID')
     #: Populated for calls that transfer, hold, wait, and so on. For example:
-    original_reason: Optional[CDROriginalReason] = Field(alias='Original reason')
+    original_reason: Optional[Union[CDROriginalReason, str]] = Field(alias='Original reason')
     #: The operating system that the app was running on, if available.
     os_type: Optional[str] = Field(alias='OS type')
     #: Outbound trunk may be presented in Originating and Terminating records.
     outbound_trunk: Optional[str] = Field(alias='Outbound trunk')
     #: Populated for calls that transfer, hold, wait, and so on. For example:
-    redirect_reason: Optional[CDRRedirectReason] = Field(alias='Redirect reason')
+    redirect_reason: Optional[Union[CDRRedirectReason, str]] = Field(alias='Redirect reason')
     #: Populated for calls that transfer, hold, wait, and so on. For example:
-    related_reason: Optional[CDRRelatedReason] = Field(alias='Related reason')
+    related_reason: Optional[Union[CDRRelatedReason, str]] = Field(alias='Related reason')
     #: A unique ID for this particular record. This can be used when processing records to aid in deduplication.
     report_id: Optional[str] = Field(alias='Report ID')
     #: The time this report was created. Time is in UTC.
-    report_time: Optional[str] = Field(alias='Report time')
+    report_time: Optional[datetime] = Field(alias='Report time')
     #: If present, this field's only reported in Originating records. Route group identifies the route group used for
     # outbound calls routed via a route group to Premises-based PSTN or an on-prem deployment integrated with Webex
     # Calling (dial plan or unknown extension).
@@ -158,12 +175,12 @@ class CDR(ApiModel):
     #: Site timezone is the offset in minutes from UTC time of the user's timezone.
     site_timezone: Optional[str] = Field(alias='Site timezone')
     #: This is the start time of the call, the answer time may be slightly after this. Time is in UTC.
-    start_time: Optional[str] = Field(alias='Start time')
+    start_time: Optional[datetime] = Field(alias='Start time')
     #: If the call is TO or FROM a mobile phone using Webex Go, the Client type will show SIP, and Sub client type
     # will show MOBILE_NETWORK.
     sub_client_type: Optional[str] = Field(alias='Sub client type')
     #: The type of user (user or workspace) that made or received the call. For example:
-    user_type: Optional[CDRUserType] = Field(alias='User type')
+    user_type: Optional[Union[CDRUserType, str]] = Field(alias='User type')
     #: A unique identifier for the user associated with the call. This is a unique identifier across Cisco products.
     user_uuid: Optional[str] = Field(alias='User UUID')
 
@@ -186,8 +203,8 @@ class DetailedCDRApi(ApiChild, base='devices'):
     This API is rate-limited to one call every 5 minutes for a given organization ID.
     """
 
-    def get_history(self, start_time: datetime = None, end_time: datetime = None, locations: list[str] = None,
-                    **params) ->Generator[CDR, None, None]:
+    def get_cdr_history(self, start_time: datetime = None, end_time: datetime = None, locations: list[str] = None,
+                    **params) -> Generator[CDR, None, None]:
         """
         Provides Webex Calling Detailed Call History data for your organization.
 
@@ -208,6 +225,16 @@ class DetailedCDRApi(ApiChild, base='devices'):
         url = 'https://analytics.webexapis.com/v1/cdr_feed'
         if locations:
             params['locations'] = ','.join(locations)
-        # TODO: handle start_time, end_time
-        raise NotImplementedError
+        if not start_time:
+            start_time = datetime.now(tz=tz.tzutc()) - timedelta(hours=47, minutes=58)
+        if not end_time:
+            end_time = datetime.now(tz=tz.tzutc()) - timedelta(minutes=5, seconds=30)
+
+        def iso_str(dt: datetime) -> str:
+            dt = dt.astimezone(tz.tzutc())
+            dt = dt.replace(tzinfo=None)
+            return f"{dt.isoformat(timespec='milliseconds')}Z"
+
+        params['startTime'] = iso_str(start_time)
+        params['endTime'] = iso_str(end_time)
         return self.session.follow_pagination(url=url, model=CDR, params=params, item_key='items')
