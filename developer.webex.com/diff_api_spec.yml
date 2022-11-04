@@ -4244,7 +4244,45 @@ docs:
         - doc: Specifies up to 10 numbers which can each have an overriden distinctive
             ring setting.
           name: alternateNumbers
-          param_attrs: []
+          param_attrs:
+          - doc: Alternate phone number for the hunt group.
+            name: phoneNumber
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: required
+          - doc: Ring pattern for when this alternate number is called. Only available
+              when distinctiveRing is enabled for the hunt group.
+            name: ringPattern
+            param_attrs:
+            - doc: Normal incoming ring pattern.
+              name: NORMAL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Incoming ring pattern of two long rings.
+              name: LONG_LONG
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Incoming ring pattern of two short rings, followed by a short ring.
+              name: SHORT_SHORT_LONG
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Incoming ring pattern of a short ring, followed by a long ring,
+                followed by a short ring.
+              name: SHORT_LONG_SHORT
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
           param_object: []
           type: array[AlternateNumbersWithPattern]
           type_spec: null

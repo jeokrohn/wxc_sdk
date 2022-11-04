@@ -141,7 +141,9 @@ telephony/config/devices/{deviceId}/actions/applyChanges
 telephony/config/jobs/devices/callDeviceSettings
   POST   https://webexapis.com/v1/telephony/config/jobs/devices/callDeviceSettings --- Change Device Settings Across Organization Or Location Job
   GET    https://webexapis.com/v1/telephony/config/jobs/devices/callDeviceSettings --- List Change Device Settings Jobs
+telephony/config/jobs/devices/callDeviceSettings/{jobId}
   GET    https://webexapis.com/v1/telephony/config/jobs/devices/callDeviceSettings/{jobId} --- Get Change Device Settings Job Status
+  GET    https://webexapis.com/v1/telephony/config/jobs/devices/callDeviceSettings/{jobId}/errors --- List Change Device Settings Job Errors
 telephony/config/locations/{locationId}
   GET    https://webexapis.com/v1/telephony/config/locations/{locationId} --- Get Location Webex Calling Details
   PUT    https://webexapis.com/v1/telephony/config/locations/{locationId} --- Update Location Webex Calling Details
@@ -372,7 +374,6 @@ workspaces/{workspaceId}/features
   GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept --- Read Call Intercept Settings for a Workspace
   PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept --- Configure Call Intercept Settings for a Workspace
   GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept --- Read Call Intercept Settings for a Workspace
-  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept --- Configure Call Intercept Settings for a Workspace
   GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/monitoring --- Retrieve Monitoring Settings for a Workspace
   PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/monitoring --- Modify Monitoring Settings for a Workspace
   GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/monitoring --- Retrieve Monitoring Settings for a Workspace

@@ -1,10 +1,8 @@
 import logging
 import re
 import sys
-from collections import defaultdict
 from collections.abc import Generator, Iterable
 from dataclasses import dataclass, field
-from functools import reduce
 from io import StringIO
 from itertools import chain
 from typing import Union, Optional, NamedTuple, ClassVar
@@ -43,6 +41,8 @@ IGNORE_MENUS = {
 RELEVANT_MENUS = {
     'Call Controls'
 }
+
+log = logging.getLogger(__name__)
 
 
 def debugger() -> bool:
@@ -187,16 +187,24 @@ class Class:
         :param other:
         :return:
         """
+        if other.base == self._name:
+            return True
+        if self.base == other._name:
+            return True
         if len(self.attributes) != len(other.attributes):
             return False
-        for a1, a2 in zip(self.attributes, other.attributes):
+        other_attrs = {a.name: a for a in other.attributes}
+        for a1 in self.attributes:
+            a2 = other_attrs.get(a1.name)
+            if a2 is None:
+                return False
             if a1.type != a2.type:
                 return False
             if (not not a1.param_class) != (not not a2.param_class):
                 return False
             if a1.param_class and not a1.param_class.equivalent(a2.param_class):
                 return False
-        return True
+        return self.base == other.base
 
     def sources(self) -> Generator[str, None, None]:
         """
@@ -272,7 +280,9 @@ class Class:
         # then yield source for this class
         source = StringIO()
 
-        if self.is_enum:
+        if self.base:
+            bases = self.base
+        elif self.is_enum:
             bases = 'str, Enum'
         else:
             bases = 'ApiModel'
@@ -283,7 +293,15 @@ class Class:
             if self.is_enum:
                 print(f'    {handle_starting_digit(enum_name(attr.name))} = \'{attr.name}\'', file=source)
             else:
-                print(f'    {handle_starting_digit(underscore(attr.name))}: Optional[{type_for_source(attr)}]',
+                # determine whether we need an alias
+                if re.search(r'[A-Z\s]', attr.name):
+                    # if the attribute name has upper case or spaces then we need an alias
+                    alias = f" = Field(alias='{attr.name}')"
+                    attr_name = attr.name.replace(' ', '_')
+                else:
+                    attr_name = attr.name
+                    alias = ''
+                print(f'    {handle_starting_digit(underscore(attr_name))}: Optional[{type_for_source(attr)}]{alias}',
                       file=source)
         self.source_generated = True
         yield source.getvalue()
@@ -299,38 +317,75 @@ class Class:
         """
         yield from chain.from_iterable(map(lambda c: c.sources(), cls.registry.values()))
 
+    def common_attributes(self, other: 'Class') -> list[Parameter]:
+        """
+        Get list of common attributes
+        :param other:
+        :return:
+        """
+        other_attrs = {a.name: a for a in other.attributes}
+        common = list()
+        for attr in self.attributes:
+            if (other_attr := other_attrs.get(attr.name)) is None:
+                continue
+            other_attr: Parameter
+            if attr.type != other_attr.type:
+                continue
+            common.append(attr)
+        return common
+
     @classmethod
     def optimize(cls):
         """
         find redundant classes
             * classes/enums with identical attribute lists
+            * find classes which are subclasses of others
         :return:
         """
+
+        def log_(msg: str, level: int = logging.DEBUG):
+            log.log(msg=f'optimize: {msg}', level=level)
 
         def attr_list(c: Class):
             return '/'.join(sorted(a.name for a in c.attributes))
 
-        classes_by_attributes = reduce(
-            lambda s, e: s[attr_list(e)].append(e) or s,
-            cls.registry.values(), defaultdict(list))
-        classes_by_attributes: dict[str, list[Class]]
-        # for each group of classes with the same attributes
-        # * pick the 1st class as the base class
-        # * for each class wherethe attributes of the class are identical to the attributes of the base class
-        #   * set the base class
-        #   * remove the attributes
-        classes_removed = 0
-        for candidates in (c for c in classes_by_attributes.values() if len(c)>1):
-            base = candidates[0]
-            for child_class in candidates[1:]:
-                if base.equivalent(child_class):
-                    child_class.base = base.name
-                    child_class.attributes = list()
-                    classes_removed += 1
-        foo = 1
+        # for all pairs or classes
+        # * determine set of common (same name and type) attributes
+        # * create new base classes as required
+        for class_a in cls.registry.values():
+            if not class_a.attributes:
+                # log_(f'{class_a._name}, skipping, no attributes')
+                continue
+            # for now ignore multiple tiers of hierachy
+            # if this class already has a base then don't check whether this class is subclass of another
+            if class_a.base:
+                # log_(f'{class_a._name}, skipping, base {class_a.base}')
+                continue
 
+            # look at all other classes
+            for class_b in cls.registry.values():
+                if class_b._name == class_a._name:
+                    continue
+                # if class_b already has a base then skip
+                if class_b.base:
+                    # log_(f'{class_a._name}/{class_b._name}, skipping, {class_b._name} has base {class_b.base}')
+                    continue
 
-        ...
+                # determine common attributes
+                common = class_a.common_attributes(class_b)
+                if len(common) == len(class_a.attributes) and len(common) > 1:
+                    log_(f'{class_a._name}/{class_b._name}, common attributes: {", ".join(a.name for a in common)}')
+
+                    # of all class_a attributes also exist in class_b then class_a is subclass of class_b
+                    class_b.base = class_a._name
+                    # ... and we can remove all common attributes from class_b
+                    names = {a.name for a in common}
+                    class_b.attributes = [a for a in class_b.attributes
+                                          if a.name not in names]
+                # if
+            # for
+        # for
+        return
 
 
 class MethodDetails(BaseModel):

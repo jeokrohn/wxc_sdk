@@ -6320,7 +6320,21 @@ docs:
         - doc: Rules for selectively forwarding calls. (Rules which are omitted in
             the list will not be deleted.)
           name: rules
-          param_attrs: []
+          param_attrs:
+          - doc: A unique identifier for the auto attendant call forward selective
+              rule.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: required
+          - doc: Flag to indicate if always call forwarding selective rule criteria
+              is active. If not set, flag will be set to false.
+            name: enabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
           param_object: []
           type: array[CallForwardRulesModifyObject]
           type_spec: null
@@ -6482,11 +6496,48 @@ docs:
         param_object: []
         type: CallForwardSelectiveCallsFromObject
         type_spec: required
-      - doc: 'Settings related to the rule matching based on the destination number.
-
-          Array of numbers to be matched against the calling destination number.'
+      - doc: Settings related to the rule matching based on the destination number.
         name: callsTo
-        param_attrs: []
+        param_attrs:
+        - doc: Array of numbers to be matched against the calling destination number.
+          name: numbers
+          param_attrs:
+          - doc: AutoCalls To phone number. Either phone number or extension should
+              be present as mandatory.
+            name: phoneNumber
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Calls To extension.  Either phoneNumber or extension is mandatory.
+            name: extension
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Calls to type options.
+            name: type
+            param_attrs:
+            - doc: Indicates that the given phoneNumber or extension associated with
+                this rule's containing object is a primary number or extension.
+              name: PRIMARY
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates that the given phoneNumber or extension associated with
+                this rule's containing object is an alternate number or extension.
+              name: ALTERNATE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: required
+          param_object: []
+          type: array[CallForwardSelectiveCallsToNumbersObject]
+          type_spec: null
         param_object: []
         type: CallForwardSelectiveCallsToObject
         type_spec: null
@@ -6866,11 +6917,48 @@ docs:
         param_object: []
         type: CallForwardSelectiveCallsFromObject
         type_spec: null
-      - doc: 'Settings related to the rule matching based on the destination number.
-
-          Array of numbers to be matched against the calling destination number.'
+      - doc: Settings related to the rule matching based on the destination number.
         name: callsTo
-        param_attrs: []
+        param_attrs:
+        - doc: Array of numbers to be matched against the calling destination number.
+          name: numbers
+          param_attrs:
+          - doc: AutoCalls To phone number. Either phone number or extension should
+              be present as mandatory.
+            name: phoneNumber
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Calls To extension.  Either phoneNumber or extension is mandatory.
+            name: extension
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Calls to type options.
+            name: type
+            param_attrs:
+            - doc: Indicates that the given phoneNumber or extension associated with
+                this rule's containing object is a primary number or extension.
+              name: PRIMARY
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates that the given phoneNumber or extension associated with
+                this rule's containing object is an alternate number or extension.
+              name: ALTERNATE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: required
+          param_object: []
+          type: array[CallForwardSelectiveCallsToNumbersObject]
+          type_spec: null
         param_object: []
         type: CallForwardSelectiveCallsToObject
         type_spec: null
@@ -9810,7 +9898,45 @@ docs:
         - doc: Specifies up to 10 numbers which can each have an overriden distinctive
             ring setting.
           name: alternateNumbers
-          param_attrs: []
+          param_attrs:
+          - doc: Alternate phone number for the hunt group.
+            name: phoneNumber
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: required
+          - doc: Ring pattern for when this alternate number is called. Only available
+              when distinctiveRing is enabled for the hunt group.
+            name: ringPattern
+            param_attrs:
+            - doc: Normal incoming ring pattern.
+              name: NORMAL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Incoming ring pattern of two long rings.
+              name: LONG_LONG
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Incoming ring pattern of two short rings, followed by a short ring.
+              name: SHORT_SHORT_LONG
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Incoming ring pattern of a short ring, followed by a long ring,
+                followed by a short ring.
+              name: SHORT_LONG_SHORT
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
           param_object: []
           type: array[AlternateNumbersWithPattern]
           type_spec: null
@@ -10462,7 +10588,19 @@ docs:
           type_spec: null
         - doc: Rules for selectively forwarding calls.
           name: rules
-          param_attrs: []
+          param_attrs:
+          - doc: Unique ID for the rule.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: required
+          - doc: Reflects if rule is enabled.
+            name: enabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
           param_object: []
           type: array[CallForwardRulesSet]
           type_spec: null
@@ -10623,11 +10761,47 @@ docs:
         param_object: []
         type: object
         type_spec: required
-      - doc: 'Settings related to the rule matching based on the destination number.
-
-          Array of numbers to be matched against the calling destination number.'
+      - doc: Settings related to the rule matching based on the destination number.
         name: callsTo
-        param_attrs: []
+        param_attrs:
+        - doc: Array of numbers to be matched against the calling destination number.
+          name: numbers
+          param_attrs:
+          - doc: Only return call queues with matching primary phone number or extension.
+            name: phoneNumber
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Primary phone extension of the call queue.
+            name: extension
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Type of
+            name: type
+            param_attrs:
+            - doc: Indicates that the given phoneNumber or extension associated with
+                this rule's containing object is a primary number or extension.
+              name: PRIMARY
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates that the given phoneNumber or extension associated with
+                this rule's containing object is an alternate number or extension.
+              name: ALTERNATE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: required
+          param_object: []
+          type: array[CallForwardingNumbers]
+          type_spec: null
         param_object: []
         type: object
         type_spec: required
@@ -11004,11 +11178,47 @@ docs:
         param_object: []
         type: object
         type_spec: null
-      - doc: 'Settings related to the rule matching based on the destination number.
-
-          Array of numbers to be matched against the calling destination number.'
+      - doc: Settings related to the rule matching based on the destination number.
         name: callsTo
-        param_attrs: []
+        param_attrs:
+        - doc: Array of numbers to be matched against the calling destination number.
+          name: numbers
+          param_attrs:
+          - doc: Only return call queues with matching primary phone number or extension.
+            name: phoneNumber
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Primary phone extension of the call queue.
+            name: extension
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Type of
+            name: type
+            param_attrs:
+            - doc: Indicates that the given phoneNumber or extension associated with
+                this rule's containing object is a primary number or extension.
+              name: PRIMARY
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates that the given phoneNumber or extension associated with
+                this rule's containing object is an alternate number or extension.
+              name: ALTERNATE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: required
+          param_object: []
+          type: array[CallForwardingNumbers]
+          type_spec: null
         param_object: []
         type: object
         type_spec: null
@@ -13502,7 +13712,19 @@ docs:
           type_spec: null
         - doc: Rules for selectively forwarding calls.
           name: rules
-          param_attrs: []
+          param_attrs:
+          - doc: Unique ID for the rule.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: required
+          - doc: Reflects if rule is enabled.
+            name: enabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
           param_object: []
           type: array[CallForwardRulesSet]
           type_spec: null
@@ -13663,11 +13885,47 @@ docs:
         param_object: []
         type: object
         type_spec: required
-      - doc: 'Settings related to the rule matching based on the destination number.
-
-          Array of numbers to be matched against the calling destination number.'
+      - doc: Settings related to the rule matching based on the destination number.
         name: callsTo
-        param_attrs: []
+        param_attrs:
+        - doc: Array of numbers to be matched against the calling destination number.
+          name: numbers
+          param_attrs:
+          - doc: Only return call queues with matching primary phone number or extension.
+            name: phoneNumber
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Primary phone extension of the call queue.
+            name: extension
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Type of
+            name: type
+            param_attrs:
+            - doc: Indicates that the given phoneNumber or extension associated with
+                this rule's containing object is a primary number or extension.
+              name: PRIMARY
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates that the given phoneNumber or extension associated with
+                this rule's containing object is an alternate number or extension.
+              name: ALTERNATE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: required
+          param_object: []
+          type: array[CallForwardingNumbers]
+          type_spec: null
         param_object: []
         type: object
         type_spec: required
@@ -14044,11 +14302,47 @@ docs:
         param_object: []
         type: object
         type_spec: null
-      - doc: 'Settings related to the rule matching based on the destination number.
-
-          Array of numbers to be matched against the calling destination number.'
+      - doc: Settings related to the rule matching based on the destination number.
         name: callsTo
-        param_attrs: []
+        param_attrs:
+        - doc: Array of numbers to be matched against the calling destination number.
+          name: numbers
+          param_attrs:
+          - doc: Only return call queues with matching primary phone number or extension.
+            name: phoneNumber
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Primary phone extension of the call queue.
+            name: extension
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Type of
+            name: type
+            param_attrs:
+            - doc: Indicates that the given phoneNumber or extension associated with
+                this rule's containing object is a primary number or extension.
+              name: PRIMARY
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates that the given phoneNumber or extension associated with
+                this rule's containing object is an alternate number or extension.
+              name: ALTERNATE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: required
+          param_object: []
+          type: array[CallForwardingNumbers]
+          type_spec: null
         param_object: []
         type: object
         type_spec: null

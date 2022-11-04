@@ -2,7 +2,17 @@
 """
 generate class definitions from API specs
 
-iterate through all attributes/objects and look for "non-standard" types
+usage: classes.py [-h] [-o OUTPUT_PATH] [-l LOG_PATH] api_spec
+
+positional arguments:
+  api_spec
+
+options:
+  -h, --help            show this help message and exit
+  -o OUTPUT_PATH, --output OUTPUT_PATH
+                        Write output to given file.
+  -l LOG_PATH, --logfile LOG_PATH
+                        Write detailed logs to this file.
 """
 import argparse
 import json
@@ -15,13 +25,44 @@ from dataclasses import dataclass
 from itertools import chain
 from json import JSONDecodeError
 from sys import stderr, stdout
-from typing import TextIO
+from typing import TextIO, Optional
 
 from scraper import DocMethodDetails, Parameter, Class
 
 collected_types = list()
 
 log = logging.getLogger()
+
+
+def setup_logging(console_level: int = logging.INFO,
+                  log_path: Optional[str] = None):
+    """
+    Setup logging
+
+    :param console_level: logging level for console (stderr)
+    :param log_path: path to log file
+    """
+
+    # enable debugging
+    logging.getLogger('urllib3').setLevel(logging.INFO)
+    logging.getLogger('selenium').setLevel(logging.INFO)
+
+    # log to console level INFO
+    # log to file level DEBUG
+    logger = logging.getLogger()
+    if log_path:
+        fmt = logging.Formatter(fmt='%(levelname)5s:%(name)s:%(message)s')
+
+        file_handler = logging.FileHandler(filename=log_path, mode='w')
+        file_handler.setLevel(logging.DEBUG)
+        file_handler.setFormatter(fmt)
+        logger.addHandler(file_handler)
+
+    stream_handler = logging.StreamHandler()
+    stream_handler.setLevel(console_level)
+    logger.addHandler(stream_handler)
+
+    logger.setLevel(logging.DEBUG)
 
 
 @dataclass
@@ -199,6 +240,8 @@ class ClassGenerator:
             # if
         # for
 
+        # if the class name has multiple word then make camel case
+        class_name = ''.join(f'{w[0].upper()}{w[1:]}' for w in class_name.split())
         # strip illegal characters from class names
         class_name = re.sub(r'\W', '', class_name)
 
@@ -270,8 +313,18 @@ def main():
     parser.add_argument('api_spec')
     parser.add_argument('-o', '--output', dest='output_path', action='store', required=False, type=str,
                         help=f'Write output to given file.')
+    # enable debug output to stderr
+    parser.add_argument('-d', '--debug', action='store_true', help='show debugs on console')
+
+    # write detailed logs (debug level) to a file
+    parser.add_argument('-l', '--logfile', dest='log_path', action='store', required=False, type=str,
+                        help=f'Write detailed logs to this file.')
+
 
     args = parser.parse_args()
+
+    setup_logging(console_level=logging.DEBUG if args.debug else logging.INFO,
+                  log_path=args.log_path)
 
     @contextmanager
     def output_file():
@@ -293,6 +346,7 @@ def main():
         print('from wxc_sdk.base import ApiModel', file=output)
         print('from enum import Enum', file=output)
         print('from typing import Optional', file=output)
+        print('from pydantic import Field', file=output)
         print('\n', file=output)
         print('\n\n'.join(class_generator.sources()), file=output)
 

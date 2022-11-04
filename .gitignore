@@ -149,3 +149,7 @@ cython_debug/
 /geocodify.env
 /ipgeolocation.env
 /tests/geocodify.env
+/developer.webex.com/debug.txt
+/developer.webex.com/auto.py
+/developer.webex.com/cdr.yml
+/developer.webex.com/cdr_auto.py
