@@ -5,6 +5,7 @@ import logging
 import os
 from typing import Union
 
+from .cdr import DetailedCDRApi
 from .devices import DevicesApi
 from .groups import GroupsApi
 from .licenses import LicensesApi
@@ -34,6 +35,8 @@ class WebexSimpleApi:
     The main API object
     """
 
+    #: CDR API: :class:`cdr.DetailedCDRApi`
+    cdr: DetailedCDRApi
     #: devices API :class:`devices.DevicesApi`
     devices: DevicesApi
     #: groups API :class:`groups.GroupsApi`
@@ -79,6 +82,7 @@ class WebexSimpleApi:
             tokens = Tokens(access_token=tokens)
 
         session = RestSession(tokens=tokens, concurrent_requests=concurrent_requests)
+        self.cdr = DetailedCDRApi(session=session)
         self.devices = DevicesApi(session=session)
         self.groups = GroupsApi(session=session)
         self.licenses = LicensesApi(session=session)
