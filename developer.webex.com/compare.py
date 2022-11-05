@@ -146,7 +146,7 @@ class ComparePathAndMethod:
 
     def compare(self) -> bool:
         """
-        ACtually compare the two :class:`PathAndMethod` instances
+        Actually compare the two :class:`PathAndMethod` instances
         :return:
         """
         # we are actually only interested in the parameters and responses
