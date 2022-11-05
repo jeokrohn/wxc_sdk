@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# get information about new APIs
+#
+# Copyright (c) 2022 Johannes Krohn <jkrohn@cisco.com>
+# License: MIT
+
+api_spec="developer.webex.com/api_spec.yml"
+auth_spec="developer.webex.com/auth_api_spec.yml"
+new_api_spec="developer.webex.com/diff_api_spec.yml"
+new_endpoints="developer.webex.com/new_endpoints.txt"
+compare="developer.webex.com/compare.txt"
+
+
+for i in ${@}; do
+    case ${i} in
+        forcebase)
+        forcebase=true
+        ;;
+
+        forcenew)
+        forcenew=true
+        ;;
+
+        forceauth)
+        forceauth=true
+        ;;
+
+        force)
+        forcenew=true
+        forceauth=true
+        ;;
+
+        *)
+        echo "Unknown argument: $i"
+        exit 1
+        ;;
+    esac
+done
+
+if [ ${forcebase} ] || [ ! -f "${api_spec}" ]; then
+  echo "creating ${api_spec}"
+  developer.webex.com/read_api_spec.py -f "${api_spec}"
+fi
+
+if [ ${forcenew} ] || [ ! -f "${new_api_spec}" ]; then
+  echo "creating ${new_api_spec}"
+  developer.webex.com/read_api_spec.py -a developer.webex.com/.env -f "${new_api_spec}" -b "${api_spec}" --newonly
+fi
+
+if [ ${forceauth} ] || [ ! -f "${auth_spec}" ]; then
+  echo "creating ${auth_spec}"
+#  developer.webex.com/read_api_spec.py -a developer.webex.com/.env -f "${auth_spec}" -b "${api_spec}"
+  developer.webex.com/read_api_spec.py -a developer.webex.com/.env -f "${auth_spec}"
+fi
+
+for yml in developer.webex.com/*.yml
+do
+  echo Summarizing endpoints from "${yml}" to "${yml%.yml}.txt"
+  developer.webex.com/endpoint_summary.py "${yml}" -o "${yml%.yml}.txt"
+done
+
+echo Comparing API definitions in "${api_spec}" "${auth_spec}" and writing result to "${compare}"
+developer.webex.com/compare.py "${api_spec}" "${auth_spec}" -o "${compare}"

@@ -29,6 +29,8 @@ PyJWT = "^2.4.0"
 webexteamssdk = "^1.6.1"
 beautifulsoup4 = "^4.11.1"
 matplotlib = "^3.6.1"
+selenium = "^4.5.0"
+inflection = "^0.5.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

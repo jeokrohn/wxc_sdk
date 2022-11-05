@@ -41,6 +41,16 @@ for i in ${@}; do
         methref=true
         ;;
 
+        apispec)
+        all=
+        apispec=true
+        ;;
+
+        apisum)
+        all=
+        apisum=true
+        ;;
+
         *)
         echo "Unknown argument: $i"
         exit 1
@@ -49,8 +59,10 @@ for i in ${@}; do
 done
 
 
-echo "==> Cleaning previous build artifacts"
-script/clean
+if [ ${all} ]; then
+  echo "==> Cleaning previous build artifacts"
+  script/clean
+fi
 
 
 if [ ${all} ] || [ ${types} ]; then
@@ -83,4 +95,16 @@ if [ ${all} ] || [ ${package} ]; then
     echo "==> Building the Source Distribution package"
     poetry build
 fi
+
+if [ ${all} ] || [ ${apispec} ]; then
+    echo "==> reading API spec from developer.webex.com"
+    ./developer.webex.com/read_api_spec.py -f ./developer.webex.com/read_api_spec.yml
+fi
+
+if [ ${all} ] || [ ${apisum} ]; then
+    echo "==> Building API summaries"
+    ./developer.webex.com/type_summary.py ./developer.webex.com/read_api_spec.yml -o ./developer.webex.com/type_summary.txt
+    ./developer.webex.com/endpoint_summary.py ./developer.webex.com/read_api_spec.yml -o ./developer.webex.com/endpoint_summary.txt
+fi
+
 
