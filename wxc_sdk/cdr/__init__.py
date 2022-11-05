@@ -204,7 +204,7 @@ class DetailedCDRApi(ApiChild, base='devices'):
     """
 
     def get_cdr_history(self, start_time: datetime = None, end_time: datetime = None, locations: list[str] = None,
-                    **params) -> Generator[CDR, None, None]:
+                        **params) -> Generator[CDR, None, None]:
         """
         Provides Webex Calling Detailed Call History data for your organization.
 
@@ -237,4 +237,5 @@ class DetailedCDRApi(ApiChild, base='devices'):
 
         params['startTime'] = iso_str(start_time)
         params['endTime'] = iso_str(end_time)
+        # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=CDR, params=params, item_key='items')
