@@ -3,7 +3,7 @@ Common date types and APIs
 """
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import Optional, Any
 
 from pydantic import Field, root_validator, validator
 
@@ -21,7 +21,7 @@ __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting',
            'CommonDeviceCustomization', 'BacklightTimer', 'Background', 'BackgroundSelection', 'DisplayNameSelection',
            'LoggingLevel', 'DisplayCallqueueAgentSoftkey', 'AcdCustomization', 'LineKeyLabelSelection',
            'LineKeyLedPattern', 'PhoneLanguage', 'ScreenTimeout', 'WifiNetwork', 'MppCustomization', 'PrimaryOrShared',
-           'MediaFileType', 'AnnAudioFile']
+           'MediaFileType', 'AnnAudioFile', 'WifiCustomization']
 
 
 class UserType(str, Enum):
@@ -373,11 +373,11 @@ class AudioCodecPriority(ApiModel):
     #: Indicates the selection of an Audio Code Priority Object.
     selection: str
     #: Indicates the primary Audio Codec.
-    primary: str
+    primary: Optional[str]
     #: Indicates the secondary Audio Codec.
-    secondary: str
+    secondary: Optional[str]
     #: Indicates the tertiary Audio Codec.
-    tertiary: str
+    tertiary: Optional[str]
 
 
 class AtaDtmfMode(str, Enum):
@@ -618,9 +618,17 @@ class MppCustomization(CommonDeviceCustomization):
     #: Specify the amount of inactive time needed (in seconds) before the phone’s screen saver activates.
     screen_timeout: ScreenTimeout
     #: Enable/disable the use of the USB ports on Multi-Platform phones.
-    usb_ports_enabled: bool
+    usb_ports_enabled: Optional[bool]
     #: Specify the Wi-Fi SSID and password for wireless-enabled MPP phones.
     wifi_network: WifiNetwork
+
+
+class WifiCustomization(ApiModel):
+    # TODO: implement as soon as properly documented on developer.webex.com
+    #: Choose up to three predefined codec priority options available for your region.
+    audio_codec_priority: AudioCodecPriority
+    ldap: Any
+    web_access: Any
 
 
 class DeviceCustomizations(ApiModel):
@@ -633,6 +641,7 @@ class DeviceCustomizations(ApiModel):
     ata: Optional[AtaCustomization]
     dect: Optional[CommonDeviceCustomization]
     mpp: Optional[MppCustomization]
+    wifi: Optional[WifiCustomization]
 
 
 class DeviceCustomization(ApiModel):
