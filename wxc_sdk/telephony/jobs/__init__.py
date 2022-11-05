@@ -1,11 +1,13 @@
 """
-Jobs
+Jobs API
 """
 import json
 from collections.abc import Generator
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
+
+from pydantic import Field
 
 from ...base import ApiModel
 from ...common import DeviceCustomization
@@ -39,7 +41,7 @@ class JobExecutionStatus(ApiModel):
     #: Unique identifier that identifies each instance of the job.
     id: str
     #: Step execution start time.
-    start_time: datetime
+    start_time: Optional[datetime]
     #: Step execution end time.
     end_time: Optional[datetime]
     #: Last updated time post one of the step execution completion.
@@ -53,7 +55,7 @@ class JobExecutionStatus(ApiModel):
     #: Time lapsed since the job execution started.
     time_elapsed: str
     #: Status of each step within a job.
-    step_execution_statuses: list[StepExecutionStatus]
+    step_execution_statuses: list[StepExecutionStatus] = Field(default_factory=list)
 
 
 class StartJobResponse(ApiModel):
@@ -123,16 +125,43 @@ class DeviceSettingsJobsApi(ApiChild, base='telephony/config/jobs/devices/callDe
     """
 
     def change(self, location_id: Optional[str], customization: DeviceCustomization,
-               org_id: str=None)->StartJobResponse:
-        # TODO: validate, tracked as issue #91, API not yet supported
-        raise NotImplementedError
+               org_id: str = None) -> StartJobResponse:
+        """
+        Change device settings across organization or locations jobs.
+
+        Performs bulk and asynchronous processing for all types of device settings initiated by organization and system
+        admins in a stateful persistent manner. This job will modify the requested device settings across all the
+        devices. Whenever a location ID is specified in the request, it will modify the requested device settings only
+        for the devices that are part of the provided location within an organization.
+
+        Returns a unique job ID which can then be utilized further to retrieve status and errors for the same.
+
+        Only one job per customer can be running at any given time within the same organization. An attempt to run
+        multiple jobs at the same time will result in a 409 error response.
+
+        Running a job requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Location within an organization where changes of device settings will be applied to all the
+            devices within it.
+        :type location_id: str
+        :param customization: customization. Atttribute custom_enabled Indicates if all the devices within this
+            location will be customized with new requested customizations(if set to true) or will be overridden with
+            the one at organization level (if set to false or any other value). This field has no effect when the job
+            is being triggered at organization level.
+        :type customization: DeviceCustomization
+        :param org_id: Apply change device settings for all the devices under this organization.
+        :type org_id: str
+        :return: information about the created job
+        :rtype: StartJobResponse
+        """
         url = self.ep()
         params = org_id and {'prgId': org_id} or None
         body = {}
         if location_id:
             body['locationId'] = location_id
-        body['locationCustomizationsEnabled'] = customization.custom_enabled
-        if customization.custom_enabled:
+            body['locationCustomizationsEnabled'] = customization.custom_enabled
+        if customization.custom_enabled or not location_id:
             body['customizations'] = json.loads(customization.customizations.json())
         data = self.post(url=url, params=params, json=body)
         return StartJobResponse.parse_obj(data)
@@ -155,6 +184,7 @@ class DeviceSettingsJobsApi(ApiChild, base='telephony/config/jobs/devices/callDe
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep()
+        # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=StartJobResponse, params=params)
 
     def get_status(self, job_id: str, org_id: str = None) -> StartJobResponse:
@@ -193,6 +223,7 @@ class DeviceSettingsJobsApi(ApiChild, base='telephony/config/jobs/devices/callDe
         """
         params = org_id and {'orgId': org_id} or None
         url = self.ep(f'{job_id}/errors')
+        # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
 
 

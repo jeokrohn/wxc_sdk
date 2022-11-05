@@ -234,8 +234,6 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         :return: device customization response
         :rtype: DeviceCustomization
         """
-        # TODO: reactivate/test as soon as jobs API starts to be supported
-        raise NotImplementedError
         params = org_id and {'orgId': org_id} or None
         url = self.ep(f'{location_id}/devices/settings')
         data = self.get(url=url, params=params)

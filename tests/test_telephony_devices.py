@@ -7,6 +7,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from itertools import chain
 from json import dumps, loads
+from time import sleep
 from typing import ClassVar
 
 from tests.base import TestCaseWithLog
@@ -17,6 +18,7 @@ from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings import PersonDevicesResponse, TelephonyDevice
 from wxc_sdk.telephony.devices import MACState, DeviceMembersResponse, AvailableMember, DeviceMember
+from wxc_sdk.telephony.jobs import JobExecutionStatus, StartJobResponse
 
 
 class TestSupportedDevices(TestCaseWithLog):
@@ -138,6 +140,7 @@ class Members(TestCaseWithLog):
         """
         with self.no_log():
             users: dict[str, Person] = {user.person_id: user for user in calling_users(api=self.api)}
+            # noinspection PyTypeChecker
             person_devices_responses = await asyncio.gather(*[self.async_api.person_settings.devices(person_id=user_id)
                                                               for user_id in users])
         person_devices_responses: list[PersonDevicesResponse]
@@ -158,6 +161,7 @@ class Members(TestCaseWithLog):
             self.skipTest('No devices belonging to users?')
 
         # now get members for all these devices
+        # noinspection PyTypeChecker
         members_list = await asyncio.gather(*[self.async_api.telephony.devices.members(device_id=device_id)
                                               for device_id in devices])
         members_list: list[DeviceMembersResponse]
@@ -242,6 +246,7 @@ class TestsWithDevices(TestCaseWithLog):
                 users = calling_users(api=cls.api)
                 cls.calling_users = {user.person_id: user for user in users}
 
+                # noinspection PyTypeChecker
                 person_devices_responses = await asyncio.gather(
                     *[api.person_settings.devices(person_id=user.person_id)
                       for user in users])
@@ -297,6 +302,7 @@ class TestAddMember(TestsWithDevices):
 
         # get available members for each device
         with self.no_log():
+            # noinspection PyTypeChecker
             available_members = await asyncio.gather(
                 *[self.async_api.telephony.devices.available_members(
                     device_id=device.device_id,
@@ -363,6 +369,7 @@ class TestDeviceSettings(TestsWithDevices):
         """
         # get device settings for all devices
         with self.no_log():
+            # noinspection PyTypeChecker
             settings = await asyncio.gather(
                 *[self.async_api.telephony.devices.device_settings(device_id=device.device_id,
                                                                    device_model=device.model)
@@ -405,6 +412,7 @@ class TestDeviceSettings(TestsWithDevices):
         """
         # get device settings for all devices
         with self.no_log():
+            # noinspection PyTypeChecker
             settings = await asyncio.gather(
                 *[self.async_api.telephony.devices.device_settings(device_id=device.device_id,
                                                                    device_model=device.model)
@@ -420,6 +428,26 @@ class TestDeviceSettings(TestsWithDevices):
 
 
 class Jobs(TestCaseWithLog):
+
+    def monitor_job_execution(self, job: StartJobResponse):
+        """
+        monitor a job until its completion
+        :param job_id:
+        :return:
+        """
+        while True:
+            print(f'{job.instance_id} {job.target} {job.location_name} '
+                  f'{job.device_count} devices {job.latest_execution_status}')
+            for status in job.job_execution_status:
+                print(f'  created {status.created_time} start {status.start_time} end {status.end_time}')
+                for step in status.step_execution_statuses:
+                    print(f'    start {step.start_time} end {step.end_time} {step.exit_code} {step.name}')
+            if job.latest_execution_status == 'COMPLETED':
+                break
+            print('not ready; sleep for 2 seconds...')
+            sleep(2)
+            job = self.api.telephony.jobs.device_settings.get_status(job_id=job.id)
+
     def test_001_list(self):
         """
         list device setting jobs
@@ -428,6 +456,13 @@ class Jobs(TestCaseWithLog):
         print(f'Got {len(jobs)} device settings jobs')
         if not jobs:
             self.skipTest('No existing jobs')
+        for job in jobs:
+            print(f'{job.instance_id} {job.target} {job.location_name} '
+                  f'{job.device_count} devices')
+            for status in job.job_execution_status:
+                print(f'  created {status.created_time} start {status.start_time} end {status.end_time}')
+                for step in status.step_execution_statuses:
+                    print(f'    start {step.start_time} end {step.end_time} {step.exit_code} {step.name}')
 
     @TestCaseWithLog.async_test
     async def test_002_get_status(self):
@@ -454,7 +489,7 @@ class Jobs(TestCaseWithLog):
                                         for job in jobs])
         print(f'Got status for {len(status)} jobs')
 
-    def test_004_update_reset_to_org_settings(self):
+    def test_004_update_location_reset_to_org_settings(self):
         """
         reset device settings in a location to org settings
         """
@@ -473,16 +508,17 @@ class Jobs(TestCaseWithLog):
         new_settings.custom_enabled = False
         job = self.api.telephony.jobs.device_settings.change(location_id=target_location.location_id,
                                                              customization=new_settings)
+        self.monitor_job_execution(job=job)
 
     def test_005_update_location_settings(self):
         """
-        update device settings across a lcoation
+        update device settings across a location
         """
         with self.no_log():
             locations = list(self.api.locations.list())
 
         # pick a random location
-        target_location:Location = random.choice(locations)
+        target_location: Location = random.choice(locations)
         print(f'Target location: "{target_location.name}"')
 
         # get location level device customization
@@ -493,8 +529,14 @@ class Jobs(TestCaseWithLog):
         new_settings.custom_enabled = not new_settings.custom_enabled
         job = self.api.telephony.jobs.device_settings.change(location_id=target_location.location_id,
                                                              customization=new_settings)
+        self.monitor_job_execution(job=job)
 
-
-
-
-
+    def test_006_update_org_settings(self):
+        """
+        update org level setting
+        """
+        # get current settings
+        settings = self.api.telephony.device_settings()
+        # update at org level
+        job = self.api.telephony.jobs.device_settings.change(location_id=None, customization=settings)
+        self.monitor_job_execution(job=job)
