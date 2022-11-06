@@ -1,3 +1,6 @@
+"""
+CDR API
+"""
 from collections.abc import Generator
 from dataclasses import dataclass
 from datetime import datetime, timedelta
@@ -5,10 +8,13 @@ from enum import Enum
 from typing import Optional, Union
 
 from dateutil import tz
-from pydantic import Field, root_validator, validator
+from pydantic import Field, root_validator
 
 from ..api_child import ApiChild
 from ..base import ApiModel
+
+__all__ = ['CDRCallType', 'CDRClientType', 'CDRDirection', 'CDROriginalReason', 'CDRRedirectReason',
+           'CDRRelatedReason', 'CDRUserType', 'CDR', 'DetailedCDRApi']
 
 
 class CDRCallType(str, Enum):
@@ -183,10 +189,6 @@ class CDR(ApiModel):
     user_type: Optional[Union[CDRUserType, str]] = Field(alias='User type')
     #: A unique identifier for the user associated with the call. This is a unique identifier across Cisco products.
     user_uuid: Optional[str] = Field(alias='User UUID')
-
-
-class GetDetailedCallHistoryResponse(ApiModel):
-    items: Optional[list[CDR]]
 
 
 @dataclass(init=False)
