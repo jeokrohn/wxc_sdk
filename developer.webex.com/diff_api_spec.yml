@@ -2420,6 +2420,637 @@ docs:
         type_spec: null
   Recording Report: []
   Video Mesh: []
+  Webex Calling Detailed Call History:
+  - doc: 'Provides Webex Calling Detailed Call History data for your organization.
+
+      Results can be filtered with the startTime, endTime and locations request parameters.
+      The startTime and endTime parameters specify the start and end of the time period
+      for the Detailed Call History reports you wish to collect. The API will return
+      all reports that were created between startTime and endTime.'
+    documentation:
+      doc: Get Detailed Call History
+      doc_link: https://developer.webex.com/docs/api/v1/webex-calling-detailed-call-history/get-detailed-call-history
+      endpoint: https://analytics.webexapis.com/v1/cdr_feed
+      http_method: GET
+    header: Get Detailed Call History
+    parameters_and_response:
+      Query Parameters:
+      - doc: 'Time of the first report you wish to collect. (report time is the time
+          the call finished). Note: The specified time must be between 5 minutes ago
+          and 48 hours ago, and be formatted as YYYY-MM-DDTHH:MM:SS.mmmZ.'
+        name: startTime
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: required
+      - doc: 'Time of the last report you wish to collect. Note: The specified time
+          should be earlier than startTime and no earlier than 48 hours ago, and be
+          formatted as YYYY-MM-DDTHH:MM:SS.mmmZ.'
+        name: endTime
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: required
+      - doc: Name of the location (as shown in Control Hub). Up to 10 comma-separated
+          locations can be provided. Allows you to query reports by location.
+        name: locations
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      - doc: Limit the maximum number of reports in the response. Range is 1 to 500.
+          When the API has more reports to return than the max value, the API response
+          will be paginated.
+        name: max
+        param_attrs: []
+        param_object: []
+        type: number
+        type_spec: null
+      Response Properties:
+      - doc: ''
+        name: items
+        param_attrs:
+        - doc: The time the call was answered. Time is in UTC.
+          name: Answer time
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Whether the call leg was answered. For example, in a hunt group case,
+            some legs will be unanswered, and one will be answered.
+          name: Answered
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: SIP Call ID used to identify the call. You can share the Call ID with
+            Cisco TAC to help them pinpoint a call if necessary.
+          name: Call ID
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'Type of call. For example:'
+          name: Call type
+          param_attrs:
+          - doc: ''
+            name: SIP_MEETING
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: SIP_INTERNATIONAL
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: SIP_SHORTCODE
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: SIP_INBOUND
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: UNKNOWN
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: SIP_EMERGENCY
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: SIP_PREMIUM
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: SIP_ENTERPRISE
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: SIP_TOLLFREE
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: SIP_NATIONAL
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: SIP_MOBILE
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: For incoming calls, the calling line ID of the user. For outgoing calls,
+            it's the calling line ID of the called party.
+          name: Called line ID
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: For incoming calls, the telephone number of the user. For outgoing
+            calls, it's the telephone number of the called party.
+          name: Called number
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: For incoming calls, the calling line ID of the calling party. For outgoing
+            calls, it's the calling line ID of the user.
+          name: Calling line ID
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: For incoming calls, the telephone number of the calling party. For
+            outgoing calls, it's the telephone number of the user.
+          name: Calling number
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'The type of client that the user (creating this record) is using to
+            make or receive the call. For example:'
+          name: Client type
+          param_attrs:
+          - doc: ''
+            name: SIP
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: WXC_CLIENT
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: WXC_THIRD_PARTY
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: TEAMS_WXC_CLIENT
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: WXC_DEVICE
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: WXC_SIP_GW
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The version of the client that the user (creating this record) is using
+            to make or receive the call.
+          name: Client version
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Correlation ID to tie together multiple call legs of the same call
+            session.
+          name: Correlation ID
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The MAC address of the device, if known.
+          name: Device MAC
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'Whether the call was inbound or outbound. The possible values are:'
+          name: Direction
+          param_attrs:
+          - doc: ''
+            name: ORIGINATING
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: TERMINATING
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The length of the call in seconds.
+          name: Duration
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Inbound trunk may be presented in Originating and Terminating records.
+          name: Inbound trunk
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The country code of the dialed number. This is only populated for international
+            calls.
+          name: International country
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Location of the report.
+          name: Location
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A unique identifier for the organization that made the call. This is
+            a unique identifier across Cisco.
+          name: Org UUID
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'Populated for calls that transfer, hold, wait, and so on. For example:'
+          name: Original reason
+          param_attrs:
+          - doc: ''
+            name: Unconditional
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: NoAnswer
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: CallQueue
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: TimeOfDay
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: UserBusy
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: FollowMe
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: Unrecognised
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: Unknown
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The operating system that the app was running on, if available.
+          name: OS type
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Outbound trunk may be presented in Originating and Terminating records.
+          name: Outbound trunk
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'Populated for calls that transfer, hold, wait, and so on. For example:'
+          name: Redirect reason
+          param_attrs:
+          - doc: ''
+            name: Unconditional
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: NoAnswer
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: CallQueue
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: TimeOfDay
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: UserBusy
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: FollowMe
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: HuntGroup
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: Deflection
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: Unknown
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: Unavailable
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: 'Populated for calls that transfer, hold, wait, and so on. For example:'
+          name: Related reason
+          param_attrs:
+          - doc: ''
+            name: ConsultativeTransfer
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: CallForwardSelective
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: CallQueue
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: Unrecognised
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: CallPickup
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: CallForwardAlways
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: FaxDeposit
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: HuntGroup
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: PushNotificationRetrieval
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: VoiceXMLScriptTermination
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: CallForwardNoAnswer
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: AnywhereLocation
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: A unique ID for this particular record. This can be used when processing
+            records to aid in deduplication.
+          name: Report ID
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The time this report was created. Time is in UTC.
+          name: Report time
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: If present, this field's only reported in Originating records. Route
+            group identifies the route group used for outbound calls routed via a
+            route group to Premises-based PSTN or an on-prem deployment integrated
+            with Webex Calling (dial plan or unknown extension).
+          name: Route group
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The main number for the user's site where the call was made or received.
+          name: Site main number
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Site timezone is the offset in minutes from UTC time of the user's
+            timezone.
+          name: Site timezone
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'This is the start time of the call, the answer time may be slightly
+            after this. Time is in UTC. '
+          name: Start time
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: If the call is TO or FROM a mobile phone using Webex Go, the Client
+            type will show SIP, and Sub client type will show MOBILE_NETWORK.
+          name: Sub client type
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'The type of user (user or workspace) that made or received the call.
+            For example:'
+          name: User type
+          param_attrs:
+          - doc: ''
+            name: AutomatedAttendantVideo
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: Anchor
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: BroadworksAnywhere
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: VoiceMailRetrieval
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: LocalGateway
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: HuntGroup
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: GroupPaging
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: User
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: VoiceMailGroup
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: CallCenterStandard
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: VoiceXML
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: RoutePoint
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: A unique identifier for the user associated with the call. This is
+            a unique identifier across Cisco products.
+          name: User UUID
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        param_object: []
+        type: array[CDR]
+        type_spec: null
   Webex Calling Organization Settings: []
   Webex Calling Organization Settings With Agent Join Unjoin And Announcement Features:
   - doc: 'Create new Call Queues for the given location.

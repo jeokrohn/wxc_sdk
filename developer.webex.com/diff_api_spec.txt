@@ -83,3 +83,5 @@ workspaces/{workspaceId}/features/outgoingPermission
   POST   https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/accessCodes --- Create Access Codes for a Workspace
   GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers --- Retrieve Transfer Numbers Settings for a Workspace
   PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers --- Modify Transfer Numbers Settings for a Workspace
+https://analytics.webexapis.com/v1/cdr_feed
+  GET    https://analytics.webexapis.com/v1/cdr_feed --- Get Detailed Call History

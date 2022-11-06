@@ -27,13 +27,13 @@ class EndPointGrouper:
 
     def key(self, url: str, init: bool = False):
         start = 'https://webexapis.com/v1'
-        assert url.startswith(start)
-        url = url[len(start):]
-        if not init and url in self.keys:
-            return url
+        if url.startswith(start):
+            url = url[len(start):]
+            if not init and url in self.keys:
+                return url
 
-        parts = url.split('/')
-        url = '/'.join(parts[:-1])
+            parts = url.split('/')
+            url = '/'.join(parts[:-1])
         return url
 
     def __init__(self, methods: Iterable[SectionAndMethodDetails]):

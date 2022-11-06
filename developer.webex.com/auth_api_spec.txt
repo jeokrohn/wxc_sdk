@@ -374,6 +374,7 @@ workspaces/{workspaceId}/features
   GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept --- Read Call Intercept Settings for a Workspace
   PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept --- Configure Call Intercept Settings for a Workspace
   GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept --- Read Call Intercept Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept --- Configure Call Intercept Settings for a Workspace
   GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/monitoring --- Retrieve Monitoring Settings for a Workspace
   PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/monitoring --- Modify Monitoring Settings for a Workspace
   GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/monitoring --- Retrieve Monitoring Settings for a Workspace
@@ -393,3 +394,5 @@ workspaces/{workspaceId}/features/outgoingPermission
   PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers --- Modify Transfer Numbers Settings for a Workspace
   GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers --- Retrieve Transfer Numbers Settings for a Workspace
   PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers --- Modify Transfer Numbers Settings for a Workspace
+https://analytics.webexapis.com/v1/cdr_feed
+  GET    https://analytics.webexapis.com/v1/cdr_feed --- Get Detailed Call History
