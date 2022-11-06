@@ -48,7 +48,7 @@ class ErrorDetail(ApiModel):
     """
     error_code: Optional[int] = Field(alias='errorCode')
     message: str  #: error message
-    errors: list[SingleError]  #: list of errors; typically has a single entry
+    errors: Optional[list[SingleError]]  #: list of errors; typically has a single entry
     tracking_id: str  #: tracking ID of the request
 
     @property
