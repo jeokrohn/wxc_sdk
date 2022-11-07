@@ -294,8 +294,8 @@ class Class:
                 print(f'    {handle_starting_digit(enum_name(attr.name))} = \'{attr.name}\'', file=source)
             else:
                 # determine whether we need an alias
-                if re.search(r'[A-Z\s]', attr.name):
-                    # if the attribute name has upper case or spaces then we need an alias
+                if re.search(r'\s', attr.name):
+                    # if the attribute name has spaces then we need an alias
                     alias = f" = Field(alias='{attr.name}')"
                     attr_name = attr.name.replace(' ', '_')
                 else:
@@ -345,9 +345,6 @@ class Class:
 
         def log_(msg: str, level: int = logging.DEBUG):
             log.log(msg=f'optimize: {msg}', level=level)
-
-        def attr_list(c: Class):
-            return '/'.join(sorted(a.name for a in c.attributes))
 
         # for all pairs or classes
         # * determine set of common (same name and type) attributes
@@ -458,14 +455,18 @@ class DevWebexComScraper:
     credentials: Credentials
     baseline: Optional[DocMethodDetails]
     new_only: bool
+    section: str
+    tabs: Union[str, list[str]]
 
     def __init__(self, credentials: Credentials = None, baseline: DocMethodDetails = None,
-                 new_only: bool = True):
+                 new_only: bool = True, section: str = None, tabs: Union[str, list[str]] = None):
         self.driver = webdriver.Chrome()
         self.logger = logging.getLogger(f'{__name__}.{self.__class__.__name__}')
         self.credentials = credentials
         self.baseline = baseline
         self.new_only = new_only
+        self.section = section or 'Calling'
+        self.tabs = tabs or 'all'
 
     def close(self):
         self.log('close()')
@@ -672,8 +673,10 @@ class DevWebexComScraper:
                     if (submenu_text in self.baseline.docs) and not self.baseline.docs[submenu_text]:
                         ignore = True
             else:
-                # .. skip all non-"standard" menus
-                if submenu.text in IGNORE_MENUS:
+                if isinstance(self.tabs, list) and submenu_text not in self.tabs:
+                    ignore = True
+                elif submenu_text in IGNORE_MENUS:
+                    # .. skip all non-"standard" menus
                     ignore = True
                 if False and debugger() and submenu_text not in RELEVANT_MENUS:
                     ignore = True
@@ -681,11 +684,11 @@ class DevWebexComScraper:
                 # .. skip
                 log(f'skipping', level=logging.INFO)
                 # .. but yield an empty list, so that we at least have a marker for that section
-                yield SectionDoc(menu_text=submenu.text,
+                yield SectionDoc(menu_text=submenu_text,
                                  methods=list())
                 continue
 
-            log(f'Extracting methods from "{submenu.text}" menu', level=logging.INFO)
+            log(f'Extracting methods from "{submenu_text}" menu', level=logging.INFO)
 
             log('start')
             log('click()')
@@ -723,9 +726,9 @@ class DevWebexComScraper:
             log('end')
         return
 
-    def get_calling_docs(self) -> list[SectionDoc]:
+    def get_section_docs(self) -> list[SectionDoc]:
         """
-        Read developer.webex.com and get doc information for all endpoints under "Calling"
+        Read developer.webex.com and get doc information for all endpoints under requested section "Calling"
         """
         url = 'https://developer.webex.com/docs'
 
@@ -785,30 +788,34 @@ class DevWebexComScraper:
         if self.credentials:
             self.login()
 
-        log('looking for "Calling"')
-        calling = self.by_class_and_text(find_in=self.driver,
+        log(f'looking for "{self.section}"')
+        section = self.by_class_and_text(find_in=self.driver,
                                          class_name='md-list-item__center',
-                                         text='Calling')
-        log('clicking on "Calling"')
-        calling.click()
+                                         text=self.section)
+        log(f'clicking on "{self.section}"')
+        section.click()
 
-        # after clicking on "Calling" an expanded nav group exists
-        log('looking for expanded sidebar nav group')
-        calling_nav_group = WebDriverWait(driver=self.driver, timeout=10).until(
-            method=EC.presence_of_element_located((By.CLASS_NAME, 'md-sidebar-nav__group--expanded')))
+        if self.section == 'Full API Reference':
+            reference_nav_group = next(iter(self.driver.find_elements(by=By.CLASS_NAME,
+                                                                      value='md-sidebar-nav__group--expanded')))
+        else:
+            # after clicking on section an expanded nav group exists
+            log('looking for expanded sidebar nav group')
+            section_nav_group = WebDriverWait(driver=self.driver, timeout=10).until(
+                method=EC.presence_of_element_located((By.CLASS_NAME, 'md-sidebar-nav__group--expanded')))
 
-        # in that nav group we want to click on "Reference"
-        log('looking for "Reference" in expanded sidebar group')
-        reference = self.by_class_and_text(find_in=calling_nav_group,
-                                           class_name='md-list-item__center',
-                                           text='Reference')
-        log('clicking on "Reference"')
-        reference.click()
+            # in that nav group we want to click on "Reference"
+            log('looking for "Reference" in expanded sidebar group')
+            reference = self.by_class_and_text(find_in=section_nav_group,
+                                               class_name='md-list-item__center',
+                                               text='Reference')
+            log('clicking on "Reference"')
+            reference.click()
 
-        # After clicking on "Reference" a new expanded nav group should exist
-        log('Looking for expanded sidebar nav group under "Calling"')
-        reference_nav_group = next(iter(calling_nav_group.find_elements(by=By.CLASS_NAME,
-                                                                        value='md-sidebar-nav__group--expanded')))
+            # After clicking on "Reference" a new expanded nav group should exist
+            log('Looking for expanded sidebar nav group under "Calling"')
+            reference_nav_group = next(iter(section_nav_group.find_elements(by=By.CLASS_NAME,
+                                                                            value='md-sidebar-nav__group--expanded')))
         log('Collecting menu items in "Reference" sidebar group')
         reference_items = reference_nav_group.find_elements(by=By.CLASS_NAME, value='md-submenu__item')
         log(f"""menu items in "Reference" sidebar group: {', '.join(f'"{smi.text}"' for smi in reference_items)}""")
@@ -820,6 +827,7 @@ class DevWebexComScraper:
         """
         Parse parameters from divs
         :param divs:
+        :param level:
         :return:
         """
 
@@ -829,7 +837,8 @@ class DevWebexComScraper:
         def log(msg: str, div: Tag = None, log_level: int = logging.DEBUG):
             div = div or param_div
             name_str = name and f'"{name}", ' or ""
-            self.log(f'      {" " * level}param_parser({div_repr(div)}): {name_str}{msg}', level=level)
+            self.log(f'      {" " * level}param_parser({div_repr(div)}): {name_str}{msg}',
+                     level=log_level)
 
         def div_generator(div_list: list[Tag]) -> Generator[Tag, None, None]:
             """
@@ -992,7 +1001,6 @@ class DevWebexComScraper:
                         log(f'single child attribute doesn\'t make sense. Adding line to documentation: "{doc_line}"')
                         doc = '\n'.join((doc.strip(), doc_line))
                         param_attrs = None
-                    foo = 1
             elif len(child_divs) < 3:
                 # to short: not idea what we can do here....
                 log(f'to few divs: {len(child_divs)}: skipping')

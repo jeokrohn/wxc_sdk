@@ -24,7 +24,6 @@ import argparse
 import logging
 import os
 import sys
-from functools import partial
 from sys import stderr
 from typing import Optional
 
@@ -90,7 +89,18 @@ def main():
     parser.add_argument('-a', '--auth', required=False, type=str,
                         help='filename of file with credentials in .env file format')
 
+    parser.add_argument('-s', '--section', required=False, type=str, help='section to read. For example "Calling". '
+                                                                          'Default: "Calling"',
+                        nargs='?', const='Calling', default='Calling')
+    parser.add_argument('-t', '--tabs', required=False, type=str, help='tab to parse. Example: "Locations". To read '
+                                                                       'all tabs a value of "all" can be used.',
+                        default='all', nargs='*')
+
     args = parser.parse_args()
+
+    if args.baseline and args.tabs != 'all':
+        print('-b not acceptable to gether with tab spec', file=stderr)
+        exit(1)
 
     if args.newonly and not args.baseline:
         print('-n only acceptable together with -b', file=stderr)
@@ -129,9 +139,10 @@ def main():
     else:
         baseline = None
 
-    with DevWebexComScraper(credentials=credentials, baseline=baseline, new_only=args.newonly) as site:
+    with DevWebexComScraper(credentials=credentials, baseline=baseline, new_only=args.newonly,
+                            section=args.section, tabs=args.tabs) as site:
         # get information about existing documentation from developer.webex.com
-        docs = site.get_calling_docs()
+        docs = site.get_section_docs()
 
         # get method details
         for doc in docs:
