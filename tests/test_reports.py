@@ -90,3 +90,20 @@ class TestReports(TestCaseWithLog):
               f'created {details.created.isoformat()}')
         print(f'{len(cdrs)} records, 1st call {min(r.start_time for r in cdrs).isoformat()}, '
               f'last call {max(r.start_time for r in cdrs).isoformat()}')
+
+    @TestCaseWithLog.async_test
+    async def test_008_async_download(self):
+        all_reports = [r async for r in self.async_api.reports.list_gen()
+                       if r.title == 'Calling Detailed Call History' and r.status == 'done']
+        all_reports.sort(key=lambda r: r.created, reverse=True)
+        if not all_reports:
+            self.skipTest('No CDR reports')
+        latest = all_reports[0]
+        details = await self.async_api.reports.details(report_id=latest.id)
+        url = details.download_url
+        cdrs = list(CallingCDR.from_dicts(await self.async_api.reports.download(url=url)))
+        print(f'CDR report, start {details.start_date.isoformat()}, end {details.end_date.isoformat()}, '
+              f'created {details.created.isoformat()}')
+        print(f'{len(cdrs)} records, 1st call {min(r.start_time for r in cdrs).isoformat()}, '
+              f'last call {max(r.start_time for r in cdrs).isoformat()}')
+

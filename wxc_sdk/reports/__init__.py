@@ -197,7 +197,7 @@ class ReportsApi(ApiChild, base='devices'):
         # TODO: https://developer.webex.com/docs/api/v1/report-templates/list-report-templates, documentation bug
         #   "Report Attributes" is actually "items"
         # TODO: https://developer.webex.com/docs/api/v1/report-templates/list-report-templates, documentation bug
-        #   missing attrinbute: downloadDomain
+        #   missing attribute: downloadDomain
         # TODO: https://developer.webex.com/docs/api/v1/report-templates/list-report-templates, documentation bug
         #   "id" is actually "Id"
         # TODO: https://developer.webex.com/docs/api/v1/report-templates/list-report-templates, documentation bug
@@ -211,7 +211,6 @@ class ReportsApi(ApiChild, base='devices'):
             params['to'] = to_date.strftime('%Y-%m-%d')
 
         url = self.session.ep('reports')
-        data = self.get(url=url, params=params)
         return self.session.follow_pagination(url=url, params=params, model=Report, item_key='items')
 
     def create(self, template_id: int, start_date: date = None, end_date: date = None, site_list: str = None) -> str:
@@ -296,6 +295,24 @@ class ReportsApi(ApiChild, base='devices'):
         :type url: str
         :return: yields dicts
         """
+        '''async
+    async def download(self, url: str) -> List[dict]:
+        """
+        Download a report from the given URL and yield the rows as dicts
+
+        :param url: download URL
+        :type url: str
+        :return: list of dicts (one per row)
+        :rtype: list[dict]
+        """
+        headers = {'Authorization': f'Bearer {self.session.access_token}'}
+        async with self.session.get(url=url, headers=headers) as r:
+            r.raise_for_status()
+            lines = [line.decode(encoding='utf-8-sig') async for line in r.content]
+            reader = csv.DictReader(lines)
+            return list(reader)
+
+        '''
         headers = {'Authorization': f'Bearer {self.session.access_token}'}
         with self.session.get(url=url, stream=True, headers=headers) as r:
             r.raise_for_status()
