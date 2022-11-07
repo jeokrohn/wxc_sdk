@@ -1,0 +1,415 @@
+# command: /Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/read_api_spec.py -f reports.yml -l debug.txt --section Full API Reference --tab Report Templates Reports
+docs:
+  Admin Audit Events: []
+  Attachment Actions: []
+  Authorizations: []
+  BroadWorks Billing Reports: []
+  BroadWorks Device Provisioning: []
+  BroadWorks Enterprises: []
+  BroadWorks Subscribers: []
+  Call Controls: []
+  Device Configurations: []
+  Devices: []
+  Events: []
+  Groups: []
+  Historical Analytics: []
+  Hybrid Clusters: []
+  Hybrid Connectors: []
+  Licenses: []
+  Locations: []
+  Meeting Chats: []
+  Meeting Closed Captions: []
+  Meeting Invitees: []
+  Meeting Participants: []
+  Meeting Polls: []
+  Meeting Preferences: []
+  Meeting Q and A: []
+  Meeting Qualities: []
+  Meeting Transcripts: []
+  Meetings: []
+  Memberships: []
+  Messages: []
+  Organizations: []
+  People: []
+  Recording Report: []
+  Recordings: []
+  Report Templates:
+  - doc: 'List all the available report templates that can be generated.
+
+      CSV (comma separated value) reports for Webex services are only supported for
+      organizations based in the North American region. Organizations based in other
+      regions will return blank CSV files for any Webex reports.'
+    documentation:
+      doc: List Report Templates
+      doc_link: https://developer.webex.com/docs/api/v1/report-templates/list-report-templates
+      endpoint: https://webexapis.com/v1/report/templates
+      http_method: GET
+    header: List Report Templates
+    parameters_and_response:
+      Response Properties:
+      - doc: An array of template object
+        name: Template Attributes
+        param_attrs:
+        - doc: Unique identifier representing a report.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Name of the template.
+          name: title
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The service to which the report belongs.
+          name: service
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Maximum date range for reports belonging to this template.
+          name: maxDays
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Generated reports belong to which field.
+          name: identifier
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: ''
+          name: validations
+          param_attrs:
+          - doc: An array of validation rules
+            name: validations
+            param_attrs:
+            - doc: Field on which validation rule is applied
+              name: field
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Whether the above field is required
+              name: required
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: array[Validation Rules]
+            type_spec: null
+          param_object: []
+          type: Validation Rules Collection
+          type_spec: null
+        param_object: []
+        type: array[Template]
+        type_spec: null
+  Reports:
+  - doc: 'Lists all reports. Use query parameters to filter the response. The parameters
+      are optional. However, from and to parameters should be provided together.
+
+      CSV reports for Teams services are only supported for organizations based in
+      the North American region. Organizations based in a different region will return
+      blank CSV files for any Teams reports.'
+    documentation:
+      doc: List Reports
+      doc_link: https://developer.webex.com/docs/api/v1/reports/list-reports
+      endpoint: https://webexapis.com/v1/reports
+      http_method: GET
+    header: List Reports
+    parameters_and_response:
+      Query Parameters:
+      - doc: List reports by ID.
+        name: reportId
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      - doc: List reports which use this service.
+        name: service
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      - doc: List reports with this report template ID.
+        name: templateId
+        param_attrs: []
+        param_object: []
+        type: number
+        type_spec: null
+      - doc: List reports that were created on or after this date.
+        name: from
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      - doc: List reports that were created before this date.
+        name: to
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      Response Properties:
+      - doc: An array of report objects.
+        name: Report Attributes
+        param_attrs:
+        - doc: Unique identifier for the report.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Name of the template to which this report belongs.
+          name: title
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The service to which the report belongs.
+          name: service
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The data in this report belongs to dates greater than or equal to this.
+          name: startDate
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The data in this report belongs to dates smaller than or equal to this.
+          name: endDate
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The site to which this report belongs to. This only exists if the report
+            belongs to service Webex.
+          name: siteList
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Time of creation for this report.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The person who created the report.
+          name: createdBy
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Whether this report was scheduled from API or Control Hub.
+          name: scheduledFrom
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Completion status of this report.
+          name: status
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The link from which the report can be downloaded.
+          name: downloadURL
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        param_object: []
+        type: array[Report]
+        type_spec: null
+  - doc: 'Create a new report. For each templateId, there are a set of validation
+      rules that need to be followed. For example, for templates belonging to Webex,
+      the user needs to provide siteUrl. These validation rules can be retrieved via
+      the Report Templates API.
+
+      The ''templateId'' parameter is a number. However, it is a limitation of developer.webex.com
+      platform that it is passed as a string when you try to test the API from here.
+
+      CSV reports for Teams services are only supported for organizations based in
+      the North American region. Organizations based in a different region will return
+      blank CSV files for any Teams reports.'
+    documentation:
+      doc: Create a Report
+      doc_link: https://developer.webex.com/docs/api/v1/reports/create-a-report
+      endpoint: https://webexapis.com/v1/reports
+      http_method: POST
+    header: Create a Report
+    parameters_and_response:
+      Body Parameters:
+      - doc: Unique ID representing valid report templates.
+        name: templateId
+        param_attrs: []
+        param_object: []
+        type: number
+        type_spec: required
+      - doc: Data in the report will be from this date onwards.
+        name: startDate
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      - doc: Data in the report will be until this date.
+        name: endDate
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      - doc: Sites belonging to user's organization. This attribute is needed for
+          site-based templates.
+        name: siteList
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      Response Properties:
+      - doc: The unique identifier for the report.
+        name: id
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+  - doc: 'Shows details for a report, by report ID.
+
+      Specify the report ID in the reportId parameter in the URI.
+
+      CSV reports for Teams services are only supported for organizations based in
+      the North American region. Organizations based in a different region will return
+      blank CSV files for any Teams reports.'
+    documentation:
+      doc: Get Report Details
+      doc_link: https://developer.webex.com/docs/api/v1/reports/get-report-details
+      endpoint: https://webexapis.com/v1/reports/{reportId}
+      http_method: GET
+    header: Get Report Details
+    parameters_and_response:
+      Response Properties:
+      - doc: Unique identifier for the report.
+        name: id
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      - doc: Name of the template to which this report belongs.
+        name: title
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      - doc: The service to which the report belongs.
+        name: service
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      - doc: The data in this report belongs to dates greater than or equal to this.
+        name: startDate
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      - doc: The data in this report belongs to dates smaller than or equal to this.
+        name: endDate
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      - doc: The site to which this report belongs to. This only exists if the report
+          belongs to service Webex.
+        name: siteList
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      - doc: Time of creation for this report.
+        name: created
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      - doc: The person who created the report.
+        name: createdBy
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      - doc: Whether this report was scheduled from API or Control Hub.
+        name: scheduledFrom
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      - doc: Completion status of this report.
+        name: status
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      - doc: The link from which the report can be downloaded.
+        name: downloadURL
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: null
+      URI Parameters:
+      - doc: The unique identifier for the report.
+        name: reportId
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: required
+  - doc: 'Remove a report from the system.
+
+      Specify the report ID in the reportId parameter in the URI
+
+      CSV reports for Teams services are only supported for organizations based in
+      the North American region. Organizations based in a different region will return
+      blank CSV files for any Teams reports.'
+    documentation:
+      doc: Delete a Report
+      doc_link: https://developer.webex.com/docs/api/v1/reports/delete-a-report
+      endpoint: https://webexapis.com/v1/reports/{reportId}
+      http_method: DELETE
+    header: Delete a Report
+    parameters_and_response:
+      URI Parameters:
+      - doc: The unique identifier for the report.
+        name: reportId
+        param_attrs: []
+        param_object: []
+        type: string
+        type_spec: required
+  Resource Group Memberships: []
+  Resource Groups: []
+  Roles: []
+  Room Tabs: []
+  Rooms: []
+  Session Types: []
+  Site: []
+  Space Classifications: []
+  Team Memberships: []
+  Teams: []
+  Tracking Codes: []
+  Video Mesh: []
+  Webex Calling Organization Settings: []
+  Webex Calling Person Settings: []
+  Webex Calling Voice Messaging: []
+  Webex Calling Workspace Settings with Numbers: []
+  Webhooks: []
+  Wholesale Billing Reports: []
+  Wholesale Customers: []
+  Wholesale Subscribers: []
+  Wholesale Subscribers with Pre-check APIs: []
+  Workspace Locations: []
+  Workspace Metrics: []
+  Workspace Personalization: []
+  Workspaces: []
+  xAPI: []

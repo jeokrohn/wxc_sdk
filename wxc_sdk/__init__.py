@@ -13,6 +13,7 @@ from .locations import LocationsApi
 from .organizations import OrganizationApi
 from .people import PeopleApi
 from .person_settings import PersonSettingsApi
+from .reports import ReportsApi
 from .rest import RestSession
 from .telephony import TelephonyApi
 from .tokens import Tokens
@@ -51,6 +52,8 @@ class WebexSimpleApi:
     person_settings: PersonSettingsApi
     #: People API :class:`people.PeopleApi`
     people: PeopleApi
+    #: Reports API :class:`reports.ReportsApi`
+    reports: ReportsApi
     #: Telephony (features) API :class:`telephony.TelephonyApi`
     telephony: TelephonyApi
     #: Webhooks API :class:`webhook.WebhookApi`
@@ -90,6 +93,7 @@ class WebexSimpleApi:
         self.organizations = OrganizationApi(session=session)
         self.person_settings = PersonSettingsApi(session=session)
         self.people = PeopleApi(session=session)
+        self.reports = ReportsApi(session=session)
         self.telephony = TelephonyApi(session=session)
         self.webhook = WebhookApi(session=session)
         self.workspaces = WorkspacesApi(session=session)
