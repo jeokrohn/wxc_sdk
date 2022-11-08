@@ -9,7 +9,7 @@ from typing import Union, Optional, NamedTuple, ClassVar
 
 from bs4 import BeautifulSoup, ResultSet, Tag
 from inflection import underscore
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, root_validator
 from selenium import webdriver
 from selenium.common import TimeoutException, StaleElementReferenceException
 from selenium.webdriver.chromium.webdriver import ChromiumDriver
@@ -22,7 +22,7 @@ from yaml import safe_load, safe_dump
 # foo !!!
 
 __all__ = ['MethodDoc', 'SectionDoc', 'AttributeInfo', 'Parameter', 'MethodDetails', 'DocMethodDetails',
-           'DevWebexComScraper', 'Credentials', 'SectionAndMethodDetails', 'Class']
+           'DevWebexComScraper', 'Credentials', 'SectionAndMethodDetails', 'Class', 'python_type', 'SectionDetails']
 
 # "Standard" menu titles we want to ignore when pull method details from submenus on the left
 IGNORE_MENUS = {
@@ -67,6 +67,20 @@ def div_repr(d) -> str:
     return f'<div{class_str}>'
 
 
+def python_type(type_str) -> str:
+    if type_str == 'number':
+        return 'int'
+    elif type_str == 'boolean':
+        return 'bool'
+    elif type_str == 'string':
+        return 'str'
+    if (referenced_class := Class.registry.get(type_str)) and referenced_class.base and \
+            not referenced_class.attributes:
+        # if the referenced class has a base class and no attributes then use the name of the base class instead
+        return python_type(referenced_class.base)
+    return type_str
+
+
 class Credentials(NamedTuple):
     user: str
     password: str
@@ -91,6 +105,10 @@ class SectionDoc(BaseModel):
     """
     #: menu text from the menu at the left under Reference linking to the page with the list of methods
     menu_text: str
+    #: header from the section page on the right
+    header: Optional[str]
+    #: documentation from section page on the right
+    doc: Optional[str]
     #: list of methods parsed from the page
     methods: list[MethodDoc]
 
@@ -112,6 +130,17 @@ class Parameter(BaseModel):
     param_object: Optional[list['Parameter']] = Field(default_factory=list)
     # reference to Class object; us set during class generation. Not part of (de-)serialization
     param_class: 'Class' = Field(default=None)
+
+    @property
+    def required(self):
+        return self.type_spec and self.type_spec.lower() == 'required'
+
+    @property
+    def python_name(self):
+        name = underscore(self.name)
+        if name in {'from', 'to'}:
+            return f'{name}_'
+        return name
 
     @validator('param_attrs', 'param_object')
     def attrs_and_object(cls, v):
@@ -206,24 +235,11 @@ class Class:
                 return False
         return self.base == other.base
 
-    def sources(self) -> Generator[str, None, None]:
+    def sources(self, only_childs: bool = False) -> Generator[str, None, None]:
         """
         Source for class
         :return:
         """
-
-        def python_type(type_str) -> str:
-            if type_str == 'number':
-                return 'int'
-            elif type_str == 'boolean':
-                return 'bool'
-            elif type_str == 'string':
-                return 'str'
-            if (referenced_class := self.registry.get(type_str)) and referenced_class.base and \
-                    not referenced_class.attributes:
-                # if the referenced class has a base class and no attributes then use the name of the base class instead
-                return python_type(referenced_class.base)
-            return type_str
 
         def type_for_source(a: Parameter) -> str:
             if a.param_class:
@@ -276,6 +292,9 @@ class Class:
         # look at base
         if self.base:
             yield from self.registry[self.base].sources()
+
+        if only_childs:
+            return
 
         # then yield source for this class
         source = StringIO()
@@ -408,13 +427,39 @@ class SectionAndMethodDetails(NamedTuple):
                 self.method_details.documentation.http_method < other.method_details.documentation.http_method)
 
 
+class SectionDetails(BaseModel):
+    """
+    Details for a section: header, doc and list of methods
+    """
+    header: Optional[str]
+    doc: Optional[str]
+    methods: list[MethodDetails]
+
+
 class DocMethodDetails(BaseModel):
     """
     Container for all information; interface to YML file
     """
     info: Optional[str]
     #: dictionary indexed by menu text with list of methods in that section
-    docs: dict[str, list[MethodDetails]] = Field(default_factory=dict)
+    docs: dict[str, SectionDetails] = Field(default_factory=dict)
+
+    @root_validator(pre=True)
+    def backward_compatibility(cls, values):
+        """
+        docs used to be a dict of list of methods.
+        When reading an "old" YML file then convert accordingly to that dict can be parsed as TabDetails
+        :param values:
+        :return:
+        """
+        docs = values.get('docs')
+        if docs is None or not isinstance(docs, dict):
+            return values
+        for section in docs:
+            content = docs[section]
+            if isinstance(content, list):
+                docs[section] = {'methods': content}
+        return values
 
     @staticmethod
     def from_yml(path: str):
@@ -435,13 +480,13 @@ class DocMethodDetails(BaseModel):
 
     def methods(self) -> Generator[SectionAndMethodDetails, None, None]:
         for section, method_details in self.docs.items():
-            for m in method_details:
+            for m in method_details.methods:
                 yield SectionAndMethodDetails(section=section, method_details=m)
 
     def attributes(self) -> Generator[AttributeInfo, None, None]:
         for method_details_key in self.docs:
             method_details = self.docs[method_details_key]
-            for md in method_details:
+            for md in method_details.methods:
                 yield from md.attributes(path=f'{method_details_key}')
 
     def dict(self, exclude=None, **kwargs):
@@ -719,7 +764,11 @@ class DevWebexComScraper:
             prev_container_header = header
 
             soup = BeautifulSoup(api_reference_container.get_attribute('outerHTML'), 'html.parser')
+            header = soup.div.div.h3.text
+            doc = '\n'.join(p.text for p in soup.div.div.find_all('p'))
             yield SectionDoc(menu_text=submenu.text,
+                             header=header,
+                             doc=doc,
                              methods=list(self.methods_from_api_reference_container(
                                  container=soup,
                                  header=submenu.text)))

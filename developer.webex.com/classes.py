@@ -18,20 +18,33 @@ import argparse
 import json
 import logging
 import re
-from collections import Counter
 from collections.abc import Generator
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from io import StringIO
 from itertools import chain
 from json import JSONDecodeError
 from sys import stderr, stdout
 from typing import TextIO, Optional
 
-from scraper import DocMethodDetails, Parameter, Class
+from inflection import underscore
+
+from scraper import DocMethodDetails, Parameter, Class, MethodDetails, python_type
+from wxc_sdk.base import to_camel
 
 collected_types = list()
 
 log = logging.getLogger()
+
+PY_HEADER = """
+from collections.abc import Generator
+
+from wxc_sdk.api_child import ApiChild
+from wxc_sdk.base import ApiModel
+from enum import Enum
+from typing import Optional
+from pydantic import Field
+"""
 
 
 def setup_logging(console_level: int = logging.INFO,
@@ -66,8 +79,230 @@ def setup_logging(console_level: int = logging.INFO,
 
 
 @dataclass
+class APIMethod:
+    name: str
+    methods_details: MethodDetails
+    body_class: Optional[Class]
+    response_class: Optional[Class]
+
+    METHOD = '''
+    def {method_name}(self{param_list}, **params){return_type}:
+        """
+{method_doc}
+        """
+{code}
+'''
+
+    EP_URL = '''        url = self.ep({url_path})'''
+    PARAM_DOC = '''
+        :param {p_name}: {p_type}: {p_doc}
+        :type {p_name}: {p_type}'''
+    PARAM_INIT = '''
+        if {p_name} is not None:
+            params['{p_name_camel}'] = {p_name}'''
+    BODY_INIT = '''
+        if {p_name} is not None:
+            body['{p_name_camel}'] = {p_name}'''
+
+    def source(self, common_prefix: str) -> Generator[str, None, None]:
+        """
+        source for one method
+        :return:
+        """
+        param_list = []
+        param_docs = []
+        param_code = []
+        body_params = []
+
+        def add_param(param: Parameter, is_query: bool = False, is_body: bool = False):
+            p_name = param.python_name
+            p_type = python_type(param.type)
+            for_param_list = f'{p_name}: {p_type}'
+            if not param.required:
+                for_param_list = f'{for_param_list} = None'
+            param_list.append(for_param_list)
+            param_docs.append(self.PARAM_DOC.format(p_name=p_name,
+                                                    p_type=p_type,
+                                                    p_doc=param.doc).strip('\n'))
+            if is_query:
+                param_code.append(self.PARAM_INIT.format(p_name=p_name, p_name_camel=param.name))
+            if is_body:
+                body_params.append(self.BODY_INIT.format(p_name=p_name, p_name_camel=param.name))
+
+        name = underscore(self.name)
+        uri_parameters = self.methods_details.parameters_and_response.get('URI Parameters')
+        if uri_parameters:
+            for param in uri_parameters:
+                add_param(param)
+
+        # we also need to add query parameters (mandatory 1st)
+        query_parameters = self.methods_details.parameters_and_response.get('Query Parameters')
+        if query_parameters:
+            mandatory = [p for p in query_parameters if p.required]
+            optional = [p for p in query_parameters if not p.required]
+            for param in mandatory:
+                add_param(param, is_query=True)
+            for param in optional:
+                add_param(param, is_query=True)
+
+        # ... finally we need the request body
+        body_parameters = self.methods_details.parameters_and_response.get('Body Parameters')
+        if body_parameters:
+            mandatory = [p for p in body_parameters if p.required]
+            optional = [p for p in body_parameters if not p.required]
+            for param in mandatory:
+                add_param(param, is_body=True)
+            for param in optional:
+                add_param(param, is_body=True)
+
+        method_doc = '\n'.join(f'        {line}' for line in self.methods_details.doc.splitlines())
+        if method_doc:
+            method_doc = method_doc + '\n'
+        if param_docs:
+            param_docs = '\n'.join((p for pd in param_docs if (p := pd.strip('\n'))))
+            method_doc = '\n'.join((method_doc, param_docs))
+        method_doc = method_doc.strip('\n')
+        if param_list:
+            param_list = f', {", ".join(param_list)}'
+        else:
+            param_list = ''
+
+        method_body = StringIO()
+
+        # add initializatin of param dict
+        if param_code:
+            print('\n'.join(p.strip('\n') for p in param_code), file=method_body)
+        if body_params:
+            print('        body = {}', file=method_body)
+            print('\n'.join(p.strip('\n') for p in body_params), file=method_body)
+            json_param = ', json=body'
+        else:
+            json_param = ''
+
+        # first create line to get EP
+        url = self.methods_details.documentation.endpoint
+        if common_prefix:
+            url = url[len(common_prefix):].strip('/')
+        if uri_parameters:
+            url_path = f"f'{url}'"
+            # find parameters in url and replace with snail_case names
+            url_path, _ = re.subn('\{(\w+)}',
+                                  lambda m: f'{{{underscore(m.group(1))}}}',
+                                  url_path)
+        else:
+            url_path = ''
+        print(self.EP_URL.format(url_path=url_path), file=method_body)
+
+        # the REST call
+        http_method = self.methods_details.documentation.http_method.lower()
+        if http_method == 'delete':
+            rest_call = 'super().delete'
+        else:
+            rest_call = f'self.{http_method}'
+        rest_call = f'{rest_call}(url=url, params=params{json_param})'
+        if self.response_class:
+            rest_call = f'data = {rest_call}'
+
+        if name.startswith('list'):
+            assert self.response_class is not None
+            result_type = python_type(self.response_class.name)
+            return_type = f' -> Generator[{result_type}, None, None]'
+            result = f'return self.session.follow_pagination(url=url, model={result_type}, params=params{json_param})'
+            rest_call = ''
+        elif self.response_class:
+            if len(self.response_class.attributes) == 1:
+                return_type = python_type(self.response_class.attributes[0].type)
+                result = f'return data["{to_camel(self.response_class.attributes[0].name)}"]'
+            else:
+                result_type = python_type(self.response_class.name)
+                return_type = f'{result_type}'
+                result = f'return {result_type}.parse_obj(data)'
+            return_type = f' -> {return_type}'
+        else:
+            return_type = ''
+            result = 'return'
+
+        if rest_call:
+            # no REST call if we return a Generator
+            print(f'        {rest_call}', file=method_body)
+        print(f'        {result}', file=method_body)
+
+        # return something
+        yield self.METHOD.format(method_name=name, param_list=param_list, return_type=return_type,
+                                 method_doc=method_doc,
+                                 code=method_body.getvalue()).strip('\n')
+        return
+
+
+@dataclass
+class API:
+    """
+    Representation of an APi object
+    """
+    section: str
+    doc: Optional[str]
+    methods: list[APIMethod] = field(default_factory=list)
+
+    @property
+    def api_class_name(self) -> str:
+        """
+        Name of the API class for this API
+        """
+        return f'{self.section.replace(" ", "")}Api'
+
+    API_HEADER = '''
+class {class_name}(ApiChild, base='{base}'):
+    """
+{class_name_doc}
+    """
+'''
+
+    def source(self) -> Generator[str, None, None]:
+        """
+        Source for API class
+        """
+        class_name = self.api_class_name
+        # determine common base of all methods in this API
+        endpoints = [m.methods_details.documentation.endpoint for m in self.methods]
+        common_index = next((i for i, letters in enumerate(zip(*endpoints))
+                             if len(set(letters)) > 1), min(map(len, endpoints)))
+        common_prefix = endpoints[0][:common_index]
+        webex_prefix = 'https://webexapis.com/v1/'
+        if common_prefix.startswith(webex_prefix):
+            base = common_prefix[len(webex_prefix):]
+        else:
+            base = ''
+            common_prefix = ''
+        if self.doc:
+            doc = '\n'.join(f'    {line}' for line in self.doc.splitlines())
+        else:
+            doc = ''
+        yield self.API_HEADER.format(class_name=class_name, base=base, class_name_doc=doc).strip('\n')
+
+        for method in self.methods:
+            yield from method.source(common_prefix=common_prefix)
+
+    def sources(self) -> Generator[str, None, None]:
+        """
+        Generator for sources for this API
+        """
+        # yield sources for all classes
+        # all body and response classes at the end ... we might want to delete them anyway
+        for only_childs in (True, False):
+            for method in self.methods:
+                if method.body_class:
+                    yield from method.body_class.sources(only_childs=only_childs)
+                if method.response_class:
+                    yield from method.response_class.sources(only_childs=only_childs)
+
+        # now prepare and yield source for APIClass
+        yield from self.source()
+
+
+@dataclass
 class ClassGenerator:
     output: TextIO
+    api_list: list[API] = field(default_factory=list)
 
     @staticmethod
     def parameters_from_url(url: str) -> list[str]:
@@ -250,7 +485,7 @@ class ClassGenerator:
             f'create class: {new_class.name} - {", ".join(f"{attr.name}({attr.type})" for attr in attributes)}')
         return new_class
 
-    def classes_from_doc_method_details(self, api_spec: DocMethodDetails):
+    def from_doc_method_details(self, api_spec: DocMethodDetails):
         """
         Read API spec and identify classes for objects in the API spec
 
@@ -269,41 +504,65 @@ class ClassGenerator:
         # else every parameter with attributes is a class
         # * param_attrs only for enums
         # * param_object is a class
-        for method in api_spec.methods():
-            # look at "Body Parameters" and "Response Properties"
-            method_name = self.method_name_from_header(method.method_details.header)
-            if body := method.method_details.parameters_and_response.get('Body Parameters'):
-                self.create_class(class_name=f'{method_name}Body', attributes=body)
-            if response := method.method_details.parameters_and_response.get('Response Properties'):
-                self.create_class(class_name=f'{method_name}Response', attributes=response)
+        for section in api_spec.docs:
+            section_details = api_spec.docs[section]
+            methods = section_details.methods
+            if not methods:
+                # nothing to do here
+                continue
+            api = API(section=section, doc=section_details.doc)
+            self.api_list.append(api)
+            for method_details in methods:
+                # look at "Body Parameters" and "Response Properties"
+                method_name = self.method_name_from_header(method_details.header)
+                body_class = None
+                response_class = None
+                if body := method_details.parameters_and_response.get('Body Parameters'):
+                    body_class = self.create_class(class_name=f'{method_name}Body', attributes=body)
+                if response := method_details.parameters_and_response.get('Response Properties'):
+                    response_class = self.create_class(class_name=f'{method_name}Response', attributes=response)
+                api.methods.append(APIMethod(name=method_name,
+                                             methods_details=method_details,
+                                             body_class=body_class,
+                                             response_class=response_class))
         Class.optimize()
 
-    @staticmethod
-    def sources() -> Generator[str, None, None]:
+    def sources(self) -> Generator[str, None, None]:
         """
-        Generator for sources of all classes
+        Generator for sources of all APIs
         """
-        yield from Class.all_sources()
+        for api in self.api_list:
+            yield from api.sources()
 
+    def dunder_all(self) -> str:
+        """
+        get __all__ = [...]
+        :return:
+        """
 
-def validate_parameters(api_spec: DocMethodDetails):
-    """
-    Some validation of parameters
-    :param api_spec:
-    :return:
-    """
-    types_with_attrs = Counter(ClassGenerator.class_name(attr.parameter) for attr in api_spec.attributes()
-                               if attr.parameter.param_attrs)
-    types_with_object = Counter(ClassGenerator.class_name(attr.parameter) for attr in api_spec.attributes()
-                                if attr.parameter.param_object)
-    parameters_and_response_keys = set(chain.from_iterable(m.method_details.parameters_and_response
-                                                           for m in api_spec.methods()))
-    requests = [
-        f'{ClassGenerator.method_name_from_header(m.method_details.header)}/' \
-        f'{ClassGenerator.method_from_url(m.method_details.documentation.endpoint)}'
-        for m in api_spec.methods()]
+        def class_names(from_class: Class, attrs_only: bool = False) -> Generator[str, None, None]:
+            if from_class.base:
+                base_class = Class.registry[from_class.base]
+                yield from class_names(base_class)
 
-    foo = 1
+            for attr in from_class.attributes:
+                if attr.param_class:
+                    yield from class_names(attr.param_class)
+            if not attrs_only and from_class.attributes:
+                yield from_class.name
+            return
+
+        # collect names of classes
+        names = set()
+        for api in self.api_list:
+            names.add(api.api_class_name)
+            for method in api.methods:
+                if method.response_class:
+                    names.update(class_names(method.response_class))
+                if method.body_class:
+                    names.update(class_names(method.body_class, attrs_only=True))
+        names = sorted(names)
+        return f"""__all__ = [{', '.join(f"'{n}'" for n in names)}]"""
 
 
 def main():
@@ -319,7 +578,6 @@ def main():
     # write detailed logs (debug level) to a file
     parser.add_argument('-l', '--logfile', dest='log_path', action='store', required=False, type=str,
                         help=f'Write detailed logs to this file.')
-
 
     args = parser.parse_args()
 
@@ -339,14 +597,11 @@ def main():
         print(f'reading API spec from {args.api_spec}', file=stderr)
         api_spec = DocMethodDetails.from_yml(args.api_spec)
 
-        validate_parameters(api_spec)
-
         class_generator = ClassGenerator(output=output)
-        class_generator.classes_from_doc_method_details(api_spec)
-        print('from wxc_sdk.base import ApiModel', file=output)
-        print('from enum import Enum', file=output)
-        print('from typing import Optional', file=output)
-        print('from pydantic import Field', file=output)
+        class_generator.from_doc_method_details(api_spec)
+        print(PY_HEADER.strip('\n'), file=output)
+        print('\n', file=output)
+        print(class_generator.dunder_all(), file=output)
         print('\n', file=output)
         print('\n\n'.join(class_generator.sources()), file=output)
 

@@ -37,6 +37,7 @@ class EndPointGrouper:
         return url
 
     def __init__(self, methods: Iterable[SectionAndMethodDetails]):
+        methods = list(methods)
         self.keys = set(self.key(m.method_details.documentation.endpoint, init=True) for m in methods)
 
 

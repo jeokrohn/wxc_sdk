@@ -29,7 +29,7 @@ from typing import Optional
 
 from dotenv import load_dotenv
 
-from scraper import DevWebexComScraper, DocMethodDetails, Credentials
+from scraper import DevWebexComScraper, DocMethodDetails, Credentials, SectionDetails
 
 
 def setup_logging(console_level: int = logging.INFO,
@@ -147,8 +147,12 @@ def main():
         # get method details
         for doc in docs:
             logging.info(f'"{doc.menu_text}"')
-            doc_details.docs[doc.menu_text] = [md for md in map(site.get_method_details, doc.methods)
-                                               if md]
+            method_details = [md for md in map(site.get_method_details, doc.methods)
+                              if md]
+            section_details = SectionDetails(header=doc.header,
+                                             doc=doc.doc,
+                                             methods=method_details)
+            doc_details.docs[doc.menu_text] = section_details
     # with
 
     # write API spec to file or print to stdout

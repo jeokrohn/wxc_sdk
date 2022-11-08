@@ -1,0 +1,2308 @@
+# command: ./read_api_spec.py -s Messaging -t People -f people.yml
+docs:
+  Attachment Actions:
+    doc: null
+    header: null
+    methods: []
+  Events:
+    doc: null
+    header: null
+    methods: []
+  Memberships:
+    doc: null
+    header: null
+    methods: []
+  Messages:
+    doc: null
+    header: null
+    methods: []
+  People:
+    doc: 'People are registered users of Webex. Searching and viewing People requires
+      an auth token with a scope of spark:people_read. Viewing the list of all People
+      in your Organization requires an administrator auth token with spark-admin:people_read
+      scope. Adding, updating, and removing People requires an administrator auth
+      token with the spark-admin:people_write and spark-admin:people_read scope.
+
+      A person''s call settings are for Webex Calling and necessitate Webex Calling
+      licenses.
+
+      To learn more about managing people in a room see the Memberships API. For information
+      about how to allocate Hybrid Services licenses to people, see the Managing Hybrid
+      Services guide.'
+    header: People
+    methods:
+    - doc: 'List people in your organization. For most users, either the email or
+        displayName parameter is required. Admin users can omit these fields and list
+        all users in their organization.
+
+        Response properties associated with a user''s presence status, such as status
+        or lastActivity, will only be returned for people within your organization
+        or an organization you manage. Presence information will not be returned if
+        the authenticated user has disabled status sharing.
+
+        Admin users can include Webex Calling (BroadCloud) user details in the response
+        by specifying callingData parameter as true. Admin users can list all users
+        in a location or with a specific phone number.
+
+        Lookup by email is only supported for people within the same org or where
+        a partner admin relationship is in place.
+
+        Long result sets will be split into pages.'
+      documentation:
+        doc: List People
+        doc_link: https://developer.webex.com/docs/api/v1/people/list-people
+        endpoint: https://webexapis.com/v1/people
+        http_method: GET
+      header: List People
+      parameters_and_response:
+        Query Parameters:
+        - doc: List people with this email address. For non-admin requests, either
+            this or displayName are required. With the exception of partner admins
+            and a managed org relationship, people lookup by email is only available
+            for users in the same org.
+          name: email
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: List people whose name starts with this string. For non-admin requests,
+            either this or email are required.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: List people by ID. Accepts up to 85 person IDs separated by commas.
+            If this parameter is provided then presence information (such as the lastActivity
+            or status properties) will not be included in the response.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: List people in this organization. Only admin users of another organization
+            (such as partners) may use this parameter.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Include Webex Calling user details in the response.
+          name: callingData
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: List people present in this location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Limit the maximum number of people in the response. If callingData=true,
+            then max will not be more than 50.
+          name: max
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        Response Properties:
+        - doc: An array of person objects.
+          name: items
+          param_attrs:
+          - doc: A unique identifier for the person.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The email addresses of the person.
+            name: emails
+            param_attrs: []
+            param_object: []
+            type: array[string]
+            type_spec: null
+          - doc: Phone numbers for the person.
+            name: phoneNumbers
+            param_attrs:
+            - doc: 'The type of phone number.
+
+                Possible values: work, mobile, fax'
+              name: type
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: 'The phone number.
+
+                Possible values: +1 408 526 7209'
+              name: value
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: array[object]
+            type_spec: null
+          - doc: The Webex Calling extension for the person. Only applies to a person
+              with a Webex Calling license
+            name: extension
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The ID of the location for this person retrieved from BroadCloud.
+            name: locationId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The full name of the person.
+            name: displayName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The nickname of the person if configured. If no nickname is configured
+              for the person, this field will not be present.
+            name: nickName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The first name of the person.
+            name: firstName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The last name of the person.
+            name: lastName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The URL to the person's avatar in PNG format.
+            name: avatar
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The ID of the organization to which this person belongs.
+            name: orgId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: An array of role strings representing the roles to which this admin
+              user belongs.
+            name: roles
+            param_attrs: []
+            param_object: []
+            type: array[string]
+            type_spec: null
+          - doc: An array of license strings allocated to this person.
+            name: licenses
+            param_attrs: []
+            param_object: []
+            type: array[string]
+            type_spec: null
+          - doc: The business department the user belongs to.
+            name: department
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A manager identifier
+            name: manager
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Person Id of the manager
+            name: managerId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: the person's title
+            name: title
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Person's address
+            name: addresses
+            param_attrs:
+            - doc: '
+
+                Possible values: US'
+              name: country
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: '
+
+                Possible values: Charlotte'
+              name: locality
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: '
+
+                Possible values: North Carolina'
+              name: region
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: '
+
+                Possible values: 1099 Bird Ave.'
+              name: streetAddress
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: '
+
+                Possible values: work'
+              name: type
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: '
+
+                Possible values: 99212'
+              name: postalCode
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: array[object]
+            type_spec: null
+          - doc: The date and time the person was created.
+            name: created
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The date and time the person was last changed.
+            name: lastModified
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The time zone of the person if configured. If no timezone is configured
+              on the account, this field will not be present
+            name: timezone
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The date and time of the person's last activity within Webex. This
+              will only be returned for people within your organization or an organization
+              you manage. Presence information will not be shown if the authenticated
+              user has disabled status sharing.
+            name: lastActivity
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: One or several site names where this user has a role (host or attendee)
+            name: siteUrls
+            param_attrs: []
+            param_object: []
+            type: array[string]
+            type_spec: null
+          - doc: The users sip addresses
+            name: sipAddresses
+            param_attrs: []
+            param_object: []
+            type: 'array[{"type": "personal-room","value": "testuser5@mycompany.webex.com","primary":
+              false}]'
+            type_spec: null
+          - doc: The current presence status of the person. This will only be returned
+              for people within your organization or an organization you manage. Presence
+              information will not be shown if the authenticated user has disabled
+              status sharing.
+            name: status
+            param_attrs:
+            - doc: Active within the last 10 minutes
+              name: active
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The user is in a call
+              name: call
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The user has manually set their status to "Do Not Disturb"
+              name: DoNotDisturb
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Last activity occurred more than 10 minutes ago
+              name: inactive
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The user is in a meeting
+              name: meeting
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The user or a Hybrid Calendar service has indicated that they are
+                "Out of Office"
+              name: OutOfOffice
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The user has never logged in; a status cannot be determined
+              name: pending
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The user is sharing content
+              name: presenting
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: "The user\u2019s status could not be determined"
+              name: unknown
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Whether or not an invite is pending for the user to complete account
+              activation. This property is only returned if the authenticated user
+              is an admin user for the person's organization.
+            name: invitePending
+            param_attrs:
+            - doc: The person has been invited to Webex but has not created an account
+              name: 'true'
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: An invite is not pending for this person
+              name: 'false'
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Whether or not the user is allowed to use Webex. This property is
+              only returned if the authenticated user is an admin user for the person's
+              organization.
+            name: loginEnabled
+            param_attrs:
+            - doc: the person can log into Webex
+              name: 'true'
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: the person cannot log into Webex
+              name: 'false'
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: The type of person account, such as person or bot.
+            name: type
+            param_attrs:
+            - doc: Account belongs to a person
+              name: person
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Account is a bot user
+              name: bot
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Account is a guest user
+              name: appuser
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          param_object: []
+          type: array[Person]
+          type_spec: null
+        - doc: An array of person IDs that could not be found.
+          name: notFoundIds
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+    - doc: 'Create a new user account for a given organization. Only an admin can
+        create a new user account.
+
+        At least one of the following body parameters is required to create a new
+        user: displayName, firstName, lastName.
+
+        Currently, users may have only one email address associated with their account.
+        The emails parameter is an array, which accepts multiple values to allow for
+        future expansion, but currently only one email address will be used for the
+        new user.
+
+        Admin users can include Webex calling (BroadCloud) user details in the response
+        by specifying callingData parameter as true.
+
+        When doing attendee management, append #attendee to the siteUrl parameter
+        (e.g. mysite.webex.com#attendee) to make the new user an attendee for a site.'
+      documentation:
+        doc: Create a Person
+        doc_link: https://developer.webex.com/docs/api/v1/people/create-a-person
+        endpoint: https://webexapis.com/v1/people
+        http_method: POST
+      header: Create a Person
+      parameters_and_response:
+        Body Parameters:
+        - doc: 'The email addresses of the person. Only one email address is allowed
+            per person.
+
+            Possible values: john.andersen@example.com'
+          name: emails
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: required
+        - doc: Phone numbers for the person. Only settable for Webex Calling. Requires
+            a Webex Calling license.
+          name: phoneNumbers
+          param_attrs:
+          - doc: 'The type of phone number.
+
+              Possible values: work'
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'The phone number.
+
+              Possible values: 408 526 7209'
+            name: value
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[object]
+          type_spec: null
+        - doc: Webex Calling extension of the person. This is only settable for a
+            person with a Webex Calling license.
+          name: extension
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the location for this person.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The full name of the person.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The first name of the person.
+          name: firstName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The last name of the person.
+          name: lastName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The URL to the person's avatar in PNG format.
+          name: avatar
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the organization to which this person belongs.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'An array of role strings representing the roles to which this admin
+            user belongs.
+
+            Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+            Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
+          name: roles
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: 'An array of license strings allocated to this person.
+
+            Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+            Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
+          name: licenses
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: The business department the user belongs to.
+          name: department
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A manager identifier.
+          name: manager
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Person Id of the manager
+          name: managerId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: the person's title
+          name: title
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'Person''s address
+
+            Possible values: , country: `US`, locality: `Charlotte`, region: `North
+            Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode:
+            `99212`'
+          name: addresses
+          param_attrs: []
+          param_object: []
+          type: array[object]
+          type_spec: null
+        - doc: 'One or several site names where this user has an attendee role. Append
+            #attendee to the sitename (eg: mysite.webex.com#attendee)
+
+            Possible values: mysite.webex.com#attendee'
+          name: siteUrls
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        Query Parameters:
+        - doc: Include Webex Calling user details in the response.
+          name: callingData
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        Response Properties:
+        - doc: A unique identifier for the person.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The email addresses of the person.
+          name: emails
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: Phone numbers for the person.
+          name: phoneNumbers
+          param_attrs:
+          - doc: 'The type of phone number.
+
+              Possible values: work, mobile, fax'
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'The phone number.
+
+              Possible values: +1 408 526 7209'
+            name: value
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[object]
+          type_spec: null
+        - doc: The Webex Calling extension for the person. Only applies to a person
+            with a Webex Calling license
+          name: extension
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the location for this person retrieved from BroadCloud.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The full name of the person.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The nickname of the person if configured. If no nickname is configured
+            for the person, this field will not be present.
+          name: nickName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The first name of the person.
+          name: firstName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The last name of the person.
+          name: lastName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The URL to the person's avatar in PNG format.
+          name: avatar
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the organization to which this person belongs.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: An array of role strings representing the roles to which this admin
+            user belongs.
+          name: roles
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: An array of license strings allocated to this person.
+          name: licenses
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: The business department the user belongs to.
+          name: department
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A manager identifier
+          name: manager
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Person Id of the manager
+          name: managerId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: the person's title
+          name: title
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Person's address
+          name: addresses
+          param_attrs:
+          - doc: '
+
+              Possible values: US'
+            name: country
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: Charlotte'
+            name: locality
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: North Carolina'
+            name: region
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: 1099 Bird Ave.'
+            name: streetAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: work'
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: 99212'
+            name: postalCode
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[object]
+          type_spec: null
+        - doc: The date and time the person was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time the person was last changed.
+          name: lastModified
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The time zone of the person if configured. If no timezone is configured
+            on the account, this field will not be present
+          name: timezone
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time of the person's last activity within Webex. This
+            will only be returned for people within your organization or an organization
+            you manage. Presence information will not be shown if the authenticated
+            user has disabled status sharing.
+          name: lastActivity
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: One or several site names where this user has a role (host or attendee)
+          name: siteUrls
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: The users sip addresses
+          name: sipAddresses
+          param_attrs: []
+          param_object: []
+          type: 'array[{"type": "personal-room","value": "testuser5@mycompany.webex.com","primary":
+            false}]'
+          type_spec: null
+        - doc: The current presence status of the person. This will only be returned
+            for people within your organization or an organization you manage. Presence
+            information will not be shown if the authenticated user has disabled status
+            sharing.
+          name: status
+          param_attrs:
+          - doc: Active within the last 10 minutes
+            name: active
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user is in a call
+            name: call
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user has manually set their status to "Do Not Disturb"
+            name: DoNotDisturb
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Last activity occurred more than 10 minutes ago
+            name: inactive
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user is in a meeting
+            name: meeting
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user or a Hybrid Calendar service has indicated that they are
+              "Out of Office"
+            name: OutOfOffice
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user has never logged in; a status cannot be determined
+            name: pending
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user is sharing content
+            name: presenting
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: "The user\u2019s status could not be determined"
+            name: unknown
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Whether or not an invite is pending for the user to complete account
+            activation. This property is only returned if the authenticated user is
+            an admin user for the person's organization.
+          name: invitePending
+          param_attrs:
+          - doc: The person has been invited to Webex but has not created an account
+            name: 'true'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: An invite is not pending for this person
+            name: 'false'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Whether or not the user is allowed to use Webex. This property is only
+            returned if the authenticated user is an admin user for the person's organization.
+          name: loginEnabled
+          param_attrs:
+          - doc: the person can log into Webex
+            name: 'true'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: the person cannot log into Webex
+            name: 'false'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The type of person account, such as person or bot.
+          name: type
+          param_attrs:
+          - doc: Account belongs to a person
+            name: person
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Account is a bot user
+            name: bot
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Account is a guest user
+            name: appuser
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+    - doc: 'Shows details for a person, by ID.
+
+        Response properties associated with a user''s presence status, such as status
+        or lastActivity, will only be displayed for people within your organization
+        or an organization you manage. Presence information will not be shown if the
+        authenticated user has disabled status sharing.
+
+        Admin users can include Webex Calling (BroadCloud) user details in the response
+        by specifying callingData parameter as true.
+
+        Specify the person ID in the personId parameter in the URI.'
+      documentation:
+        doc: Get Person Details
+        doc_link: https://developer.webex.com/docs/api/v1/people/get-person-details
+        endpoint: https://webexapis.com/v1/people/{personId}
+        http_method: GET
+      header: Get Person Details
+      parameters_and_response:
+        Query Parameters:
+        - doc: Include Webex Calling user details in the response.
+          name: callingData
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        Response Properties:
+        - doc: A unique identifier for the person.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The email addresses of the person.
+          name: emails
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: Phone numbers for the person.
+          name: phoneNumbers
+          param_attrs:
+          - doc: 'The type of phone number.
+
+              Possible values: work, mobile, fax'
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'The phone number.
+
+              Possible values: +1 408 526 7209'
+            name: value
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[object]
+          type_spec: null
+        - doc: The Webex Calling extension for the person. Only applies to a person
+            with a Webex Calling license
+          name: extension
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the location for this person retrieved from BroadCloud.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The full name of the person.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The nickname of the person if configured. If no nickname is configured
+            for the person, this field will not be present.
+          name: nickName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The first name of the person.
+          name: firstName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The last name of the person.
+          name: lastName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The URL to the person's avatar in PNG format.
+          name: avatar
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the organization to which this person belongs.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: An array of role strings representing the roles to which this admin
+            user belongs.
+          name: roles
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: An array of license strings allocated to this person.
+          name: licenses
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: The business department the user belongs to.
+          name: department
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A manager identifier
+          name: manager
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Person Id of the manager
+          name: managerId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: the person's title
+          name: title
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Person's address
+          name: addresses
+          param_attrs:
+          - doc: '
+
+              Possible values: US'
+            name: country
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: Charlotte'
+            name: locality
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: North Carolina'
+            name: region
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: 1099 Bird Ave.'
+            name: streetAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: work'
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: 99212'
+            name: postalCode
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[object]
+          type_spec: null
+        - doc: The date and time the person was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time the person was last changed.
+          name: lastModified
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The time zone of the person if configured. If no timezone is configured
+            on the account, this field will not be present
+          name: timezone
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time of the person's last activity within Webex. This
+            will only be returned for people within your organization or an organization
+            you manage. Presence information will not be shown if the authenticated
+            user has disabled status sharing.
+          name: lastActivity
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: One or several site names where this user has a role (host or attendee)
+          name: siteUrls
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: The users sip addresses
+          name: sipAddresses
+          param_attrs: []
+          param_object: []
+          type: 'array[{"type": "personal-room","value": "testuser5@mycompany.webex.com","primary":
+            false}]'
+          type_spec: null
+        - doc: The current presence status of the person. This will only be returned
+            for people within your organization or an organization you manage. Presence
+            information will not be shown if the authenticated user has disabled status
+            sharing.
+          name: status
+          param_attrs:
+          - doc: Active within the last 10 minutes
+            name: active
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user is in a call
+            name: call
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user has manually set their status to "Do Not Disturb"
+            name: DoNotDisturb
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Last activity occurred more than 10 minutes ago
+            name: inactive
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user is in a meeting
+            name: meeting
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user or a Hybrid Calendar service has indicated that they are
+              "Out of Office"
+            name: OutOfOffice
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user has never logged in; a status cannot be determined
+            name: pending
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user is sharing content
+            name: presenting
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: "The user\u2019s status could not be determined"
+            name: unknown
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Whether or not an invite is pending for the user to complete account
+            activation. This property is only returned if the authenticated user is
+            an admin user for the person's organization.
+          name: invitePending
+          param_attrs:
+          - doc: The person has been invited to Webex but has not created an account
+            name: 'true'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: An invite is not pending for this person
+            name: 'false'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Whether or not the user is allowed to use Webex. This property is only
+            returned if the authenticated user is an admin user for the person's organization.
+          name: loginEnabled
+          param_attrs:
+          - doc: the person can log into Webex
+            name: 'true'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: the person cannot log into Webex
+            name: 'false'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The type of person account, such as person or bot.
+          name: type
+          param_attrs:
+          - doc: Account belongs to a person
+            name: person
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Account is a bot user
+            name: bot
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Account is a guest user
+            name: appuser
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        URI Parameters:
+        - doc: A unique identifier for the person.
+          name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Update details for a person, by ID.
+
+        Specify the person ID in the personId parameter in the URI. Only an admin
+        can update a person details.
+
+        Include all details for the person. This action expects all user details to
+        be present in the request. A common approach is to first GET the person''s
+        details, make changes, then PUT both the changed and unchanged values.
+
+        Admin users can include Webex Calling (BroadCloud) user details in the response
+        by specifying callingData parameter as true.
+
+        Note: The locationId can only be set when adding a calling license to a user.
+        It cannot be changed if a user is already an existing calling user.
+
+        When doing attendee management, to update a user from host role to an attendee
+        for a site append #attendee to the respective siteUrl and remove the meeting
+        host license for this site from the license array.
+
+        To update a person from an attendee role to a host for a site, add the meeting
+        license for this site in the meeting array, and remove that site from the
+        siteurl parameter.
+
+        Removing the attendee privilege for a  user on a meeting site is done by removing
+        that sitename#attendee  from the siteUrls array. The showAllTypes parameter
+        must be set to true.'
+      documentation:
+        doc: Update a Person
+        doc_link: https://developer.webex.com/docs/api/v1/people/update-a-person
+        endpoint: https://webexapis.com/v1/people/{personId}
+        http_method: PUT
+      header: Update a Person
+      parameters_and_response:
+        Body Parameters:
+        - doc: 'The email addresses of the person. Only one email address is allowed
+            per person.
+
+            Possible values: john.andersen@example.com'
+          name: emails
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: Phone numbers for the person. Can only be set for Webex Calling. Needs
+            a Webex Calling license.
+          name: phoneNumbers
+          param_attrs:
+          - doc: 'The type of phone number.
+
+              Possible values: work'
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'The phone number.
+
+              Possible values: 408 526 7209'
+            name: value
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[object]
+          type_spec: null
+        - doc: Webex Calling extension of the person. This is only settable for a
+            person with a Webex Calling license
+          name: extension
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the location for this person.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The full name of the person.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: The first name of the person.
+          name: firstName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The last name of the person.
+          name: lastName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The nickname of the person if configured. Set to the firstName automatically
+            in update request.
+          name: nickName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The URL to the person's avatar in PNG format.
+          name: avatar
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the organization to which this person belongs.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'An array of role strings representing the roles to which this admin
+            user belongs.
+
+            Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+            Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
+          name: roles
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: 'An array of license strings allocated to this person.
+
+            Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+            Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi'
+          name: licenses
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: The business department the user belongs to.
+          name: department
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A manager identifier
+          name: manager
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Person Id of the manager
+          name: managerId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: the person's title
+          name: title
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'Person''s address
+
+            Possible values: , country: `US`, locality: `Charlotte`, region: `North
+            Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode:
+            `99212`'
+          name: addresses
+          param_attrs: []
+          param_object: []
+          type: array[object]
+          type_spec: null
+        - doc: 'One or several site names where this user has a role (host or attendee).
+            Append #attendee to the site name to designate the attendee role on that
+            site.
+
+            Possible values: mysite.webex.com#attendee'
+          name: siteUrls
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: Whether or not the user is allowed to use Webex. This property is only
+            accessible if the authenticated user is an admin user for the person's
+            organization.
+          name: loginEnabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        Query Parameters:
+        - doc: Include Webex Calling user details in the response.
+          name: callingData
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: 'Include additional user data like #attendee role'
+          name: showAllTypes
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        Response Properties:
+        - doc: A unique identifier for the person.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The email addresses of the person.
+          name: emails
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: Phone numbers for the person.
+          name: phoneNumbers
+          param_attrs:
+          - doc: 'The type of phone number.
+
+              Possible values: work, mobile, fax'
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'The phone number.
+
+              Possible values: +1 408 526 7209'
+            name: value
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[object]
+          type_spec: null
+        - doc: The Webex Calling extension for the person. Only applies to a person
+            with a Webex Calling license
+          name: extension
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the location for this person retrieved from BroadCloud.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The full name of the person.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The nickname of the person if configured. If no nickname is configured
+            for the person, this field will not be present.
+          name: nickName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The first name of the person.
+          name: firstName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The last name of the person.
+          name: lastName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The URL to the person's avatar in PNG format.
+          name: avatar
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the organization to which this person belongs.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: An array of role strings representing the roles to which this admin
+            user belongs.
+          name: roles
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: An array of license strings allocated to this person.
+          name: licenses
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: The business department the user belongs to.
+          name: department
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A manager identifier
+          name: manager
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Person Id of the manager
+          name: managerId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: the person's title
+          name: title
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Person's address
+          name: addresses
+          param_attrs:
+          - doc: '
+
+              Possible values: US'
+            name: country
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: Charlotte'
+            name: locality
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: North Carolina'
+            name: region
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: 1099 Bird Ave.'
+            name: streetAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: work'
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: 99212'
+            name: postalCode
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[object]
+          type_spec: null
+        - doc: The date and time the person was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time the person was last changed.
+          name: lastModified
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The time zone of the person if configured. If no timezone is configured
+            on the account, this field will not be present
+          name: timezone
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time of the person's last activity within Webex. This
+            will only be returned for people within your organization or an organization
+            you manage. Presence information will not be shown if the authenticated
+            user has disabled status sharing.
+          name: lastActivity
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: One or several site names where this user has a role (host or attendee)
+          name: siteUrls
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: The users sip addresses
+          name: sipAddresses
+          param_attrs: []
+          param_object: []
+          type: 'array[{"type": "personal-room","value": "testuser5@mycompany.webex.com","primary":
+            false}]'
+          type_spec: null
+        - doc: The current presence status of the person. This will only be returned
+            for people within your organization or an organization you manage. Presence
+            information will not be shown if the authenticated user has disabled status
+            sharing.
+          name: status
+          param_attrs:
+          - doc: Active within the last 10 minutes
+            name: active
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user is in a call
+            name: call
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user has manually set their status to "Do Not Disturb"
+            name: DoNotDisturb
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Last activity occurred more than 10 minutes ago
+            name: inactive
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user is in a meeting
+            name: meeting
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user or a Hybrid Calendar service has indicated that they are
+              "Out of Office"
+            name: OutOfOffice
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user has never logged in; a status cannot be determined
+            name: pending
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user is sharing content
+            name: presenting
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: "The user\u2019s status could not be determined"
+            name: unknown
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Whether or not an invite is pending for the user to complete account
+            activation. This property is only returned if the authenticated user is
+            an admin user for the person's organization.
+          name: invitePending
+          param_attrs:
+          - doc: The person has been invited to Webex but has not created an account
+            name: 'true'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: An invite is not pending for this person
+            name: 'false'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Whether or not the user is allowed to use Webex. This property is only
+            returned if the authenticated user is an admin user for the person's organization.
+          name: loginEnabled
+          param_attrs:
+          - doc: the person can log into Webex
+            name: 'true'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: the person cannot log into Webex
+            name: 'false'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The type of person account, such as person or bot.
+          name: type
+          param_attrs:
+          - doc: Account belongs to a person
+            name: person
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Account is a bot user
+            name: bot
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Account is a guest user
+            name: appuser
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        URI Parameters:
+        - doc: A unique identifier for the person.
+          name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Remove a person from the system. Only an admin can remove a person.
+
+        Specify the person ID in the personId parameter in the URI.'
+      documentation:
+        doc: Delete a Person
+        doc_link: https://developer.webex.com/docs/api/v1/people/delete-a-person
+        endpoint: https://webexapis.com/v1/people/{personId}
+        http_method: DELETE
+      header: Delete a Person
+      parameters_and_response:
+        URI Parameters:
+        - doc: A unique identifier for the person.
+          name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Get profile details for the authenticated user. This is the same as GET
+        /people/{personId} using the Person ID associated with your Auth token.
+
+        Admin users can include Webex Calling (BroadCloud) user details in the response
+        by specifying callingData parameter as true.'
+      documentation:
+        doc: Get My Own Details
+        doc_link: https://developer.webex.com/docs/api/v1/people/get-my-own-details
+        endpoint: https://webexapis.com/v1/people/me
+        http_method: GET
+      header: Get My Own Details
+      parameters_and_response:
+        Query Parameters:
+        - doc: Include Webex Calling user details in the response.
+          name: callingData
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        Response Properties:
+        - doc: A unique identifier for the person.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The email addresses of the person.
+          name: emails
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: Phone numbers for the person.
+          name: phoneNumbers
+          param_attrs:
+          - doc: 'The type of phone number.
+
+              Possible values: work, mobile, fax'
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'The phone number.
+
+              Possible values: +1 408 526 7209'
+            name: value
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[object]
+          type_spec: null
+        - doc: The Webex Calling extension for the person. Only applies to a person
+            with a Webex Calling license
+          name: extension
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the location for this person retrieved from BroadCloud.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The full name of the person.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The nickname of the person if configured. If no nickname is configured
+            for the person, this field will not be present.
+          name: nickName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The first name of the person.
+          name: firstName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The last name of the person.
+          name: lastName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The URL to the person's avatar in PNG format.
+          name: avatar
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the organization to which this person belongs.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: An array of role strings representing the roles to which this admin
+            user belongs.
+          name: roles
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: An array of license strings allocated to this person.
+          name: licenses
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: The business department the user belongs to.
+          name: department
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A manager identifier
+          name: manager
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Person Id of the manager
+          name: managerId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: the person's title
+          name: title
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Person's address
+          name: addresses
+          param_attrs:
+          - doc: '
+
+              Possible values: US'
+            name: country
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: Charlotte'
+            name: locality
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: North Carolina'
+            name: region
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: 1099 Bird Ave.'
+            name: streetAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: work'
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: '
+
+              Possible values: 99212'
+            name: postalCode
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[object]
+          type_spec: null
+        - doc: The date and time the person was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time the person was last changed.
+          name: lastModified
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The time zone of the person if configured. If no timezone is configured
+            on the account, this field will not be present
+          name: timezone
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time of the person's last activity within Webex. This
+            will only be returned for people within your organization or an organization
+            you manage. Presence information will not be shown if the authenticated
+            user has disabled status sharing.
+          name: lastActivity
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: One or several site names where this user has a role (host or attendee)
+          name: siteUrls
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: The users sip addresses
+          name: sipAddresses
+          param_attrs: []
+          param_object: []
+          type: 'array[{"type": "personal-room","value": "testuser5@mycompany.webex.com","primary":
+            false}]'
+          type_spec: null
+        - doc: The current presence status of the person. This will only be returned
+            for people within your organization or an organization you manage. Presence
+            information will not be shown if the authenticated user has disabled status
+            sharing.
+          name: status
+          param_attrs:
+          - doc: Active within the last 10 minutes
+            name: active
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user is in a call
+            name: call
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user has manually set their status to "Do Not Disturb"
+            name: DoNotDisturb
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Last activity occurred more than 10 minutes ago
+            name: inactive
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user is in a meeting
+            name: meeting
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user or a Hybrid Calendar service has indicated that they are
+              "Out of Office"
+            name: OutOfOffice
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user has never logged in; a status cannot be determined
+            name: pending
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user is sharing content
+            name: presenting
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: "The user\u2019s status could not be determined"
+            name: unknown
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Whether or not an invite is pending for the user to complete account
+            activation. This property is only returned if the authenticated user is
+            an admin user for the person's organization.
+          name: invitePending
+          param_attrs:
+          - doc: The person has been invited to Webex but has not created an account
+            name: 'true'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: An invite is not pending for this person
+            name: 'false'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Whether or not the user is allowed to use Webex. This property is only
+            returned if the authenticated user is an admin user for the person's organization.
+          name: loginEnabled
+          param_attrs:
+          - doc: the person can log into Webex
+            name: 'true'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: the person cannot log into Webex
+            name: 'false'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The type of person account, such as person or bot.
+          name: type
+          param_attrs:
+          - doc: Account belongs to a person
+            name: person
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Account is a bot user
+            name: bot
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Account is a guest user
+            name: appuser
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+  Room Tabs:
+    doc: null
+    header: null
+    methods: []
+  Rooms:
+    doc: null
+    header: null
+    methods: []
+  Team Memberships:
+    doc: null
+    header: null
+    methods: []
+  Teams:
+    doc: null
+    header: null
+    methods: []
+  Tracking Codes:
+    doc: null
+    header: null
+    methods: []
+  Webhooks:
+    doc: null
+    header: null
+    methods: []
