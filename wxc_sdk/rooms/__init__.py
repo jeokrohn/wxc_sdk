@@ -92,10 +92,10 @@ class RoomsApi(ApiChild, base='rooms'):
         :param team_id: str: List rooms associated with a team, by ID.
         :type team_id: str
         :param type_: RoomType: List rooms by type.
-Possible values: direct, group
+            Possible values: direct, group
         :type type_: str
         :param sort_by: str: Sort results.
-Possible values: id, lastactivity, created
+            Possible values: id, lastactivity, created
         :type sort_by: str
         """
         if team_id is not None:

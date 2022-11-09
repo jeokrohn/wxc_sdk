@@ -39,13 +39,14 @@ from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.integration import Integration
 from wxc_sdk.licenses import License
 from wxc_sdk.locations import Location
+from wxc_sdk.rooms import Room
 from wxc_sdk.scopes import parse_scopes
 from wxc_sdk.tokens import Tokens
 
 log = logging.getLogger(__name__)
 
 __all__ = ['TestCaseWithTokens', 'TestCaseWithLog', 'gather', 'TestWithLocations', 'TestCaseWithUsers', 'get_tokens',
-           'async_test', 'LoggedRequest']
+           'async_test', 'LoggedRequest', 'TestCaseWithUsersAndSpaces']
 
 
 def gather(mapping: Iterable[Any], return_exceptions: bool = False) -> Generator[Union[Any, Exception]]:
@@ -652,3 +653,30 @@ class TestCaseWithUsers(TestCaseWithLog):
         super().setUp()
         if not self.users:
             self.skipTest('Need at least one calling user to run test')
+
+
+@dataclass(init=False)
+class TestCaseWithUsersAndSpaces(TestCaseWithLog):
+    users: ClassVar[list[Person]]
+    spaces: ClassVar[list[Room]]
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        me = cls.api.people.me()
+        cls.users = [u for u in cls.api.people.list() if u.person_id != me.person_id]
+        cls.spaces = [r for r in cls.api.rooms.list()
+                      if re.match('Test Space \d{3}', r.title)]
+
+    def setUp(self) -> None:
+        super().setUp()
+        if not self.spaces:
+            self.skipTest('No target spaces')
+
+    @contextmanager
+    def target_space(self) -> Room:
+        target = random.choice(self.spaces)
+        try:
+            yield target
+        finally:
+            ...
