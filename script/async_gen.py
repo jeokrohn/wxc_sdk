@@ -555,7 +555,7 @@ def transform_classes_to_async(sources: Iterable[str]) -> Generator[str, None, N
             if not subs:
                 raise ValueError(f'Changing "Generator" to "AsyncGenerator" failed for {class_name}.{method_name}')
 
-            # rename generator method name to _gen; only 1st occurence
+            # rename generator method name to _gen; only 1st occurrence
             gen_source, subs = RE_METHOD_DEF.subn(f'def {method_name}_gen(', gen_source, count=1)
             if not subs:
                 raise ValueError(f'Changing method name to *_gen failed for {class_name}.{method_name}')
