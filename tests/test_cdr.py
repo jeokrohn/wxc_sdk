@@ -2,10 +2,7 @@
 Test CDR API
 """
 from collections import defaultdict
-from datetime import datetime
 from functools import reduce
-
-from dateutil import tz
 
 from tests.base import TestCaseWithLog
 from wxc_sdk.cdr import CDR

@@ -12,9 +12,8 @@ from typing import ClassVar, Optional
 from webexteamsasyncapi import PrivateAsyncApi
 from webexteamsasyncapi.private.cpapi.callparkextension import CallParkExtension as CPAPI_CPE
 
-from wxc_sdk.base import webex_id_to_uuid
-from wxc_sdk.all_types import *
 from wxc_sdk import WebexSimpleApi
+from wxc_sdk.all_types import *
 from .base import TestCaseWithUsers
 
 

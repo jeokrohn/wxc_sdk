@@ -3,13 +3,10 @@ Rooms API
 """
 from collections.abc import Generator
 from datetime import datetime
+from typing import Optional
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
-from enum import Enum
-from typing import Optional
-from pydantic import Field
-
 from wxc_sdk.common import RoomType
 
 __all__ = ['GetRoomMeetingDetailsResponse', 'ListRoomsResponse', 'Room', 'RoomsApi']

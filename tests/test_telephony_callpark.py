@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from functools import reduce
 from itertools import chain, groupby
 from re import match
-from typing import ClassVar, Optional
+from typing import ClassVar
 from unittest import skip
 
 from wxc_sdk.all_types import *

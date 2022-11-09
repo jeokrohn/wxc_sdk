@@ -18,7 +18,7 @@ from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings import PersonDevicesResponse, TelephonyDevice
 from wxc_sdk.telephony.devices import MACState, DeviceMembersResponse, AvailableMember, DeviceMember
-from wxc_sdk.telephony.jobs import JobExecutionStatus, StartJobResponse
+from wxc_sdk.telephony.jobs import StartJobResponse
 
 
 class TestSupportedDevices(TestCaseWithLog):
@@ -432,7 +432,6 @@ class Jobs(TestCaseWithLog):
     def monitor_job_execution(self, job: StartJobResponse):
         """
         monitor a job until its completion
-        :param job_id:
         :return:
         """
         while True:

@@ -2,7 +2,6 @@
 Tests for MembershipAPI
 """
 from concurrent.futures import ThreadPoolExecutor
-from contextlib import contextmanager
 from dataclasses import dataclass
 from random import choice
 

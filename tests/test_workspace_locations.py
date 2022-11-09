@@ -4,11 +4,10 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from itertools import chain
-from random import choice
 
 from randomlocation import RandomLocation, Address
 
-from tests.base import TestCaseWithLog, async_test
+from tests.base import TestCaseWithLog
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.rest import RestError
 from wxc_sdk.workspace_locations import WorkspaceLocation

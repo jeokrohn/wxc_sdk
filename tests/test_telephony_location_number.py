@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from random import choice
-from typing import ClassVar, Optional
+from typing import ClassVar
 
 from tests.base import TestCaseWithLog
 from tests.testutil import us_location_info, available_tns, LocationInfo

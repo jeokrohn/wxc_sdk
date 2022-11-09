@@ -110,6 +110,7 @@ RE_FOLLOW_PAGINATION = re.compile("""
 # block comment with async code to put in for method
 RE_ASYNC_SOURCE = re.compile("'''async(.*?)$(?P<async_source>.+?)'''", flags=re.VERBOSE + re.DOTALL + re.MULTILINE)
 
+
 @dataclass
 class Module:
     #: project relative module name

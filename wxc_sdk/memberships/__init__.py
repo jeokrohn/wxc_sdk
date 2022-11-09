@@ -8,7 +8,7 @@ from typing import Optional
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 
-__all__ = ['Membership', 'MembershipsApi']
+__all__ = ['Membership', 'MembershipApi']
 
 from wxc_sdk.common import RoomType
 
