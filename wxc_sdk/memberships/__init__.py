@@ -116,14 +116,15 @@ class MembershipApi(ApiChild, base='memberships'):
         data = super().get(url=url)
         return Membership.parse_obj(data)
 
-    def update(self, update: Membership, membership_id: str, is_moderator: bool, is_room_hidden: bool) -> Membership:
+    def update(self, update: Membership) -> Membership:
         """
         Updates properties for a membership by ID; ID has to be set in update.
 
         These can be updated:
             is_moderator: bool: Whether or not the participant is a room moderator.
+
             is_room_hidden: bool: When set to true, hides direct spaces in the teams client. Any new message will
-                    make the room visible again.
+            make the room visible again.
         """
         data = update.json(include={'is_moderator', 'is_room_hidden'})
         if update.id is None:
