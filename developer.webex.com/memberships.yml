@@ -1,0 +1,528 @@
+# command: ./read_api_spec.py -s Messaging -t Memberships -f memberships.yml
+docs:
+  Attachment Actions:
+    doc: null
+    header: null
+    methods: []
+  Events:
+    doc: null
+    header: null
+    methods: []
+  Memberships:
+    doc: 'Memberships represent a person''s relationship to a room. Use this API to
+      list members of any room that you''re in or create memberships to invite someone
+      to a room. Compliance Officers can now also list memberships for personEmails
+      where the CO is not part of the room.
+
+      Memberships can also be updated to make someone a moderator, or deleted, to
+      remove someone from the room.
+
+      Just like in the Webex client, you must be a member of the room in order to
+      list its memberships or invite people.'
+    header: Memberships
+    methods:
+    - doc: 'Lists all room memberships. By default, lists memberships for rooms to
+        which the authenticated user belongs.
+
+        Use query parameters to filter the response.
+
+        Use roomId to list memberships for a room, by ID.
+
+        NOTE: For moderated team spaces, the list of memberships will include only
+        the space moderators if the user is a team member but not a direct participant
+        of the space.
+
+        Use either personId or personEmail to filter the results. The roomId parameter
+        is required when using these parameters.
+
+        Long result sets will be split into pages.'
+      documentation:
+        doc: List Memberships
+        doc_link: https://developer.webex.com/docs/api/v1/memberships/list-memberships
+        endpoint: https://webexapis.com/v1/memberships
+        http_method: GET
+      header: List Memberships
+      parameters_and_response:
+        Query Parameters:
+        - doc: List memberships associated with a room, by ID.
+          name: roomId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: List memberships associated with a person, by ID. The roomId parameter
+            is required when using this parameter.
+          name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: List memberships associated with a person, by email address. The roomId
+            parameter is required when using this parameter.
+          name: personEmail
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Limit the maximum number of memberships in the response.
+          name: max
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        Response Properties:
+        - doc: ''
+          name: items
+          param_attrs:
+          - doc: A unique identifier for the membership.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The room ID.
+            name: roomId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The person ID.
+            name: personId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The email address of the person.
+            name: personEmail
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The display name of the person.
+            name: personDisplayName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The organization ID of the person.
+            name: personOrgId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Whether or not the participant is a room moderator.
+            name: isModerator
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Whether or not the direct type room is hidden in the Webex clients.
+            name: isRoomHidden
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: The type of room the membership is associated with.
+            name: roomType
+            param_attrs:
+            - doc: 1:1 room.
+              name: direct
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Group room.
+              name: group
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Whether or not the participant is a monitoring bot (deprecated).
+            name: isMonitor
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: The date and time when the membership was created.
+            name: created
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[Membership]
+          type_spec: null
+    - doc: Add someone to a room by Person ID or email address, optionally making
+        them a moderator.
+      documentation:
+        doc: Create a Membership
+        doc_link: https://developer.webex.com/docs/api/v1/memberships/create-a-membership
+        endpoint: https://webexapis.com/v1/memberships
+        http_method: POST
+      header: Create a Membership
+      parameters_and_response:
+        Body Parameters:
+        - doc: The room ID.
+          name: roomId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: The person ID.
+          name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The email address of the person.
+          name: personEmail
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Whether or not the participant is a room moderator.
+          name: isModerator
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        Response Properties:
+        - doc: A unique identifier for the membership.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The room ID.
+          name: roomId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The person ID.
+          name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The email address of the person.
+          name: personEmail
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The display name of the person.
+          name: personDisplayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The organization ID of the person.
+          name: personOrgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Whether or not the participant is a room moderator.
+          name: isModerator
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Whether or not the direct type room is hidden in the Webex clients.
+          name: isRoomHidden
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The type of room the membership is associated with.
+          name: roomType
+          param_attrs:
+          - doc: 1:1 room.
+            name: direct
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Group room.
+            name: group
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Whether or not the participant is a monitoring bot (deprecated).
+          name: isMonitor
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The date and time when the membership was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+    - doc: 'Get details for a membership by ID.
+
+        Specify the membership ID in the membershipId URI parameter.'
+      documentation:
+        doc: Get Membership Details
+        doc_link: https://developer.webex.com/docs/api/v1/memberships/get-membership-details
+        endpoint: https://webexapis.com/v1/memberships/{membershipId}
+        http_method: GET
+      header: Get Membership Details
+      parameters_and_response:
+        Response Properties:
+        - doc: A unique identifier for the membership.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The room ID.
+          name: roomId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The person ID.
+          name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The email address of the person.
+          name: personEmail
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The display name of the person.
+          name: personDisplayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The organization ID of the person.
+          name: personOrgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Whether or not the participant is a room moderator.
+          name: isModerator
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Whether or not the direct type room is hidden in the Webex clients.
+          name: isRoomHidden
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The type of room the membership is associated with.
+          name: roomType
+          param_attrs:
+          - doc: 1:1 room.
+            name: direct
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Group room.
+            name: group
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Whether or not the participant is a monitoring bot (deprecated).
+          name: isMonitor
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The date and time when the membership was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: The unique identifier for the membership.
+          name: membershipId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Updates properties for a membership by ID.
+
+        Specify the membership ID in the membershipId URI parameter.'
+      documentation:
+        doc: Update a Membership
+        doc_link: https://developer.webex.com/docs/api/v1/memberships/update-a-membership
+        endpoint: https://webexapis.com/v1/memberships/{membershipId}
+        http_method: PUT
+      header: Update a Membership
+      parameters_and_response:
+        Body Parameters:
+        - doc: Whether or not the participant is a room moderator.
+          name: isModerator
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: required
+        - doc: When set to true, hides direct spaces in the teams client. Any new
+            message will make the room visible again.
+          name: isRoomHidden
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: required
+        Response Properties:
+        - doc: A unique identifier for the membership.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The room ID.
+          name: roomId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The person ID.
+          name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The email address of the person.
+          name: personEmail
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The display name of the person.
+          name: personDisplayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The organization ID of the person.
+          name: personOrgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Whether or not the participant is a room moderator.
+          name: isModerator
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Whether or not the direct type room is hidden in the Webex clients.
+          name: isRoomHidden
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The type of room the membership is associated with.
+          name: roomType
+          param_attrs:
+          - doc: 1:1 room.
+            name: direct
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Group room.
+            name: group
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Whether or not the participant is a monitoring bot (deprecated).
+          name: isMonitor
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The date and time when the membership was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: The unique identifier for the membership.
+          name: membershipId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Deletes a membership by ID.
+
+        Specify the membership ID in the membershipId URI parameter.
+
+        The membership for the last moderator of a Team''s General space may not be
+        deleted; promote another user to team moderator first.'
+      documentation:
+        doc: Delete a Membership
+        doc_link: https://developer.webex.com/docs/api/v1/memberships/delete-a-membership
+        endpoint: https://webexapis.com/v1/memberships/{membershipId}
+        http_method: DELETE
+      header: Delete a Membership
+      parameters_and_response:
+        URI Parameters:
+        - doc: The unique identifier for the membership.
+          name: membershipId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+  Messages:
+    doc: null
+    header: null
+    methods: []
+  People:
+    doc: null
+    header: null
+    methods: []
+  Room Tabs:
+    doc: null
+    header: null
+    methods: []
+  Rooms:
+    doc: null
+    header: null
+    methods: []
+  Team Memberships:
+    doc: null
+    header: null
+    methods: []
+  Teams:
+    doc: null
+    header: null
+    methods: []
+  Tracking Codes:
+    doc: null
+    header: null
+    methods: []
+  Webhooks:
+    doc: null
+    header: null
+    methods: []

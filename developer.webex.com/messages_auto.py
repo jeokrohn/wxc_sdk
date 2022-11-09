@@ -3,7 +3,7 @@ from collections.abc import Generator
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
 from pydantic import Field
 
 
@@ -18,25 +18,19 @@ class RoomType(str, Enum):
 
 
 class Body(ApiModel):
-    #: 
     #: Possible values: TextBlock
     type: Optional[str]
-    #: 
     #: Possible values: Adaptive Cards
     text: Optional[str]
-    #: 
     #: Possible values: large
     size: Optional[str]
 
 
 class Actions(ApiModel):
-    #: 
     #: Possible values: Action.OpenUrl
     type: Optional[str]
-    #: 
     #: Possible values: http://adaptivecards.io
     url: Optional[str]
-    #: 
     #: Possible values: Learn More
     title: Optional[str]
 
@@ -156,7 +150,7 @@ class MessagesApi(ApiChild, base='messages'):
 
     """
 
-    def list_messages(self, room_id: str, parent_id: str = None, mentioned_people: array = None, before: str = None, before_message: str = None, max: int = None, **params) -> Generator[ListMessagesResponse, None, None]:
+    def list(self, room_id: str, parent_id: str = None, mentioned_people: List[str] = None, before: str = None, before_message: str = None, **params) -> Generator[ListMessagesResponse, None, None]:
         """
         Lists all messages in a room.  Each message will include content attachments if present.
         The list sorts the messages in descending order by creation date.
@@ -166,14 +160,12 @@ class MessagesApi(ApiChild, base='messages'):
         :type room_id: str
         :param parent_id: str: List messages with a parent, by ID.
         :type parent_id: str
-        :param mentioned_people: array: List messages with these people mentioned, by ID. Use me as a shorthand for the current API user. Only me or the person ID of the current user may be specified. Bots must include this parameter to list messages in group rooms (spaces).
-        :type mentioned_people: array
+        :param mentioned_people: List[str]: List messages with these people mentioned, by ID. Use me as a shorthand for the current API user. Only me or the person ID of the current user may be specified. Bots must include this parameter to list messages in group rooms (spaces).
+        :type mentioned_people: List[str]
         :param before: str: List messages sent before a date and time.
         :type before: str
         :param before_message: str: List messages sent before a message, by ID.
         :type before_message: str
-        :param max: int: Limit the maximum number of messages in the response.
-        :type max: int
         """
         if room_id is not None:
             params['roomId'] = room_id
@@ -185,12 +177,10 @@ class MessagesApi(ApiChild, base='messages'):
             params['before'] = before
         if before_message is not None:
             params['beforeMessage'] = before_message
-        if max is not None:
-            params['max'] = max
         url = self.ep()
         return self.session.follow_pagination(url=url, model=ListMessagesResponse, params=params)
 
-    def list_direct_messages(self, parent_id: str = None, person_id: str = None, person_email: str = None, **params) -> Generator[ListDirectMessagesResponse, None, None]:
+    def list_direct(self, parent_id: str = None, person_id: str = None, person_email: str = None, **params) -> Generator[ListDirectMessagesResponse, None, None]:
         """
         List all messages in a 1:1 (direct) room. Use the personId or personEmail query parameter to specify the room. Each message will include content attachments if present.
         The list sorts the messages in descending order by creation date.
@@ -208,10 +198,10 @@ class MessagesApi(ApiChild, base='messages'):
             params['personId'] = person_id
         if person_email is not None:
             params['personEmail'] = person_email
-        url = self.ep()
+        url = self.ep('direct')
         return self.session.follow_pagination(url=url, model=ListDirectMessagesResponse, params=params)
 
-    def create_message(self, room_id: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None, text: str = None, markdown: str = None, files: array[string] = None, attachments: array[Attachment] = None, **params) -> CreateMessageResponse:
+    def create(self, room_id: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None, text: str = None, markdown: str = None, files: List[str] = None, attachments: List[Attachment] = None) -> CreateMessageResponse:
         """
         Post a plain text or rich text message, and optionally, a file attachment attachment, to a room.
         The files parameter is an array, which accepts multiple values to allow for future expansion, but currently only one file may be included with the message. File previews are only rendered for attachments of 1MB or less.
@@ -228,11 +218,11 @@ class MessagesApi(ApiChild, base='messages'):
         :type text: str
         :param markdown: str: The message, in Markdown format. The maximum message length is 7439 bytes.
         :type markdown: str
-        :param files: array[string]: The public URL to a binary file to be posted into the room. Only one file is allowed per message. Uploaded files are automatically converted into a format that all Webex clients can render. For the supported media types and the behavior of uploads, see the Message Attachments Guide.
+        :param files: List[str]: The public URL to a binary file to be posted into the room. Only one file is allowed per message. Uploaded files are automatically converted into a format that all Webex clients can render. For the supported media types and the behavior of uploads, see the Message Attachments Guide.
 Possible values: http://www.example.com/images/media.png
-        :type files: array[string]
-        :param attachments: array[Attachment]: Content attachments to attach to the message. Only one card per message is supported. See the Cards Guide for more information.
-        :type attachments: array[Attachment]
+        :type files: List[str]
+        :param attachments: List[Attachment]: Content attachments to attach to the message. Only one card per message is supported. See the Cards Guide for more information.
+        :type attachments: List[Attachment]
         """
         body = {}
         if room_id is not None:
@@ -252,27 +242,37 @@ Possible values: http://www.example.com/images/media.png
         if attachments is not None:
             body['attachments'] = attachments
         url = self.ep()
-        data = self.post(url=url, params=params, json=body)
+        data = super().post(url=url, json=body)
         return CreateMessageResponse.parse_obj(data)
 
-    def edit_message(self, message_id: str, room_id: str = None, text: str = None, markdown: str = None, **params) -> ListMessage:
+    def edit(self, message_id: str, room_id: str = None, text: str = None, markdown: str = None) -> ListMessage:
         """
         Update a message you have posted not more than 10 times.
         Specify the messageId of the message you want to edit.
         Edits of messages containing files or attachments are not currently supported.
-        If a user attempts to edit a message containing files or attachments a 400 Bad Request will be returned by the API with a message stating that the feature is currently unsupported.
-        There is also a maximum number of times a user can edit a message. The maximum currently supported is 10 edits per message.
-            If a user attempts to edit a message greater that the maximum times allowed the API will return 400 Bad Request with a message stating the edit limit has been reached.
-        While only the roomId and text or markdown attributes are required in the request body, a common pattern for editing message is to first call GET /messages/{id} for the message you wish to edit and to then update the text or markdown attribute accordingly, passing the updated message object in the request body of the PUT /messages/{id} request.
-        When this pattern is used on a message that included markdown, the html attribute must be deleted prior to making the PUT request.
+        If a user attempts to edit a message containing files or attachments a 400 Bad Request will be returned by
+        the API with a message stating that the feature is currently unsupported.
+        There is also a maximum number of times a user can edit a message. The maximum currently supported is 10
+        edits per message.
+            If a user attempts to edit a message greater that the maximum times allowed the API will return 400 Bad
+            Request with a message stating the edit limit has been reached.
+        While only the roomId and text or markdown attributes are required in the request body, a common pattern for
+        editing message is to first call GET /messages/{id} for the message you wish to edit and to then update the
+        text or markdown attribute accordingly, passing the updated message object in the request body of the PUT
+        /messages/{id} request.
+        When this pattern is used on a message that included markdown, the html attribute must be deleted prior to
+        making the PUT request.
 
         :param message_id: str: The unique identifier for the message.
         :type message_id: str
         :param room_id: str: The room ID of the message.
         :type room_id: str
-        :param text: str: The message, in plain text. If markdown is specified this parameter may be optionally used to provide alternate text for UI clients that do not support rich text. The maximum message length is 7439 bytes.
+        :param text: str: The message, in plain text. If markdown is specified this parameter may be optionally used
+            to provide alternate text for UI clients that do not support rich text. The maximum message length is 7439
+            bytes.
         :type text: str
-        :param markdown: str: The message, in Markdown format. If this attribute is set ensure that the request does NOT contain an html attribute.
+        :param markdown: str: The message, in Markdown format. If this attribute is set ensure that the request does
+            NOT contain an html attribute.
         :type markdown: str
         """
         body = {}
@@ -283,10 +283,10 @@ Possible values: http://www.example.com/images/media.png
         if markdown is not None:
             body['markdown'] = markdown
         url = self.ep(f'{message_id}')
-        data = self.put(url=url, params=params, json=body)
+        data = super().put(url=url, json=body)
         return ListMessage.parse_obj(data)
 
-    def get_message_details(self, message_id: str, **params) -> ListMessage:
+    def details(self, message_id: str) -> ListMessage:
         """
         Show details for a message, by message ID.
         Specify the message ID in the messageId parameter in the URI.
@@ -295,10 +295,10 @@ Possible values: http://www.example.com/images/media.png
         :type message_id: str
         """
         url = self.ep(f'{message_id}')
-        data = self.get(url=url, params=params)
+        data = super().get(url=url)
         return ListMessage.parse_obj(data)
 
-    def delete_message(self, message_id: str, **params):
+    def delete(self, message_id: str):
         """
         Delete a message, by message ID.
         Specify the message ID in the messageId parameter in the URI.
@@ -307,5 +307,5 @@ Possible values: http://www.example.com/images/media.png
         :type message_id: str
         """
         url = self.ep(f'{message_id}')
-        super().delete(url=url, params=params)
+        super().delete(url=url)
         return

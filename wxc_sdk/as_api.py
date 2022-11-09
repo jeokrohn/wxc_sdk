@@ -1,9 +1,12 @@
 # auto-generated. DO NOT EDIT
+import csv
 import json
 import logging
 import os
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass
+from datetime import datetime, date, timedelta
+from dateutil import tz
 from enum import Enum
 from io import BufferedReader
 from typing import Union, Dict, Optional, Literal, List
@@ -39,15 +42,16 @@ MAX_USERS_WITH_CALLING_DATA = 10
 __all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsApiChild', 'AsAppServicesApi',
            'AsAuthCodesApi', 'AsAutoAttendantApi', 'AsBargeApi', 'AsCQPolicyApi', 'AsCallInterceptApi',
            'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi', 'AsCallRecordingApi', 'AsCallWaitingApi',
-           'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsDeviceSettingsJobsApi',
-           'AsDevicesApi', 'AsDialPlanApi', 'AsDndApi', 'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi',
-           'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi',
-           'AsLicensesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
-           'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMonitoringApi', 'AsNumbersApi',
-           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi',
-           'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
-           'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsReceptionistApi',
-           'AsRestSession', 'AsRouteGroupApi', 'AsRouteListApi', 'AsScheduleApi', 'AsTelephonyApi',
+           'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsDetailedCDRApi',
+           'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi', 'AsDndApi', 'AsExecAssistantApi',
+           'AsForwardingApi', 'AsGroupsApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
+           'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
+           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMembershipApi',
+           'AsMessagesApi', 'AsMonitoringApi', 'AsNumbersApi', 'AsOrganisationVoicemailSettingsAPI',
+           'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi',
+           'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPremisePstnApi', 'AsPrivacyApi',
+           'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsReceptionistApi', 'AsReportsApi', 'AsRestSession',
+           'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsScheduleApi', 'AsTelephonyApi',
            'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi',
            'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi',
            'AsWebhookApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
@@ -139,6 +143,94 @@ class AsApiChild:
         return await self.session.rest_patch(*args, **kwargs)
 
 
+class AsDetailedCDRApi(AsApiChild, base='devices'):
+    """
+    To retrieve Detailed Call History information, you must use a token with the spark-admin:calling_cdr_read scope.
+    The authenticating user must be a read-only-admin or full-admin of the organization and have the administrator
+    role "Webex Calling Detailed Call History API access" enabled.
+
+    Detailed Call History information is available 5 minutes after a call has ended and may be retrieved for up to 48
+    hours. For example, if a call ends at 9:46 am, the record for that call can be collected using the API from 9:51
+    am, and is available until 9:46 am two days later.
+
+    This API is rate-limited to one call every 5 minutes for a given organization ID.
+    """
+
+    def get_cdr_history_gen(self, start_time: datetime = None, end_time: datetime = None, locations: list[str] = None,
+                        **params) -> AsyncGenerator[CDR, None, None]:
+        """
+        Provides Webex Calling Detailed Call History data for your organization.
+
+        Results can be filtered with the startTime, endTime and locations request parameters. The startTime and endTime
+        parameters specify the start and end of the time period for the Detailed Call History reports you wish to
+        collect.
+        The API will return all reports that were created between startTime and endTime.
+
+        :param start_time: Time of the first report you wish to collect. (report time is the time the call finished).
+            Note: The specified time must be between 5 minutes ago and 48 hours ago.
+        :param end_time: Time of the last report you wish to collect. Note: The specified time should be earlier than
+            startTime and no earlier than 48 hours ago
+        :param locations: Names of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
+            provided. Allows you to query reports by location.
+        :param params: additional arguments
+        :return:
+        """
+        url = 'https://analytics.webexapis.com/v1/cdr_feed'
+        if locations:
+            params['locations'] = ','.join(locations)
+        if not start_time:
+            start_time = datetime.now(tz=tz.tzutc()) - timedelta(hours=47, minutes=58)
+        if not end_time:
+            end_time = datetime.now(tz=tz.tzutc()) - timedelta(minutes=5, seconds=30)
+
+        def iso_str(dt: datetime) -> str:
+            dt = dt.astimezone(tz.tzutc())
+            dt = dt.replace(tzinfo=None)
+            return f"{dt.isoformat(timespec='milliseconds')}Z"
+
+        params['startTime'] = iso_str(start_time)
+        params['endTime'] = iso_str(end_time)
+        # noinspection PyTypeChecker
+        return self.session.follow_pagination(url=url, model=CDR, params=params, item_key='items')
+
+    async def get_cdr_history(self, start_time: datetime = None, end_time: datetime = None, locations: list[str] = None,
+                        **params) -> List[CDR]:
+        """
+        Provides Webex Calling Detailed Call History data for your organization.
+
+        Results can be filtered with the startTime, endTime and locations request parameters. The startTime and endTime
+        parameters specify the start and end of the time period for the Detailed Call History reports you wish to
+        collect.
+        The API will return all reports that were created between startTime and endTime.
+
+        :param start_time: Time of the first report you wish to collect. (report time is the time the call finished).
+            Note: The specified time must be between 5 minutes ago and 48 hours ago.
+        :param end_time: Time of the last report you wish to collect. Note: The specified time should be earlier than
+            startTime and no earlier than 48 hours ago
+        :param locations: Names of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
+            provided. Allows you to query reports by location.
+        :param params: additional arguments
+        :return:
+        """
+        url = 'https://analytics.webexapis.com/v1/cdr_feed'
+        if locations:
+            params['locations'] = ','.join(locations)
+        if not start_time:
+            start_time = datetime.now(tz=tz.tzutc()) - timedelta(hours=47, minutes=58)
+        if not end_time:
+            end_time = datetime.now(tz=tz.tzutc()) - timedelta(minutes=5, seconds=30)
+
+        def iso_str(dt: datetime) -> str:
+            dt = dt.astimezone(tz.tzutc())
+            dt = dt.replace(tzinfo=None)
+            return f"{dt.isoformat(timespec='milliseconds')}Z"
+
+        params['startTime'] = iso_str(start_time)
+        params['endTime'] = iso_str(end_time)
+        # noinspection PyTypeChecker
+        return [o async for o in self.session.follow_pagination(url=url, model=CDR, params=params, item_key='items')]
+
+
 class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/callDeviceSettings'):
     """
     API for jobs to update device settings at the location and organization level
@@ -146,16 +238,43 @@ class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/ca
     """
 
     async def change(self, location_id: Optional[str], customization: DeviceCustomization,
-               org_id: str=None)->StartJobResponse:
-        # TODO: validate, tracked as issue #91, API not yet supported
-        raise NotImplementedError
+               org_id: str = None) -> StartJobResponse:
+        """
+        Change device settings across organization or locations jobs.
+
+        Performs bulk and asynchronous processing for all types of device settings initiated by organization and system
+        admins in a stateful persistent manner. This job will modify the requested device settings across all the
+        devices. Whenever a location ID is specified in the request, it will modify the requested device settings only
+        for the devices that are part of the provided location within an organization.
+
+        Returns a unique job ID which can then be utilized further to retrieve status and errors for the same.
+
+        Only one job per customer can be running at any given time within the same organization. An attempt to run
+        multiple jobs at the same time will result in a 409 error response.
+
+        Running a job requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Location within an organization where changes of device settings will be applied to all the
+            devices within it.
+        :type location_id: str
+        :param customization: customization. Atttribute custom_enabled Indicates if all the devices within this
+            location will be customized with new requested customizations(if set to true) or will be overridden with
+            the one at organization level (if set to false or any other value). This field has no effect when the job
+            is being triggered at organization level.
+        :type customization: DeviceCustomization
+        :param org_id: Apply change device settings for all the devices under this organization.
+        :type org_id: str
+        :return: information about the created job
+        :rtype: StartJobResponse
+        """
         url = self.ep()
         params = org_id and {'prgId': org_id} or None
         body = {}
         if location_id:
             body['locationId'] = location_id
-        body['locationCustomizationsEnabled'] = customization.custom_enabled
-        if customization.custom_enabled:
+            body['locationCustomizationsEnabled'] = customization.custom_enabled
+        if customization.custom_enabled or not location_id:
             body['customizations'] = json.loads(customization.customizations.json())
         data = await self.post(url=url, params=params, json=body)
         return StartJobResponse.parse_obj(data)
@@ -178,6 +297,7 @@ class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/ca
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep()
+        # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=StartJobResponse, params=params)
 
     async def list(self, org_id: str = None, **params) -> List[StartJobResponse]:
@@ -198,6 +318,7 @@ class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/ca
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep()
+        # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=StartJobResponse, params=params)]
 
     async def get_status(self, job_id: str, org_id: str = None) -> StartJobResponse:
@@ -236,6 +357,7 @@ class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/ca
         """
         params = org_id and {'orgId': org_id} or None
         url = self.ep(f'{job_id}/errors')
+        # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
 
     async def job_errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
@@ -253,6 +375,7 @@ class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/ca
         """
         params = org_id and {'orgId': org_id} or None
         url = self.ep(f'{job_id}/errors')
+        # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, params=params)]
 
 
@@ -839,6 +962,373 @@ class AsLocationsApi(AsApiChild, base='locations'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
         await self.put(url=url, data=data, params=params)
+
+
+class AsMembershipApi(AsApiChild, base='memberships'):
+    """
+    Memberships represent a person's relationship to a room. Use this API to list members of any room that you're in
+    or create memberships to invite someone to a room. Compliance Officers can now also list memberships for
+    personEmails where the CO is not part of the room.
+    Memberships can also be updated to make someone a moderator, or deleted, to remove someone from the room.
+    Just like in the Webex client, you must be a member of the room in order to list its memberships or invite people.
+    """
+
+    def list_gen(self, room_id: str = None, person_id: str = None, person_email: str = None,
+             **params) -> AsyncGenerator[Membership, None, None]:
+        """
+        Lists all room memberships. By default, lists memberships for rooms to which the authenticated user belongs.
+        Use query parameters to filter the response.
+        Use roomId to list memberships for a room, by ID.
+        NOTE: For moderated team spaces, the list of memberships will include only the space moderators if the user
+        is a team member but not a direct participant of the space.
+        Use either personId or personEmail to filter the results. The roomId parameter is required when using these
+        parameters.
+        Long result sets will be split into pages.
+
+        :param room_id: str: List memberships associated with a room, by ID.
+        :type room_id: str
+        :param person_id: str: List memberships associated with a person, by ID. The roomId parameter is required
+        when using this parameter.
+        :type person_id: str
+        :param person_email: str: List memberships associated with a person, by email address. The roomId parameter
+        is required when using this parameter.
+        :type person_email: str
+        """
+        if room_id is not None:
+            params['roomId'] = room_id
+        if person_id is not None:
+            params['personId'] = person_id
+        if person_email is not None:
+            params['personEmail'] = person_email
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=Membership, params=params)
+
+    async def list(self, room_id: str = None, person_id: str = None, person_email: str = None,
+             **params) -> List[Membership]:
+        """
+        Lists all room memberships. By default, lists memberships for rooms to which the authenticated user belongs.
+        Use query parameters to filter the response.
+        Use roomId to list memberships for a room, by ID.
+        NOTE: For moderated team spaces, the list of memberships will include only the space moderators if the user
+        is a team member but not a direct participant of the space.
+        Use either personId or personEmail to filter the results. The roomId parameter is required when using these
+        parameters.
+        Long result sets will be split into pages.
+
+        :param room_id: str: List memberships associated with a room, by ID.
+        :type room_id: str
+        :param person_id: str: List memberships associated with a person, by ID. The roomId parameter is required
+        when using this parameter.
+        :type person_id: str
+        :param person_email: str: List memberships associated with a person, by email address. The roomId parameter
+        is required when using this parameter.
+        :type person_email: str
+        """
+        if room_id is not None:
+            params['roomId'] = room_id
+        if person_id is not None:
+            params['personId'] = person_id
+        if person_email is not None:
+            params['personEmail'] = person_email
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=Membership, params=params)]
+
+    async def create(self, room_id: str, person_id: str = None, person_email: str = None,
+               is_moderator: bool = None) -> Membership:
+        """
+        Add someone to a room by Person ID or email address, optionally making them a moderator.
+
+        :param room_id: str: The room ID.
+        :type room_id: str
+        :param person_id: str: The person ID.
+        :type person_id: str
+        :param person_email: str: The email address of the person.
+        :type person_email: str
+        :param is_moderator: bool: Whether or not the participant is a room moderator.
+        :type is_moderator: bool
+        """
+        body = {}
+        if room_id is not None:
+            body['roomId'] = room_id
+        if person_id is not None:
+            body['personId'] = person_id
+        if person_email is not None:
+            body['personEmail'] = person_email
+        if is_moderator is not None:
+            body['isModerator'] = is_moderator
+        url = self.ep()
+        data = await super().post(url=url, json=body)
+        return Membership.parse_obj(data)
+
+    async def details(self, membership_id: str) -> Membership:
+        """
+        Get details for a membership by ID.
+        Specify the membership ID in the membershipId URI parameter.
+
+        :param membership_id: str: The unique identifier for the membership.
+        :type membership_id: str
+        """
+        url = self.ep(f'{membership_id}')
+        data = await super().get(url=url)
+        return Membership.parse_obj(data)
+
+    async def update(self, update: Membership, membership_id: str, is_moderator: bool, is_room_hidden: bool) -> Membership:
+        """
+        Updates properties for a membership by ID; ID has to be set in update.
+
+        These can be updated:
+            is_moderator: bool: Whether or not the participant is a room moderator.
+            is_room_hidden: bool: When set to true, hides direct spaces in the teams client. Any new message will
+                    make the room visible again.
+        """
+        data = update.json(include={'is_moderator', 'is_room_hidden'})
+        if update.id is None:
+            raise ValueError('ID has to be set')
+        url = self.ep(f'{update.id}')
+        data = await super().put(url=url, data=data)
+        return Membership.parse_obj(data)
+
+    async def delete(self, membership_id: str):
+        """
+        Deletes a membership by ID.
+        Specify the membership ID in the membershipId URI parameter.
+        The membership for the last moderator of a Team's General space may not be deleted; promote another user to
+        team moderator first.
+
+        :param membership_id: str: The unique identifier for the membership.
+        :type membership_id: str
+        """
+        url = self.ep(f'{membership_id}')
+        await super().delete(url=url)
+        return
+
+
+class AsMessagesApi(AsApiChild, base='messages'):
+    """
+
+    """
+
+    def list_gen(self, room_id: str, parent_id: str = None, mentioned_people: List[str] = None, before: datetime = None,
+             before_message: str = None, **params) -> AsyncGenerator[Message, None, None]:
+        """
+        Lists all messages in a room.  Each message will include content attachments if present.
+        The list sorts the messages in descending order by creation date.
+        Long result sets will be split into pages.
+
+        :param room_id: str: List messages in a room, by ID.
+        :type room_id: str
+        :param parent_id: str: List messages with a parent, by ID.
+        :type parent_id: str
+        :param mentioned_people: List[str]: List messages with these people mentioned, by ID. Use me as a shorthand
+            for the current API user. Only me or the person ID of the current user may be specified. Bots must include
+            this parameter to list messages in group rooms (spaces).
+        :type mentioned_people: List[str]
+        :param before: str: List messages sent before a date and time.
+        :type before: str
+        :param before_message: str: List messages sent before a message, by ID.
+        :type before_message: str
+        """
+        if room_id is not None:
+            params['roomId'] = room_id
+        if parent_id is not None:
+            params['parentId'] = parent_id
+        if mentioned_people is not None:
+            params['mentionedPeople'] = mentioned_people
+        if before is not None:
+            params['before'] = f"{before.isoformat(timespec='milliseconds')}Z"
+        if before_message is not None:
+            params['beforeMessage'] = before_message
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=Message, params=params)
+
+    async def list(self, room_id: str, parent_id: str = None, mentioned_people: List[str] = None, before: datetime = None,
+             before_message: str = None, **params) -> List[Message]:
+        """
+        Lists all messages in a room.  Each message will include content attachments if present.
+        The list sorts the messages in descending order by creation date.
+        Long result sets will be split into pages.
+
+        :param room_id: str: List messages in a room, by ID.
+        :type room_id: str
+        :param parent_id: str: List messages with a parent, by ID.
+        :type parent_id: str
+        :param mentioned_people: List[str]: List messages with these people mentioned, by ID. Use me as a shorthand
+            for the current API user. Only me or the person ID of the current user may be specified. Bots must include
+            this parameter to list messages in group rooms (spaces).
+        :type mentioned_people: List[str]
+        :param before: str: List messages sent before a date and time.
+        :type before: str
+        :param before_message: str: List messages sent before a message, by ID.
+        :type before_message: str
+        """
+        if room_id is not None:
+            params['roomId'] = room_id
+        if parent_id is not None:
+            params['parentId'] = parent_id
+        if mentioned_people is not None:
+            params['mentionedPeople'] = mentioned_people
+        if before is not None:
+            params['before'] = f"{before.isoformat(timespec='milliseconds')}Z"
+        if before_message is not None:
+            params['beforeMessage'] = before_message
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=Message, params=params)]
+
+    def list_direct_gen(self, parent_id: str = None, person_id: str = None, person_email: str = None,
+                    **params) -> AsyncGenerator[Message, None, None]:
+        """
+        List all messages in a 1:1 (direct) room. Use the personId or personEmail query parameter to specify the
+        room. Each message will include content attachments if present.
+        The list sorts the messages in descending order by creation date.
+
+        :param parent_id: str: List messages with a parent, by ID.
+        :type parent_id: str
+        :param person_id: str: List messages in a 1:1 room, by person ID.
+        :type person_id: str
+        :param person_email: str: List messages in a 1:1 room, by person email.
+        :type person_email: str
+        """
+        if parent_id is not None:
+            params['parentId'] = parent_id
+        if person_id is not None:
+            params['personId'] = person_id
+        if person_email is not None:
+            params['personEmail'] = person_email
+        url = self.ep('direct')
+        return self.session.follow_pagination(url=url, model=Message, params=params)
+
+    async def list_direct(self, parent_id: str = None, person_id: str = None, person_email: str = None,
+                    **params) -> List[Message]:
+        """
+        List all messages in a 1:1 (direct) room. Use the personId or personEmail query parameter to specify the
+        room. Each message will include content attachments if present.
+        The list sorts the messages in descending order by creation date.
+
+        :param parent_id: str: List messages with a parent, by ID.
+        :type parent_id: str
+        :param person_id: str: List messages in a 1:1 room, by person ID.
+        :type person_id: str
+        :param person_email: str: List messages in a 1:1 room, by person email.
+        :type person_email: str
+        """
+        if parent_id is not None:
+            params['parentId'] = parent_id
+        if person_id is not None:
+            params['personId'] = person_id
+        if person_email is not None:
+            params['personEmail'] = person_email
+        url = self.ep('direct')
+        return [o async for o in self.session.follow_pagination(url=url, model=Message, params=params)]
+
+    async def create(self, room_id: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None,
+               text: str = None, markdown: str = None, files: List[str] = None,
+               attachments: List[MessageAttachment] = None) -> Message:
+        """
+        Post a plain text or rich text message, and optionally, a file attachment, to a room.
+        The files parameter is an array, which accepts multiple values to allow for future expansion, but currently
+        only one file may be included with the message. File previews are only rendered for attachments of 1MB or less.
+
+        :param room_id: str: The room ID of the message.
+        :type room_id: str
+        :param parent_id: str: The parent message to reply to.
+        :type parent_id: str
+        :param to_person_id: str: The person ID of the recipient when sending a private 1:1 message.
+        :type to_person_id: str
+        :param to_person_email: str: The email address of the recipient when sending a private 1:1 message.
+        :type to_person_email: str
+        :param text: str: The message, in plain text. If markdown is specified this parameter may be optionally used
+            to provide alternate text for UI clients that do not support rich text. The maximum message length is 7439
+            bytes.
+        :type text: str
+        :param markdown: str: The message, in Markdown format. The maximum message length is 7439 bytes.
+        :type markdown: str
+        :param files: List[str]: The public URL to a binary file to be posted into the room. Only one file is allowed
+            per message. Uploaded files are automatically converted into a format that all Webex clients can render. For
+            the supported media types and the behavior of uploads, see the Message Attachments Guide.
+                Possible values: http://www.example.com/images/media.png
+        :type files: List[str]
+        :param attachments: List[Attachment]: Content attachments to attach to the message. Only one card per message
+            is supported. See the Cards Guide for more information.
+        :type attachments: List[Attachment]
+        :rtype: Message
+        """
+        # TODO: handle local files for attachments
+        body = {}
+        if room_id is not None:
+            body['roomId'] = room_id
+        if parent_id is not None:
+            body['parentId'] = parent_id
+        if to_person_id is not None:
+            body['toPersonId'] = to_person_id
+        if to_person_email is not None:
+            body['toPersonEmail'] = to_person_email
+        if text is not None:
+            body['text'] = text
+        if markdown is not None:
+            body['markdown'] = markdown
+        if files is not None:
+            body['files'] = files
+        if attachments is not None:
+            body['attachments'] = attachments
+        url = self.ep()
+        data = await super().post(url=url, json=body)
+        return Message.parse_obj(data)
+
+    async def edit(self, message: Message) -> Message:
+        """
+        Update a message you have posted not more than 10 times.
+        Specify the messageId of the message you want to edit.
+        Edits of messages containing files or attachments are not currently supported.
+        If a user attempts to edit a message containing files or attachments a 400 Bad Request will be returned by
+        the API with a message stating that the feature is currently unsupported.
+        There is also a maximum number of times a user can edit a message. The maximum currently supported is 10
+        edits per message.
+        If a user attempts to edit a message greater that the maximum times allowed the API will return 400 Bad
+        Request with a message stating the edit limit has been reached.
+        While only the roomId and text or markdown attributes are required in the request body, a common pattern for
+        editing message is to first call GET /messages/{id} for the message you wish to edit and to then update the
+        text or markdown attribute accordingly, passing the updated message object in the request body of the PUT
+        /messages/{id} request.
+
+        :param message: the updated message, id has to be set in the message
+            attributes supported for update:
+                room_id: str: The room ID of the message.
+                text: str: The message, in plain text. If markdown is specified this parameter may be optionally used
+                    to provide alternate text for UI clients that do not support rich text. The maximum message length
+                    is 7439 bytes.
+                markdown: str: The message, in Markdown format. If this attribute is set ensure that the request does
+                    NOT contain an html attribute.
+        """
+        data = message.json(include={'room_id', 'text', 'markdown'})
+        if not message.id:
+            raise ValueError('ID has to be set')
+        url = self.ep(f'{message.id}')
+        data = await super().put(url=url, data=data)
+        return Message.parse_obj(data)
+
+    async def details(self, message_id: str) -> Message:
+        """
+        Show details for a message, by message ID.
+        Specify the message ID in the messageId parameter in the URI.
+
+        :param message_id: str: The unique identifier for the message.
+        :type message_id: str
+        """
+        url = self.ep(f'{message_id}')
+        data = await super().get(url=url)
+        return Message.parse_obj(data)
+
+    async def delete(self, message_id: str):
+        """
+        Delete a message, by message ID.
+        Specify the message ID in the messageId parameter in the URI.
+
+        :param message_id: str: The unique identifier for the message.
+        :type message_id: str
+        """
+        url = self.ep(f'{message_id}')
+        await super().delete(url=url)
+        return
 
 
 class AsOrganizationApi(AsApiChild, base='organizations'):
@@ -3205,6 +3695,381 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         url = self.session.ep(f'telephony/config/people/{person_id}/devices')
         data = await self.get(url=url, params=params)
         return PersonDevicesResponse.parse_obj(data)
+
+
+class AsReportsApi(AsApiChild, base='devices'):
+    """
+    Report templates are available for use with the Reports API.
+
+    To access this endpoint, you must use an administrator token with the analytics:read_all scope. The authenticated
+    user must be a read-only or full administrator of the organization to which the report belongs.
+
+    To use this endpoint the organization needs to be licensed for Pro Pack for Control Hub.
+
+    Reports available via Webex Control Hub may be generated and downloaded via the Reports API. To access this API,
+    the authenticated user must be a read-only or full administrator of the organization to which the report belongs.
+
+    """
+
+    async def list_templates(self) -> list[ReportTemplate]:
+        """
+        List all the available report templates that can be generated.
+
+        CSV (comma separated value) reports for Webex services are only supported for organizations based in the
+        North American region. Organizations based in other regions will return blank CSV files for any Webex reports.
+
+        :return: list of report templates
+        :rtype: list[ReportTemplate]
+        """
+        # TODO: https://developer.webex.com/docs/api/v1/report-templates/list-report-templates, documentation bug
+        #   "Template Attributes" is actually "items"
+        # TODO: https://developer.webex.com/docs/api/v1/report-templates/list-report-templates, documentation bug
+        #   "validations"/"validations" is actually "validations"
+        # TODO: https://developer.webex.com/docs/api/v1/report-templates/list-report-templates, documentation bug
+        #   "id" is actually "Id"
+        # TODO: https://developer.webex.com/docs/api/v1/report-templates/list-report-templates, documentation bug
+        #   "startDate", "endDate" not documented
+        url = self.session.ep('report/templates')
+        data = await self.get(url=url)
+        result = parse_obj_as(list[ReportTemplate], data['items'])
+        return result
+
+    def list_gen(self, report_id: str = None, service: str = None, template_id: str = None, from_date: date = None,
+             to_date: date = None) -> AsyncGenerator[Report, None, None]:
+        """
+        Lists all reports. Use query parameters to filter the response. The parameters are optional. However,
+        from and to parameters should be provided together.
+
+        CSV reports for Teams services are only supported for organizations based in the North American region.
+        Organizations based in a different region will return blank CSV files for any Teams reports.
+
+        :param report_id: List reports by ID.
+        :param service: List reports which use this service.
+        :param template_id: List reports with this report template ID.
+        :param from_date: List reports that were created on or after this date.
+        :param to_date: List reports that were created before this date.
+        :return: yields :class:`Report` instances
+        """
+        # TODO: https://developer.webex.com/docs/api/v1/report-templates/list-report-templates, documentation bug
+        #   "Report Attributes" is actually "items"
+        # TODO: https://developer.webex.com/docs/api/v1/report-templates/list-report-templates, documentation bug
+        #   missing attribute: downloadDomain
+        # TODO: https://developer.webex.com/docs/api/v1/report-templates/list-report-templates, documentation bug
+        #   "id" is actually "Id"
+        # TODO: https://developer.webex.com/docs/api/v1/report-templates/list-report-templates, documentation bug
+        #   "scheduledFrom" is actually "scheduleFrom"
+
+        params = {to_camel(k.split('_')[0] if k.endswith('date') else k): v for k, v in locals().items()
+                  if k not in {'self', 'from_date', 'to_date'} and v is not None}
+        if from_date:
+            params['from'] = from_date.strftime('%Y-%m-%d')
+        if to_date:
+            params['to'] = to_date.strftime('%Y-%m-%d')
+
+        url = self.session.ep('reports')
+        return self.session.follow_pagination(url=url, params=params, model=Report, item_key='items')
+
+    async def list(self, report_id: str = None, service: str = None, template_id: str = None, from_date: date = None,
+             to_date: date = None) -> List[Report]:
+        """
+        Lists all reports. Use query parameters to filter the response. The parameters are optional. However,
+        from and to parameters should be provided together.
+
+        CSV reports for Teams services are only supported for organizations based in the North American region.
+        Organizations based in a different region will return blank CSV files for any Teams reports.
+
+        :param report_id: List reports by ID.
+        :param service: List reports which use this service.
+        :param template_id: List reports with this report template ID.
+        :param from_date: List reports that were created on or after this date.
+        :param to_date: List reports that were created before this date.
+        :return: yields :class:`Report` instances
+        """
+        # TODO: https://developer.webex.com/docs/api/v1/report-templates/list-report-templates, documentation bug
+        #   "Report Attributes" is actually "items"
+        # TODO: https://developer.webex.com/docs/api/v1/report-templates/list-report-templates, documentation bug
+        #   missing attribute: downloadDomain
+        # TODO: https://developer.webex.com/docs/api/v1/report-templates/list-report-templates, documentation bug
+        #   "id" is actually "Id"
+        # TODO: https://developer.webex.com/docs/api/v1/report-templates/list-report-templates, documentation bug
+        #   "scheduledFrom" is actually "scheduleFrom"
+
+        params = {to_camel(k.split('_')[0] if k.endswith('date') else k): v for k, v in locals().items()
+                  if k not in {'self', 'from_date', 'to_date'} and v is not None}
+        if from_date:
+            params['from'] = from_date.strftime('%Y-%m-%d')
+        if to_date:
+            params['to'] = to_date.strftime('%Y-%m-%d')
+
+        url = self.session.ep('reports')
+        return [o async for o in self.session.follow_pagination(url=url, params=params, model=Report, item_key='items')]
+
+    async def create(self, template_id: int, start_date: date = None, end_date: date = None, site_list: str = None) -> str:
+        """
+        Create a new report. For each templateId, there are a set of validation rules that need to be followed. For
+        example, for templates belonging to Webex, the user needs to provide siteUrl. These validation rules can be
+        retrieved via the Report Templates API.
+
+        CSV reports for Teams services are only supported for organizations based in the North American region.
+        Organizations based in a different region will return blank CSV files for any Teams reports.
+
+        :param template_id: Unique ID representing valid report templates.
+        :type template_id: int
+        :param start_date: Data in the report will be from this date onwards.
+        :type start_date: date
+        :param end_date: Data in the report will be until this date.
+        :type end_date: date
+        :param site_list: Sites belonging to user's organization. This attribute is needed for site-based templates.
+        :type site_list: str
+        :return: The unique identifier for the report.
+        :rtype: str
+        """
+        # TODO: https://developer.webex.com/docs/api/v1/reports/create-a-report, documentation bug
+        #   result actually is something like: {'items': {'Id': 'Y2...lMg'}}
+        body = {'templateId': template_id}
+        if start_date:
+            body['startDate'] = start_date.strftime('%Y-%m-%d')
+        if end_date:
+            body['endDate'] = end_date.strftime('%Y-%m-%d')
+        if site_list:
+            body['siteList'] = site_list
+        url = self.session.ep('reports')
+        data = await self.post(url=url, json=body)
+        result = data['items']['Id']
+        return result
+
+    async def details(self, report_id: str) -> Report:
+        """
+        Shows details for a report, by report ID.
+
+        Specify the report ID in the reportId parameter in the URI.
+
+        CSV reports for Teams services are only supported for organizations based in the North American region.
+        Organizations based in a different region will return blank CSV files for any Teams reports.
+
+        :param report_id: The unique identifier for the report.
+        :type report_id: str
+        :return: report details
+        :rtype: Report
+        """
+        # TODO: https://developer.webex.com/docs/api/v1/reports/create-a-report, documentation bug
+        #   result actually is something like: {'items': [{'title': 'Engagement Report', 'service': 'Webex Calling',
+        #   'startDate': '2021-12-14', 'endDate': '2022-01-13', 'siteList': '', 'created': '2022-01-14 11:16:59',
+        #   'createdBy': 'Y2lz..GM', 'scheduleFrom': 'api', 'status': 'done', 'downloadDomain':
+        #   'https://reportdownload-a.webex.com/',  'downloadURL':
+        #   'https://reportdownload-a.webex.com/api?reportId=Y2lz3ZA',  'Id': 'Y23ZA'}], 'numberOfReports': 1}
+        url = self.session.ep(f'reports/{report_id}')
+        data = await self.get(url=url)
+        result = Report.parse_obj(data['items'][0])
+        return result
+
+    async def delete(self, report_id: str):
+        """
+        Remove a report from the system.
+
+        Specify the report ID in the reportId parameter in the URI
+
+        CSV reports for Teams services are only supported for organizations based in the North American region.
+        Organizations based in a different region will return blank CSV files for any Teams reports.
+
+        :param report_id: The unique identifier for the report.
+        :type report_id: str
+        """
+        url = self.session.ep(f'reports/{report_id}')
+        await super().delete(url=url)
+
+    async def download(self, url: str) -> List[dict]:
+        """
+        Download a report from the given URL and yield the rows as dicts
+
+        :param url: download URL
+        :type url: str
+        :return: list of dicts (one per row)
+        :rtype: list[dict]
+        """
+        headers = {'Authorization': f'Bearer {self.session.access_token}'}
+        async with self.session.get(url=url, headers=headers) as r:
+            r.raise_for_status()
+            lines = [line.decode(encoding='utf-8-sig') async for line in r.content]
+            reader = csv.DictReader(lines)
+            return list(reader)
+
+        
+
+
+class AsRoomsApi(AsApiChild, base='rooms'):
+    """
+    Rooms are virtual meeting places where people post messages and collaborate to get work done. This API is used to
+    manage the rooms themselves. Rooms are created and deleted with this API. You can also update a room to change
+    its title, for example.
+    To create a team room, specify the a teamId in the POST payload. Note that once a room is added to a team,
+    it cannot be moved. To learn more about managing teams, see the Teams API.
+    To manage people in a room see the Memberships API.
+    To post content see the Messages API.
+    """
+
+    def list_gen(self, team_id: str = None, type_: RoomType = None, sort_by: str = None,
+             **params) -> AsyncGenerator[Room, None, None]:
+        """
+        List rooms.
+        The title of the room for 1:1 rooms will be the display name of the other person.
+        By default, lists rooms to which the authenticated user belongs.
+        Long result sets will be split into pages.
+        Known Limitations:
+        The underlying database does not support natural sorting by lastactivity and will only sort on limited set of
+        results, which are pulled from the database in order of roomId. For users or bots in more than 3000 spaces
+        this can result in anomalies such as spaces that have had recent activity not being returned in the results
+        when sorting by lastacivity.
+
+        :param team_id: str: List rooms associated with a team, by ID.
+        :type team_id: str
+        :param type_: RoomType: List rooms by type.
+            Possible values: direct, group
+        :type type_: str
+        :param sort_by: str: Sort results.
+            Possible values: id, lastactivity, created
+        :type sort_by: str
+        """
+        if team_id is not None:
+            params['teamId'] = team_id
+        if type_ is not None:
+            params['type'] = type_
+        if sort_by is not None:
+            params['sortBy'] = sort_by
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=Room, params=params)
+
+    async def list(self, team_id: str = None, type_: RoomType = None, sort_by: str = None,
+             **params) -> List[Room]:
+        """
+        List rooms.
+        The title of the room for 1:1 rooms will be the display name of the other person.
+        By default, lists rooms to which the authenticated user belongs.
+        Long result sets will be split into pages.
+        Known Limitations:
+        The underlying database does not support natural sorting by lastactivity and will only sort on limited set of
+        results, which are pulled from the database in order of roomId. For users or bots in more than 3000 spaces
+        this can result in anomalies such as spaces that have had recent activity not being returned in the results
+        when sorting by lastacivity.
+
+        :param team_id: str: List rooms associated with a team, by ID.
+        :type team_id: str
+        :param type_: RoomType: List rooms by type.
+            Possible values: direct, group
+        :type type_: str
+        :param sort_by: str: Sort results.
+            Possible values: id, lastactivity, created
+        :type sort_by: str
+        """
+        if team_id is not None:
+            params['teamId'] = team_id
+        if type_ is not None:
+            params['type'] = type_
+        if sort_by is not None:
+            params['sortBy'] = sort_by
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=Room, params=params)]
+
+    async def create(self, title: str, team_id: str = None, classification_id: str = None, is_locked: bool = None,
+               is_announcement_only: bool = None) -> Room:
+        """
+        Creates a room. The authenticated user is automatically added as a member of the room. See the Memberships
+        API to learn how to add more people to the room.
+        To create a 1:1 room, use the Create Messages endpoint to send a message directly to another person by using
+        the toPersonId or toPersonEmail parameters.
+        Bots are not able to create and classify a room. A bot may update a space classification after a person of
+        the same owning organization joined the space as the first human user.
+        A space can only be put into announcement mode when it is locked.
+
+        :param title: str: A user-friendly name for the room.
+        :type title: str
+        :param team_id: str: The ID for the team with which this room is associated.
+        :type team_id: str
+        :param classification_id: str: The classificationId for the room.
+        :type classification_id: str
+        :param is_locked: bool: Set the space as locked/moderated and the creator becomes a moderator
+        :type is_locked: bool
+        :param is_announcement_only: bool: Sets the space into announcement Mode.
+        :type is_announcement_only: bool
+        """
+        body = {}
+        if title is not None:
+            body['title'] = title
+        if team_id is not None:
+            body['teamId'] = team_id
+        if classification_id is not None:
+            body['classificationId'] = classification_id
+        if is_locked is not None:
+            body['isLocked'] = is_locked
+        if is_announcement_only is not None:
+            body['isAnnouncementOnly'] = is_announcement_only
+        url = self.ep()
+        data = await super().post(url=url, json=body)
+        return Room.parse_obj(data)
+
+    async def details(self, room_id: str) -> Room:
+        """
+        Shows details for a room, by ID.
+        The title of the room for 1:1 rooms will be the display name of the other person.
+        Specify the room ID in the roomId parameter in the URI.
+
+        :param room_id: str: The unique identifier for the room.
+        :type room_id: str
+        """
+        url = self.ep(f'{room_id}')
+        data = await super().get(url=url)
+        return Room.parse_obj(data)
+
+    async def meeting_details(self, room_id: str) -> GetRoomMeetingDetailsResponse:
+        """
+        Shows Webex meeting details for a room such as the SIP address, meeting URL, toll-free and toll dial-in numbers.
+        Specify the room ID in the roomId parameter in the URI.
+
+        :param room_id: str: The unique identifier for the room.
+        :type room_id: str
+        """
+        url = self.ep(f'{room_id}/meetingInfo')
+        data = await super().get(url=url)
+        return GetRoomMeetingDetailsResponse.parse_obj(data)
+
+    async def update(self, update: Room) -> Room:
+        """
+        Updates details for a room
+        A space can only be put into announcement mode when it is locked.
+        
+        :update: update to apply. ID and title have to be set. Only can update:
+            title: str: A user-friendly name for the room.
+            classification_id: str: The classificationId for the room.
+            team_id: str: The teamId to which this space should be assigned. Only unowned spaces can be assigned
+                to a team. Assignment between teams is unsupported.
+            is_locked: bool: Set the space as locked/moderated and the creator becomes a moderator
+            is_announcement_only: bool: Sets the space into announcement mode or clears the anouncement Mode (false)
+            is_read_only: bool: A compliance officer can set a direct room as read-only, which will disallow any
+                new information exchanges in this space, while maintaining historical data.
+        """
+        update: Room
+        data = update.json(include={'title', 'classification_id', 'team_id', 'is_locked', 'is_announcement_only',
+                                    'is_read_only'})
+        if update.id is None:
+            raise ValueError('ID has to be set')
+        url = self.ep(f'{update.id}')
+        data = await super().put(url=url, data=data)
+        return Room.parse_obj(data)
+
+    async def delete(self, room_id: str):
+        """
+        Deletes a room, by ID. Deleted rooms cannot be recovered.
+        As a security measure to prevent accidental deletion, when a non moderator deletes the room they are removed
+        from the room instead.
+        Deleting a room that is part of a team will archive the room instead.
+        Specify the room ID in the roomId parameter in the URI.
+
+        :param room_id: str: The unique identifier for the room.
+        :type room_id: str
+        """
+        url = self.ep(f'{room_id}')
+        await super().delete(url=url)
+        return
 
 
 class AsAccessCodesApi(AsApiChild, base='telephony/config/locations'):
@@ -7968,8 +8833,6 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         :return: device customization response
         :rtype: DeviceCustomization
         """
-        # TODO: reactivate/test as soon as jobs API starts to be supported
-        raise NotImplementedError
         params = org_id and {'orgId': org_id} or None
         url = self.ep(f'{location_id}/devices/settings')
         data = await self.get(url=url, params=params)
@@ -9249,6 +10112,8 @@ class AsWebexSimpleApi:
     The main API object
     """
 
+    #: CDR API: :class:`AsDetailedCDRApi`
+    cdr: AsDetailedCDRApi
     #: devices API :class:`AsDevicesApi`
     devices: AsDevicesApi
     #: groups API :class:`AsGroupsApi`
@@ -9257,12 +10122,20 @@ class AsWebexSimpleApi:
     licenses: AsLicensesApi
     #: Location API :class:`AsLocationsApi`
     locations: AsLocationsApi
+    #: membership API: :class:`AsMembershipApi`
+    membership: AsMembershipApi
+    #: Messages API :class:`AsMessagesApi`
+    messages: AsMessagesApi
     #: organization settings API
     organizations: AsOrganizationApi
     #: Person settings API :class:`AsPersonSettingsApi`
     person_settings: AsPersonSettingsApi
     #: People API :class:`AsPeopleApi`
     people: AsPeopleApi
+    #: Reports API :class:`AsReportsApi`
+    reports: AsReportsApi
+    #: Rooms API :class:`AsRoomsApi`
+    rooms: AsRoomsApi
     #: Telephony (features) API :class:`AsTelephonyApi`
     telephony: AsTelephonyApi
     #: Webhooks API :class:`AsWebhookApi`
@@ -9294,13 +10167,18 @@ class AsWebexSimpleApi:
             tokens = Tokens(access_token=tokens)
 
         session = AsRestSession(tokens=tokens, concurrent_requests=concurrent_requests)
+        self.cdr = AsDetailedCDRApi(session=session)
         self.devices = AsDevicesApi(session=session)
         self.groups = AsGroupsApi(session=session)
         self.licenses = AsLicensesApi(session=session)
         self.locations = AsLocationsApi(session=session)
+        self.membership = AsMembershipApi(session=session)
+        self.messages = AsMessagesApi(session=session)
         self.organizations = AsOrganizationApi(session=session)
         self.person_settings = AsPersonSettingsApi(session=session)
         self.people = AsPeopleApi(session=session)
+        self.reports = AsReportsApi(session=session)
+        self.rooms = AsRoomsApi(session=session)
         self.telephony = AsTelephonyApi(session=session)
         self.webhook = AsWebhookApi(session=session)
         self.workspaces = AsWorkspacesApi(session=session)

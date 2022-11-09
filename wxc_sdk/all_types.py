@@ -1,22 +1,26 @@
 from wxc_sdk.base import ApiModel, ApiModelWithErrors, CodeAndReason, StrOrDict, plus1, to_camel,\
     webex_id_to_uuid
+from wxc_sdk.cdr import CDR, CDRCallType, CDRClientType, CDRDirection, CDROriginalReason, CDRRedirectReason,\
+    CDRRelatedReason, CDRUserType
 from wxc_sdk.common import AcdCustomization, AlternateNumber, AnnAudioFile, AtaCustomization, AtaDtmfMethod,\
     AtaDtmfMode, AudioCodecPriority, AuthCode, Background, BackgroundSelection, BacklightTimer, CallParkExtension,\
     CommonDeviceCustomization, Customer, DeviceCustomization, DeviceCustomizations, DialPatternStatus,\
     DialPatternValidate, DisplayCallqueueAgentSoftkey, DisplayNameSelection, Greeting, IdAndName, IdOnly,\
     LineKeyLabelSelection, LineKeyLedPattern, LoggingLevel, MediaFileType, MonitoredMember, MppCustomization,\
-    NumberState, PatternAction, PersonPlaceAgent, PhoneLanguage, PrimaryOrShared, RingPattern, RouteIdentity,\
-    RouteType, ScreenTimeout, StorageType, UserBase, UserNumber, UserType, ValidateExtensionStatus,\
+    NumberState, PatternAction, PersonPlaceAgent, PhoneLanguage, PrimaryOrShared, RingPattern, RoomType,\
+    RouteIdentity, RouteType, ScreenTimeout, StorageType, UserBase, UserNumber, UserType, ValidateExtensionStatus,\
     ValidateExtensionStatusState, ValidateExtensionsResponse, ValidatePhoneNumberStatus,\
     ValidatePhoneNumberStatusState, ValidatePhoneNumbersResponse, ValidationStatus, VlanSetting,\
     VoicemailCopyOfMessage, VoicemailEnabled, VoicemailFax, VoicemailMessageStorage, VoicemailNotifications,\
-    VoicemailTransferToNumber, WifiNetwork
+    VoicemailTransferToNumber, WifiCustomization, WifiNetwork
 from wxc_sdk.common.schedules import Event, RecurWeekly, RecurYearlyByDate, RecurYearlyByDay, Recurrence,\
     Schedule, ScheduleApiBase, ScheduleDay, ScheduleMonth, ScheduleType, ScheduleTypeOrStr, ScheduleWeek
 from wxc_sdk.devices import ActivationCodeResponse, Device, TagOp
 from wxc_sdk.groups import Group, GroupMember
 from wxc_sdk.licenses import License, SiteType
 from wxc_sdk.locations import Location, LocationAddress
+from wxc_sdk.memberships import Membership
+from wxc_sdk.messages import AdaptiveCard, AdaptiveCardAction, AdaptiveCardBody, Message, MessageAttachment
 from wxc_sdk.organizations import Organization
 from wxc_sdk.people import PeopleStatus, Person, PersonType, PhoneNumber, PhoneNumberType, SipAddress, SipType
 from wxc_sdk.person_settings import DeviceActivationState, DeviceOwner, PersonDevicesResponse, TelephonyDevice
@@ -44,6 +48,8 @@ from wxc_sdk.person_settings.privacy import Privacy
 from wxc_sdk.person_settings.push_to_talk import PTTConnectionType, PushToTalkAccessType, PushToTalkSettings
 from wxc_sdk.person_settings.receptionist import ReceptionistSettings
 from wxc_sdk.person_settings.voicemail import UnansweredCalls, VoicemailEnabledWithGreeting, VoicemailSettings
+from wxc_sdk.reports import CallingCDR, Report, ReportTemplate, ValidationRules
+from wxc_sdk.rooms import GetRoomMeetingDetailsResponse, ListRoomsResponse, Room
 from wxc_sdk.telephony import CallSourceInfo, CallSourceType, DestinationType, DeviceManagedBy,\
     DeviceManufacturer, DeviceType, EmergencyDestination, FeatureAccessCodeDestination, HostedFeatureDestination,\
     HostedUserDestination, LocationAndNumbers, NumberDetails, NumberListPhoneNumber, NumberListPhoneNumberType,\
@@ -98,19 +104,21 @@ from wxc_sdk.workspace_locations import WorkspaceLocation, WorkspaceLocationFloo
 from wxc_sdk.workspace_settings.numbers import WorkSpaceNumbers
 from wxc_sdk.workspaces import Calendar, CalendarType, CallingType, WorkSpaceType, Workspace, WorkspaceEmail
 
-__all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'Agent', 'AgentQueue', 'AlternateNumber',
-           'AlternateNumberSettings', 'AnnAudioFile', 'Announcement', 'AnnouncementMode', 'ApiModel',
-           'ApiModelWithErrors', 'AppServicesSettings', 'AtaCustomization', 'AtaDtmfMethod', 'AtaDtmfMode',
-           'AudioCodecPriority', 'AudioSource', 'AuthCode', 'AutoAttendant', 'AutoAttendantAction',
-           'AutoAttendantKeyConfiguration', 'AutoAttendantMenu', 'AutoTransferNumbers', 'AvailableMember',
-           'AvailableRecallHuntGroup', 'Background', 'BackgroundSelection', 'BacklightTimer', 'BargeSettings',
-           'BehaviorType', 'BlockContiguousSequences', 'BlockPreviousPasscodes', 'BlockRepeatedDigits',
-           'BusinessContinuity', 'CPActionType', 'CQHolidaySchedule', 'CQRoutingType', 'Calendar', 'CalendarType',
-           'CallBounce', 'CallForwarding', 'CallForwardingAlways', 'CallForwardingCommon', 'CallForwardingNoAnswer',
-           'CallForwardingNumber', 'CallForwardingNumberType', 'CallForwardingPerson', 'CallHistoryRecord',
-           'CallInfo', 'CallPark', 'CallParkExtension', 'CallParkRecall', 'CallParkSettings', 'CallPickup',
-           'CallQueue', 'CallQueueCallPolicies', 'CallRecordingSetting', 'CallSourceInfo', 'CallSourceType',
-           'CallState', 'CallType', 'CallTypePermission', 'CallerId', 'CallerIdSelectedType', 'CallingBehavior',
+__all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard', 'AdaptiveCardAction',
+           'AdaptiveCardBody', 'Agent', 'AgentQueue', 'AlternateNumber', 'AlternateNumberSettings', 'AnnAudioFile',
+           'Announcement', 'AnnouncementMode', 'ApiModel', 'ApiModelWithErrors', 'AppServicesSettings',
+           'AtaCustomization', 'AtaDtmfMethod', 'AtaDtmfMode', 'AudioCodecPriority', 'AudioSource', 'AuthCode',
+           'AutoAttendant', 'AutoAttendantAction', 'AutoAttendantKeyConfiguration', 'AutoAttendantMenu',
+           'AutoTransferNumbers', 'AvailableMember', 'AvailableRecallHuntGroup', 'Background', 'BackgroundSelection',
+           'BacklightTimer', 'BargeSettings', 'BehaviorType', 'BlockContiguousSequences', 'BlockPreviousPasscodes',
+           'BlockRepeatedDigits', 'BusinessContinuity', 'CDR', 'CDRCallType', 'CDRClientType', 'CDRDirection',
+           'CDROriginalReason', 'CDRRedirectReason', 'CDRRelatedReason', 'CDRUserType', 'CPActionType',
+           'CQHolidaySchedule', 'CQRoutingType', 'Calendar', 'CalendarType', 'CallBounce', 'CallForwarding',
+           'CallForwardingAlways', 'CallForwardingCommon', 'CallForwardingNoAnswer', 'CallForwardingNumber',
+           'CallForwardingNumberType', 'CallForwardingPerson', 'CallHistoryRecord', 'CallInfo', 'CallPark',
+           'CallParkExtension', 'CallParkRecall', 'CallParkSettings', 'CallPickup', 'CallQueue',
+           'CallQueueCallPolicies', 'CallRecordingSetting', 'CallSourceInfo', 'CallSourceType', 'CallState',
+           'CallType', 'CallTypePermission', 'CallerId', 'CallerIdSelectedType', 'CallingBehavior', 'CallingCDR',
            'CallingLineId', 'CallingPermissions', 'CallingType', 'CallsFrom', 'CnameRecord', 'CodeAndReason',
            'ComfortMessageBypass', 'ComfortMessageSetting', 'CommonDeviceCustomization', 'CreateResponse',
            'CustomNumbers', 'Customer', 'DND', 'DectDevice', 'DefaultVoicemailPinRules', 'DestinationType', 'Device',
@@ -121,45 +129,46 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'Agent', 'Age
            'EmergencyDestination', 'EnabledAndNumberOfDays', 'Event', 'ExecAssistantType', 'ExpirePasscode',
            'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts', 'FeatureAccessCodeDestination',
            'FeatureSelector', 'ForcedForward', 'ForwardCallsTo', 'ForwardToSelection', 'ForwardingRule',
-           'ForwardingRuleDetails', 'ForwardingSetting', 'Greeting', 'Group', 'GroupMember', 'HGCallPolicies',
-           'HGandCQ', 'HistoryType', 'HolidayService', 'HostedFeatureDestination', 'HostedUserDestination',
-           'HuntGroup', 'IdAndName', 'IdOnly', 'IncomingPermissions', 'InterceptAnnouncements', 'InterceptNumber',
-           'InterceptSetting', 'InterceptSettingIncoming', 'InterceptSettingOutgoing', 'InterceptTypeIncoming',
-           'InterceptTypeOutgoing', 'InternalDialing', 'JobError', 'JobErrorItem', 'JobErrorMessage',
-           'JobExecutionStatus', 'License', 'LineKeyLabelSelection', 'LineKeyLedPattern', 'Location',
-           'LocationAddress', 'LocationAndNumbers', 'LocationCallParkSettings', 'LocationMoHGreetingType',
-           'LocationMoHSetting', 'LocationVoiceMailSettings', 'LoggingLevel', 'MACState', 'MACStatus',
-           'MACValidationResponse', 'MediaFileType', 'MemberCommon', 'MenuKey', 'MohMessageSetting',
-           'MonitoredElement', 'MonitoredElementMember', 'MonitoredMember', 'Monitoring', 'MppCustomization',
-           'NetworkConnectionType', 'NightService', 'NoAnswer', 'Notification', 'NotificationRepeat',
-           'NotificationType', 'NumberAndAction', 'NumberDetails', 'NumberListPhoneNumber',
-           'NumberListPhoneNumberType', 'NumberLocation', 'NumberOwner', 'NumberState', 'NumberType',
-           'OnboardingMethod', 'OrganisationVoicemailSettings', 'OrganisationVoicemailSettingsAPI', 'Organization',
-           'OriginatorType', 'OutboundProxy', 'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction',
-           'OverflowSetting', 'OwnerType', 'PSTNConnection', 'PTTConnectionType', 'Paging', 'PagingAgent',
-           'ParkedAgainst', 'PasscodeRules', 'PatternAction', 'PatternAndAction', 'PbxUserDestination',
-           'PeopleStatus', 'Person', 'PersonDevicesResponse', 'PersonForwardingSetting', 'PersonNumbers',
-           'PersonPhoneNumber', 'PersonPlaceAgent', 'PersonSettingsApiChild', 'PersonType', 'Personality',
-           'PhoneLanguage', 'PhoneNumber', 'PhoneNumberType', 'PinLength', 'Policy', 'PrimaryOrShared', 'Privacy',
-           'PstnNumberDestination', 'PushToTalkAccessType', 'PushToTalkSettings', 'QueueCallerId', 'QueueSettings',
-           'RGTrunk', 'Recall', 'RecallHuntGroup', 'ReceptionistSettings', 'Record', 'RecordingState', 'RecurWeekly',
-           'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence', 'RedirectReason', 'Redirection', 'RejectAction',
-           'ResponseStatus', 'ResponseStatusType', 'RingPattern', 'RouteGroup', 'RouteGroupUsage', 'RouteIdentity',
-           'RouteList', 'RouteListDestination', 'RouteListDetail', 'RouteType', 'Schedule', 'ScheduleApiBase',
-           'ScheduleDay', 'ScheduleLevel', 'ScheduleMonth', 'ScheduleType', 'ScheduleTypeOrStr', 'ScheduleWeek',
-           'ScreenTimeout', 'ServiceType', 'SipAddress', 'SipType', 'SiteType', 'StartJobResponse',
-           'StepExecutionStatus', 'StorageType', 'StrOrDict', 'StrandedCalls', 'SupportedDevice', 'TagOp',
-           'TelephonyCall', 'TelephonyDevice', 'TelephonyEvent', 'TelephonyEventData', 'TelephonyLocation',
+           'ForwardingRuleDetails', 'ForwardingSetting', 'GetRoomMeetingDetailsResponse', 'Greeting', 'Group',
+           'GroupMember', 'HGCallPolicies', 'HGandCQ', 'HistoryType', 'HolidayService', 'HostedFeatureDestination',
+           'HostedUserDestination', 'HuntGroup', 'IdAndName', 'IdOnly', 'IncomingPermissions',
+           'InterceptAnnouncements', 'InterceptNumber', 'InterceptSetting', 'InterceptSettingIncoming',
+           'InterceptSettingOutgoing', 'InterceptTypeIncoming', 'InterceptTypeOutgoing', 'InternalDialing',
+           'JobError', 'JobErrorItem', 'JobErrorMessage', 'JobExecutionStatus', 'License', 'LineKeyLabelSelection',
+           'LineKeyLedPattern', 'ListRoomsResponse', 'Location', 'LocationAddress', 'LocationAndNumbers',
+           'LocationCallParkSettings', 'LocationMoHGreetingType', 'LocationMoHSetting', 'LocationVoiceMailSettings',
+           'LoggingLevel', 'MACState', 'MACStatus', 'MACValidationResponse', 'MediaFileType', 'MemberCommon',
+           'Membership', 'MenuKey', 'Message', 'MessageAttachment', 'MohMessageSetting', 'MonitoredElement',
+           'MonitoredElementMember', 'MonitoredMember', 'Monitoring', 'MppCustomization', 'NetworkConnectionType',
+           'NightService', 'NoAnswer', 'Notification', 'NotificationRepeat', 'NotificationType', 'NumberAndAction',
+           'NumberDetails', 'NumberListPhoneNumber', 'NumberListPhoneNumberType', 'NumberLocation', 'NumberOwner',
+           'NumberState', 'NumberType', 'OnboardingMethod', 'OrganisationVoicemailSettings',
+           'OrganisationVoicemailSettingsAPI', 'Organization', 'OriginatorType', 'OutboundProxy',
+           'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction', 'OverflowSetting', 'OwnerType',
+           'PSTNConnection', 'PTTConnectionType', 'Paging', 'PagingAgent', 'ParkedAgainst', 'PasscodeRules',
+           'PatternAction', 'PatternAndAction', 'PbxUserDestination', 'PeopleStatus', 'Person',
+           'PersonDevicesResponse', 'PersonForwardingSetting', 'PersonNumbers', 'PersonPhoneNumber',
+           'PersonPlaceAgent', 'PersonSettingsApiChild', 'PersonType', 'Personality', 'PhoneLanguage', 'PhoneNumber',
+           'PhoneNumberType', 'PinLength', 'Policy', 'PrimaryOrShared', 'Privacy', 'PstnNumberDestination',
+           'PushToTalkAccessType', 'PushToTalkSettings', 'QueueCallerId', 'QueueSettings', 'RGTrunk', 'Recall',
+           'RecallHuntGroup', 'ReceptionistSettings', 'Record', 'RecordingState', 'RecurWeekly', 'RecurYearlyByDate',
+           'RecurYearlyByDay', 'Recurrence', 'RedirectReason', 'Redirection', 'RejectAction', 'Report',
+           'ReportTemplate', 'ResponseStatus', 'ResponseStatusType', 'RingPattern', 'Room', 'RoomType', 'RouteGroup',
+           'RouteGroupUsage', 'RouteIdentity', 'RouteList', 'RouteListDestination', 'RouteListDetail', 'RouteType',
+           'Schedule', 'ScheduleApiBase', 'ScheduleDay', 'ScheduleLevel', 'ScheduleMonth', 'ScheduleType',
+           'ScheduleTypeOrStr', 'ScheduleWeek', 'ScreenTimeout', 'ServiceType', 'SipAddress', 'SipType', 'SiteType',
+           'StartJobResponse', 'StepExecutionStatus', 'StorageType', 'StrOrDict', 'StrandedCalls', 'SupportedDevice',
+           'TagOp', 'TelephonyCall', 'TelephonyDevice', 'TelephonyEvent', 'TelephonyEventData', 'TelephonyLocation',
            'TelephonyParty', 'TestCallRoutingResult', 'Tokens', 'Trunk', 'TrunkDestination', 'TrunkDetail',
            'TrunkDeviceType', 'TrunkLocation', 'TrunkType', 'TrunkTypeWithDeviceType', 'TrunkUsage', 'UCMProfile',
            'UnansweredCalls', 'UpdateNumbersResponse', 'UpdatePersonNumbers', 'UpdatePersonPhoneNumber',
            'UsageRouteLists', 'UserBase', 'UserNumber', 'UserType', 'ValidateExtensionStatus',
            'ValidateExtensionStatusState', 'ValidateExtensionsResponse', 'ValidatePhoneNumberStatus',
-           'ValidatePhoneNumberStatusState', 'ValidatePhoneNumbersResponse', 'ValidationStatus',
+           'ValidatePhoneNumberStatusState', 'ValidatePhoneNumbersResponse', 'ValidationRules', 'ValidationStatus',
            'VirtualExtensionDestination', 'VlanSetting', 'VoiceMailRules', 'VoicePortalSettings',
            'VoicemailCopyOfMessage', 'VoicemailEnabled', 'VoicemailEnabledWithGreeting', 'VoicemailFax',
            'VoicemailGroup', 'VoicemailGroupDetail', 'VoicemailMessageStorage', 'VoicemailNotifications',
            'VoicemailSettings', 'VoicemailTransferToNumber', 'WaitMessageSetting', 'WaitMode', 'WebHook',
            'WebHookCreate', 'WebHookEvent', 'WebHookResource', 'WebHookStatus', 'WelcomeMessageSetting',
-           'WifiNetwork', 'WorkSpaceNumbers', 'WorkSpaceType', 'Workspace', 'WorkspaceEmail', 'WorkspaceLocation',
-           'WorkspaceLocationFloor', '_Helper', 'plus1', 'to_camel', 'webex_id_to_uuid']
+           'WifiCustomization', 'WifiNetwork', 'WorkSpaceNumbers', 'WorkSpaceType', 'Workspace', 'WorkspaceEmail',
+           'WorkspaceLocation', 'WorkspaceLocationFloor', '_Helper', 'plus1', 'to_camel', 'webex_id_to_uuid']

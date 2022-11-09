@@ -203,7 +203,6 @@ Call Controls/Get Call Details/Response Properties/recordingState/attrs/stopped 
 Call Controls/Get Call Details/Response Properties/recordingState/attrs/failed - string
 Call Controls/Get Call Details/URI Parameters/callId - string (required)
 Call Controls/List Call History/Query Parameters/type - string
-Call Controls/List Call History/Query Parameters/type/attrs/Possible values:  - 
 Call Controls/List Call History/Response Properties/items - array[Call History Record]
 Call Controls/List Call History/Response Properties/items/attrs/type - Call History Record Type Enum
 Call Controls/List Call History/Response Properties/items/attrs/type/attrs/placed - string
@@ -266,6 +265,323 @@ Locations/Update a Location/Body Parameters/address/attrs/postalCode - string
 Locations/Update a Location/Body Parameters/address/attrs/country - string
 Locations/Update a Location/Query Parameters/orgId - string
 Locations/Update a Location/URI Parameters/locationId - string (required)
+People/List People/Query Parameters/email - string
+People/List People/Query Parameters/displayName - string
+People/List People/Query Parameters/id - string
+People/List People/Query Parameters/orgId - string
+People/List People/Query Parameters/callingData - boolean
+People/List People/Query Parameters/locationId - string
+People/List People/Query Parameters/max - number
+People/List People/Response Properties/items - array[Person]
+People/List People/Response Properties/items/attrs/id - string
+People/List People/Response Properties/items/attrs/emails - array[string]
+People/List People/Response Properties/items/attrs/phoneNumbers - array[object]
+People/List People/Response Properties/items/attrs/phoneNumbers/attrs/type - string
+People/List People/Response Properties/items/attrs/phoneNumbers/attrs/value - string
+People/List People/Response Properties/items/attrs/extension - string
+People/List People/Response Properties/items/attrs/locationId - string
+People/List People/Response Properties/items/attrs/displayName - string
+People/List People/Response Properties/items/attrs/nickName - string
+People/List People/Response Properties/items/attrs/firstName - string
+People/List People/Response Properties/items/attrs/lastName - string
+People/List People/Response Properties/items/attrs/avatar - string
+People/List People/Response Properties/items/attrs/orgId - string
+People/List People/Response Properties/items/attrs/roles - array[string]
+People/List People/Response Properties/items/attrs/licenses - array[string]
+People/List People/Response Properties/items/attrs/department - string
+People/List People/Response Properties/items/attrs/manager - string
+People/List People/Response Properties/items/attrs/managerId - string
+People/List People/Response Properties/items/attrs/title - string
+People/List People/Response Properties/items/attrs/addresses - array[object]
+People/List People/Response Properties/items/attrs/addresses/attrs/country - string
+People/List People/Response Properties/items/attrs/addresses/attrs/locality - string
+People/List People/Response Properties/items/attrs/addresses/attrs/region - string
+People/List People/Response Properties/items/attrs/addresses/attrs/streetAddress - string
+People/List People/Response Properties/items/attrs/addresses/attrs/type - string
+People/List People/Response Properties/items/attrs/addresses/attrs/postalCode - string
+People/List People/Response Properties/items/attrs/created - string
+People/List People/Response Properties/items/attrs/lastModified - string
+People/List People/Response Properties/items/attrs/timezone - string
+People/List People/Response Properties/items/attrs/lastActivity - string
+People/List People/Response Properties/items/attrs/siteUrls - array[string]
+People/List People/Response Properties/items/attrs/sipAddresses - array[{"type": "personal-room","value": "testuser5@mycompany.webex.com","primary": false}]
+People/List People/Response Properties/items/attrs/status - enum
+People/List People/Response Properties/items/attrs/status/attrs/active - string
+People/List People/Response Properties/items/attrs/status/attrs/call - string
+People/List People/Response Properties/items/attrs/status/attrs/DoNotDisturb - string
+People/List People/Response Properties/items/attrs/status/attrs/inactive - string
+People/List People/Response Properties/items/attrs/status/attrs/meeting - string
+People/List People/Response Properties/items/attrs/status/attrs/OutOfOffice - string
+People/List People/Response Properties/items/attrs/status/attrs/pending - string
+People/List People/Response Properties/items/attrs/status/attrs/presenting - string
+People/List People/Response Properties/items/attrs/status/attrs/unknown - string
+People/List People/Response Properties/items/attrs/invitePending - enum
+People/List People/Response Properties/items/attrs/invitePending/attrs/true - string
+People/List People/Response Properties/items/attrs/invitePending/attrs/false - string
+People/List People/Response Properties/items/attrs/loginEnabled - enum
+People/List People/Response Properties/items/attrs/loginEnabled/attrs/true - string
+People/List People/Response Properties/items/attrs/loginEnabled/attrs/false - string
+People/List People/Response Properties/items/attrs/type - enum
+People/List People/Response Properties/items/attrs/type/attrs/person - string
+People/List People/Response Properties/items/attrs/type/attrs/bot - string
+People/List People/Response Properties/items/attrs/type/attrs/appuser - string
+People/List People/Response Properties/notFoundIds - array[string]
+People/Create a Person/Body Parameters/emails - array[string] (required)
+People/Create a Person/Body Parameters/phoneNumbers - array[object]
+People/Create a Person/Body Parameters/phoneNumbers/attrs/type - string
+People/Create a Person/Body Parameters/phoneNumbers/attrs/value - string
+People/Create a Person/Body Parameters/extension - string
+People/Create a Person/Body Parameters/locationId - string
+People/Create a Person/Body Parameters/displayName - string
+People/Create a Person/Body Parameters/firstName - string
+People/Create a Person/Body Parameters/lastName - string
+People/Create a Person/Body Parameters/avatar - string
+People/Create a Person/Body Parameters/orgId - string
+People/Create a Person/Body Parameters/roles - array[string]
+People/Create a Person/Body Parameters/licenses - array[string]
+People/Create a Person/Body Parameters/department - string
+People/Create a Person/Body Parameters/manager - string
+People/Create a Person/Body Parameters/managerId - string
+People/Create a Person/Body Parameters/title - string
+People/Create a Person/Body Parameters/addresses - array[object]
+People/Create a Person/Body Parameters/siteUrls - array[string]
+People/Create a Person/Query Parameters/callingData - boolean
+People/Create a Person/Response Properties/id - string
+People/Create a Person/Response Properties/emails - array[string]
+People/Create a Person/Response Properties/phoneNumbers - array[object]
+People/Create a Person/Response Properties/phoneNumbers/attrs/type - string
+People/Create a Person/Response Properties/phoneNumbers/attrs/value - string
+People/Create a Person/Response Properties/extension - string
+People/Create a Person/Response Properties/locationId - string
+People/Create a Person/Response Properties/displayName - string
+People/Create a Person/Response Properties/nickName - string
+People/Create a Person/Response Properties/firstName - string
+People/Create a Person/Response Properties/lastName - string
+People/Create a Person/Response Properties/avatar - string
+People/Create a Person/Response Properties/orgId - string
+People/Create a Person/Response Properties/roles - array[string]
+People/Create a Person/Response Properties/licenses - array[string]
+People/Create a Person/Response Properties/department - string
+People/Create a Person/Response Properties/manager - string
+People/Create a Person/Response Properties/managerId - string
+People/Create a Person/Response Properties/title - string
+People/Create a Person/Response Properties/addresses - array[object]
+People/Create a Person/Response Properties/addresses/attrs/country - string
+People/Create a Person/Response Properties/addresses/attrs/locality - string
+People/Create a Person/Response Properties/addresses/attrs/region - string
+People/Create a Person/Response Properties/addresses/attrs/streetAddress - string
+People/Create a Person/Response Properties/addresses/attrs/type - string
+People/Create a Person/Response Properties/addresses/attrs/postalCode - string
+People/Create a Person/Response Properties/created - string
+People/Create a Person/Response Properties/lastModified - string
+People/Create a Person/Response Properties/timezone - string
+People/Create a Person/Response Properties/lastActivity - string
+People/Create a Person/Response Properties/siteUrls - array[string]
+People/Create a Person/Response Properties/sipAddresses - array[{"type": "personal-room","value": "testuser5@mycompany.webex.com","primary": false}]
+People/Create a Person/Response Properties/status - enum
+People/Create a Person/Response Properties/status/attrs/active - string
+People/Create a Person/Response Properties/status/attrs/call - string
+People/Create a Person/Response Properties/status/attrs/DoNotDisturb - string
+People/Create a Person/Response Properties/status/attrs/inactive - string
+People/Create a Person/Response Properties/status/attrs/meeting - string
+People/Create a Person/Response Properties/status/attrs/OutOfOffice - string
+People/Create a Person/Response Properties/status/attrs/pending - string
+People/Create a Person/Response Properties/status/attrs/presenting - string
+People/Create a Person/Response Properties/status/attrs/unknown - string
+People/Create a Person/Response Properties/invitePending - enum
+People/Create a Person/Response Properties/invitePending/attrs/true - string
+People/Create a Person/Response Properties/invitePending/attrs/false - string
+People/Create a Person/Response Properties/loginEnabled - enum
+People/Create a Person/Response Properties/loginEnabled/attrs/true - string
+People/Create a Person/Response Properties/loginEnabled/attrs/false - string
+People/Create a Person/Response Properties/type - enum
+People/Create a Person/Response Properties/type/attrs/person - string
+People/Create a Person/Response Properties/type/attrs/bot - string
+People/Create a Person/Response Properties/type/attrs/appuser - string
+People/Get Person Details/Query Parameters/callingData - boolean
+People/Get Person Details/Response Properties/id - string
+People/Get Person Details/Response Properties/emails - array[string]
+People/Get Person Details/Response Properties/phoneNumbers - array[object]
+People/Get Person Details/Response Properties/phoneNumbers/attrs/type - string
+People/Get Person Details/Response Properties/phoneNumbers/attrs/value - string
+People/Get Person Details/Response Properties/extension - string
+People/Get Person Details/Response Properties/locationId - string
+People/Get Person Details/Response Properties/displayName - string
+People/Get Person Details/Response Properties/nickName - string
+People/Get Person Details/Response Properties/firstName - string
+People/Get Person Details/Response Properties/lastName - string
+People/Get Person Details/Response Properties/avatar - string
+People/Get Person Details/Response Properties/orgId - string
+People/Get Person Details/Response Properties/roles - array[string]
+People/Get Person Details/Response Properties/licenses - array[string]
+People/Get Person Details/Response Properties/department - string
+People/Get Person Details/Response Properties/manager - string
+People/Get Person Details/Response Properties/managerId - string
+People/Get Person Details/Response Properties/title - string
+People/Get Person Details/Response Properties/addresses - array[object]
+People/Get Person Details/Response Properties/addresses/attrs/country - string
+People/Get Person Details/Response Properties/addresses/attrs/locality - string
+People/Get Person Details/Response Properties/addresses/attrs/region - string
+People/Get Person Details/Response Properties/addresses/attrs/streetAddress - string
+People/Get Person Details/Response Properties/addresses/attrs/type - string
+People/Get Person Details/Response Properties/addresses/attrs/postalCode - string
+People/Get Person Details/Response Properties/created - string
+People/Get Person Details/Response Properties/lastModified - string
+People/Get Person Details/Response Properties/timezone - string
+People/Get Person Details/Response Properties/lastActivity - string
+People/Get Person Details/Response Properties/siteUrls - array[string]
+People/Get Person Details/Response Properties/sipAddresses - array[{"type": "personal-room","value": "testuser5@mycompany.webex.com","primary": false}]
+People/Get Person Details/Response Properties/status - enum
+People/Get Person Details/Response Properties/status/attrs/active - string
+People/Get Person Details/Response Properties/status/attrs/call - string
+People/Get Person Details/Response Properties/status/attrs/DoNotDisturb - string
+People/Get Person Details/Response Properties/status/attrs/inactive - string
+People/Get Person Details/Response Properties/status/attrs/meeting - string
+People/Get Person Details/Response Properties/status/attrs/OutOfOffice - string
+People/Get Person Details/Response Properties/status/attrs/pending - string
+People/Get Person Details/Response Properties/status/attrs/presenting - string
+People/Get Person Details/Response Properties/status/attrs/unknown - string
+People/Get Person Details/Response Properties/invitePending - enum
+People/Get Person Details/Response Properties/invitePending/attrs/true - string
+People/Get Person Details/Response Properties/invitePending/attrs/false - string
+People/Get Person Details/Response Properties/loginEnabled - enum
+People/Get Person Details/Response Properties/loginEnabled/attrs/true - string
+People/Get Person Details/Response Properties/loginEnabled/attrs/false - string
+People/Get Person Details/Response Properties/type - enum
+People/Get Person Details/Response Properties/type/attrs/person - string
+People/Get Person Details/Response Properties/type/attrs/bot - string
+People/Get Person Details/Response Properties/type/attrs/appuser - string
+People/Get Person Details/URI Parameters/personId - string (required)
+People/Update a Person/Body Parameters/emails - array[string]
+People/Update a Person/Body Parameters/phoneNumbers - array[object]
+People/Update a Person/Body Parameters/phoneNumbers/attrs/type - string
+People/Update a Person/Body Parameters/phoneNumbers/attrs/value - string
+People/Update a Person/Body Parameters/extension - string
+People/Update a Person/Body Parameters/locationId - string
+People/Update a Person/Body Parameters/displayName - string (required)
+People/Update a Person/Body Parameters/firstName - string
+People/Update a Person/Body Parameters/lastName - string
+People/Update a Person/Body Parameters/nickName - string
+People/Update a Person/Body Parameters/avatar - string
+People/Update a Person/Body Parameters/orgId - string
+People/Update a Person/Body Parameters/roles - array[string]
+People/Update a Person/Body Parameters/licenses - array[string]
+People/Update a Person/Body Parameters/department - string
+People/Update a Person/Body Parameters/manager - string
+People/Update a Person/Body Parameters/managerId - string
+People/Update a Person/Body Parameters/title - string
+People/Update a Person/Body Parameters/addresses - array[object]
+People/Update a Person/Body Parameters/siteUrls - array[string]
+People/Update a Person/Body Parameters/loginEnabled - boolean
+People/Update a Person/Query Parameters/callingData - boolean
+People/Update a Person/Query Parameters/showAllTypes - boolean
+People/Update a Person/Response Properties/id - string
+People/Update a Person/Response Properties/emails - array[string]
+People/Update a Person/Response Properties/phoneNumbers - array[object]
+People/Update a Person/Response Properties/phoneNumbers/attrs/type - string
+People/Update a Person/Response Properties/phoneNumbers/attrs/value - string
+People/Update a Person/Response Properties/extension - string
+People/Update a Person/Response Properties/locationId - string
+People/Update a Person/Response Properties/displayName - string
+People/Update a Person/Response Properties/nickName - string
+People/Update a Person/Response Properties/firstName - string
+People/Update a Person/Response Properties/lastName - string
+People/Update a Person/Response Properties/avatar - string
+People/Update a Person/Response Properties/orgId - string
+People/Update a Person/Response Properties/roles - array[string]
+People/Update a Person/Response Properties/licenses - array[string]
+People/Update a Person/Response Properties/department - string
+People/Update a Person/Response Properties/manager - string
+People/Update a Person/Response Properties/managerId - string
+People/Update a Person/Response Properties/title - string
+People/Update a Person/Response Properties/addresses - array[object]
+People/Update a Person/Response Properties/addresses/attrs/country - string
+People/Update a Person/Response Properties/addresses/attrs/locality - string
+People/Update a Person/Response Properties/addresses/attrs/region - string
+People/Update a Person/Response Properties/addresses/attrs/streetAddress - string
+People/Update a Person/Response Properties/addresses/attrs/type - string
+People/Update a Person/Response Properties/addresses/attrs/postalCode - string
+People/Update a Person/Response Properties/created - string
+People/Update a Person/Response Properties/lastModified - string
+People/Update a Person/Response Properties/timezone - string
+People/Update a Person/Response Properties/lastActivity - string
+People/Update a Person/Response Properties/siteUrls - array[string]
+People/Update a Person/Response Properties/sipAddresses - array[{"type": "personal-room","value": "testuser5@mycompany.webex.com","primary": false}]
+People/Update a Person/Response Properties/status - enum
+People/Update a Person/Response Properties/status/attrs/active - string
+People/Update a Person/Response Properties/status/attrs/call - string
+People/Update a Person/Response Properties/status/attrs/DoNotDisturb - string
+People/Update a Person/Response Properties/status/attrs/inactive - string
+People/Update a Person/Response Properties/status/attrs/meeting - string
+People/Update a Person/Response Properties/status/attrs/OutOfOffice - string
+People/Update a Person/Response Properties/status/attrs/pending - string
+People/Update a Person/Response Properties/status/attrs/presenting - string
+People/Update a Person/Response Properties/status/attrs/unknown - string
+People/Update a Person/Response Properties/invitePending - enum
+People/Update a Person/Response Properties/invitePending/attrs/true - string
+People/Update a Person/Response Properties/invitePending/attrs/false - string
+People/Update a Person/Response Properties/loginEnabled - enum
+People/Update a Person/Response Properties/loginEnabled/attrs/true - string
+People/Update a Person/Response Properties/loginEnabled/attrs/false - string
+People/Update a Person/Response Properties/type - enum
+People/Update a Person/Response Properties/type/attrs/person - string
+People/Update a Person/Response Properties/type/attrs/bot - string
+People/Update a Person/Response Properties/type/attrs/appuser - string
+People/Update a Person/URI Parameters/personId - string (required)
+People/Delete a Person/URI Parameters/personId - string (required)
+People/Get My Own Details/Query Parameters/callingData - boolean
+People/Get My Own Details/Response Properties/id - string
+People/Get My Own Details/Response Properties/emails - array[string]
+People/Get My Own Details/Response Properties/phoneNumbers - array[object]
+People/Get My Own Details/Response Properties/phoneNumbers/attrs/type - string
+People/Get My Own Details/Response Properties/phoneNumbers/attrs/value - string
+People/Get My Own Details/Response Properties/extension - string
+People/Get My Own Details/Response Properties/locationId - string
+People/Get My Own Details/Response Properties/displayName - string
+People/Get My Own Details/Response Properties/nickName - string
+People/Get My Own Details/Response Properties/firstName - string
+People/Get My Own Details/Response Properties/lastName - string
+People/Get My Own Details/Response Properties/avatar - string
+People/Get My Own Details/Response Properties/orgId - string
+People/Get My Own Details/Response Properties/roles - array[string]
+People/Get My Own Details/Response Properties/licenses - array[string]
+People/Get My Own Details/Response Properties/department - string
+People/Get My Own Details/Response Properties/manager - string
+People/Get My Own Details/Response Properties/managerId - string
+People/Get My Own Details/Response Properties/title - string
+People/Get My Own Details/Response Properties/addresses - array[object]
+People/Get My Own Details/Response Properties/addresses/attrs/country - string
+People/Get My Own Details/Response Properties/addresses/attrs/locality - string
+People/Get My Own Details/Response Properties/addresses/attrs/region - string
+People/Get My Own Details/Response Properties/addresses/attrs/streetAddress - string
+People/Get My Own Details/Response Properties/addresses/attrs/type - string
+People/Get My Own Details/Response Properties/addresses/attrs/postalCode - string
+People/Get My Own Details/Response Properties/created - string
+People/Get My Own Details/Response Properties/lastModified - string
+People/Get My Own Details/Response Properties/timezone - string
+People/Get My Own Details/Response Properties/lastActivity - string
+People/Get My Own Details/Response Properties/siteUrls - array[string]
+People/Get My Own Details/Response Properties/sipAddresses - array[{"type": "personal-room","value": "testuser5@mycompany.webex.com","primary": false}]
+People/Get My Own Details/Response Properties/status - enum
+People/Get My Own Details/Response Properties/status/attrs/active - string
+People/Get My Own Details/Response Properties/status/attrs/call - string
+People/Get My Own Details/Response Properties/status/attrs/DoNotDisturb - string
+People/Get My Own Details/Response Properties/status/attrs/inactive - string
+People/Get My Own Details/Response Properties/status/attrs/meeting - string
+People/Get My Own Details/Response Properties/status/attrs/OutOfOffice - string
+People/Get My Own Details/Response Properties/status/attrs/pending - string
+People/Get My Own Details/Response Properties/status/attrs/presenting - string
+People/Get My Own Details/Response Properties/status/attrs/unknown - string
+People/Get My Own Details/Response Properties/invitePending - enum
+People/Get My Own Details/Response Properties/invitePending/attrs/true - string
+People/Get My Own Details/Response Properties/invitePending/attrs/false - string
+People/Get My Own Details/Response Properties/loginEnabled - enum
+People/Get My Own Details/Response Properties/loginEnabled/attrs/true - string
+People/Get My Own Details/Response Properties/loginEnabled/attrs/false - string
+People/Get My Own Details/Response Properties/type - enum
+People/Get My Own Details/Response Properties/type/attrs/person - string
+People/Get My Own Details/Response Properties/type/attrs/bot - string
+People/Get My Own Details/Response Properties/type/attrs/appuser - string
 Webex Calling Organization Settings/Change Announcement Language/Body Parameters/agentEnabled - boolean
 Webex Calling Organization Settings/Change Announcement Language/Body Parameters/serviceEnabled - boolean
 Webex Calling Organization Settings/Change Announcement Language/Body Parameters/announcementLanguageCode - string (required)
@@ -320,17 +636,17 @@ Webex Calling Organization Settings/Get Details for an Auto Attendant/Response P
 Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/extensionEnabled - boolean
 Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations - KeyConfigurationsObject
 Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key - enum
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/0 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/1 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/2 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/3 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/4 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/5 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/6 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/7 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/8 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/9 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/# - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_0 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_1 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_2 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_3 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_4 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_5 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_6 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_7 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_8 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_9 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/hash - string
 Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/action - enum
 Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/action/attrs/TRANSFER_WITHOUT_PROMPT - string
 Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/businessHoursMenu/attrs/keyConfigurations/attrs/action/attrs/TRANSFER_WITH_PROMPT - string
@@ -350,17 +666,17 @@ Webex Calling Organization Settings/Get Details for an Auto Attendant/Response P
 Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/extensionEnabled - boolean
 Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations - KeyConfigurationsObject
 Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key - enum
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/0 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/1 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/2 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/3 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/4 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/5 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/6 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/7 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/8 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/9 - string
-Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/# - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_0 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_1 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_2 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_3 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_4 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_5 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_6 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_7 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_8 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_9 - string
+Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/hash - string
 Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/action - enum
 Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/action/attrs/TRANSFER_WITHOUT_PROMPT - string
 Webex Calling Organization Settings/Get Details for an Auto Attendant/Response Properties/afterHoursMenu/attrs/keyConfigurations/attrs/action/attrs/TRANSFER_WITH_PROMPT - string
@@ -405,17 +721,17 @@ Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/bus
 Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/extensionEnabled - boolean (required)
 Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations - KeyConfigurationsObject (required)
 Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key - enum (required)
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/0 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/1 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/2 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/3 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/4 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/5 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/6 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/7 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/8 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/9 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/# - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_0 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_1 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_2 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_3 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_4 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_5 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_6 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_7 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_8 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_9 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/hash - string
 Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/action - enum (required)
 Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/action/attrs/TRANSFER_WITHOUT_PROMPT - string
 Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/action/attrs/TRANSFER_WITH_PROMPT - string
@@ -435,17 +751,17 @@ Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/aft
 Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/extensionEnabled - boolean (required)
 Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations - KeyConfigurationsObject (required)
 Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key - enum (required)
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/0 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/1 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/2 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/3 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/4 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/5 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/6 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/7 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/8 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/9 - string
-Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/# - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_0 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_1 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_2 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_3 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_4 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_5 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_6 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_7 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_8 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_9 - string
+Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/hash - string
 Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/action - enum (required)
 Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/action/attrs/TRANSFER_WITHOUT_PROMPT - string
 Webex Calling Organization Settings/Create an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/action/attrs/TRANSFER_WITH_PROMPT - string
@@ -491,17 +807,17 @@ Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/bus
 Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/extensionEnabled - boolean (required)
 Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations - KeyConfigurationsObject (required)
 Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key - enum (required)
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/0 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/1 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/2 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/3 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/4 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/5 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/6 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/7 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/8 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/9 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/# - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_0 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_1 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_2 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_3 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_4 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_5 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_6 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_7 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_8 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_9 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/key/attrs/hash - string
 Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/action - enum (required)
 Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/action/attrs/TRANSFER_WITHOUT_PROMPT - string
 Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/businessHoursMenu/attrs/keyConfigurations/attrs/action/attrs/TRANSFER_WITH_PROMPT - string
@@ -521,17 +837,17 @@ Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/aft
 Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/extensionEnabled - boolean (required)
 Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations - KeyConfigurationsObject (required)
 Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key - enum (required)
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/0 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/1 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/2 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/3 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/4 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/5 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/6 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/7 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/8 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/9 - string
-Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/# - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_0 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_1 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_2 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_3 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_4 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_5 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_6 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_7 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_8 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/digit_9 - string
+Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/key/attrs/hash - string
 Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/action - enum (required)
 Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/action/attrs/TRANSFER_WITHOUT_PROMPT - string
 Webex Calling Organization Settings/Update an Auto Attendant/Body Parameters/afterHoursMenu/attrs/keyConfigurations/attrs/action/attrs/TRANSFER_WITH_PROMPT - string
@@ -583,6 +899,8 @@ Webex Calling Organization Settings/Update Call Forwarding Settings for an Auto 
 Webex Calling Organization Settings/Update Call Forwarding Settings for an Auto Attendant/Body Parameters/callForwarding/attrs/selective/attrs/ringReminderEnabled - boolean
 Webex Calling Organization Settings/Update Call Forwarding Settings for an Auto Attendant/Body Parameters/callForwarding/attrs/selective/attrs/sendToVoicemailEnabled - boolean
 Webex Calling Organization Settings/Update Call Forwarding Settings for an Auto Attendant/Body Parameters/callForwarding/attrs/rules - array[CallForwardRulesModifyObject]
+Webex Calling Organization Settings/Update Call Forwarding Settings for an Auto Attendant/Body Parameters/callForwarding/attrs/rules/attrs/id - string (required)
+Webex Calling Organization Settings/Update Call Forwarding Settings for an Auto Attendant/Body Parameters/callForwarding/attrs/rules/attrs/enabled - boolean
 Webex Calling Organization Settings/Update Call Forwarding Settings for an Auto Attendant/Query Parameters/orgId - string
 Webex Calling Organization Settings/Update Call Forwarding Settings for an Auto Attendant/URI Parameters/locationId - string (required)
 Webex Calling Organization Settings/Update Call Forwarding Settings for an Auto Attendant/URI Parameters/autoAttendantId - string (required)
@@ -604,9 +922,13 @@ Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for 
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsFrom/attrs/customNumbers/attrs/privateNumberEnabled - boolean (required)
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsFrom/attrs/customNumbers/attrs/unavailableNumberEnabled - boolean (required)
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsFrom/attrs/customNumbers/attrs/numbers - array[string] (required)
-Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsFrom/attrs/customNumbers/attrs/numbers/attrs/["+12147691003", "+12147691004"] - string
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsTo - CallForwardSelectiveCallsToObject
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsTo/attrs/numbers - array[CallForwardSelectiveCallsToNumbersObject]
+Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsTo/attrs/numbers/attrs/phoneNumber - string
+Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsTo/attrs/numbers/attrs/extension - string
+Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsTo/attrs/numbers/attrs/type - enum (required)
+Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsTo/attrs/numbers/attrs/type/attrs/PRIMARY - string
+Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsTo/attrs/numbers/attrs/type/attrs/ALTERNATE - string
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for an Auto Attendant/Query Parameters/orgId - string
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for an Auto Attendant/Response Properties/id - string
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for an Auto Attendant/URI Parameters/locationId - string (required)
@@ -659,9 +981,13 @@ Webex Calling Organization Settings/Update Selective Call Forwarding Rule for an
 Webex Calling Organization Settings/Update Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsFrom/attrs/customNumbers/attrs/privateNumberEnabled - boolean (required)
 Webex Calling Organization Settings/Update Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsFrom/attrs/customNumbers/attrs/unavailableNumberEnabled - boolean (required)
 Webex Calling Organization Settings/Update Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsFrom/attrs/customNumbers/attrs/numbers - array[string] (required)
-Webex Calling Organization Settings/Update Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsFrom/attrs/customNumbers/attrs/numbers/attrs/["+12147691003", "+12147691004"] - string
 Webex Calling Organization Settings/Update Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsTo - CallForwardSelectiveCallsToObject
 Webex Calling Organization Settings/Update Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsTo/attrs/numbers - array[CallForwardSelectiveCallsToNumbersObject]
+Webex Calling Organization Settings/Update Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsTo/attrs/numbers/attrs/phoneNumber - string
+Webex Calling Organization Settings/Update Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsTo/attrs/numbers/attrs/extension - string
+Webex Calling Organization Settings/Update Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsTo/attrs/numbers/attrs/type - enum (required)
+Webex Calling Organization Settings/Update Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsTo/attrs/numbers/attrs/type/attrs/PRIMARY - string
+Webex Calling Organization Settings/Update Selective Call Forwarding Rule for an Auto Attendant/Body Parameters/callsTo/attrs/numbers/attrs/type/attrs/ALTERNATE - string
 Webex Calling Organization Settings/Update Selective Call Forwarding Rule for an Auto Attendant/Query Parameters/orgId - string
 Webex Calling Organization Settings/Update Selective Call Forwarding Rule for an Auto Attendant/Response Properties/id - string
 Webex Calling Organization Settings/Update Selective Call Forwarding Rule for an Auto Attendant/URI Parameters/locationId - string (required)
@@ -937,7 +1263,7 @@ Webex Calling Organization Settings/Create a Call Queue/Body Parameters/callPoli
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/callPolicies/attrs/distinctiveRing/attrs/ringPattern/attrs/SHORT_LONG_SHORT - string
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings - CallQueueQueueSettingsObject (required)
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/queueSize - number (required)
-Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/callOfferToneEnabled `true` - boolean
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/callOfferToneEnabled - boolean
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/resetCallStatisticsEnabled - boolean
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/overflow - object (required)
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/overflow/attrs/action - enum (required)
@@ -956,6 +1282,7 @@ Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSet
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/agents - array[PostPersonPlaceObject] (required)
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/agents/attrs/id - string (required)
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/agents/attrs/weight - string
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/phoneNumberForOutgoingCallsEnabled - boolean
 Webex Calling Organization Settings/Create a Call Queue/Query Parameters/orgId - string
 Webex Calling Organization Settings/Create a Call Queue/Response Properties/id - string
 Webex Calling Organization Settings/Create a Call Queue/URI Parameters/locationId - string (required)
@@ -1009,7 +1336,7 @@ Webex Calling Organization Settings/Get Details for a Call Queue/Response Proper
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/callPolicies/attrs/distinctiveRing/object/ringPattern/attrs/SHORT_LONG_SHORT - string
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings - CallQueueQueueSettingsObject
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/queueSize - number
-Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/callOfferToneEnabled `true` - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/callOfferToneEnabled - boolean
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/resetCallStatisticsEnabled - boolean
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/overflow - object
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/overflow/object/action - enum
@@ -1033,6 +1360,7 @@ Webex Calling Organization Settings/Get Details for a Call Queue/Response Proper
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/agents/attrs/phoneNumber - string
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/agents/attrs/extension - string
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/agents/attrs/weight - string
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/phoneNumberForOutgoingCallsEnabled - boolean
 Webex Calling Organization Settings/Get Details for a Call Queue/URI Parameters/locationId - string (required)
 Webex Calling Organization Settings/Get Details for a Call Queue/URI Parameters/queueId - string (required)
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/enabled - boolean
@@ -1046,6 +1374,12 @@ Webex Calling Organization Settings/Update a Call Queue/Body Parameters/extensio
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/alternateNumberSettings - object
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/alternateNumberSettings/attrs/distinctiveRingEnabled - boolean
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/alternateNumberSettings/attrs/alternateNumbers - array[AlternateNumbersWithPattern]
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/alternateNumberSettings/attrs/alternateNumbers/attrs/phoneNumber - string (required)
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/alternateNumberSettings/attrs/alternateNumbers/attrs/ringPattern - enum
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/alternateNumberSettings/attrs/alternateNumbers/attrs/ringPattern/attrs/NORMAL - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/alternateNumberSettings/attrs/alternateNumbers/attrs/ringPattern/attrs/LONG_LONG - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/alternateNumberSettings/attrs/alternateNumbers/attrs/ringPattern/attrs/SHORT_SHORT_LONG - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/alternateNumberSettings/attrs/alternateNumbers/attrs/ringPattern/attrs/SHORT_LONG_SHORT - string
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/callPolicies - ModifyCallQueueCallPolicyObject
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/callPolicies/attrs/policy - HuntPolicySelection
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/callPolicies/attrs/policy/attrs/CIRCULAR - string
@@ -1070,7 +1404,7 @@ Webex Calling Organization Settings/Update a Call Queue/Body Parameters/callPoli
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/callPolicies/attrs/distinctiveRing/attrs/ringPattern/attrs/SHORT_LONG_SHORT - string
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings - CallQueueQueueSettingsObject (required)
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/queueSize - number (required)
-Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/callOfferToneEnabled `true` - boolean
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/callOfferToneEnabled - boolean
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/resetCallStatisticsEnabled - boolean
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/overflow - object (required)
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/overflow/attrs/action - enum (required)
@@ -1090,6 +1424,7 @@ Webex Calling Organization Settings/Update a Call Queue/Body Parameters/allowCal
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/agents - array[PostPersonPlaceObject]
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/agents/attrs/id - string (required)
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/agents/attrs/weight - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/phoneNumberForOutgoingCallsEnabled - boolean
 Webex Calling Organization Settings/Update a Call Queue/Query Parameters/orgId - string
 Webex Calling Organization Settings/Update a Call Queue/URI Parameters/locationId - string (required)
 Webex Calling Organization Settings/Update a Call Queue/URI Parameters/queueId - string (required)
@@ -1136,6 +1471,8 @@ Webex Calling Organization Settings/Update Call Forwarding Settings for a Call Q
 Webex Calling Organization Settings/Update Call Forwarding Settings for a Call Queue/Body Parameters/callForwarding/attrs/selective/attrs/ringReminderEnabled - boolean
 Webex Calling Organization Settings/Update Call Forwarding Settings for a Call Queue/Body Parameters/callForwarding/attrs/selective/attrs/destinationVoicemailEnabled - boolean
 Webex Calling Organization Settings/Update Call Forwarding Settings for a Call Queue/Body Parameters/callForwarding/attrs/rules - array[CallForwardRulesSet]
+Webex Calling Organization Settings/Update Call Forwarding Settings for a Call Queue/Body Parameters/callForwarding/attrs/rules/attrs/id - string (required)
+Webex Calling Organization Settings/Update Call Forwarding Settings for a Call Queue/Body Parameters/callForwarding/attrs/rules/attrs/enabled - boolean
 Webex Calling Organization Settings/Update Call Forwarding Settings for a Call Queue/Query Parameters/orgId - string
 Webex Calling Organization Settings/Update Call Forwarding Settings for a Call Queue/URI Parameters/locationId - string (required)
 Webex Calling Organization Settings/Update Call Forwarding Settings for a Call Queue/URI Parameters/queueId - string (required)
@@ -1159,6 +1496,11 @@ Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for 
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Call Queue/Body Parameters/callsFrom/attrs/customNumbers/attrs/numbers - array[string]
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Call Queue/Body Parameters/callsTo - object (required)
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Call Queue/Body Parameters/callsTo/attrs/numbers - array[CallForwardingNumbers]
+Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Call Queue/Body Parameters/callsTo/attrs/numbers/attrs/phoneNumber - string
+Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Call Queue/Body Parameters/callsTo/attrs/numbers/attrs/extension - string
+Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Call Queue/Body Parameters/callsTo/attrs/numbers/attrs/type - enum (required)
+Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Call Queue/Body Parameters/callsTo/attrs/numbers/attrs/type/attrs/PRIMARY - string
+Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Call Queue/Body Parameters/callsTo/attrs/numbers/attrs/type/attrs/ALTERNATE - string
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Call Queue/Query Parameters/orgId - string
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Call Queue/Response Properties/id - string
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Call Queue/URI Parameters/locationId - string (required)
@@ -1213,6 +1555,11 @@ Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for 
 Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Call Queue/Body Parameters/callsFrom/attrs/customNumbers/attrs/numbers - array[string]
 Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Call Queue/Body Parameters/callsTo - object
 Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Call Queue/Body Parameters/callsTo/attrs/numbers - array[CallForwardingNumbers]
+Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Call Queue/Body Parameters/callsTo/attrs/numbers/attrs/phoneNumber - string
+Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Call Queue/Body Parameters/callsTo/attrs/numbers/attrs/extension - string
+Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Call Queue/Body Parameters/callsTo/attrs/numbers/attrs/type - enum (required)
+Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Call Queue/Body Parameters/callsTo/attrs/numbers/attrs/type/attrs/PRIMARY - string
+Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Call Queue/Body Parameters/callsTo/attrs/numbers/attrs/type/attrs/ALTERNATE - string
 Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Call Queue/Query Parameters/orgId - string
 Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Call Queue/Response Properties/id - string
 Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Call Queue/URI Parameters/locationId - string (required)
@@ -1373,7 +1720,6 @@ Webex Calling Organization Settings/Test Call Routing/Response Properties/unknow
 Webex Calling Organization Settings/Test Call Routing/Response Properties/unknownNumber/attrs/trunkLocationName - string
 Webex Calling Organization Settings/Test Call Routing/Response Properties/unknownNumber/attrs/trunkLocationId - string
 Webex Calling Organization Settings/Validate the List of Extensions/Body Parameters/extensions - array[string]
-Webex Calling Organization Settings/Validate the List of Extensions/Body Parameters/extensions/attrs/Possible values:  - 
 Webex Calling Organization Settings/Validate the List of Extensions/Query Parameters/orgId - string
 Webex Calling Organization Settings/Validate Extensions/Body Parameters/extensions - array[string] (required)
 Webex Calling Organization Settings/Validate Extensions/Query Parameters/orgId - string
@@ -1564,6 +1910,8 @@ Webex Calling Organization Settings/Update Call Forwarding Settings for a Hunt G
 Webex Calling Organization Settings/Update Call Forwarding Settings for a Hunt Group/Body Parameters/callForwarding/attrs/selective/attrs/ringReminderEnabled - boolean
 Webex Calling Organization Settings/Update Call Forwarding Settings for a Hunt Group/Body Parameters/callForwarding/attrs/selective/attrs/destinationVoicemailEnabled - boolean
 Webex Calling Organization Settings/Update Call Forwarding Settings for a Hunt Group/Body Parameters/callForwarding/attrs/rules - array[CallForwardRulesSet]
+Webex Calling Organization Settings/Update Call Forwarding Settings for a Hunt Group/Body Parameters/callForwarding/attrs/rules/attrs/id - string (required)
+Webex Calling Organization Settings/Update Call Forwarding Settings for a Hunt Group/Body Parameters/callForwarding/attrs/rules/attrs/enabled - boolean
 Webex Calling Organization Settings/Update Call Forwarding Settings for a Hunt Group/Query Parameters/orgId - string
 Webex Calling Organization Settings/Update Call Forwarding Settings for a Hunt Group/URI Parameters/locationId - string (required)
 Webex Calling Organization Settings/Update Call Forwarding Settings for a Hunt Group/URI Parameters/huntGroupId - string (required)
@@ -1587,6 +1935,11 @@ Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for 
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Hunt Group/Body Parameters/callsFrom/attrs/customNumbers/attrs/numbers - array[string]
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Hunt Group/Body Parameters/callsTo - object (required)
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Hunt Group/Body Parameters/callsTo/attrs/numbers - array[CallForwardingNumbers]
+Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Hunt Group/Body Parameters/callsTo/attrs/numbers/attrs/phoneNumber - string
+Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Hunt Group/Body Parameters/callsTo/attrs/numbers/attrs/extension - string
+Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Hunt Group/Body Parameters/callsTo/attrs/numbers/attrs/type - enum (required)
+Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Hunt Group/Body Parameters/callsTo/attrs/numbers/attrs/type/attrs/PRIMARY - string
+Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Hunt Group/Body Parameters/callsTo/attrs/numbers/attrs/type/attrs/ALTERNATE - string
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Hunt Group/Query Parameters/orgId - string
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Hunt Group/Response Properties/id - string
 Webex Calling Organization Settings/Create a Selective Call Forwarding Rule for a Hunt Group/URI Parameters/locationId - string (required)
@@ -1641,6 +1994,11 @@ Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for 
 Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Hunt Group/Body Parameters/callsFrom/attrs/customNumbers/attrs/numbers - array[string]
 Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Hunt Group/Body Parameters/callsTo - object
 Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Hunt Group/Body Parameters/callsTo/attrs/numbers - array[CallForwardingNumbers]
+Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Hunt Group/Body Parameters/callsTo/attrs/numbers/attrs/phoneNumber - string
+Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Hunt Group/Body Parameters/callsTo/attrs/numbers/attrs/extension - string
+Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Hunt Group/Body Parameters/callsTo/attrs/numbers/attrs/type - enum (required)
+Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Hunt Group/Body Parameters/callsTo/attrs/numbers/attrs/type/attrs/PRIMARY - string
+Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Hunt Group/Body Parameters/callsTo/attrs/numbers/attrs/type/attrs/ALTERNATE - string
 Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Hunt Group/Query Parameters/orgId - string
 Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Hunt Group/Response Properties/id - string
 Webex Calling Organization Settings/Update a Selective Call Forwarding Rule for a Hunt Group/URI Parameters/locationId - string (required)
@@ -1752,7 +2110,6 @@ Webex Calling Organization Settings/Update Location Webex Calling Details/Body P
 Webex Calling Organization Settings/Update Location Webex Calling Details/Query Parameters/orgId - string
 Webex Calling Organization Settings/Update Location Webex Calling Details/URI Parameters/locationId - string (required)
 Webex Calling Organization Settings/Generate example password for Location/Body Parameters/generate - array[PasswordGenerate]
-Webex Calling Organization Settings/Generate example password for Location/Body Parameters/generate/attrs/SIP - string
 Webex Calling Organization Settings/Generate example password for Location/Query Parameters/orgId - string
 Webex Calling Organization Settings/Generate example password for Location/Response Properties/exampleSipPassword - string
 Webex Calling Organization Settings/Generate example password for Location/URI Parameters/locationId - string (required)
@@ -1977,7 +2334,7 @@ Webex Calling Organization Settings/Read the List of Routing Choices/Response Pr
 Webex Calling Organization Settings/Read the List of Routing Choices/Response Properties/routeIdentities/attrs/type/attrs/ROUTE_GROUP - string
 Webex Calling Organization Settings/Read the List of Routing Choices/Response Properties/routeIdentities/attrs/type/attrs/TRUNK - string
 Webex Calling Organization Settings/Read the List of Schedules/Query Parameters/orgId - string
-Webex Calling Organization Settings/Read the List of Schedules/Query Parameters/type - enum
+Webex Calling Organization Settings/Read the List of Schedules/Query Parameters/type - string
 Webex Calling Organization Settings/Read the List of Schedules/Query Parameters/max - number
 Webex Calling Organization Settings/Read the List of Schedules/Query Parameters/start - number
 Webex Calling Organization Settings/Read the List of Schedules/Query Parameters/name - string
@@ -2059,7 +2416,7 @@ Webex Calling Organization Settings/Get Details for a Schedule/Response Properti
 Webex Calling Organization Settings/Get Details for a Schedule/Response Properties/events/attrs/recurrence/attrs/recurYearlyByDay/attrs/month/attrs/NOVEMBER - string
 Webex Calling Organization Settings/Get Details for a Schedule/Response Properties/events/attrs/recurrence/attrs/recurYearlyByDay/attrs/month/attrs/DECEMBER - string
 Webex Calling Organization Settings/Get Details for a Schedule/URI Parameters/locationId - string (required)
-Webex Calling Organization Settings/Get Details for a Schedule/URI Parameters/type - enum (required)
+Webex Calling Organization Settings/Get Details for a Schedule/URI Parameters/type - string (required)
 Webex Calling Organization Settings/Get Details for a Schedule/URI Parameters/scheduleId - string (required)
 Webex Calling Organization Settings/Create a Schedule/Body Parameters/type - enum (required)
 Webex Calling Organization Settings/Create a Schedule/Body Parameters/type/attrs/businessHours - string
@@ -2195,11 +2552,11 @@ Webex Calling Organization Settings/Update a Schedule/Body Parameters/events/att
 Webex Calling Organization Settings/Update a Schedule/Query Parameters/orgId - string
 Webex Calling Organization Settings/Update a Schedule/Response Properties/id - string
 Webex Calling Organization Settings/Update a Schedule/URI Parameters/locationId - string (required)
-Webex Calling Organization Settings/Update a Schedule/URI Parameters/type - enum (required)
+Webex Calling Organization Settings/Update a Schedule/URI Parameters/type - string (required)
 Webex Calling Organization Settings/Update a Schedule/URI Parameters/scheduleId - string (required)
 Webex Calling Organization Settings/Delete a Schedule/Query Parameters/orgId - string
 Webex Calling Organization Settings/Delete a Schedule/URI Parameters/locationId - string (required)
-Webex Calling Organization Settings/Delete a Schedule/URI Parameters/type - enum (required)
+Webex Calling Organization Settings/Delete a Schedule/URI Parameters/type - string (required)
 Webex Calling Organization Settings/Delete a Schedule/URI Parameters/scheduleId - string (required)
 Webex Calling Organization Settings/Get Details for a Schedule Event/Query Parameters/orgId - string
 Webex Calling Organization Settings/Get Details for a Schedule Event/Response Properties/id - string
@@ -2264,7 +2621,7 @@ Webex Calling Organization Settings/Get Details for a Schedule Event/Response Pr
 Webex Calling Organization Settings/Get Details for a Schedule Event/Response Properties/recurrence/attrs/recurYearlyByDay/attrs/month/attrs/NOVEMBER - string
 Webex Calling Organization Settings/Get Details for a Schedule Event/Response Properties/recurrence/attrs/recurYearlyByDay/attrs/month/attrs/DECEMBER - string
 Webex Calling Organization Settings/Get Details for a Schedule Event/URI Parameters/locationId - string (required)
-Webex Calling Organization Settings/Get Details for a Schedule Event/URI Parameters/type - enum (required)
+Webex Calling Organization Settings/Get Details for a Schedule Event/URI Parameters/type - string (required)
 Webex Calling Organization Settings/Get Details for a Schedule Event/URI Parameters/scheduleId - string (required)
 Webex Calling Organization Settings/Get Details for a Schedule Event/URI Parameters/eventId - string (required)
 Webex Calling Organization Settings/Create a Schedule Event/Body Parameters/name - string (required)
@@ -2330,7 +2687,7 @@ Webex Calling Organization Settings/Create a Schedule Event/Body Parameters/recu
 Webex Calling Organization Settings/Create a Schedule Event/Query Parameters/orgId - string
 Webex Calling Organization Settings/Create a Schedule Event/Response Properties/id - string
 Webex Calling Organization Settings/Create a Schedule Event/URI Parameters/locationId - string (required)
-Webex Calling Organization Settings/Create a Schedule Event/URI Parameters/type - enum (required)
+Webex Calling Organization Settings/Create a Schedule Event/URI Parameters/type - string (required)
 Webex Calling Organization Settings/Create a Schedule Event/URI Parameters/scheduleId - string (required)
 Webex Calling Organization Settings/Update a Schedule Event/Body Parameters/name - string (required)
 Webex Calling Organization Settings/Update a Schedule Event/Body Parameters/startDate - string (required)
@@ -2395,12 +2752,12 @@ Webex Calling Organization Settings/Update a Schedule Event/Body Parameters/recu
 Webex Calling Organization Settings/Update a Schedule Event/Query Parameters/orgId - string
 Webex Calling Organization Settings/Update a Schedule Event/Response Properties/id - string
 Webex Calling Organization Settings/Update a Schedule Event/URI Parameters/locationId - string (required)
-Webex Calling Organization Settings/Update a Schedule Event/URI Parameters/type - enum (required)
+Webex Calling Organization Settings/Update a Schedule Event/URI Parameters/type - string (required)
 Webex Calling Organization Settings/Update a Schedule Event/URI Parameters/scheduleId - string (required)
 Webex Calling Organization Settings/Update a Schedule Event/URI Parameters/eventId - string (required)
 Webex Calling Organization Settings/Delete a Schedule Event/Query Parameters/orgId - string
 Webex Calling Organization Settings/Delete a Schedule Event/URI Parameters/locationId - string (required)
-Webex Calling Organization Settings/Delete a Schedule Event/URI Parameters/type - enum (required)
+Webex Calling Organization Settings/Delete a Schedule Event/URI Parameters/type - string (required)
 Webex Calling Organization Settings/Delete a Schedule Event/URI Parameters/scheduleId - string (required)
 Webex Calling Organization Settings/Delete a Schedule Event/URI Parameters/eventId - string (required)
 Webex Calling Organization Settings/Get Voicemail Settings/Query Parameters/orgId - string
@@ -2644,7 +3001,6 @@ Webex Calling Organization Settings/Modify Dial Patterns/Body Parameters/deleteA
 Webex Calling Organization Settings/Modify Dial Patterns/Query Parameters/orgId - string
 Webex Calling Organization Settings/Modify Dial Patterns/URI Parameters/dialPlanId - string (required)
 Webex Calling Organization Settings/Validate a Dial Pattern/Body Parameters/dialPatterns - array[string] (required)
-Webex Calling Organization Settings/Validate a Dial Pattern/Body Parameters/dialPatterns/attrs/Possible values:  - 
 Webex Calling Organization Settings/Validate a Dial Pattern/Query Parameters/orgId - string
 Webex Calling Organization Settings/Validate a Dial Pattern/Response Properties/status - DialPatternValidationStatus
 Webex Calling Organization Settings/Validate a Dial Pattern/Response Properties/status/attrs/ERRORS - string
@@ -2677,7 +3033,6 @@ Webex Calling Organization Settings/Create a Dial Plan/Body Parameters/routeType
 Webex Calling Organization Settings/Create a Dial Plan/Body Parameters/routeType/attrs/ROUTE_GROUP - string
 Webex Calling Organization Settings/Create a Dial Plan/Body Parameters/routeType/attrs/TRUNK - string
 Webex Calling Organization Settings/Create a Dial Plan/Body Parameters/dialPatterns - array[string]
-Webex Calling Organization Settings/Create a Dial Plan/Body Parameters/dialPatterns/attrs/Possible values:  - 
 Webex Calling Organization Settings/Create a Dial Plan/Query Parameters/orgId - string
 Webex Calling Organization Settings/Create a Dial Plan/Response Properties/id - string
 Webex Calling Organization Settings/Get a Dial Plan/Query Parameters/orgId - string
@@ -2967,6 +3322,200 @@ Webex Calling Organization Settings/Get Local Gateway Usage Count/Response Prope
 Webex Calling Organization Settings/Get Local Gateway Usage Count/Response Properties/dialPlanCount - number
 Webex Calling Organization Settings/Get Local Gateway Usage Count/Response Properties/routeGroupCount - number
 Webex Calling Organization Settings/Get Local Gateway Usage Count/URI Parameters/trunkId - string (required)
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Query Parameters/orgId - string
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/holidayServiceEnabled - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/action - enum
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/action/attrs/BUSY - string
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/action/attrs/TRANSFER - string
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/holidayScheduleLevel - enum
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/holidayScheduleLevel/attrs/LOCATION - string
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/holidayScheduleLevel/attrs/ORGANIZATION - string
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/holidayScheduleName - string
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/transferPhoneNumber - string
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/playAnnouncementBeforeEnabled - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/audioMessageSelection - enum
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/audioMessageSelection/attrs/DEFAULT - string
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/audioMessageSelection/attrs/CUSTOM - string
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/audioFiles - array[CallQueueAudioFilesObject]
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/audioFiles/attrs/fileName - string
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/audioFiles/attrs/mediaFileType - enum
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/audioFiles/attrs/mediaFileType/attrs/WMA - string
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/audioFiles/attrs/mediaFileType/attrs/WAV - string
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/audioFiles/attrs/mediaFileType/attrs/3GP - string
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/holidaySchedules - array[CallQueueHolidaySchedulesObject]
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/holidaySchedules/attrs/scheduleName - string
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/holidaySchedules/attrs/scheduleLevel - enum
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/holidaySchedules/attrs/scheduleLevel/attrs/LOCATION - string
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/Response Properties/holidaySchedules/attrs/scheduleLevel/attrs/ORGANIZATION - string
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/URI Parameters/locationId - string (required)
+Webex Calling Organization Settings/Get Details for a Call Queue Holiday Service/URI Parameters/queueId - string (required)
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Body Parameters/holidayServiceEnabled - boolean (required)
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Body Parameters/action - enum (required)
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Body Parameters/action/attrs/BUSY - string
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Body Parameters/action/attrs/TRANSFER - string
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Body Parameters/holidayScheduleLevel - enum (required)
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Body Parameters/holidayScheduleLevel/attrs/LOCATION - string
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Body Parameters/holidayScheduleLevel/attrs/ORGANIZATION - string
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Body Parameters/holidayScheduleName - string
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Body Parameters/transferPhoneNumber - string
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Body Parameters/playAnnouncementBeforeEnabled - boolean (required)
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Body Parameters/audioMessageSelection - enum (required)
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Body Parameters/audioMessageSelection/attrs/DEFAULT - string
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Body Parameters/audioMessageSelection/attrs/CUSTOM - string
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Body Parameters/audioFiles - array[CallQueueAudioFilesObject]
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Body Parameters/audioFiles/attrs/fileName - string (required)
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Body Parameters/audioFiles/attrs/mediaFileType - enum (required)
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Body Parameters/audioFiles/attrs/mediaFileType/attrs/WMA - string
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Body Parameters/audioFiles/attrs/mediaFileType/attrs/WAV - string
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Body Parameters/audioFiles/attrs/mediaFileType/attrs/3GP - string
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/Query Parameters/orgId - string
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/URI Parameters/locationId - string (required)
+Webex Calling Organization Settings/Update a Call Queue Holiday Service/URI Parameters/queueId - string (required)
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Query Parameters/orgId - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/nightServiceEnabled - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/action - enum
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/action/attrs/BUSY - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/action/attrs/TRANSFER - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/transferPhoneNumber - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/playAnnouncementBeforeEnabled - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/announcementMode - enum
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/announcementMode/attrs/NORMAL - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/announcementMode/attrs/MANUAL - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/audioMessageSelection - enum
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/audioMessageSelection/attrs/DEFAULT - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/audioMessageSelection/attrs/CUSTOM - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/audioFiles - array[CallQueueAudioFilesObject]
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/audioFiles/attrs/fileName - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/audioFiles/attrs/mediaFileType - enum
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/audioFiles/attrs/mediaFileType/attrs/WMA - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/audioFiles/attrs/mediaFileType/attrs/WAV - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/audioFiles/attrs/mediaFileType/attrs/3GP - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/businessHoursName - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/businessHoursLevel - enum
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/businessHoursLevel/attrs/ORGANIZATION - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/businessHoursLevel/attrs/LOCATION - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/businessHourSchedules - array[CallQueueNightSchedulesObject]
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/businessHourSchedules/attrs/scheduleName - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/businessHourSchedules/attrs/scheduleLevel - enum
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/businessHourSchedules/attrs/scheduleLevel/attrs/LOCATION - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/businessHourSchedules/attrs/scheduleLevel/attrs/ORGANIZATION - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/forceNightServiceEnabled - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/manualAudioMessageSelection - enum
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/manualAudioMessageSelection/attrs/DEFAULT - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/manualAudioMessageSelection/attrs/CUSTOM - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/manualAudioFiles - array[CallQueueAudioFilesObject]
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/manualAudioFiles/attrs/fileName - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/manualAudioFiles/attrs/mediaFileType - enum
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/manualAudioFiles/attrs/mediaFileType/attrs/WMA - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/manualAudioFiles/attrs/mediaFileType/attrs/WAV - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/Response Properties/manualAudioFiles/attrs/mediaFileType/attrs/3GP - string
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/URI Parameters/locationId - string (required)
+Webex Calling Organization Settings/Get Details for a Call Queue Night Service/URI Parameters/queueId - string (required)
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/nightServiceEnabled - boolean (required)
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/action - enum
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/action/attrs/BUSY - string
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/action/attrs/TRANSFER - string
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/transferPhoneNumber - string
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/playAnnouncementBeforeEnabled - boolean (required)
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/announcementMode - enum (required)
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/announcementMode/attrs/NORMAL - string
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/announcementMode/attrs/MANUAL - string
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/audioMessageSelection - enum (required)
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/audioMessageSelection/attrs/DEFAULT - string
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/audioMessageSelection/attrs/CUSTOM - string
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/audioFiles - array[CallQueueAudioFilesObject]
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/audioFiles/attrs/fileName - string (required)
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/audioFiles/attrs/mediaFileType - enum (required)
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/audioFiles/attrs/mediaFileType/attrs/WMA - string
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/audioFiles/attrs/mediaFileType/attrs/WAV - string
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/audioFiles/attrs/mediaFileType/attrs/3GP - string
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/businessHoursName - string
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/businessHoursLevel - enum
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/businessHoursLevel/attrs/ORGANIZATION - string
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/businessHoursLevel/attrs/LOCATION - string
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/forceNightServiceEnabled - boolean (required)
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/manualAudioMessageSelection - enum (required)
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/manualAudioMessageSelection/attrs/DEFAULT - string
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/manualAudioMessageSelection/attrs/CUSTOM - string
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/manualAudioFiles - array[CallQueueAudioFilesObject]
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/manualAudioFiles/attrs/fileName - string (required)
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/manualAudioFiles/attrs/mediaFileType - enum (required)
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/manualAudioFiles/attrs/mediaFileType/attrs/WMA - string
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/manualAudioFiles/attrs/mediaFileType/attrs/WAV - string
+Webex Calling Organization Settings/Update a Call Queue Night Service/Body Parameters/manualAudioFiles/attrs/mediaFileType/attrs/3GP - string
+Webex Calling Organization Settings/Update a Call Queue Night Service/Query Parameters/orgId - string
+Webex Calling Organization Settings/Update a Call Queue Night Service/URI Parameters/locationId - string (required)
+Webex Calling Organization Settings/Update a Call Queue Night Service/URI Parameters/queueId - string (required)
+Webex Calling Organization Settings/Get Details for a Call Queue Forced Forward/Query Parameters/orgId - string
+Webex Calling Organization Settings/Get Details for a Call Queue Forced Forward/Response Properties/forcedForwardEnabled - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue Forced Forward/Response Properties/transferPhoneNumber - string
+Webex Calling Organization Settings/Get Details for a Call Queue Forced Forward/Response Properties/playAnnouncementBeforeEnabled - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue Forced Forward/Response Properties/audioMessageSelection - enum
+Webex Calling Organization Settings/Get Details for a Call Queue Forced Forward/Response Properties/audioMessageSelection/attrs/DEFAULT - string
+Webex Calling Organization Settings/Get Details for a Call Queue Forced Forward/Response Properties/audioMessageSelection/attrs/CUSTOM - string
+Webex Calling Organization Settings/Get Details for a Call Queue Forced Forward/Response Properties/audioFiles - array[CallQueueAudioFilesObject]
+Webex Calling Organization Settings/Get Details for a Call Queue Forced Forward/Response Properties/audioFiles/attrs/fileName - string
+Webex Calling Organization Settings/Get Details for a Call Queue Forced Forward/Response Properties/audioFiles/attrs/mediaFileType - enum
+Webex Calling Organization Settings/Get Details for a Call Queue Forced Forward/Response Properties/audioFiles/attrs/mediaFileType/attrs/WMA - string
+Webex Calling Organization Settings/Get Details for a Call Queue Forced Forward/Response Properties/audioFiles/attrs/mediaFileType/attrs/WAV - string
+Webex Calling Organization Settings/Get Details for a Call Queue Forced Forward/Response Properties/audioFiles/attrs/mediaFileType/attrs/3GP - string
+Webex Calling Organization Settings/Get Details for a Call Queue Forced Forward/URI Parameters/locationId - string (required)
+Webex Calling Organization Settings/Get Details for a Call Queue Forced Forward/URI Parameters/queueId - string (required)
+Webex Calling Organization Settings/Update a Call Queue Forced Forward service/Body Parameters/forcedForwardEnabled - boolean (required)
+Webex Calling Organization Settings/Update a Call Queue Forced Forward service/Body Parameters/transferPhoneNumber - string
+Webex Calling Organization Settings/Update a Call Queue Forced Forward service/Body Parameters/playAnnouncementBeforeEnabled - boolean (required)
+Webex Calling Organization Settings/Update a Call Queue Forced Forward service/Body Parameters/audioMessageSelection - enum (required)
+Webex Calling Organization Settings/Update a Call Queue Forced Forward service/Body Parameters/audioMessageSelection/attrs/DEFAULT - string
+Webex Calling Organization Settings/Update a Call Queue Forced Forward service/Body Parameters/audioMessageSelection/attrs/CUSTOM - string
+Webex Calling Organization Settings/Update a Call Queue Forced Forward service/Body Parameters/audioFiles - array[CallQueueAudioFilesObject]
+Webex Calling Organization Settings/Update a Call Queue Forced Forward service/Body Parameters/audioFiles/attrs/fileName - string (required)
+Webex Calling Organization Settings/Update a Call Queue Forced Forward service/Body Parameters/audioFiles/attrs/mediaFileType - enum (required)
+Webex Calling Organization Settings/Update a Call Queue Forced Forward service/Body Parameters/audioFiles/attrs/mediaFileType/attrs/WMA - string
+Webex Calling Organization Settings/Update a Call Queue Forced Forward service/Body Parameters/audioFiles/attrs/mediaFileType/attrs/WAV - string
+Webex Calling Organization Settings/Update a Call Queue Forced Forward service/Body Parameters/audioFiles/attrs/mediaFileType/attrs/3GP - string
+Webex Calling Organization Settings/Update a Call Queue Forced Forward service/Query Parameters/orgId - string
+Webex Calling Organization Settings/Update a Call Queue Forced Forward service/URI Parameters/locationId - string (required)
+Webex Calling Organization Settings/Update a Call Queue Forced Forward service/URI Parameters/queueId - string (required)
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/Query Parameters/orgId - string
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/Response Properties/action - enum
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/Response Properties/action/attrs/NONE - string
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/Response Properties/action/attrs/BUSY - string
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/Response Properties/action/attrs/TRANSFER - string
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/Response Properties/action/attrs/NIGHT_SERVICE - string
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/Response Properties/action/attrs/RINGING - string
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/Response Properties/action/attrs/ANNOUNCEMENT - string
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/Response Properties/transferPhoneNumber - string
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/Response Properties/audioMessageSelection - enum
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/Response Properties/audioMessageSelection/attrs/DEFAULT - string
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/Response Properties/audioMessageSelection/attrs/CUSTOM - string
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/Response Properties/audioFiles - array[CallQueueAudioFilesObject]
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/Response Properties/audioFiles/attrs/fileName - string
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/Response Properties/audioFiles/attrs/mediaFileType - enum
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/Response Properties/audioFiles/attrs/mediaFileType/attrs/WMA - string
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/Response Properties/audioFiles/attrs/mediaFileType/attrs/WAV - string
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/Response Properties/audioFiles/attrs/mediaFileType/attrs/3GP - string
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/URI Parameters/locationId - string (required)
+Webex Calling Organization Settings/Get Details for a Call Queue Stranded Calls/URI Parameters/queueId - string (required)
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/Body Parameters/action - enum (required)
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/Body Parameters/action/attrs/NONE - string
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/Body Parameters/action/attrs/BUSY - string
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/Body Parameters/action/attrs/TRANSFER - string
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/Body Parameters/action/attrs/NIGHT_SERVICE - string
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/Body Parameters/action/attrs/RINGING - string
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/Body Parameters/action/attrs/ANNOUNCEMENT - string
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/Body Parameters/transferPhoneNumber - string
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/Body Parameters/audioMessageSelection - enum (required)
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/Body Parameters/audioMessageSelection/attrs/DEFAULT - string
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/Body Parameters/audioMessageSelection/attrs/CUSTOM - string
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/Body Parameters/audioFiles - array[CallQueueAudioFilesObject]
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/Body Parameters/audioFiles/attrs/fileName - string (required)
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/Body Parameters/audioFiles/attrs/mediaFileType - enum (required)
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/Body Parameters/audioFiles/attrs/mediaFileType/attrs/WMA - string
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/Body Parameters/audioFiles/attrs/mediaFileType/attrs/WAV - string
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/Body Parameters/audioFiles/attrs/mediaFileType/attrs/3GP - string
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/Query Parameters/orgId - string
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/URI Parameters/locationId - string (required)
+Webex Calling Organization Settings/Update a Call Queue Stranded Calls service/URI Parameters/queueId - string (required)
 Webex Calling Person Settings/Read Person's Calling Behavior/Query Parameters/orgId - string
 Webex Calling Person Settings/Read Person's Calling Behavior/Response Properties/behaviorType - enum
 Webex Calling Person Settings/Read Person's Calling Behavior/Response Properties/behaviorType/attrs/NATIVE_WEBEX_TEAMS_CALLING - string
@@ -3122,7 +3671,6 @@ Webex Calling Person Settings/Configure Call Recording Settings for a Person/Bod
 Webex Calling Person Settings/Configure Call Recording Settings for a Person/Body Parameters/recordVoicemailEnabled - boolean
 Webex Calling Person Settings/Configure Call Recording Settings for a Person/Body Parameters/startStopAnnouncementEnabled - boolean
 Webex Calling Person Settings/Configure Call Recording Settings for a Person/Body Parameters/notification - object
-Webex Calling Person Settings/Configure Call Recording Settings for a Person/Body Parameters/notification/attrs/enabled - boolean
 Webex Calling Person Settings/Configure Call Recording Settings for a Person/Body Parameters/repeat - object
 Webex Calling Person Settings/Configure Call Recording Settings for a Person/Body Parameters/repeat/attrs/interval - number
 Webex Calling Person Settings/Configure Call Recording Settings for a Person/Body Parameters/repeat/attrs/enabled - boolean
@@ -3156,7 +3704,6 @@ Webex Calling Person Settings/Read Caller ID Settings for a Person/Response Prop
 Webex Calling Person Settings/Read Caller ID Settings for a Person/Response Properties/locationExternalCallerIdName - string
 Webex Calling Person Settings/Read Caller ID Settings for a Person/URI Parameters/personId - string (required)
 Webex Calling Person Settings/Configure Caller ID Settings for a Person/Body Parameters/selected - CallerIdSelectedType
-Webex Calling Person Settings/Configure Caller ID Settings for a Person/Body Parameters/selected/attrs/Possible values:  - 
 Webex Calling Person Settings/Configure Caller ID Settings for a Person/Body Parameters/customNumber - string
 Webex Calling Person Settings/Configure Caller ID Settings for a Person/Body Parameters/firstName - string
 Webex Calling Person Settings/Configure Caller ID Settings for a Person/Body Parameters/lastName - string
@@ -3216,7 +3763,6 @@ Webex Calling Person Settings/Read Voicemail Settings for a Person/Response Prop
 Webex Calling Person Settings/Read Voicemail Settings for a Person/URI Parameters/personId - string (required)
 Webex Calling Person Settings/Configure Voicemail Settings for a Person/Body Parameters/enabled - boolean
 Webex Calling Person Settings/Configure Voicemail Settings for a Person/Body Parameters/sendAllCalls - object
-Webex Calling Person Settings/Configure Voicemail Settings for a Person/Body Parameters/sendAllCalls/attrs/enabled - boolean
 Webex Calling Person Settings/Configure Voicemail Settings for a Person/Body Parameters/sendBusyCalls - object
 Webex Calling Person Settings/Configure Voicemail Settings for a Person/Body Parameters/sendBusyCalls/attrs/enabled - boolean
 Webex Calling Person Settings/Configure Voicemail Settings for a Person/Body Parameters/sendBusyCalls/attrs/greeting - enum
@@ -3281,7 +3827,6 @@ Webex Calling Person Settings/Create Schedule for a Person/Body Parameters/event
 Webex Calling Person Settings/Create Schedule for a Person/Body Parameters/events/attrs/recurrence/attrs/recurEndDate - string
 Webex Calling Person Settings/Create Schedule for a Person/Body Parameters/events/attrs/recurrence/attrs/recurEndOccurrence - number
 Webex Calling Person Settings/Create Schedule for a Person/Body Parameters/events/attrs/recurrence/attrs/recurDaily - object
-Webex Calling Person Settings/Create Schedule for a Person/Body Parameters/events/attrs/recurrence/attrs/recurDaily/attrs/recurInterval - number (required)
 Webex Calling Person Settings/Create Schedule for a Person/Body Parameters/events/attrs/recurrence/attrs/recurWeekly - object
 Webex Calling Person Settings/Create Schedule for a Person/Body Parameters/events/attrs/recurrence/attrs/recurWeekly/attrs/recurInterval - number (required)
 Webex Calling Person Settings/Create Schedule for a Person/Body Parameters/events/attrs/recurrence/attrs/recurWeekly/attrs/sunday - boolean
@@ -3342,7 +3887,6 @@ Webex Calling Person Settings/Update a Schedule/Body Parameters/events/attrs/rec
 Webex Calling Person Settings/Update a Schedule/Body Parameters/events/attrs/recurrence/attrs/recurEndDate - string
 Webex Calling Person Settings/Update a Schedule/Body Parameters/events/attrs/recurrence/attrs/recurEndOccurrence - number
 Webex Calling Person Settings/Update a Schedule/Body Parameters/events/attrs/recurrence/attrs/recurDaily - object
-Webex Calling Person Settings/Update a Schedule/Body Parameters/events/attrs/recurrence/attrs/recurDaily/attrs/recurInterval - number (required)
 Webex Calling Person Settings/Update a Schedule/Body Parameters/events/attrs/recurrence/attrs/recurWeekly - object
 Webex Calling Person Settings/Update a Schedule/Body Parameters/events/attrs/recurrence/attrs/recurWeekly/attrs/recurInterval - number (required)
 Webex Calling Person Settings/Update a Schedule/Body Parameters/events/attrs/recurrence/attrs/recurWeekly/attrs/sunday - boolean
@@ -3399,7 +3943,6 @@ Webex Calling Person Settings/Add a New Event for Person's Schedule/Body Paramet
 Webex Calling Person Settings/Add a New Event for Person's Schedule/Body Parameters/recurrence/attrs/recurEndDate - string
 Webex Calling Person Settings/Add a New Event for Person's Schedule/Body Parameters/recurrence/attrs/recurEndOccurrence - number
 Webex Calling Person Settings/Add a New Event for Person's Schedule/Body Parameters/recurrence/attrs/recurDaily - object
-Webex Calling Person Settings/Add a New Event for Person's Schedule/Body Parameters/recurrence/attrs/recurDaily/attrs/recurInterval - number (required)
 Webex Calling Person Settings/Add a New Event for Person's Schedule/Body Parameters/recurrence/attrs/recurWeekly - object
 Webex Calling Person Settings/Add a New Event for Person's Schedule/Body Parameters/recurrence/attrs/recurWeekly/attrs/recurInterval - number (required)
 Webex Calling Person Settings/Add a New Event for Person's Schedule/Body Parameters/recurrence/attrs/recurWeekly/attrs/sunday - boolean
@@ -3426,7 +3969,6 @@ Webex Calling Person Settings/Update an Event for a person's Schedule/Body Param
 Webex Calling Person Settings/Update an Event for a person's Schedule/Body Parameters/recurrence/attrs/recurEndDate - string
 Webex Calling Person Settings/Update an Event for a person's Schedule/Body Parameters/recurrence/attrs/recurEndOccurrence - number
 Webex Calling Person Settings/Update an Event for a person's Schedule/Body Parameters/recurrence/attrs/recurDaily - object
-Webex Calling Person Settings/Update an Event for a person's Schedule/Body Parameters/recurrence/attrs/recurDaily/attrs/recurInterval - number (required)
 Webex Calling Person Settings/Update an Event for a person's Schedule/Body Parameters/recurrence/attrs/recurWeekly - object
 Webex Calling Person Settings/Update an Event for a person's Schedule/Body Parameters/recurrence/attrs/recurWeekly/attrs/recurInterval - number (required)
 Webex Calling Person Settings/Update an Event for a person's Schedule/Body Parameters/recurrence/attrs/recurWeekly/attrs/sunday - boolean
@@ -3480,7 +4022,6 @@ Webex Calling Person Settings/Retrieve a person's Monitoring Settings/Response P
 Webex Calling Person Settings/Retrieve a person's Monitoring Settings/URI Parameters/personId - string (required)
 Webex Calling Person Settings/Modify a person's Monitoring Settings/Body Parameters/enableCallParkNotification - boolean (required)
 Webex Calling Person Settings/Modify a person's Monitoring Settings/Body Parameters/monitoredElements - array[string] (required)
-Webex Calling Person Settings/Modify a person's Monitoring Settings/Body Parameters/monitoredElements/attrs/Possible values:  - 
 Webex Calling Person Settings/Modify a person's Monitoring Settings/Query Parameters/orgId - string
 Webex Calling Person Settings/Modify a person's Monitoring Settings/URI Parameters/personId - string (required)
 Webex Calling Person Settings/Get a List of Phone Numbers for a Person/Query Parameters/orgId - string
@@ -3489,7 +4030,7 @@ Webex Calling Person Settings/Get a List of Phone Numbers for a Person/Response 
 Webex Calling Person Settings/Get a List of Phone Numbers for a Person/Response Properties/phoneNumbers/attrs/primary - boolean
 Webex Calling Person Settings/Get a List of Phone Numbers for a Person/Response Properties/phoneNumbers/attrs/directNumber - string
 Webex Calling Person Settings/Get a List of Phone Numbers for a Person/Response Properties/phoneNumbers/attrs/extension - string
-Webex Calling Person Settings/Get a List of Phone Numbers for a Person/Response Properties/phoneNumbers/attrs/ringPattern - enum
+Webex Calling Person Settings/Get a List of Phone Numbers for a Person/Response Properties/phoneNumbers/attrs/ringPattern - string
 Webex Calling Person Settings/Get a List of Phone Numbers for a Person/URI Parameters/personId - string (required)
 Webex Calling Person Settings/Retrieve a person's Application Services Settings/Query Parameters/orgId - string
 Webex Calling Person Settings/Retrieve a person's Application Services Settings/Response Properties/ringDevicesForClickToDialCallsEnabled - boolean
@@ -3562,7 +4103,6 @@ Webex Calling Person Settings/Read Receptionist Client Settings for a Person/Res
 Webex Calling Person Settings/Read Receptionist Client Settings for a Person/URI Parameters/personId - string (required)
 Webex Calling Person Settings/Configure Receptionist Client Settings for a Person/Body Parameters/receptionEnabled - boolean (required)
 Webex Calling Person Settings/Configure Receptionist Client Settings for a Person/Body Parameters/monitoredMembers - array[string]
-Webex Calling Person Settings/Configure Receptionist Client Settings for a Person/Body Parameters/monitoredMembers/attrs/Possible values:  - 
 Webex Calling Person Settings/Configure Receptionist Client Settings for a Person/Query Parameters/orgId - string
 Webex Calling Person Settings/Configure Receptionist Client Settings for a Person/URI Parameters/personId - string (required)
 Webex Calling Person Settings/Read Push-to-Talk Settings for a Person/Query Parameters/orgId - string
@@ -3595,7 +4135,6 @@ Webex Calling Person Settings/Configure Push-to-Talk Settings for a Person/Body 
 Webex Calling Person Settings/Configure Push-to-Talk Settings for a Person/Body Parameters/accessType/attrs/ALLOW_MEMBERS - string
 Webex Calling Person Settings/Configure Push-to-Talk Settings for a Person/Body Parameters/accessType/attrs/BLOCK_MEMBERS - string
 Webex Calling Person Settings/Configure Push-to-Talk Settings for a Person/Body Parameters/members - array[string]
-Webex Calling Person Settings/Configure Push-to-Talk Settings for a Person/Body Parameters/members/attrs/Possible values:  - 
 Webex Calling Person Settings/Configure Push-to-Talk Settings for a Person/Query Parameters/orgId - string
 Webex Calling Person Settings/Configure Push-to-Talk Settings for a Person/URI Parameters/personId - string (required)
 Webex Calling Person Settings/Read Hoteling Settings for a Person/Query Parameters/orgId - string
@@ -3627,14 +4166,14 @@ Webex Calling Person Settings/Configure Incoming Permission Settings for a Perso
 Webex Calling Person Settings/Retrieve a person's Outgoing Calling Permissions Settings/Query Parameters/orgId - string
 Webex Calling Person Settings/Retrieve a person's Outgoing Calling Permissions Settings/Response Properties/useCustomEnabled - boolean
 Webex Calling Person Settings/Retrieve a person's Outgoing Calling Permissions Settings/Response Properties/callingPermissions - array[object]
-Webex Calling Person Settings/Retrieve a person's Outgoing Calling Permissions Settings/Response Properties/callingPermissions/attrs/callType - enum
-Webex Calling Person Settings/Retrieve a person's Outgoing Calling Permissions Settings/Response Properties/callingPermissions/attrs/action - enum
+Webex Calling Person Settings/Retrieve a person's Outgoing Calling Permissions Settings/Response Properties/callingPermissions/attrs/callType - string
+Webex Calling Person Settings/Retrieve a person's Outgoing Calling Permissions Settings/Response Properties/callingPermissions/attrs/action - string
 Webex Calling Person Settings/Retrieve a person's Outgoing Calling Permissions Settings/Response Properties/callingPermissions/attrs/transferEnabled - boolean
 Webex Calling Person Settings/Retrieve a person's Outgoing Calling Permissions Settings/URI Parameters/personId - string (required)
 Webex Calling Person Settings/Modify a person's Outgoing Calling Permissions Settings/Body Parameters/useCustomEnabled - boolean (required)
 Webex Calling Person Settings/Modify a person's Outgoing Calling Permissions Settings/Body Parameters/callingPermissions - array[object] (required)
-Webex Calling Person Settings/Modify a person's Outgoing Calling Permissions Settings/Body Parameters/callingPermissions/attrs/callType - enum
-Webex Calling Person Settings/Modify a person's Outgoing Calling Permissions Settings/Body Parameters/callingPermissions/attrs/action - enum
+Webex Calling Person Settings/Modify a person's Outgoing Calling Permissions Settings/Body Parameters/callingPermissions/attrs/callType - string
+Webex Calling Person Settings/Modify a person's Outgoing Calling Permissions Settings/Body Parameters/callingPermissions/attrs/action - string
 Webex Calling Person Settings/Modify a person's Outgoing Calling Permissions Settings/Body Parameters/callingPermissions/attrs/transferEnabled - boolean
 Webex Calling Person Settings/Modify a person's Outgoing Calling Permissions Settings/Query Parameters/orgId - string
 Webex Calling Person Settings/Modify a person's Outgoing Calling Permissions Settings/URI Parameters/personId - string (required)
@@ -3653,6 +4192,24 @@ Webex Calling Person Settings/Assign or Unassign numbers to a person/Body Parame
 Webex Calling Person Settings/Assign or Unassign numbers to a person/Body Parameters/phoneNumbers/attrs/ringPattern/attrs/SHORT_LONG_SHORT - string
 Webex Calling Person Settings/Assign or Unassign numbers to a person/Query Parameters/orgId - string
 Webex Calling Person Settings/Assign or Unassign numbers to a person/URI Parameters/personId - string (required)
+Webex Calling Person Settings/Retrieve List of Call Queue Caller ID information/Response Properties/availableQueues - array[CallQueueObject]
+Webex Calling Person Settings/Retrieve List of Call Queue Caller ID information/Response Properties/availableQueues/attrs/id - string
+Webex Calling Person Settings/Retrieve List of Call Queue Caller ID information/Response Properties/availableQueues/attrs/name - string
+Webex Calling Person Settings/Retrieve List of Call Queue Caller ID information/Response Properties/availableQueues/attrs/phoneNumber - string
+Webex Calling Person Settings/Retrieve List of Call Queue Caller ID information/Response Properties/availableQueues/attrs/extension - string
+Webex Calling Person Settings/Retrieve List of Call Queue Caller ID information/URI Parameters/personId - string (required)
+Webex Calling Person Settings/Retrieve a Call Queue Agent's Caller ID information/Response Properties/queueCallerIdEnabled - boolean
+Webex Calling Person Settings/Retrieve a Call Queue Agent's Caller ID information/Response Properties/selectedQueue - CallQueueObject
+Webex Calling Person Settings/Retrieve a Call Queue Agent's Caller ID information/Response Properties/selectedQueue/attrs/id - string
+Webex Calling Person Settings/Retrieve a Call Queue Agent's Caller ID information/Response Properties/selectedQueue/attrs/name - string
+Webex Calling Person Settings/Retrieve a Call Queue Agent's Caller ID information/Response Properties/selectedQueue/attrs/phoneNumber - string
+Webex Calling Person Settings/Retrieve a Call Queue Agent's Caller ID information/Response Properties/selectedQueue/attrs/extension - string
+Webex Calling Person Settings/Retrieve a Call Queue Agent's Caller ID information/URI Parameters/personId - string (required)
+Webex Calling Person Settings/Modify a Call Queue Agent's Caller ID information/Body Parameters/queueCallerIdEnabled - boolean (required)
+Webex Calling Person Settings/Modify a Call Queue Agent's Caller ID information/Body Parameters/selectedQueue - object (required)
+Webex Calling Person Settings/Modify a Call Queue Agent's Caller ID information/Body Parameters/selectedQueue/attrs/id - string (required)
+Webex Calling Person Settings/Modify a Call Queue Agent's Caller ID information/Body Parameters/selectedQueue/attrs/name - string (required)
+Webex Calling Person Settings/Modify a Call Queue Agent's Caller ID information/URI Parameters/personId - string (required)
 Webex Calling Voice Messaging/Get Message Summary/Response Properties/newMessages - number
 Webex Calling Voice Messaging/Get Message Summary/Response Properties/oldMessages - number
 Webex Calling Voice Messaging/Get Message Summary/Response Properties/newUrgentMessages - number
@@ -3675,7 +4232,6 @@ Webex Calling Voice Messaging/Delete Message/URI Parameters/messageId - string (
 Webex Calling Voice Messaging/Mark As Read/Body Parameters/messageId - string
 Webex Calling Voice Messaging/Mark As Unread/Body Parameters/messageId - string
 
-: 8
 Action: 1
 ActionOnRouteList: 1
 array[AlternateNumbersObject]: 3
@@ -3690,6 +4246,10 @@ array[CallForwardRulesObject]: 1
 array[CallForwardRulesSet]: 2
 array[CallForwardSelectiveCallsToNumbersObject]: 3
 array[CallingPermissionObject]: 2
+array[CallQueueAudioFilesObject]: 10
+array[CallQueueHolidaySchedulesObject]: 1
+array[CallQueueNightSchedulesObject]: 1
+array[CallQueueObject]: 1
 array[DeviceType]: 1
 array[DialPattern]: 1
 array[DialPatternValidate]: 1
@@ -3722,8 +4282,9 @@ array[ModifyScheduleEventListObject]: 1
 array[MonitoredMemberObject]: 1
 array[MonitoredNumberObject]: 2
 array[MonitoredPersonObject]: 2
-array[object]: 3
+array[object]: 17
 array[PasswordGenerate]: 1
+array[Person]: 1
 array[PhoneNumber]: 1
 array[PostPersonPlaceObject]: 4
 array[PushToTalkNumberObject]: 2
@@ -3738,13 +4299,14 @@ array[RouteListNumberPatch]: 1
 array[RouteListNumberPatchResponse]: 1
 array[ScheduleEventObject]: 1
 array[ScheduleShortDetails]: 1
-array[string]: 35
+array[string]: 64
 array[Trunk]: 1
 array[TrunkTypeWithDeviceType]: 1
 array[VoiceMessageDetails]: 1
+array[{"type": "personal-room","value": "testuser5@mycompany.webex.com","primary": false}]: 5
 AutoAttendantCallForwardSettingsDetailsObject: 1
 AutoAttendantCallForwardSettingsModifyDetailsObject: 1
-boolean: 472
+boolean: 499
 Call History Record Type Enum: 1
 Call Personality Enum: 2
 Call State Enum: 2
@@ -3755,6 +4317,7 @@ CallForwardSelectiveCallsFromObject: 3
 CallForwardSelectiveCallsToObject: 3
 CallForwardSelectiveForwardToObject: 3
 CallParkSettingsObject: 2
+CallQueueObject: 1
 CallQueueQueueSettingsObject: 3
 CallSourceInfo: 1
 CallSourceType: 1
@@ -3765,7 +4328,7 @@ DialPatternAction: 1
 DialPatternStatus: 1
 DialPatternValidationStatus: 1
 Emergency: 1
-enum: 152
+enum: 200
 FeatureAccessCode: 1
 GetCallForwardAlwaysSettingObject: 1
 GetCallForwardSelectiveSettingObject: 1
@@ -3782,10 +4345,10 @@ Location: 5
 ModifyCallForwardAlwaysSettingObject: 1
 ModifyCallForwardSelectiveSettingObject: 1
 ModifyCallQueueCallPolicyObject: 1
-number: 166
+number: 163
 NumberListGetObject: 1
 NumberStatus: 1
-object: 175
+object: 176
 Organization: 1
 OriginatorType: 1
 Party Information: 7
@@ -3818,7 +4381,7 @@ RouteType: 9
 ScheduleType: 11
 ServiceType: 1
 State: 2
-string: 2380
+string: 2809
 string array: 6
 TrunkType: 4
 UnknownExtension: 1

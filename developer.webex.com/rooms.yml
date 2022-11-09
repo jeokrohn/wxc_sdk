@@ -1,0 +1,693 @@
+# command: ./read_api_spec.py -s Messaging -t Rooms -f rooms.yml
+docs:
+  Attachment Actions:
+    doc: null
+    header: null
+    methods: []
+  Events:
+    doc: null
+    header: null
+    methods: []
+  Memberships:
+    doc: null
+    header: null
+    methods: []
+  Messages:
+    doc: null
+    header: null
+    methods: []
+  People:
+    doc: null
+    header: null
+    methods: []
+  Room Tabs:
+    doc: null
+    header: null
+    methods: []
+  Rooms:
+    doc: 'Rooms are virtual meeting places where people post messages and collaborate
+      to get work done. This API is used to manage the rooms themselves. Rooms are
+      created and deleted with this API. You can also update a room to change its
+      title, for example.
+
+      To create a team room, specify the a teamId in the POST payload. Note that once
+      a room is added to a team, it cannot be moved. To learn more about managing
+      teams, see the Teams API.
+
+      To manage people in a room see the Memberships API.
+
+      To post content see the Messages API.'
+    header: Rooms
+    methods:
+    - doc: 'List rooms.
+
+        The title of the room for 1:1 rooms will be the display name of the other
+        person.
+
+        By default, lists rooms to which the authenticated user belongs.
+
+        Long result sets will be split into pages.
+
+        Known Limitations:
+
+        The underlying database does not support natural sorting by lastactivity and
+        will only sort on limited set of results, which are pulled from the database
+        in order of roomId. For users or bots in more than 3000 spaces this can result
+        in anomalies such as spaces that have had recent activity not being returned
+        in the results when sorting by lastacivity.'
+      documentation:
+        doc: List Rooms
+        doc_link: https://developer.webex.com/docs/api/v1/rooms/list-rooms
+        endpoint: https://webexapis.com/v1/rooms
+        http_method: GET
+      header: List Rooms
+      parameters_and_response:
+        Query Parameters:
+        - doc: List rooms associated with a team, by ID.
+          name: teamId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'List rooms by type.
+
+            Possible values: direct, group'
+          name: type
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'Sort results.
+
+            Possible values: id, lastactivity, created'
+          name: sortBy
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Limit the maximum number of rooms in the response. Value must be between
+            1 and 1000, inclusive.
+          name: max
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        Response Properties:
+        - doc: ''
+          name: items
+          param_attrs:
+          - doc: A unique identifier for the room.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A user-friendly name for the room.
+            name: title
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The room type.
+            name: type
+            param_attrs:
+            - doc: 1:1 room.
+              name: direct
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Group room.
+              name: group
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Whether the room is moderated (locked) or not.
+            name: isLocked
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: The ID for the team with which this room is associated.
+            name: teamId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The date and time of the room's last activity.
+            name: lastActivity
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The ID of the person who created this room.
+            name: creatorId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The date and time the room was created.
+            name: created
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The ID of the organization which owns this room. See Webex Data in
+              the Compliance Guide for more information.
+            name: ownerId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Space classification ID represents the space's current classification.  It
+              can be attached during space creation time, and can be modified at the
+              request of an authorized user.
+            name: classificationId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Indicates when a space is in Announcement Mode where only moderators
+              can post messages
+            name: isAnnouncementOnly
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: A compliance officer can set a direct room as read-only, which will
+              disallow any new information exchanges in this space, while maintaing
+              historical data.
+            name: isReadOnly
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          param_object: []
+          type: array[Room]
+          type_spec: null
+    - doc: 'Creates a room. The authenticated user is automatically added as a member
+        of the room. See the Memberships API to learn how to add more people to the
+        room.
+
+        To create a 1:1 room, use the Create Messages endpoint to send a message directly
+        to another person by using the toPersonId or toPersonEmail parameters.
+
+        Bots are not able to create and classify a room. A bot may update a space
+        classification after a person of the same owning organization joined the space
+        as the first human user.
+
+        A space can only be put into announcement mode when it is locked.'
+      documentation:
+        doc: Create a Room
+        doc_link: https://developer.webex.com/docs/api/v1/rooms/create-a-room
+        endpoint: https://webexapis.com/v1/rooms
+        http_method: POST
+      header: Create a Room
+      parameters_and_response:
+        Body Parameters:
+        - doc: A user-friendly name for the room.
+          name: title
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: The ID for the team with which this room is associated.
+          name: teamId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The classificationId for the room.
+          name: classificationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Set the space as locked/moderated and the creator becomes a moderator
+          name: isLocked
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Sets the space into announcement Mode.
+          name: isAnnouncementOnly
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        Response Properties:
+        - doc: A unique identifier for the room.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A user-friendly name for the room.
+          name: title
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The room type.
+          name: type
+          param_attrs:
+          - doc: 1:1 room.
+            name: direct
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Group room.
+            name: group
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Whether the room is moderated (locked) or not.
+          name: isLocked
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The ID for the team with which this room is associated.
+          name: teamId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time of the room's last activity.
+          name: lastActivity
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the person who created this room.
+          name: creatorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time the room was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the organization which owns this room. See Webex Data in
+            the Compliance Guide for more information.
+          name: ownerId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Space classification ID represents the space's current classification.  It
+            can be attached during space creation time, and can be modified at the
+            request of an authorized user.
+          name: classificationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Indicates when a space is in Announcement Mode where only moderators
+            can post messages
+          name: isAnnouncementOnly
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: A compliance officer can set a direct room as read-only, which will
+            disallow any new information exchanges in this space, while maintaing
+            historical data.
+          name: isReadOnly
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+    - doc: 'Shows details for a room, by ID.
+
+        The title of the room for 1:1 rooms will be the display name of the other
+        person.
+
+        Specify the room ID in the roomId parameter in the URI.'
+      documentation:
+        doc: Get Room Details
+        doc_link: https://developer.webex.com/docs/api/v1/rooms/get-room-details
+        endpoint: https://webexapis.com/v1/rooms/{roomId}
+        http_method: GET
+      header: Get Room Details
+      parameters_and_response:
+        Response Properties:
+        - doc: A unique identifier for the room.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A user-friendly name for the room.
+          name: title
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The room type.
+          name: type
+          param_attrs:
+          - doc: 1:1 room.
+            name: direct
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Group room.
+            name: group
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Whether the room is moderated (locked) or not.
+          name: isLocked
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The ID for the team with which this room is associated.
+          name: teamId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time of the room's last activity.
+          name: lastActivity
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the person who created this room.
+          name: creatorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time the room was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the organization which owns this room. See Webex Data in
+            the Compliance Guide for more information.
+          name: ownerId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Space classification ID represents the space's current classification.  It
+            can be attached during space creation time, and can be modified at the
+            request of an authorized user.
+          name: classificationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Indicates when a space is in Announcement Mode where only moderators
+            can post messages
+          name: isAnnouncementOnly
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: A compliance officer can set a direct room as read-only, which will
+            disallow any new information exchanges in this space, while maintaing
+            historical data.
+          name: isReadOnly
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        URI Parameters:
+        - doc: The unique identifier for the room.
+          name: roomId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Shows Webex meeting details for a room such as the SIP address, meeting
+        URL, toll-free and toll dial-in numbers.
+
+        Specify the room ID in the roomId parameter in the URI.'
+      documentation:
+        doc: Get Room Meeting Details
+        doc_link: https://developer.webex.com/docs/api/v1/rooms/get-room-meeting-details
+        endpoint: https://webexapis.com/v1/rooms/{roomId}/meetingInfo
+        http_method: GET
+      header: Get Room Meeting Details
+      parameters_and_response:
+        Response Properties:
+        - doc: A unique identifier for the room.
+          name: roomId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The Webex meeting URL for the room.
+          name: meetingLink
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The SIP address for the room.
+          name: sipAddress
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The Webex meeting number for the room.
+          name: meetingNumber
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The Webex meeting ID for the room.
+          name: meetingId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The toll-free PSTN number for the room.
+          name: callInTollFreeNumber
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The toll (local) PSTN number for the room.
+          name: callInTollNumber
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: The unique identifier for the room.
+          name: roomId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Updates details for a room, by ID.
+
+        Specify the room ID in the roomId parameter in the URI.
+
+        A space can only be put into announcement mode when it is locked.'
+      documentation:
+        doc: Update a Room
+        doc_link: https://developer.webex.com/docs/api/v1/rooms/update-a-room
+        endpoint: https://webexapis.com/v1/rooms/{roomId}
+        http_method: PUT
+      header: Update a Room
+      parameters_and_response:
+        Body Parameters:
+        - doc: A user-friendly name for the room.
+          name: title
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: The classificationId for the room.
+          name: classificationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The teamId to which this space should be assigned. Only unowned spaces
+            can be assigned to a team. Assignment between teams is unsupported.
+          name: teamId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Set the space as locked/moderated and the creator becomes a moderator
+          name: isLocked
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Sets the space into Announcement Mode or clears the Anouncement Mode
+            (false)
+          name: isAnnouncementOnly
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: A compliance officer can set a direct room as read-only, which will
+            disallow any new information exchanges in this space, while maintaing
+            historical data.
+          name: isReadOnly
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        Response Properties:
+        - doc: A unique identifier for the room.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A user-friendly name for the room.
+          name: title
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The room type.
+          name: type
+          param_attrs:
+          - doc: 1:1 room.
+            name: direct
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Group room.
+            name: group
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Whether the room is moderated (locked) or not.
+          name: isLocked
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The ID for the team with which this room is associated.
+          name: teamId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time of the room's last activity.
+          name: lastActivity
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the person who created this room.
+          name: creatorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time the room was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the organization which owns this room. See Webex Data in
+            the Compliance Guide for more information.
+          name: ownerId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Space classification ID represents the space's current classification.  It
+            can be attached during space creation time, and can be modified at the
+            request of an authorized user.
+          name: classificationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Indicates when a space is in Announcement Mode where only moderators
+            can post messages
+          name: isAnnouncementOnly
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: A compliance officer can set a direct room as read-only, which will
+            disallow any new information exchanges in this space, while maintaing
+            historical data.
+          name: isReadOnly
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        URI Parameters:
+        - doc: The unique identifier for the room.
+          name: roomId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Deletes a room, by ID. Deleted rooms cannot be recovered.
+
+        As a security measure to prevent accidental deletion, when a non moderator
+        deletes the room they are removed from the room instead.
+
+        Deleting a room that is part of a team will archive the room instead.
+
+        Specify the room ID in the roomId parameter in the URI.'
+      documentation:
+        doc: Delete a Room
+        doc_link: https://developer.webex.com/docs/api/v1/rooms/delete-a-room
+        endpoint: https://webexapis.com/v1/rooms/{roomId}
+        http_method: DELETE
+      header: Delete a Room
+      parameters_and_response:
+        URI Parameters:
+        - doc: The unique identifier for the room.
+          name: roomId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+  Team Memberships:
+    doc: null
+    header: null
+    methods: []
+  Teams:
+    doc: null
+    header: null
+    methods: []
+  Tracking Codes:
+    doc: null
+    header: null
+    methods: []
+  Webhooks:
+    doc: null
+    header: null
+    methods: []

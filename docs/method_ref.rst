@@ -14,6 +14,9 @@ The second column of the table has a link to the documentation of the method.
    * - api.close
         
      - :meth:`~wxc_sdk.WebexSimpleApi.close`
+   * - api.cdr.get_cdr_history
+        Provides Webex Calling Detailed Call History data for your organization
+     - :meth:`~wxc_sdk.cdr.DetailedCDRApi.get_cdr_history`
    * - api.devices.activation_code
         Create a Device Activation Code
      - :meth:`~wxc_sdk.devices.DevicesApi.activation_code`
@@ -30,7 +33,7 @@ The second column of the table has a link to the documentation of the method.
         Modify Device Tags
      - :meth:`~wxc_sdk.devices.DevicesApi.modify_device_tags`
    * - api.devices.settings_jobs.change
-        
+        Change device settings across organization or locations jobs
      - :meth:`~wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.change`
    * - api.devices.settings_jobs.get_status
         Get change device settings job status
@@ -80,6 +83,39 @@ The second column of the table has a link to the documentation of the method.
    * - api.locations.update
         Update details for a location, by ID
      - :meth:`~wxc_sdk.locations.LocationsApi.update`
+   * - api.membership.create
+        Add someone to a room by Person ID or email address, optionally making them a moderator
+     - :meth:`~wxc_sdk.memberships.MembershipApi.create`
+   * - api.membership.delete
+        Deletes a membership by ID
+     - :meth:`~wxc_sdk.memberships.MembershipApi.delete`
+   * - api.membership.details
+        Get details for a membership by ID
+     - :meth:`~wxc_sdk.memberships.MembershipApi.details`
+   * - api.membership.list
+        Lists all room memberships
+     - :meth:`~wxc_sdk.memberships.MembershipApi.list`
+   * - api.membership.update
+        Updates properties for a membership by ID; ID has to be set in update
+     - :meth:`~wxc_sdk.memberships.MembershipApi.update`
+   * - api.messages.create
+        Post a plain text or rich text message, and optionally, a file attachment, to a room
+     - :meth:`~wxc_sdk.messages.MessagesApi.create`
+   * - api.messages.delete
+        Delete a message, by message ID
+     - :meth:`~wxc_sdk.messages.MessagesApi.delete`
+   * - api.messages.details
+        Show details for a message, by message ID
+     - :meth:`~wxc_sdk.messages.MessagesApi.details`
+   * - api.messages.edit
+        Update a message you have posted not more than 10 times
+     - :meth:`~wxc_sdk.messages.MessagesApi.edit`
+   * - api.messages.list
+        Lists all messages in a room
+     - :meth:`~wxc_sdk.messages.MessagesApi.list`
+   * - api.messages.list_direct
+        List all messages in a 1:1 (direct) room
+     - :meth:`~wxc_sdk.messages.MessagesApi.list_direct`
    * - api.organizations.delete
         Delete Organization
      - :meth:`~wxc_sdk.organizations.OrganizationApi.delete`
@@ -278,6 +314,42 @@ The second column of the table has a link to the documentation of the method.
    * - api.person_settings.voicemail.read
         Read Voicemail Settings for a Person
      - :meth:`~wxc_sdk.person_settings.voicemail.VoicemailApi.read`
+   * - api.reports.create
+        Create a new report
+     - :meth:`~wxc_sdk.reports.ReportsApi.create`
+   * - api.reports.delete
+        Remove a report from the system
+     - :meth:`~wxc_sdk.reports.ReportsApi.delete`
+   * - api.reports.details
+        Shows details for a report, by report ID
+     - :meth:`~wxc_sdk.reports.ReportsApi.details`
+   * - api.reports.download
+        Download a report from the given URL and yield the rows as dicts
+     - :meth:`~wxc_sdk.reports.ReportsApi.download`
+   * - api.reports.list
+        Lists all reports
+     - :meth:`~wxc_sdk.reports.ReportsApi.list`
+   * - api.reports.list_templates
+        List all the available report templates that can be generated
+     - :meth:`~wxc_sdk.reports.ReportsApi.list_templates`
+   * - api.rooms.create
+        Creates a room
+     - :meth:`~wxc_sdk.rooms.RoomsApi.create`
+   * - api.rooms.delete
+        Deletes a room, by ID
+     - :meth:`~wxc_sdk.rooms.RoomsApi.delete`
+   * - api.rooms.details
+        Shows details for a room, by ID
+     - :meth:`~wxc_sdk.rooms.RoomsApi.details`
+   * - api.rooms.list
+        List rooms
+     - :meth:`~wxc_sdk.rooms.RoomsApi.list`
+   * - api.rooms.meeting_details
+        Shows Webex meeting details for a room such as the SIP address, meeting URL, toll-free and toll dial-in numbers
+     - :meth:`~wxc_sdk.rooms.RoomsApi.meeting_details`
+   * - api.rooms.update
+        Updates details for a room
+     - :meth:`~wxc_sdk.rooms.RoomsApi.update`
    * - api.telephony.device_settings
         Get device override settings for an organization
      - :meth:`~wxc_sdk.telephony.TelephonyApi.device_settings`
@@ -477,7 +549,7 @@ The second column of the table has a link to the documentation of the method.
         Update a Hunt Group
      - :meth:`~wxc_sdk.telephony.huntgroup.HuntGroupApi.update`
    * - api.telephony.jobs.device_settings.change
-        
+        Change device settings across organization or locations jobs
      - :meth:`~wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.change`
    * - api.telephony.jobs.device_settings.get_status
         Get change device settings job status

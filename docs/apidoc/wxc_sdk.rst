@@ -12,15 +12,20 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   wxc_sdk.cdr
    wxc_sdk.common
    wxc_sdk.devices
    wxc_sdk.groups
    wxc_sdk.integration
    wxc_sdk.licenses
    wxc_sdk.locations
+   wxc_sdk.memberships
+   wxc_sdk.messages
    wxc_sdk.organizations
    wxc_sdk.people
    wxc_sdk.person_settings
+   wxc_sdk.reports
+   wxc_sdk.rooms
    wxc_sdk.telephony
    wxc_sdk.webhook
    wxc_sdk.workspace_locations
