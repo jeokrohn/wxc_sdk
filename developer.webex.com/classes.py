@@ -18,7 +18,8 @@ import argparse
 import json
 import logging
 import re
-from collections.abc import Generator
+from collections import Counter
+from collections.abc import Generator, Callable
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from io import StringIO
@@ -42,7 +43,7 @@ from collections.abc import Generator
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
 from pydantic import Field
 """
 
@@ -86,7 +87,7 @@ class APIMethod:
     response_class: Optional[Class]
 
     METHOD = '''
-    def {method_name}(self{param_list}, **params){return_type}:
+    def {method_name}(self{param_list}){return_type}:
         """
 {method_doc}
         """
@@ -104,7 +105,7 @@ class APIMethod:
         if {p_name} is not None:
             body['{p_name_camel}'] = {p_name}'''
 
-    def source(self, common_prefix: str) -> Generator[str, None, None]:
+    def source(self, common_prefix: str, transform_name: Callable[[str], str]) -> Generator[str, None, None]:
         """
         source for one method
         :return:
@@ -120,12 +121,14 @@ class APIMethod:
             for_param_list = f'{p_name}: {p_type}'
             if not param.required:
                 for_param_list = f'{for_param_list} = None'
-            param_list.append(for_param_list)
-            param_docs.append(self.PARAM_DOC.format(p_name=p_name,
-                                                    p_type=p_type,
-                                                    p_doc=param.doc).strip('\n'))
-            if is_query:
-                param_code.append(self.PARAM_INIT.format(p_name=p_name, p_name_camel=param.name))
+            # in list_ methods we want to get rid of "max" and "start"
+            if not name.startswith('list_') or p_name not in {'start', 'max'}:
+                param_list.append(for_param_list)
+                param_docs.append(self.PARAM_DOC.format(p_name=p_name,
+                                                        p_type=p_type,
+                                                        p_doc=param.doc).strip('\n'))
+                if is_query:
+                    param_code.append(self.PARAM_INIT.format(p_name=p_name, p_name_camel=param.name))
             if is_body:
                 body_params.append(self.BODY_INIT.format(p_name=p_name, p_name_camel=param.name))
 
@@ -162,16 +165,25 @@ class APIMethod:
             param_docs = '\n'.join((p for pd in param_docs if (p := pd.strip('\n'))))
             method_doc = '\n'.join((method_doc, param_docs))
         method_doc = method_doc.strip('\n')
+        kwargs = False
         if param_list:
+            # in list_ methods we want to add "**params" to allow additional parameters
+            if name.startswith('list_'):
+                param_list.append('**params')
+                kwargs = True
             param_list = f', {", ".join(param_list)}'
         else:
             param_list = ''
 
         method_body = StringIO()
 
-        # add initializatin of param dict
+        # add initialization of param dict
         if param_code:
+            if not kwargs:
+                print('        params = {}', file=method_body)
             print('\n'.join(p.strip('\n') for p in param_code), file=method_body)
+
+        # initialization of JSON body
         if body_params:
             print('        body = {}', file=method_body)
             print('\n'.join(p.strip('\n') for p in body_params), file=method_body)
@@ -190,22 +202,23 @@ class APIMethod:
                                   lambda m: f'{{{underscore(m.group(1))}}}',
                                   url_path)
         else:
-            url_path = ''
+            url_path = url and f"'{url}'"
         print(self.EP_URL.format(url_path=url_path), file=method_body)
 
         # the REST call
         http_method = self.methods_details.documentation.http_method.lower()
-        if http_method == 'delete':
-            rest_call = 'super().delete'
+        rest_call = f'super().{http_method}'
+        if kwargs or param_code:
+            kwargs = ', params=params'
         else:
-            rest_call = f'self.{http_method}'
-        rest_call = f'{rest_call}(url=url, params=params{json_param})'
+            kwargs = ''
+        rest_call = f'{rest_call}(url=url{kwargs}{json_param})'
         if self.response_class:
             rest_call = f'data = {rest_call}'
 
         if name.startswith('list'):
             assert self.response_class is not None
-            result_type = python_type(self.response_class.name)
+            result_type = python_type(self.response_class.name, for_list=True)
             return_type = f' -> Generator[{result_type}, None, None]'
             result = f'return self.session.follow_pagination(url=url, model={result_type}, params=params{json_param})'
             rest_call = ''
@@ -228,7 +241,7 @@ class APIMethod:
         print(f'        {result}', file=method_body)
 
         # return something
-        yield self.METHOD.format(method_name=name, param_list=param_list, return_type=return_type,
+        yield self.METHOD.format(method_name=transform_name(name), param_list=param_list, return_type=return_type,
                                  method_doc=method_doc,
                                  code=method_body.getvalue()).strip('\n')
         return
@@ -279,8 +292,20 @@ class {class_name}(ApiChild, base='{base}'):
             doc = ''
         yield self.API_HEADER.format(class_name=class_name, base=base, class_name_doc=doc).strip('\n')
 
+        # for methods like list_rooms, create_room, update_room, ... we want to get rid of "room"
+        # let's look for the most common word in all methods names
+        word_counts = Counter(chain.from_iterable(underscore(method.name).split('_') for method in self.methods))
+        word, _ = max(word_counts.items(), key=lambda t: t[1])
+        method_matcher = re.compile(f'_{word}s?')
+
+        def transform_method_name(name: str) -> str:
+            name = method_matcher.sub('', name)
+            if name.startswith('get_'):
+                name = name[4:]
+            return name
+
         for method in self.methods:
-            yield from method.source(common_prefix=common_prefix)
+            yield from method.source(common_prefix=common_prefix, transform_name=transform_method_name)
 
     def sources(self) -> Generator[str, None, None]:
         """

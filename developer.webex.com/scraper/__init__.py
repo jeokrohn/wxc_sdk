@@ -67,17 +67,30 @@ def div_repr(d) -> str:
     return f'<div{class_str}>'
 
 
-def python_type(type_str) -> str:
+def python_type(type_str, for_list: bool = False) -> str:
     if type_str == 'number':
         return 'int'
     elif type_str == 'boolean':
         return 'bool'
     elif type_str == 'string':
         return 'str'
+    elif m := re.match(f'array\[(\w+)]', type_str):
+        return f'List[{python_type(m.group(1))}]'
+    elif type_str == 'array':
+        return 'List[str]'
     if (referenced_class := Class.registry.get(type_str)) and referenced_class.base and \
             not referenced_class.attributes:
         # if the referenced class has a base class and no attributes then use the name of the base class instead
         return python_type(referenced_class.base)
+    if for_list:
+        # need to find an attribute that is a list
+        assert referenced_class
+        list_attr = next((a
+                          for a in referenced_class.attributes
+                          if a.param_class and re.match(r'array\[\w+]', a.type)), None)
+        if list_attr:
+            return list_attr.param_class.name
+
     return type_str
 
 
@@ -138,7 +151,7 @@ class Parameter(BaseModel):
     @property
     def python_name(self):
         name = underscore(self.name)
-        if name in {'from', 'to'}:
+        if name in {'from', 'to', 'type'}:
             return f'{name}_'
         return name
 
@@ -307,7 +320,7 @@ class Class:
             bases = 'ApiModel'
         print(f'class {self._name}({bases}):', file=source)
         for attr in self.attributes:
-            for line in attr.doc.splitlines():
+            for line in attr.doc.strip('\n').splitlines():
                 print(f'    #: {line}', file=source)
             if self.is_enum:
                 print(f'    {handle_starting_digit(enum_name(attr.name))} = \'{attr.name}\'', file=source)
