@@ -21,7 +21,14 @@ __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting',
            'CommonDeviceCustomization', 'BacklightTimer', 'Background', 'BackgroundSelection', 'DisplayNameSelection',
            'LoggingLevel', 'DisplayCallqueueAgentSoftkey', 'AcdCustomization', 'LineKeyLabelSelection',
            'LineKeyLedPattern', 'PhoneLanguage', 'ScreenTimeout', 'WifiNetwork', 'MppCustomization', 'PrimaryOrShared',
-           'MediaFileType', 'AnnAudioFile', 'WifiCustomization']
+           'MediaFileType', 'AnnAudioFile', 'WifiCustomization', 'RoomType']
+
+
+class RoomType(str, Enum):
+    #: 1:1 room.
+    direct = 'direct'
+    #: Group room.
+    group = 'group'
 
 
 class UserType(str, Enum):
