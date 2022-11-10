@@ -644,7 +644,7 @@ class DevWebexComScraper:
         """
             Rows look like this:
                 <div class="B_af0kjJ65j92iCwAiw1">
-                    <div class="columns small-9"><span class="md-badge md-badge--green 
+                    <div class="columns small-9"><span class="md-badge md-badge--green
                     E38yq9G_nWIm8SdrG1GU">GET</span><span
                             class="X9_XSxV8TI6eNf98ElQU"><a
                             href="/docs/api/v1/broadworks-billing-reports/list-broadworks-billing-reports">https
@@ -653,11 +653,11 @@ class DevWebexComScraper:
                     <div class="columns small-3 sn1OrZrRvd9GVOvUv4WK">List BroadWorks Billing Reports</div>
                 </div>
                 <div class="cg3iKW8BWwV8ooZrsjQi">
-                    <div class="X9_XSxV8TI6eNf98ElQU"><a 
+                    <div class="X9_XSxV8TI6eNf98ElQU"><a
                     href="/docs/api/v1/broadworks-billing-reports/list-broadworks-billing-reports">https://webexapis
                     .com/v1/broadworks/billing/reports</a>
                     </div>
-                    <span class="md-badge md-badge--green E38yq9G_nWIm8SdrG1GU">GET</span><span 
+                    <span class="md-badge md-badge--green E38yq9G_nWIm8SdrG1GU">GET</span><span
                     class="sn1OrZrRvd9GVOvUv4WK">List BroadWorks Billing Reports</span>
                 </div>
         """
@@ -740,7 +740,7 @@ class DevWebexComScraper:
                     ignore = True
             if ignore:
                 # .. skip
-                log(f'skipping', level=logging.INFO)
+                log('skipping', level=logging.INFO)
                 # .. but yield an empty list, so that we at least have a marker for that section
                 yield SectionDoc(menu_text=submenu_text,
                                  methods=list())
@@ -830,7 +830,7 @@ class DevWebexComScraper:
                         return target
                     mutable['pos'] = pos
                 else:
-                    log(f'not visible or not enabled')
+                    log('not visible or not enabled')
                 return False
 
             return _predicate
@@ -945,7 +945,7 @@ class DevWebexComScraper:
                                         <div class="bfIcOqrr0LEmWxjEID2z">
                                             <div class="ETdjpkOd18yDmr_Pomer">
                                                 <div class="AzemgtvlBWwLVUYkRkbg">id</div>
-                                                <div class="Xjm2mpYxY4YHNn4XsTBg"><span>string</span><span 
+                                                <div class="Xjm2mpYxY4YHNn4XsTBg"><span>string</span><span
                                                 class="buEuRUqtw7z8xim5DxxA">required</span>
                                                 </div>
                                             </div>
@@ -967,7 +967,7 @@ class DevWebexComScraper:
                     """
                     if (childs := div.find_all('div', recursive=False)) and all(child.attrs.get('class', None) is None
                                                                                 for child in childs):
-                        log(f'div_generator: list of classless child divs -> yield divs from childs')
+                        log('div_generator: list of classless child divs -> yield divs from childs')
                         for child in childs:
                             child: Tag
                             yield from child.find_all('div', recursive=False)
@@ -1016,7 +1016,7 @@ class DevWebexComScraper:
                     <div class="bfIcOqrr0LEmWxjEID2z">
                         <div class="ETdjpkOd18yDmr_Pomer">
                             <div class="AzemgtvlBWwLVUYkRkbg">personId</div>
-                            <div class="Xjm2mpYxY4YHNn4XsTBg"><span>string</span><span 
+                            <div class="Xjm2mpYxY4YHNn4XsTBg"><span>string</span><span
                             class="buEuRUqtw7z8xim5DxxA">required</span></div>
                         </div>
                         <div class="Sj3x8PGVKM_DQu1MaOpF"><p>Unique identifier for the person.</p></div>
@@ -1074,17 +1074,17 @@ class DevWebexComScraper:
                     <div class="emjDUw5LqTp3QCCg4hNp">
                         <div class="AzemgtvlBWwLVUYkRkbg">primary</div>
                         <div class="Xjm2mpYxY4YHNn4XsTBg"><span>boolean</span></div>
-                        <div class="Sj3x8PGVKM_DQu1MaOpF"><p>Flag to indicate if the number is primary or 
+                        <div class="Sj3x8PGVKM_DQu1MaOpF"><p>Flag to indicate if the number is primary or
                         not.</p></div>
                         <div class="Mo4RauPOboRxtDGO9VvT"><span>Possible values: </span><span></span></div>
-                    </div>      
+                    </div>
                 """
                 childs = iter(child_divs)
 
                 # get name of attribute from 1st div
                 # <div class="AzemgtvlBWwLVUYkRkbg">primary</div>
                 name = next(childs).text
-                log(f'flat sequence of divs')
+                log('flat sequence of divs')
 
                 # next div has a list of spans ...
                 # <div class="Xjm2mpYxY4YHNn4XsTBg"><span>boolean</span></div>
@@ -1145,7 +1145,7 @@ class DevWebexComScraper:
                     continue
 
             if param_type == 'enum' and not param_attrs and not param_object:
-                log(f'type "enum" without attributes transformed to "string"')
+                log('type "enum" without attributes transformed to "string"')
                 param_type = 'string'
 
             log(f'yield type={param_type}, type_spec={type_spec}, '
@@ -1232,14 +1232,14 @@ class DevWebexComScraper:
 
             api_ref_descr = soup.find(class_='api-reference__description')
             """ API reference description is something like:
-                    <div class="columns u_6eoYxPfVMJxwlI0Wcb large-6 xlarge-6 api-reference__description 
+                    <div class="columns u_6eoYxPfVMJxwlI0Wcb large-6 xlarge-6 api-reference__description
                     XdQBFUuam5J29sqNCtir">
                         <div class="K_M3cdOQTnTLnPOWhtqe"><h4>Read Person's Calling Behavior</h4>
-                            <div><p>Retrieves the calling behavior and UC Manager Profile settings for the person which 
+                            <div><p>Retrieves the calling behavior and UC Manager Profile settings for the person which
                             includes overall
                                 calling behavior and calling UC Manager Profile ID.</p>
-                                <p>Webex Calling Behavior controls which Webex telephony application and which UC 
-                                Manager 
+                                <p>Webex Calling Behavior controls which Webex telephony application and which UC
+                                Manager
                                 Profile is to be
                                     used for a person.</p>
                                 </div>
@@ -1250,7 +1250,7 @@ class DevWebexComScraper:
                         level=logging.WARNING)
                     doc_link = doc_link.strip('.')
                     continue
-                log(f'GET failed? API reference description not found on page', level=logging.ERROR)
+                log('GET failed? API reference description not found on page', level=logging.ERROR)
                 return None
             break
         # while
@@ -1258,7 +1258,7 @@ class DevWebexComScraper:
         try:
             header = api_ref_descr.div.h4.text
         except AttributeError:
-            log(f'Failed o parse header from api spec',
+            log('Failed o parse header from api spec',
                 level=logging.ERROR)
             return None
 

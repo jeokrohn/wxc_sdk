@@ -62,10 +62,10 @@ class MembershipApi(ApiChild, base='memberships'):
         :param room_id: str: List memberships associated with a room, by ID.
         :type room_id: str
         :param person_id: str: List memberships associated with a person, by ID. The roomId parameter is required
-        when using this parameter.
+            when using this parameter.
         :type person_id: str
         :param person_email: str: List memberships associated with a person, by email address. The roomId parameter
-        is required when using this parameter.
+            is required when using this parameter.
         :type person_email: str
         """
         if room_id is not None:
@@ -75,6 +75,7 @@ class MembershipApi(ApiChild, base='memberships'):
         if person_email is not None:
             params['personEmail'] = person_email
         url = self.ep()
+        # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Membership, params=params)
 
     def create(self, room_id: str, person_id: str = None, person_email: str = None,
@@ -118,13 +119,17 @@ class MembershipApi(ApiChild, base='memberships'):
 
     def update(self, update: Membership) -> Membership:
         """
-        Updates properties for a membership by ID; ID has to be set in update.
+        Updates properties for a membership by ID
 
-        These can be updated:
-            is_moderator: bool: Whether or not the participant is a room moderator.
+        :param update: new settings; ID has to be set in update.
 
-            is_room_hidden: bool: When set to true, hides direct spaces in the teams client. Any new message will
-            make the room visible again.
+            These can be updated:
+                is_moderator: bool: Whether or not the participant is a room moderator.
+
+                is_room_hidden: bool: When set to true, hides direct spaces in the teams client. Any new message will
+                make the room visible again.
+        :type update: Membership
+
         """
         data = update.json(include={'is_moderator', 'is_room_hidden'})
         if update.id is None:

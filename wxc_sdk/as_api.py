@@ -988,10 +988,10 @@ class AsMembershipApi(AsApiChild, base='memberships'):
         :param room_id: str: List memberships associated with a room, by ID.
         :type room_id: str
         :param person_id: str: List memberships associated with a person, by ID. The roomId parameter is required
-        when using this parameter.
+            when using this parameter.
         :type person_id: str
         :param person_email: str: List memberships associated with a person, by email address. The roomId parameter
-        is required when using this parameter.
+            is required when using this parameter.
         :type person_email: str
         """
         if room_id is not None:
@@ -1001,6 +1001,7 @@ class AsMembershipApi(AsApiChild, base='memberships'):
         if person_email is not None:
             params['personEmail'] = person_email
         url = self.ep()
+        # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Membership, params=params)
 
     async def list(self, room_id: str = None, person_id: str = None, person_email: str = None,
@@ -1018,10 +1019,10 @@ class AsMembershipApi(AsApiChild, base='memberships'):
         :param room_id: str: List memberships associated with a room, by ID.
         :type room_id: str
         :param person_id: str: List memberships associated with a person, by ID. The roomId parameter is required
-        when using this parameter.
+            when using this parameter.
         :type person_id: str
         :param person_email: str: List memberships associated with a person, by email address. The roomId parameter
-        is required when using this parameter.
+            is required when using this parameter.
         :type person_email: str
         """
         if room_id is not None:
@@ -1031,6 +1032,7 @@ class AsMembershipApi(AsApiChild, base='memberships'):
         if person_email is not None:
             params['personEmail'] = person_email
         url = self.ep()
+        # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=Membership, params=params)]
 
     async def create(self, room_id: str, person_id: str = None, person_email: str = None,
@@ -1072,14 +1074,19 @@ class AsMembershipApi(AsApiChild, base='memberships'):
         data = await super().get(url=url)
         return Membership.parse_obj(data)
 
-    async def update(self, update: Membership, membership_id: str, is_moderator: bool, is_room_hidden: bool) -> Membership:
+    async def update(self, update: Membership) -> Membership:
         """
-        Updates properties for a membership by ID; ID has to be set in update.
+        Updates properties for a membership by ID
 
-        These can be updated:
-            is_moderator: bool: Whether or not the participant is a room moderator.
-            is_room_hidden: bool: When set to true, hides direct spaces in the teams client. Any new message will
-                    make the room visible again.
+        :param update: new settings; ID has to be set in update.
+
+            These can be updated:
+                is_moderator: bool: Whether or not the participant is a room moderator.
+
+                is_room_hidden: bool: When set to true, hides direct spaces in the teams client. Any new message will
+                make the room visible again.
+        :type update: Membership
+
         """
         data = update.json(include={'is_moderator', 'is_room_hidden'})
         if update.id is None:
@@ -1139,6 +1146,7 @@ class AsMessagesApi(AsApiChild, base='messages'):
         if before_message is not None:
             params['beforeMessage'] = before_message
         url = self.ep()
+        # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Message, params=params)
 
     async def list(self, room_id: str, parent_id: str = None, mentioned_people: List[str] = None, before: datetime = None,
@@ -1172,6 +1180,7 @@ class AsMessagesApi(AsApiChild, base='messages'):
         if before_message is not None:
             params['beforeMessage'] = before_message
         url = self.ep()
+        # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=Message, params=params)]
 
     def list_direct_gen(self, parent_id: str = None, person_id: str = None, person_email: str = None,
@@ -1195,6 +1204,7 @@ class AsMessagesApi(AsApiChild, base='messages'):
         if person_email is not None:
             params['personEmail'] = person_email
         url = self.ep('direct')
+        # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Message, params=params)
 
     async def list_direct(self, parent_id: str = None, person_id: str = None, person_email: str = None,
@@ -1218,6 +1228,7 @@ class AsMessagesApi(AsApiChild, base='messages'):
         if person_email is not None:
             params['personEmail'] = person_email
         url = self.ep('direct')
+        # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=Message, params=params)]
 
     async def create(self, room_id: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None,
@@ -1245,7 +1256,7 @@ class AsMessagesApi(AsApiChild, base='messages'):
         :param files: List[str]: The public URL to a binary file to be posted into the room. Only one file is allowed
             per message. Uploaded files are automatically converted into a format that all Webex clients can render. For
             the supported media types and the behavior of uploads, see the Message Attachments Guide.
-                Possible values: http://www.example.com/images/media.png
+            Possible values: http://www.example.com/images/media.png
         :type files: List[str]
         :param attachments: List[Attachment]: Content attachments to attach to the message. Only one card per message
             is supported. See the Cards Guide for more information.
@@ -1292,12 +1303,13 @@ class AsMessagesApi(AsApiChild, base='messages'):
 
         :param message: the updated message, id has to be set in the message
             attributes supported for update:
-                room_id: str: The room ID of the message.
-                text: str: The message, in plain text. If markdown is specified this parameter may be optionally used
-                    to provide alternate text for UI clients that do not support rich text. The maximum message length
-                    is 7439 bytes.
-                markdown: str: The message, in Markdown format. If this attribute is set ensure that the request does
-                    NOT contain an html attribute.
+
+                * room_id: str: The room ID of the message.
+                * text: str: The message, in plain text. If markdown is specified this parameter may be optionally used
+                  to provide alternate text for UI clients that do not support rich text. The maximum message length
+                  is 7439 bytes.
+                * markdown: str: The message, in Markdown format. If this attribute is set ensure that the request does
+                  NOT contain an html attribute.
         """
         data = message.json(include={'room_id', 'text', 'markdown'})
         if not message.id:
@@ -3937,6 +3949,7 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         if sort_by is not None:
             params['sortBy'] = sort_by
         url = self.ep()
+        # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Room, params=params)
 
     async def list(self, team_id: str = None, type_: RoomType = None, sort_by: str = None,
@@ -3968,6 +3981,7 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         if sort_by is not None:
             params['sortBy'] = sort_by
         url = self.ep()
+        # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=Room, params=params)]
 
     async def create(self, title: str, team_id: str = None, classification_id: str = None, is_locked: bool = None,
@@ -4036,16 +4050,17 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         """
         Updates details for a room
         A space can only be put into announcement mode when it is locked.
-        
+
         :update: update to apply. ID and title have to be set. Only can update:
-            title: str: A user-friendly name for the room.
-            classification_id: str: The classificationId for the room.
-            team_id: str: The teamId to which this space should be assigned. Only unowned spaces can be assigned
-                to a team. Assignment between teams is unsupported.
-            is_locked: bool: Set the space as locked/moderated and the creator becomes a moderator
-            is_announcement_only: bool: Sets the space into announcement mode or clears the anouncement Mode (false)
-            is_read_only: bool: A compliance officer can set a direct room as read-only, which will disallow any
-                new information exchanges in this space, while maintaining historical data.
+
+            * title: str: A user-friendly name for the room.
+            * classification_id: str: The classificationId for the room.
+            * team_id: str: The teamId to which this space should be assigned. Only unowned spaces can be assigned
+              to a team. Assignment between teams is unsupported.
+            * is_locked: bool: Set the space as locked/moderated and the creator becomes a moderator
+            * is_announcement_only: bool: Sets the space into announcement mode or clears the anouncement Mode (false)
+            * is_read_only: bool: A compliance officer can set a direct room as read-only, which will disallow any
+              new information exchanges in this space, while maintaining historical data.
         """
         update: Room
         data = update.json(include={'title', 'classification_id', 'team_id', 'is_locked', 'is_announcement_only',
@@ -10112,7 +10127,7 @@ class AsWebexSimpleApi:
     The main API object
     """
 
-    #: CDR API: :class:`AsDetailedCDRApi`
+    #: CDR API :class:`AsDetailedCDRApi`
     cdr: AsDetailedCDRApi
     #: devices API :class:`AsDevicesApi`
     devices: AsDevicesApi
@@ -10122,7 +10137,7 @@ class AsWebexSimpleApi:
     licenses: AsLicensesApi
     #: Location API :class:`AsLocationsApi`
     locations: AsLocationsApi
-    #: membership API: :class:`AsMembershipApi`
+    #: membership API :class:`AsMembershipApi`
     membership: AsMembershipApi
     #: Messages API :class:`AsMessagesApi`
     messages: AsMessagesApi

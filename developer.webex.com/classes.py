@@ -596,13 +596,13 @@ def main():
 
     parser.add_argument('api_spec')
     parser.add_argument('-o', '--output', dest='output_path', action='store', required=False, type=str,
-                        help=f'Write output to given file.')
+                        help='Write output to given file.')
     # enable debug output to stderr
     parser.add_argument('-d', '--debug', action='store_true', help='show debugs on console')
 
     # write detailed logs (debug level) to a file
     parser.add_argument('-l', '--logfile', dest='log_path', action='store', required=False, type=str,
-                        help=f'Write detailed logs to this file.')
+                        help='Write detailed logs to this file.')
 
     args = parser.parse_args()
 

@@ -124,14 +124,14 @@ class CallingCDR(ApiModel):
     def from_dicts(cls, dicts: Iterable[dict]) -> Generator['CallingCDR', None, None]:
         """
         Yield :class:`CallingCDR` instances from dicts
-        
+
         :param dicts: iterable with the dicts to yield CDRs from
         :return: yields :class:`CallingCDR` instances
-        
+
         Example:
 
             .. code-block:: python
-            
+
                 # download call history report from Webex
                 cdrs = list(CallingCDR.from_dicts(api.reports.download(url=url)))
 

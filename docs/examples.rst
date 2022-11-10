@@ -133,7 +133,7 @@ Source: |get_tokens.py|_
 
 
 Read/update call intercept settings of a user
------
+---------------------------------------------
 
     | usage: call_intercept.py [-h] [--token TOKEN] user_email [{on,off}]
     |

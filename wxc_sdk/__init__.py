@@ -28,7 +28,7 @@ from dataclasses import dataclass
 
 __all__ = ['WebexSimpleApi']
 
-__version__ = '1.7.2'
+__version__ = '1.8.0'
 
 log = logging.getLogger(__name__)
 
@@ -39,7 +39,7 @@ class WebexSimpleApi:
     The main API object
     """
 
-    #: CDR API: :class:`cdr.DetailedCDRApi`
+    #: CDR API :class:`cdr.DetailedCDRApi`
     cdr: DetailedCDRApi
     #: devices API :class:`devices.DevicesApi`
     devices: DevicesApi
@@ -49,7 +49,7 @@ class WebexSimpleApi:
     licenses: LicensesApi
     #: Location API :class:`locations.LocationsApi`
     locations: LocationsApi
-    #: membership API: :class:`memberships.MembershipApi`
+    #: membership API :class:`memberships.MembershipApi`
     membership: MembershipApi
     #: Messages API :class:`messages.MessagesApi`
     messages: MessagesApi

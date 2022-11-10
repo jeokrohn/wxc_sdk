@@ -102,6 +102,7 @@ class RoomsApi(ApiChild, base='rooms'):
         if sort_by is not None:
             params['sortBy'] = sort_by
         url = self.ep()
+        # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Room, params=params)
 
     def create(self, title: str, team_id: str = None, classification_id: str = None, is_locked: bool = None,
@@ -170,16 +171,17 @@ class RoomsApi(ApiChild, base='rooms'):
         """
         Updates details for a room
         A space can only be put into announcement mode when it is locked.
-        
+
         :update: update to apply. ID and title have to be set. Only can update:
-            title: str: A user-friendly name for the room.
-            classification_id: str: The classificationId for the room.
-            team_id: str: The teamId to which this space should be assigned. Only unowned spaces can be assigned
-                to a team. Assignment between teams is unsupported.
-            is_locked: bool: Set the space as locked/moderated and the creator becomes a moderator
-            is_announcement_only: bool: Sets the space into announcement mode or clears the anouncement Mode (false)
-            is_read_only: bool: A compliance officer can set a direct room as read-only, which will disallow any
-                new information exchanges in this space, while maintaining historical data.
+
+            * title: str: A user-friendly name for the room.
+            * classification_id: str: The classificationId for the room.
+            * team_id: str: The teamId to which this space should be assigned. Only unowned spaces can be assigned
+              to a team. Assignment between teams is unsupported.
+            * is_locked: bool: Set the space as locked/moderated and the creator becomes a moderator
+            * is_announcement_only: bool: Sets the space into announcement mode or clears the anouncement Mode (false)
+            * is_read_only: bool: A compliance officer can set a direct room as read-only, which will disallow any
+              new information exchanges in this space, while maintaining historical data.
         """
         update: Room
         data = update.json(include={'title', 'classification_id', 'team_id', 'is_locked', 'is_announcement_only',

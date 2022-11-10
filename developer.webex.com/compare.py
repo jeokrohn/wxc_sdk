@@ -254,7 +254,7 @@ def main():
 
     parser.add_argument('api_spec', nargs=2)
     parser.add_argument('-o', '--output', dest='output_path', action='store', required=False, type=str,
-                        help=f'Write output to given file.')
+                        help='Write output to given file.')
 
     args = parser.parse_args()
     # names need to be unique

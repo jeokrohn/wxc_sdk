@@ -129,6 +129,7 @@ class MessagesApi(ApiChild, base='messages'):
         if before_message is not None:
             params['beforeMessage'] = before_message
         url = self.ep()
+        # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Message, params=params)
 
     def list_direct(self, parent_id: str = None, person_id: str = None, person_email: str = None,
@@ -152,6 +153,7 @@ class MessagesApi(ApiChild, base='messages'):
         if person_email is not None:
             params['personEmail'] = person_email
         url = self.ep('direct')
+        # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Message, params=params)
 
     def create(self, room_id: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None,
@@ -179,7 +181,7 @@ class MessagesApi(ApiChild, base='messages'):
         :param files: List[str]: The public URL to a binary file to be posted into the room. Only one file is allowed
             per message. Uploaded files are automatically converted into a format that all Webex clients can render. For
             the supported media types and the behavior of uploads, see the Message Attachments Guide.
-                Possible values: http://www.example.com/images/media.png
+            Possible values: http://www.example.com/images/media.png
         :type files: List[str]
         :param attachments: List[Attachment]: Content attachments to attach to the message. Only one card per message
             is supported. See the Cards Guide for more information.
@@ -226,12 +228,13 @@ class MessagesApi(ApiChild, base='messages'):
 
         :param message: the updated message, id has to be set in the message
             attributes supported for update:
-                room_id: str: The room ID of the message.
-                text: str: The message, in plain text. If markdown is specified this parameter may be optionally used
-                    to provide alternate text for UI clients that do not support rich text. The maximum message length
-                    is 7439 bytes.
-                markdown: str: The message, in Markdown format. If this attribute is set ensure that the request does
-                    NOT contain an html attribute.
+
+                * room_id: str: The room ID of the message.
+                * text: str: The message, in plain text. If markdown is specified this parameter may be optionally used
+                  to provide alternate text for UI clients that do not support rich text. The maximum message length
+                  is 7439 bytes.
+                * markdown: str: The message, in Markdown format. If this attribute is set ensure that the request does
+                  NOT contain an html attribute.
         """
         data = message.json(include={'room_id', 'text', 'markdown'})
         if not message.id:
