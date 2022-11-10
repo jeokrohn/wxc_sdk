@@ -96,7 +96,7 @@ The second column of the table has a link to the documentation of the method.
         Lists all room memberships
      - :meth:`~wxc_sdk.memberships.MembershipApi.list`
    * - api.membership.update
-        Updates properties for a membership by ID; ID has to be set in update
+        Updates properties for a membership by ID
      - :meth:`~wxc_sdk.memberships.MembershipApi.update`
    * - api.messages.create
         Post a plain text or rich text message, and optionally, a file attachment, to a room

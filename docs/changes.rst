@@ -1,6 +1,19 @@
 Release history
 ===============
 
+1.8.0
+-----
+- feat: new APIs: :attr:`wxc_sdk.WebexSimpleApi.rooms`
+- feat: new APIs: :attr:`wxc_sdk.WebexSimpleApi.messages`
+- feat: new APIs: :attr:`wxc_sdk.WebexSimpleApi.membership`
+- feat: new API :attr:`wxc_sdk.WebexSimpleApi.reports`
+- feat: new API :attr:`wxc_sdk.WebexSimpleApi.cdr`
+- feat: new API: :attr:`wxc_sdk.telephony.TelephonyApi.jobs`
+- feat: :class:`wxc_sdk.person_settings.permissions_out.CallingPermissions` allows call type permissions for arbitrary
+  call_types in deserialization of API responses.
+- feat: :meth:`wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.configure` supports dropping of call
+  types from serialization. Default: {'url_dialing', 'unknown', 'casual'}
+
 1.7.2
 -----
 - fix: call type national consistently fixed
