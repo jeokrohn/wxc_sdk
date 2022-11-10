@@ -1,9 +1,13 @@
 """
 Messages API
 """
+import mimetypes
+import os.path
 from collections.abc import Generator
 from datetime import datetime
 from typing import List, Optional, Union
+
+from requests_toolbelt import MultipartEncoder
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
@@ -178,10 +182,10 @@ class MessagesApi(ApiChild, base='messages'):
         :type text: str
         :param markdown: str: The message, in Markdown format. The maximum message length is 7439 bytes.
         :type markdown: str
-        :param files: List[str]: The public URL to a binary file to be posted into the room. Only one file is allowed
+        :param files: List[str]: The public URL to a binary file or a path to a local file to be posted into the room.
+            Only one file is allowed
             per message. Uploaded files are automatically converted into a format that all Webex clients can render. For
             the supported media types and the behavior of uploads, see the Message Attachments Guide.
-            Possible values: http://www.example.com/images/media.png
         :type files: List[str]
         :param attachments: List[Attachment]: Content attachments to attach to the message. Only one card per message
             is supported. See the Cards Guide for more information.
@@ -202,13 +206,28 @@ class MessagesApi(ApiChild, base='messages'):
             body['text'] = text
         if markdown is not None:
             body['markdown'] = markdown
-        if files is not None:
-            body['files'] = files
         if attachments is not None:
             body['attachments'] = [a.dict(by_alias=True) if isinstance(a, MessageAttachment) else a
                                    for a in attachments]
+        if files is not None:
+            body['files'] = files
+
         url = self.ep()
-        data = super().post(url=url, json=body)
+        if files and os.path.isfile(files[0]):
+            # this is a local file
+            open_file = open(files[0], mode='rb')
+            try:
+                c_type = mimetypes.guess_type(files[0])[0] or 'text/plain'
+                body['files'] = (os.path.basename(files[0]),
+                                 open_file,
+                                 c_type)
+                multipart = MultipartEncoder(body)
+                headers = {'Content-type': multipart.content_type}
+                data = super().post(url=url, headers=headers, data=multipart)
+            finally:
+                open_file.close()
+        else:
+            data = super().post(url=url, json=body)
         return Message.parse_obj(data)
 
     def edit(self, message: Message) -> Message:

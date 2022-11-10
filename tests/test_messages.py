@@ -33,6 +33,16 @@ class TestMessages(TestCaseWithUsersAndSpaces):
         direct_by_id = list(api.list_direct(person_id=target_user.person_id))
         direct_by_email = list(api.list_direct(person_email=target_user.emails[0]))
 
+    def test_003_create_direct_message_local_file(self):
+        api = self.api.messages
+        # pick a random user
+        target_user = choice(self.users)
+        new_message = api.create(to_person_id=target_user.person_id,
+                                 text=f'Random message {uuid.uuid4()} with attachment',
+                                 files=[__file__])
+        # now a space has to exist with that user
+        self.assertEqual(RoomType.direct, new_message.room_type)
+
     def test_003_attachment(self):
         attachments = [
             {
@@ -59,4 +69,3 @@ class TestMessages(TestCaseWithUsersAndSpaces):
         ]
         atts = parse_obj_as(list[MessageAttachment], attachments)
         foo = 1
-
