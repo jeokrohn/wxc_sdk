@@ -21,6 +21,7 @@ PREAMBLE = """# auto-generated. DO NOT EDIT
 import csv
 import json
 import logging
+import mimetypes
 import os
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass
@@ -30,7 +31,7 @@ from enum import Enum
 from io import BufferedReader
 from typing import Union, Dict, Optional, Literal, List
 
-from aiohttp import MultipartWriter
+from aiohttp import MultipartWriter, FormData
 from pydantic import parse_obj_as
 
 from wxc_sdk.all_types import *
@@ -40,17 +41,24 @@ from wxc_sdk.base import to_camel, StrOrDict
 log = logging.getLogger(__name__)
 
 
-class MultipartEncoder(MultipartWriter):
+class MultipartEncoder(FormData):
     \"""
     Compatibility class for requests toolbelt MultipartEncoder
     \"""
 
-    def __init__(self, *, fields: dict):
-        super().__init__('form_data')
-        for field_name, (file_name, content, content_type) in fields.items():
-            # noinspection PyTypeChecker
-            part = self.append(content, {'Content-Type': content_type})
-            part.set_content_disposition('form-data', name=field_name, filename=file_name)
+    def __init__(self, body):
+        super().__init__()
+        for name, value in body.items():
+            if isinstance(value, str):
+                self.add_field(name, value)
+            elif isinstance(value, tuple):
+                self.add_field(name, value=value[1], content_type=value[2], filename=value[0])
+            else:
+                raise NotImplementedError
+
+    @property
+    def content_type(self) -> str:
+        return self._writer.content_type
 
 
 # there seems to be a problem with getting too many users with calling data at the same time
@@ -59,6 +67,9 @@ MAX_USERS_WITH_CALLING_DATA = 10
 
 
 """
+
+
+
 
 # identify sync calls to be translated to "await .." calls
 RE_SYNC_CALLS = re.compile(r"""

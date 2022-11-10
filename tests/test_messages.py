@@ -4,6 +4,7 @@ Tests for messages API
 import uuid
 from random import choice
 
+from aiohttp import MultipartWriter, FormData
 from pydantic import parse_obj_as
 
 from tests.base import TestCaseWithUsersAndSpaces
@@ -43,7 +44,15 @@ class TestMessages(TestCaseWithUsersAndSpaces):
         # now a space has to exist with that user
         self.assertEqual(RoomType.direct, new_message.room_type)
 
-    def test_003_attachment(self):
+    @TestCaseWithUsersAndSpaces.async_test
+    async def test_004_reate_direct_message_local_file_async_sdk(self):
+        api = self.async_api.messages
+        target_user = choice(self.users)
+        new_message = await api.create(to_person_id=target_user.person_id,
+                                       text=f'Random message {uuid.uuid4()} with attachment',
+                                       files=[__file__])
+
+    def test_005_attachment(self):
         attachments = [
             {
                 "contentType": "application/vnd.microsoft.card.adaptive",

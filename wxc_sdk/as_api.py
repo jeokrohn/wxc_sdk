@@ -2,6 +2,7 @@
 import csv
 import json
 import logging
+import mimetypes
 import os
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass
@@ -11,7 +12,7 @@ from enum import Enum
 from io import BufferedReader
 from typing import Union, Dict, Optional, Literal, List
 
-from aiohttp import MultipartWriter
+from aiohttp import MultipartWriter, FormData
 from pydantic import parse_obj_as
 
 from wxc_sdk.all_types import *
@@ -21,17 +22,24 @@ from wxc_sdk.base import to_camel, StrOrDict
 log = logging.getLogger(__name__)
 
 
-class MultipartEncoder(MultipartWriter):
+class MultipartEncoder(FormData):
     """
     Compatibility class for requests toolbelt MultipartEncoder
     """
 
-    def __init__(self, *, fields: dict):
-        super().__init__('form_data')
-        for field_name, (file_name, content, content_type) in fields.items():
-            # noinspection PyTypeChecker
-            part = self.append(content, {'Content-Type': content_type})
-            part.set_content_disposition('form-data', name=field_name, filename=file_name)
+    def __init__(self, body):
+        super().__init__()
+        for name, value in body.items():
+            if isinstance(value, str):
+                self.add_field(name, value)
+            elif isinstance(value, tuple):
+                self.add_field(name, value=value[1], content_type=value[2], filename=value[0])
+            else:
+                raise NotImplementedError
+
+    @property
+    def content_type(self) -> str:
+        return self._writer.content_type
 
 
 # there seems to be a problem with getting too many users with calling data at the same time
@@ -51,11 +59,11 @@ __all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsApi
            'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi',
            'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPremisePstnApi', 'AsPrivacyApi',
            'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsReceptionistApi', 'AsReportsApi', 'AsRestSession',
-           'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsScheduleApi', 'AsTelephonyApi',
-           'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi',
-           'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi',
-           'AsWebhookApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
-           'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
+           'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsScheduleApi',
+           'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi',
+           'AsTransferNumbersApi', 'AsTrunkApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
+           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceLocationApi',
+           'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
 
 @dataclass(init=False)
@@ -1233,7 +1241,7 @@ class AsMessagesApi(AsApiChild, base='messages'):
 
     async def create(self, room_id: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None,
                text: str = None, markdown: str = None, files: List[str] = None,
-               attachments: List[MessageAttachment] = None) -> Message:
+               attachments: List[Union[dict, MessageAttachment]] = None) -> Message:
         """
         Post a plain text or rich text message, and optionally, a file attachment, to a room.
         The files parameter is an array, which accepts multiple values to allow for future expansion, but currently
@@ -1253,10 +1261,10 @@ class AsMessagesApi(AsApiChild, base='messages'):
         :type text: str
         :param markdown: str: The message, in Markdown format. The maximum message length is 7439 bytes.
         :type markdown: str
-        :param files: List[str]: The public URL to a binary file to be posted into the room. Only one file is allowed
+        :param files: List[str]: The public URL to a binary file or a path to a local file to be posted into the room.
+            Only one file is allowed
             per message. Uploaded files are automatically converted into a format that all Webex clients can render. For
             the supported media types and the behavior of uploads, see the Message Attachments Guide.
-            Possible values: http://www.example.com/images/media.png
         :type files: List[str]
         :param attachments: List[Attachment]: Content attachments to attach to the message. Only one card per message
             is supported. See the Cards Guide for more information.
@@ -1277,12 +1285,28 @@ class AsMessagesApi(AsApiChild, base='messages'):
             body['text'] = text
         if markdown is not None:
             body['markdown'] = markdown
+        if attachments is not None:
+            body['attachments'] = [a.dict(by_alias=True) if isinstance(a, MessageAttachment) else a
+                                   for a in attachments]
         if files is not None:
             body['files'] = files
-        if attachments is not None:
-            body['attachments'] = attachments
+
         url = self.ep()
-        data = await super().post(url=url, json=body)
+        if files and os.path.isfile(files[0]):
+            # this is a local file
+            open_file = open(files[0], mode='rb')
+            try:
+                c_type = mimetypes.guess_type(files[0])[0] or 'text/plain'
+                body['files'] = (os.path.basename(files[0]),
+                                 open_file,
+                                 c_type)
+                multipart = MultipartEncoder(body)
+                headers = {'Content-type': multipart.content_type}
+                data = await super().post(url=url, headers=headers, data=multipart)
+            finally:
+                open_file.close()
+        else:
+            data = await super().post(url=url, json=body)
         return Message.parse_obj(data)
 
     async def edit(self, message: Message) -> Message:
@@ -3909,6 +3933,107 @@ class AsReportsApi(AsApiChild, base='devices'):
         
 
 
+class AsRoomTabsApi(AsApiChild, base='room/tabs'):
+    """
+    A Room Tab represents a URL shortcut that is added as a persistent tab to a Webex room (space) tab row. Use this
+    API to list tabs of any Webex room that you belong to. Room Tabs can also be updated to point to a different
+    content URL, or deleted to remove the tab from the room.
+    Just like in the Webex app, you must be a member of the room in order to list its Room Tabs.
+    """
+
+    def list_tabs_gen(self, room_id: str, **params) -> AsyncGenerator[RoomTab, None, None]:
+        """
+        Lists all Room Tabs of a room specified by the roomId query parameter.
+
+        :param room_id: str: ID of the room for which to list room tabs.
+        :type room_id: str
+        """
+        if room_id is not None:
+            params['roomId'] = room_id
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=RoomTab, params=params)
+
+    async def list_tabs(self, room_id: str, **params) -> List[RoomTab]:
+        """
+        Lists all Room Tabs of a room specified by the roomId query parameter.
+
+        :param room_id: str: ID of the room for which to list room tabs.
+        :type room_id: str
+        """
+        if room_id is not None:
+            params['roomId'] = room_id
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=RoomTab, params=params)]
+
+    async def create_tab(self, room_id: str, content_url: str, display_name: str) -> RoomTab:
+        """
+        Add a tab with a specified URL to a room.
+
+        :param room_id: str: A unique identifier for the room.
+        :type room_id: str
+        :param content_url: str: URL of the Room Tab. Must use https protocol.
+        :type content_url: str
+        :param display_name: str: User-friendly name for the room tab.
+        :type display_name: str
+        """
+        body = {}
+        if room_id is not None:
+            body['roomId'] = room_id
+        if content_url is not None:
+            body['contentUrl'] = content_url
+        if display_name is not None:
+            body['displayName'] = display_name
+        url = self.ep()
+        data = await super().post(url=url, json=body)
+        return RoomTab.parse_obj(data)
+
+    async def tab_details(self, tab_id: str) -> RoomTab:
+        """
+        Get details for a Room Tab with the specified room tab ID.
+
+        :param tab_id: str: The unique identifier for the Room Tab.
+        :type tab_id: str
+        """
+        url = self.ep(f'{tab_id}')
+        data = await super().get(url=url)
+        return RoomTab.parse_obj(data)
+
+    async def update_tab(self, tab_id: str, room_id: str, content_url: str, display_name: str) -> RoomTab:
+        """
+        Updates the content URL of the specified Room Tab ID.
+
+        :param tab_id: str: The unique identifier for the Room Tab.
+        :type tab_id: str
+        :param room_id: str: ID of the room that contains the room tab in question.
+        :type room_id: str
+        :param content_url: str: Content URL of the Room Tab. URL must use https protocol.
+        :type content_url: str
+        :param display_name: str: User-friendly name for the room tab.
+        :type display_name: str
+        """
+        body = {}
+        if room_id is not None:
+            body['roomId'] = room_id
+        if content_url is not None:
+            body['contentUrl'] = content_url
+        if display_name is not None:
+            body['displayName'] = display_name
+        url = self.ep(f'{tab_id}')
+        data = await super().put(url=url, json=body)
+        return RoomTab.parse_obj(data)
+
+    async def delete_tab(self, tab_id: str):
+        """
+        Deletes a Room Tab with the specified ID.
+
+        :param tab_id: str: The unique identifier for the Room Tab to delete.
+        :type tab_id: str
+        """
+        url = self.ep(f'{tab_id}')
+        await super().delete(url=url)
+        return
+
+
 class AsRoomsApi(AsApiChild, base='rooms'):
     """
     Rooms are virtual meeting places where people post messages and collaborate to get work done. This API is used to
@@ -4083,6 +4208,185 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         :type room_id: str
         """
         url = self.ep(f'{room_id}')
+        await super().delete(url=url)
+        return
+
+
+class AsTeamMembershipsApi(AsApiChild, base='team/memberships'):
+    """
+    Team Memberships represent a person's relationship to a team. Use this API to list members of any team that you're
+    in or create memberships to invite someone to a team. Team memberships can also be updated to make someone a
+    moderator or deleted to remove them from the team.
+    Just like in the Webex app, you must be a member of the team in order to list its memberships or invite people.
+    """
+
+    def list_memberships_gen(self, team_id: str, **params) -> AsyncGenerator[TeamMembership, None, None]:
+        """
+        Lists all team memberships for a given team, specified by the teamId query parameter.
+        Use query parameters to filter the response.
+
+        :param team_id: str: List memberships for a team, by ID.
+        :type team_id: str
+        """
+        params = {'teamId': team_id}
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=TeamMembership, params=params)
+
+    async def list_memberships(self, team_id: str, **params) -> List[TeamMembership]:
+        """
+        Lists all team memberships for a given team, specified by the teamId query parameter.
+        Use query parameters to filter the response.
+
+        :param team_id: str: List memberships for a team, by ID.
+        :type team_id: str
+        """
+        params = {'teamId': team_id}
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=TeamMembership, params=params)]
+
+    async def create_membership(self, team_id: str, person_id: str = None, person_email: str = None,
+                          is_moderator: bool = None) -> TeamMembership:
+        """
+        Add someone to a team by Person ID or email address, optionally making them a moderator.
+
+        :param team_id: str: The team ID.
+        :type team_id: str
+        :param person_id: str: The person ID.
+        :type person_id: str
+        :param person_email: str: The email address of the person.
+        :type person_email: str
+        :param is_moderator: bool: Whether or not the participant is a team moderator.
+        :type is_moderator: bool
+        """
+        body = {}
+        if team_id is not None:
+            body['teamId'] = team_id
+        if person_id is not None:
+            body['personId'] = person_id
+        if person_email is not None:
+            body['personEmail'] = person_email
+        if is_moderator is not None:
+            body['isModerator'] = is_moderator
+        url = self.ep()
+        data = await super().post(url=url, json=body)
+        return TeamMembership.parse_obj(data)
+
+    async def membership_details(self, membership_id: str) -> TeamMembership:
+        """
+        Shows details for a team membership, by ID.
+        Specify the team membership ID in the membershipId URI parameter.
+
+        :param membership_id: str: The unique identifier for the team membership.
+        :type membership_id: str
+        """
+        url = self.ep(f'{membership_id}')
+        data = await super().get(url=url)
+        return TeamMembership.parse_obj(data)
+
+    async def update_membership(self, membership_id: str, is_moderator: bool) -> TeamMembership:
+        """
+        Updates a team membership, by ID.
+        Specify the team membership ID in the membershipId URI parameter.
+
+        :param membership_id: str: The unique identifier for the team membership.
+        :type membership_id: str
+        :param is_moderator: bool: Whether or not the participant is a team moderator.
+        :type is_moderator: bool
+        """
+        body = {'isModerator': is_moderator}
+        url = self.ep(f'{membership_id}')
+        data = await super().put(url=url, json=body)
+        return TeamMembership.parse_obj(data)
+
+    async def delete_membership(self, membership_id: str):
+        """
+        Deletes a team membership, by ID.
+        Specify the team membership ID in the membershipId URI parameter.
+        The team membership for the last moderator of a team may not be deleted; promote another user to team moderator
+        first.
+
+        :param membership_id: str: The unique identifier for the team membership.
+        :type membership_id: str
+        """
+        url = self.ep(f'{membership_id}')
+        await super().delete(url=url)
+        return
+
+
+class AsTeamsApi(AsApiChild, base='teams'):
+    """
+    Teams are groups of people with a set of rooms that are visible to all members of that team. This API is used to
+    manage the teams themselves. Teams are created and deleted with this API. You can also update a team to change its
+    name, for example.
+    To manage people in a team see the Team Memberships API.
+    To manage team rooms see the Rooms API.
+    """
+
+    def list_gen(self) -> AsyncGenerator[Team, None, None]:
+        """
+        Lists teams to which the authenticated user belongs.
+        """
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=Team)
+
+    async def list(self) -> List[Team]:
+        """
+        Lists teams to which the authenticated user belongs.
+        """
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=Team)]
+
+    async def create(self, name: str) -> Team:
+        """
+        Creates a team.
+        The authenticated user is automatically added as a member of the team. See the Team Memberships API to learn how to add more people to the team.
+
+        :param name: str: A user-friendly name for the team.
+        :type name: str
+        """
+        body = {}
+        if name is not None:
+            body['name'] = name
+        url = self.ep()
+        data = await super().post(url=url, json=body)
+        return Team.parse_obj(data)
+
+    async def details(self, team_id: str) -> Team:
+        """
+        Shows details for a team, by ID.
+        Specify the team ID in the teamId parameter in the URI.
+
+        :param team_id: str: The unique identifier for the team.
+        :type team_id: str
+        """
+        url = self.ep(f'{team_id}')
+        data = await super().get(url=url)
+        return Team.parse_obj(data)
+
+    async def update(self, team_id: str, name: str) -> Team:
+        """
+        Updates details for a team, by ID.
+        Specify the team ID in the teamId parameter in the URI.
+
+        :param team_id: str: The unique identifier for the team.
+        :type team_id: str
+        :param name: str: A user-friendly name for the team.
+        :type name: str
+        """
+        body = {'name': name}
+        url = self.ep(f'{team_id}')
+        data = await super().put(url=url, json=body)
+        return Team.parse_obj(data)
+
+    async def delete(self, team_id: str):
+        """
+        Deletes a team, by ID.
+        Specify the team ID in the teamId parameter in the URI.
+
+        :param team_id: str: The unique identifier for the team.
+        :type team_id: str
+        """
+        url = self.ep(f'{team_id}')
         await super().delete(url=url)
         return
 
@@ -10151,6 +10455,12 @@ class AsWebexSimpleApi:
     reports: AsReportsApi
     #: Rooms API :class:`AsRoomsApi`
     rooms: AsRoomsApi
+    #: Room tabs API :class:`AsRoomTabsApi`
+    room_tabs: AsRoomTabsApi
+    #: Teams API :class:`AsTeamsApi`
+    teams: AsTeamsApi
+    #: Team memberships API :class:`AsTeamMembershipsApi`
+    team_memberships: AsTeamMembershipsApi
     #: Telephony (features) API :class:`AsTelephonyApi`
     telephony: AsTelephonyApi
     #: Webhooks API :class:`AsWebhookApi`
@@ -10194,6 +10504,9 @@ class AsWebexSimpleApi:
         self.people = AsPeopleApi(session=session)
         self.reports = AsReportsApi(session=session)
         self.rooms = AsRoomsApi(session=session)
+        self.room_tabs = AsRoomTabsApi(session=session)
+        self.teams = AsTeamsApi(session=session)
+        self.team_memberships = AsTeamMembershipsApi(session=session)
         self.telephony = AsTelephonyApi(session=session)
         self.webhook = AsWebhookApi(session=session)
         self.workspaces = AsWorkspacesApi(session=session)
