@@ -14,8 +14,8 @@ from urllib.parse import parse_qsl
 import backoff
 from pydantic import BaseModel, ValidationError, Field
 from requests import HTTPError, Response, Session
-from requests.models import PreparedRequest
 from requests.adapters import HTTPAdapter
+from requests.models import PreparedRequest
 
 from .base import ApiModel, StrOrDict
 from .tokens import Tokens

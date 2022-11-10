@@ -8,7 +8,7 @@ from random import choice
 from typing import ClassVar
 from unittest import skip
 
-from randomlocation import RandomLocation, NpaInfo, Address
+from test_helper.randomlocation import RandomLocation, NpaInfo, Address
 
 from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.common import RouteType, RouteIdentity
