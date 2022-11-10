@@ -4,8 +4,11 @@ Tests for messages API
 import uuid
 from random import choice
 
+from pydantic import parse_obj_as
+
 from tests.base import TestCaseWithUsersAndSpaces
 from wxc_sdk.common import RoomType
+from wxc_sdk.messages import MessageAttachment
 from wxc_sdk.rooms import Room
 
 
@@ -29,3 +32,31 @@ class TestMessages(TestCaseWithUsersAndSpaces):
         self.assertEqual(RoomType.direct, new_message.room_type)
         direct_by_id = list(api.list_direct(person_id=target_user.person_id))
         direct_by_email = list(api.list_direct(person_email=target_user.emails[0]))
+
+    def test_003_attachment(self):
+        attachments = [
+            {
+                "contentType": "application/vnd.microsoft.card.adaptive",
+                "content": {
+                    "type": "AdaptiveCard",
+                    "version": "1.0",
+                    "body": [
+                        {
+                            "type": "TextBlock",
+                            "text": "Sample Adaptive Card",
+                            "size": "large"
+                        }
+                    ],
+                    "actions": [
+                        {
+                            "type": "Action.OpenUrl",
+                            "url": "http://adaptivecards.io",
+                            "title": "Learn More"
+                        }
+                    ]
+                }
+            }
+        ]
+        atts = parse_obj_as(list[MessageAttachment], attachments)
+        foo = 1
+

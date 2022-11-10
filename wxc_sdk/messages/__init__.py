@@ -3,7 +3,7 @@ Messages API
 """
 from collections.abc import Generator
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
@@ -158,7 +158,7 @@ class MessagesApi(ApiChild, base='messages'):
 
     def create(self, room_id: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None,
                text: str = None, markdown: str = None, files: List[str] = None,
-               attachments: List[MessageAttachment] = None) -> Message:
+               attachments: List[Union[dict, MessageAttachment]] = None) -> Message:
         """
         Post a plain text or rich text message, and optionally, a file attachment, to a room.
         The files parameter is an array, which accepts multiple values to allow for future expansion, but currently
@@ -205,7 +205,8 @@ class MessagesApi(ApiChild, base='messages'):
         if files is not None:
             body['files'] = files
         if attachments is not None:
-            body['attachments'] = attachments
+            body['attachments'] = [a.dict(by_alias=True) if isinstance(a, MessageAttachment) else a
+                                   for a in attachments]
         url = self.ep()
         data = super().post(url=url, json=body)
         return Message.parse_obj(data)
