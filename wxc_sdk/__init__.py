@@ -17,7 +17,10 @@ from .people import PeopleApi
 from .person_settings import PersonSettingsApi
 from .reports import ReportsApi
 from .rest import RestSession
+from .room_tabs import RoomTabsApi
 from .rooms import RoomsApi
+from .team_memberships import TeamMembershipsApi
+from .teams import TeamsApi
 from .telephony import TelephonyApi
 from .tokens import Tokens
 from .webhook import WebhookApi
@@ -63,6 +66,12 @@ class WebexSimpleApi:
     reports: ReportsApi
     #: Rooms API :class:`rooms.RoomsApi`
     rooms: RoomsApi
+    #: Room tabs API :class:`room_tabs.RoomTabsApi`
+    room_tabs: RoomTabsApi
+    #: Teams API :class:`teams.TeamsApi`
+    teams: TeamsApi
+    #: Team memberships API :class:`TeamMembershipsApi`
+    team_memberships: TeamMembershipsApi
     #: Telephony (features) API :class:`telephony.TelephonyApi`
     telephony: TelephonyApi
     #: Webhooks API :class:`webhook.WebhookApi`
@@ -106,6 +115,9 @@ class WebexSimpleApi:
         self.people = PeopleApi(session=session)
         self.reports = ReportsApi(session=session)
         self.rooms = RoomsApi(session=session)
+        self.room_tabs = RoomTabsApi(session=session)
+        self.teams = TeamsApi(session=session)
+        self.team_memberships = TeamMembershipsApi(session=session)
         self.telephony = TelephonyApi(session=session)
         self.webhook = WebhookApi(session=session)
         self.workspaces = WorkspacesApi(session=session)

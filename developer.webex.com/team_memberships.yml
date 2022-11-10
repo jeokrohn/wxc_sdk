@@ -1,0 +1,373 @@
+# command: ./read_api_spec.py -s Messaging -t Team Memberships -f team_memberships.yml
+docs:
+  Attachment Actions:
+    doc: null
+    header: null
+    methods: []
+  Events:
+    doc: null
+    header: null
+    methods: []
+  Memberships:
+    doc: null
+    header: null
+    methods: []
+  Messages:
+    doc: null
+    header: null
+    methods: []
+  People:
+    doc: null
+    header: null
+    methods: []
+  Room Tabs:
+    doc: null
+    header: null
+    methods: []
+  Rooms:
+    doc: null
+    header: null
+    methods: []
+  Team Memberships:
+    doc: 'Team Memberships represent a person''s relationship to a team. Use this
+      API to list members of any team that you''re in or create memberships to invite
+      someone to a team. Team memberships can also be updated to make someone a moderator
+      or deleted to remove them from the team.
+
+      Just like in the Webex app, you must be a member of the team in order to list
+      its memberships or invite people.'
+    header: Team Memberships
+    methods:
+    - doc: 'Lists all team memberships for a given team, specified by the teamId query
+        parameter.
+
+        Use query parameters to filter the response.'
+      documentation:
+        doc: List Team Memberships
+        doc_link: https://developer.webex.com/docs/api/v1/team-memberships/list-team-memberships
+        endpoint: https://webexapis.com/v1/team/memberships
+        http_method: GET
+      header: List Team Memberships
+      parameters_and_response:
+        Query Parameters:
+        - doc: List memberships for a team, by ID.
+          name: teamId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Limit the maximum number of team memberships in the response.
+          name: max
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        Response Properties:
+        - doc: ''
+          name: items
+          param_attrs:
+          - doc: A unique identifier for the team membership.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The team ID.
+            name: teamId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The person ID.
+            name: personId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The email address of the person.
+            name: personEmail
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The display name of the person.
+            name: personDisplayName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The organization ID of the person.
+            name: personOrgId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Whether or not the participant is a team moderator.
+            name: isModerator
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: The date and time when the team membership was created.
+            name: created
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[Team Membership]
+          type_spec: null
+    - doc: Add someone to a team by Person ID or email address, optionally making
+        them a moderator.
+      documentation:
+        doc: Create a Team Membership
+        doc_link: https://developer.webex.com/docs/api/v1/team-memberships/create-a-team-membership
+        endpoint: https://webexapis.com/v1/team/memberships
+        http_method: POST
+      header: Create a Team Membership
+      parameters_and_response:
+        Body Parameters:
+        - doc: The team ID.
+          name: teamId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: The person ID.
+          name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The email address of the person.
+          name: personEmail
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Whether or not the participant is a team moderator.
+          name: isModerator
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        Response Properties:
+        - doc: A unique identifier for the team membership.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The team ID.
+          name: teamId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The person ID.
+          name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The email address of the person.
+          name: personEmail
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The display name of the person.
+          name: personDisplayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The organization ID of the person.
+          name: personOrgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Whether or not the participant is a team moderator.
+          name: isModerator
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The date and time when the team membership was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+    - doc: 'Shows details for a team membership, by ID.
+
+        Specify the team membership ID in the membershipId URI parameter.'
+      documentation:
+        doc: Get Team Membership Details
+        doc_link: https://developer.webex.com/docs/api/v1/team-memberships/get-team-membership-details
+        endpoint: https://webexapis.com/v1/team/memberships/{membershipId}
+        http_method: GET
+      header: Get Team Membership Details
+      parameters_and_response:
+        Response Properties:
+        - doc: A unique identifier for the team membership.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The team ID.
+          name: teamId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The person ID.
+          name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The email address of the person.
+          name: personEmail
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The display name of the person.
+          name: personDisplayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The organization ID of the person.
+          name: personOrgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Whether or not the participant is a team moderator.
+          name: isModerator
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The date and time when the team membership was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: The unique identifier for the team membership.
+          name: membershipId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Updates a team membership, by ID.
+
+        Specify the team membership ID in the membershipId URI parameter.'
+      documentation:
+        doc: Update a Team Membership
+        doc_link: https://developer.webex.com/docs/api/v1/team-memberships/update-a-team-membership
+        endpoint: https://webexapis.com/v1/team/memberships/{membershipId}
+        http_method: PUT
+      header: Update a Team Membership
+      parameters_and_response:
+        Body Parameters:
+        - doc: Whether or not the participant is a team moderator.
+          name: isModerator
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: required
+        Response Properties:
+        - doc: A unique identifier for the team membership.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The team ID.
+          name: teamId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The person ID.
+          name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The email address of the person.
+          name: personEmail
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The display name of the person.
+          name: personDisplayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The organization ID of the person.
+          name: personOrgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Whether or not the participant is a team moderator.
+          name: isModerator
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The date and time when the team membership was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: The unique identifier for the team membership.
+          name: membershipId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Deletes a team membership, by ID.
+
+        Specify the team membership ID in the membershipId URI parameter.
+
+        The team membership for the last moderator of a team may not be deleted; promote
+        another user to team moderator first.'
+      documentation:
+        doc: Delete a Team Membership
+        doc_link: https://developer.webex.com/docs/api/v1/team-memberships/delete-a-team-membership
+        endpoint: https://webexapis.com/v1/team/memberships/{membershipId}
+        http_method: DELETE
+      header: Delete a Team Membership
+      parameters_and_response:
+        URI Parameters:
+        - doc: The unique identifier for the team membership.
+          name: membershipId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+  Teams:
+    doc: null
+    header: null
+    methods: []
+  Tracking Codes:
+    doc: null
+    header: null
+    methods: []
+  Webhooks:
+    doc: null
+    header: null
+    methods: []

@@ -1,0 +1,384 @@
+# command: ./read_api_spec.py -s Messaging -t Room Tabs -f room_tabs.yml
+docs:
+  Attachment Actions:
+    doc: null
+    header: null
+    methods: []
+  Events:
+    doc: null
+    header: null
+    methods: []
+  Memberships:
+    doc: null
+    header: null
+    methods: []
+  Messages:
+    doc: null
+    header: null
+    methods: []
+  People:
+    doc: null
+    header: null
+    methods: []
+  Room Tabs:
+    doc: 'A Room Tab represents a URL shortcut that is added as a persistent tab to
+      a Webex room (space) tab row. Use this API to list tabs of any Webex room that
+      you belong to. Room Tabs can also be updated to point to a different content
+      URL, or deleted to remove the tab from the room.
+
+      Just like in the Webex app, you must be a member of the room in order to list
+      its Room Tabs.'
+    header: Room Tabs
+    methods:
+    - doc: Lists all Room Tabs of a room specified by the roomId query parameter.
+      documentation:
+        doc: List Room Tabs
+        doc_link: https://developer.webex.com/docs/api/v1/room-tabs/list-room-tabs
+        endpoint: https://webexapis.com/v1/room/tabs
+        http_method: GET
+      header: List Room Tabs
+      parameters_and_response:
+        Query Parameters:
+        - doc: ID of the room for which to list room tabs.
+          name: roomId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        Response Properties:
+        - doc: ''
+          name: items
+          param_attrs:
+          - doc: A unique identifier for the Room Tab.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A unique identifier for the room containing the room tab.
+            name: roomId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The room type.
+            name: roomType
+            param_attrs:
+            - doc: 1:1 room
+              name: direct
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: group room
+              name: group
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: User-friendly name for the room tab.
+            name: displayName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Room Tab's content URL.
+            name: contentUrl
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The person ID of the person who created this Room Tab.
+            name: creatorId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The date and time when the Room Tab was created.
+            name: created
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[Room Tab]
+          type_spec: null
+    - doc: Add a tab with a specified URL to a room.
+      documentation:
+        doc: Create a Room Tab
+        doc_link: https://developer.webex.com/docs/api/v1/room-tabs/create-a-room-tab
+        endpoint: https://webexapis.com/v1/room/tabs
+        http_method: POST
+      header: Create a Room Tab
+      parameters_and_response:
+        Body Parameters:
+        - doc: A unique identifier for the room.
+          name: roomId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: URL of the Room Tab. Must use https protocol.
+          name: contentUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: User-friendly name for the room tab.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        Response Properties:
+        - doc: A unique identifier for the Room Tab.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A unique identifier for the room containing the room tab.
+          name: roomId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The room type.
+          name: roomType
+          param_attrs:
+          - doc: 1:1 room
+            name: direct
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: group room
+            name: group
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: User-friendly name for the room tab.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Room Tab's content URL.
+          name: contentUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The person ID of the person who created this Room Tab.
+          name: creatorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time when the Room Tab was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+    - doc: Get details for a Room Tab with the specified room tab ID.
+      documentation:
+        doc: Get Room Tab Details
+        doc_link: https://developer.webex.com/docs/api/v1/room-tabs/get-room-tab-details
+        endpoint: https://webexapis.com/v1/room/tabs/{id}
+        http_method: GET
+      header: Get Room Tab Details
+      parameters_and_response:
+        Response Properties:
+        - doc: A unique identifier for the Room Tab.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A unique identifier for the room containing the room tab.
+          name: roomId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The room type.
+          name: roomType
+          param_attrs:
+          - doc: 1:1 room
+            name: direct
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: group room
+            name: group
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: User-friendly name for the room tab.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Room Tab's content URL.
+          name: contentUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The person ID of the person who created this Room Tab.
+          name: creatorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time when the Room Tab was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: The unique identifier for the Room Tab.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: Updates the content URL of the specified Room Tab ID.
+      documentation:
+        doc: Update a Room Tab
+        doc_link: https://developer.webex.com/docs/api/v1/room-tabs/update-a-room-tab
+        endpoint: https://webexapis.com/v1/room/tabs/{id}
+        http_method: PUT
+      header: Update a Room Tab
+      parameters_and_response:
+        Body Parameters:
+        - doc: ID of the room that contains the room tab in question.
+          name: roomId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Content URL of the Room Tab. URL must use https protocol.
+          name: contentUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: User-friendly name for the room tab.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        Response Properties:
+        - doc: A unique identifier for the Room Tab.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A unique identifier for the room containing the room tab.
+          name: roomId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The room type.
+          name: roomType
+          param_attrs:
+          - doc: 1:1 room
+            name: direct
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: group room
+            name: group
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: User-friendly name for the room tab.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Room Tab's content URL.
+          name: contentUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The person ID of the person who created this Room Tab.
+          name: creatorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time when the Room Tab was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: The unique identifier for the Room Tab.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: Deletes a Room Tab with the specified ID.
+      documentation:
+        doc: Delete a Room Tab
+        doc_link: https://developer.webex.com/docs/api/v1/room-tabs/delete-a-room-tab
+        endpoint: https://webexapis.com/v1/room/tabs/{id}
+        http_method: DELETE
+      header: Delete a Room Tab
+      parameters_and_response:
+        URI Parameters:
+        - doc: The unique identifier for the Room Tab to delete.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+  Rooms:
+    doc: null
+    header: null
+    methods: []
+  Team Memberships:
+    doc: null
+    header: null
+    methods: []
+  Teams:
+    doc: null
+    header: null
+    methods: []
+  Tracking Codes:
+    doc: null
+    header: null
+    methods: []
+  Webhooks:
+    doc: null
+    header: null
+    methods: []
