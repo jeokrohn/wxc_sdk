@@ -1,0 +1,226 @@
+# command: ./read_api_spec.py -s Messaging -t Teams -f teams.yml
+docs:
+  Attachment Actions:
+    doc: null
+    header: null
+    methods: []
+  Events:
+    doc: null
+    header: null
+    methods: []
+  Memberships:
+    doc: null
+    header: null
+    methods: []
+  Messages:
+    doc: null
+    header: null
+    methods: []
+  People:
+    doc: null
+    header: null
+    methods: []
+  Room Tabs:
+    doc: null
+    header: null
+    methods: []
+  Rooms:
+    doc: null
+    header: null
+    methods: []
+  Team Memberships:
+    doc: null
+    header: null
+    methods: []
+  Teams:
+    doc: 'Teams are groups of people with a set of rooms that are visible to all members
+      of that team. This API is used to manage the teams themselves. Teams are created
+      and deleted with this API. You can also update a team to change its name, for
+      example.
+
+      To manage people in a team see the Team Memberships API.
+
+      To manage team rooms see the Rooms API.'
+    header: Teams
+    methods:
+    - doc: Lists teams to which the authenticated user belongs.
+      documentation:
+        doc: List Teams
+        doc_link: https://developer.webex.com/docs/api/v1/teams/list-teams
+        endpoint: https://webexapis.com/v1/teams
+        http_method: GET
+      header: List Teams
+      parameters_and_response:
+        Query Parameters:
+        - doc: Limit the maximum number of teams in the response.
+          name: max
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        Response Properties:
+        - doc: ''
+          name: items
+          param_attrs:
+          - doc: A unique identifier for the team.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A user-friendly name for the team.
+            name: name
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The date and time the team was created.
+            name: created
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[Team]
+          type_spec: null
+    - doc: 'Creates a team.
+
+        The authenticated user is automatically added as a member of the team. See
+        the Team Memberships API to learn how to add more people to the team.'
+      documentation:
+        doc: Create a Team
+        doc_link: https://developer.webex.com/docs/api/v1/teams/create-a-team
+        endpoint: https://webexapis.com/v1/teams
+        http_method: POST
+      header: Create a Team
+      parameters_and_response:
+        Body Parameters:
+        - doc: A user-friendly name for the team.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        Response Properties:
+        - doc: A unique identifier for the team.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A user-friendly name for the team.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time the team was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+    - doc: 'Shows details for a team, by ID.
+
+        Specify the team ID in the teamId parameter in the URI.'
+      documentation:
+        doc: Get Team Details
+        doc_link: https://developer.webex.com/docs/api/v1/teams/get-team-details
+        endpoint: https://webexapis.com/v1/teams/{teamId}
+        http_method: GET
+      header: Get Team Details
+      parameters_and_response:
+        Response Properties:
+        - doc: A unique identifier for the team.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A user-friendly name for the team.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time the team was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: The unique identifier for the team.
+          name: teamId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Updates details for a team, by ID.
+
+        Specify the team ID in the teamId parameter in the URI.'
+      documentation:
+        doc: Update a Team
+        doc_link: https://developer.webex.com/docs/api/v1/teams/update-a-team
+        endpoint: https://webexapis.com/v1/teams/{teamId}
+        http_method: PUT
+      header: Update a Team
+      parameters_and_response:
+        Body Parameters:
+        - doc: A user-friendly name for the team.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        Response Properties:
+        - doc: A unique identifier for the team.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A user-friendly name for the team.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time the team was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: The unique identifier for the team.
+          name: teamId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Deletes a team, by ID.
+
+        Specify the team ID in the teamId parameter in the URI.'
+      documentation:
+        doc: Delete a Team
+        doc_link: https://developer.webex.com/docs/api/v1/teams/delete-a-team
+        endpoint: https://webexapis.com/v1/teams/{teamId}
+        http_method: DELETE
+      header: Delete a Team
+      parameters_and_response:
+        URI Parameters:
+        - doc: The unique identifier for the team.
+          name: teamId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+  Tracking Codes:
+    doc: null
+    header: null
+    methods: []
+  Webhooks:
+    doc: null
+    header: null
+    methods: []
