@@ -34,7 +34,7 @@ class TeamsApi(ApiChild, base='teams'):
         Lists teams to which the authenticated user belongs.
         """
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=Team, params=params)
+        return self.session.follow_pagination(url=url, model=Team)
 
     def create(self, name: str) -> Team:
         """
