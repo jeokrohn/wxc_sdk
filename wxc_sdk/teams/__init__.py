@@ -16,6 +16,8 @@ class Team(ApiModel):
     id: Optional[str]
     #: A user-friendly name for the team.
     name: Optional[str]
+    #: id of the creator
+    creator_id: Optional[str]
     #: The date and time the team was created.
     created: Optional[datetime]
 
@@ -41,7 +43,7 @@ class TeamsApi(ApiChild, base='teams'):
         Creates a team.
         The authenticated user is automatically added as a member of the team. See the Team Memberships API to learn how to add more people to the team.
 
-        :param name: str: A user-friendly name for the team.
+        :param name: A user-friendly name for the team.
         :type name: str
         """
         body = {}
@@ -56,7 +58,7 @@ class TeamsApi(ApiChild, base='teams'):
         Shows details for a team, by ID.
         Specify the team ID in the teamId parameter in the URI.
 
-        :param team_id: str: The unique identifier for the team.
+        :param team_id: The unique identifier for the team.
         :type team_id: str
         """
         url = self.ep(f'{team_id}')
@@ -68,9 +70,9 @@ class TeamsApi(ApiChild, base='teams'):
         Updates details for a team, by ID.
         Specify the team ID in the teamId parameter in the URI.
 
-        :param team_id: str: The unique identifier for the team.
+        :param team_id: The unique identifier for the team.
         :type team_id: str
-        :param name: str: A user-friendly name for the team.
+        :param name: A user-friendly name for the team.
         :type name: str
         """
         body = {'name': name}
@@ -83,7 +85,7 @@ class TeamsApi(ApiChild, base='teams'):
         Deletes a team, by ID.
         Specify the team ID in the teamId parameter in the URI.
 
-        :param team_id: str: The unique identifier for the team.
+        :param team_id: The unique identifier for the team.
         :type team_id: str
         """
         url = self.ep(f'{team_id}')

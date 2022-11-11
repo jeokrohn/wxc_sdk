@@ -42,7 +42,7 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         """
         Lists all Room Tabs of a room specified by the roomId query parameter.
 
-        :param room_id: str: ID of the room for which to list room tabs.
+        :param room_id: ID of the room for which to list room tabs.
         :type room_id: str
         """
         if room_id is not None:
@@ -54,11 +54,11 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         """
         Add a tab with a specified URL to a room.
 
-        :param room_id: str: A unique identifier for the room.
+        :param room_id: A unique identifier for the room.
         :type room_id: str
-        :param content_url: str: URL of the Room Tab. Must use https protocol.
+        :param content_url: URL of the Room Tab. Must use https protocol.
         :type content_url: str
-        :param display_name: str: User-friendly name for the room tab.
+        :param display_name: User-friendly name for the room tab.
         :type display_name: str
         """
         body = {}
@@ -76,7 +76,7 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         """
         Get details for a Room Tab with the specified room tab ID.
 
-        :param tab_id: str: The unique identifier for the Room Tab.
+        :param tab_id: The unique identifier for the Room Tab.
         :type tab_id: str
         """
         url = self.ep(f'{tab_id}')
@@ -87,13 +87,13 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         """
         Updates the content URL of the specified Room Tab ID.
 
-        :param tab_id: str: The unique identifier for the Room Tab.
+        :param tab_id: The unique identifier for the Room Tab.
         :type tab_id: str
-        :param room_id: str: ID of the room that contains the room tab in question.
+        :param room_id: ID of the room that contains the room tab in question.
         :type room_id: str
-        :param content_url: str: Content URL of the Room Tab. URL must use https protocol.
+        :param content_url: Content URL of the Room Tab. URL must use https protocol.
         :type content_url: str
-        :param display_name: str: User-friendly name for the room tab.
+        :param display_name: User-friendly name for the room tab.
         :type display_name: str
         """
         body = {}
@@ -111,7 +111,7 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         """
         Deletes a Room Tab with the specified ID.
 
-        :param tab_id: str: The unique identifier for the Room Tab to delete.
+        :param tab_id: The unique identifier for the Room Tab to delete.
         :type tab_id: str
         """
         url = self.ep(f'{tab_id}')

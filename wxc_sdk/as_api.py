@@ -17,7 +17,7 @@ from pydantic import parse_obj_as
 
 from wxc_sdk.all_types import *
 from wxc_sdk.as_rest import AsRestSession
-from wxc_sdk.base import to_camel, StrOrDict
+from wxc_sdk.base import to_camel, StrOrDict, dt_iso_str
 
 log = logging.getLogger(__name__)
 
@@ -51,19 +51,20 @@ __all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsApi
            'AsAuthCodesApi', 'AsAutoAttendantApi', 'AsBargeApi', 'AsCQPolicyApi', 'AsCallInterceptApi',
            'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi', 'AsCallRecordingApi', 'AsCallWaitingApi',
            'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsDetailedCDRApi',
-           'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi', 'AsDndApi', 'AsExecAssistantApi',
-           'AsForwardingApi', 'AsGroupsApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
-           'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
-           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMembershipApi',
-           'AsMessagesApi', 'AsMonitoringApi', 'AsNumbersApi', 'AsOrganisationVoicemailSettingsAPI',
-           'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi',
-           'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPremisePstnApi', 'AsPrivacyApi',
-           'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsReceptionistApi', 'AsReportsApi', 'AsRestSession',
-           'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsScheduleApi',
-           'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi',
-           'AsTransferNumbersApi', 'AsTrunkApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
-           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceLocationApi',
-           'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
+           'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi', 'AsDndApi', 'AsEventsApi',
+           'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi', 'AsHotelingApi', 'AsHuntGroupApi',
+           'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationInterceptApi',
+           'AsLocationMoHApi', 'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi',
+           'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi', 'AsNumbersApi',
+           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi',
+           'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
+           'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsReceptionistApi',
+           'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi',
+           'AsScheduleApi', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi',
+           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi', 'AsVoicePortalApi', 'AsVoicemailApi',
+           'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi',
+           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi', 'AsWorkspaceSettingsApi',
+           'AsWorkspacesApi']
 
 
 @dataclass(init=False)
@@ -191,13 +192,8 @@ class AsDetailedCDRApi(AsApiChild, base='devices'):
         if not end_time:
             end_time = datetime.now(tz=tz.tzutc()) - timedelta(minutes=5, seconds=30)
 
-        def iso_str(dt: datetime) -> str:
-            dt = dt.astimezone(tz.tzutc())
-            dt = dt.replace(tzinfo=None)
-            return f"{dt.isoformat(timespec='milliseconds')}Z"
-
-        params['startTime'] = iso_str(start_time)
-        params['endTime'] = iso_str(end_time)
+        params['startTime'] = dt_iso_str(start_time)
+        params['endTime'] = dt_iso_str(end_time)
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=CDR, params=params, item_key='items')
 
@@ -228,13 +224,8 @@ class AsDetailedCDRApi(AsApiChild, base='devices'):
         if not end_time:
             end_time = datetime.now(tz=tz.tzutc()) - timedelta(minutes=5, seconds=30)
 
-        def iso_str(dt: datetime) -> str:
-            dt = dt.astimezone(tz.tzutc())
-            dt = dt.replace(tzinfo=None)
-            return f"{dt.isoformat(timespec='milliseconds')}Z"
-
-        params['startTime'] = iso_str(start_time)
-        params['endTime'] = iso_str(end_time)
+        params['startTime'] = dt_iso_str(start_time)
+        params['endTime'] = dt_iso_str(end_time)
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=CDR, params=params, item_key='items')]
 
@@ -582,6 +573,90 @@ class AsDevicesApi(AsApiChild, base='devices'):
         params = org_id and {'orgId': org_id} or None
         data = await self.post(url=url, params=params, json={'workspaceId': workspace_id})
         return ActivationCodeResponse.parse_obj(data)
+
+
+class AsEventsApi(AsApiChild, base='events'):
+    """
+    Events are generated when actions take place within Webex, such as when someone creates or deletes a message.
+    The Events API can only be used by a Compliance Officer with an API access token that contains the
+    spark-compliance:events_read scope. See the Compliance Guide for more information.
+    """
+
+    def list_gen(self, resource: EventResource = None, type_: EventType = None, actor_id: str = None,
+             from_: datetime = None, to_: datetime = None, **params) -> AsyncGenerator[ComplianceEvent, None, None]:
+        """
+        List events in your organization. 
+        Several query parameters are available to filter the events returned in 
+        the response. Long result sets will be split into pages.
+
+        :param resource: List events with a specific resource type.
+        :type resource: EventResource
+        :param type_: List events with a specific event type.
+        :type type_: EventType
+        :param actor_id: List events performed by this person, by person ID.
+        :type actor_id: str
+        :param from_: List events which occurred after a specific date and time.
+        :type from_: str
+        :param to_: List events which occurred before a specific date and time. If unspecified, or set to a time in the 
+            future, lists events up to the present.
+        :type to_: str
+        """
+        if resource is not None:
+            params['resource'] = resource
+        if type_ is not None:
+            params['type'] = type_
+        if actor_id is not None:
+            params['actorId'] = actor_id
+        if from_ is not None:
+            params['from'] = dt_iso_str(from_)
+        if to_ is not None:
+            params['to'] = dt_iso_str(to_)
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=ComplianceEvent, params=params)
+
+    async def list(self, resource: EventResource = None, type_: EventType = None, actor_id: str = None,
+             from_: datetime = None, to_: datetime = None, **params) -> List[ComplianceEvent]:
+        """
+        List events in your organization. 
+        Several query parameters are available to filter the events returned in 
+        the response. Long result sets will be split into pages.
+
+        :param resource: List events with a specific resource type.
+        :type resource: EventResource
+        :param type_: List events with a specific event type.
+        :type type_: EventType
+        :param actor_id: List events performed by this person, by person ID.
+        :type actor_id: str
+        :param from_: List events which occurred after a specific date and time.
+        :type from_: str
+        :param to_: List events which occurred before a specific date and time. If unspecified, or set to a time in the 
+            future, lists events up to the present.
+        :type to_: str
+        """
+        if resource is not None:
+            params['resource'] = resource
+        if type_ is not None:
+            params['type'] = type_
+        if actor_id is not None:
+            params['actorId'] = actor_id
+        if from_ is not None:
+            params['from'] = dt_iso_str(from_)
+        if to_ is not None:
+            params['to'] = dt_iso_str(to_)
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=ComplianceEvent, params=params)]
+
+    async def details(self, event_id: str) -> ComplianceEvent:
+        """
+        Shows details for an event, by event ID.
+        Specify the event ID in the eventId parameter in the URI.
+
+        :param event_id: The unique identifier for the event.
+        :type event_id: str
+        """
+        url = self.ep(f'{event_id}')
+        data = await super().get(url=url)
+        return ComplianceEvent.parse_obj(data)
 
 
 class AsGroupsApi(AsApiChild, base='groups'):
@@ -993,12 +1068,12 @@ class AsMembershipApi(AsApiChild, base='memberships'):
         parameters.
         Long result sets will be split into pages.
 
-        :param room_id: str: List memberships associated with a room, by ID.
+        :param room_id: List memberships associated with a room, by ID.
         :type room_id: str
-        :param person_id: str: List memberships associated with a person, by ID. The roomId parameter is required
+        :param person_id: List memberships associated with a person, by ID. The roomId parameter is required
             when using this parameter.
         :type person_id: str
-        :param person_email: str: List memberships associated with a person, by email address. The roomId parameter
+        :param person_email: List memberships associated with a person, by email address. The roomId parameter
             is required when using this parameter.
         :type person_email: str
         """
@@ -1024,12 +1099,12 @@ class AsMembershipApi(AsApiChild, base='memberships'):
         parameters.
         Long result sets will be split into pages.
 
-        :param room_id: str: List memberships associated with a room, by ID.
+        :param room_id: List memberships associated with a room, by ID.
         :type room_id: str
-        :param person_id: str: List memberships associated with a person, by ID. The roomId parameter is required
+        :param person_id: List memberships associated with a person, by ID. The roomId parameter is required
             when using this parameter.
         :type person_id: str
-        :param person_email: str: List memberships associated with a person, by email address. The roomId parameter
+        :param person_email: List memberships associated with a person, by email address. The roomId parameter
             is required when using this parameter.
         :type person_email: str
         """
@@ -1048,13 +1123,13 @@ class AsMembershipApi(AsApiChild, base='memberships'):
         """
         Add someone to a room by Person ID or email address, optionally making them a moderator.
 
-        :param room_id: str: The room ID.
+        :param room_id: The room ID.
         :type room_id: str
-        :param person_id: str: The person ID.
+        :param person_id: The person ID.
         :type person_id: str
-        :param person_email: str: The email address of the person.
+        :param person_email: The email address of the person.
         :type person_email: str
-        :param is_moderator: bool: Whether or not the participant is a room moderator.
+        :param is_moderator: Whether or not the participant is a room moderator.
         :type is_moderator: bool
         """
         body = {}
@@ -1075,7 +1150,7 @@ class AsMembershipApi(AsApiChild, base='memberships'):
         Get details for a membership by ID.
         Specify the membership ID in the membershipId URI parameter.
 
-        :param membership_id: str: The unique identifier for the membership.
+        :param membership_id: The unique identifier for the membership.
         :type membership_id: str
         """
         url = self.ep(f'{membership_id}')
@@ -1110,7 +1185,7 @@ class AsMembershipApi(AsApiChild, base='memberships'):
         The membership for the last moderator of a Team's General space may not be deleted; promote another user to
         team moderator first.
 
-        :param membership_id: str: The unique identifier for the membership.
+        :param membership_id: The unique identifier for the membership.
         :type membership_id: str
         """
         url = self.ep(f'{membership_id}')
@@ -1130,17 +1205,17 @@ class AsMessagesApi(AsApiChild, base='messages'):
         The list sorts the messages in descending order by creation date.
         Long result sets will be split into pages.
 
-        :param room_id: str: List messages in a room, by ID.
+        :param room_id: List messages in a room, by ID.
         :type room_id: str
-        :param parent_id: str: List messages with a parent, by ID.
+        :param parent_id: List messages with a parent, by ID.
         :type parent_id: str
-        :param mentioned_people: List[str]: List messages with these people mentioned, by ID. Use me as a shorthand
+        :param mentioned_people: List messages with these people mentioned, by ID. Use me as a shorthand
             for the current API user. Only me or the person ID of the current user may be specified. Bots must include
             this parameter to list messages in group rooms (spaces).
         :type mentioned_people: List[str]
-        :param before: str: List messages sent before a date and time.
+        :param before: List messages sent before a date and time.
         :type before: str
-        :param before_message: str: List messages sent before a message, by ID.
+        :param before_message: List messages sent before a message, by ID.
         :type before_message: str
         """
         if room_id is not None:
@@ -1150,7 +1225,7 @@ class AsMessagesApi(AsApiChild, base='messages'):
         if mentioned_people is not None:
             params['mentionedPeople'] = mentioned_people
         if before is not None:
-            params['before'] = f"{before.isoformat(timespec='milliseconds')}Z"
+            params['before'] = dt_iso_str(before)
         if before_message is not None:
             params['beforeMessage'] = before_message
         url = self.ep()
@@ -1164,17 +1239,17 @@ class AsMessagesApi(AsApiChild, base='messages'):
         The list sorts the messages in descending order by creation date.
         Long result sets will be split into pages.
 
-        :param room_id: str: List messages in a room, by ID.
+        :param room_id: List messages in a room, by ID.
         :type room_id: str
-        :param parent_id: str: List messages with a parent, by ID.
+        :param parent_id: List messages with a parent, by ID.
         :type parent_id: str
-        :param mentioned_people: List[str]: List messages with these people mentioned, by ID. Use me as a shorthand
+        :param mentioned_people: List messages with these people mentioned, by ID. Use me as a shorthand
             for the current API user. Only me or the person ID of the current user may be specified. Bots must include
             this parameter to list messages in group rooms (spaces).
         :type mentioned_people: List[str]
-        :param before: str: List messages sent before a date and time.
+        :param before: List messages sent before a date and time.
         :type before: str
-        :param before_message: str: List messages sent before a message, by ID.
+        :param before_message: List messages sent before a message, by ID.
         :type before_message: str
         """
         if room_id is not None:
@@ -1184,7 +1259,7 @@ class AsMessagesApi(AsApiChild, base='messages'):
         if mentioned_people is not None:
             params['mentionedPeople'] = mentioned_people
         if before is not None:
-            params['before'] = f"{before.isoformat(timespec='milliseconds')}Z"
+            params['before'] = dt_iso_str(before)
         if before_message is not None:
             params['beforeMessage'] = before_message
         url = self.ep()
@@ -1198,11 +1273,11 @@ class AsMessagesApi(AsApiChild, base='messages'):
         room. Each message will include content attachments if present.
         The list sorts the messages in descending order by creation date.
 
-        :param parent_id: str: List messages with a parent, by ID.
+        :param parent_id: List messages with a parent, by ID.
         :type parent_id: str
-        :param person_id: str: List messages in a 1:1 room, by person ID.
+        :param person_id: List messages in a 1:1 room, by person ID.
         :type person_id: str
-        :param person_email: str: List messages in a 1:1 room, by person email.
+        :param person_email: List messages in a 1:1 room, by person email.
         :type person_email: str
         """
         if parent_id is not None:
@@ -1222,11 +1297,11 @@ class AsMessagesApi(AsApiChild, base='messages'):
         room. Each message will include content attachments if present.
         The list sorts the messages in descending order by creation date.
 
-        :param parent_id: str: List messages with a parent, by ID.
+        :param parent_id: List messages with a parent, by ID.
         :type parent_id: str
-        :param person_id: str: List messages in a 1:1 room, by person ID.
+        :param person_id: List messages in a 1:1 room, by person ID.
         :type person_id: str
-        :param person_email: str: List messages in a 1:1 room, by person email.
+        :param person_email: List messages in a 1:1 room, by person email.
         :type person_email: str
         """
         if parent_id is not None:
@@ -1247,26 +1322,26 @@ class AsMessagesApi(AsApiChild, base='messages'):
         The files parameter is an array, which accepts multiple values to allow for future expansion, but currently
         only one file may be included with the message. File previews are only rendered for attachments of 1MB or less.
 
-        :param room_id: str: The room ID of the message.
+        :param room_id: The room ID of the message.
         :type room_id: str
-        :param parent_id: str: The parent message to reply to.
+        :param parent_id: The parent message to reply to.
         :type parent_id: str
-        :param to_person_id: str: The person ID of the recipient when sending a private 1:1 message.
+        :param to_person_id: The person ID of the recipient when sending a private 1:1 message.
         :type to_person_id: str
-        :param to_person_email: str: The email address of the recipient when sending a private 1:1 message.
+        :param to_person_email: The email address of the recipient when sending a private 1:1 message.
         :type to_person_email: str
-        :param text: str: The message, in plain text. If markdown is specified this parameter may be optionally used
+        :param text: The message, in plain text. If markdown is specified this parameter may be optionally used
             to provide alternate text for UI clients that do not support rich text. The maximum message length is 7439
             bytes.
         :type text: str
-        :param markdown: str: The message, in Markdown format. The maximum message length is 7439 bytes.
+        :param markdown: The message, in Markdown format. The maximum message length is 7439 bytes.
         :type markdown: str
-        :param files: List[str]: The public URL to a binary file or a path to a local file to be posted into the room.
+        :param files: The public URL to a binary file or a path to a local file to be posted into the room.
             Only one file is allowed
             per message. Uploaded files are automatically converted into a format that all Webex clients can render. For
             the supported media types and the behavior of uploads, see the Message Attachments Guide.
         :type files: List[str]
-        :param attachments: List[Attachment]: Content attachments to attach to the message. Only one card per message
+        :param attachments: Content attachments to attach to the message. Only one card per message
             is supported. See the Cards Guide for more information.
         :type attachments: List[Attachment]
         :rtype: Message
@@ -1347,7 +1422,7 @@ class AsMessagesApi(AsApiChild, base='messages'):
         Show details for a message, by message ID.
         Specify the message ID in the messageId parameter in the URI.
 
-        :param message_id: str: The unique identifier for the message.
+        :param message_id: The unique identifier for the message.
         :type message_id: str
         """
         url = self.ep(f'{message_id}')
@@ -1359,7 +1434,7 @@ class AsMessagesApi(AsApiChild, base='messages'):
         Delete a message, by message ID.
         Specify the message ID in the messageId parameter in the URI.
 
-        :param message_id: str: The unique identifier for the message.
+        :param message_id: The unique identifier for the message.
         :type message_id: str
         """
         url = self.ep(f'{message_id}')
@@ -3945,7 +4020,7 @@ class AsRoomTabsApi(AsApiChild, base='room/tabs'):
         """
         Lists all Room Tabs of a room specified by the roomId query parameter.
 
-        :param room_id: str: ID of the room for which to list room tabs.
+        :param room_id: ID of the room for which to list room tabs.
         :type room_id: str
         """
         if room_id is not None:
@@ -3957,7 +4032,7 @@ class AsRoomTabsApi(AsApiChild, base='room/tabs'):
         """
         Lists all Room Tabs of a room specified by the roomId query parameter.
 
-        :param room_id: str: ID of the room for which to list room tabs.
+        :param room_id: ID of the room for which to list room tabs.
         :type room_id: str
         """
         if room_id is not None:
@@ -3969,11 +4044,11 @@ class AsRoomTabsApi(AsApiChild, base='room/tabs'):
         """
         Add a tab with a specified URL to a room.
 
-        :param room_id: str: A unique identifier for the room.
+        :param room_id: A unique identifier for the room.
         :type room_id: str
-        :param content_url: str: URL of the Room Tab. Must use https protocol.
+        :param content_url: URL of the Room Tab. Must use https protocol.
         :type content_url: str
-        :param display_name: str: User-friendly name for the room tab.
+        :param display_name: User-friendly name for the room tab.
         :type display_name: str
         """
         body = {}
@@ -3991,7 +4066,7 @@ class AsRoomTabsApi(AsApiChild, base='room/tabs'):
         """
         Get details for a Room Tab with the specified room tab ID.
 
-        :param tab_id: str: The unique identifier for the Room Tab.
+        :param tab_id: The unique identifier for the Room Tab.
         :type tab_id: str
         """
         url = self.ep(f'{tab_id}')
@@ -4002,13 +4077,13 @@ class AsRoomTabsApi(AsApiChild, base='room/tabs'):
         """
         Updates the content URL of the specified Room Tab ID.
 
-        :param tab_id: str: The unique identifier for the Room Tab.
+        :param tab_id: The unique identifier for the Room Tab.
         :type tab_id: str
-        :param room_id: str: ID of the room that contains the room tab in question.
+        :param room_id: ID of the room that contains the room tab in question.
         :type room_id: str
-        :param content_url: str: Content URL of the Room Tab. URL must use https protocol.
+        :param content_url: Content URL of the Room Tab. URL must use https protocol.
         :type content_url: str
-        :param display_name: str: User-friendly name for the room tab.
+        :param display_name: User-friendly name for the room tab.
         :type display_name: str
         """
         body = {}
@@ -4026,7 +4101,7 @@ class AsRoomTabsApi(AsApiChild, base='room/tabs'):
         """
         Deletes a Room Tab with the specified ID.
 
-        :param tab_id: str: The unique identifier for the Room Tab to delete.
+        :param tab_id: The unique identifier for the Room Tab to delete.
         :type tab_id: str
         """
         url = self.ep(f'{tab_id}')
@@ -4058,12 +4133,12 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         this can result in anomalies such as spaces that have had recent activity not being returned in the results
         when sorting by lastacivity.
 
-        :param team_id: str: List rooms associated with a team, by ID.
+        :param team_id: List rooms associated with a team, by ID.
         :type team_id: str
-        :param type_: RoomType: List rooms by type.
+        :param type_: List rooms by type.
             Possible values: direct, group
         :type type_: str
-        :param sort_by: str: Sort results.
+        :param sort_by: Sort results.
             Possible values: id, lastactivity, created
         :type sort_by: str
         """
@@ -4090,12 +4165,12 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         this can result in anomalies such as spaces that have had recent activity not being returned in the results
         when sorting by lastacivity.
 
-        :param team_id: str: List rooms associated with a team, by ID.
+        :param team_id: List rooms associated with a team, by ID.
         :type team_id: str
-        :param type_: RoomType: List rooms by type.
+        :param type_: List rooms by type.
             Possible values: direct, group
         :type type_: str
-        :param sort_by: str: Sort results.
+        :param sort_by: Sort results.
             Possible values: id, lastactivity, created
         :type sort_by: str
         """
@@ -4120,15 +4195,15 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         the same owning organization joined the space as the first human user.
         A space can only be put into announcement mode when it is locked.
 
-        :param title: str: A user-friendly name for the room.
+        :param title: A user-friendly name for the room.
         :type title: str
-        :param team_id: str: The ID for the team with which this room is associated.
+        :param team_id: The ID for the team with which this room is associated.
         :type team_id: str
-        :param classification_id: str: The classificationId for the room.
+        :param classification_id: The classificationId for the room.
         :type classification_id: str
-        :param is_locked: bool: Set the space as locked/moderated and the creator becomes a moderator
+        :param is_locked: Set the space as locked/moderated and the creator becomes a moderator
         :type is_locked: bool
-        :param is_announcement_only: bool: Sets the space into announcement Mode.
+        :param is_announcement_only: Sets the space into announcement Mode.
         :type is_announcement_only: bool
         """
         body = {}
@@ -4152,7 +4227,7 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         The title of the room for 1:1 rooms will be the display name of the other person.
         Specify the room ID in the roomId parameter in the URI.
 
-        :param room_id: str: The unique identifier for the room.
+        :param room_id: The unique identifier for the room.
         :type room_id: str
         """
         url = self.ep(f'{room_id}')
@@ -4164,7 +4239,7 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         Shows Webex meeting details for a room such as the SIP address, meeting URL, toll-free and toll dial-in numbers.
         Specify the room ID in the roomId parameter in the URI.
 
-        :param room_id: str: The unique identifier for the room.
+        :param room_id: The unique identifier for the room.
         :type room_id: str
         """
         url = self.ep(f'{room_id}/meetingInfo')
@@ -4204,7 +4279,7 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         Deleting a room that is part of a team will archive the room instead.
         Specify the room ID in the roomId parameter in the URI.
 
-        :param room_id: str: The unique identifier for the room.
+        :param room_id: The unique identifier for the room.
         :type room_id: str
         """
         url = self.ep(f'{room_id}')
@@ -4225,7 +4300,7 @@ class AsTeamMembershipsApi(AsApiChild, base='team/memberships'):
         Lists all team memberships for a given team, specified by the teamId query parameter.
         Use query parameters to filter the response.
 
-        :param team_id: str: List memberships for a team, by ID.
+        :param team_id: List memberships for a team, by ID.
         :type team_id: str
         """
         params = {'teamId': team_id}
@@ -4237,7 +4312,7 @@ class AsTeamMembershipsApi(AsApiChild, base='team/memberships'):
         Lists all team memberships for a given team, specified by the teamId query parameter.
         Use query parameters to filter the response.
 
-        :param team_id: str: List memberships for a team, by ID.
+        :param team_id: List memberships for a team, by ID.
         :type team_id: str
         """
         params = {'teamId': team_id}
@@ -4249,13 +4324,13 @@ class AsTeamMembershipsApi(AsApiChild, base='team/memberships'):
         """
         Add someone to a team by Person ID or email address, optionally making them a moderator.
 
-        :param team_id: str: The team ID.
+        :param team_id: The team ID.
         :type team_id: str
-        :param person_id: str: The person ID.
+        :param person_id: The person ID.
         :type person_id: str
-        :param person_email: str: The email address of the person.
+        :param person_email: The email address of the person.
         :type person_email: str
-        :param is_moderator: bool: Whether or not the participant is a team moderator.
+        :param is_moderator: Whether or not the participant is a team moderator.
         :type is_moderator: bool
         """
         body = {}
@@ -4276,7 +4351,7 @@ class AsTeamMembershipsApi(AsApiChild, base='team/memberships'):
         Shows details for a team membership, by ID.
         Specify the team membership ID in the membershipId URI parameter.
 
-        :param membership_id: str: The unique identifier for the team membership.
+        :param membership_id: The unique identifier for the team membership.
         :type membership_id: str
         """
         url = self.ep(f'{membership_id}')
@@ -4288,9 +4363,9 @@ class AsTeamMembershipsApi(AsApiChild, base='team/memberships'):
         Updates a team membership, by ID.
         Specify the team membership ID in the membershipId URI parameter.
 
-        :param membership_id: str: The unique identifier for the team membership.
+        :param membership_id: The unique identifier for the team membership.
         :type membership_id: str
-        :param is_moderator: bool: Whether or not the participant is a team moderator.
+        :param is_moderator: Whether or not the participant is a team moderator.
         :type is_moderator: bool
         """
         body = {'isModerator': is_moderator}
@@ -4305,7 +4380,7 @@ class AsTeamMembershipsApi(AsApiChild, base='team/memberships'):
         The team membership for the last moderator of a team may not be deleted; promote another user to team moderator
         first.
 
-        :param membership_id: str: The unique identifier for the team membership.
+        :param membership_id: The unique identifier for the team membership.
         :type membership_id: str
         """
         url = self.ep(f'{membership_id}')
@@ -4341,7 +4416,7 @@ class AsTeamsApi(AsApiChild, base='teams'):
         Creates a team.
         The authenticated user is automatically added as a member of the team. See the Team Memberships API to learn how to add more people to the team.
 
-        :param name: str: A user-friendly name for the team.
+        :param name: A user-friendly name for the team.
         :type name: str
         """
         body = {}
@@ -4356,7 +4431,7 @@ class AsTeamsApi(AsApiChild, base='teams'):
         Shows details for a team, by ID.
         Specify the team ID in the teamId parameter in the URI.
 
-        :param team_id: str: The unique identifier for the team.
+        :param team_id: The unique identifier for the team.
         :type team_id: str
         """
         url = self.ep(f'{team_id}')
@@ -4368,9 +4443,9 @@ class AsTeamsApi(AsApiChild, base='teams'):
         Updates details for a team, by ID.
         Specify the team ID in the teamId parameter in the URI.
 
-        :param team_id: str: The unique identifier for the team.
+        :param team_id: The unique identifier for the team.
         :type team_id: str
-        :param name: str: A user-friendly name for the team.
+        :param name: A user-friendly name for the team.
         :type name: str
         """
         body = {'name': name}
@@ -4383,7 +4458,7 @@ class AsTeamsApi(AsApiChild, base='teams'):
         Deletes a team, by ID.
         Specify the team ID in the teamId parameter in the URI.
 
-        :param team_id: str: The unique identifier for the team.
+        :param team_id: The unique identifier for the team.
         :type team_id: str
         """
         url = self.ep(f'{team_id}')
@@ -10435,6 +10510,8 @@ class AsWebexSimpleApi:
     cdr: AsDetailedCDRApi
     #: devices API :class:`AsDevicesApi`
     devices: AsDevicesApi
+    #: events API; :class:`AsEventsApi`
+    events: AsEventsApi
     #: groups API :class:`AsGroupsApi`
     groups: AsGroupsApi
     #: Licenses API :class:`AsLicensesApi`
@@ -10494,6 +10571,7 @@ class AsWebexSimpleApi:
         session = AsRestSession(tokens=tokens, concurrent_requests=concurrent_requests)
         self.cdr = AsDetailedCDRApi(session=session)
         self.devices = AsDevicesApi(session=session)
+        self.events = AsEventsApi(session=session)
         self.groups = AsGroupsApi(session=session)
         self.licenses = AsLicensesApi(session=session)
         self.locations = AsLocationsApi(session=session)

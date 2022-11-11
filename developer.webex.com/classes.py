@@ -96,7 +96,7 @@ class APIMethod:
 
     EP_URL = '''        url = self.ep({url_path})'''
     PARAM_DOC = '''
-        :param {p_name}: {p_type}: {p_doc}
+        :param {p_name}: {p_doc}
         :type {p_name}: {p_type}'''
     PARAM_INIT = '''
         if {p_name} is not None:

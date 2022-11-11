@@ -11,7 +11,7 @@ from dateutil import tz
 from pydantic import Field, root_validator
 
 from ..api_child import ApiChild
-from ..base import ApiModel
+from ..base import ApiModel, dt_iso_str
 
 __all__ = ['CDRCallType', 'CDRClientType', 'CDRDirection', 'CDROriginalReason', 'CDRRedirectReason',
            'CDRRelatedReason', 'CDRUserType', 'CDR', 'DetailedCDRApi']
@@ -232,12 +232,7 @@ class DetailedCDRApi(ApiChild, base='devices'):
         if not end_time:
             end_time = datetime.now(tz=tz.tzutc()) - timedelta(minutes=5, seconds=30)
 
-        def iso_str(dt: datetime) -> str:
-            dt = dt.astimezone(tz.tzutc())
-            dt = dt.replace(tzinfo=None)
-            return f"{dt.isoformat(timespec='milliseconds')}Z"
-
-        params['startTime'] = iso_str(start_time)
-        params['endTime'] = iso_str(end_time)
+        params['startTime'] = dt_iso_str(start_time)
+        params['endTime'] = dt_iso_str(end_time)
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=CDR, params=params, item_key='items')

@@ -15,6 +15,7 @@ Subpackages
    wxc_sdk.cdr
    wxc_sdk.common
    wxc_sdk.devices
+   wxc_sdk.events
    wxc_sdk.groups
    wxc_sdk.integration
    wxc_sdk.licenses
@@ -25,7 +26,10 @@ Subpackages
    wxc_sdk.people
    wxc_sdk.person_settings
    wxc_sdk.reports
+   wxc_sdk.room_tabs
    wxc_sdk.rooms
+   wxc_sdk.team_memberships
+   wxc_sdk.teams
    wxc_sdk.telephony
    wxc_sdk.webhook
    wxc_sdk.workspace_locations

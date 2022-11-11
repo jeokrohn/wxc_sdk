@@ -36,7 +36,7 @@ from pydantic import parse_obj_as
 
 from wxc_sdk.all_types import *
 from wxc_sdk.as_rest import AsRestSession
-from wxc_sdk.base import to_camel, StrOrDict
+from wxc_sdk.base import to_camel, StrOrDict, dt_iso_str
 
 log = logging.getLogger(__name__)
 

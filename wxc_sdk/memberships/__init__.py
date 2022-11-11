@@ -59,12 +59,12 @@ class MembershipApi(ApiChild, base='memberships'):
         parameters.
         Long result sets will be split into pages.
 
-        :param room_id: str: List memberships associated with a room, by ID.
+        :param room_id: List memberships associated with a room, by ID.
         :type room_id: str
-        :param person_id: str: List memberships associated with a person, by ID. The roomId parameter is required
+        :param person_id: List memberships associated with a person, by ID. The roomId parameter is required
             when using this parameter.
         :type person_id: str
-        :param person_email: str: List memberships associated with a person, by email address. The roomId parameter
+        :param person_email: List memberships associated with a person, by email address. The roomId parameter
             is required when using this parameter.
         :type person_email: str
         """
@@ -83,13 +83,13 @@ class MembershipApi(ApiChild, base='memberships'):
         """
         Add someone to a room by Person ID or email address, optionally making them a moderator.
 
-        :param room_id: str: The room ID.
+        :param room_id: The room ID.
         :type room_id: str
-        :param person_id: str: The person ID.
+        :param person_id: The person ID.
         :type person_id: str
-        :param person_email: str: The email address of the person.
+        :param person_email: The email address of the person.
         :type person_email: str
-        :param is_moderator: bool: Whether or not the participant is a room moderator.
+        :param is_moderator: Whether or not the participant is a room moderator.
         :type is_moderator: bool
         """
         body = {}
@@ -110,7 +110,7 @@ class MembershipApi(ApiChild, base='memberships'):
         Get details for a membership by ID.
         Specify the membership ID in the membershipId URI parameter.
 
-        :param membership_id: str: The unique identifier for the membership.
+        :param membership_id: The unique identifier for the membership.
         :type membership_id: str
         """
         url = self.ep(f'{membership_id}')
@@ -145,7 +145,7 @@ class MembershipApi(ApiChild, base='memberships'):
         The membership for the last moderator of a Team's General space may not be deleted; promote another user to
         team moderator first.
 
-        :param membership_id: str: The unique identifier for the membership.
+        :param membership_id: The unique identifier for the membership.
         :type membership_id: str
         """
         url = self.ep(f'{membership_id}')

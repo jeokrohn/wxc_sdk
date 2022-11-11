@@ -40,7 +40,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         Lists all team memberships for a given team, specified by the teamId query parameter.
         Use query parameters to filter the response.
 
-        :param team_id: str: List memberships for a team, by ID.
+        :param team_id: List memberships for a team, by ID.
         :type team_id: str
         """
         params = {'teamId': team_id}
@@ -52,13 +52,13 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         """
         Add someone to a team by Person ID or email address, optionally making them a moderator.
 
-        :param team_id: str: The team ID.
+        :param team_id: The team ID.
         :type team_id: str
-        :param person_id: str: The person ID.
+        :param person_id: The person ID.
         :type person_id: str
-        :param person_email: str: The email address of the person.
+        :param person_email: The email address of the person.
         :type person_email: str
-        :param is_moderator: bool: Whether or not the participant is a team moderator.
+        :param is_moderator: Whether or not the participant is a team moderator.
         :type is_moderator: bool
         """
         body = {}
@@ -79,7 +79,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         Shows details for a team membership, by ID.
         Specify the team membership ID in the membershipId URI parameter.
 
-        :param membership_id: str: The unique identifier for the team membership.
+        :param membership_id: The unique identifier for the team membership.
         :type membership_id: str
         """
         url = self.ep(f'{membership_id}')
@@ -91,9 +91,9 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         Updates a team membership, by ID.
         Specify the team membership ID in the membershipId URI parameter.
 
-        :param membership_id: str: The unique identifier for the team membership.
+        :param membership_id: The unique identifier for the team membership.
         :type membership_id: str
-        :param is_moderator: bool: Whether or not the participant is a team moderator.
+        :param is_moderator: Whether or not the participant is a team moderator.
         :type is_moderator: bool
         """
         body = {'isModerator': is_moderator}
@@ -108,7 +108,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         The team membership for the last moderator of a team may not be deleted; promote another user to team moderator
         first.
 
-        :param membership_id: str: The unique identifier for the team membership.
+        :param membership_id: The unique identifier for the team membership.
         :type membership_id: str
         """
         url = self.ep(f'{membership_id}')

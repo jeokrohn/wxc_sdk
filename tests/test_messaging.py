@@ -1,0 +1,300 @@
+"""
+Tests for messaging APIs
+"""
+import asyncio
+import json
+import re
+import uuid
+from collections import Counter
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
+from dataclasses import dataclass
+from itertools import chain, combinations
+from random import choice, sample, shuffle
+from unittest import skip
+
+from pydantic import parse_obj_as
+
+from tests.base import TestCaseWithUsersAndSpaces, TestCaseWithLog
+from wxc_sdk.common import RoomType
+from wxc_sdk.messages import MessageAttachment
+from wxc_sdk.people import Person
+from wxc_sdk.rooms import Room
+from wxc_sdk.teams import Team
+
+TEST_NAME = re.compile(r'Test Space \d{3}')
+
+
+class TestMessages(TestCaseWithUsersAndSpaces):
+
+    def test_001_create_message(self):
+        """
+        """
+        api = self.api.messages
+        with self.target_space() as target:
+            target: Room
+            messages = list(api.list(room_id=target.id))
+            new_message = api.create(room_id=target.id, text=f'Random message {uuid.uuid4()}')
+
+    def test_002_create_direct_message(self):
+        api = self.api.messages
+        # pick a random user
+        target_user = choice(self.users)
+        new_message = api.create(to_person_id=target_user.person_id, text=f'Random message {uuid.uuid4()}')
+        # now a space has to exist with that user
+        self.assertEqual(RoomType.direct, new_message.room_type)
+        direct_by_id = list(api.list_direct(person_id=target_user.person_id))
+        direct_by_email = list(api.list_direct(person_email=target_user.emails[0]))
+
+    def test_003_create_direct_message_local_file(self):
+        api = self.api.messages
+        # pick a random user
+        target_user = choice(self.users)
+        new_message = api.create(to_person_id=target_user.person_id,
+                                 text=f'Random message {uuid.uuid4()} with attachment',
+                                 files=[__file__])
+        # now a space has to exist with that user
+        self.assertEqual(RoomType.direct, new_message.room_type)
+
+    @TestCaseWithUsersAndSpaces.async_test
+    async def test_004_reate_direct_message_local_file_async_sdk(self):
+        api = self.async_api.messages
+        target_user = choice(self.users)
+        new_message = await api.create(to_person_id=target_user.person_id,
+                                       text=f'Random message {uuid.uuid4()} with attachment',
+                                       files=[__file__])
+
+    def test_005_attachment(self):
+        attachments = [
+            {
+                "contentType": "application/vnd.microsoft.card.adaptive",
+                "content": {
+                    "type": "AdaptiveCard",
+                    "version": "1.0",
+                    "body": [
+                        {
+                            "type": "TextBlock",
+                            "text": "Sample Adaptive Card",
+                            "size": "large"
+                        }
+                    ],
+                    "actions": [
+                        {
+                            "type": "Action.OpenUrl",
+                            "url": "http://adaptivecards.io",
+                            "title": "Learn More"
+                        }
+                    ]
+                }
+            }
+        ]
+        atts = parse_obj_as(list[MessageAttachment], attachments)
+        foo = 1
+
+
+@dataclass(init=False)
+class TestMembership(TestCaseWithUsersAndSpaces):
+
+    def test_001_list_memberships(self):
+        """
+        get memberships of all spaces
+        """
+        spaces = list(self.api.rooms.list())
+        spaces.sort(key=lambda s: s.title)
+        users_by_id: dict[str, Person] = {user.person_id: user for user in self.users}
+
+        def user_str(user_id: str) -> str:
+            user = users_by_id.get(user_id)
+            if user is None:
+                return f'None ({user_id})'
+            return f'{user.display_name}({user.emails[0]})'
+
+        with ThreadPoolExecutor() as pool:
+            memberships_list = list(pool.map(lambda space: list(self.api.membership.list(room_id=space.id)), spaces))
+        for space, memberships in zip(spaces, memberships_list):
+            print(space.title)
+            print('\n'.join(f'  {user_str(m.person_id)}, {m.person_email}' for m in memberships))
+
+    def test_002_add_user(self):
+        """
+        Add bunch of users to space
+        """
+        with self.target_space() as target_space:
+            target_space: Room
+            members = list(self.api.membership.list(room_id=target_space.id))
+            people_ids = set(m.person_id for m in members)
+            candidates = [u for u in self.users if u.person_id not in people_ids]
+            # add a user
+            to_add = choice(candidates)
+            self.api.membership.create(room_id=target_space.id, person_id=to_add.person_id)
+
+            # check if the user has been added
+            members_after = list(self.api.membership.list(room_id=target_space.id))
+            added_membership = next((m for m in members_after if m.person_id == to_add.person_id), None)
+            self.assertIsNotNone(added_membership)
+
+            # remove user again
+            self.api.membership.delete(membership_id=added_membership.id)
+            members_after = list(self.api.membership.list(room_id=target_space.id))
+
+            # back to before?
+            members.sort(key=lambda m: m.id)
+            members_after.sort(key=lambda m: m.id)
+            self.assertEqual(members, members_after)
+
+
+class TestRooms(TestCaseWithLog):
+    def test_001_list(self):
+        rooms = list(self.api.rooms.list())
+        print(f'Got {len(rooms)} rooms')
+
+    def test_002_create(self):
+        rooms = list(self.api.rooms.list())
+        new_names = (name for i in range(1000)
+                     if (name := f'Test Space {i:03}') not in set(r.title for r in rooms))
+        title = next(new_names)
+        new_room = self.api.rooms.create(title=title)
+        print(f'Created space "{title}"')
+        print(json.dumps(json.loads(new_room.json(by_alias=True)), indent=2))
+
+    def test_003_details(self):
+        """
+        details for all spaces
+        """
+        rooms = list(self.api.rooms.list())
+        with ThreadPoolExecutor() as pool:
+            details = list(map(lambda r: self.api.rooms.details(room_id=r.id), rooms))
+        print(f'got details for {len(details)} rooms')
+
+    def test_004_details(self):
+        """
+        meeting details for all spaces
+        """
+        rooms = list(self.api.rooms.list())
+        with ThreadPoolExecutor() as pool:
+            details = list(map(lambda r: self.api.rooms.meeting_details(room_id=r.id), rooms))
+        print(f'got meeting details for {len(details)} rooms')
+
+    @contextmanager
+    def target_space(self):
+        with self.no_log():
+            rooms = [r for r in self.api.rooms.list()
+                     if TEST_NAME.match(r.title)]
+        if not rooms:
+            self.skipTest('No targets')
+        target = choice(rooms)
+        details = self.api.rooms.details(room_id=target.id)
+        try:
+            yield details
+        finally:
+            after = self.api.rooms.update(update=details)
+            self.assertEqual(details, after)
+
+    def test_005_update_title(self):
+        """
+        meeting details for all spaces
+        """
+        with self.target_space() as room:
+            room: Room
+            title = f'{room.title}-XXX'
+            update = Room(id=room.id, title=title)
+            after = self.api.rooms.update(update)
+            self.assertEqual(title, after.title)
+            after.title = room.title
+            self.assertEqual(room, after)
+
+
+class TestTeams(TestCaseWithLog):
+    @TestCaseWithLog.async_test
+    async def test_001_create(self):
+        """
+        Create teams and post messages in the teams
+        """
+        TEAMS_TO_CREATE = 20
+        USERS_IN_TEAM = 5
+
+        api = self.async_api
+
+        async def get_users() -> list[Person]:
+            me = await api.people.me()
+            return [user async for user in api.people.list_gen()
+                    if user.person_id != me.person_id]
+
+        async def get_teams() -> list[Team]:
+            return [team async for team in api.teams.list_gen()
+                    if re.match(r'Team Test \d{3}', team.name)]
+
+        users, teams = await asyncio.gather(get_users(), get_teams())
+        users: list[Person]
+        teams: list[Team]
+        new_names = (name
+                     for i in range(1000)
+                     if (name := f'Team Test {i:03}') not in set(team.name for team in teams))
+
+        # create a bunch of teams and add random sets of users to them
+        async def create_team() -> Team:
+            # create the team
+            team_name = next(new_names)
+            team = await api.teams.create(name=team_name)
+            print(f'Created "{team.name}"')
+            # add members
+            team_members = sample(users, USERS_IN_TEAM)
+            general_space = next(iter(await asyncio.gather(
+                api.rooms.list(team_id=team.id),
+                *[api.team_memberships.create_membership(team_id=team.id,
+                                                         person_id=member.person_id)
+                  for member in team_members])))[0]
+            general_space: Room
+            print(f'Added to team "{team.name}": {", ".join(m.display_name for m in team_members)}')
+            # create some messages mentioning random people
+            tasks = []
+            user_lists = list(chain.from_iterable(combinations(team_members, c_len)
+                                                  for c_len in range(2, len(team_members))))
+            shuffle(user_lists)
+            for user_list in user_lists:
+                tasks.append(api.messages.create(
+                    room_id=general_space.id,
+                    markdown=f'Hi, {", ".join(f"<@personId: {u.person_id}>" for u in user_list)}'))
+            await asyncio.gather(*tasks)
+
+            return
+
+        new_teams = await asyncio.gather(*[create_team() for _ in range(TEAMS_TO_CREATE)])
+        new_teams: list[Team]
+
+        # with all this we should see a bunch of 429s
+        def url_key(url:str)->str:
+            return url.split('?')[0]
+
+        url_counters = Counter((url_key(request.url), request.method, request.status) for request in self.requests())
+
+        for url_and_method in sorted(url_counters, key=lambda k: url_counters[k]):
+            print(f'{url_and_method}: {url_counters[url_and_method]} requests')
+
+        ...
+
+    @TestCaseWithLog.async_test
+    async def test_002_delete(self):
+        """
+        delete a random team
+        """
+        api = self.async_api
+        teams = [team async for team in api.teams.list_gen()
+                 if re.match(r'Team Test \d{3}', team.name)]
+        if not teams:
+            self.skipTest('No target teams')
+        target = choice(teams)
+        print(f'Deleting team "{target.name}"')
+        await api.teams.delete(team_id=target.id)
+
+    #@skip('')
+    @TestCaseWithLog.async_test
+    async def test_003_delete_all(self):
+        """
+        delete all test teams
+        """
+        api = self.async_api
+        teams = [team async for team in api.teams.list_gen()
+                 if re.match(r'Team Test \d{3}', team.name)]
+        await asyncio.gather(*[api.teams.delete(team_id=team.id)
+                               for team in teams])

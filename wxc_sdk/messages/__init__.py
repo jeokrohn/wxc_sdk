@@ -10,7 +10,7 @@ from typing import List, Optional, Union
 from requests_toolbelt import MultipartEncoder
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.common import RoomType
 
 __all__ = ['AdaptiveCardAction', 'AdaptiveCard', 'MessageAttachment', 'AdaptiveCardBody',
@@ -109,17 +109,17 @@ class MessagesApi(ApiChild, base='messages'):
         The list sorts the messages in descending order by creation date.
         Long result sets will be split into pages.
 
-        :param room_id: str: List messages in a room, by ID.
+        :param room_id: List messages in a room, by ID.
         :type room_id: str
-        :param parent_id: str: List messages with a parent, by ID.
+        :param parent_id: List messages with a parent, by ID.
         :type parent_id: str
-        :param mentioned_people: List[str]: List messages with these people mentioned, by ID. Use me as a shorthand
+        :param mentioned_people: List messages with these people mentioned, by ID. Use me as a shorthand
             for the current API user. Only me or the person ID of the current user may be specified. Bots must include
             this parameter to list messages in group rooms (spaces).
         :type mentioned_people: List[str]
-        :param before: str: List messages sent before a date and time.
+        :param before: List messages sent before a date and time.
         :type before: str
-        :param before_message: str: List messages sent before a message, by ID.
+        :param before_message: List messages sent before a message, by ID.
         :type before_message: str
         """
         if room_id is not None:
@@ -129,7 +129,7 @@ class MessagesApi(ApiChild, base='messages'):
         if mentioned_people is not None:
             params['mentionedPeople'] = mentioned_people
         if before is not None:
-            params['before'] = f"{before.isoformat(timespec='milliseconds')}Z"
+            params['before'] = dt_iso_str(before)
         if before_message is not None:
             params['beforeMessage'] = before_message
         url = self.ep()
@@ -143,11 +143,11 @@ class MessagesApi(ApiChild, base='messages'):
         room. Each message will include content attachments if present.
         The list sorts the messages in descending order by creation date.
 
-        :param parent_id: str: List messages with a parent, by ID.
+        :param parent_id: List messages with a parent, by ID.
         :type parent_id: str
-        :param person_id: str: List messages in a 1:1 room, by person ID.
+        :param person_id: List messages in a 1:1 room, by person ID.
         :type person_id: str
-        :param person_email: str: List messages in a 1:1 room, by person email.
+        :param person_email: List messages in a 1:1 room, by person email.
         :type person_email: str
         """
         if parent_id is not None:
@@ -168,26 +168,26 @@ class MessagesApi(ApiChild, base='messages'):
         The files parameter is an array, which accepts multiple values to allow for future expansion, but currently
         only one file may be included with the message. File previews are only rendered for attachments of 1MB or less.
 
-        :param room_id: str: The room ID of the message.
+        :param room_id: The room ID of the message.
         :type room_id: str
-        :param parent_id: str: The parent message to reply to.
+        :param parent_id: The parent message to reply to.
         :type parent_id: str
-        :param to_person_id: str: The person ID of the recipient when sending a private 1:1 message.
+        :param to_person_id: The person ID of the recipient when sending a private 1:1 message.
         :type to_person_id: str
-        :param to_person_email: str: The email address of the recipient when sending a private 1:1 message.
+        :param to_person_email: The email address of the recipient when sending a private 1:1 message.
         :type to_person_email: str
-        :param text: str: The message, in plain text. If markdown is specified this parameter may be optionally used
+        :param text: The message, in plain text. If markdown is specified this parameter may be optionally used
             to provide alternate text for UI clients that do not support rich text. The maximum message length is 7439
             bytes.
         :type text: str
-        :param markdown: str: The message, in Markdown format. The maximum message length is 7439 bytes.
+        :param markdown: The message, in Markdown format. The maximum message length is 7439 bytes.
         :type markdown: str
-        :param files: List[str]: The public URL to a binary file or a path to a local file to be posted into the room.
+        :param files: The public URL to a binary file or a path to a local file to be posted into the room.
             Only one file is allowed
             per message. Uploaded files are automatically converted into a format that all Webex clients can render. For
             the supported media types and the behavior of uploads, see the Message Attachments Guide.
         :type files: List[str]
-        :param attachments: List[Attachment]: Content attachments to attach to the message. Only one card per message
+        :param attachments: Content attachments to attach to the message. Only one card per message
             is supported. See the Cards Guide for more information.
         :type attachments: List[Attachment]
         :rtype: Message
@@ -268,7 +268,7 @@ class MessagesApi(ApiChild, base='messages'):
         Show details for a message, by message ID.
         Specify the message ID in the messageId parameter in the URI.
 
-        :param message_id: str: The unique identifier for the message.
+        :param message_id: The unique identifier for the message.
         :type message_id: str
         """
         url = self.ep(f'{message_id}')
@@ -280,7 +280,7 @@ class MessagesApi(ApiChild, base='messages'):
         Delete a message, by message ID.
         Specify the message ID in the messageId parameter in the URI.
 
-        :param message_id: str: The unique identifier for the message.
+        :param message_id: The unique identifier for the message.
         :type message_id: str
         """
         url = self.ep(f'{message_id}')

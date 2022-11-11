@@ -1,0 +1,595 @@
+# command: ./read_api_spec.py -s Messaging -t Events -f events.yml
+docs:
+  Attachment Actions:
+    doc: null
+    header: null
+    methods: []
+  Events:
+    doc: 'Events are generated when actions take place within Webex, such as when
+      someone creates or deletes a message.
+
+      The Events API can only be used by a Compliance Officer with an API access token
+      that contains the spark-compliance:events_read scope. See the Compliance Guide
+      for more information.'
+    header: Events
+    methods:
+    - doc: 'List events in your organization. Several query parameters are available
+        to filter the events returned in the response.
+
+        Long result sets will be split into pages.'
+      documentation:
+        doc: List Events
+        doc_link: https://developer.webex.com/docs/api/v1/events/list-events
+        endpoint: https://webexapis.com/v1/events
+        http_method: GET
+      header: List Events
+      parameters_and_response:
+        Query Parameters:
+        - doc: 'List events with a specific resource type.
+
+            Possible values: messages, memberships, meetings, meetingMessages, meetingTranscripts,
+            tabs, rooms, attachmentActions, files, file_transcodings'
+          name: resource
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'List events with a specific event type.
+
+            Possible values: created, updated, deleted, ended'
+          name: type
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: List events performed by this person, by person ID.
+          name: actorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: List events which occurred after a specific date and time.
+          name: from
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: List events which occurred before a specific date and time. If unspecified,
+            or set to a time in the future, lists events up to the present.
+          name: to
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Limit the maximum number of events in the response. Value must be between
+            1 and 1000, inclusive.
+          name: max
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        Response Properties:
+        - doc: ''
+          name: items
+          param_attrs:
+          - doc: The unique identifier for the event.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The type of resource in the event.
+            name: resource
+            param_attrs:
+            - doc: State changed on a messages resource
+              name: messages
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: State changed on a memberships resource
+              name: memberships
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: State change on a meeting ( here combined with type = 'ended' )
+              name: meetings
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: State change on a automatic transcript resource for Webex Assistant
+              name: meetingTranscripts
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: State changed on a meeting message, i.e. message exchanged as part
+                of a meeting
+              name: meetingMessages
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: State changed on a room tabs in a space
+              name: tabs
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: State changed on a space classification
+              name: rooms
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: State changed on a card attachment
+              name: attachmentActions
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: State changed on a file download
+              name: files
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: State change on a file preview
+              name: file_transcodings
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: Event Resource Enum
+            type_spec: null
+          - doc: The action which took place in the event.
+            name: type
+            param_attrs:
+            - doc: The resource has been created
+              name: created
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: A property on the resource has been updated
+              name: updated
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The resource has been deleted
+              name: deleted
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The meeting has ended
+              name: ended
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: Event Type Enum
+            type_spec: null
+          - doc: The ID of the application for the event.
+            name: appId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The ID of the person who performed the action.
+            name: actorId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The ID of the organization for the event.
+            name: orgId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The date and time of the event.
+            name: created
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The event's data representation. This object will contain the event's
+              resource, such as memberships, messages, meetings, tabs, rooms or attachmentActions
+              at the time the event took place.
+            name: data
+            param_attrs: []
+            param_object:
+            - doc: ''
+              name: id
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: roomId
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: roomType
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: orgId
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: text
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: personId
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: personEmail
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: meetingId
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: creatorId
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The meeting's host data
+              name: host
+              param_attrs: []
+              param_object: []
+              type: object
+              type_spec: null
+            - doc: Common Identity (CI) authenticated meeting attendees
+              name: attendees
+              param_attrs: []
+              param_object: []
+              type: array
+              type_spec: null
+            - doc: indicates whether or not the Voice Assistant was enabled during
+                the meeting. If true a transcript should be available a couple minutes
+                after the meeting ended at the meetingTranscripts resource
+              name: transcriptionEnabled
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: indicates if recording was enabled for all or parts of the meeting.
+                If true a recording should be available shortly after the meeting
+                ended at the recordings resource
+              name: recordingEnabled
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: indicates i chat messages were exchanged during the meeting in
+                the meetings client (not the unified client). If true these messages
+                can be accessed by a compliance officer at the postMeetingsChat resource.
+                Meetings chat collection must be custom enabled.
+              name: hasPostMeetingsChat
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: created
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            type: object
+            type_spec: null
+          param_object: []
+          type: array[Event]
+          type_spec: null
+    - doc: 'Shows details for an event, by event ID.
+
+        Specify the event ID in the eventId parameter in the URI.'
+      documentation:
+        doc: Get Event Details
+        doc_link: https://developer.webex.com/docs/api/v1/events/get-event-details
+        endpoint: https://webexapis.com/v1/events/{eventId}
+        http_method: GET
+      header: Get Event Details
+      parameters_and_response:
+        Response Properties:
+        - doc: The unique identifier for the event.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The type of resource in the event.
+          name: resource
+          param_attrs:
+          - doc: State changed on a messages resource
+            name: messages
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: State changed on a memberships resource
+            name: memberships
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: State change on a meeting ( here combined with type = 'ended' )
+            name: meetings
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: State change on a automatic transcript resource for Webex Assistant
+            name: meetingTranscripts
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: State changed on a meeting message, i.e. message exchanged as part
+              of a meeting
+            name: meetingMessages
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: State changed on a room tabs in a space
+            name: tabs
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: State changed on a space classification
+            name: rooms
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: State changed on a card attachment
+            name: attachmentActions
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: State changed on a file download
+            name: files
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: State change on a file preview
+            name: file_transcodings
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: Event Resource Enum
+          type_spec: null
+        - doc: The action which took place in the event.
+          name: type
+          param_attrs:
+          - doc: The resource has been created
+            name: created
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A property on the resource has been updated
+            name: updated
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The resource has been deleted
+            name: deleted
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The meeting has ended
+            name: ended
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: Event Type Enum
+          type_spec: null
+        - doc: The ID of the application for the event.
+          name: appId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the person who performed the action.
+          name: actorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the organization for the event.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time of the event.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The event's data representation. This object will contain the event's
+            resource, such as memberships, messages, meetings, tabs, rooms or attachmentActions
+            at the time the event took place.
+          name: data
+          param_attrs: []
+          param_object:
+          - doc: ''
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: roomId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: roomType
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: orgId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: text
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: personId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: personEmail
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: meetingId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: creatorId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The meeting's host data
+            name: host
+            param_attrs: []
+            param_object: []
+            type: object
+            type_spec: null
+          - doc: Common Identity (CI) authenticated meeting attendees
+            name: attendees
+            param_attrs: []
+            param_object: []
+            type: array
+            type_spec: null
+          - doc: indicates whether or not the Voice Assistant was enabled during the
+              meeting. If true a transcript should be available a couple minutes after
+              the meeting ended at the meetingTranscripts resource
+            name: transcriptionEnabled
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: indicates if recording was enabled for all or parts of the meeting.
+              If true a recording should be available shortly after the meeting ended
+              at the recordings resource
+            name: recordingEnabled
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: indicates i chat messages were exchanged during the meeting in the
+              meetings client (not the unified client). If true these messages can
+              be accessed by a compliance officer at the postMeetingsChat resource.
+              Meetings chat collection must be custom enabled.
+            name: hasPostMeetingsChat
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: created
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          type: object
+          type_spec: null
+        URI Parameters:
+        - doc: The unique identifier for the event.
+          name: eventId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+  Memberships:
+    doc: null
+    header: null
+    methods: []
+  Messages:
+    doc: null
+    header: null
+    methods: []
+  People:
+    doc: null
+    header: null
+    methods: []
+  Room Tabs:
+    doc: null
+    header: null
+    methods: []
+  Rooms:
+    doc: null
+    header: null
+    methods: []
+  Team Memberships:
+    doc: null
+    header: null
+    methods: []
+  Teams:
+    doc: null
+    header: null
+    methods: []
+  Tracking Codes:
+    doc: null
+    header: null
+    methods: []
+  Webhooks:
+    doc: null
+    header: null
+    methods: []

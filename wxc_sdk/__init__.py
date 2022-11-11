@@ -7,6 +7,7 @@ from typing import Union
 
 from .cdr import DetailedCDRApi
 from .devices import DevicesApi
+from .events import EventsApi
 from .groups import GroupsApi
 from .licenses import LicensesApi
 from .locations import LocationsApi
@@ -46,6 +47,8 @@ class WebexSimpleApi:
     cdr: DetailedCDRApi
     #: devices API :class:`devices.DevicesApi`
     devices: DevicesApi
+    #: events API; :class:`events.EventsApi`
+    events: EventsApi
     #: groups API :class:`groups.GroupsApi`
     groups: GroupsApi
     #: Licenses API :class:`licenses.LicensesApi`
@@ -105,6 +108,7 @@ class WebexSimpleApi:
         session = RestSession(tokens=tokens, concurrent_requests=concurrent_requests)
         self.cdr = DetailedCDRApi(session=session)
         self.devices = DevicesApi(session=session)
+        self.events = EventsApi(session=session)
         self.groups = GroupsApi(session=session)
         self.licenses = LicensesApi(session=session)
         self.locations = LocationsApi(session=session)

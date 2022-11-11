@@ -1,10 +1,13 @@
 import base64
 import sys
+from datetime import datetime
 from typing import Optional, Union
 
+from dateutil import tz
 from pydantic import BaseModel, ValidationError
 
-__all__ = ['StrOrDict', 'webex_id_to_uuid', 'to_camel', 'ApiModel', 'CodeAndReason', 'ApiModelWithErrors', 'plus1']
+__all__ = ['StrOrDict', 'webex_id_to_uuid', 'to_camel', 'ApiModel', 'CodeAndReason', 'ApiModelWithErrors', 'plus1',
+           'dt_iso_str']
 
 StrOrDict = Union[str, dict]
 
@@ -71,3 +74,14 @@ def plus1(v: Optional[str]) -> str:
     :return:
     """
     return v and len(v) == 10 and v[0] != '+' and f'+1{v}' or v
+
+
+def dt_iso_str(dt: datetime) -> str:
+    """
+    ISO format datetime as used by Webex API (no time zone, milliseconds)
+    :param dt:
+    :return:
+    """
+    dt = dt.astimezone(tz.tzutc())
+    dt = dt.replace(tzinfo=None)
+    return f"{dt.isoformat(timespec='milliseconds')}Z"

@@ -86,12 +86,12 @@ class RoomsApi(ApiChild, base='rooms'):
         this can result in anomalies such as spaces that have had recent activity not being returned in the results
         when sorting by lastacivity.
 
-        :param team_id: str: List rooms associated with a team, by ID.
+        :param team_id: List rooms associated with a team, by ID.
         :type team_id: str
-        :param type_: RoomType: List rooms by type.
+        :param type_: List rooms by type.
             Possible values: direct, group
         :type type_: str
-        :param sort_by: str: Sort results.
+        :param sort_by: Sort results.
             Possible values: id, lastactivity, created
         :type sort_by: str
         """
@@ -116,15 +116,15 @@ class RoomsApi(ApiChild, base='rooms'):
         the same owning organization joined the space as the first human user.
         A space can only be put into announcement mode when it is locked.
 
-        :param title: str: A user-friendly name for the room.
+        :param title: A user-friendly name for the room.
         :type title: str
-        :param team_id: str: The ID for the team with which this room is associated.
+        :param team_id: The ID for the team with which this room is associated.
         :type team_id: str
-        :param classification_id: str: The classificationId for the room.
+        :param classification_id: The classificationId for the room.
         :type classification_id: str
-        :param is_locked: bool: Set the space as locked/moderated and the creator becomes a moderator
+        :param is_locked: Set the space as locked/moderated and the creator becomes a moderator
         :type is_locked: bool
-        :param is_announcement_only: bool: Sets the space into announcement Mode.
+        :param is_announcement_only: Sets the space into announcement Mode.
         :type is_announcement_only: bool
         """
         body = {}
@@ -148,7 +148,7 @@ class RoomsApi(ApiChild, base='rooms'):
         The title of the room for 1:1 rooms will be the display name of the other person.
         Specify the room ID in the roomId parameter in the URI.
 
-        :param room_id: str: The unique identifier for the room.
+        :param room_id: The unique identifier for the room.
         :type room_id: str
         """
         url = self.ep(f'{room_id}')
@@ -160,7 +160,7 @@ class RoomsApi(ApiChild, base='rooms'):
         Shows Webex meeting details for a room such as the SIP address, meeting URL, toll-free and toll dial-in numbers.
         Specify the room ID in the roomId parameter in the URI.
 
-        :param room_id: str: The unique identifier for the room.
+        :param room_id: The unique identifier for the room.
         :type room_id: str
         """
         url = self.ep(f'{room_id}/meetingInfo')
@@ -200,7 +200,7 @@ class RoomsApi(ApiChild, base='rooms'):
         Deleting a room that is part of a team will archive the room instead.
         Specify the room ID in the roomId parameter in the URI.
 
-        :param room_id: str: The unique identifier for the room.
+        :param room_id: The unique identifier for the room.
         :type room_id: str
         """
         url = self.ep(f'{room_id}')
