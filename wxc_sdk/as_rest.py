@@ -2,11 +2,12 @@
 REST session for Webex API requests
 """
 import asyncio
+import inspect
 import json as json_mod
 import logging
 import urllib.parse
 import uuid
-from asyncio import Semaphore
+from asyncio import Semaphore, Event
 from collections.abc import AsyncGenerator
 from io import TextIOBase, StringIO
 from time import perf_counter_ns
@@ -174,7 +175,19 @@ async def _giveup_429(e: ClientResponseError) -> bool:
     # never wait more than the defined maximum of 20 s
     retry_after = min(retry_after, 20)
     log.warning(f'429 retry after {retry_after} on {e.request_info.method} {e.request_info.url}')
-    await asyncio.sleep(retry_after)
+    # dirty hack to get the session object
+    session = inspect.currentframe().f_back.f_locals['args'][0]
+    session: AsRestSession
+    if session._go429.is_set():
+        # first task to hit a 420 clears the event so that other tasks can't initiate new requests
+        session._go429.clear()
+        await asyncio.sleep(retry_after)
+        # after waiting we then set the event again
+        session._go429.set()
+    else:
+        # if another task has hit a 429 then we sleep and then wait for the event to be set again
+        await asyncio.sleep(retry_after)
+        await session._go429.wait()
     return False
 
 
@@ -192,6 +205,8 @@ class AsRestSession(ClientSession):
         super().__init__()
         self._tokens = tokens
         self._sem = Semaphore(concurrent_requests)
+        self._go429 = Event()
+        self._go429.set()
 
     def ep(self, path: str = None):
         """
@@ -240,6 +255,8 @@ class AsRestSession(ClientSession):
             request_headers.update((k.lower(), v) for k, v in headers.items())
         if content_type:
             request_headers['content-type'] = content_type
+        # the event is cleared if any task hit a 429
+        await self._go429.wait()
         async with self._sem:
             start = perf_counter_ns()
             async with self.request(method, url=url, headers=request_headers,
