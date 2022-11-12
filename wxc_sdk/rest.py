@@ -6,12 +6,12 @@ import logging
 import time
 import uuid
 from collections.abc import Generator
+from functools import wraps
 from io import TextIOBase, StringIO
 from threading import Semaphore
 from typing import Tuple, Type, Optional
 from urllib.parse import parse_qsl
 
-import backoff
 from pydantic import BaseModel, ValidationError, Field
 from requests import HTTPError, Response, Session
 from requests.adapters import HTTPAdapter
@@ -189,28 +189,6 @@ def dump_response(response: Response, file: TextIOBase = None, dump_log: logging
         dump_log.debug(output.getvalue())
 
 
-def _giveup_429(e: RestError) -> bool:
-    """
-    callback for backoff on REST requests
-
-    :param e: latest exception
-    :return: True -> break the backoff loop
-    """
-    response = e.response
-    response: Response
-    if response.status_code != 429:
-        # Don't retry on anything other than 429
-        return True
-
-    # determine how long we have to wait
-    retry_after = int(response.headers.get('Retry-After', 5))
-
-    # never wait more than the defined maximum of 20 s
-    retry_after = min(retry_after, 20)
-    time.sleep(retry_after)
-    return False
-
-
 class RestSession(Session):
     """
     REST session used for API requests:
@@ -249,7 +227,46 @@ class RestSession(Session):
         """
         return self._tokens.access_token
 
-    @backoff.on_exception(backoff.constant, RestError, interval=0, giveup=_giveup_429)
+    @staticmethod
+    def _giveup_429(e: RestError) -> bool:
+        """
+        callback for backoff on REST requests
+
+        :param e: latest exception
+        :return: True -> break the backoff loop
+        """
+        response = e.response
+        response: Response
+        if response.status_code != 429:
+            # Don't retry on anything other than 429
+            return True
+
+        # determine how long we have to wait
+        retry_after = int(response.headers.get('Retry-After', 5))
+
+        # never wait more than the defined maximum of 20 s
+        retry_after = min(retry_after, 20)
+        time.sleep(retry_after)
+        return False
+
+    @staticmethod
+    def retry_request(func):
+        @wraps(func)
+        def wrapper(session: 'RestSession', *args, **kwargs):
+            with session._sem:
+                while True:
+                    try:
+                        result = func(session, *args, **kwargs)
+                    except RestError as e:
+                        if session._giveup_429(e):
+                            raise
+                    else:
+                        break
+            return result
+
+        return wrapper
+
+    @retry_request
     def _request_w_response(self, method: str, url: str, headers=None, content_type: str = None,
                             **kwargs) -> Tuple[Response, StrOrDict]:
         """
@@ -275,10 +292,9 @@ class RestSession(Session):
             request_headers.update((k.lower(), v) for k, v in headers.items())
         if content_type:
             request_headers['content-type'] = content_type
-        with self._sem:
-            start = time.perf_counter_ns()
-            response = self.request(method, url=url, headers=request_headers, **kwargs)
-            diff_ns = time.perf_counter_ns() - start
+        start = time.perf_counter_ns()
+        response = self.request(method, url=url, headers=request_headers, **kwargs)
+        diff_ns = time.perf_counter_ns() - start
         try:
             dump_response(response, diff_ns=diff_ns)
             try:

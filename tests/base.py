@@ -16,6 +16,7 @@ import time
 import urllib.parse
 import uuid
 import webbrowser
+from collections import Counter
 from collections.abc import Iterable, Generator
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
@@ -536,6 +537,22 @@ class TestCaseWithLog(TestCaseWithTokens):
         :return: yields logged requests
         """
         return LoggedRequest.from_records(self.record_log_handler.records, method=method, url_filter=url_filter)
+
+    def print_request_stats(self):
+        """
+        print some request stats
+        """
+        long_word = re.compile(r'/\w{20,}/?')
+        def url_key(url: str) -> str:
+            # remove long words (probably IDs?) from URL
+            url = long_word.sub('', url)
+            return url.split('?')[0]
+
+        url_counters = Counter((url_key(request.url), request.method, request.status)
+                               for request in self.requests())
+
+        for url_and_method in sorted(url_counters, key=lambda k: url_counters[k]):
+            print(f'{url_and_method}: {url_counters[url_and_method]} requests')
 
 
 @dataclass(init=False)

@@ -2,18 +2,17 @@
 REST session for Webex API requests
 """
 import asyncio
-import inspect
 import json as json_mod
 import logging
 import urllib.parse
 import uuid
-from asyncio import Semaphore, Event
+from asyncio import Semaphore
 from collections.abc import AsyncGenerator
+from functools import wraps
 from io import TextIOBase, StringIO
 from time import perf_counter_ns
 from typing import Tuple, Type, Optional
 
-import backoff
 from aiohttp import ClientSession, ClientResponse, ClientResponseError, RequestInfo
 from aiohttp.typedefs import LooseHeaders
 from pydantic import BaseModel, Field
@@ -158,39 +157,6 @@ def as_dump_response(*, response: ClientResponse, response_data=None, data=None,
         dump_log.debug(output.getvalue())
 
 
-async def _giveup_429(e: ClientResponseError) -> bool:
-    """
-    callback for backoff on REST requests
-
-    :param e: latest exception
-    :return: True -> break the backoff loop
-    """
-    if e.status != 429:
-        # Don't retry on anything other than 429
-        return True
-
-    # determine how long we have to wait
-    retry_after = int(e.headers.get('Retry-After', 5))
-
-    # never wait more than the defined maximum of 20 s
-    retry_after = min(retry_after, 20)
-    log.warning(f'429 retry after {retry_after} on {e.request_info.method} {e.request_info.url}')
-    # dirty hack to get the session object
-    session = inspect.currentframe().f_back.f_locals['args'][0]
-    session: AsRestSession
-    if session._go429.is_set():
-        # first task to hit a 420 clears the event so that other tasks can't initiate new requests
-        session._go429.clear()
-        await asyncio.sleep(retry_after)
-        # after waiting we then set the event again
-        session._go429.set()
-    else:
-        # if another task has hit a 429 then we sleep and then wait for the event to be set again
-        await asyncio.sleep(retry_after)
-        await session._go429.wait()
-    return False
-
-
 class AsRestSession(ClientSession):
     """
     REST session used for API requests:
@@ -205,8 +171,6 @@ class AsRestSession(ClientSession):
         super().__init__()
         self._tokens = tokens
         self._sem = Semaphore(concurrent_requests)
-        self._go429 = Event()
-        self._go429.set()
 
     def ep(self, path: str = None):
         """
@@ -229,7 +193,45 @@ class AsRestSession(ClientSession):
         """
         return self._tokens.access_token
 
-    @backoff.on_exception(backoff.constant, ClientResponseError, interval=0, giveup=_giveup_429)
+    @staticmethod
+    async def _giveup_429(e: ClientResponseError) -> bool:
+        """
+        callback for backoff on REST requests
+
+        :param e: latest exception
+        :return: True -> break the backoff loop
+        """
+        if e.status != 429:
+            # Don't retry on anything other than 429
+            return True
+
+        # determine how long we have to wait
+        retry_after = int(e.headers.get('Retry-After', 5))
+
+        # never wait more than the defined maximum of 20 s
+        retry_after = min(retry_after, 20)
+        log.warning(f'429 retry after {retry_after} on {e.request_info.method} {e.request_info.url}')
+        await asyncio.sleep(retry_after)
+        return False
+
+    @staticmethod
+    def retry_request(func):
+        @wraps(func)
+        async def wrapper(session: 'AsRestSession', *args, **kwargs):
+            async with session._sem:
+                while True:
+                    try:
+                        result = await func(session, *args, **kwargs)
+                    except ClientResponseError as e:
+                        if await session._giveup_429(e):
+                            raise
+                    else:
+                        break
+            return result
+
+        return wrapper
+
+    @retry_request
     async def _request_w_response(self, method: str, url: str, headers=None, content_type: str = None,
                                   data=None, json=None, **kwargs) -> Tuple[ClientResponse, StrOrDict]:
         """
@@ -256,29 +258,27 @@ class AsRestSession(ClientSession):
         if content_type:
             request_headers['content-type'] = content_type
         # the event is cleared if any task hit a 429
-        await self._go429.wait()
-        async with self._sem:
-            start = perf_counter_ns()
-            async with self.request(method, url=url, headers=request_headers,
-                                    data=data, json=json, **kwargs) as response:
-                # get response body as text or dict (parsed JSON)
-                ct = response.headers.get('Content-Type')
-                if not ct:
-                    response_data = ''
-                elif ct.startswith('application/json'):
-                    response_data = await response.json()
-                else:
-                    response_data = await response.text()
-                diff_ns = perf_counter_ns() - start
-                as_dump_response(response=response, data=data, json=json, response_data=response_data, diff_ns=diff_ns)
-                try:
-                    response.raise_for_status()
-                except ClientResponseError as error:
-                    # create a RestError based on HTTP error
-                    error = AsRestError(request_info=error.request_info,
-                                        history=error.history, status=error.status,
-                                        message=error.message, headers=error.headers)
-                    raise error
+        start = perf_counter_ns()
+        async with self.request(method, url=url, headers=request_headers,
+                                data=data, json=json, **kwargs) as response:
+            # get response body as text or dict (parsed JSON)
+            ct = response.headers.get('Content-Type')
+            if not ct:
+                response_data = ''
+            elif ct.startswith('application/json'):
+                response_data = await response.json()
+            else:
+                response_data = await response.text()
+            diff_ns = perf_counter_ns() - start
+            as_dump_response(response=response, data=data, json=json, response_data=response_data, diff_ns=diff_ns)
+            try:
+                response.raise_for_status()
+            except ClientResponseError as error:
+                # create a RestError based on HTTP error
+                error = AsRestError(request_info=error.request_info,
+                                    history=error.history, status=error.status,
+                                    message=error.message, headers=error.headers)
+                raise error
 
         return response, response_data
 
@@ -364,8 +364,10 @@ class AsRestSession(ClientSession):
         :type item_key: str
         :return: yields parsed objects
         """
+
         def noop(x):
             return x
+
         if model is None:
             model = noop
         else:
