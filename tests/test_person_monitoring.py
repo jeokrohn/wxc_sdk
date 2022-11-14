@@ -9,21 +9,10 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from typing import ClassVar, Optional
 
-from webexteamsasyncapi import PrivateAsyncApi
-from webexteamsasyncapi.private.cpapi.callparkextension import CallParkExtension as CPAPI_CPE
-
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.all_types import *
+from wxc_sdk.as_api import AsWebexSimpleApi
 from .base import TestCaseWithUsers
-
-
-def webex_id(*, region: str, item_type: str, ci_id: str):
-    webex_bytes = f'ciscospark://{region}/{item_type}/{ci_id}'.encode()
-    return base64.b64encode(webex_bytes).decode().rstrip('=')
-
-
-def cpe_webex_id(*, ci_id: str):
-    return webex_id(region='us', item_type='CALL_PARK_EXTENSION', ci_id=ci_id)
 
 
 def print_monitoring(*, user: Person, monitoring: Monitoring):
@@ -57,20 +46,15 @@ class TestRead(TestCaseWithUsers):
 @dataclass(init=False)
 class TempCPE:
     api: WebexSimpleApi
-    ci_org_id: str
     generated_cpe_ids: list[str]
     location_id: str
 
     def __init__(self, api: WebexSimpleApi):
         self.api = api
-        me = api.people.me()
-        self.ci_org_id = webex_id_to_uuid(me.org_id)
 
     async def cleanup(self):
-        async with PrivateAsyncApi(access_token=self.api.access_token) as api:
-            tasks = [api.cpapi.call_park_extensions.delete_cpe(ci_org_id=self.ci_org_id,
-                                                               ci_location_id=self.location_id,
-                                                               cpe_id=cpe_id)
+        async with AsWebexSimpleApi(tokens=self.api.access_token) as api:
+            tasks = [api.telephony.callpark_extension.delete(location_id=self.location_id, cpe_id=cpe_id)
                      for cpe_id in self.generated_cpe_ids]
             self.generated_cpe_ids = []
             await asyncio.gather(*tasks)
@@ -83,49 +67,46 @@ class TempCPE:
         """
 
         async def get_cpes() -> list[str]:
-            async with PrivateAsyncApi(access_token=self.api.access_token) as api:
-                ci_org_id = self.ci_org_id
-                existing_cpes = await api.cpapi.call_park_extensions.list(ci_org_id=ci_org_id)
+            async with AsWebexSimpleApi(tokens=self.api.access_token) as api:
+                existing_cpes = await api.telephony.callpark_extension.list()
 
-                # CI CPE ids currently used as member
-                ci_cpe_ids = set(webex_id_to_uuid(cpe.cpe_id) for cpe in cpes_present)
+                # CPE ids currently used as member
+                ids_cpes_present = set(cpe.cpe_id for cpe in cpes_present)
 
-                # CI ids of CPEs which can be added: all cpes not currently used
-                available_ci_cpe_ids = [cpe.id
+                # ids of CPEs which can be added: all cpes not currently used
+                available_ci_cpe_ids = [cpe.cpe_id
                                         for cpe in existing_cpes
-                                        if cpe.id not in ci_cpe_ids]
+                                        if cpe.cpe_id not in ids_cpes_present]
+
                 # are we missing any to be able to fulfill the request?
                 missing = max(cpe_count - len(available_ci_cpe_ids), 0)
                 if missing:
                     # we need to create a bunch of CPEs
                     # pick a random location
-                    locations = await api.cpapi.location.list(ci_org_id=ci_org_id)
+                    locations = await api.locations.list()
 
-                    ci_location_id = random.choice(locations).id
-                    self.location_id = ci_location_id
+                    location_id = random.choice(locations).id
+                    self.location_id = location_id
                     cpe_names = set(cpe.name for cpe in existing_cpes
-                                    if cpe.location_id == ci_location_id)
+                                    if cpe.location_id == location_id)
                     new_names = (name for i in range(1000)
                                  if (name := f'cpe_{i:03}') not in cpe_names)
 
                     # assumption: we can assign new extensions to CPEs in ascending order
                     extensions = [int(cpe.extension)
                                   for cpe in existing_cpes
-                                  if cpe.location_id == ci_location_id]
+                                  if cpe.location_id == location_id]
                     extensions = extensions or [1100]
                     max_cpe_extension = max(extensions)
 
-                    tasks = [api.cpapi.call_park_extensions.add(ci_org_id=ci_org_id,
-                                                                ci_location_id=ci_location_id,
-                                                                name=next(new_names),
-                                                                extension=str(max_cpe_extension + i + 1))
+                    tasks = [api.telephony.callpark_extension.create(location_id=location_id,
+                                                                     name=next(new_names),
+                                                                     extension=str(max_cpe_extension + i + 1))
                              for i in range(missing)]
                     self.generated_cpe_ids = await asyncio.gather(*tasks)
                     available_ci_cpe_ids.extend(self.generated_cpe_ids)
 
             result = random.sample(available_ci_cpe_ids, cpe_count)
-            # convert to webex id
-            result = [cpe_webex_id(ci_id=ci_id) for ci_id in result]
             return result
 
         self.generated_cpe_ids = []
@@ -141,24 +122,12 @@ class TempCPE:
 
 @dataclass(init=False)
 class TestUpdate(TestCaseWithUsers):
-    callpark_extensions: ClassVar[Optional[list[CPAPI_CPE]]]
+    callpark_extensions: ClassVar[Optional[list[CallParkExtension]]]
 
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
-
-        async def list_cpe() -> list[CallParkExtension]:
-            ci_org_id = webex_id_to_uuid(cls.me.org_id)
-            async with PrivateAsyncApi(access_token=cls.tokens.access_token) as api:
-                cpes = await api.cpapi.call_park_extensions.list(ci_org_id=ci_org_id)
-            return cpes
-
-        if cls.api:
-            cpe_list = asyncio.run(list_cpe())
-            cpe_list: list[CPAPI_CPE]
-            cls.callpark_extensions = cpe_list
-        else:
-            cls.callpark_extensions = None
+        cls.callpark_extensions = list(cls.api.telephony.callpark_extension.list())
 
     @contextmanager
     def target_user(self):
@@ -238,6 +207,7 @@ class TestUpdate(TestCaseWithUsers):
         """
         with self.target_user() as user:
             # API shortcut
+
             mon = self.api.person_settings.monitoring
             # get current settings
             before = mon.read(person_id=user.person_id)
@@ -245,6 +215,8 @@ class TestUpdate(TestCaseWithUsers):
             user_candidates = [user for user in self.users
                                if user.person_id not in present_ids]
             to_add = random.sample(user_candidates, 3)
+            to_add: list[Person]
+            print(f'Trying to add monitoring for: {", ".join(u.display_name for u in to_add)}')
 
             # ths is what we want to add
             new_monitoring_elements = [user.person_id

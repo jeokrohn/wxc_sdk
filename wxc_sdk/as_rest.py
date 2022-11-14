@@ -157,6 +157,50 @@ def as_dump_response(*, response: ClientResponse, response_data=None, data=None,
         dump_log.debug(output.getvalue())
 
 
+def retry_request(func):
+    """
+    Decorator for the request method in the AsRestSession class. Used to implement backoff on 429 responses
+
+    :param func:
+    :return:
+    """
+
+    async def giveup_429(e: ClientResponseError) -> bool:
+        """
+        callback for backoff on REST requests
+
+        :param e: latest exception
+        :return: True -> break the backoff loop
+        """
+        if e.status != 429:
+            # Don't retry on anything other than 429
+            return True
+
+        # determine how long we have to wait
+        retry_after = int(e.headers.get('Retry-After', 5))
+
+        # never wait more than the defined maximum of 20 s
+        retry_after = min(retry_after, 20)
+        log.warning(f'429 retry after {retry_after} on {e.request_info.method} {e.request_info.url}')
+        await asyncio.sleep(retry_after)
+        return False
+
+    @wraps(func)
+    async def wrapper(session: 'AsRestSession', *args, **kwargs):
+        async with session._sem:
+            while True:
+                try:
+                    result = await func(session, *args, **kwargs)
+                except ClientResponseError as e:
+                    if await giveup_429(e):
+                        raise
+                else:
+                    break
+        return result
+
+    return wrapper
+
+
 class AsRestSession(ClientSession):
     """
     REST session used for API requests:
@@ -192,44 +236,6 @@ class AsRestSession(ClientSession):
         :rtype: str
         """
         return self._tokens.access_token
-
-    @staticmethod
-    async def _giveup_429(e: ClientResponseError) -> bool:
-        """
-        callback for backoff on REST requests
-
-        :param e: latest exception
-        :return: True -> break the backoff loop
-        """
-        if e.status != 429:
-            # Don't retry on anything other than 429
-            return True
-
-        # determine how long we have to wait
-        retry_after = int(e.headers.get('Retry-After', 5))
-
-        # never wait more than the defined maximum of 20 s
-        retry_after = min(retry_after, 20)
-        log.warning(f'429 retry after {retry_after} on {e.request_info.method} {e.request_info.url}')
-        await asyncio.sleep(retry_after)
-        return False
-
-    @staticmethod
-    def retry_request(func):
-        @wraps(func)
-        async def wrapper(session: 'AsRestSession', *args, **kwargs):
-            async with session._sem:
-                while True:
-                    try:
-                        result = await func(session, *args, **kwargs)
-                    except ClientResponseError as e:
-                        if await session._giveup_429(e):
-                            raise
-                    else:
-                        break
-            return result
-
-        return wrapper
 
     @retry_request
     async def _request_w_response(self, method: str, url: str, headers=None, content_type: str = None,

@@ -6144,9 +6144,9 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony/config/huntGroups'):
                 ep = f'{ep}/{cpe_id}'
             return ep
 
-    def list_gen(self, org_id: str = None, extension: str = None, name: str = None, location_id: str = None,
-             location_name: str = None,
-             order: str = None, **params) -> AsyncGenerator[CallParkExtension, None, None]:
+    def list_gen(self, extension: str = None, name: str = None, location_id: str = None,
+             location_name: str = None, order: str = None, org_id: str = None,
+             **params) -> AsyncGenerator[CallParkExtension, None, None]:
         """
         Read the List of Call Park Extensions
 
@@ -6159,8 +6159,6 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony/config/huntGroups'):
         Retrieving this list requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param org_id: List call park extensions for this organization.
-        :type org_id: str
         :param extension: Only return call park extensions with the matching extension.
         :type extension: str
         :param name: Only return call park extensions with the matching name.
@@ -6172,6 +6170,8 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony/config/huntGroups'):
         :param order: Order the available agents according to the designated fields. Available sort fields: groupName,
             callParkExtension, callParkExtensionName, callParkExtensionExternalId.
         :type order: str
+        :param org_id: List call park extensions for this organization.
+        :type org_id: str
         :param params: additional parameters
         :return: yields :class:`wxc_sdk.common.CallParkExtension` instances
         """
@@ -6182,9 +6182,9 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony/config/huntGroups'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=CallParkExtension, params=params)
 
-    async def list(self, org_id: str = None, extension: str = None, name: str = None, location_id: str = None,
-             location_name: str = None,
-             order: str = None, **params) -> List[CallParkExtension]:
+    async def list(self, extension: str = None, name: str = None, location_id: str = None,
+             location_name: str = None, order: str = None, org_id: str = None,
+             **params) -> List[CallParkExtension]:
         """
         Read the List of Call Park Extensions
 
@@ -6197,8 +6197,6 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony/config/huntGroups'):
         Retrieving this list requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param org_id: List call park extensions for this organization.
-        :type org_id: str
         :param extension: Only return call park extensions with the matching extension.
         :type extension: str
         :param name: Only return call park extensions with the matching name.
@@ -6210,6 +6208,8 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony/config/huntGroups'):
         :param order: Order the available agents according to the designated fields. Available sort fields: groupName,
             callParkExtension, callParkExtensionName, callParkExtensionExternalId.
         :type order: str
+        :param org_id: List call park extensions for this organization.
+        :type org_id: str
         :param params: additional parameters
         :return: yields :class:`wxc_sdk.common.CallParkExtension` instances
         """
@@ -6246,6 +6246,96 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony/config/huntGroups'):
         params = org_id and {'orgId': org_id} or {}
         data = await self.get(url, params=params)
         return CallParkExtension.parse_obj(data)
+
+    async def create(self, location_id: str, name: str, extension: str, org_id: str = None, ) -> str:
+        """
+        Create new Call Park Extensions for the given location.
+        Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same
+        Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as
+        monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone
+        line key.
+        Creating a call park extension requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Create the call park extension for this location.
+        :type location_id: str
+        :param name: Name for the call park extension. The maximum length is 30.
+        :type name: str
+        :param extension: Unique extension which will be assigned to call park extension. The minimum length is 2,
+            maximum length is 6.
+        :type extension: str
+        :param org_id: Create the call park extension for this organization.
+        :type org_id: str
+        :return: id of the new call park extension
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = {'name': name, 'extension': extension}
+        url = self._endpoint(location_id=location_id)
+        data = await super().post(url=url, params=params, json=body)
+        return data["id"]
+
+    async def delete(self, location_id: str, cpe_id: str, org_id: str = None):
+        """
+        Delete the designated Call Park Extension.
+        Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same
+        Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as
+        monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone
+        line key.
+        Deleting a call park extension requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Location from which to delete a call park extension.
+        :type location_id: str
+        :param cpe_id: Delete the call park extension with the matching ID.
+        :type cpe_id: str
+        :param org_id: Delete the call park extension from this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self._endpoint(location_id=location_id, cpe_id=cpe_id)
+
+        url = self.ep(f'locations/{location_id}/callParkExtensions/{cpe_id}')
+        await super().delete(url=url, params=params)
+        return
+
+    async def update(self, location_id: str, cpe_id: str, name: str = None, extension: str = None, org_id: str = None):
+        """
+        Update the designated Call Park Extension.
+        Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same
+        Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as
+        monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone
+        line key.
+        Updating a call park extension requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Location in which this call park extension exists.
+        :type location_id: str
+        :param cpe_id: Update a call park extension with the matching ID.
+        :type cpe_id: str
+        :param name: Name for the call park extension. The maximum length is 30.
+        :type name: str
+        :param extension: Unique extension which will be assigned to call park extension. The minimum length is 2,
+            maximum length is 6.
+        :type extension: str
+        :param org_id: Update a call park extension from this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = {}
+        if name is not None:
+            body['name'] = name
+        if extension is not None:
+            body['extension'] = extension
+        url = self._endpoint(location_id=location_id, cpe_id=cpe_id)
+        await super().put(url=url, params=params, json=body)
+        return
 
 
 class AsCallsApi(AsApiChild, base='telephony/calls'):

@@ -67,7 +67,9 @@ def div_repr(d) -> str:
     return f'<div{class_str}>'
 
 
-def python_type(type_str, for_list: bool = False) -> str:
+def python_type(type_str:str, for_list: bool = False) -> str:
+    # transform "Some Class" to "SomeClass"
+    type_str, _ = re.subn(r'\s([A-Z])', '\g<1>', type_str)
     if type_str == 'number':
         return 'int'
     elif type_str == 'boolean':

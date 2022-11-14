@@ -189,6 +189,51 @@ def dump_response(response: Response, file: TextIOBase = None, dump_log: logging
         dump_log.debug(output.getvalue())
 
 
+def retry_request(func):
+    """
+    Decorator for the request method in the RestSession class. Used to implement backoff on 429 responses
+
+    :param func:
+    :return:
+    """
+
+    def giveup_429(e: RestError) -> bool:
+        """
+        callback for backoff on REST requests
+
+        :param e: latest exception
+        :return: True -> break the backoff loop
+        """
+        response = e.response
+        response: Response
+        if response.status_code != 429:
+            # Don't retry on anything other than 429
+            return True
+
+        # determine how long we have to wait
+        retry_after = int(response.headers.get('Retry-After', 5))
+
+        # never wait more than the defined maximum of 20 s
+        retry_after = min(retry_after, 20)
+        time.sleep(retry_after)
+        return False
+
+    @wraps(func)
+    def wrapper(session: 'RestSession', *args, **kwargs):
+        with session._sem:
+            while True:
+                try:
+                    result = func(session, *args, **kwargs)
+                except RestError as e:
+                    if giveup_429(e):
+                        raise
+                else:
+                    break
+        return result
+
+    return wrapper
+
+
 class RestSession(Session):
     """
     REST session used for API requests:
@@ -226,45 +271,6 @@ class RestSession(Session):
         :rtype: str
         """
         return self._tokens.access_token
-
-    @staticmethod
-    def _giveup_429(e: RestError) -> bool:
-        """
-        callback for backoff on REST requests
-
-        :param e: latest exception
-        :return: True -> break the backoff loop
-        """
-        response = e.response
-        response: Response
-        if response.status_code != 429:
-            # Don't retry on anything other than 429
-            return True
-
-        # determine how long we have to wait
-        retry_after = int(response.headers.get('Retry-After', 5))
-
-        # never wait more than the defined maximum of 20 s
-        retry_after = min(retry_after, 20)
-        time.sleep(retry_after)
-        return False
-
-    @staticmethod
-    def retry_request(func):
-        @wraps(func)
-        def wrapper(session: 'RestSession', *args, **kwargs):
-            with session._sem:
-                while True:
-                    try:
-                        result = func(session, *args, **kwargs)
-                    except RestError as e:
-                        if session._giveup_429(e):
-                            raise
-                    else:
-                        break
-            return result
-
-        return wrapper
 
     @retry_request
     def _request_w_response(self, method: str, url: str, headers=None, content_type: str = None,

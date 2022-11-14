@@ -12,7 +12,7 @@ from itertools import zip_longest
 from random import randint
 from typing import Generator
 
-from digittree import DigitTree
+from test_helper.digittree import DigitTree
 
 from examples.calendarific import CalendarifiyApi
 from wxc_sdk import WebexSimpleApi
