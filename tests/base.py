@@ -543,6 +543,7 @@ class TestCaseWithLog(TestCaseWithTokens):
         print some request stats
         """
         long_word = re.compile(r'/\w{20,}/?')
+
         def url_key(url: str) -> str:
             # remove long words (probably IDs?) from URL
             url = long_word.sub('', url)

@@ -9,6 +9,7 @@
 * set version number in tests/test_wxc_sdk.py
 * update docs/changes.rst, prepare commit message
 * run "script/build"
+* check API changes based on information scraped from developer.webex.com
 * run all tests and check results
 * review TODOs: did we miss anything
 * run "script/build"

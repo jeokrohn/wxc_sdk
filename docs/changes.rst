@@ -1,6 +1,20 @@
 Release history
 ===============
 
+- feat: new API: :attr:`wxc_sdk.WebexSimpleApi.teams`
+- feat: new API: :attr:`wxc_sdk.WebexSimpleApi.team_memberships`
+- feat: new API: :attr:`wxc_sdk.WebexSimpleApi.room_tabs`
+- fix: proper support for :class:`wxc_sdk.messages.MessageAttachment` in :meth:`wxc_sdk.messages.MessagesApi.create`
+- feat: support local files with :meth:`wxc_sdk.messages.MessagesApi.create`
+- fix: :meth:`wxc_sdk.teams.TeamsApi.list`, removed undefined "param" variable
+- feat: generated async API now supports file uploads; for example posting messagen
+- feat: new API: :attr:`wxc_sdk.WebexSimpleApi.events`
+- improved 429 handling; not using backoff module anymore
+- added :meth:`wxc_sdk.telephony.callpark_extension.CallparkExtensionApi.create`
+- added :meth:`wxc_sdk.telephony.callpark_extension.CallparkExtensionApi.delete`
+- added :meth:`wxc_sdk.telephony.callpark_extension.CallparkExtensionApi.update`
+- fix: :meth:`wxc_sdk.people.PeopleApi.update` with calling_data=True failed
+
 1.8.0
 -----
 - feat: new APIs: :attr:`wxc_sdk.WebexSimpleApi.rooms`

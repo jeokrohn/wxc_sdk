@@ -1,11 +1,10 @@
 from collections.abc import Generator
 from datetime import datetime
+from enum import Enum
+from typing import Optional, Any
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel, dt_iso_str
-from enum import Enum
-from typing import List, Optional, Any
-from pydantic import Field
 
 __all__ = ['EventData', 'ComplianceEvent', 'EventResource', 'EventType', 'EventsApi']
 
