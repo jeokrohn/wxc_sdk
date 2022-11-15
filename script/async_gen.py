@@ -31,7 +31,7 @@ from enum import Enum
 from io import BufferedReader
 from typing import Union, Dict, Optional, Literal, List
 
-from aiohttp import MultipartWriter, FormData
+from aiohttp import FormData
 from pydantic import parse_obj_as
 
 from wxc_sdk.all_types import *

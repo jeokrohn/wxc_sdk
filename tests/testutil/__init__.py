@@ -2,6 +2,7 @@
 Generic helper for test cases
 """
 import asyncio
+import os
 import random
 from collections import defaultdict
 from collections.abc import Iterable
@@ -11,6 +12,8 @@ from functools import reduce
 from itertools import zip_longest
 from random import randint
 from typing import Generator
+from test_helper.randomuserutil import RandomUserUtil
+from test_helper.randomuser import User
 
 from test_helper.digittree import DigitTree
 
@@ -24,7 +27,7 @@ from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 
 __all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'LocationInfo', 'us_location_info',
            'calling_users', 'available_numbers', 'available_extensions_gen', 'get_or_create_holiday_schedule',
-           'get_or_create_business_schedule']
+           'get_or_create_business_schedule', 'random_users']
 
 
 def available_numbers(numbers: Iterable[str], seed: str = None) -> Generator[str, None, None]:
@@ -233,3 +236,18 @@ def get_or_create_business_schedule(*, api: WebexSimpleApi, location_id: str) ->
     schedule_id = api.telephony.schedules.create(obj_id=location_id, schedule=schedule)
     return api.telephony.schedules.details(obj_id=location_id, schedule_type=ScheduleType.business_hours,
                                            schedule_id=schedule_id)
+
+
+async def random_users(api: AsWebexSimpleApi, user_count: int = 1) -> list[User]:
+    """
+    Get a bunch of random new users
+    :param api:
+    :param user_count:
+    :return:
+    """
+    email = os.getenv('BASE_EMAIL')
+    if email is None:
+        raise KeyError('BASE_EMAIL needs to be defined')
+    util = RandomUserUtil(api=api, gmail_address=email)
+    new_users = await util.get_new_users(number_of_users=user_count)
+    return new_users

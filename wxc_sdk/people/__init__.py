@@ -333,10 +333,10 @@ class PeopleApi(ApiChild, base='people'):
         :rtype: Person
         """
         params = {}
-        if calling_data is not None:
-            params['callingData'] = calling_data
-        if show_all_types is not None:
-            params['showAllTypes'] = show_all_types
+        if calling_data:
+            params['callingData'] = 'true'
+        if show_all_types:
+            params['showAllTypes'] = 'true'
 
         if not all(v is not None
                    for v in (person.display_name, person.first_name, person.last_name)):

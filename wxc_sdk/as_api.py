@@ -12,7 +12,7 @@ from enum import Enum
 from io import BufferedReader
 from typing import Union, Dict, Optional, Literal, List
 
-from aiohttp import MultipartWriter, FormData
+from aiohttp import FormData
 from pydantic import parse_obj_as
 
 from wxc_sdk.all_types import *
@@ -1682,10 +1682,10 @@ class AsPeopleApi(AsApiChild, base='people'):
         :rtype: Person
         """
         params = {}
-        if calling_data is not None:
-            params['callingData'] = calling_data
-        if show_all_types is not None:
-            params['showAllTypes'] = show_all_types
+        if calling_data:
+            params['callingData'] = 'true'
+        if show_all_types:
+            params['showAllTypes'] = 'true'
 
         if not all(v is not None
                    for v in (person.display_name, person.first_name, person.last_name)):

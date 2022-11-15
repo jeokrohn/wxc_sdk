@@ -1,3 +1,4 @@
+import asyncio
 import base64
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
@@ -7,23 +8,27 @@ from functools import reduce
 from itertools import chain
 from json import dumps, loads
 from random import shuffle, choice, randint
-from typing import ClassVar, Optional, Generator, Union
+from typing import ClassVar, Optional, Generator, Union, NamedTuple
 
 from tests.base import TestCaseWithLog, async_test
+from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.common import RouteType, RouteIdentity, UserType, NumberState
 from wxc_sdk.common.schedules import Schedule, ScheduleType
 from wxc_sdk.locations import Location
-from wxc_sdk.people import Person
+from wxc_sdk.people import Person, PhoneNumber, PhoneNumberType
 from wxc_sdk.rest import RestError
 from wxc_sdk.telephony import OriginatorType, DestinationType, NumberType, CallSourceType, TestCallRoutingResult, \
-    HostedFeatureDestination, ServiceType, HostedUserDestination, CallSourceInfo, PbxUserDestination, OwnerType, \
-    NumberListPhoneNumberType
+    HostedFeatureDestination, ServiceType, HostedUserDestination, CallSourceInfo, PbxUserDestination, \
+    NumberListPhoneNumber
 from wxc_sdk.telephony.autoattendant import AutoAttendant, AutoAttendantMenu
 from wxc_sdk.telephony.huntgroup import HuntGroup
+from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.telephony.location.internal_dialing import InternalDialing
 from wxc_sdk.telephony.prem_pstn.dial_plan import DialPlan
 from wxc_sdk.telephony.prem_pstn.trunk import TrunkDetail
-from .testutil import calling_users, us_location_info, LocationInfo, available_extensions, available_tns
+
+from .testutil import calling_users, us_location_info, LocationInfo, available_extensions, available_tns, \
+    as_available_tns, random_users
 
 
 @dataclass
@@ -146,7 +151,7 @@ class DpContext:
 @dataclass(init=False)
 class TestCallRouting(TestCaseWithLog):
     dp_context: ClassVar[Optional[DpContext]] = field(default=None)
-    _calling_users: list[Person] = field(default=None)
+    _calling_users: ClassVar[list[Person]] = field(default=None)
     _location_infos: ClassVar[Optional[list[LocationInfo]]] = field(default=None)
 
     @classmethod
@@ -154,6 +159,7 @@ class TestCallRouting(TestCaseWithLog):
         super().setUpClass()
         cls.dp_context = None
         cls._location_infos = None
+        cls._calling_users = None
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -187,7 +193,7 @@ class TestCallRouting(TestCaseWithLog):
                 users = [user for user in users
                          if user.location_id in loc_ids]
 
-            self._calling_users = users
+            self.__class__._calling_users = users
         return self._calling_users
 
     @contextmanager
@@ -203,7 +209,154 @@ class TestCallRouting(TestCaseWithLog):
         print(dumps(loads(result.json()), indent=2))
 
 
+class LocationAndTelephony(NamedTuple):
+    location: Location
+    telephony_location: TelephonyLocation
+    main_number: str
+
+
+@dataclass(init=False)
+class ToUserWithTN(TestCallRouting):
+    target_location: ClassVar[LocationAndTelephony]
+    target_user: ClassVar[Person]
+    target_tn: ClassVar[str]
+    caller: ClassVar[Person]
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+
+        async def setup():
+            async def location_info() -> list[LocationAndTelephony]:
+                # get locations with premises PSTN configured
+                locations = await api.locations.list()
+
+                # get telephony location details for all locations
+                telephony_locations = await asyncio.gather(
+                    *[api.telephony.location.details(location_id=loc.location_id)
+                      for loc in locations])
+                telephony_locations: list[TelephonyLocation]
+                numbers = await api.telephony.phone_numbers()
+                numbers: list[NumberListPhoneNumber]
+                main_numbers: dict[str, NumberListPhoneNumber] = {number.location.location_id: number
+                                                                  for number in numbers if number.main_number}
+                return [LocationAndTelephony(location=loc, telephony_location=tel_loc, main_number=nlp.phone_number)
+                        for loc, tel_loc in zip(locations, telephony_locations)
+                        if tel_loc.connection and (nlp := main_numbers.get(loc.location_id))]
+
+            async with AsWebexSimpleApi(tokens=cls.tokens) as api:
+                locations = await location_info()
+                locations: list[LocationAndTelephony]
+
+                # pick a location with premises PSTN
+                locations = [loc for loc in locations
+                             if loc.telephony_location.connection]
+                target_location = choice(locations)
+                cls.target_location = target_location
+
+                # get a new TN for the user's location
+                new_tn = (await as_available_tns(as_api=api, tns_requested=1,
+                                                 tn_prefix=target_location.main_number[:5]))[0]
+                cls.target_tn = new_tn
+
+                # add TN to location and activate
+                await api.telephony.location.number.add(location_id=target_location.location.location_id,
+                                                        phone_numbers=[new_tn],
+                                                        state=NumberState.active)
+                print(f'Added new TN {new_tn} to location "{cls.target_location.location.name}"')
+                # create a new random user
+                new_user = (await random_users(api=api, user_count=1))[0]
+                new_person = await api.people.create(
+                    settings=Person(emails=[new_user.email],
+                                    display_name=new_user.display_name,
+                                    first_name=new_user.name.first,
+                                    last_name=new_user.name.last))
+                print(f'Added new user "{new_person.display_name}({new_person.emails[0]})"')
+                cls.target_user = new_person
+                # enable the user for calling, and add TN to user
+                licenses = await api.licenses.list()
+                basic_calling_license = next((lic for lic in licenses
+                                              if lic.webex_calling_basic))
+                new_person.licenses.append(basic_calling_license.license_id)
+                new_person.phone_numbers = [PhoneNumber(number_type=PhoneNumberType.work, value=new_tn[2:])]
+                await api.people.update(person=new_person, calling_data=True)
+            return
+
+        asyncio.run(setup())
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+
+        async def cleanup():
+            async with AsWebexSimpleApi(tokens=cls.tokens) as api:
+                if cls.target_user:
+                    # delete the user
+                    await api.people.delete_person(person_id=cls.target_user.person_id)
+                    print(f'Deleted user user "{cls.target_user.display_name}({cls.target_user.emails[0]})"')
+                if cls.target_tn:
+                    await api.telephony.location.number.remove(location_id=cls.target_location.location.location_id,
+                                                               phone_numbers=[cls.target_tn])
+                    print(f'removed TN {cls.target_tn} to from "{cls.target_location.location.name}"')
+
+        asyncio.run(cleanup())
+        super().tearDownClass()
+
+    def test_002_user_to_user_e164(self):
+        """
+        User calls another user dialing the user's TN
+        """
+        called = self.target_user
+        caller = choice([user for user in self.calling_users
+                         if user.person_id != called.person_id])
+        result = self.api.telephony.test_call_routing(originator_id=caller.person_id,
+                                                      originator_type=OriginatorType.user,
+                                                      destination=self.target_tn)
+        self.print_result(result=result)
+        self.assertEqual(DestinationType.hosted_agent, result.destination_type)
+        self.assertEqual(called.person_id, result.hosted_user.hu_id)
+        self.assertEqual(self.target_tn, result.routing_address)
+
+    @TestCallRouting.async_test
+    async def test_003_user_to_user_10d(self):
+        called = self.target_user
+        caller = choice([user for user in self.calling_users
+                         if user.person_id != called.person_id])
+        result = self.api.telephony.test_call_routing(originator_id=caller.person_id,
+                                                      originator_type=OriginatorType.user,
+                                                      destination=self.target_tn[2:])
+        self.print_result(result=result)
+        self.assertEqual(DestinationType.hosted_agent, result.destination_type)
+        self.assertEqual(called.person_id, result.hosted_user.hu_id)
+        self.assertEqual(self.target_tn, result.routing_address)
+
+    @TestCallRouting.async_test
+    async def test_004_user_to_user_w_oac(self):
+        # check it location has OAC configured
+        oac = self.target_location.telephony_location.outside_dial_digit
+        if not oac:
+            settings = self.target_location.telephony_location.copy(deep=True)
+            settings.outside_dial_digit = '9'
+            await self.async_api.telephony.location.update(location_id=self.target_location.location.location_id,
+                                                           settings=settings)
+        try:
+            called = self.target_user
+            caller = choice([user for user in self.calling_users
+                             if user.person_id != called.person_id])
+            result = self.api.telephony.test_call_routing(originator_id=caller.person_id,
+                                                          originator_type=OriginatorType.user,
+                                                          destination=f'9{self.target_tn}')
+            self.print_result(result=result)
+            self.assertEqual(DestinationType.hosted_agent, result.destination_type)
+            self.assertEqual(called.person_id, result.hosted_user.hu_id)
+            self.assertEqual(self.target_tn, result.routing_address)
+        finally:
+            if not oac:
+                await self.async_api.telephony.location.update(location_id=self.target_location.location.location_id,
+                                                               settings=self.target_location.telephony_location)
+
+
 class TestUsersAndTrunks(TestCallRouting):
+
     @async_test
     async def test_001_user_to_user_extension_same_location(self):
         """
@@ -277,28 +430,7 @@ class TestUsersAndTrunks(TestCallRouting):
                 print('No other issues other than wrong location id format')
                 raise
 
-    def test_002_user_to_user_e164(self):
-        """
-        User calls another user dialing the user's TN
-        """
-        # all TNs used as primary TN
-        # TODO: create active TN and temporarily add to user
-        primary_tns = list(self.api.telephony.phone_numbers(owner_type=OwnerType.people,
-                                                            phone_number_type=NumberListPhoneNumberType.primary,
-                                                            state=NumberState.active))
-        if not primary_tns:
-            self.skipTest('Need at least one user with a TN')
-        called_tn = choice(primary_tns)
-        called = next(user for user in self.calling_users
-                      if user.person_id == called_tn.owner.owner_id)
-        caller = choice([user for user in self.calling_users
-                         if user.person_id != called.person_id])
-        result = self.api.telephony.test_call_routing(originator_id=caller.person_id,
-                                                      originator_type=OriginatorType.user,
-                                                      destination=called_tn.phone_number)
-        self.print_result(result=result)
-
-    def test_002_trunk_prem_to_user_extension(self):
+    def test_005_trunk_prem_to_user_extension(self):
         """
         Call from a trunk to an extension with +E.164 caller ID of a prem user is expected to work
         :return:
@@ -344,7 +476,7 @@ class TestUsersAndTrunks(TestCallRouting):
             ),
                 test_result)
 
-    def test_003_trunk_pstn_to_user_extension(self):
+    def test_006_trunk_pstn_to_user_extension(self):
         """
         Call from a trunk to an extension with caller ID of a PSTN number is expected to fail
         """
@@ -364,7 +496,7 @@ class TestUsersAndTrunks(TestCallRouting):
                              f'in standard mode',
                              rest_error.description)
 
-    def test_004_trunk_ext_to_user_ext_unknown_extension_routing_enabled(self):
+    def test_007_trunk_ext_to_user_ext_unknown_extension_routing_enabled(self):
         """
         Call from a trunk with extension as caller id to a user's extension should work
         """
@@ -400,7 +532,7 @@ class TestUsersAndTrunks(TestCallRouting):
                     self.api.telephony.location.internal_dialing.update(location_id=ctx.location.location_id,
                                                                         update=internal_dialing_before)
 
-    def test_005_trunk_ext_to_user_ext_unknown_extension_routing_disabled(self):
+    def test_008_trunk_ext_to_user_ext_unknown_extension_routing_disabled(self):
         """
         Call from a trunk with extension as caller id to a user's extension should fail
         """
@@ -435,7 +567,7 @@ class TestUsersAndTrunks(TestCallRouting):
                     self.api.telephony.location.internal_dialing.update(location_id=ctx.location.location_id,
                                                                         update=internal_dialing_before)
 
-    def test_006_trunk_to_trunk_from_prem_e164(self):
+    def test_009_trunk_to_trunk_from_prem_e164(self):
         """
         Call from trunk to trunk (match on e164 pattern). Caller is E.164 based on DP match
         :return:
@@ -588,7 +720,7 @@ class AAContext:
                 aa.location_id = self.location.location_id
                 self.aa_id = aa_id
                 self.auto_attendant = aa
-            except:
+            finally:
                 self.clean_up()
 
     def clean_up(self):
@@ -663,7 +795,7 @@ class HGContext:
                 hg.id = hg_id
                 hg.location_id = self.location.location_id
                 self.hg = hg
-            except:
+            finally:
                 self.clean_up()
 
     def clean_up(self):

@@ -44,6 +44,12 @@ The second column of the table has a link to the documentation of the method.
    * - api.devices.settings_jobs.list
         List change device settings jobs
      - :meth:`~wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.list`
+   * - api.events.details
+        Shows details for an event, by event ID
+     - :meth:`~wxc_sdk.events.EventsApi.details`
+   * - api.events.list
+        List events in your organization
+     - :meth:`~wxc_sdk.events.EventsApi.list`
    * - api.groups.create
         Create a new group using the provided settings
      - :meth:`~wxc_sdk.groups.GroupsApi.create`
@@ -332,6 +338,21 @@ The second column of the table has a link to the documentation of the method.
    * - api.reports.list_templates
         List all the available report templates that can be generated
      - :meth:`~wxc_sdk.reports.ReportsApi.list_templates`
+   * - api.room_tabs.create_tab
+        Add a tab with a specified URL to a room
+     - :meth:`~wxc_sdk.room_tabs.RoomTabsApi.create_tab`
+   * - api.room_tabs.delete_tab
+        Deletes a Room Tab with the specified ID
+     - :meth:`~wxc_sdk.room_tabs.RoomTabsApi.delete_tab`
+   * - api.room_tabs.list_tabs
+        Lists all Room Tabs of a room specified by the roomId query parameter
+     - :meth:`~wxc_sdk.room_tabs.RoomTabsApi.list_tabs`
+   * - api.room_tabs.tab_details
+        Get details for a Room Tab with the specified room tab ID
+     - :meth:`~wxc_sdk.room_tabs.RoomTabsApi.tab_details`
+   * - api.room_tabs.update_tab
+        Updates the content URL of the specified Room Tab ID
+     - :meth:`~wxc_sdk.room_tabs.RoomTabsApi.update_tab`
    * - api.rooms.create
         Creates a room
      - :meth:`~wxc_sdk.rooms.RoomsApi.create`
@@ -350,6 +371,36 @@ The second column of the table has a link to the documentation of the method.
    * - api.rooms.update
         Updates details for a room
      - :meth:`~wxc_sdk.rooms.RoomsApi.update`
+   * - api.team_memberships.create_membership
+        Add someone to a team by Person ID or email address, optionally making them a moderator
+     - :meth:`~wxc_sdk.team_memberships.TeamMembershipsApi.create_membership`
+   * - api.team_memberships.delete_membership
+        Deletes a team membership, by ID
+     - :meth:`~wxc_sdk.team_memberships.TeamMembershipsApi.delete_membership`
+   * - api.team_memberships.list_memberships
+        Lists all team memberships for a given team, specified by the teamId query parameter
+     - :meth:`~wxc_sdk.team_memberships.TeamMembershipsApi.list_memberships`
+   * - api.team_memberships.membership_details
+        Shows details for a team membership, by ID
+     - :meth:`~wxc_sdk.team_memberships.TeamMembershipsApi.membership_details`
+   * - api.team_memberships.update_membership
+        Updates a team membership, by ID
+     - :meth:`~wxc_sdk.team_memberships.TeamMembershipsApi.update_membership`
+   * - api.teams.create
+        Creates a team
+     - :meth:`~wxc_sdk.teams.TeamsApi.create`
+   * - api.teams.delete
+        Deletes a team, by ID
+     - :meth:`~wxc_sdk.teams.TeamsApi.delete`
+   * - api.teams.details
+        Shows details for a team, by ID
+     - :meth:`~wxc_sdk.teams.TeamsApi.details`
+   * - api.teams.list
+        Lists teams to which the authenticated user belongs
+     - :meth:`~wxc_sdk.teams.TeamsApi.list`
+   * - api.teams.update
+        Updates details for a team, by ID
+     - :meth:`~wxc_sdk.teams.TeamsApi.update`
    * - api.telephony.device_settings
         Get device override settings for an organization
      - :meth:`~wxc_sdk.telephony.TelephonyApi.device_settings`
@@ -437,12 +488,21 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.callpark.update_call_park_settings
         Update Call Park settings
      - :meth:`~wxc_sdk.telephony.callpark.CallParkApi.update_call_park_settings`
+   * - api.telephony.callpark_extension.create
+        Create new Call Park Extensions for the given location
+     - :meth:`~wxc_sdk.telephony.callpark_extension.CallparkExtensionApi.create`
+   * - api.telephony.callpark_extension.delete
+        Delete the designated Call Park Extension
+     - :meth:`~wxc_sdk.telephony.callpark_extension.CallparkExtensionApi.delete`
    * - api.telephony.callpark_extension.details
         Get Details for a Call Park Extension
      - :meth:`~wxc_sdk.telephony.callpark_extension.CallparkExtensionApi.details`
    * - api.telephony.callpark_extension.list
         Read the List of Call Park Extensions
      - :meth:`~wxc_sdk.telephony.callpark_extension.CallparkExtensionApi.list`
+   * - api.telephony.callpark_extension.update
+        Update the designated Call Park Extension
+     - :meth:`~wxc_sdk.telephony.callpark_extension.CallparkExtensionApi.update`
    * - api.telephony.calls.answer
         Answer an incoming call on the user's primary device
      - :meth:`~wxc_sdk.telephony.calls.CallsApi.answer`
