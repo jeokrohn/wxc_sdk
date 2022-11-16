@@ -122,6 +122,7 @@ class DpContext:
         return next(avail_gen)
 
     def available_prem_pattern(self, prefix: str) -> Generator[str, None, None]:
+        # noinspection PyShadowingNames
         def no_conflict(prefix, pattern) -> bool:
             m = split_prefix.match(pattern)
             pattern_prefix = m.group(1)
@@ -274,6 +275,7 @@ class ToUserWithTN(TestCallRouting):
         super().setUpClass()
 
         async def setup():
+            # noinspection PyShadowingNames
             async def location_info() -> list[LocationAndTelephony]:
                 # get locations with premises PSTN configured
                 locations = await api.locations.list()
@@ -313,6 +315,7 @@ class ToUserWithTN(TestCallRouting):
                 print(f'Added new TN {new_tn} to location "{cls.target_location.location.name}"')
                 # create a new random user
                 new_user = (await random_users(api=api, user_count=1))[0]
+                # noinspection PyArgumentList
                 new_person = await api.people.create(
                     settings=Person(emails=[new_user.email],
                                     display_name=new_user.display_name,
@@ -432,6 +435,7 @@ class ToUserWithTN(TestCallRouting):
                   for dialled, _ in dialing_habits])
             results: list[TestCallRoutingResult]
 
+            # noinspection PyShadowingNames
             def dest_str(result: TestCallRoutingResult) -> str:
                 r = f'destination: {result.destination_type.name}'
                 if result.destination_type == DestinationType.hosted_agent:
@@ -491,7 +495,6 @@ class TestUsersAndTrunks(TestCallRouting):
 
         requests = list(self.requests(method='POST', url_filter=r'.+/actions/testCallRouting/invoke'))
         self.assertFalse(not requests)
-        request = requests[0]
         # TODO: remove
         # self.assertEqual('HOSTED_USER', request.response_body['destinationType'],
         #                  'destinationType has been fixwd ->WXCAPIBULK-105')
@@ -582,10 +585,10 @@ class TestUsersAndTrunks(TestCallRouting):
             called = choice(users_w_extension)
             # the test is expected to fail
             with self.assertRaises(RestError) as exc:
-                test_result = self.api.telephony.test_call_routing(originator_id=ctx.trunk.trunk_id,
-                                                                   originator_type=OriginatorType.trunk,
-                                                                   destination=called.extension,
-                                                                   originator_number=ctx.pstn_number)
+                self.api.telephony.test_call_routing(originator_id=ctx.trunk.trunk_id,
+                                                     originator_type=OriginatorType.trunk,
+                                                     destination=called.extension,
+                                                     originator_number=ctx.pstn_number)
             rest_error: RestError = exc.exception
             self.assertEqual(111602, rest_error.code)
             self.assertEqual(f'This call is an inbound PSTN call from unknown number {ctx.pstn_number} '
@@ -647,10 +650,10 @@ class TestUsersAndTrunks(TestCallRouting):
                     update=InternalDialing(enable_unknown_extension_route_policy=False))
             try:
                 with self.assertRaises(RestError) as exc:
-                    test_result = self.api.telephony.test_call_routing(originator_id=ctx.trunk.trunk_id,
-                                                                       originator_type=OriginatorType.trunk,
-                                                                       destination=called.extension,
-                                                                       originator_number='1234')
+                    self.api.telephony.test_call_routing(originator_id=ctx.trunk.trunk_id,
+                                                         originator_type=OriginatorType.trunk,
+                                                         destination=called.extension,
+                                                         originator_number='1234')
                 rest_error: RestError = exc.exception
                 self.assertEqual(111602, rest_error.code)
                 self.assertEqual(f'This call is an inbound PSTN call from unknown number 1234 '
@@ -714,10 +717,10 @@ class TestUsersAndTrunks(TestCallRouting):
 
                         requests = list(self.requests(method='POST', url_filter=r'.+/actions/testCallRouting/invoke'))
                         self.assertFalse(not requests)
-                        request = requests[0]
                         # TODO: remove
                         # self.assertTrue('premisesDialPattern' in request.response_body['pbxUser'],
                         #                 'redundant premisesDialPattern attribute has been removed -> WXCAPIBULK-105')
+                        # noinspection PyArgumentList
                         self.assertEqual(TestCallRoutingResult(
                             call_source_info=CallSourceInfo(
                                 call_source_type=CallSourceType.dial_pattern,
@@ -785,13 +788,12 @@ class TestUsersAndTrunks(TestCallRouting):
 
             for dialled, result in zip(dial_strings, results):
                 print(
-                    f'Dialling "{dialled:{len(uk_number)+3}}" -> destination: {result.destination_type.name} ')
+                    f'Dialling "{dialled:{len(uk_number) + 3}}" -> destination: {result.destination_type.name} ')
             for result in results:
                 self.print_result(result=result)
             self.assertTrue(all(r.destination_type == DestinationType.pbx_user and r.pbx_user and
                                 r.pbx_user.dial_plan_id == ctx.dial_plan.dial_plan_id
                                 for r in results))
-        ...
 
 
 @dataclass
@@ -845,6 +847,7 @@ class AAContext:
 
                 # create AA
                 print(f'Creating AA "{aa_name}" in location "{self.location.name}"')
+                # noinspection PyArgumentList
                 aa = AutoAttendant(name=aa_name,
                                    enabled=True,
                                    phone_number=aa_tn,
@@ -1053,6 +1056,7 @@ class TestHostedFeature(TestCallRouting):
         else:
             raise ValueError(f"Wrong service type: {service.__class__.__name__}")
 
+        # noinspection PyArgumentList
         return TestCallRoutingResult(destination_type=DestinationType.hosted_feature,
                                      routing_address=service.phone_number,
                                      is_rejected=False,
@@ -1065,6 +1069,7 @@ class TestHostedFeature(TestCallRouting):
                                          name=service.name,
                                          service_instance_id=service_instance_id))
 
+    # noinspection DuplicatedCode
     def test_001_user_to_aa_same_location_by_extension(self):
         """
         user calls AA in same location by extension
@@ -1083,9 +1088,9 @@ class TestHostedFeature(TestCallRouting):
 
         requests = list(self.requests(method='POST', url_filter=r'.+/actions/testCallRouting/invoke'))
         self.assertFalse(not requests)
-        request = requests[0]
 
         # apparently the service instance ID seems to be wrong?
+        # noinspection PyArgumentList
         expected = TestCallRoutingResult(destination_type=DestinationType.hosted_feature,
                                          routing_address=aa.extension,
                                          is_rejected=False,
@@ -1100,6 +1105,7 @@ class TestHostedFeature(TestCallRouting):
 
         self.assert_result_wrong_service_instance_id_format(expected=expected, result=result)
 
+    # noinspection DuplicatedCode
     def test_002_user_to_aa_same_location_by_tn(self):
         """
         user calls AA in same location by +E.164 TN
@@ -1154,6 +1160,7 @@ class TestHostedFeature(TestCallRouting):
         expected = self.result_service_by_phone_numer(service=aa, location=location)
         self.assert_result_wrong_service_instance_id_format(expected=expected, result=result)
 
+    # noinspection DuplicatedCode
     def test_005_user_to_hg_same_location_by_extension(self):
         """
         user calls HG in same location by extension
@@ -1170,6 +1177,7 @@ class TestHostedFeature(TestCallRouting):
                                                       destination=hg.extension)
         self.print_result(result=result)
         # apparently the service instance ID seems to be wrong?
+        # noinspection PyArgumentList
         expected = TestCallRoutingResult(destination_type=DestinationType.hosted_feature,
                                          routing_address=hg.extension,
                                          is_rejected=False,
@@ -1184,6 +1192,7 @@ class TestHostedFeature(TestCallRouting):
 
         self.assert_result_wrong_service_instance_id_format(expected=expected, result=result)
 
+    # noinspection DuplicatedCode
     def test_005_user_to_hg_same_location_by_tn(self):
         """
         user calls HG in same location by +E.164 TN
