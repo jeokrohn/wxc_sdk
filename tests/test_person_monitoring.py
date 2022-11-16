@@ -212,8 +212,8 @@ class TestUpdate(TestCaseWithUsers):
             # get current settings
             before = mon.read(person_id=user.person_id)
             present_ids = [m.member_id for m in before.monitored_members]
-            user_candidates = [user for user in self.users
-                               if user.person_id not in present_ids]
+            user_candidates = [uc for uc in self.users
+                               if uc.person_id not in present_ids and uc.person_id != user.person_id]
             to_add = random.sample(user_candidates, 3)
             to_add: list[Person]
             print(f'Trying to add monitoring for: {", ".join(u.display_name for u in to_add)}')

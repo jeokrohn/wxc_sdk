@@ -450,7 +450,6 @@ class Jobs(TestCaseWithLog):
         print(json.dumps(json.loads(job.json()), indent=2))
         self.assertEqual('COMPLETED', job.latest_execution_status)
 
-
     def test_001_list(self):
         """
         list device setting jobs

@@ -23,7 +23,7 @@ class PermissionsOutMixin(TestCaseWithUsers):
         # explicitly defined call types are the defined attributes of CallingPermissions
         explicit_call_types = set(CallingPermissions.__fields__)
 
-        # identify unknown call types: attributes of returned settings that are no explicitly defined
+        # identify unknown call types: attributes of returned settings that are not explicitly defined
         unknown_call_types = set()
         for setting in settings:
             unknown_call_types.update(set(setting.calling_permissions.__dict__) - explicit_call_types)
@@ -114,6 +114,7 @@ class TestUnknownCallTypes(PermissionsOutMixin):
         with self.no_log():
             _, call_types = await self.get_permissions_and_unknown_call_types()
         call_types |= set(CallingPermissions.__fields__)
+        # pick a random user
         with self.target_user() as user:
             user: Person
             po = self.api.person_settings.permissions_out

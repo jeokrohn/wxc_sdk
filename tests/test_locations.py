@@ -420,6 +420,7 @@ class TestUpdateTelephony(TestCaseWithLog):
                 update = TelephonyLocation(calling_line_id=CallingLineId(phone_number=tn))
                 expected = target.copy(deep=True)
                 expected.calling_line_id.phone_number = tn
+                expected.calling_line_id.name = None
                 await self.update_and_verify(target=target, update=update, expected=expected)
         finally:
             # remove TN from location again

@@ -96,5 +96,3 @@ class TestUpdate(TestCaseWithLog):
             after = cba.read(person_id=user.person_id)
         self.assertEqual(settings.behavior_type,
                          after.behavior_type)
-        after.behavior_type = before.behavior_type
-        self.assertEqual(before, after)
