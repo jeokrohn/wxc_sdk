@@ -2,6 +2,7 @@
 All tests around telephony devices
 """
 import asyncio
+import json
 import random
 from collections import defaultdict
 from dataclasses import dataclass
@@ -441,11 +442,14 @@ class Jobs(TestCaseWithLog):
                 print(f'  created {status.created_time} start {status.start_time} end {status.end_time}')
                 for step in status.step_execution_statuses:
                     print(f'    start {step.start_time} end {step.end_time} {step.exit_code} {step.name}')
-            if job.latest_execution_status == 'COMPLETED':
+            if job.latest_execution_status in {'COMPLETED', 'FAILED'}:
                 break
             print('not ready; sleep for 2 seconds...')
             sleep(2)
             job = self.api.telephony.jobs.device_settings.get_status(job_id=job.id)
+        print(json.dumps(json.loads(job.json()), indent=2))
+        self.assertEqual('COMPLETED', job.latest_execution_status)
+
 
     def test_001_list(self):
         """
