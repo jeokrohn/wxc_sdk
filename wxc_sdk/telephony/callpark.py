@@ -70,6 +70,7 @@ class CallPark(ApiModel):
     recall: Optional[RecallHuntGroup]
     #: People, including workspaces, that are eligible to receive calls.
     agents: Optional[list[PersonPlaceAgent]]
+    park_on_agents_enabled: Optional[bool]
 
     @staticmethod
     def default(*, name: str) -> 'CallPark':

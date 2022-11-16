@@ -439,6 +439,7 @@ class AtaCustomization(CommonDeviceCustomization):
     ata_dtmf_mode: AtaDtmfMode
     #: Method for transmitting DTMF signals to the far end.
     ata_dtmf_method: AtaDtmfMethod
+    snmp: dict
 
 
 class BacklightTimer(str, Enum):

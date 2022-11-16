@@ -63,8 +63,6 @@ class StartJobResponse(ApiModel):
     name: Optional[str]
     #: Unique identifier of the job.
     id: str
-    #: Job type.
-    job_type: str
     #: Unique identifier to track the flow of HTTP requests.
     tracking_id: str
     #: Unique identifier to identify which user has run the job.
@@ -99,15 +97,16 @@ class JobErrorMessage(ApiModel):
     #: Error message.
     description: str
     #: Internal error code.
-    code: str
+    code: Optional[str]
     #: Message describing the location or point of failure.
-    location: str
+    location: Optional[str]
+    location_id: Optional[str]
 
 
 class JobError(ApiModel):
     #: HTTP error code.
     key: str
-    message: JobErrorMessage
+    message: list[JobErrorMessage]
 
 
 class JobErrorItem(ApiModel):

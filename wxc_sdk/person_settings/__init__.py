@@ -76,8 +76,6 @@ class TelephonyDevice(ApiModel):
     owner: DeviceOwner
     #: Activation state of device.
     activation_state: DeviceActivationState
-    pre_onboarding_device_id: str
-
 
 class PersonDevicesResponse(ApiModel):
     #: Array of devices available to person.
