@@ -501,10 +501,14 @@ class TestCaseWithLog(TestCaseWithTokens):
             self.record_log_handler.close()
 
     @contextmanager
-    def no_log(self):
+    def no_log(self, keep: bool = False):
         """
         Context manager to temporarily disable logging
         """
+        if keep:
+            yield
+            return
+
         old_level = None
         if self.file_log_handler:
             old_level = self.file_log_handler.level

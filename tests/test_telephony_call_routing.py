@@ -1,6 +1,8 @@
 import asyncio
 import base64
+import re
 from collections import defaultdict
+from collections.abc import Generator
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from dataclasses import dataclass, field
@@ -8,7 +10,7 @@ from functools import reduce
 from itertools import chain
 from json import dumps, loads
 from random import shuffle, choice, randint
-from typing import ClassVar, Optional, Generator, Union, NamedTuple
+from typing import ClassVar, Optional, Union, NamedTuple
 
 from tests.base import TestCaseWithLog, async_test
 from wxc_sdk.as_api import AsWebexSimpleApi
@@ -24,7 +26,7 @@ from wxc_sdk.telephony.autoattendant import AutoAttendant, AutoAttendantMenu
 from wxc_sdk.telephony.huntgroup import HuntGroup
 from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.telephony.location.internal_dialing import InternalDialing
-from wxc_sdk.telephony.prem_pstn.dial_plan import DialPlan
+from wxc_sdk.telephony.prem_pstn.dial_plan import DialPlan, PatternAndAction
 from wxc_sdk.telephony.prem_pstn.trunk import TrunkDetail
 
 from .testutil import calling_users, us_location_info, LocationInfo, available_extensions, available_tns, \
@@ -77,8 +79,10 @@ class DpContext:
                            if (name := f'{self.location.name} {i:02}') not in set(dp.name for dp in dial_plans))
 
             # we also need an E.164 number that is not part of any dial plan and not a WxC TN
+            # all WxC numbers
             self._numbers = set(
                 n.phone_number for n in self.test.api.telephony.phone_numbers(number_type=NumberType.number))
+            # and then update with patterns from dial plans
             with ThreadPoolExecutor() as pool:
                 self._used_numbers.update(n for n in chain.from_iterable(
                     pool.map(lambda dp: list(self.test.api.telephony.prem_pstn.dial_plan.patterns(
@@ -117,6 +121,39 @@ class DpContext:
             self._avail_generators[prefix] = avail_gen
         return next(avail_gen)
 
+    def available_prem_pattern(self, prefix: str) -> Generator[str, None, None]:
+        def no_conflict(prefix, pattern) -> bool:
+            m = split_prefix.match(pattern)
+            pattern_prefix = m.group(1)
+            if prefix.startswith(pattern_prefix) or pattern_prefix.startswith(prefix):
+                return False
+            return True
+
+        avail_gen = self._avail_generators.get(prefix)
+
+        split_prefix = re.compile(r'^(\+\d+)(X*)$')
+        if avail_gen is None:
+            # prefix is something like +44XXXX; there has to be a sequence of X es
+            m = split_prefix.match(prefix)
+            if not m or not m.group(2):
+                raise ValueError(f'Prefix has to be something like +44XXXX: {prefix}')
+            start = m.group(1)
+            variable = len(m.group(2))
+
+            def available():
+                # which patterns / numbers fall into the range we are trying to cover?
+                patterns = [number for number in self._used_numbers
+                            if number.startswith(start)]
+                # now iterate through all prem patterns
+                for trailing in (f'{t:0{variable}}' for t in range(1, 10 ** variable)):
+                    candidate = f'{start}{trailing}'
+                    if all(no_conflict(candidate, pattern) for pattern in patterns):
+                        yield candidate
+
+            avail_gen = available()
+            self._avail_generators[prefix] = avail_gen
+        return avail_gen
+
     def available_wildcard(self, *, prefix: str, wildcard_digits: int):
         """
         get an available prefix
@@ -124,13 +161,18 @@ class DpContext:
         :param wildcard_digits:
         :return:
         """
+        # each prefix has the form {prefix}{variable digits}
         variable_digits = 12 - len(prefix) - wildcard_digits
         if variable_digits <= 0:
             raise ValueError('Invalid parameters')
+        # strings we want to try as {variable digits} part of the prefix
         variable_strings = [f'{i:0{variable_digits}}' for i in range(1, 10 ** variable_digits)]
+        # strings covered by the wildcards
         wildcarded = [f'{i:0{wildcard_digits}}' for i in range(1, 10 ** wildcard_digits)]
+        # now try all variable strings parts and look for a prefix that doesn't have any overlap with existing numbers
         for variable_string in variable_strings:
             v_prefix = f'{prefix}{variable_string}'
+            # all numbers covered by this prefix
             numbers = set(f'{v_prefix}{wildcard_number}' for wildcard_number in wildcarded)
             if not self._used_numbers & numbers:
                 self._used_numbers.update(numbers)
@@ -217,6 +259,11 @@ class LocationAndTelephony(NamedTuple):
 
 @dataclass(init=False)
 class ToUserWithTN(TestCallRouting):
+    """
+    Test calling a user with a TN.
+
+    A temporary user with an active TN is created which can be used as destination for the call
+    """
     target_location: ClassVar[LocationAndTelephony]
     target_user: ClassVar[Person]
     target_tn: ClassVar[str]
@@ -301,7 +348,7 @@ class ToUserWithTN(TestCallRouting):
         asyncio.run(cleanup())
         super().tearDownClass()
 
-    def test_002_user_to_user_e164(self):
+    def test_001_user_to_user_e164(self):
         """
         User calls another user dialing the user's TN
         """
@@ -317,7 +364,7 @@ class ToUserWithTN(TestCallRouting):
         self.assertEqual(self.target_tn, result.routing_address)
 
     @TestCallRouting.async_test
-    async def test_003_user_to_user_10d(self):
+    async def test_002_user_to_user_10d(self):
         called = self.target_user
         caller = choice([user for user in self.calling_users
                          if user.person_id != called.person_id])
@@ -330,7 +377,7 @@ class ToUserWithTN(TestCallRouting):
         self.assertEqual(self.target_tn, result.routing_address)
 
     @TestCallRouting.async_test
-    async def test_004_user_to_user_w_oac(self):
+    async def test_003_user_to_user_w_oac(self):
         # check it location has OAC configured
         oac = self.target_location.telephony_location.outside_dial_digit
         if not oac:
@@ -344,7 +391,7 @@ class ToUserWithTN(TestCallRouting):
                              if user.person_id != called.person_id])
             result = self.api.telephony.test_call_routing(originator_id=caller.person_id,
                                                           originator_type=OriginatorType.user,
-                                                          destination=f'9{self.target_tn}')
+                                                          destination=f'9{self.target_tn[1:]}')
             self.print_result(result=result)
             self.assertEqual(DestinationType.hosted_agent, result.destination_type)
             self.assertEqual(called.person_id, result.hosted_user.hu_id)
@@ -353,6 +400,55 @@ class ToUserWithTN(TestCallRouting):
             if not oac:
                 await self.async_api.telephony.location.update(location_id=self.target_location.location.location_id,
                                                                settings=self.target_location.telephony_location)
+
+    @TestCallRouting.async_test
+    async def test_004_user_to_user_various_dialing_habits(self):
+        """
+        Call from user to user by dialing the TN using various dialing habits
+        """
+        # check it location has OAC configured
+        oac = self.target_location.telephony_location.outside_dial_digit
+        if not oac:
+            settings = self.target_location.telephony_location.copy(deep=True)
+            settings.outside_dial_digit = '9'
+            await self.async_api.telephony.location.update(location_id=self.target_location.location.location_id,
+                                                           settings=settings)
+            print(f'Set OAC "9" for location "{self.target_location.location.name}"')
+        try:
+            called = self.target_user
+            caller = choice([user for user in self.calling_users
+                             if user.person_id != called.person_id])
+            tn = self.target_tn
+            dialing_habits = [(tn, '+E.164'),  # +E.164
+                              (tn[2:], '10D'),  # 10D
+                              (tn[1:], '1+10D'),  # 1+10D
+                              (f'9{tn[2:]}', '9-10D'),  # 9-10D
+                              (f'9{tn[1:]}', '91-10D')  # 9-1-10D
+                              ]
+            results = await asyncio.gather(
+                *[self.async_api.telephony.test_call_routing(originator_id=caller.person_id,
+                                                             originator_type=OriginatorType.user,
+                                                             destination=dialled)
+                  for dialled, _ in dialing_habits])
+            results: list[TestCallRoutingResult]
+
+            def dest_str(result: TestCallRoutingResult) -> str:
+                r = f'destination: {result.destination_type.name}'
+                if result.destination_type == DestinationType.hosted_agent:
+                    r = f'{r} {result.hosted_user.phone_number}'
+                return r
+
+            print(f'Calling "{called.display_name}({called.emails[0]})" with TN {tn}')
+            for (dialled, how), result in zip(dialing_habits, results):
+                print(
+                    f'Dialling "{dialled:13}" ({how:6}) -> destination: {result.destination_type.name} '
+                    f'{dest_str(result)}')
+
+        finally:
+            if not oac:
+                await self.async_api.telephony.location.update(location_id=self.target_location.location.location_id,
+                                                               settings=self.target_location.telephony_location)
+                print(f'Restored OAC setting for location "{self.target_location.location.name}"')
 
 
 class TestUsersAndTrunks(TestCallRouting):
@@ -654,6 +750,49 @@ class TestUsersAndTrunks(TestCallRouting):
                     with self.no_log():
                         self.api.telephony.prem_pstn.trunk.delete_trunk(trunk_id=trunk_id)
 
+    @TestCallRouting.async_test
+    async def test_010_user_to_trunk_international(self):
+        """
+        Calling international destination matching a dial plan pattern using various dialing habits
+        """
+        # find an international pattern that we can add to a dial plan
+        # find an existing trunk / routelist
+        # create dial plan pointing to route list
+        # add pattern to route list
+        with self.assert_dial_plan_context() as ctx:
+            ctx: DpContext
+            # we now have a trunk and a dial plan
+            uk_number = next(ctx.available_prem_pattern('+4420452050XX'))
+            uk_prefix = next(ctx.available_prem_pattern('+442045206XX'))
+            # add number and prefix to dial plan
+            patterns = [uk_number, f'{uk_prefix}X']
+            print(f'Adding patterns: {", ".join(patterns)}')
+            await self.async_api.telephony.prem_pstn.dial_plan.modify_patterns(
+                dial_plan_id=ctx.dial_plan.dial_plan_id,
+                dial_patterns=[PatternAndAction.add(p) for p in patterns])
+            # now pick a user and dial from that user
+            caller = choice(self.calling_users)
+
+            dial_strings = [uk_number,
+                            f'9011{uk_number[1:]}',
+                            f'{uk_prefix}1',
+                            f'9011{uk_prefix[1:]}1']
+            results = await asyncio.gather(*[self.async_api.telephony.test_call_routing(
+                originator_id=caller.person_id,
+                originator_type=OriginatorType.user,
+                destination=dialled) for dialled in dial_strings])
+            results: list[TestCallRoutingResult]
+
+            for dialled, result in zip(dial_strings, results):
+                print(
+                    f'Dialling "{dialled:{len(uk_number)+3}}" -> destination: {result.destination_type.name} ')
+            for result in results:
+                self.print_result(result=result)
+            self.assertTrue(all(r.destination_type == DestinationType.pbx_user and r.pbx_user and
+                                r.pbx_user.dial_plan_id == ctx.dial_plan.dial_plan_id
+                                for r in results))
+        ...
+
 
 @dataclass
 class AAContext:
@@ -669,6 +808,7 @@ class AAContext:
     aa_id: str = field(init=False, default=None)
     auto_attendant: AutoAttendant = field(init=False, default=None)
 
+    # noinspection DuplicatedCode
     def __post_init__(self):
         with self.test.no_log():
             aa_list = list(self.test.api.telephony.auto_attendant.list(location_id=self.location.location_id))
@@ -685,6 +825,7 @@ class AAContext:
                                   tn_prefix=loc_info.main_number[:9])[0]
             # add number to location
             print(f'adding TN "{aa_tn}" to location "{self.location.name}')
+            # noinspection PyBroadException
             try:
                 self.test.api.telephony.location.number.add(location_id=self.location.location_id,
                                                             phone_numbers=[aa_tn],
@@ -720,7 +861,7 @@ class AAContext:
                 aa.location_id = self.location.location_id
                 self.aa_id = aa_id
                 self.auto_attendant = aa
-            finally:
+            except Exception:
                 self.clean_up()
 
     def clean_up(self):
@@ -750,7 +891,7 @@ class AAContext:
 @dataclass
 class HGContext:
     """
-    An hunt group context to be used for call routing tests with HG as destination
+    A hunt group context to be used for call routing tests with HG as destination
     """
     test: 'TestHostedFeature'
     location: Location
@@ -759,6 +900,7 @@ class HGContext:
     hg_id: str = field(init=False, default=None)
     hg: HuntGroup = field(init=False, default=None)
 
+    # noinspection DuplicatedCode
     def __post_init__(self):
         # create a new hunt group
         with self.test.no_log():
@@ -777,6 +919,7 @@ class HGContext:
 
             # add number to location
             print(f'adding TN "{hg_tn}" to location "{self.location.name}')
+            # noinspection PyBroadException
             try:
                 self.test.api.telephony.location.number.add(location_id=self.location.location_id,
                                                             phone_numbers=[hg_tn],
@@ -795,7 +938,7 @@ class HGContext:
                 hg.id = hg_id
                 hg.location_id = self.location.location_id
                 self.hg = hg
-            finally:
+            except Exception:
                 self.clean_up()
 
     def clean_up(self):
