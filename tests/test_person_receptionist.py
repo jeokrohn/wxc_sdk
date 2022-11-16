@@ -12,6 +12,7 @@ from .base import TestCaseWithUsers
 
 class TestRead(TestCaseWithUsers):
 
+    # noinspection DuplicatedCode,PyShadowingNames
     def test_001_read_all(self):
         """
         Read settings of all users
@@ -32,6 +33,7 @@ class TestRead(TestCaseWithUsers):
                 for n in me.numbers or []:
                     print(f'    {n.extension or "None":10} {n.external or "None":10}')
 
+    # noinspection DuplicatedCode
     @contextmanager
     def target_user(self):
         """
@@ -76,6 +78,7 @@ class TestRead(TestCaseWithUsers):
             list(pool.map(lambda user: rc.configure(person_id=user.person_id, settings=settings),
                           self.users))
 
+    # noinspection DuplicatedCode
     def test_002_add_user_by_id(self):
         """
         Add some users by ID

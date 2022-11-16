@@ -80,6 +80,8 @@ class AsApiChild:
         if base:
             self.base = base
 
+    # noinspection PyMethodOverriding
+
     def __init_subclass__(cls, base: str):
         """
         Subclass registration hook. Each APIChild has a specific endpoint prefix which we gather at subclass
@@ -4414,7 +4416,8 @@ class AsTeamsApi(AsApiChild, base='teams'):
     async def create(self, name: str) -> Team:
         """
         Creates a team.
-        The authenticated user is automatically added as a member of the team. See the Team Memberships API to learn how to add more people to the team.
+        The authenticated user is automatically added as a member of the team. See the Team Memberships API to learn
+        how to add more people to the team.
 
         :param name: A user-friendly name for the team.
         :type name: str
@@ -10107,6 +10110,7 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
 
 
 class AsWorkspaceLocationFloorApi(AsApiChild, base='workspaceLocations'):
+    # noinspection PyMethodOverriding
     def ep(self, location_id: str, floor_id: str = None):
         path = f'{location_id}/floors'
         if floor_id:
@@ -10353,6 +10357,7 @@ class AsWorkspaceLocationApi(AsApiChild, base='workspaceLocations'):
 
 class AsWorkspaceNumbersApi(AsApiChild, base='workspaces'):
 
+    # noinspection PyMethodOverriding
     def ep(self, workspace_id: str, path: str = None):
         """
         :meta private:

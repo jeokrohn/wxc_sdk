@@ -323,6 +323,7 @@ class TestModifyPatterns(TestCaseWithLog):
             # clean up: delete dial plan
             dp_api.delete_dial_plan(dial_plan_id=dp_id)
 
+    # noinspection DuplicatedCode
     def test_002_create_and_modify(self):
         """
         Create a dial plan with a bunch of patterns and then modify
@@ -361,6 +362,7 @@ class TestModifyPatterns(TestCaseWithLog):
             # clean up: delete dial plan
             dp_api.delete_dial_plan(dial_plan_id=dp_id)
 
+    # noinspection DuplicatedCode
     def test_003_delete_all_patterns(self):
         """
         Create a dial plan with a bunch of patterns and delete all of them
@@ -445,8 +447,8 @@ class TestCreateLargeDialPlan(TestCaseWithLog):
             patterns_after = await api.patterns(dial_plan_id=dp_id)
             print(f'Created dial plan "{dp_name}" with {len(patterns_after)} patterns')
             self.assertEqual(6000, len(patterns_after))
-            foo = 1
-        except:
+
+        except Exception:
             # if adding patterns fails then remove the dial plan again
             await api.delete_dial_plan(dial_plan_id=dp_id)
             raise

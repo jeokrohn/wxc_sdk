@@ -41,7 +41,8 @@ class TeamsApi(ApiChild, base='teams'):
     def create(self, name: str) -> Team:
         """
         Creates a team.
-        The authenticated user is automatically added as a member of the team. See the Team Memberships API to learn how to add more people to the team.
+        The authenticated user is automatically added as a member of the team. See the Team Memberships API to learn
+        how to add more people to the team.
 
         :param name: A user-friendly name for the team.
         :type name: str

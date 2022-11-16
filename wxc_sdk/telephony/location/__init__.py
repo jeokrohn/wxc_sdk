@@ -31,7 +31,7 @@ class PSTNConnection(ApiModel):
     """
     Connection details
     """
-    #: Webex Calling location only suppports TRUNK and ROUTE_GROUP connection type.
+    #: Webex Calling location only supports TRUNK and ROUTE_GROUP connection type.
     type: RouteType
     #: A unique identifier of route type.
     id: str

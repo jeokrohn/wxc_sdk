@@ -197,6 +197,7 @@ class OutgoingPermissions(ApiModel):
             r[call_type.lower()] = entry
         return r
 
+    # noinspection PyMethodOverriding
     def json(self, drop_call_types: set[str] = None) -> str:
         """
         :meta private:

@@ -22,8 +22,8 @@ def time_it(message: str = None):
         message = f'{message} took: '
     else:
         message = ''
+    start_time = time.perf_counter()
     try:
-        start_time = time.perf_counter()
         yield
     finally:
         elapsed = time.perf_counter() - start_time

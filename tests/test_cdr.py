@@ -16,6 +16,9 @@ class TestCDR(TestCaseWithLog):
             cdrs = list(api.get_cdr_history())
         except RestError as e:
             print(f'Error: {e}')
+            print(f'{e.detail}')
+            if e.detail.error_code == 404 and e.detail.message == 'No CDRs for requested time range and filters':
+                return
             raise
         print(f'Got {len(cdrs)} CDRs')
         call_ids = set(cdr.call_id for cdr in cdrs)
@@ -40,5 +43,8 @@ class TestCDR(TestCaseWithLog):
             cdrs = list(api.get_cdr_history(max=5))
         except RestError as e:
             print(f'Error: {e}')
+            print(f'{e.detail}')
+            if e.detail.error_code == 404 and e.detail.message == 'No CDRs for requested time range and filters':
+                return
             raise
         print(f'Got {len(cdrs)} CDRs')

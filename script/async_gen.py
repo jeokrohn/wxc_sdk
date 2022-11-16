@@ -68,9 +68,6 @@ MAX_USERS_WITH_CALLING_DATA = 10
 
 """
 
-
-
-
 # identify sync calls to be translated to "await .." calls
 RE_SYNC_CALLS = re.compile(r"""
     (?:(?:self\.(?:(?:_)?session\.)?)|  # self., self._session., self.session.
@@ -163,6 +160,7 @@ class Module:
         except KeyError:
             raise
 
+    # noinspection PyShadowingNames
     @classmethod
     def init_imports(cls):
         """
@@ -591,6 +589,7 @@ def transform_classes_to_async(sources: Iterable[str]) -> Generator[str, None, N
             source = '\n\n'.join((gen_source, source))
         return source
 
+    # noinspection PyShadowingNames
     def transform_class(*, source: str) -> str:
         """
         transform source of one method to async

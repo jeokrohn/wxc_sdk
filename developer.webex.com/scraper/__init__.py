@@ -67,7 +67,7 @@ def div_repr(d) -> str:
     return f'<div{class_str}>'
 
 
-def python_type(type_str:str, for_list: bool = False) -> str:
+def python_type(type_str: str, for_list: bool = False) -> str:
     # transform "Some Class" to "SomeClass"
     type_str, _ = re.subn(r'\s([A-Z])', '\g<1>', type_str)
     if type_str == 'number':
@@ -508,6 +508,7 @@ class DocMethodDetails(BaseModel):
         return super().dict(exclude={'info'}, by_alias=True, **kwargs)
 
 
+# noinspection PyShadowingNames
 @dataclass
 class DevWebexComScraper:
     driver: ChromiumDriver
@@ -776,8 +777,10 @@ class DevWebexComScraper:
             header: str
 
             # set the new header (needed when waiting for the next container)
+            # noinspection PyUnboundLocalVariable
             prev_container_header = header
 
+            # noinspection PyUnboundLocalVariable
             soup = BeautifulSoup(api_reference_container.get_attribute('outerHTML'), 'html.parser')
             header = soup.div.div.h3.text
             doc = '\n'.join(p.text for p in soup.div.div.find_all('p'))

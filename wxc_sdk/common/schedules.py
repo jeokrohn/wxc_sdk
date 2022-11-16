@@ -226,6 +226,7 @@ class Event(ApiModel):
             start_time = datetime.time(start_time)
         if isinstance(end_time, int):
             end_time = datetime.time(end_time)
+        # noinspection PyArgumentList
         return Event(name=name,
                      start_date=day, end_date=day,
                      start_time=start_time,

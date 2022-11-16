@@ -289,6 +289,7 @@ class ToUserWithTN(TestCallRouting):
                 numbers: list[NumberListPhoneNumber]
                 main_numbers: dict[str, NumberListPhoneNumber] = {number.location.location_id: number
                                                                   for number in numbers if number.main_number}
+                # noinspection PyUnboundLocalVariable
                 return [LocationAndTelephony(location=loc, telephony_location=tel_loc, main_number=nlp.phone_number)
                         for loc, tel_loc in zip(locations, telephony_locations)
                         if tel_loc.connection and (nlp := main_numbers.get(loc.location_id))]

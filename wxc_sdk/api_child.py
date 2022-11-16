@@ -19,6 +19,7 @@ class ApiChild:
         if base:
             self.base = base
 
+    # noinspection PyMethodOverriding
     def __init_subclass__(cls, base: str):
         """
         Subclass registration hook. Each APIChild has a specific endpoint prefix which we gather at subclass

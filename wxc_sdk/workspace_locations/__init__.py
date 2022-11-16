@@ -48,6 +48,7 @@ class WorkspaceLocationFloor(ApiModel):
 
 
 class WorkspaceLocationFloorApi(ApiChild, base='workspaceLocations'):
+    # noinspection PyMethodOverriding
     def ep(self, location_id: str, floor_id: str = None):
         path = f'{location_id}/floors'
         if floor_id:

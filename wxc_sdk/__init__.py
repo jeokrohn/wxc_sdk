@@ -37,6 +37,7 @@ __version__ = '1.9.0'
 log = logging.getLogger(__name__)
 
 
+# noinspection PyShadowingNames
 @dataclass(init=False)
 class WebexSimpleApi:
     """
