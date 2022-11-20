@@ -111,7 +111,7 @@ class Workspace(ApiModel):
     calendar: Optional[Calendar]
     #: Notes associated to the workspace.
     notes: Optional[str]
-    hotdesking_enabled: Optional[bool]
+    hotdesking_status: Optional[bool]
 
     @validator('calling', pre=True)
     def validate_calling(cls, value):
@@ -124,6 +124,17 @@ class Workspace(ApiModel):
             return value
         return value['type']
 
+    @validator('hotdesking_status', pre=True)
+    def validate_hotdesking_status(cls, value):
+        """
+        hotdesking_status actually is a string: 'on'/'off'
+
+        :meta private:
+        """
+        if isinstance(value, bool):
+            return value
+        return value == 'on'
+
     def json(self, *args, exclude_none=True, by_alias=True, **kwargs) -> str:
         """
         restore calling type
@@ -134,6 +145,8 @@ class Workspace(ApiModel):
         ct = j_data.pop('calling', None)
         if ct:
             j_data['calling'] = {'type': ct}
+        if self.hotdesking_status is not None:
+            j_data['hotdeskingStatus'] = 'on' if self.hotdesking_status else 'off'
         return json.dumps(j_data)
 
     def update_or_create(self, for_update: bool = False) -> str:

@@ -1,6 +1,10 @@
 Release history
 ===============
 
+- fix: wxc_sdk.workspaces.Workspace.hotdesking_enabled is now :attr:`wxc_sdk.workspaces.Workspace.hotdesking_status` (on/off)
+
+1.9.0
+-----
 - feat: new API: :attr:`wxc_sdk.WebexSimpleApi.teams`
 - feat: new API: :attr:`wxc_sdk.WebexSimpleApi.team_memberships`
 - feat: new API: :attr:`wxc_sdk.WebexSimpleApi.room_tabs`
