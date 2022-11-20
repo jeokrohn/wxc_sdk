@@ -189,7 +189,7 @@ class CQPolicyApi:
         :type queue_id: str
         :param org_id: Retrieve call queue settings from this organization.
         :type org_id: str
-        :return:Call Queue Holiday Service details
+        :return: Call Queue Holiday Service details
         :rtype: HolidayService
         """
         url = self._ep(location_id, queue_id, 'holidayService')

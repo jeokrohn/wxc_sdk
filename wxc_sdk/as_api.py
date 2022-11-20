@@ -5643,7 +5643,7 @@ class AsCQPolicyApi:
         :type queue_id: str
         :param org_id: Retrieve call queue settings from this organization.
         :type org_id: str
-        :return:Call Queue Holiday Service details
+        :return: Call Queue Holiday Service details
         :rtype: HolidayService
         """
         url = self._ep(location_id, queue_id, 'holidayService')
@@ -6121,7 +6121,7 @@ class AsCallQueueApi:
         await self._session.rest_put(url=url, data=cq_data, params=params)
 
 
-class AsCallparkExtensionApi(AsApiChild, base='telephony/config/huntGroups'):
+class AsCallparkExtensionApi(AsApiChild, base='telephony'):
     """
     Call Park Extension API
     """
@@ -6302,7 +6302,6 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony/config/huntGroups'):
             params['orgId'] = org_id
         url = self._endpoint(location_id=location_id, cpe_id=cpe_id)
 
-        url = self.ep(f'locations/{location_id}/callParkExtensions/{cpe_id}')
         await super().delete(url=url, params=params)
         return
 
