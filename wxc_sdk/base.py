@@ -1,15 +1,36 @@
 import base64
+import logging
 import sys
 from datetime import datetime
 from typing import Optional, Union
 
+from aenum import Enum, extend_enum
 from dateutil import tz
 from pydantic import BaseModel, ValidationError
 
 __all__ = ['StrOrDict', 'webex_id_to_uuid', 'to_camel', 'ApiModel', 'CodeAndReason', 'ApiModelWithErrors', 'plus1',
-           'dt_iso_str']
+           'dt_iso_str', 'SafeEnum']
 
 StrOrDict = Union[str, dict]
+
+log = logging.getLogger(__name__)
+
+
+class SafeEnum(Enum):
+    """
+    A replacement for the standard Enum class which allows dynamic enhancements of enums
+    """
+    if 'unittest' in sys.modules or 'pytest' in sys.modules:
+        # if run as unit test then don't allow dynamic extension of enum
+        @classmethod
+        def _missing_(cls, value):
+            return None
+    else:
+        # ... while during normal execution simply dynamically enhance the enum
+        @classmethod
+        def _missing_(cls, value):
+            log.warning(f'auto enhancing Enum {cls.__name__}, new value: {value}')
+            return extend_enum(cls, value, value)
 
 
 def webex_id_to_uuid(webex_id: Optional[str]) -> Optional[str]:

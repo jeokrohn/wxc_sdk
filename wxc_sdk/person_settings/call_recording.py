@@ -2,12 +2,13 @@
 Call recording API
 """
 import json
-from enum import Enum
 from typing import Optional
 
 from pydantic import Field
+
 from .common import PersonSettingsApiChild
 from ..base import ApiModel
+from ..base import SafeEnum as Enum
 
 __all__ = ['Record', 'NotificationType', 'NotificationRepeat', 'Notification', 'CallRecordingSetting',
            'CallRecordingApi']

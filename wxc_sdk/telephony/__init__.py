@@ -3,7 +3,6 @@ Telephony types and API (location and organisation settings)
 """
 from collections.abc import Generator
 from dataclasses import dataclass
-from enum import Enum
 from typing import Optional
 
 from pydantic import Field, parse_obj_as, validator
@@ -29,6 +28,7 @@ from .voicemail_groups import VoicemailGroupsApi
 from .voiceportal import VoicePortalApi
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel, plus1
+from ..base import SafeEnum as Enum
 from ..common import UserType, RouteIdentity, NumberState, ValidateExtensionsResponse, ValidatePhoneNumbersResponse, \
     DeviceCustomization
 from ..common.schedules import ScheduleApi, ScheduleApiBase

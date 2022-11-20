@@ -8,13 +8,13 @@ API is used in:
 """
 import json
 from dataclasses import dataclass
-from enum import Enum
 from typing import Optional, Union
 
 from pydantic import validator, parse_obj_as, root_validator
 
 from .common import PersonSettingsApiChild
 from ..base import ApiModel
+from ..base import SafeEnum as Enum
 from ..common import AuthCode
 from ..rest import RestSession
 

@@ -14,13 +14,13 @@ relevant endpoints.
 import datetime
 import json
 from collections.abc import Generator
-from enum import Enum
 from typing import Optional
 
 from pydantic import Field, validator
 
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
+from ..base import SafeEnum as Enum
 
 __all__ = ['WorkSpaceType', 'CallingType', 'CalendarType', 'WorkspaceEmail', 'Calendar', 'Workspace', 'WorkspacesApi']
 

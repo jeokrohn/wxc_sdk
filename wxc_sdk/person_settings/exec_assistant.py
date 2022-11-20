@@ -2,12 +2,11 @@
 exec assistant settings API
 """
 
-from enum import Enum
-
 from pydantic import Field
 
 from .common import PersonSettingsApiChild
 from ..base import ApiModel
+from ..base import SafeEnum as Enum
 
 __all__ = ['ExecAssistantApi', 'ExecAssistantType', '_Helper']
 

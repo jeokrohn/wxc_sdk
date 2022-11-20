@@ -2,13 +2,12 @@
 Common date types and APIs
 """
 from datetime import datetime
-from enum import Enum
 from typing import Optional, Any
 
 from pydantic import Field, root_validator, validator
 
-from wxc_sdk.base import ApiModel
-from ..base import webex_id_to_uuid
+from ..base import ApiModel, webex_id_to_uuid
+from ..base import SafeEnum as Enum
 
 __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting', 'UserNumber', 'PersonPlaceAgent',
            'MonitoredMember', 'CallParkExtension', 'AuthCode', 'RouteType', 'DialPatternValidate', 'DialPatternStatus',

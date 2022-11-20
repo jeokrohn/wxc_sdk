@@ -3,14 +3,15 @@ Call intercept API
 """
 import json
 import os
-from enum import Enum
 from io import BufferedReader
 from typing import Optional, Union
 
 from pydantic import Field
 from requests_toolbelt.multipart.encoder import MultipartEncoder
+
 from .common import PersonSettingsApiChild
 from ..base import ApiModel
+from ..base import SafeEnum as Enum
 from ..common import Greeting
 
 __all__ = ['InterceptTypeIncoming', 'InterceptNumber', 'InterceptAnnouncements', 'InterceptSettingIncoming',

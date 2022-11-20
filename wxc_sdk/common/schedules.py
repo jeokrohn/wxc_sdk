@@ -3,13 +3,13 @@ Schedules for locations or users
 """
 import datetime
 from collections.abc import Generator
-from enum import Enum
 from typing import Optional, Union
 
 from pydantic import Field
 
 from ..api_child import ApiChild
 from ..base import ApiModel
+from ..base import SafeEnum as Enum
 from ..rest import RestSession
 
 __all__ = ['ScheduleApi', 'ScheduleType', 'ScheduleMonth', 'ScheduleDay', 'ScheduleWeek', 'RecurWeekly',

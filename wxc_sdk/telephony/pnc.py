@@ -1,11 +1,11 @@
 """
 Private network connect API
 """
-from enum import Enum
 
 from pydantic import parse_obj_as
 
 from ..api_child import ApiChild
+from ..base import SafeEnum as Enum
 
 __all__ = ['NetworkConnectionType', 'PrivateNetworkConnectApi']
 

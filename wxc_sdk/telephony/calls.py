@@ -3,13 +3,13 @@ Webex Calling Call Control API and related data types
 """
 import datetime
 from collections.abc import Generator
-from enum import Enum
 from typing import Optional, Literal, Union
 
 from pydantic import Field
 
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
+from ..base import SafeEnum as Enum
 from ..webhook import WebHook
 
 __all__ = ['CallType', 'TelephonyParty', 'RedirectReason', 'Redirection', 'Recall', 'RecordingState',

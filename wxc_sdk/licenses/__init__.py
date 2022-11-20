@@ -6,13 +6,13 @@ partners manage the amount of licenses provided to administrators and users. Thi
 only by an admin.
 """
 from collections.abc import Generator
-from enum import Enum
 from typing import Optional
 
 from pydantic import Field
 
 from ..api_child import ApiChild
 from ..base import ApiModel
+from ..base import SafeEnum as Enum
 
 __all__ = ['SiteType', 'License', 'LicensesApi']
 

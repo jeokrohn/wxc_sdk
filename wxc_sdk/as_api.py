@@ -18,6 +18,7 @@ from pydantic import parse_obj_as
 from wxc_sdk.all_types import *
 from wxc_sdk.as_rest import AsRestSession
 from wxc_sdk.base import to_camel, StrOrDict, dt_iso_str
+from wxc_sdk.base import SafeEnum as Enum
 
 log = logging.getLogger(__name__)
 
@@ -6121,7 +6122,7 @@ class AsCallQueueApi:
         await self._session.rest_put(url=url, data=cq_data, params=params)
 
 
-class AsCallparkExtensionApi(AsApiChild, base='telephony/config/huntGroups'):
+class AsCallparkExtensionApi(AsApiChild, base='telephony'):
     """
     Call Park Extension API
     """
@@ -6302,7 +6303,6 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony/config/huntGroups'):
             params['orgId'] = org_id
         url = self._endpoint(location_id=location_id, cpe_id=cpe_id)
 
-        url = self.ep(f'locations/{location_id}/callParkExtensions/{cpe_id}')
         await super().delete(url=url, params=params)
         return
 

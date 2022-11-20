@@ -2,7 +2,6 @@
 Person settings
 """
 from dataclasses import dataclass
-from enum import Enum
 from typing import Optional
 
 from pydantic import Field
@@ -29,6 +28,7 @@ from .receptionist import ReceptionistApi
 from .voicemail import VoicemailApi
 from ..api_child import ApiChild
 from ..base import ApiModel
+from ..base import SafeEnum as Enum
 from ..common import UserType, PrimaryOrShared
 from ..common.schedules import ScheduleApi, ScheduleApiBase
 from ..rest import RestSession

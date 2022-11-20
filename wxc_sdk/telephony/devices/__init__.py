@@ -3,13 +3,13 @@ Telephony devices
 """
 import json
 from collections.abc import Generator
-from enum import Enum
 from typing import Optional, Union
 
 from pydantic import parse_obj_as, Field, validator
 
 from ...api_child import ApiChild
 from ...base import ApiModel, plus1, to_camel
+from ...base import SafeEnum as Enum
 
 __all__ = ['DectDevice', 'MemberCommon', 'DeviceMember', 'DeviceMembersResponse', 'AvailableMember', 'MACState',
            'MACStatus', 'MACValidationResponse', 'TelephonyDevicesApi']

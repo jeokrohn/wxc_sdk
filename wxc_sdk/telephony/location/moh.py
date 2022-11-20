@@ -3,11 +3,11 @@ MoH API for locations
 
 """
 import json
-from enum import Enum
 from typing import Union, Optional
 
 from ...api_child import ApiChild
 from ...base import ApiModel
+from ...base import SafeEnum as Enum
 from ...common import AuthCode
 
 __all__ = ['LocationMoHGreetingType', 'LocationMoHSetting', 'LocationMoHApi']

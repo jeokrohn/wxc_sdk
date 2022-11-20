@@ -85,7 +85,7 @@ class TempCPE:
                     # pick a random location
                     locations = await api.locations.list()
 
-                    location_id = random.choice(locations).id
+                    location_id = random.choice(locations).location_id
                     self.location_id = location_id
                     cpe_names = set(cpe.name for cpe in existing_cpes
                                     if cpe.location_id == location_id)
