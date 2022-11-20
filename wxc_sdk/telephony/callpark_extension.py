@@ -7,7 +7,7 @@ from ..common import CallParkExtension
 __all__ = ['CallparkExtensionApi']
 
 
-class CallparkExtensionApi(ApiChild, base='telephony/config/huntGroups'):
+class CallparkExtensionApi(ApiChild, base='telephony'):
     """
     Call Park Extension API
     """
@@ -150,7 +150,6 @@ class CallparkExtensionApi(ApiChild, base='telephony/config/huntGroups'):
             params['orgId'] = org_id
         url = self._endpoint(location_id=location_id, cpe_id=cpe_id)
 
-        url = self.ep(f'locations/{location_id}/callParkExtensions/{cpe_id}')
         super().delete(url=url, params=params)
         return
 

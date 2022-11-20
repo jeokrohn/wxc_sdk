@@ -2,6 +2,7 @@ Release history
 ===============
 
 - fix: wxc_sdk.workspaces.Workspace.hotdesking_enabled is now :attr:`wxc_sdk.workspaces.Workspace.hotdesking_status` (on/off)
+- fix: wrong url in :meth:`wxc_sdk.telephony.callpark_extension.CallparkExtensionApi.delete`
 
 1.9.0
 -----

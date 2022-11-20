@@ -2,7 +2,6 @@
 """
 Clean up test objects created by test cases
 """
-
 import logging
 import os
 import re
@@ -13,6 +12,8 @@ from collections.abc import Generator
 from concurrent.futures import ThreadPoolExecutor
 from functools import reduce
 from itertools import chain, zip_longest
+from re import Pattern
+from typing import Union
 
 from tests.base import get_tokens
 from wxc_sdk import WebexSimpleApi
@@ -23,15 +24,18 @@ TO_DELETE = re.compile(r'^(?:(?:\w{2}_|many_|test_|test_user_|workspace test )\d
 DRY_RUN = False
 
 
-def filter(targets, name_getter=None):
+def filtered(targets, name_getter=None, alternate_matches: Union[Pattern, str] = None):
     def default_name_getter(item):
         return item.name
 
     name_getter = name_getter or default_name_getter
 
+    if isinstance(alternate_matches, str):
+        alternate_matches = re.compile(alternate_matches)
+
     for t in targets:
         name = name_getter(t)
-        if TO_DELETE.match(name):
+        if alternate_matches and alternate_matches.match(name) or TO_DELETE.match(name):
             yield t
         else:
             print(f'Keeping {t.__class__.__name__}({name})')
@@ -61,7 +65,7 @@ def main():
     with ThreadPoolExecutor() as pool:
         # auto attendants
         ata = api.telephony.auto_attendant
-        aa_list = list(filter(ata.list()))
+        aa_list = list(filtered(ata.list()))
         print(f'deleting {len(aa_list)} auto attendants: {", ".join(aa.name for aa in aa_list)}')
         if not DRY_RUN:
             list(pool.map(lambda aa: ata.delete_auto_attendant(location_id=aa.location_id,
@@ -69,9 +73,9 @@ def main():
                           aa_list))
         # call parks
         atc = api.telephony.callpark
-        cp_list = list(filter(chain.from_iterable(
+        cp_list = list(filtered(chain.from_iterable(
             pool.map(lambda l: atc.list(location_id=l.location_id),
-                     locations))))
+                     locations)), alternate_matches='CPG\d'))
         print(f'deleting {len(cp_list)} call parks: {", ".join(cp.name for cp in cp_list)}')
         if not DRY_RUN:
             list(pool.map(lambda cp: atc.delete_callpark(location_id=cp.location_id, callpark_id=cp.callpark_id),
@@ -79,7 +83,7 @@ def main():
 
         # call pickups
         atp = api.telephony.pickup
-        cpu_list = list(filter(chain.from_iterable(
+        cpu_list = list(filtered(chain.from_iterable(
             pool.map(lambda l: atp.list(location_id=l.location_id),
                      locations))))
         print(f'deleting {len(cpu_list)} call pickups: {", ".join(cp.name for cp in cpu_list)}')
@@ -89,7 +93,7 @@ def main():
 
         # call queues
         atq = api.telephony.callqueue
-        cq_list = list(filter(chain.from_iterable(
+        cq_list = list(filtered(chain.from_iterable(
             pool.map(lambda l: atq.list(location_id=l.location_id),
                      locations))))
         print(f'deleting {len(cq_list)} call queues: {", ".join(cq.name for cq in cq_list)}')
@@ -99,7 +103,7 @@ def main():
 
         # hunt groups
         ath = api.telephony.huntgroup
-        hg_list = list(filter(chain.from_iterable(
+        hg_list = list(filtered(chain.from_iterable(
             pool.map(lambda l: ath.list(location_id=l.location_id),
                      locations))))
         print(f'deleting {len(hg_list)} hunt groups: {", ".join(hg.name for hg in hg_list)}')
@@ -109,7 +113,7 @@ def main():
 
         # paging groups
         atpg = api.telephony.paging
-        pg_list = list(filter(atpg.list()))
+        pg_list = list(filtered(atpg.list()))
         print(f'deleting {len(pg_list)} paging groups: {", ".join(pg.name for pg in pg_list)}')
         if not DRY_RUN:
             list(pool.map(lambda pg: atpg.delete_paging(location_id=pg.location_id, paging_id=pg.paging_id),
@@ -117,9 +121,9 @@ def main():
 
         # schedules
         ats = api.telephony.schedules
-        schedule_list = list(filter(chain.from_iterable(
+        schedule_list = list(filtered(chain.from_iterable(
             pool.map(lambda l: ats.list(obj_id=l.location_id),
-                     locations))))
+                     locations)), alternate_matches='\w+ \d{2}'))
         print(f'deleting {len(schedule_list)} schedules: {", ".join(schedule.name for schedule in schedule_list)}')
         if not DRY_RUN:
             list(pool.map(lambda schedule: ats.delete_schedule(obj_id=schedule.location_id,
@@ -135,7 +139,7 @@ def main():
         schedule_lists = list(pool.map(lambda user: list(aps.list(obj_id=user.person_id)),
                                        users))
         users_and_schedules = list(chain.from_iterable(((user, schedule)
-                                                        for schedule in filter(schedules))
+                                                        for schedule in filtered(schedules))
                                                        for user, schedules in zip(users, schedule_lists)))
         print(f'deleting {len(users_and_schedules)} user schedules:'
               f' {", ".join(f"{user.display_name}-{schedule.name}" for user, schedule in users_and_schedules)}')
@@ -149,8 +153,8 @@ def main():
                 users_and_schedules))
 
         # groups
-        groups = list(filter(api.groups.list(),
-                             name_getter=lambda g: g.display_name))
+        groups = list(filtered(api.groups.list(),
+                               name_getter=lambda g: g.display_name))
         groups.sort(key=lambda g: g.display_name)
         print(f'Deleting {len(groups)} groups')
         if not DRY_RUN:
@@ -158,15 +162,15 @@ def main():
                           groups))
 
         # workspaces
-        workspaces = list(filter(api.workspaces.list(),
-                                 name_getter=lambda w: w.display_name))
+        workspaces = list(filtered(api.workspaces.list(),
+                                   name_getter=lambda w: w.display_name))
         print(f'Deleting {len(workspaces)} workspaces')
         if not DRY_RUN:
             list(pool.map(lambda ws: api.workspaces.delete_workspace(workspace_id=ws.workspace_id),
                           workspaces))
 
         # voicemail groups
-        groups = list(filter(api.telephony.voicemail_groups.list()))
+        groups = list(filtered(api.telephony.voicemail_groups.list()))
         print(f'Deleting {len(groups)} voicemail groups')
         if not DRY_RUN:
             list(pool.map(lambda g: api.telephony.voicemail_groups.delete(location_id=g.location_id,
@@ -205,11 +209,19 @@ def main():
                 batches))
 
         # dial plans
-        dial_plans = list(filter(list(api.telephony.prem_pstn.dial_plan.list())))
+        dial_plans = list(filtered(list(api.telephony.prem_pstn.dial_plan.list())))
         print(f'Deleting {len(dial_plans)} dialplans')
         if not DRY_RUN:
             list(pool.map(lambda dp: api.telephony.prem_pstn.dial_plan.delete_dial_plan(dial_plan_id=dp.dial_plan_id),
                           dial_plans))
+
+        # call park extensions
+        cpe_list = list(filtered(api.telephony.callpark_extension.list(), alternate_matches='\w\d{4}'))
+        print(f'Deleting {len(cpe_list)} call park extensions')
+        if not DRY_RUN:
+            list(pool.map(lambda cpe: api.telephony.callpark_extension.delete(location_id=cpe.location_id,
+                                                                              cpe_id=cpe.cpe_id),
+                          cpe_list))
 
 
 if __name__ == '__main__':
