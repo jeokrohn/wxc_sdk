@@ -446,7 +446,7 @@ class ToUserWithTN(TestCallRouting):
             print(f'Calling "{called.display_name}({called.emails[0]})" with TN {tn}')
             for (dialled, how), result in zip(dialing_habits, results):
                 print(
-                    f'Dialling "{dialled:13}" ({how:6}) -> destination: {result.destination_type.name} '
+                    f'Dialling "{dialled:13}" ({how:6}) -> destination: {result.destination_type} '
                     f'{dest_str(result)}')
 
         finally:
@@ -789,7 +789,7 @@ class TestUsersAndTrunks(TestCallRouting):
 
             for dialled, result in zip(dial_strings, results):
                 print(
-                    f'Dialling "{dialled:{len(uk_number) + 3}}" -> destination: {result.destination_type.name} ')
+                    f'Dialling "{dialled:{len(uk_number) + 3}}" -> destination: {result.destination_type} ')
             for result in results:
                 self.print_result(result=result)
             self.assertTrue(all(r.destination_type == DestinationType.pbx_user and r.pbx_user and

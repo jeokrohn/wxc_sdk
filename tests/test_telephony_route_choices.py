@@ -10,4 +10,4 @@ class TestRouteChoices(TestCaseWithLog):
         """
         route_choices = list(self.api.telephony.route_choices())
         print(f'Got {len(route_choices)} route choices')
-        print('\n'.join(f'{rc.route_type.value:>11}: {rc.name}' for rc in route_choices))
+        print('\n'.join(f'{rc.route_type:>11}: {rc.name}' for rc in route_choices))

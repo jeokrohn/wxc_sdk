@@ -66,6 +66,8 @@ class ApiModel(BaseModel):
         #: set to 'forbid' if run in unittest to catch schema issues during tests
         #: else set to 'allow'
         extra = 'forbid' if 'unittest' in sys.modules or 'pytest' in sys.modules else 'allow'
+        # store values instead of enum types
+        use_enum_values = True
 
     def json(self, *args, exclude_none=True, by_alias=True, **kwargs) -> str:
         return super().json(*args, exclude_none=exclude_none, by_alias=by_alias, **kwargs)

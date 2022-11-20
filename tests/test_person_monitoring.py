@@ -20,7 +20,7 @@ def print_monitoring(*, user: Person, monitoring: Monitoring):
     print(f'  call park notifications enabled: {monitoring.call_park_notification_enabled}')
     for me in monitoring.monitored_elements or []:
         if me.member:
-            print(f'    {me.member.display_name} ({me.member.member_type.value}) in {me.member.location_name}')
+            print(f'    {me.member.display_name} ({me.member.member_type}) in {me.member.location_name}')
         else:
             print(f'    {me.cpe.name} (CPE) in {me.cpe.location_name}')
 

@@ -297,7 +297,7 @@ class TestUpdate(TestCaseWithUsers):
             policy = target.call_policies.policy
             other_policies = [p for p in Policy if p != policy]
             new_policy: Policy = random.choice(other_policies)
-            print(f'Switch policy from {policy.value} to {new_policy.value}')
+            print(f'Switch policy from {policy} to {new_policy.value}')
             update = HuntGroup(call_policies=HGCallPolicies(policy=new_policy))
             self.api.telephony.huntgroup.update(location_id=target.location_id,
                                                 huntgroup_id=target.id,

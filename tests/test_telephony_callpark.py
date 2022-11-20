@@ -348,7 +348,7 @@ class AvailableAgents(TestWithLocations):
         name_len = max(len(location.name) for location in self.locations)
         for location, agents in zip(self.locations, available_agents):
             print(f'Available in {location.name:{name_len}}:'
-                  f' {", ".join(f"{agent.display_name} ({agent.user_type.name})" for agent in agents)}')
+                  f' {", ".join(f"{agent.display_name} ({agent.user_type})" for agent in agents)}')
 
 
 class AvailableRecalls(TestWithLocations):
