@@ -12,6 +12,8 @@ Release history
 - fix: fixed method names in :class:`wxc_sdk.team_memberships.TeamMembershipsApi`
 - feat: new example: archive_space.py
 - feat: SafeEnum instead of Enum to tolerate unknown enum values
+- fix: use_enum_values = True in ApiModel so that enum values are not stored as Enum instances; CAUTION: might break
+  code that uses .name and .value attributes of enums.
 
 1.9.0
 -----

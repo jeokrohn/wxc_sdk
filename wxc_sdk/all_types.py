@@ -1,5 +1,5 @@
-from wxc_sdk.base import ApiModel, ApiModelWithErrors, CodeAndReason, StrOrDict, dt_iso_str, plus1, to_camel,\
-    webex_id_to_uuid
+from wxc_sdk.base import ApiModel, ApiModelWithErrors, CodeAndReason, SafeEnum, StrOrDict, dt_iso_str, plus1,\
+    to_camel, webex_id_to_uuid
 from wxc_sdk.cdr import CDR, CDRCallType, CDRClientType, CDRDirection, CDROriginalReason, CDRRedirectReason,\
     CDRRelatedReason, CDRUserType
 from wxc_sdk.common import AcdCustomization, AlternateNumber, AnnAudioFile, AtaCustomization, AtaDtmfMethod,\
@@ -159,7 +159,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence', 'RedirectReason', 'Redirection', 'RejectAction',
            'Report', 'ReportTemplate', 'ResponseStatus', 'ResponseStatusType', 'RingPattern', 'Room', 'RoomTab',
            'RoomType', 'RouteGroup', 'RouteGroupUsage', 'RouteIdentity', 'RouteList', 'RouteListDestination',
-           'RouteListDetail', 'RouteType', 'Schedule', 'ScheduleApiBase', 'ScheduleDay', 'ScheduleLevel',
+           'RouteListDetail', 'RouteType', 'SafeEnum', 'Schedule', 'ScheduleApiBase', 'ScheduleDay', 'ScheduleLevel',
            'ScheduleMonth', 'ScheduleType', 'ScheduleTypeOrStr', 'ScheduleWeek', 'ScreenTimeout', 'ServiceType',
            'SipAddress', 'SipType', 'SiteType', 'StartJobResponse', 'StepExecutionStatus', 'StorageType', 'StrOrDict',
            'StrandedCalls', 'SupportedDevice', 'TagOp', 'Team', 'TeamMembership', 'TelephonyCall', 'TelephonyDevice',
