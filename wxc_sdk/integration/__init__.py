@@ -3,6 +3,7 @@ An OAuth integration
 """
 import concurrent.futures
 import http.server
+import json
 import logging
 import socketserver
 import threading
@@ -14,6 +15,7 @@ from dataclasses import dataclass
 from typing import Union, Optional
 
 import requests
+import yaml
 
 from ..rest import dump_response
 from ..tokens import Tokens
@@ -263,7 +265,8 @@ class Integration:
         return new_tokens
 
     def get_cached_tokens(self, read_from_cache: Callable[[], Optional[Tokens]],
-                          write_to_cache: Callable[[Tokens], None]) -> Optional[Tokens]:
+                          write_to_cache: Callable[[Tokens], None],
+                          force_new: bool = False) -> Optional[Tokens]:
         """
         Get tokens.
 
@@ -275,11 +278,13 @@ class Integration:
             None should be returned.
         :param write_to_cache: callback to write updated tokens back to cache. The callback is called with a
             :class:`wxc_sdk.tokens.Tokens` instance as only argument.
+        :param force_new: flag, don't read cached tokens and always get tokens from OAuth flow
+        :type force_new: bool
         :return: set of tokens or None
         :rtype: :class:`wxc_sdk.tokens.Tokens`
         """
         # read tokens from cache
-        tokens = read_from_cache()
+        tokens = not force_new and read_from_cache() or None
         if tokens:
             # validate tokens
             changed = self.validate_tokens(tokens=tokens)
@@ -293,3 +298,36 @@ class Integration:
             if tokens:
                 write_to_cache(tokens)
         return tokens
+
+    def get_cached_tokens_from_yml(self, yml_path: str, force_new: bool = False) -> Optional[Tokens]:
+        """
+        Get tokens.
+
+        Tokens are read from given YML file and then verified. If needed an OAuth flow is initiated to get a new
+        set of tokens. For this the redirect URL http://localhost:6001/redirect is expected.
+
+        :param yml_path: path to YML file to be used to cache tokens
+        :param force_new: flag, don't read cached tokens and always get tokens from OAuth flow
+        :type force_new: bool
+
+        :return: set of tokens or None
+        :rtype: :class:`wxc_sdk.tokens.Tokens`
+        """
+
+        def write_tokens(tokens_to_cache: Tokens):
+            with open(yml_path, mode='w') as f:
+                yaml.safe_dump(json.loads(tokens_to_cache.json()), f)
+            return
+
+        def read_tokens() -> Optional[Tokens]:
+            try:
+                with open(yml_path, mode='r') as f:
+                    data = yaml.safe_load(f)
+                    tokens_read = Tokens.parse_obj(data)
+            except Exception as e:
+                log.info(f'failed to read tokens from file: {e}')
+                tokens_read = None
+            return tokens_read
+
+        return self.get_cached_tokens(read_from_cache=read_tokens, write_to_cache=write_tokens,
+                                      force_new=force_new)

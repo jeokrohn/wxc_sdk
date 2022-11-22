@@ -4,6 +4,13 @@ Release history
 - fix: wxc_sdk.workspaces.Workspace.hotdesking_enabled is now :attr:`wxc_sdk.workspaces.Workspace.hotdesking_status` (on/off)
 - fix: wrong url in :meth:`wxc_sdk.telephony.callpark_extension.CallparkExtensionApi.delete`
 - fix: docstring fixed for :meth:`wxc_sdk.telephony.callqueue.policies.CQPolicyApi.holiday_service_details`
+- feat: new parameter force_new for :meth:`wxc_sdk.integration.Integration.get_cached_tokens`
+- feat: new :meth:`wxc_sdk.integration.Integration.get_cached_tokens_from_yml`
+- feat: new parameters org_public_spaces, from_, to_ for :meth:`wxc_sdk.rooms.RoomsApi.list`
+- feat: new parameters is_public, description for :meth:`wxc_sdk.rooms.RoomsApi.create`
+- feat: new attributes made_public, description for :class:`wxc_sdk.rooms.Room`
+- fix: fixed method names in :class:`wxc_sdk.team_memberships.TeamMembershipsApi`
+- feat: new example: archive_space.py
 
 1.9.0
 -----

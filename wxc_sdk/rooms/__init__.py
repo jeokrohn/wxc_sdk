@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import Optional
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.common import RoomType
 
 __all__ = ['GetRoomMeetingDetailsResponse', 'ListRoomsResponse', 'Room', 'RoomsApi']
@@ -38,7 +38,12 @@ class Room(ApiModel):
     is_locked: Optional[bool]
     #: Sets the space into announcement Mode.
     is_announcement_only: Optional[bool]
+    #: The room is public and therefore discoverable within the org. Anyone can find and join that room.
     is_public: Optional[bool]
+    #: Date and time when the room was made public.
+    made_public: Optional[datetime]
+    #: The description of the space.
+    description: Optional[str]
 
 
 class ListRoomsResponse(ApiModel):
@@ -73,7 +78,8 @@ class RoomsApi(ApiChild, base='rooms'):
     To post content see the Messages API.
     """
 
-    def list(self, team_id: str = None, type_: RoomType = None, sort_by: str = None,
+    def list(self, team_id: str = None, type_: RoomType = None, org_public_spaces: bool = None,
+             from_: datetime = None, to_: datetime = None, sort_by: str = None,
              **params) -> Generator[Room, None, None]:
         """
         List rooms.
@@ -90,7 +96,14 @@ class RoomsApi(ApiChild, base='rooms'):
         :type team_id: str
         :param type_: List rooms by type.
             Possible values: direct, group
-        :type type_: str
+        :type type_: RoomType
+        :param org_public_spaces: Shows the org's public spaces joined and unjoined. When set the result list is sorted
+            by the madePublic timestamp.
+        :type org_public_spaces: bool
+        :param from_: Filters rooms, that were made public after this time. See madePublic timestamp
+        :type from_: datetime
+        :param to_: Filters rooms, that were made public before this time. See maePublic timestamp
+        :type to_: datetime
         :param sort_by: Sort results.
             Possible values: id, lastactivity, created
         :type sort_by: str
@@ -101,12 +114,18 @@ class RoomsApi(ApiChild, base='rooms'):
             params['type'] = type_
         if sort_by is not None:
             params['sortBy'] = sort_by
+        if org_public_spaces is not None:
+            params['orgPublicSpaces'] = org_public_spaces
+        if from_ is not None:
+            params['from'] = dt_iso_str(from_)
+        if to_ is not None:
+            params['to'] = dt_iso_str(to_)
         url = self.ep()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Room, params=params)
 
     def create(self, title: str, team_id: str = None, classification_id: str = None, is_locked: bool = None,
-               is_announcement_only: bool = None) -> Room:
+               is_public: bool = None, description: str = None, is_announcement_only: bool = None) -> Room:
         """
         Creates a room. The authenticated user is automatically added as a member of the room. See the Memberships
         API to learn how to add more people to the room.
@@ -124,6 +143,11 @@ class RoomsApi(ApiChild, base='rooms'):
         :type classification_id: str
         :param is_locked: Set the space as locked/moderated and the creator becomes a moderator
         :type is_locked: bool
+        :param is_public: The room is public and therefore discoverable within the org. Anyone can find and join that
+            room. When true the description must be filled in.
+        :type is_public: bool
+        :param description: The description of the space.
+        :type description: str
         :param is_announcement_only: Sets the space into announcement Mode.
         :type is_announcement_only: bool
         """
@@ -136,6 +160,10 @@ class RoomsApi(ApiChild, base='rooms'):
             body['classificationId'] = classification_id
         if is_locked is not None:
             body['isLocked'] = is_locked
+        if is_public is not None:
+            body['isPublic'] = is_public
+        if description is not None:
+            body['description'] = description
         if is_announcement_only is not None:
             body['isAnnouncementOnly'] = is_announcement_only
         url = self.ep()

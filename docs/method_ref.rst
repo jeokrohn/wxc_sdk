@@ -371,21 +371,21 @@ The second column of the table has a link to the documentation of the method.
    * - api.rooms.update
         Updates details for a room
      - :meth:`~wxc_sdk.rooms.RoomsApi.update`
-   * - api.team_memberships.create_membership
+   * - api.team_memberships.create
         Add someone to a team by Person ID or email address, optionally making them a moderator
-     - :meth:`~wxc_sdk.team_memberships.TeamMembershipsApi.create_membership`
-   * - api.team_memberships.delete_membership
+     - :meth:`~wxc_sdk.team_memberships.TeamMembershipsApi.create`
+   * - api.team_memberships.delete
         Deletes a team membership, by ID
-     - :meth:`~wxc_sdk.team_memberships.TeamMembershipsApi.delete_membership`
-   * - api.team_memberships.list_memberships
-        Lists all team memberships for a given team, specified by the teamId query parameter
-     - :meth:`~wxc_sdk.team_memberships.TeamMembershipsApi.list_memberships`
-   * - api.team_memberships.membership_details
+     - :meth:`~wxc_sdk.team_memberships.TeamMembershipsApi.delete`
+   * - api.team_memberships.details
         Shows details for a team membership, by ID
-     - :meth:`~wxc_sdk.team_memberships.TeamMembershipsApi.membership_details`
-   * - api.team_memberships.update_membership
+     - :meth:`~wxc_sdk.team_memberships.TeamMembershipsApi.details`
+   * - api.team_memberships.list
+        Lists all team memberships for a given team, specified by the teamId query parameter
+     - :meth:`~wxc_sdk.team_memberships.TeamMembershipsApi.list`
+   * - api.team_memberships.membership
         Updates a team membership, by ID
-     - :meth:`~wxc_sdk.team_memberships.TeamMembershipsApi.update_membership`
+     - :meth:`~wxc_sdk.team_memberships.TeamMembershipsApi.membership`
    * - api.teams.create
         Creates a team
      - :meth:`~wxc_sdk.teams.TeamsApi.create`

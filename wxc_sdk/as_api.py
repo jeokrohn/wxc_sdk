@@ -4122,7 +4122,8 @@ class AsRoomsApi(AsApiChild, base='rooms'):
     To post content see the Messages API.
     """
 
-    def list_gen(self, team_id: str = None, type_: RoomType = None, sort_by: str = None,
+    def list_gen(self, team_id: str = None, type_: RoomType = None, org_public_spaces: bool = None,
+             from_: datetime = None, to_: datetime = None, sort_by: str = None,
              **params) -> AsyncGenerator[Room, None, None]:
         """
         List rooms.
@@ -4139,7 +4140,14 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         :type team_id: str
         :param type_: List rooms by type.
             Possible values: direct, group
-        :type type_: str
+        :type type_: RoomType
+        :param org_public_spaces: Shows the org's public spaces joined and unjoined. When set the result list is sorted
+            by the madePublic timestamp.
+        :type org_public_spaces: bool
+        :param from_: Filters rooms, that were made public after this time. See madePublic timestamp
+        :type from_: datetime
+        :param to_: Filters rooms, that were made public before this time. See maePublic timestamp
+        :type to_: datetime
         :param sort_by: Sort results.
             Possible values: id, lastactivity, created
         :type sort_by: str
@@ -4150,11 +4158,18 @@ class AsRoomsApi(AsApiChild, base='rooms'):
             params['type'] = type_
         if sort_by is not None:
             params['sortBy'] = sort_by
+        if org_public_spaces is not None:
+            params['orgPublicSpaces'] = org_public_spaces
+        if from_ is not None:
+            params['from'] = dt_iso_str(from_)
+        if to_ is not None:
+            params['to'] = dt_iso_str(to_)
         url = self.ep()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Room, params=params)
 
-    async def list(self, team_id: str = None, type_: RoomType = None, sort_by: str = None,
+    async def list(self, team_id: str = None, type_: RoomType = None, org_public_spaces: bool = None,
+             from_: datetime = None, to_: datetime = None, sort_by: str = None,
              **params) -> List[Room]:
         """
         List rooms.
@@ -4171,7 +4186,14 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         :type team_id: str
         :param type_: List rooms by type.
             Possible values: direct, group
-        :type type_: str
+        :type type_: RoomType
+        :param org_public_spaces: Shows the org's public spaces joined and unjoined. When set the result list is sorted
+            by the madePublic timestamp.
+        :type org_public_spaces: bool
+        :param from_: Filters rooms, that were made public after this time. See madePublic timestamp
+        :type from_: datetime
+        :param to_: Filters rooms, that were made public before this time. See maePublic timestamp
+        :type to_: datetime
         :param sort_by: Sort results.
             Possible values: id, lastactivity, created
         :type sort_by: str
@@ -4182,12 +4204,18 @@ class AsRoomsApi(AsApiChild, base='rooms'):
             params['type'] = type_
         if sort_by is not None:
             params['sortBy'] = sort_by
+        if org_public_spaces is not None:
+            params['orgPublicSpaces'] = org_public_spaces
+        if from_ is not None:
+            params['from'] = dt_iso_str(from_)
+        if to_ is not None:
+            params['to'] = dt_iso_str(to_)
         url = self.ep()
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=Room, params=params)]
 
     async def create(self, title: str, team_id: str = None, classification_id: str = None, is_locked: bool = None,
-               is_announcement_only: bool = None) -> Room:
+               is_public: bool = None, description: str = None, is_announcement_only: bool = None) -> Room:
         """
         Creates a room. The authenticated user is automatically added as a member of the room. See the Memberships
         API to learn how to add more people to the room.
@@ -4205,6 +4233,11 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         :type classification_id: str
         :param is_locked: Set the space as locked/moderated and the creator becomes a moderator
         :type is_locked: bool
+        :param is_public: The room is public and therefore discoverable within the org. Anyone can find and join that
+            room. When true the description must be filled in.
+        :type is_public: bool
+        :param description: The description of the space.
+        :type description: str
         :param is_announcement_only: Sets the space into announcement Mode.
         :type is_announcement_only: bool
         """
@@ -4217,6 +4250,10 @@ class AsRoomsApi(AsApiChild, base='rooms'):
             body['classificationId'] = classification_id
         if is_locked is not None:
             body['isLocked'] = is_locked
+        if is_public is not None:
+            body['isPublic'] = is_public
+        if description is not None:
+            body['description'] = description
         if is_announcement_only is not None:
             body['isAnnouncementOnly'] = is_announcement_only
         url = self.ep()
@@ -4297,7 +4334,7 @@ class AsTeamMembershipsApi(AsApiChild, base='team/memberships'):
     Just like in the Webex app, you must be a member of the team in order to list its memberships or invite people.
     """
 
-    def list_memberships_gen(self, team_id: str, **params) -> AsyncGenerator[TeamMembership, None, None]:
+    def list_gen(self, team_id: str, **params) -> AsyncGenerator[TeamMembership, None, None]:
         """
         Lists all team memberships for a given team, specified by the teamId query parameter.
         Use query parameters to filter the response.
@@ -4305,11 +4342,12 @@ class AsTeamMembershipsApi(AsApiChild, base='team/memberships'):
         :param team_id: List memberships for a team, by ID.
         :type team_id: str
         """
-        params = {'teamId': team_id}
+        if team_id is not None:
+            params['teamId'] = team_id
         url = self.ep()
         return self.session.follow_pagination(url=url, model=TeamMembership, params=params)
 
-    async def list_memberships(self, team_id: str, **params) -> List[TeamMembership]:
+    async def list(self, team_id: str, **params) -> List[TeamMembership]:
         """
         Lists all team memberships for a given team, specified by the teamId query parameter.
         Use query parameters to filter the response.
@@ -4317,12 +4355,13 @@ class AsTeamMembershipsApi(AsApiChild, base='team/memberships'):
         :param team_id: List memberships for a team, by ID.
         :type team_id: str
         """
-        params = {'teamId': team_id}
+        if team_id is not None:
+            params['teamId'] = team_id
         url = self.ep()
         return [o async for o in self.session.follow_pagination(url=url, model=TeamMembership, params=params)]
 
-    async def create_membership(self, team_id: str, person_id: str = None, person_email: str = None,
-                          is_moderator: bool = None) -> TeamMembership:
+    async def create(self, team_id: str, person_id: str = None, person_email: str = None,
+               is_moderator: bool = None) -> TeamMembership:
         """
         Add someone to a team by Person ID or email address, optionally making them a moderator.
 
@@ -4348,7 +4387,7 @@ class AsTeamMembershipsApi(AsApiChild, base='team/memberships'):
         data = await super().post(url=url, json=body)
         return TeamMembership.parse_obj(data)
 
-    async def membership_details(self, membership_id: str) -> TeamMembership:
+    async def details(self, membership_id: str) -> TeamMembership:
         """
         Shows details for a team membership, by ID.
         Specify the team membership ID in the membershipId URI parameter.
@@ -4360,7 +4399,7 @@ class AsTeamMembershipsApi(AsApiChild, base='team/memberships'):
         data = await super().get(url=url)
         return TeamMembership.parse_obj(data)
 
-    async def update_membership(self, membership_id: str, is_moderator: bool) -> TeamMembership:
+    async def membership(self, membership_id: str, is_moderator: bool) -> TeamMembership:
         """
         Updates a team membership, by ID.
         Specify the team membership ID in the membershipId URI parameter.
@@ -4375,7 +4414,7 @@ class AsTeamMembershipsApi(AsApiChild, base='team/memberships'):
         data = await super().put(url=url, json=body)
         return TeamMembership.parse_obj(data)
 
-    async def delete_membership(self, membership_id: str):
+    async def delete(self, membership_id: str):
         """
         Deletes a team membership, by ID.
         Specify the team membership ID in the membershipId URI parameter.

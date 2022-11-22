@@ -35,7 +35,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
     Just like in the Webex app, you must be a member of the team in order to list its memberships or invite people.
     """
 
-    def list_memberships(self, team_id: str, **params) -> Generator[TeamMembership, None, None]:
+    def list(self, team_id: str, **params) -> Generator[TeamMembership, None, None]:
         """
         Lists all team memberships for a given team, specified by the teamId query parameter.
         Use query parameters to filter the response.
@@ -43,12 +43,13 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         :param team_id: List memberships for a team, by ID.
         :type team_id: str
         """
-        params = {'teamId': team_id}
+        if team_id is not None:
+            params['teamId'] = team_id
         url = self.ep()
         return self.session.follow_pagination(url=url, model=TeamMembership, params=params)
 
-    def create_membership(self, team_id: str, person_id: str = None, person_email: str = None,
-                          is_moderator: bool = None) -> TeamMembership:
+    def create(self, team_id: str, person_id: str = None, person_email: str = None,
+               is_moderator: bool = None) -> TeamMembership:
         """
         Add someone to a team by Person ID or email address, optionally making them a moderator.
 
@@ -74,7 +75,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         data = super().post(url=url, json=body)
         return TeamMembership.parse_obj(data)
 
-    def membership_details(self, membership_id: str) -> TeamMembership:
+    def details(self, membership_id: str) -> TeamMembership:
         """
         Shows details for a team membership, by ID.
         Specify the team membership ID in the membershipId URI parameter.
@@ -86,7 +87,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         data = super().get(url=url)
         return TeamMembership.parse_obj(data)
 
-    def update_membership(self, membership_id: str, is_moderator: bool) -> TeamMembership:
+    def membership(self, membership_id: str, is_moderator: bool) -> TeamMembership:
         """
         Updates a team membership, by ID.
         Specify the team membership ID in the membershipId URI parameter.
@@ -101,7 +102,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         data = super().put(url=url, json=body)
         return TeamMembership.parse_obj(data)
 
-    def delete_membership(self, membership_id: str):
+    def delete(self, membership_id: str):
         """
         Deletes a team membership, by ID.
         Specify the team membership ID in the membershipId URI parameter.
