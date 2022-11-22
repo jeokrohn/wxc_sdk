@@ -59,8 +59,8 @@ class TestScheduleList(TestCaseWithUsers):
 
         if schedule_ids:
             name_len = max(map(len, (s[0] for s in schedule_ids)))
-            type_len = max(map(len, (s[2].name for s in schedule_ids)))
-            decoded_ids = map(lambda s: f'{s[0]:{name_len}}({s[2].name:{type_len}}): {debug_schedule_id(s[1])}',
+            type_len = max(map(len, (s[2] for s in schedule_ids)))
+            decoded_ids = map(lambda s: f'{s[0]:{name_len}}({s[2]:{type_len}}): {debug_schedule_id(s[1])}',
                               schedule_ids)
             print('\n'.join(decoded_ids))
 
@@ -87,8 +87,8 @@ class TestCreateOrUpdate(TestCaseWithUsers):
         # list user and location schedules
         user_schedules = list(ps.list(obj_id=target_user.person_id))
         location_schedules = list(ls.list(obj_id=target_user.location_id))
-        print(f'    user schedules: {", ".join(f"{s.name}({s.schedule_type.name})" for s in user_schedules)}')
-        print(f'location schedules: {", ".join(f"{s.name}({s.schedule_type.name})" for s in location_schedules)}')
+        print(f'    user schedules: {", ".join(f"{s.name}({s.schedule_type})" for s in user_schedules)}')
+        print(f'location schedules: {", ".join(f"{s.name}({s.schedule_type})" for s in location_schedules)}')
 
         # get available name (not present at location nor user level)
         names = set(chain((s.name for s in user_schedules),
@@ -141,8 +141,8 @@ class TestCreateOrUpdate(TestCaseWithUsers):
         # list user and location schedules
         user_schedules = list(ps.list(obj_id=target_user.person_id))
         location_schedules = list(ls.list(obj_id=target_user.location_id))
-        print(f'    user schedules: {", ".join(f"{s.name}({s.schedule_type.name})" for s in user_schedules)}')
-        print(f'location schedules: {", ".join(f"{s.name}({s.schedule_type.name})" for s in location_schedules)}')
+        print(f'    user schedules: {", ".join(f"{s.name}({s.schedule_type})" for s in user_schedules)}')
+        print(f'location schedules: {", ".join(f"{s.name}({s.schedule_type})" for s in location_schedules)}')
 
         # determine target location schedule
         user_schedule_names = set(s.name for s in user_schedules)
@@ -329,7 +329,7 @@ class TestCreateOrUpdate(TestCaseWithUsers):
         name_len = max(map(len, (s.name for s in user_schedules_after.values())))
         for schedule in user_schedules_after.values():
             schedule: Schedule
-            print(f'Getting user schedule details for {schedule.name}({schedule.schedule_type.name})')
+            print(f'Getting user schedule details for {schedule.name}({schedule.schedule_type})')
             if (schedule.schedule_type, schedule.name) in location_schedules_after:
                 # this is actually a location schedule and we expect the user details call to fail
                 with self.assertRaises(RestError):
@@ -406,7 +406,7 @@ class TestCreateOrUpdate(TestCaseWithUsers):
                                          schedule_id=target_schedule.schedule_id)
             # verify that the event actually got added
             self.assertEqual(1, len(target_schedule.events))
-        print(f'target schedule: {target_schedule.name}({target_schedule.schedule_type.name})')
+        print(f'target schedule: {target_schedule.name}({target_schedule.schedule_type})')
 
         new_name = next(new_names)
         print(f'Changing name to {new_name}')

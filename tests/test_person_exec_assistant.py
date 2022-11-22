@@ -21,7 +21,7 @@ class TestRead(TestCaseWithUsers):
                                      self.users))
         print(f'Got exec assistant settings for {len(self.users)} users')
         max_len = max(len(user.display_name) for user in self.users)
-        print('\n'.join(f'{user.display_name:{max_len}}: {s.name}' for user, s in zip(self.users, settings)))
+        print('\n'.join(f'{user.display_name:{max_len}}: {s}' for user, s in zip(self.users, settings)))
 
     def test_002_update(self):
         """

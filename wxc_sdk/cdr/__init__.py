@@ -4,7 +4,6 @@ CDR API
 from collections.abc import Generator
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from enum import Enum
 from typing import Optional, Union
 
 from dateutil import tz
@@ -12,6 +11,7 @@ from pydantic import Field, root_validator
 
 from ..api_child import ApiChild
 from ..base import ApiModel, dt_iso_str
+from ..base import SafeEnum as Enum
 
 __all__ = ['CDRCallType', 'CDRClientType', 'CDRDirection', 'CDROriginalReason', 'CDRRedirectReason',
            'CDRRelatedReason', 'CDRUserType', 'CDR', 'DetailedCDRApi']

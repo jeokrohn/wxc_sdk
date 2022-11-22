@@ -1,11 +1,11 @@
 from collections.abc import Generator
 from dataclasses import dataclass
-from enum import Enum
 from typing import List, Any, Optional
 
 from pydantic import parse_obj_as, Field
 
 from ...api_child import ApiChild
+from ...base import SafeEnum as Enum
 from ...base import to_camel, ApiModel
 from ...common import Customer, IdAndName
 

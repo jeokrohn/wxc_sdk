@@ -1,6 +1,5 @@
 from collections.abc import Generator
 from dataclasses import dataclass
-from enum import Enum
 from typing import Optional
 
 from pydantic import Field
@@ -9,6 +8,7 @@ from .announcement import AnnouncementApi
 from .policies import CQPolicyApi
 from ..forwarding import ForwardingApi, FeatureSelector
 from ..hg_and_cq import HGandCQ, Policy, Agent
+from ...base import SafeEnum as Enum
 from ...base import to_camel, ApiModel
 from ...common import RingPattern, Greeting
 from ...rest import RestSession

@@ -13,14 +13,14 @@ __all__ = ['DevicesApi', 'Device', 'TagOp', 'ActivationCodeResponse']
 from collections.abc import Generator
 from dataclasses import dataclass
 from datetime import datetime
-from enum import Enum
 from typing import Optional, Any, List
 
 from pydantic import root_validator, Field
 
-from ..rest import RestSession
 from ..api_child import ApiChild
+from ..base import SafeEnum as Enum
 from ..base import to_camel, ApiModel
+from ..rest import RestSession
 from ..telephony.jobs import DeviceSettingsJobsApi
 
 

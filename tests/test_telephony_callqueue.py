@@ -335,7 +335,7 @@ class TestUpdate(TestWithQueues):
             policy = target.call_policies.policy
             other_policies = [p for p in Policy if p != policy]
             new_policy: Policy = random.choice(other_policies)
-            print(f'Switch policy from {policy.value} to {new_policy.value}')
+            print(f'Switch policy from {policy} to {new_policy.value}')
             # Apparently when setting a new policy you also have to provide the routing type
             update = CallQueue(call_policies=CallQueueCallPolicies(policy=new_policy,
                                                                    routing_type=CQRoutingType.priority_based))

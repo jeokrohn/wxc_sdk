@@ -2,12 +2,12 @@
 Call Queue policy settings
 """
 from dataclasses import dataclass
-from enum import Enum
 from typing import Optional
 
 from pydantic import Field
 
 from ...base import ApiModel
+from ...base import SafeEnum as Enum
 from ...common import Greeting, AnnAudioFile
 from ...rest import RestSession
 

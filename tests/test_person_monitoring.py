@@ -20,7 +20,7 @@ def print_monitoring(*, user: Person, monitoring: Monitoring):
     print(f'  call park notifications enabled: {monitoring.call_park_notification_enabled}')
     for me in monitoring.monitored_elements or []:
         if me.member:
-            print(f'    {me.member.display_name} ({me.member.member_type.value}) in {me.member.location_name}')
+            print(f'    {me.member.display_name} ({me.member.member_type}) in {me.member.location_name}')
         else:
             print(f'    {me.cpe.name} (CPE) in {me.cpe.location_name}')
 
@@ -85,7 +85,7 @@ class TempCPE:
                     # pick a random location
                     locations = await api.locations.list()
 
-                    location_id = random.choice(locations).id
+                    location_id = random.choice(locations).location_id
                     self.location_id = location_id
                     cpe_names = set(cpe.name for cpe in existing_cpes
                                     if cpe.location_id == location_id)

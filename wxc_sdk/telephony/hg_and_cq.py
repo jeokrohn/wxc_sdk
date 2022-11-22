@@ -2,14 +2,13 @@
 common base for Call Queues and Hunt Groups
 """
 from base64 import b64decode
-from enum import Enum
 from typing import Optional
 
 from pydantic import Field
 
-from wxc_sdk.common import AlternateNumber
 from ..base import ApiModel, webex_id_to_uuid
-from ..common import UserBase
+from ..base import SafeEnum as Enum
+from ..common import UserBase, AlternateNumber
 
 __all__ = ['HGandCQ', 'Policy', 'Agent', 'AlternateNumberSettings']
 

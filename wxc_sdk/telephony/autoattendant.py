@@ -3,7 +3,6 @@ Auto attendant data types and API
 """
 from collections.abc import Generator
 from dataclasses import dataclass
-from enum import Enum
 from typing import Optional
 
 from pydantic import Field
@@ -12,6 +11,7 @@ from wxc_sdk.common import AlternateNumber
 from .forwarding import ForwardingApi, FeatureSelector
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
+from ..base import SafeEnum as Enum
 from ..common import Greeting
 from ..rest import RestSession
 

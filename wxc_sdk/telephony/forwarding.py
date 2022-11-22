@@ -2,12 +2,12 @@
 Forwarding settings and API for call queues, hunt groups, and auto attendants
 """
 
-from enum import Enum
 from typing import Optional, Dict
 
 from pydantic import Field, validator
 
 from ..base import ApiModel
+from ..base import SafeEnum as Enum
 from ..rest import RestSession
 
 __all__ = ['ForwardingRule', 'ForwardingSetting', 'CallForwarding', 'ForwardToSelection', 'CallForwardingNumberType',

@@ -2,10 +2,9 @@
 Person incoming permissions API
 """
 
-from enum import Enum
-
 from .common import PersonSettingsApiChild
 from ..base import ApiModel
+from ..base import SafeEnum as Enum
 
 __all__ = ['ExternalTransfer', 'IncomingPermissions', 'IncomingPermissionsApi']
 

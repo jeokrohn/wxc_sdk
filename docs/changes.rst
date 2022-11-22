@@ -11,6 +11,7 @@ Release history
 - feat: new attributes made_public, description for :class:`wxc_sdk.rooms.Room`
 - fix: fixed method names in :class:`wxc_sdk.team_memberships.TeamMembershipsApi`
 - feat: new example: archive_space.py
+- feat: SafeEnum instead of Enum to tolerate unknown enum values
 
 1.9.0
 -----

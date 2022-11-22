@@ -1,12 +1,12 @@
 import json
 from collections.abc import Generator
-from enum import Enum
 from typing import Optional, Literal
 
 from pydantic import Field
 
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
+from ..base import SafeEnum as Enum
 from ..common import RingPattern, PersonPlaceAgent
 
 __all__ = ['CallParkRecall', 'RecallHuntGroup', 'AvailableRecallHuntGroup',

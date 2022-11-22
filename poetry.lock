@@ -1,4 +1,12 @@
 [[package]]
+name = "aenum"
+version = "3.1.11"
+description = "Advanced Enumerations (compatible with Python's stdlib Enum), NamedTuples, and NamedConstants"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "aiohttp"
 version = "3.8.3"
 description = "Async http client/server framework (asyncio)"
@@ -944,9 +952,10 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "flake8 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "7610a65b54591e37e4d9c87f96ff399aec225e1eca7fe32357a89a8d7dcb0201"
+content-hash = "04ec96da7c36e6657648faeaa2daccc5e41c8fe7ecd6a18001917ce9dd6aa50c"
 
 [metadata.files]
+aenum = []
 aiohttp = []
 aiosignal = []
 alabaster = [

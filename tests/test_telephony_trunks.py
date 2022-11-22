@@ -119,7 +119,7 @@ class TestTrunkTypes(TestCaseWithLog):
         trunk_types = self.api.telephony.prem_pstn.trunk.trunk_types()
         print(f'Got {len(trunk_types)} trunk types')
         for tt in trunk_types:
-            print(f'type: {tt.trunk_type.name}')
+            print(f'type: {tt.trunk_type}')
             for dt in tt.device_types:
                 print(f'  device type: {dt.device_type} min; {dt.min_concurrent_calls} max: {dt.max_concurrent_calls}')
 
