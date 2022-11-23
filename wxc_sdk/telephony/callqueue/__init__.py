@@ -161,22 +161,38 @@ class OverflowSetting(ApiModel):
 
 
 class WaitMode(str, Enum):
+    #: Announce the waiting time.
     time = 'TIME'
+    #: Announce queue position.
     position = 'POSITION'
 
 
 class WaitMessageSetting(ApiModel):
+    #: If enabled play Wait Message.
     enabled: Optional[bool]
+    #: Estimated wait message operating mode. Supported values TIME and POSITION.
     wait_mode: Optional[WaitMode]
+    #: The number of minutes for which the estimated wait is played. The minimum time is 10 minutes. The maximum time
+    #: is 100 minutes.
     handling_time: Optional[int]
-    queue_position: Optional[int]
-    high_volume_message_enabled: Optional[bool]
-    estimated_waiting_time: Optional[int]
-    callback_option_enabled: Optional[bool]
-    minimum_estimated_callback_time: Optional[int]
-    international_callback_enabled: Optional[bool]
-    play_updated_estimated_wait_message: Optional[bool]
+    #: The default number of call handling minutes. The minimum time is 1 minutes, The maximum time is 100 minutes.
     default_handling_time: Optional[int]
+    #: The number of the position for which the estimated wait is played. The minimum positions are 10, The maximum
+    #: positions are 100.
+    queue_position: Optional[int]
+    #: Play time / Play position High Volume.
+    high_volume_message_enabled: Optional[bool]
+    #: The number of estimated waiting times in seconds. The minimum time is 10 seconds. The maximum time is 600
+    #: seconds.
+    estimated_waiting_time: Optional[int]
+    #: Callback options enabled/disabled. Default value is false.
+    callback_option_enabled: Optional[bool]
+    #: The minimum estimated callback times in minutes. The default value is 30.
+    minimum_estimated_callback_time: Optional[int]
+    #: The international numbers for callback is enabled/disabled. The default value is false.
+    international_callback_enabled: Optional[bool]
+    #: Play updated estimated wait message.
+    play_updated_estimated_wait_message: Optional[str]
 
     @staticmethod
     def default():
@@ -199,6 +215,8 @@ class WelcomeMessageSetting(AudioSource):
 
 
 class ComfortMessageSetting(AudioSource):
+    #: The interval in seconds between each repetition of the comfort message played to queued users. The minimum time
+    #: is 10 seconds.The maximum time is 600 seconds.
     time_between_messages: int = Field(default=10)
 
     @staticmethod
@@ -238,9 +256,18 @@ class QueueSettings(ApiModel):
     reset_call_statistics_enabled: Optional[bool]
     #: Settings for incoming calls exceed queue_size.
     overflow: Optional[OverflowSetting]
+    #: Notify the caller with either their estimated wait time or position in the queue. If this option is enabled, it
+    #: plays after the welcome message and before the comfort message. By default, it is not enabled.
     wait_message: Optional[WaitMessageSetting]
+    #: Play a message when callers first reach the queue. For example, “Thank you for calling. An agent will be with
+    #: you shortly.” It can be set as mandatory. If the mandatory option is not selected and a caller reaches the
+    #: call queue while there is an available agent, the caller will not hear this announcement and is transferred to
+    #: an agent. The welcome message feature is enabled by default.
     welcome_message: Optional[WelcomeMessageSetting]
+    #: Play a message after the welcome message and before hold music. This is typically a CUSTOM announcement that
+    #:  plays information, such as current promotions or information about products and services.
     comfort_message: Optional[ComfortMessageSetting]
+    #: Play music after the comforting message in a repetitive loop.
     moh_message: Optional[MohMessageSetting]
     #: Comfort message bypass settings
     comfort_message_bypass: Optional[ComfortMessageBypass]
