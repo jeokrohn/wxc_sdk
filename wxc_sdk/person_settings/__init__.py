@@ -77,6 +77,7 @@ class TelephonyDevice(ApiModel):
     #: Activation state of device.
     activation_state: DeviceActivationState
 
+
 class PersonDevicesResponse(ApiModel):
     #: Array of devices available to person.
     devices: list[TelephonyDevice]

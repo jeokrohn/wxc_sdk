@@ -237,8 +237,8 @@ class TestTeams(TestCaseWithLog):
         # add members
         general_space = next(iter(await asyncio.gather(
             self.async_api.rooms.list(team_id=team.id),
-            *[self.async_api.team_memberships.create_membership(team_id=team.id,
-                                                                person_id=member.person_id)
+            *[self.async_api.team_memberships.create(team_id=team.id,
+                                                     person_id=member.person_id)
               for member in team_members])))[0]
         print(f'Added to team "{team.name}": {", ".join(m.display_name for m in team_members)}')
         return team, general_space

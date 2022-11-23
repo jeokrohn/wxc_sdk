@@ -95,7 +95,7 @@ class TestInternalDialing(TestCaseWithLog):
         trunk = choice(trunks)
 
         # pick a location (don't pick India locations to avoid toll bypass hassle)
-        locations = [l for l in self.locations if l.address.country != 'IN']
+        locations = [loc for loc in self.locations if loc.address.country != 'IN']
         location = choice(locations)
         api = self.api.telephony.location.internal_dialing
         with self.update_context(location=location):

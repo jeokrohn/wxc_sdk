@@ -290,11 +290,11 @@ class Schedule(ApiModel):
             # Two events
             # * from start to break
             # * from break end to end of day
-            schedule.events.append(Event.day_start_end(name=f'{day.value} 1',
+            schedule.events.append(Event.day_start_end(name=f'{day} 1',
                                                        day=dt_day,
                                                        start_time=day_start,
                                                        end_time=break_start))
-            schedule.events.append(Event.day_start_end(name=f'{day.value} 2',
+            schedule.events.append(Event.day_start_end(name=f'{day} 2',
                                                        day=dt_day,
                                                        start_time=break_end,
                                                        end_time=day_end))

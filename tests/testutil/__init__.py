@@ -115,7 +115,7 @@ def available_tns(*, api: WebexSimpleApi, tn_prefix: str, tns_requested: int = 1
     return asyncio.run(as_run())
 
 
-def available_extensions_gen(*, api: WebexSimpleApi, location_id, ext_requested: int = 1) -> Generator[str, None, None]:
+def available_extensions_gen(*, api: WebexSimpleApi, location_id) -> Generator[str, None, None]:
     extensions = [pn.extension for pn in api.telephony.phone_numbers(location_id=location_id)
                   if pn.extension]
     return available_numbers(numbers=extensions)

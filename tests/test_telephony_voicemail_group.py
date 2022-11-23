@@ -260,7 +260,8 @@ class TestVmGroup(TestCaseWithLog):
                 done.add(group.group_id)
                 index_list = group_index_lists[group.group_id]
                 if len(index_list) > 1:
-                    print(f'group "{group.name}" ({group.group_id}) in "{group.location_name}" listed multiple times in paginated list: '
+                    print(f'group "{group.name}" ({group.group_id}) in "{group.location_name}" listed multiple times '
+                          f'in paginated list: '
                           f'{", ".join(str(i) for i in index_list)}')
             missing_in_small_page_set = vmg_ids - vmg_ids_small_page
             if missing_in_small_page_set:
