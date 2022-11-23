@@ -1,4 +1,4 @@
-# command: ./read_api_spec.py -s Messaging -t Teams -f teams.yml
+# command: developer.webex.com/read_api_spec.py -s Messaging -t Teams -f developer.webex.com/teams.yml
 docs:
   Attachment Actions:
     doc: null
@@ -74,6 +74,12 @@ docs:
             param_object: []
             type: string
             type_spec: null
+          - doc: The teams description.
+            name: description
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
           - doc: The date and time the team was created.
             name: created
             param_attrs: []
@@ -101,6 +107,12 @@ docs:
           param_object: []
           type: string
           type_spec: required
+        - doc: The teams description.
+          name: description
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
         Response Properties:
         - doc: A unique identifier for the team.
           name: id
@@ -110,6 +122,12 @@ docs:
           type_spec: null
         - doc: A user-friendly name for the team.
           name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The teams description.
+          name: description
           param_attrs: []
           param_object: []
           type: string
@@ -130,6 +148,13 @@ docs:
         http_method: GET
       header: Get Team Details
       parameters_and_response:
+        Query Parameters:
+        - doc: The teams description.
+          name: description
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
         Response Properties:
         - doc: A unique identifier for the team.
           name: id
@@ -139,6 +164,12 @@ docs:
           type_spec: null
         - doc: A user-friendly name for the team.
           name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The teams description.
+          name: description
           param_attrs: []
           param_object: []
           type: string
@@ -173,6 +204,12 @@ docs:
           param_object: []
           type: string
           type_spec: required
+        - doc: The teams description.
+          name: description
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
         Response Properties:
         - doc: A unique identifier for the team.
           name: id
@@ -182,6 +219,12 @@ docs:
           type_spec: null
         - doc: A user-friendly name for the team.
           name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The teams description.
+          name: description
           param_attrs: []
           param_object: []
           type: string

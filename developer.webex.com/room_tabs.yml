@@ -1,4 +1,4 @@
-# command: ./read_api_spec.py -s Messaging -t Room Tabs -f room_tabs.yml
+# command: developer.webex.com/read_api_spec.py -s Messaging -t "Room Tabs" -f developer.webex.com/room_tabs.yml
 docs:
   Attachment Actions:
     doc: null

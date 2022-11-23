@@ -1,4 +1,4 @@
-# command: ./read_api_spec.py -a .env -s Calling -t "Webex Calling Detailed Call History" -f cdr.yml
+# command: developer.webex.com/read_api_spec.py -a developer.webex.com/.env -s Calling -t "Webex Calling Detailed Call History" -f developer.webex.com/cdr.yml
 docs:
   BroadWorks Billing Reports:
     doc: null

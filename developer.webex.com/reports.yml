@@ -1,4 +1,4 @@
-# command: /Users/jkrohn/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/read_api_spec.py -f reports.yml -l debug.txt --section Full API Reference --tab Report Templates Reports
+# command: developer.webex.com/read_api_spec.py -s "Full API Reference" -t "Report Templates" Reports -f developer.webex.com/reports.yml
 docs:
   Admin Audit Events:
     doc: null
@@ -573,7 +573,7 @@ docs:
     doc: null
     header: null
     methods: []
-  Webex Calling Workspace Settings with Numbers:
+  Webex Calling Workspace Settings:
     doc: null
     header: null
     methods: []
@@ -586,6 +586,10 @@ docs:
     header: null
     methods: []
   Wholesale Customers:
+    doc: null
+    header: null
+    methods: []
+  Wholesale Customers with Precheck APIs:
     doc: null
     header: null
     methods: []

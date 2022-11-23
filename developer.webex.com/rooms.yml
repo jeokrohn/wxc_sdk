@@ -1,4 +1,4 @@
-# command: ./read_api_spec.py -s Messaging -t Rooms -f rooms.yml
+# command: developer.webex.com/read_api_spec.py -s Messaging -t Rooms -f developer.webex.com/rooms.yml
 docs:
   Attachment Actions:
     doc: null
@@ -28,7 +28,7 @@ docs:
     doc: 'Rooms are virtual meeting places where people post messages and collaborate
       to get work done. This API is used to manage the rooms themselves. Rooms are
       created and deleted with this API. You can also update a room to change its
-      title, for example.
+      title or make it public, for example.
 
       To create a team room, specify the a teamId in the POST payload. Note that once
       a room is added to a team, it cannot be moved. To learn more about managing
@@ -63,13 +63,14 @@ docs:
       header: List Rooms
       parameters_and_response:
         Query Parameters:
-        - doc: List rooms associated with a team, by ID.
+        - doc: List rooms associated with a team, by ID. Cannot be set in combination
+            with orgPublicSpaces.
           name: teamId
           param_attrs: []
           param_object: []
           type: string
           type_spec: null
-        - doc: 'List rooms by type.
+        - doc: 'List rooms by type. Cannot be set in combination with orgPublicSpaces.
 
             Possible values: direct, group'
           name: type
@@ -77,7 +78,28 @@ docs:
           param_object: []
           type: string
           type_spec: null
-        - doc: 'Sort results.
+        - doc: Shows the org's public spaces joined and unjoined. When set the result
+            list is sorted by the madePublic timestamp.
+          name: orgPublicSpaces
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Filters rooms, that were made public after this time. See madePublic
+            timestamp
+          name: from
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Filters rooms, that were made public before this time. See maePublic
+            timestamp
+          name: to
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'Sort results. Cannot be set in combination with orgPublicSpaces.
 
             Possible values: id, lastactivity, created'
           name: sortBy
@@ -186,6 +208,25 @@ docs:
             param_object: []
             type: boolean
             type_spec: null
+          - doc: The room is public and therefore discoverable within the org. Anyone
+              can find and join that room.
+            name: isPublic
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Date and time when the room was made public.
+            name: madePublic
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The description of the space.
+            name: description
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
           param_object: []
           type: array[Room]
           type_spec: null
@@ -232,6 +273,20 @@ docs:
           param_attrs: []
           param_object: []
           type: boolean
+          type_spec: null
+        - doc: The room is public and therefore discoverable within the org. Anyone
+            can find and join that room. When true the description must be filled
+            in.
+          name: isPublic
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The description of the space.
+          name: description
+          param_attrs: []
+          param_object: []
+          type: string
           type_spec: null
         - doc: Sets the space into announcement Mode.
           name: isAnnouncementOnly
@@ -329,6 +384,25 @@ docs:
           param_attrs: []
           param_object: []
           type: boolean
+          type_spec: null
+        - doc: The room is public and therefore discoverable within the org. Anyone
+            can find and join that room.
+          name: isPublic
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Date and time when the room was made public.
+          name: madePublic
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The description of the space.
+          name: description
+          param_attrs: []
+          param_object: []
+          type: string
           type_spec: null
     - doc: 'Shows details for a room, by ID.
 
@@ -434,6 +508,25 @@ docs:
           param_object: []
           type: boolean
           type_spec: null
+        - doc: The room is public and therefore discoverable within the org. Anyone
+            can find and join that room.
+          name: isPublic
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Date and time when the room was made public.
+          name: madePublic
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The description of the space.
+          name: description
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
         URI Parameters:
         - doc: The unique identifier for the room.
           name: roomId
@@ -506,7 +599,11 @@ docs:
 
         Specify the room ID in the roomId parameter in the URI.
 
-        A space can only be put into announcement mode when it is locked.'
+        A space can only be put into announcement mode when it is locked.
+
+        Any space participant or compliance officer can convert a space from public
+        to private. Conversion from private to public is currently not supported.
+        To remove a description please use a space character   by itself.'
       documentation:
         doc: Update a Room
         doc_link: https://developer.webex.com/docs/api/v1/rooms/update-a-room
@@ -539,6 +636,20 @@ docs:
           param_attrs: []
           param_object: []
           type: boolean
+          type_spec: null
+        - doc: The room is public and therefore discoverable within the org. Anyone
+            can find and join that room. When true the description must be filled
+            in.
+          name: isPublic
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The description of the space.
+          name: description
+          param_attrs: []
+          param_object: []
+          type: string
           type_spec: null
         - doc: Sets the space into Announcement Mode or clears the Anouncement Mode
             (false)
@@ -645,6 +756,25 @@ docs:
           param_attrs: []
           param_object: []
           type: boolean
+          type_spec: null
+        - doc: The room is public and therefore discoverable within the org. Anyone
+            can find and join that room.
+          name: isPublic
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Date and time when the room was made public.
+          name: madePublic
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The description of the space.
+          name: description
+          param_attrs: []
+          param_object: []
+          type: string
           type_spec: null
         URI Parameters:
         - doc: The unique identifier for the room.

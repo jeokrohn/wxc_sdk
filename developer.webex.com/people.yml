@@ -1,4 +1,4 @@
-# command: ./read_api_spec.py -s Messaging -t People -f people.yml
+# command: developer.webex.com/read_api_spec.py -s Messaging -t People -f developer.webex.com/people.yml
 docs:
   Attachment Actions:
     doc: null
@@ -42,7 +42,10 @@ docs:
 
         Admin users can include Webex Calling (BroadCloud) user details in the response
         by specifying callingData parameter as true. Admin users can list all users
-        in a location or with a specific phone number.
+        in a location or with a specific phone number. Admin users will receive an
+        enriched payload with additional administrative fields like liceneses,roles
+        etc. These fields are shown when accessing a user via GET /people/{id}, not
+        when doing a GET /people?id=
 
         Lookup by email is only supported for people within the same org or where
         a partner admin relationship is in place.
@@ -1374,9 +1377,9 @@ docs:
         license for this site in the meeting array, and remove that site from the
         siteurl parameter.
 
-        Removing the attendee privilege for a  user on a meeting site is done by removing
-        that sitename#attendee  from the siteUrls array. The showAllTypes parameter
-        must be set to true.'
+        To remove the attendee privilege for a user on a meeting site, remove the
+        sitename#attendee from the siteUrls array. The showAllTypes parameter must
+        be set to true.'
       documentation:
         doc: Update a Person
         doc_link: https://developer.webex.com/docs/api/v1/people/update-a-person

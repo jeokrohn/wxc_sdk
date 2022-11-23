@@ -1,4 +1,4 @@
-# command: ./read_api_spec.py -s Messaging -t Events -f events.yml
+# command: developer.webex.com/read_api_spec.py -s Messaging -t Events -f developer.webex.com/events.yml
 docs:
   Attachment Actions:
     doc: null
