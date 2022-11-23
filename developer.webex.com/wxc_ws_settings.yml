@@ -1,0 +1,1918 @@
+# command: ./developer.webex.com/read_api_spec.py -s Calling -t "Webex Calling Workspace Settings" -f developer.webex.com/wxc_ws_settings.yml
+docs:
+  BroadWorks Billing Reports:
+    doc: null
+    header: null
+    methods: []
+  BroadWorks Device Provisioning:
+    doc: null
+    header: null
+    methods: []
+  BroadWorks Enterprises:
+    doc: null
+    header: null
+    methods: []
+  BroadWorks Subscribers:
+    doc: null
+    header: null
+    methods: []
+  Call Controls:
+    doc: null
+    header: null
+    methods: []
+  Locations:
+    doc: null
+    header: null
+    methods: []
+  People:
+    doc: null
+    header: null
+    methods: []
+  Recording Report:
+    doc: null
+    header: null
+    methods: []
+  Video Mesh:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Organization Settings:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Person Settings:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Voice Messaging:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Workspace Settings:
+    doc: "Workspaces represent places where people work, such as conference rooms,\
+      \ meeting spaces, lobbies, and lunchrooms. Devices may be associated with workspaces.\n\
+      Webex Calling Workspace Settings support reading and writing of Webex Calling\
+      \ settings for a specific workspace within the organization.\nViewing the list\
+      \ of settings in a workspace requires an administrator auth token with the spark-admin:workspaces_read\
+      \ scope. \nAdding, updating, or deleting settings in a workspace requires an\
+      \ administrator auth token with the spark-admin:workspaces_write scope.\nThis\
+      \ API can also be used by partner administrators acting as administrators of\
+      \ a different organization than their own. In those cases, an orgId must be\
+      \ supplied, as indicated in the reference documentation for the relevant endpoints.\n\
+      A partner administrator can retrieve or change settings in a customer's organization\
+      \ using the optional OrgId query parameter."
+    header: Webex Calling Workspace Settings
+    methods:
+    - doc: 'Retrieve Call Forwarding Settings for a Workspace.
+
+        Two types of call forwarding are supported:
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:workspaces_read or a user auth token with spark:workspaces_read
+        scope can be used to read workspace settings.'
+      documentation:
+        doc: Retrieve Call Forwarding Settings for a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-call-forwarding-settings-for-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/callForwarding
+        http_method: GET
+      header: Retrieve Call Forwarding Settings for a Workspace
+      parameters_and_response:
+        Query Parameters:
+        - doc: ID of the organization within which the workspace resides. Only admin
+            users of another organization (such as partners) may use this parameter
+            as the default is the same organization as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Call forwarding settings for a Workspace.
+          name: callForwarding
+          param_attrs:
+          - doc: Settings for forwarding all incoming calls to the destination you
+              chose while the phone is in use or the workspace is busy.
+            name: busy
+            param_attrs:
+            - doc: '"Busy" call forwarding is enabled or disabled.'
+              name: enabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Destination for "Busy" call forwarding.
+              name: destination
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the enabled or disabled state of sending incoming calls
+                to voicemail when the destination is an internal phone number and
+                that number has the voicemail service enabled.
+              name: destinationVoicemailEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            param_object: []
+            type: CallForwardingBusyGet
+            type_spec: null
+          - doc: Settings for forwarding which only occurs when you are away or not
+              answering your phone.
+            name: noAnswer
+            param_attrs:
+            - doc: '"No Answer" call forwarding is enabled or disabled.'
+              name: enabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Destination for "No Answer" call forwarding.
+              name: destination
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Number of rings before the call will be forwarded if unanswered.
+              name: numberOfRings
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: null
+            - doc: System-wide maximum number of rings allowed for numberOfRings setting.
+              name: systemMaxNumberOfRings
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: null
+            - doc: Enables and disables sending incoming to destination number's voicemail
+                if the destination is an internal phone number and that number has
+                the voicemail service enabled.
+              name: destinationVoicemailEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            param_object: []
+            type: CallForwardingNoAnswerGet
+            type_spec: null
+          param_object: []
+          type: CallForwardingPlaceSettingGet
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Modify call forwarding settings for a Workspace.
+
+        Two types of call forwarding are supported:
+
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write
+        scope or a user auth token with spark:workspaces_write scope can be used to
+        update workspace settings.'
+      documentation:
+        doc: Modify Call Forwarding Settings for a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-call-forwarding-settings-for-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/callForwarding
+        http_method: PUT
+      header: Modify Call Forwarding Settings for a Workspace
+      parameters_and_response:
+        Body Parameters:
+        - doc: Call forwarding settings for a Workspace.
+          name: callForwarding
+          param_attrs:
+          - doc: Settings for forwarding all incoming calls to the destination you
+              chose while the phone is in use or the workspace is busy.
+            name: busy
+            param_attrs:
+            - doc: '"Busy" call forwarding is enabled or disabled.'
+              name: enabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: required
+            - doc: Destination for "Busy" call forwarding.
+              name: destination
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the enabled or disabled state of sending incoming calls
+                to voicemail when the destination is an internal phone number and
+                that number has the voicemail service enabled.
+              name: destinationVoicemailEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: required
+            param_object: []
+            type: CallForwardingBusyGet
+            type_spec: null
+          - doc: Settings for forwarding which only occurs when you are away or not
+              answering your phone.
+            name: noAnswer
+            param_attrs:
+            - doc: '"No Answer" call forwarding is enabled or disabled.'
+              name: enabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Destination for "No Answer" call forwarding. If enabled true, destination
+                is required.
+              name: destination
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Number of rings before the call will be forwarded if unanswered.
+              name: numberOfRings
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: null
+            - doc: Max number of rings before the call will be forwarded if unanswered.
+              name: systemMaxNumberOfRings
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: null
+            - doc: Enables and disables sending incoming to destination number's voicemail
+                if the destination is an internal phone number and that number has
+                the voicemail service enabled.
+              name: destinationVoicemailEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            param_object: []
+            type: ModifyCallForwardingNoAnswer
+            type_spec: null
+          param_object: []
+          type: CallForwardingPlaceSettingPatch
+          type_spec: required
+        Query Parameters:
+        - doc: ID of the organization within which the workspace resides. Only admin
+            users of another organization (such as partners) may use this parameter
+            as the default is the same organization as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Retrieve Call Waiting Settings for a Workspace.
+
+        Call Waiting allows workspaces to handle multiple simultaneous calls. Workspaces
+        with Call Waiting enabled can place a call on hold to answer or initiate another
+        call.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:workspaces_read or a user auth token with spark:workspaces_read
+        scope can be used to read workspace settings.'
+      documentation:
+        doc: Retrieve Call Waiting Settings for a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-call-waiting-settings-for-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/callWaiting
+        http_method: GET
+      header: Retrieve Call Waiting Settings for a Workspace
+      parameters_and_response:
+        Query Parameters:
+        - doc: ID of the organization within which the workspace resides. Only admin
+            users of another organization (such as partners) may use this parameter
+            as the default is the same organization as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Call Waiting state.
+          name: enabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Modify Call Waiting Settings for a Workspace.
+
+        Call Waiting allows workspaces to handle multiple simultaneous calls. Workspaces
+        with Call Waiting enabled can place a call on hold to answer or initiate another
+        call.
+
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write
+        scope or a user auth token with spark:workspaces_write scope can be used to
+        update workspace settings.'
+      documentation:
+        doc: Modify Call Waiting Settings for a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-call-waiting-settings-for-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/callWaiting
+        http_method: PUT
+      header: Modify Call Waiting Settings for a Workspace
+      parameters_and_response:
+        Body Parameters:
+        - doc: Call Waiting state.
+          name: enabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        Query Parameters:
+        - doc: ID of the organization within which the workspace resides. Only admin
+            users of another organization (such as partners) may use this parameter
+            as the default is the same organization as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Retrieve Caller ID Settings for a Workspace.
+
+        Caller ID settings control how a workspace''s information is displayed when
+        making outgoing calls.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:workspaces_read or a user auth token with spark:workspaces_read
+        scope can be used to read workspace settings.'
+      documentation:
+        doc: Retrieve Caller ID Settings for a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-caller-id-settings-for-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/callerId
+        http_method: GET
+      header: Retrieve Caller ID Settings for a Workspace
+      parameters_and_response:
+        Query Parameters:
+        - doc: ID of the organization within which the workspace resides. Only admin
+            users of another organization (such as partners) may use this parameter
+            as the default is the same organization as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Allowed types for the selected field.
+          name: types
+          param_attrs:
+          - doc: Outgoing caller ID will show the caller's direct line number and/or
+              extension.
+            name: DIRECT_LINE
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Outgoing caller ID will show the main number for the location.
+            name: LOCATION_NUMBER
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Outgoing caller ID will show the value from the customNumber field.
+            name: CUSTOM
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[CLIDPolicySelection]
+          type_spec: null
+        - doc: Which type of outgoing Caller ID will be used.
+          name: selected
+          param_attrs:
+          - doc: Outgoing caller ID will show the caller's direct line number and/or
+              extension.
+            name: DIRECT_LINE
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Outgoing caller ID will show the main number for the location.
+            name: LOCATION_NUMBER
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Outgoing caller ID will show the value from the customNumber field.
+            name: CUSTOM
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Direct number which will be shown if DIRECT_LINE is selected.
+          name: directNumber
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Location number which will be shown if LOCATION_NUMBER is selected
+          name: locationNumber
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Flag for specifying a toll-free number.
+          name: tollFreeLocationNumber
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: This value must be an assigned number from the person's location.
+          name: customNumber
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Workspace's caller ID display name.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Workspace's caller ID display details. Default is ..
+          name: displayDetail
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Flag to block call forwarding.
+          name: blockInForwardCallsEnabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Designates which type of External Caller ID Name policy is used. Default
+            is DIRECT_LINE.
+          name: externalCallerIdNamePolicy
+          param_attrs:
+          - doc: Outgoing caller ID will show the caller's direct line name.
+            name: DIRECT_LINE
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Outgoing caller ID will show the Site Name for the location.
+            name: LOCATION
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Outgoing caller ID will show the value from the customExternalCallerIdName
+              field.
+            name: OTHER
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Custom External Caller Name, which will be shown if External Caller
+            ID Name is OTHER.
+          name: customExternalCallerIdName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: External Caller Name, which will be shown if External Caller ID Name
+            is OTHER.
+          name: locationExternalCallerIdName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Modify Caller ID settings for a Workspace.
+
+        Caller ID settings control how a workspace''s information is displayed when
+        making outgoing calls.
+
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write
+        scope or a user auth token with spark:workspaces_write scope can be used to
+        update workspace settings.'
+      documentation:
+        doc: Modify Caller ID Settings for a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-caller-id-settings-for-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/callerId
+        http_method: PUT
+      header: Modify Caller ID Settings for a Workspace
+      parameters_and_response:
+        Body Parameters:
+        - doc: Which type of outgoing Caller ID will be used.
+          name: selected
+          param_attrs:
+          - doc: Outgoing caller ID will show the caller's direct line number and/or
+              extension.
+            name: DIRECT_LINE
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Outgoing caller ID will show the main number for the location.
+            name: LOCATION_NUMBER
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Outgoing caller ID will show the value from the customNumber field.
+            name: CUSTOM
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: required
+        - doc: This value must be an assigned number from the workspace's location.
+          name: customNumber
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Workspace's caller ID display name.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Workspace's caller ID display details.
+          name: displayDetail
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Flag to block call forwarding.
+          name: blockInForwardCallsEnabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: 'Designates which type of External Caller ID Name policy is used. Default
+            is DIRECT_LINE.
+
+            Possible values: DIRECT_LINE'
+          name: externalCallerIdNamePolicy
+          param_attrs: []
+          param_object: []
+          type: ExternalCallerIdNamePolicy
+          type_spec: null
+        - doc: Custom External Caller Name, which will be shown if External Caller
+            ID Name is OTHER.
+          name: customExternalCallerIdName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: External Caller Name, which will be shown if External Caller ID Name
+            is OTHER.
+          name: locationExternalCallerIdName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Query Parameters:
+        - doc: ID of the organization within which the workspace resides. Only admin
+            users of another organization (such as partners) may use this parameter
+            as the default is the same organization as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Retrieves Monitoring settings for a Workspace.
+
+        Allow workspaces to monitor the line status of specified agents, workspaces,
+        or call park extensions. The line status indicates if a monitored agent or
+        a workspace is on a call, or if a call has been parked on the monitored call
+        park extension.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:workspaces_read or a user auth token with spark:workspaces_read
+        scope can be used to read workspace settings.'
+      documentation:
+        doc: Retrieve Monitoring Settings for a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-monitoring-settings-for-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/monitoring
+        http_method: GET
+      header: Retrieve Monitoring Settings for a Workspace
+      parameters_and_response:
+        Query Parameters:
+        - doc: ID of the organization within which the workspace resides. Only admin
+            users of another organization (such as partners) may use this parameter
+            as the default is the same organization as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Call park notification enabled or disabled.
+          name: callParkNotificationEnabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Monitored element items.
+          name: monitoredElements
+          param_attrs:
+          - doc: Monitored Call Park extension.
+            name: callparkextension
+            param_attrs:
+            - doc: ID of call park extension.
+              name: id
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Name of call park extension.
+              name: name
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Extension of call park extension.
+              name: extension
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Name of location for call park extension.
+              name: location
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ID of location for call park extension.
+              name: locationId
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: MonitoredElementCallParkExtension
+            type_spec: null
+          - doc: Monitored member for this workspace.
+            name: member
+            param_attrs:
+            - doc: ID of person or workspace.
+              name: id
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: First name of person or workspace.
+              name: firstName
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Last name of person or workspace.
+              name: lastName
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Display name of person or workspace.
+              name: displayName
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Type of the person or workspace.
+              name: type
+              param_attrs:
+              - doc: Object is a user.
+                name: PEOPLE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Object is a workspace.
+                name: PLACE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            - doc: Email of the person or workspace.
+              name: email
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: List of phone numbers of the person or workspace.
+              name: numbers
+              param_attrs:
+              - doc: Phone number of person or workspace. Either phoneNumber or extension
+                  is mandatory.
+                name: external
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Extension of person or workspace. Either phoneNumber or extension
+                  is mandatory.
+                name: extension
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Flag to indicate primary phone.
+                name: primary
+                param_attrs: []
+                param_object: []
+                type: boolean
+                type_spec: null
+              - doc: Flag to indicate toll free number.
+                name: tollFreeNumber
+                param_attrs: []
+                param_object: []
+                type: boolean
+                type_spec: null
+              param_object: []
+              type: array[UserNumberItem]
+              type_spec: null
+            - doc: Name of location for call park.
+              name: location
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ID of the location for call park.
+              name: locationId
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: MonitoredElementUser
+            type_spec: null
+          param_object: []
+          type: MonitoredElementItem
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Modify Monitoring settings for a Workspace.
+
+        Allow workspaces to monitor the line status of specified agents, workspaces,
+        or call park extensions. The line status indicates if a monitored agent or
+        a workspace is on a call, or if a call has been parked on the monitored call
+        park extension.
+
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write
+        scope or a user auth token with spark:workspaces_write scope can be used to
+        update workspace settings.'
+      documentation:
+        doc: Modify Monitoring Settings for a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-monitoring-settings-for-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/monitoring
+        http_method: PUT
+      header: Modify Monitoring Settings for a Workspace
+      parameters_and_response:
+        Body Parameters:
+        - doc: Call park notification is enabled or disabled.
+          name: enableCallParkNotification
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Array of ID strings of monitored elements.
+          name: monitoredElements
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        Query Parameters:
+        - doc: ID of the organization within which the workspace resides. Only admin
+            users of another organization (such as partners) may use this parameter
+            as the default is the same organization as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Retrieve Incoming Permission settings for a Workspace.
+
+        Incoming permission settings allow modifying permissions for a workspace that
+        can be different from the organization''s default to manage different call
+        types.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:workspaces_read or a user auth token with spark:workspaces_read
+        scope can be used to read workspace settings.'
+      documentation:
+        doc: Retrieve Incoming Permission Settings for a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-incoming-permission-settings-for-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/incomingPermission
+        http_method: GET
+      header: Retrieve Incoming Permission Settings for a Workspace
+      parameters_and_response:
+        Query Parameters:
+        - doc: ID of the organization within which the workspace resides. Only admin
+            users of another organization (such as partners) may use this parameter
+            as the default is the same organization as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Incoming Permission state. If disabled, the default settings are used.
+          name: useCustomEnabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Indicate call transfer setting.
+          name: externalTransfer
+          param_attrs:
+          - doc: All external calls are allowed.
+            name: ALLOW_ALL_EXTERNAL
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Only externally transferred external calls are allowed.
+            name: ALLOW_ONLY_TRANSFERRED_EXTERNAL
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: All external calls are blocked.
+            name: BLOCK_ALL_EXTERNAL
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Flag to indicate if workspace can receive internal calls.
+          name: internalCallsEnabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Flag to indicate if workspace can receive collect calls.
+          name: collectCallsEnabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Modify Incoming Permission settings for a Workspace.
+
+        Incoming permission settings allow modifying permissions for a workspace that
+        can be different from the organization''s default to manage different call
+        types.
+
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write
+        scope or a user auth token with spark:workspaces_write scope can be used to
+        update workspace settings.'
+      documentation:
+        doc: Modify Incoming Permission Settings for a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-incoming-permission-settings-for-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/incomingPermission
+        http_method: PUT
+      header: Modify Incoming Permission Settings for a Workspace
+      parameters_and_response:
+        Body Parameters:
+        - doc: Incoming Permission state. If disabled, the default settings are used.
+          name: useCustomEnabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Indicate call transfer setting.
+          name: externalTransfer
+          param_attrs:
+          - doc: All external calls are allowed.
+            name: ALLOW_ALL_EXTERNAL
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Only externally transferred external calls are allowed.
+            name: ALLOW_ONLY_TRANSFERRED_EXTERNAL
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: All external calls are blocked.
+            name: BLOCK_ALL_EXTERNAL
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Flag to indicate if the workspace can receive internal calls.
+          name: internalCallsEnabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Flag to indicate if the workspace can receive collect calls.
+          name: collectCallsEnabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        Query Parameters:
+        - doc: ID of the organization within which the workspace resides. Only admin
+            users of another organization (such as partners) may use this parameter
+            as the default is the same organization as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Retrieve Outgoing Permission settings for a Workspace.
+
+        Turn on outgoing call settings for this workspace to override the calling
+        settings from the location that are used by default.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:workspaces_read or a user auth token with spark:workspaces_read
+        scope can be used to read workspace settings.'
+      documentation:
+        doc: Retrieve Outgoing Permission Settings for a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-outgoing-permission-settings-for-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission
+        http_method: GET
+      header: Retrieve Outgoing Permission Settings for a Workspace
+      parameters_and_response:
+        Query Parameters:
+        - doc: ID of the organization within which the workspace resides. Only admin
+            users of another organization (such as partners) may use this parameter
+            as the default is the same organization as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Outgoing Permission state. If disabled, the default settings are used.
+          name: useCustomEnabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Workspace's list of outgoing permissions.
+          name: callingPermissions
+          param_attrs:
+          - doc: Type of the outgoing call.
+            name: callType
+            param_attrs:
+            - doc: Indicates the internal call type.
+              name: INTERNAL_CALL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the toll free call type.
+              name: TOLL_FREE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the international call type.
+              name: INTERNATIONAL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the operator assisted call type.
+              name: OPERATOR_ASSISTED
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the chargeable directory assisted call type.
+              name: CHARGEABLE_DIRECTORY_ASSISTED
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the special services I call type.
+              name: SPECIAL_SERVICES_I
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the special services II call type.
+              name: SPECIAL_SERVICES_II
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the premium services I call type.
+              name: PREMIUM_SERVICES_I
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the premium services II call type.
+              name: PREMIUM_SERVICES_II
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the national call type.
+              name: NATIONAL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Indicates permission for call types.
+            name: action
+            param_attrs:
+            - doc: The call type is allowed.
+              name: ALLOW
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The call type is blocked.
+              name: BLOCK
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates access code action for the specified call type.
+              name: AUTH_CODE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates transfer number 1 for the specified call type.
+              name: TRANSFER_NUMBER_1
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates transfer number 2 for the specified call type.
+              name: TRANSFER_NUMBER_2
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates transfer number 3 for the specified call type.
+              name: TRANSFER_NUMBER_3
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Indicate calling permission for call type enable status.
+            name: transferEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          param_object: []
+          type: array[CallingPermission]
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Modify Outgoing Permission settings for a Place.
+
+        Turn on outgoing call settings for this workspace to override the calling
+        settings from the location that are used by default.
+
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write
+        scope or a user auth token with spark:workspaces_write scope can be used to
+        update workspace settings.'
+      documentation:
+        doc: Modify Outgoing Permission Settings for a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-outgoing-permission-settings-for-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission
+        http_method: PUT
+      header: Modify Outgoing Permission Settings for a Workspace
+      parameters_and_response:
+        Body Parameters:
+        - doc: Outgoing Permission state. If disabled, the default settings are used.
+          name: useCustomEnabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Workspace's list of outgoing permissions.
+          name: callingPermissions
+          param_attrs:
+          - doc: Indicates types for outgoing calls.
+            name: callType
+            param_attrs:
+            - doc: Indicates the internal call type.
+              name: INTERNAL_CALL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the toll free call type.
+              name: TOLL_FREE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the international call type.
+              name: INTERNATIONAL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the operator assisted call type.
+              name: OPERATOR_ASSISTED
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the chargeable directory assisted call type.
+              name: CHARGEABLE_DIRECTORY_ASSISTED
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the special services I call type.
+              name: SPECIAL_SERVICES_I
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the special services II call type.
+              name: SPECIAL_SERVICES_II
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the premium services I call type.
+              name: PREMIUM_SERVICES_I
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the premium services II call type.
+              name: PREMIUM_SERVICES_II
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the national call type.
+              name: NATIONAL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Indicates permission for call types.
+            name: action
+            param_attrs:
+            - doc: The call type is allowed.
+              name: ALLOW
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The call type is blocked.
+              name: BLOCK
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates access code action for the specified call type.
+              name: AUTH_CODE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates transfer number 1 for the specified call type.
+              name: TRANSFER_NUMBER_1
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates transfer number 2 for the specified call type.
+              name: TRANSFER_NUMBER_2
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates transfer number 3 for the specified call type.
+              name: TRANSFER_NUMBER_3
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Indicate calling permission for call type enable status.
+            name: transferEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          param_object: []
+          type: array[ModifyCallingPermission]
+          type_spec: null
+        Query Parameters:
+        - doc: ID of the organization within which the workspace resides. Only admin
+            users of another organization (such as partners) may use this parameter
+            as the default is the same organization as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Retrieve Access codes for a Workspace.
+
+        Access codes are used to bypass permissions.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:workspaces_read or a user auth token with spark:workspaces_read
+        scope can be used to read workspace settings.'
+      documentation:
+        doc: Retrieve Access Codes for a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-access-codes-for-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/accessCodes
+        http_method: GET
+      header: Retrieve Access Codes for a Workspace
+      parameters_and_response:
+        Query Parameters:
+        - doc: ID of the organization within which the workspace resides. Only admin
+            users of another organization (such as partners) may use this parameter
+            as the default is the same organization as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Indicates the set of activation codes and description.
+          name: accessCodes
+          param_attrs:
+          - doc: Indicates an access code.
+            name: code
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Indicates the description of the access code.
+            name: description
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[AuthorizationCode]
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Modify Access codes for a workspace.
+
+        Access codes are used to bypass permissions.
+
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write
+        scope or a user auth token with spark:workspaces_write scope can be used to
+        update workspace settings.'
+      documentation:
+        doc: Modify Access Codes for a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-access-codes-for-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/accessCodes
+        http_method: PUT
+      header: Modify Access Codes for a Workspace
+      parameters_and_response:
+        Body Parameters:
+        - doc: Indicates access codes to delete.
+          name: deleteCodes
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        Query Parameters:
+        - doc: ID of the organization within which the workspace resides. Only admin
+            users of another organization (such as partners) may use this parameter
+            as the default is the same organization as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Create new Access codes for the given workspace.
+
+        Access codes are used to bypass permissions.
+
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write
+        scope or a user auth token with spark:workspaces_write scope can be used to
+        update workspace settings.'
+      documentation:
+        doc: Create Access Codes for a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/create-access-codes-for-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/accessCodes
+        http_method: POST
+      header: Create Access Codes for a Workspace
+      parameters_and_response:
+        Body Parameters:
+        - doc: Indicates an access code.
+          name: code
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Indicates the description of the access code.
+          name: description
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        Query Parameters:
+        - doc: ID of the organization within which the workspace resides. Only admin
+            users of another organization (such as partners) may use this parameter
+            as the default is the same organization as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Retrieves Workspace''s Call Intercept Settings
+
+        The intercept feature gracefully takes a workspace''s phone out of service,
+        while providing callers with informative announcements and alternative routing
+        options. Depending on the service configuration, none, some, or all incoming
+        calls to the specified workspace are intercepted. Also depending on the service
+        configuration, outgoing calls are intercepted or rerouted to another location.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:workspaces_read or a user auth token with spark:workspaces_read
+        scope can be used to read workspace settings.'
+      documentation:
+        doc: Read Call Intercept Settings for a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/read-call-intercept-settings-for-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept
+        http_method: GET
+      header: Read Call Intercept Settings for a Workspace
+      parameters_and_response:
+        Query Parameters:
+        - doc: ID of the organization within which the workspace resides. Only admin
+            users of another organization (such as partners) may use this parameter
+            as the default is the same organization as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: true if call intercept is enabled.
+          name: enabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Settings related to how incoming calls are handled when the intercept
+            feature is enabled.
+          name: incoming
+          param_attrs:
+          - doc: Indicated incoming calls are intercepted.
+            name: type
+            param_attrs:
+            - doc: All incoming calls are intercepted.
+              name: INTERCEPT_ALL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Incoming calls are not intercepted.
+              name: ALLOW_ALL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Indicates enabled or disabled state of sending incoming calls to
+              voicemail when the destination is an internal phone number and that
+              number has the voicemail service enabled.
+            name: voicemailEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Settings related to how incoming calls are handled when the intercept
+              feature is enabled.
+            name: announcements
+            param_attrs:
+            - doc: Indicates that a system default message will be placed when incoming
+                calls are intercepted.
+              name: greeting
+              param_attrs:
+              - doc: A custom greeting is played when incoming calls are intercepted.
+                name: CUSTOM
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: A System default greeting is played when incoming calls are intercepted.
+                name: DEFAULT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            - doc: Filename of the custom greeting; this is an empty string if no
+                custom greeting has been uploaded.
+              name: filename
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Information about the new number announcement.
+              name: newNumber
+              param_attrs:
+              - doc: If true, the caller hears this new number when the call is intercepted.
+                name: enabled
+                param_attrs: []
+                param_object: []
+                type: boolean
+                type_spec: null
+              - doc: New number the caller hears announced.
+                name: destination
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: InterceptNumberGet
+              type_spec: null
+            - doc: Information about how the call will be handled if zero (0) is pressed.
+              name: zeroTransfer
+              param_attrs:
+              - doc: If true, the caller hears this new number when the call is intercepted.
+                name: enabled
+                param_attrs: []
+                param_object: []
+                type: boolean
+                type_spec: null
+              - doc: New number the caller hears announced.
+                name: destination
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: InterceptNumberGet
+              type_spec: null
+            param_object: []
+            type: InterceptAnnouncementsGet
+            type_spec: null
+          param_object: []
+          type: InterceptIncomingGet
+          type_spec: null
+        - doc: Settings related to how outgoing calls are handled when the intercept
+            feature is enabled.
+          name: outgoing
+          param_attrs:
+          - doc: Indicated all outgoing calls are intercepted.
+            name: type
+            param_attrs:
+            - doc: Outgoing calls are intercepted.
+              name: INTERCEPT_ALL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Only non-local calls are intercepted.
+              name: ALLOW_LOCAL_ONLY
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: If true, when the person attempts to make an outbound call, a system
+              default message is played and the call is made to the destination phone
+              number.
+            name: transferEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Number to which the outbound call be transferred.
+            name: destination
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: InterceptOutGoingGet
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Configures a Workspace''s Call Intercept Settings
+
+        The intercept feature gracefully takes a workspace''s phone out of service,
+        while providing callers with informative announcements and alternative routing
+        options. Depending on the service configuration, none, some, or all incoming
+        calls to the specified person are intercepted. Also depending on the service
+        configuration, outgoing calls are intercepted or rerouted to another location.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:workspaces_write or a user auth token with spark:workspaces_read
+        scope can be used by a person to read their settings.'
+      documentation:
+        doc: Configure Call Intercept Settings for a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/configure-call-intercept-settings-for-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept
+        http_method: PUT
+      header: Configure Call Intercept Settings for a Workspace
+      parameters_and_response:
+        Body Parameters:
+        - doc: true if call interception is enabled.
+          name: enabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Settings related to how incoming calls are handled when the intercept
+            feature is enabled.
+          name: incoming
+          param_attrs:
+          - doc: Indicated incoming calls are intercepted.
+            name: type
+            param_attrs:
+            - doc: Incoming calls are intercepted.
+              name: INTERCEPT_ALL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Incoming calls are not intercepted.
+              name: ALLOW_ALL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Indicates enabled or disabled state of sending incoming calls to
+              voicemail when the destination is an internal phone number and that
+              number has the voicemail service enabled.
+            name: voicemailEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Settings related to how incoming calls are handled when the intercept
+              feature is enabled.
+            name: announcements
+            param_attrs:
+            - doc: Indicates that a system default message will be placed when incoming
+                calls are intercepted.
+              name: greeting
+              param_attrs:
+              - doc: A custom greeting is played when incoming calls are intercepted.
+                name: CUSTOM
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: A System default greeting is played when incoming calls are intercepted.
+                name: DEFAULT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            - doc: Information about the new number announcement.
+              name: newNumber
+              param_attrs:
+              - doc: If true, the caller hears this new number when the call is intercepted.
+                name: enabled
+                param_attrs: []
+                param_object: []
+                type: boolean
+                type_spec: null
+              - doc: New number the caller hears announced.
+                name: destination
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: object
+              type_spec: null
+            - doc: Information about how the call will be handled if zero (0) is pressed.
+              name: zeroTransfer
+              param_attrs:
+              - doc: If true, the caller hears this new number when the call is intercepted.
+                name: enabled
+                param_attrs: []
+                param_object: []
+                type: boolean
+                type_spec: null
+              - doc: New number the caller hears announced.
+                name: destination
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: object
+              type_spec: null
+            param_object: []
+            type: InterceptAnnouncementsPatch
+            type_spec: null
+          param_object: []
+          type: InterceptIncomingPatch
+          type_spec: null
+        - doc: Settings related to how outgoing calls are handled when the intercept
+            feature is enabled.
+          name: outgoing
+          param_attrs:
+          - doc: All outgoing calls are intercepted.
+            name: type
+            param_attrs:
+            - doc: Outgoing calls are intercepted.
+              name: INTERCEPT_ALL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Only non-local calls are intercepted.
+              name: ALLOW_LOCAL_ONLY
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: If true, when the person attempts to make an outbound call, a system
+              default message is played and the call is made to the destination phone
+              number.
+            name: transferEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Number to which the outbound call be transferred.
+            name: destination
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: InterceptOutGoingPatch
+          type_spec: null
+        Query Parameters:
+        - doc: ID of the organization within which the workspace resides. Only admin
+            users of another organization (such as partners) may use this parameter
+            as the default is the same organization as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Retrieve Transfer Numbers Settings for a Workspace.
+
+        When calling a specific call type, this workspace will be automatically transferred
+        to another number. The person assigned the Auto Transfer Number can then approve
+        the call and send it through or reject the call type. You can add up to 3
+        numbers.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:workspaces_read or a user auth token with spark:workspaces_read
+        scope can be used to read workspace settings.'
+      documentation:
+        doc: Retrieve Transfer Numbers Settings for a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-transfer-numbers-settings-for-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers
+        http_method: GET
+      header: Retrieve Transfer Numbers Settings for a Workspace
+      parameters_and_response:
+        Query Parameters:
+        - doc: ID of the organization within which the workspace resides. Only admin
+            users of another organization (such as partners) may use this parameter
+            as the default is the same organization as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: When calling a specific call type, this workspace will be automatically
+            transferred to another number.
+          name: autoTransferNumber1
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: When calling a specific call type, this workspace will be automatically
+            transferred to another number.
+          name: autoTransferNumber2
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: When calling a specific call type, this workspace will be automatically
+            transferred to another number.
+          name: autoTransferNumber3
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Modify Transfer Numbers Settings for a place.
+
+        When calling a specific call type, this workspace will be automatically transferred
+        to another number. The person assigned the Auto Transfer Number can then approve
+        the call and send it through or reject the call type. You can add up to 3
+        numbers.
+
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write
+        scope or a user auth token with spark:workspaces_write scope can be used to
+        update workspace settings.'
+      documentation:
+        doc: Modify Transfer Numbers Settings for a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-transfer-numbers-settings-for-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers
+        http_method: PUT
+      header: Modify Transfer Numbers Settings for a Workspace
+      parameters_and_response:
+        Body Parameters:
+        - doc: When calling a specific call type, this workspace will be automatically
+            transferred to another number.
+          name: autoTransferNumber1
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: When calling a specific call type, this workspace will be automatically
+            transferred to another number.
+          name: autoTransferNumber2
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: When calling a specific call type, this workspace will be automatically
+            transferred to another number.
+          name: autoTransferNumber3
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Query Parameters:
+        - doc: ID of the organization within which the workspace resides. Only admin
+            users of another organization (such as partners) may use this parameter
+            as the default is the same organization as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+  Wholesale Billing Reports:
+    doc: null
+    header: null
+    methods: []
+  Wholesale Customers:
+    doc: null
+    header: null
+    methods: []
+  Wholesale Subscribers:
+    doc: null
+    header: null
+    methods: []
