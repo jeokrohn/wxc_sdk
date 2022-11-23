@@ -1,6 +1,10 @@
 Release history
 ===============
 
+1.10.1
+------
+- fix: missing requirement: pyyaml
+
 1.10.0
 ------
 - fix: wxc_sdk.workspaces.Workspace.hotdesking_enabled is now :attr:`wxc_sdk.workspaces.Workspace.hotdesking_status` (on/off)
