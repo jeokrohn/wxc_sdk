@@ -14,7 +14,7 @@ __all__ = ['VoicePortalSettings', 'FailedAttempts', 'ExpirePasscode', 'PasscodeR
 
 
 class VoicePortalSettings(ApiModel):
-    #: Voice Portal Id
+    #: Voice Portal ID
     portal_id: Optional[str] = Field(alias='id')
     #: Voice Portal Name.
     name: str

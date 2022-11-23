@@ -135,7 +135,7 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         Retrieving a dial plan requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param dial_plan_id: Id of the dial plan.
+        :param dial_plan_id: ID of the dial plan.
         :type dial_plan_id: str
         :param org_id: Organization to which dial plan belongs.
         :type org_id: str
@@ -183,7 +183,7 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         Deleting a dial plan requires a full administrator auth token with a scope
         of spark-admin:telephony_config_write.
 
-        :param dial_plan_id: Id of the dial plan.
+        :param dial_plan_id: ID of the dial plan.
         :type dial_plan_id: str
         :param org_id: Organization to which dial plan belongs.
         :type org_id: str
@@ -205,7 +205,7 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         Retrieving this list requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param dial_plan_id: Id of the dial plan.
+        :param dial_plan_id: ID of the dial plan.
         :type dial_plan_id: str
         :param org_id: List dial patterns associated with a dial plan.
         :type org_id: str
@@ -234,7 +234,7 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         Modifying a dial pattern requires a full administrator auth token with a scope
         of spark-admin:telephony_config_write.
 
-        :param dial_plan_id: Id of the dial plan being modified.
+        :param dial_plan_id: ID of the dial plan being modified.
         :type dial_plan_id: str
         :param dial_patterns: Array of dial patterns to add or delete. Dial Pattern that is not present in the
             request is not modified.
@@ -263,7 +263,7 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         Deleting dial pattern requires a full administrator auth token with a scope
         of spark-admin:telephony_config_write.
 
-        :param dial_plan_id: Id of the dial plan being modified.
+        :param dial_plan_id: ID of the dial plan being modified.
         :type dial_plan_id: str
         :param org_id: Organization to which dial plan belongs.
         :type org_id: str

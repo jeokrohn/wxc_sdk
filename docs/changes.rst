@@ -1,6 +1,8 @@
 Release history
 ===============
 
+1.10.0
+------
 - fix: wxc_sdk.workspaces.Workspace.hotdesking_enabled is now :attr:`wxc_sdk.workspaces.Workspace.hotdesking_status` (on/off)
 - fix: wrong url in :meth:`wxc_sdk.telephony.callpark_extension.CallparkExtensionApi.delete`
 - fix: docstring fixed for :meth:`wxc_sdk.telephony.callqueue.policies.CQPolicyApi.holiday_service_details`
@@ -12,8 +14,8 @@ Release history
 - fix: fixed method names in :class:`wxc_sdk.team_memberships.TeamMembershipsApi`
 - feat: new example: archive_space.py
 - feat: SafeEnum instead of Enum to tolerate unknown enum values
-- fix: use_enum_values = True in ApiModel so that enum values are not stored as Enum instances; CAUTION: might break
-  code that uses .name and .value attributes of enums.
+- fix: use_enum_values = True in ApiModel so that enum values are not stored as Enum instances;
+  CAUTION: might break code that uses .name and .value attributes of enums.
 - feat: new API: :attr:`wxc_sdk.telephony.TelephonyApi.voice_messaging`
 
 1.9.0

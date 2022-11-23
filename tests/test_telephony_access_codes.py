@@ -45,6 +45,6 @@ class Test(TestWithLocations):
             ac.delete_codes(location_id=target_location.location_id, access_codes=ac_codes)
             if access_codes:
                 # recreate the access codes that existed before
-                ac.create(location_id=target_location, access_codes=access_codes)
+                ac.create(location_id=target_location.location_id, access_codes=access_codes)
             cleaned = ac.read(location_id=target_location.location_id)
             self.assertEqual(access_codes, cleaned)

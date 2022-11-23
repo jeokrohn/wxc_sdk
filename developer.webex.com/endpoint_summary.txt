@@ -302,3 +302,24 @@ telephony/voiceMessages
   POST   https://webexapis.com/v1/telephony/voiceMessages/markAsUnread --- Mark As Unread
   GET    https://webexapis.com/v1/telephony/voiceMessages/summary --- Get Message Summary
   DELETE https://webexapis.com/v1/telephony/voiceMessages/{messageId} --- Delete Message
+workspaces/{workspaceId}/features
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/callForwarding --- Retrieve Call Forwarding Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/callForwarding --- Modify Call Forwarding Settings for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/callWaiting --- Retrieve Call Waiting Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/callWaiting --- Modify Call Waiting Settings for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/callerId --- Retrieve Caller ID Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/callerId --- Modify Caller ID Settings for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/incomingPermission --- Retrieve Incoming Permission Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/incomingPermission --- Modify Incoming Permission Settings for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept --- Read Call Intercept Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept --- Configure Call Intercept Settings for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/monitoring --- Retrieve Monitoring Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/monitoring --- Modify Monitoring Settings for a Workspace
+workspaces/{workspaceId}/features/outgoingPermission
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission --- Retrieve Outgoing Permission Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission --- Modify Outgoing Permission Settings for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/accessCodes --- Retrieve Access Codes for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/accessCodes --- Modify Access Codes for a Workspace
+  POST   https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/accessCodes --- Create Access Codes for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers --- Retrieve Transfer Numbers Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers --- Modify Transfer Numbers Settings for a Workspace

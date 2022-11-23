@@ -16,7 +16,7 @@ __all__ = ['VoicemailGroup', 'VoicemailGroupDetail', 'VoicemailGroupsApi']
 
 
 class VoicemailGroup(ApiModel):
-    #: Voicemail Group Id.
+    #: Voicemail Group ID.
     group_id: str = Field(alias='id')
     #: Voicemail Group Name.
     name: str
@@ -165,7 +165,7 @@ class VoicemailGroupsApi(ApiChild, base='telephony/config/voicemailGroups'):
 
         :param location_id: Retrieve voicemail group details for this location.
         :type location_id: str
-        :param voicemail_group_id: Retrieve voicemail group details for this voicemail group Id.
+        :param voicemail_group_id: Retrieve voicemail group details for this voicemail group ID.
         :type voicemail_group_id: str
         :param org_id: Retrieve voicemail group details for a customer location.
         :type org_id: str
@@ -189,7 +189,7 @@ class VoicemailGroupsApi(ApiChild, base='telephony/config/voicemailGroups'):
 
         :param location_id: Modifies the voicemail group details for this location.
         :type location_id: str
-        :param voicemail_group_id: Modifies the voicemail group details for this voicemail group Id.
+        :param voicemail_group_id: Modifies the voicemail group details for this voicemail group ID.
         :type voicemail_group_id: str
         :param settings: New settings
         :type settings: :class:`VoicemailGroupDetail`

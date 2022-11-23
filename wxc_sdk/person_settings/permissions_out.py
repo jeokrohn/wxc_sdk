@@ -208,15 +208,16 @@ class OutgoingPermissions(ApiModel):
             # default call types to be excluded from updates
             drop_call_types = {'url_dialing', 'unknown', 'casual'}
         data = self.dict(exclude={'calling_permissions'}, by_alias=True)
-        permissions = []
-        for call_type, call_type_permission in self.calling_permissions.__dict__.items():
-            call_type_permission: CallTypePermission
-            if not call_type_permission or (call_type in drop_call_types):
-                continue
-            ct_dict = call_type_permission.dict(by_alias=True)
-            ct_dict['callType'] = call_type.upper()
-            permissions.append(ct_dict)
-        data['callingPermissions'] = permissions
+        if self.calling_permissions is not None:
+            permissions = []
+            for call_type, call_type_permission in self.calling_permissions.__dict__.items():
+                call_type_permission: CallTypePermission
+                if not call_type_permission or (call_type in drop_call_types):
+                    continue
+                ct_dict = call_type_permission.dict(by_alias=True)
+                ct_dict['callType'] = call_type.upper()
+                permissions.append(ct_dict)
+            data['callingPermissions'] = permissions
         return json.dumps(data)
 
 

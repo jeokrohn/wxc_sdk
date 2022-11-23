@@ -76,7 +76,7 @@ def python_type(type_str: str, for_list: bool = False) -> str:
         return 'bool'
     elif type_str == 'string':
         return 'str'
-    elif m := re.match(f'array\[(\w+)]', type_str):
+    elif m := re.match(r'array\[(\w+)]', type_str):
         return f'List[{python_type(m.group(1))}]'
     elif type_str == 'array':
         return 'List[str]'

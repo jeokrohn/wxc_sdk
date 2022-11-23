@@ -84,6 +84,8 @@ class EventData(ApiModel):
     file_id: Optional[str]
     page_number: Optional[int]
     is_locked: Optional[bool]
+    is_public: Optional[bool]
+    made_public: Optional[datetime]
     is_announcement_only: Optional[bool]
 
 
@@ -117,8 +119,8 @@ class EventsApi(ApiChild, base='events'):
     def list(self, resource: EventResource = None, type_: EventType = None, actor_id: str = None,
              from_: datetime = None, to_: datetime = None, **params) -> Generator[ComplianceEvent, None, None]:
         """
-        List events in your organization. 
-        Several query parameters are available to filter the events returned in 
+        List events in your organization.
+        Several query parameters are available to filter the events returned in
         the response. Long result sets will be split into pages.
 
         :param resource: List events with a specific resource type.
@@ -129,7 +131,7 @@ class EventsApi(ApiChild, base='events'):
         :type actor_id: str
         :param from_: List events which occurred after a specific date and time.
         :type from_: str
-        :param to_: List events which occurred before a specific date and time. If unspecified, or set to a time in the 
+        :param to_: List events which occurred before a specific date and time. If unspecified, or set to a time in the
             future, lists events up to the present.
         :type to_: str
         """

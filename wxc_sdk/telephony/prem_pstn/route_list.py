@@ -133,7 +133,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         Retrieving a Route List requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param rl_id: Id of the Route List.
+        :param rl_id: ID of the Route List.
         :type rl_id: str
         :param org_id: Organization to which Route List belongs.
         :type org_id: str
@@ -155,7 +155,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         Retrieving a Route List requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_write.
 
-        :param rl_id: Id of the Route List.
+        :param rl_id: ID of the Route List.
         :type rl_id: str
         :param name: Route List new name.
         :type name: str
@@ -180,7 +180,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         Deleting a Route List requires a full administrator auth token with a scope
         of spark-admin:telephony_config_write.
 
-        :param rl_id: Id of the Route List.
+        :param rl_id: ID of the Route List.
         :type rl_id: str
         :param org_id: Organization to which Route List belongs.
         :type org_id: str
@@ -200,7 +200,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         Retrieving a Route List requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_write.
 
-        :param rl_id: Id of the Route List.
+        :param rl_id: ID of the Route List.
         :type rl_id: str
         :param order: Order the Route Lists according to number.
         :type order: str
@@ -227,7 +227,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         Retrieving a Route List requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_write.
 
-        :param rl_id: Id of the Route List.
+        :param rl_id: ID of the Route List.
         :type rl_id: str
         :param numbers: Array of the numbers to be deleted/added.
         :type numbers: list[:class:`NumberAndAction`]

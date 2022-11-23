@@ -115,11 +115,11 @@ class TestCreateOrUpdate(TestCaseWithUsers):
         user_schedules_after = list(ps.list(obj_id=target_user.person_id))
         location_schedules_after = list(ls.list(obj_id=target_user.location_id))
         print(f'    user schedules (after): '
-              f'{", ".join(f"{s.name}({s.schedule_type.name})" for s in user_schedules_after)}')
+              f'{", ".join(f"{s.name}({s.schedule_type})" for s in user_schedules_after)}')
         print(f'location schedules (after): '
-              f'{", ".join(f"{s.name}({s.schedule_type.name})" for s in location_schedules_after)}')
+              f'{", ".join(f"{s.name}({s.schedule_type})" for s in location_schedules_after)}')
 
-        # the new schedule shoult not change the location schedule list
+        # the new schedule should not change the location schedule list
         self.assertEqual(location_schedules, location_schedules_after)
 
         # new schedule has to be in user schedule list

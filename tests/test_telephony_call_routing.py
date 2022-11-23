@@ -438,7 +438,7 @@ class ToUserWithTN(TestCallRouting):
 
             # noinspection PyShadowingNames
             def dest_str(result: TestCallRoutingResult) -> str:
-                r = f'destination: {result.destination_type.name}'
+                r = f'destination: {result.destination_type}'
                 if result.destination_type == DestinationType.hosted_agent:
                     r = f'{r} {result.hosted_user.phone_number}'
                 return r

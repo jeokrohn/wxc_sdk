@@ -225,7 +225,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         Retrieving a trunk requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param trunk_id: Id of the trunk.
+        :param trunk_id: ID of the trunk.
         :type trunk_id: str
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
@@ -280,7 +280,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
 
         Deleting a trunk requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
-        :param trunk_id: Id of the trunk.
+        :param trunk_id: ID of the trunk.
         :type trunk_id: str
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
@@ -321,7 +321,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         Retrieving this information requires a full administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param trunk_id: Id of the trunk.
+        :param trunk_id: ID of the trunk.
         :type trunk_id: str
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
@@ -344,7 +344,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         Retrieving this information requires a full administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param trunk_id: Id of the trunk.
+        :param trunk_id: ID of the trunk.
         :type trunk_id: str
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
@@ -369,7 +369,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         Retrieving this information requires a full administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param trunk_id: Id of the trunk.
+        :param trunk_id: ID of the trunk.
         :type trunk_id: str
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
@@ -392,7 +392,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         Retrieving this information requires a full administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param trunk_id: Id of the trunk.
+        :param trunk_id: ID of the trunk.
         :type trunk_id: str
         :param org_id: Organization to which trunk belongs.
         :type org_id: str

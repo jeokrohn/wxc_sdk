@@ -588,8 +588,8 @@ class AsEventsApi(AsApiChild, base='events'):
     def list_gen(self, resource: EventResource = None, type_: EventType = None, actor_id: str = None,
              from_: datetime = None, to_: datetime = None, **params) -> AsyncGenerator[ComplianceEvent, None, None]:
         """
-        List events in your organization. 
-        Several query parameters are available to filter the events returned in 
+        List events in your organization.
+        Several query parameters are available to filter the events returned in
         the response. Long result sets will be split into pages.
 
         :param resource: List events with a specific resource type.
@@ -600,7 +600,7 @@ class AsEventsApi(AsApiChild, base='events'):
         :type actor_id: str
         :param from_: List events which occurred after a specific date and time.
         :type from_: str
-        :param to_: List events which occurred before a specific date and time. If unspecified, or set to a time in the 
+        :param to_: List events which occurred before a specific date and time. If unspecified, or set to a time in the
             future, lists events up to the present.
         :type to_: str
         """
@@ -620,8 +620,8 @@ class AsEventsApi(AsApiChild, base='events'):
     async def list(self, resource: EventResource = None, type_: EventType = None, actor_id: str = None,
              from_: datetime = None, to_: datetime = None, **params) -> List[ComplianceEvent]:
         """
-        List events in your organization. 
-        Several query parameters are available to filter the events returned in 
+        List events in your organization.
+        Several query parameters are available to filter the events returned in
         the response. Long result sets will be split into pages.
 
         :param resource: List events with a specific resource type.
@@ -632,7 +632,7 @@ class AsEventsApi(AsApiChild, base='events'):
         :type actor_id: str
         :param from_: List events which occurred after a specific date and time.
         :type from_: str
-        :param to_: List events which occurred before a specific date and time. If unspecified, or set to a time in the 
+        :param to_: List events which occurred before a specific date and time. If unspecified, or set to a time in the
             future, lists events up to the present.
         :type to_: str
         """
@@ -2273,10 +2273,10 @@ class AsCallerIdApi(AsPersonSettingsApiChild):
         :param last_name: Person\'s Caller ID last name. Characters of %, +, \`, \" and Unicode characters are not
             allowed.
         :type last_name: str
-        :param external_caller_id_name_policy: Designates which type of External Caller Id Name policy is used.
+        :param external_caller_id_name_policy: Designates which type of External Caller ID Name policy is used.
             Default is DIRECT_LINE.
         :type external_caller_id_name_policy: ExternalCallerIdNamePolicy
-        :param custom_external_caller_id_name: Custom External Caller Name, which will be shown if External Caller Id
+        :param custom_external_caller_id_name: Custom External Caller Name, which will be shown if External Caller ID
             Name is OTHER.
         :type custom_external_caller_id_name: str
 
@@ -7356,7 +7356,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         Retrieving a dial plan requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param dial_plan_id: Id of the dial plan.
+        :param dial_plan_id: ID of the dial plan.
         :type dial_plan_id: str
         :param org_id: Organization to which dial plan belongs.
         :type org_id: str
@@ -7404,7 +7404,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         Deleting a dial plan requires a full administrator auth token with a scope
         of spark-admin:telephony_config_write.
 
-        :param dial_plan_id: Id of the dial plan.
+        :param dial_plan_id: ID of the dial plan.
         :type dial_plan_id: str
         :param org_id: Organization to which dial plan belongs.
         :type org_id: str
@@ -7426,7 +7426,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         Retrieving this list requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param dial_plan_id: Id of the dial plan.
+        :param dial_plan_id: ID of the dial plan.
         :type dial_plan_id: str
         :param org_id: List dial patterns associated with a dial plan.
         :type org_id: str
@@ -7456,7 +7456,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         Retrieving this list requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param dial_plan_id: Id of the dial plan.
+        :param dial_plan_id: ID of the dial plan.
         :type dial_plan_id: str
         :param org_id: List dial patterns associated with a dial plan.
         :type org_id: str
@@ -7485,7 +7485,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         Modifying a dial pattern requires a full administrator auth token with a scope
         of spark-admin:telephony_config_write.
 
-        :param dial_plan_id: Id of the dial plan being modified.
+        :param dial_plan_id: ID of the dial plan being modified.
         :type dial_plan_id: str
         :param dial_patterns: Array of dial patterns to add or delete. Dial Pattern that is not present in the
             request is not modified.
@@ -7514,7 +7514,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         Deleting dial pattern requires a full administrator auth token with a scope
         of spark-admin:telephony_config_write.
 
-        :param dial_plan_id: Id of the dial plan being modified.
+        :param dial_plan_id: ID of the dial plan being modified.
         :type dial_plan_id: str
         :param org_id: Organization to which dial plan belongs.
         :type org_id: str
@@ -7962,7 +7962,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         Retrieving a Route List requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param rl_id: Id of the Route List.
+        :param rl_id: ID of the Route List.
         :type rl_id: str
         :param org_id: Organization to which Route List belongs.
         :type org_id: str
@@ -7984,7 +7984,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         Retrieving a Route List requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_write.
 
-        :param rl_id: Id of the Route List.
+        :param rl_id: ID of the Route List.
         :type rl_id: str
         :param name: Route List new name.
         :type name: str
@@ -8009,7 +8009,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         Deleting a Route List requires a full administrator auth token with a scope
         of spark-admin:telephony_config_write.
 
-        :param rl_id: Id of the Route List.
+        :param rl_id: ID of the Route List.
         :type rl_id: str
         :param org_id: Organization to which Route List belongs.
         :type org_id: str
@@ -8029,7 +8029,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         Retrieving a Route List requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_write.
 
-        :param rl_id: Id of the Route List.
+        :param rl_id: ID of the Route List.
         :type rl_id: str
         :param order: Order the Route Lists according to number.
         :type order: str
@@ -8056,7 +8056,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         Retrieving a Route List requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_write.
 
-        :param rl_id: Id of the Route List.
+        :param rl_id: ID of the Route List.
         :type rl_id: str
         :param order: Order the Route Lists according to number.
         :type order: str
@@ -8083,7 +8083,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         Retrieving a Route List requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_write.
 
-        :param rl_id: Id of the Route List.
+        :param rl_id: ID of the Route List.
         :type rl_id: str
         :param numbers: Array of the numbers to be deleted/added.
         :type numbers: list[:class:`NumberAndAction`]
@@ -8237,7 +8237,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         Retrieving a trunk requires a full or read-only administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param trunk_id: Id of the trunk.
+        :param trunk_id: ID of the trunk.
         :type trunk_id: str
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
@@ -8292,7 +8292,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
 
         Deleting a trunk requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
-        :param trunk_id: Id of the trunk.
+        :param trunk_id: ID of the trunk.
         :type trunk_id: str
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
@@ -8333,7 +8333,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         Retrieving this information requires a full administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param trunk_id: Id of the trunk.
+        :param trunk_id: ID of the trunk.
         :type trunk_id: str
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
@@ -8356,7 +8356,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         Retrieving this information requires a full administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param trunk_id: Id of the trunk.
+        :param trunk_id: ID of the trunk.
         :type trunk_id: str
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
@@ -8379,7 +8379,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         Retrieving this information requires a full administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param trunk_id: Id of the trunk.
+        :param trunk_id: ID of the trunk.
         :type trunk_id: str
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
@@ -8404,7 +8404,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         Retrieving this information requires a full administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param trunk_id: Id of the trunk.
+        :param trunk_id: ID of the trunk.
         :type trunk_id: str
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
@@ -8429,7 +8429,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         Retrieving this information requires a full administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param trunk_id: Id of the trunk.
+        :param trunk_id: ID of the trunk.
         :type trunk_id: str
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
@@ -8452,7 +8452,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         Retrieving this information requires a full administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param trunk_id: Id of the trunk.
+        :param trunk_id: ID of the trunk.
         :type trunk_id: str
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
@@ -8475,7 +8475,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         Retrieving this information requires a full administrator auth token with a scope
         of spark-admin:telephony_config_read.
 
-        :param trunk_id: Id of the trunk.
+        :param trunk_id: ID of the trunk.
         :type trunk_id: str
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
@@ -9614,7 +9614,7 @@ class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
 
         :param location_id: Retrieve voicemail group details for this location.
         :type location_id: str
-        :param voicemail_group_id: Retrieve voicemail group details for this voicemail group Id.
+        :param voicemail_group_id: Retrieve voicemail group details for this voicemail group ID.
         :type voicemail_group_id: str
         :param org_id: Retrieve voicemail group details for a customer location.
         :type org_id: str
@@ -9638,7 +9638,7 @@ class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
 
         :param location_id: Modifies the voicemail group details for this location.
         :type location_id: str
-        :param voicemail_group_id: Modifies the voicemail group details for this voicemail group Id.
+        :param voicemail_group_id: Modifies the voicemail group details for this voicemail group ID.
         :type voicemail_group_id: str
         :param settings: New settings
         :type settings: :class:`VoicemailGroupDetail`
@@ -9809,6 +9809,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.schedules = AsScheduleApi(session=session, base=ScheduleApiBase.locations)
         self.voicemail_groups = AsVoicemailGroupsApi(session=session)
         self.voicemail_rules = AsVoicemailRulesApi(session=session)
+        self.voice_messaging = AsVoiceMessagingApi(session=session)
         self.voiceportal = AsVoicePortalApi(session=session)
 
     def phone_numbers_gen(self, location_id: str = None, phone_number: str = None, available: bool = None,

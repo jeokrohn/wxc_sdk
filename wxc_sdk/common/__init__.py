@@ -137,7 +137,7 @@ class CallParkExtension(ApiModel):
     extension: Optional[str]
     #: The location name where the call park extension is.
     location_name: Optional[str]
-    #: The location Id for the location.
+    #: The location ID for the location.
     location_id: Optional[str]
 
     @root_validator(pre=True)
@@ -209,7 +209,7 @@ class Customer(ApiModel):
     """
     Customer information.
     """
-    #: Id of the customer/organization.
+    #: ID of the customer/organization.
     customer_id: str = Field(alias='id')
     #: Name of the customer/organization.
     name: str
@@ -577,7 +577,7 @@ class WifiNetwork(ApiModel):
     authentication_method: str
     #: SSID name of the wifi network.
     ssid_name: Optional[str]
-    #: User Id of the wifi network.
+    #: User ID of the wifi network.
     user_id: Optional[str]
 
 

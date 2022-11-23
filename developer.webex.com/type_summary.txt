@@ -1240,6 +1240,9 @@ Webex Calling Organization Settings/Create a Call Queue/Body Parameters/firstNam
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/lastName - string
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/timeZone - string
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/callPolicies - PostCallQueueCallPolicyObject (required)
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/callPolicies/attrs/routingType - HuntRoutingTypeSelection (required)
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/callPolicies/attrs/routingType/attrs/PRIORITY_BASED - string
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/callPolicies/attrs/routingType/attrs/SKILL_BASED - string
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/callPolicies/attrs/policy - HuntPolicySelection (required)
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/callPolicies/attrs/policy/attrs/CIRCULAR - string
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/callPolicies/attrs/policy/attrs/REGULAR - string
@@ -1279,9 +1282,65 @@ Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSet
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/overflow/attrs/greeting/attrs/CUSTOM - string
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/overflow/attrs/greeting/attrs/DEFAULT - string
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/overflow/attrs/audioFiles - array[string]
-Webex Calling Organization Settings/Create a Call Queue/Body Parameters/agents - array[PostPersonPlaceObject] (required)
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/welcomeMessage - object
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/welcomeMessage/attrs/enabled - boolean
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/welcomeMessage/attrs/alwaysEnabled - boolean
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/welcomeMessage/attrs/greeting - enum (required)
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/welcomeMessage/attrs/greeting/attrs/CUSTOM - string
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/welcomeMessage/attrs/greeting/attrs/DEFAULT - string
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/welcomeMessage/attrs/audioFiles - array[string]
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/waitMessage - object
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/enabled - boolean
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/waitMode - enum (required)
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/waitMode/attrs/TIME - string
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/waitMode/attrs/POSITION - string
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/handlingTime - number
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/defaultHandlingTime - number
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/queuePosition - number
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/highVolumeMessageEnabled - boolean
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/estimatedWaitingTime - number
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/callbackOptionEnabled - boolean
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/minimumEstimatedCallbackTime - number
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/internationalCallbackEnabled - boolean
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/playUpdatedEstimatedWaitMessage - string
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/comfortMessage - object
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/comfortMessage/attrs/enabled - boolean
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/comfortMessage/attrs/timeBetweenMessages - number
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/comfortMessage/attrs/greeting - enum (required)
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/comfortMessage/attrs/greeting/attrs/CUSTOM - string
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/comfortMessage/attrs/greeting/attrs/DEFAULT - string
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/comfortMessage/attrs/audioFiles - array[string]
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/comfortMessageBypass - object
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/comfortMessageBypass/attrs/enabled - boolean
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/comfortMessageBypass/attrs/callWaitingAgeThreshold - number
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/comfortMessageBypass/attrs/greeting - enum (required)
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/comfortMessageBypass/attrs/greeting/attrs/CUSTOM - string
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/comfortMessageBypass/attrs/greeting/attrs/DEFAULT - string
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/comfortMessageBypass/attrs/audioFiles - array[string]
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/mohMessage - object
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/normalSource - object (required)
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/normalSource/attrs/enabled - boolean
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/normalSource/attrs/greeting - enum (required)
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/normalSource/attrs/greeting/attrs/CUSTOM - string
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/normalSource/attrs/greeting/attrs/DEFAULT - string
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/normalSource/attrs/audioFiles - array[string]
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/alternateSource - object (required)
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/alternateSource/attrs/enabled - boolean
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/alternateSource/attrs/greeting - enum (required)
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/alternateSource/attrs/greeting/attrs/CUSTOM - string
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/alternateSource/attrs/greeting/attrs/DEFAULT - string
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/alternateSource/attrs/audioFiles - array[string]
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/whisperMessage - object
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/whisperMessage/attrs/enabled - boolean
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/whisperMessage/attrs/greeting - enum (required)
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/whisperMessage/attrs/greeting/attrs/CUSTOM - string
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/whisperMessage/attrs/greeting/attrs/DEFAULT - string
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/queueSettings/attrs/whisperMessage/attrs/audioFiles - array[string]
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/agents - array[PostPersonPlaceCallQueueObject] (required)
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/agents/attrs/id - string (required)
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/agents/attrs/weight - string
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/agents/attrs/skillLevel - number
+Webex Calling Organization Settings/Create a Call Queue/Body Parameters/allowAgentJoinEnabled - boolean
 Webex Calling Organization Settings/Create a Call Queue/Body Parameters/phoneNumberForOutgoingCallsEnabled - boolean
 Webex Calling Organization Settings/Create a Call Queue/Query Parameters/orgId - string
 Webex Calling Organization Settings/Create a Call Queue/Response Properties/id - string
@@ -1313,6 +1372,9 @@ Webex Calling Organization Settings/Get Details for a Call Queue/Response Proper
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/languageCode - string
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/timeZone - string
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/callPolicies - GetCallQueueCallPolicyObject
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/callPolicies/attrs/routingType - HuntRoutingTypeSelection
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/callPolicies/attrs/routingType/attrs/PRIORITY_BASED - string
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/callPolicies/attrs/routingType/attrs/SKILL_BASED - string
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/callPolicies/attrs/policy - HuntPolicySelection
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/callPolicies/attrs/policy/attrs/CIRCULAR - string
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/callPolicies/attrs/policy/attrs/REGULAR - string
@@ -1352,14 +1414,71 @@ Webex Calling Organization Settings/Get Details for a Call Queue/Response Proper
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/overflow/object/greeting/attrs/CUSTOM - string
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/overflow/object/greeting/attrs/DEFAULT - string
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/overflow/object/audioFiles - array[string]
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/welcomeMessage - object
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/welcomeMessage/object/enabled - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/welcomeMessage/object/alwaysEnabled - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/welcomeMessage/object/greeting - enum
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/welcomeMessage/object/greeting/attrs/CUSTOM - string
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/welcomeMessage/object/greeting/attrs/DEFAULT - string
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/welcomeMessage/object/audioFiles - array[string]
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/waitMessage - object
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/waitMessage/object/enabled - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/waitMessage/object/waitMode - enum
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/waitMessage/object/waitMode/attrs/TIME - string
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/waitMessage/object/waitMode/attrs/POSITION - string
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/waitMessage/object/handlingTime - number
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/waitMessage/object/defaultHandlingTime - number
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/waitMessage/object/queuePosition - number
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/waitMessage/object/highVolumeMessageEnabled - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/waitMessage/object/estimatedWaitingTime - number
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/waitMessage/object/callbackOptionEnabled - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/waitMessage/object/minimumEstimatedCallbackTime - number
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/waitMessage/object/internationalCallbackEnabled - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/waitMessage/object/playUpdatedEstimatedWaitMessage - string
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/comfortMessage - object
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/comfortMessage/object/enabled - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/comfortMessage/object/timeBetweenMessages - number
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/comfortMessage/object/greeting - enum
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/comfortMessage/object/greeting/attrs/CUSTOM - string
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/comfortMessage/object/greeting/attrs/DEFAULT - string
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/comfortMessage/object/audioFiles - array[string]
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/comfortMessageBypass - object
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/comfortMessageBypass/object/enabled - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/comfortMessageBypass/object/callWaitingAgeThreshold - number
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/comfortMessageBypass/object/greeting - enum
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/comfortMessageBypass/object/greeting/attrs/CUSTOM - string
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/comfortMessageBypass/object/greeting/attrs/DEFAULT - string
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/comfortMessageBypass/object/audioFiles - array[string]
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/mohMessage - object
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/mohMessage/object/normalSource - object
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/mohMessage/object/normalSource/object/enabled - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/mohMessage/object/normalSource/object/greeting - enum
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/mohMessage/object/normalSource/object/greeting/attrs/CUSTOM - string
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/mohMessage/object/normalSource/object/greeting/attrs/DEFAULT - string
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/mohMessage/object/normalSource/object/audioFiles - array[string]
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/mohMessage/object/alternateSource - object
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/mohMessage/object/alternateSource/object/enabled - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/mohMessage/object/alternateSource/object/greeting - enum
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/mohMessage/object/alternateSource/object/greeting/attrs/CUSTOM - string
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/mohMessage/object/alternateSource/object/greeting/attrs/DEFAULT - string
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/mohMessage/object/alternateSource/object/audioFiles - array[string]
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/whisperMessage - object
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/whisperMessage/object/enabled - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/whisperMessage/object/greeting - enum
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/whisperMessage/object/greeting/attrs/CUSTOM - string
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/whisperMessage/object/greeting/attrs/DEFAULT - string
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/queueSettings/attrs/whisperMessage/object/audioFiles - array[string]
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/allowCallWaitingForAgentsEnabled - boolean
-Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/agents - array[GetPersonPlaceObject]
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/agents - array[GetPersonPlaceCallQueueObject]
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/agents/attrs/id - string
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/agents/attrs/firstName - string
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/agents/attrs/lastName - string
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/agents/attrs/phoneNumber - string
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/agents/attrs/extension - string
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/agents/attrs/weight - string
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/agents/attrs/skillLevel - number
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/agents/attrs/joinEnabled - boolean
+Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/allowAgentJoinEnabled - boolean
 Webex Calling Organization Settings/Get Details for a Call Queue/Response Properties/phoneNumberForOutgoingCallsEnabled - boolean
 Webex Calling Organization Settings/Get Details for a Call Queue/URI Parameters/locationId - string (required)
 Webex Calling Organization Settings/Get Details for a Call Queue/URI Parameters/queueId - string (required)
@@ -1381,6 +1500,9 @@ Webex Calling Organization Settings/Update a Call Queue/Body Parameters/alternat
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/alternateNumberSettings/attrs/alternateNumbers/attrs/ringPattern/attrs/SHORT_SHORT_LONG - string
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/alternateNumberSettings/attrs/alternateNumbers/attrs/ringPattern/attrs/SHORT_LONG_SHORT - string
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/callPolicies - ModifyCallQueueCallPolicyObject
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/callPolicies/attrs/routingType - HuntRoutingTypeSelection (required)
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/callPolicies/attrs/routingType/attrs/PRIORITY_BASED - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/callPolicies/attrs/routingType/attrs/SKILL_BASED - string
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/callPolicies/attrs/policy - HuntPolicySelection
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/callPolicies/attrs/policy/attrs/CIRCULAR - string
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/callPolicies/attrs/policy/attrs/REGULAR - string
@@ -1420,10 +1542,67 @@ Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSet
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/overflow/attrs/greeting/attrs/CUSTOM - string
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/overflow/attrs/greeting/attrs/DEFAULT - string
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/overflow/attrs/audioFiles - array[string]
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/welcomeMessage - object
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/welcomeMessage/attrs/enabled - boolean
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/welcomeMessage/attrs/alwaysEnabled - boolean
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/welcomeMessage/attrs/greeting - enum (required)
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/welcomeMessage/attrs/greeting/attrs/CUSTOM - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/welcomeMessage/attrs/greeting/attrs/DEFAULT - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/welcomeMessage/attrs/audioFiles - array[string]
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/waitMessage - object
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/enabled - boolean
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/waitMode - enum (required)
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/waitMode/attrs/TIME - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/waitMode/attrs/POSITION - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/handlingTime - number
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/defaultHandlingTime - number
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/queuePosition - number
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/highVolumeMessageEnabled - boolean
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/estimatedWaitingTime - number
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/callbackOptionEnabled - boolean
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/minimumEstimatedCallbackTime - number
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/internationalCallbackEnabled - boolean
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/waitMessage/attrs/playUpdatedEstimatedWaitMessage - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/comfortMessage - object
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/comfortMessage/attrs/enabled - boolean
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/comfortMessage/attrs/timeBetweenMessages - number
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/comfortMessage/attrs/greeting - enum (required)
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/comfortMessage/attrs/greeting/attrs/CUSTOM - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/comfortMessage/attrs/greeting/attrs/DEFAULT - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/comfortMessage/attrs/audioFiles - array[string]
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/comfortMessageBypass - object
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/comfortMessageBypass/attrs/enabled - boolean
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/comfortMessageBypass/attrs/callWaitingAgeThreshold - number
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/comfortMessageBypass/attrs/greeting - enum (required)
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/comfortMessageBypass/attrs/greeting/attrs/CUSTOM - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/comfortMessageBypass/attrs/greeting/attrs/DEFAULT - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/comfortMessageBypass/attrs/audioFiles - array[string]
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/mohMessage - object
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/normalSource - object (required)
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/normalSource/attrs/enabled - boolean
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/normalSource/attrs/greeting - enum (required)
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/normalSource/attrs/greeting/attrs/CUSTOM - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/normalSource/attrs/greeting/attrs/DEFAULT - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/normalSource/attrs/audioFiles - array[string]
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/alternateSource - object (required)
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/alternateSource/attrs/enabled - boolean
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/alternateSource/attrs/greeting - enum (required)
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/alternateSource/attrs/greeting/attrs/CUSTOM - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/alternateSource/attrs/greeting/attrs/DEFAULT - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/mohMessage/attrs/alternateSource/attrs/audioFiles - array[string]
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/whisperMessage - object
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/whisperMessage/attrs/enabled - boolean
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/whisperMessage/attrs/greeting - enum (required)
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/whisperMessage/attrs/greeting/attrs/CUSTOM - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/whisperMessage/attrs/greeting/attrs/DEFAULT - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/queueSettings/attrs/whisperMessage/attrs/audioFiles - array[string]
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/allowCallWaitingForAgentsEnabled - boolean
-Webex Calling Organization Settings/Update a Call Queue/Body Parameters/agents - array[PostPersonPlaceObject]
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/agents - array[ModifyPersonPlaceCallQueueObject]
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/agents/attrs/id - string (required)
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/agents/attrs/weight - string
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/agents/attrs/skillLevel - number
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/agents/attrs/joinEnabled - boolean
+Webex Calling Organization Settings/Update a Call Queue/Body Parameters/allowAgentJoinEnabled - boolean
 Webex Calling Organization Settings/Update a Call Queue/Body Parameters/phoneNumberForOutgoingCallsEnabled - boolean
 Webex Calling Organization Settings/Update a Call Queue/Query Parameters/orgId - string
 Webex Calling Organization Settings/Update a Call Queue/URI Parameters/locationId - string (required)
@@ -2117,9 +2296,7 @@ Webex Calling Organization Settings/Get Location Outgoing Permission/Query Param
 Webex Calling Organization Settings/Get Location Outgoing Permission/Response Properties/callingPermissions - array[CallingPermissionObject]
 Webex Calling Organization Settings/Get Location Outgoing Permission/Response Properties/callingPermissions/attrs/callType - enum
 Webex Calling Organization Settings/Get Location Outgoing Permission/Response Properties/callingPermissions/attrs/callType/attrs/INTERNAL_CALL - string
-Webex Calling Organization Settings/Get Location Outgoing Permission/Response Properties/callingPermissions/attrs/callType/attrs/LOCAL - string
 Webex Calling Organization Settings/Get Location Outgoing Permission/Response Properties/callingPermissions/attrs/callType/attrs/TOLL_FREE - string
-Webex Calling Organization Settings/Get Location Outgoing Permission/Response Properties/callingPermissions/attrs/callType/attrs/TOLL - string
 Webex Calling Organization Settings/Get Location Outgoing Permission/Response Properties/callingPermissions/attrs/callType/attrs/INTERNATIONAL - string
 Webex Calling Organization Settings/Get Location Outgoing Permission/Response Properties/callingPermissions/attrs/callType/attrs/OPERATOR_ASSISTED - string
 Webex Calling Organization Settings/Get Location Outgoing Permission/Response Properties/callingPermissions/attrs/callType/attrs/CHARGEABLE_DIRECTORY_ASSISTED - string
@@ -2127,6 +2304,7 @@ Webex Calling Organization Settings/Get Location Outgoing Permission/Response Pr
 Webex Calling Organization Settings/Get Location Outgoing Permission/Response Properties/callingPermissions/attrs/callType/attrs/SPECIAL_SERVICES_II - string
 Webex Calling Organization Settings/Get Location Outgoing Permission/Response Properties/callingPermissions/attrs/callType/attrs/PREMIUM_SERVICES_I - string
 Webex Calling Organization Settings/Get Location Outgoing Permission/Response Properties/callingPermissions/attrs/callType/attrs/PREMIUM_SERVICES_II - string
+Webex Calling Organization Settings/Get Location Outgoing Permission/Response Properties/callingPermissions/attrs/callType/attrs/NATIONAL - string
 Webex Calling Organization Settings/Get Location Outgoing Permission/Response Properties/callingPermissions/attrs/action - enum
 Webex Calling Organization Settings/Get Location Outgoing Permission/Response Properties/callingPermissions/attrs/action/attrs/ALLOW - string
 Webex Calling Organization Settings/Get Location Outgoing Permission/Response Properties/callingPermissions/attrs/action/attrs/BLOCK - string
@@ -2139,9 +2317,7 @@ Webex Calling Organization Settings/Get Location Outgoing Permission/URI Paramet
 Webex Calling Organization Settings/Update Location Outgoing Permission/Body Parameters/callingPermissions - array[CallingPermissionObject]
 Webex Calling Organization Settings/Update Location Outgoing Permission/Body Parameters/callingPermissions/attrs/callType - enum (required)
 Webex Calling Organization Settings/Update Location Outgoing Permission/Body Parameters/callingPermissions/attrs/callType/attrs/INTERNAL_CALL - string
-Webex Calling Organization Settings/Update Location Outgoing Permission/Body Parameters/callingPermissions/attrs/callType/attrs/LOCAL - string
 Webex Calling Organization Settings/Update Location Outgoing Permission/Body Parameters/callingPermissions/attrs/callType/attrs/TOLL_FREE - string
-Webex Calling Organization Settings/Update Location Outgoing Permission/Body Parameters/callingPermissions/attrs/callType/attrs/TOLL - string
 Webex Calling Organization Settings/Update Location Outgoing Permission/Body Parameters/callingPermissions/attrs/callType/attrs/INTERNATIONAL - string
 Webex Calling Organization Settings/Update Location Outgoing Permission/Body Parameters/callingPermissions/attrs/callType/attrs/OPERATOR_ASSISTED - string
 Webex Calling Organization Settings/Update Location Outgoing Permission/Body Parameters/callingPermissions/attrs/callType/attrs/CHARGEABLE_DIRECTORY_ASSISTED - string
@@ -2149,6 +2325,7 @@ Webex Calling Organization Settings/Update Location Outgoing Permission/Body Par
 Webex Calling Organization Settings/Update Location Outgoing Permission/Body Parameters/callingPermissions/attrs/callType/attrs/SPECIAL_SERVICES_II - string
 Webex Calling Organization Settings/Update Location Outgoing Permission/Body Parameters/callingPermissions/attrs/callType/attrs/PREMIUM_SERVICES_I - string
 Webex Calling Organization Settings/Update Location Outgoing Permission/Body Parameters/callingPermissions/attrs/callType/attrs/PREMIUM_SERVICES_II - string
+Webex Calling Organization Settings/Update Location Outgoing Permission/Body Parameters/callingPermissions/attrs/callType/attrs/NATIONAL - string
 Webex Calling Organization Settings/Update Location Outgoing Permission/Body Parameters/callingPermissions/attrs/action - enum (required)
 Webex Calling Organization Settings/Update Location Outgoing Permission/Body Parameters/callingPermissions/attrs/action/attrs/ALLOW - string
 Webex Calling Organization Settings/Update Location Outgoing Permission/Body Parameters/callingPermissions/attrs/action/attrs/BLOCK - string
@@ -2195,6 +2372,7 @@ Webex Calling Organization Settings/Read the List of Paging Groups/Response Prop
 Webex Calling Organization Settings/Read the List of Paging Groups/Response Properties/locationPaging/attrs/extension - string
 Webex Calling Organization Settings/Read the List of Paging Groups/Response Properties/locationPaging/attrs/locationName - string
 Webex Calling Organization Settings/Read the List of Paging Groups/Response Properties/locationPaging/attrs/locationId - string
+Webex Calling Organization Settings/Read the List of Paging Groups/Response Properties/locationPaging/attrs/tollFreeNumber - boolean
 Webex Calling Organization Settings/Create a new Paging Group/Body Parameters/name - string (required)
 Webex Calling Organization Settings/Create a new Paging Group/Body Parameters/phoneNumber - string
 Webex Calling Organization Settings/Create a new Paging Group/Body Parameters/extension - string
@@ -4231,11 +4409,245 @@ Webex Calling Voice Messaging/List Messages/Response Properties/items/attrs/crea
 Webex Calling Voice Messaging/Delete Message/URI Parameters/messageId - string (required)
 Webex Calling Voice Messaging/Mark As Read/Body Parameters/messageId - string
 Webex Calling Voice Messaging/Mark As Unread/Body Parameters/messageId - string
+Webex Calling Workspace Settings/Retrieve Call Forwarding Settings for a Workspace/Query Parameters/orgId - string
+Webex Calling Workspace Settings/Retrieve Call Forwarding Settings for a Workspace/Response Properties/callForwarding - CallForwardingPlaceSettingGet
+Webex Calling Workspace Settings/Retrieve Call Forwarding Settings for a Workspace/Response Properties/callForwarding/attrs/busy - CallForwardingBusyGet
+Webex Calling Workspace Settings/Retrieve Call Forwarding Settings for a Workspace/Response Properties/callForwarding/attrs/busy/attrs/enabled - boolean
+Webex Calling Workspace Settings/Retrieve Call Forwarding Settings for a Workspace/Response Properties/callForwarding/attrs/busy/attrs/destination - string
+Webex Calling Workspace Settings/Retrieve Call Forwarding Settings for a Workspace/Response Properties/callForwarding/attrs/busy/attrs/destinationVoicemailEnabled - boolean
+Webex Calling Workspace Settings/Retrieve Call Forwarding Settings for a Workspace/Response Properties/callForwarding/attrs/noAnswer - CallForwardingNoAnswerGet
+Webex Calling Workspace Settings/Retrieve Call Forwarding Settings for a Workspace/Response Properties/callForwarding/attrs/noAnswer/attrs/enabled - boolean
+Webex Calling Workspace Settings/Retrieve Call Forwarding Settings for a Workspace/Response Properties/callForwarding/attrs/noAnswer/attrs/destination - string
+Webex Calling Workspace Settings/Retrieve Call Forwarding Settings for a Workspace/Response Properties/callForwarding/attrs/noAnswer/attrs/numberOfRings - number
+Webex Calling Workspace Settings/Retrieve Call Forwarding Settings for a Workspace/Response Properties/callForwarding/attrs/noAnswer/attrs/systemMaxNumberOfRings - number
+Webex Calling Workspace Settings/Retrieve Call Forwarding Settings for a Workspace/Response Properties/callForwarding/attrs/noAnswer/attrs/destinationVoicemailEnabled - boolean
+Webex Calling Workspace Settings/Retrieve Call Forwarding Settings for a Workspace/URI Parameters/workspaceId - string (required)
+Webex Calling Workspace Settings/Modify Call Forwarding Settings for a Workspace/Body Parameters/callForwarding - CallForwardingPlaceSettingPatch (required)
+Webex Calling Workspace Settings/Modify Call Forwarding Settings for a Workspace/Body Parameters/callForwarding/attrs/busy - CallForwardingBusyGet
+Webex Calling Workspace Settings/Modify Call Forwarding Settings for a Workspace/Body Parameters/callForwarding/attrs/busy/attrs/enabled - boolean (required)
+Webex Calling Workspace Settings/Modify Call Forwarding Settings for a Workspace/Body Parameters/callForwarding/attrs/busy/attrs/destination - string
+Webex Calling Workspace Settings/Modify Call Forwarding Settings for a Workspace/Body Parameters/callForwarding/attrs/busy/attrs/destinationVoicemailEnabled - boolean (required)
+Webex Calling Workspace Settings/Modify Call Forwarding Settings for a Workspace/Body Parameters/callForwarding/attrs/noAnswer - ModifyCallForwardingNoAnswer
+Webex Calling Workspace Settings/Modify Call Forwarding Settings for a Workspace/Body Parameters/callForwarding/attrs/noAnswer/attrs/enabled - boolean
+Webex Calling Workspace Settings/Modify Call Forwarding Settings for a Workspace/Body Parameters/callForwarding/attrs/noAnswer/attrs/destination - string
+Webex Calling Workspace Settings/Modify Call Forwarding Settings for a Workspace/Body Parameters/callForwarding/attrs/noAnswer/attrs/numberOfRings - number
+Webex Calling Workspace Settings/Modify Call Forwarding Settings for a Workspace/Body Parameters/callForwarding/attrs/noAnswer/attrs/systemMaxNumberOfRings - number
+Webex Calling Workspace Settings/Modify Call Forwarding Settings for a Workspace/Body Parameters/callForwarding/attrs/noAnswer/attrs/destinationVoicemailEnabled - boolean
+Webex Calling Workspace Settings/Modify Call Forwarding Settings for a Workspace/Query Parameters/orgId - string
+Webex Calling Workspace Settings/Modify Call Forwarding Settings for a Workspace/URI Parameters/workspaceId - string (required)
+Webex Calling Workspace Settings/Retrieve Call Waiting Settings for a Workspace/Query Parameters/orgId - string
+Webex Calling Workspace Settings/Retrieve Call Waiting Settings for a Workspace/Response Properties/enabled - boolean
+Webex Calling Workspace Settings/Retrieve Call Waiting Settings for a Workspace/URI Parameters/workspaceId - string (required)
+Webex Calling Workspace Settings/Modify Call Waiting Settings for a Workspace/Body Parameters/enabled - boolean
+Webex Calling Workspace Settings/Modify Call Waiting Settings for a Workspace/Query Parameters/orgId - string
+Webex Calling Workspace Settings/Modify Call Waiting Settings for a Workspace/URI Parameters/workspaceId - string (required)
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Query Parameters/orgId - string
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/types - array[CLIDPolicySelection]
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/types/attrs/DIRECT_LINE - string
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/types/attrs/LOCATION_NUMBER - string
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/types/attrs/CUSTOM - string
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/selected - enum
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/selected/attrs/DIRECT_LINE - string
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/selected/attrs/LOCATION_NUMBER - string
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/selected/attrs/CUSTOM - string
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/directNumber - string
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/locationNumber - string
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/tollFreeLocationNumber - boolean
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/customNumber - string
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/displayName - string
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/displayDetail - string
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/blockInForwardCallsEnabled - boolean
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/externalCallerIdNamePolicy - enum
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/externalCallerIdNamePolicy/attrs/DIRECT_LINE - string
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/externalCallerIdNamePolicy/attrs/LOCATION - string
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/externalCallerIdNamePolicy/attrs/OTHER - string
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/customExternalCallerIdName - string
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/Response Properties/locationExternalCallerIdName - string
+Webex Calling Workspace Settings/Retrieve Caller ID Settings for a Workspace/URI Parameters/workspaceId - string (required)
+Webex Calling Workspace Settings/Modify Caller ID Settings for a Workspace/Body Parameters/selected - enum (required)
+Webex Calling Workspace Settings/Modify Caller ID Settings for a Workspace/Body Parameters/selected/attrs/DIRECT_LINE - string
+Webex Calling Workspace Settings/Modify Caller ID Settings for a Workspace/Body Parameters/selected/attrs/LOCATION_NUMBER - string
+Webex Calling Workspace Settings/Modify Caller ID Settings for a Workspace/Body Parameters/selected/attrs/CUSTOM - string
+Webex Calling Workspace Settings/Modify Caller ID Settings for a Workspace/Body Parameters/customNumber - string
+Webex Calling Workspace Settings/Modify Caller ID Settings for a Workspace/Body Parameters/displayName - string
+Webex Calling Workspace Settings/Modify Caller ID Settings for a Workspace/Body Parameters/displayDetail - string
+Webex Calling Workspace Settings/Modify Caller ID Settings for a Workspace/Body Parameters/blockInForwardCallsEnabled - boolean
+Webex Calling Workspace Settings/Modify Caller ID Settings for a Workspace/Body Parameters/externalCallerIdNamePolicy - ExternalCallerIdNamePolicy
+Webex Calling Workspace Settings/Modify Caller ID Settings for a Workspace/Body Parameters/customExternalCallerIdName - string
+Webex Calling Workspace Settings/Modify Caller ID Settings for a Workspace/Body Parameters/locationExternalCallerIdName - string
+Webex Calling Workspace Settings/Modify Caller ID Settings for a Workspace/Query Parameters/orgId - string
+Webex Calling Workspace Settings/Modify Caller ID Settings for a Workspace/URI Parameters/workspaceId - string (required)
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Query Parameters/orgId - string
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/callParkNotificationEnabled - boolean
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements - MonitoredElementItem
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/callparkextension - MonitoredElementCallParkExtension
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/callparkextension/attrs/id - string
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/callparkextension/attrs/name - string
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/callparkextension/attrs/extension - string
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/callparkextension/attrs/location - string
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/callparkextension/attrs/locationId - string
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/member - MonitoredElementUser
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/member/attrs/id - string
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/member/attrs/firstName - string
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/member/attrs/lastName - string
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/member/attrs/displayName - string
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/member/attrs/type - enum
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/member/attrs/type/attrs/PEOPLE - string
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/member/attrs/type/attrs/PLACE - string
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/member/attrs/email - string
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/member/attrs/numbers - array[UserNumberItem]
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/member/attrs/numbers/attrs/external - string
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/member/attrs/numbers/attrs/extension - string
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/member/attrs/numbers/attrs/primary - boolean
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/member/attrs/numbers/attrs/tollFreeNumber - boolean
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/member/attrs/location - string
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/Response Properties/monitoredElements/attrs/member/attrs/locationId - string
+Webex Calling Workspace Settings/Retrieve Monitoring Settings for a Workspace/URI Parameters/workspaceId - string (required)
+Webex Calling Workspace Settings/Modify Monitoring Settings for a Workspace/Body Parameters/enableCallParkNotification - boolean
+Webex Calling Workspace Settings/Modify Monitoring Settings for a Workspace/Body Parameters/monitoredElements - array[string]
+Webex Calling Workspace Settings/Modify Monitoring Settings for a Workspace/Query Parameters/orgId - string
+Webex Calling Workspace Settings/Modify Monitoring Settings for a Workspace/URI Parameters/workspaceId - string (required)
+Webex Calling Workspace Settings/Retrieve Incoming Permission Settings for a Workspace/Query Parameters/orgId - string
+Webex Calling Workspace Settings/Retrieve Incoming Permission Settings for a Workspace/Response Properties/useCustomEnabled - boolean
+Webex Calling Workspace Settings/Retrieve Incoming Permission Settings for a Workspace/Response Properties/externalTransfer - enum
+Webex Calling Workspace Settings/Retrieve Incoming Permission Settings for a Workspace/Response Properties/externalTransfer/attrs/ALLOW_ALL_EXTERNAL - string
+Webex Calling Workspace Settings/Retrieve Incoming Permission Settings for a Workspace/Response Properties/externalTransfer/attrs/ALLOW_ONLY_TRANSFERRED_EXTERNAL - string
+Webex Calling Workspace Settings/Retrieve Incoming Permission Settings for a Workspace/Response Properties/externalTransfer/attrs/BLOCK_ALL_EXTERNAL - string
+Webex Calling Workspace Settings/Retrieve Incoming Permission Settings for a Workspace/Response Properties/internalCallsEnabled - boolean
+Webex Calling Workspace Settings/Retrieve Incoming Permission Settings for a Workspace/Response Properties/collectCallsEnabled - boolean
+Webex Calling Workspace Settings/Retrieve Incoming Permission Settings for a Workspace/URI Parameters/workspaceId - string (required)
+Webex Calling Workspace Settings/Modify Incoming Permission Settings for a Workspace/Body Parameters/useCustomEnabled - boolean
+Webex Calling Workspace Settings/Modify Incoming Permission Settings for a Workspace/Body Parameters/externalTransfer - enum
+Webex Calling Workspace Settings/Modify Incoming Permission Settings for a Workspace/Body Parameters/externalTransfer/attrs/ALLOW_ALL_EXTERNAL - string
+Webex Calling Workspace Settings/Modify Incoming Permission Settings for a Workspace/Body Parameters/externalTransfer/attrs/ALLOW_ONLY_TRANSFERRED_EXTERNAL - string
+Webex Calling Workspace Settings/Modify Incoming Permission Settings for a Workspace/Body Parameters/externalTransfer/attrs/BLOCK_ALL_EXTERNAL - string
+Webex Calling Workspace Settings/Modify Incoming Permission Settings for a Workspace/Body Parameters/internalCallsEnabled - boolean
+Webex Calling Workspace Settings/Modify Incoming Permission Settings for a Workspace/Body Parameters/collectCallsEnabled - boolean
+Webex Calling Workspace Settings/Modify Incoming Permission Settings for a Workspace/Query Parameters/orgId - string
+Webex Calling Workspace Settings/Modify Incoming Permission Settings for a Workspace/URI Parameters/workspaceId - string (required)
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Query Parameters/orgId - string
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/useCustomEnabled - boolean
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions - array[CallingPermission]
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions/attrs/callType - enum
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions/attrs/callType/attrs/INTERNAL_CALL - string
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions/attrs/callType/attrs/TOLL_FREE - string
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions/attrs/callType/attrs/INTERNATIONAL - string
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions/attrs/callType/attrs/OPERATOR_ASSISTED - string
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions/attrs/callType/attrs/CHARGEABLE_DIRECTORY_ASSISTED - string
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions/attrs/callType/attrs/SPECIAL_SERVICES_I - string
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions/attrs/callType/attrs/SPECIAL_SERVICES_II - string
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions/attrs/callType/attrs/PREMIUM_SERVICES_I - string
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions/attrs/callType/attrs/PREMIUM_SERVICES_II - string
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions/attrs/callType/attrs/NATIONAL - string
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions/attrs/action - enum
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions/attrs/action/attrs/ALLOW - string
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions/attrs/action/attrs/BLOCK - string
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions/attrs/action/attrs/AUTH_CODE - string
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions/attrs/action/attrs/TRANSFER_NUMBER_1 - string
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions/attrs/action/attrs/TRANSFER_NUMBER_2 - string
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions/attrs/action/attrs/TRANSFER_NUMBER_3 - string
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/Response Properties/callingPermissions/attrs/transferEnabled - boolean
+Webex Calling Workspace Settings/Retrieve Outgoing Permission Settings for a Workspace/URI Parameters/workspaceId - string (required)
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/useCustomEnabled - boolean
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions - array[ModifyCallingPermission]
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions/attrs/callType - enum
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions/attrs/callType/attrs/INTERNAL_CALL - string
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions/attrs/callType/attrs/TOLL_FREE - string
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions/attrs/callType/attrs/INTERNATIONAL - string
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions/attrs/callType/attrs/OPERATOR_ASSISTED - string
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions/attrs/callType/attrs/CHARGEABLE_DIRECTORY_ASSISTED - string
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions/attrs/callType/attrs/SPECIAL_SERVICES_I - string
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions/attrs/callType/attrs/SPECIAL_SERVICES_II - string
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions/attrs/callType/attrs/PREMIUM_SERVICES_I - string
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions/attrs/callType/attrs/PREMIUM_SERVICES_II - string
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions/attrs/callType/attrs/NATIONAL - string
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions/attrs/action - enum
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions/attrs/action/attrs/ALLOW - string
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions/attrs/action/attrs/BLOCK - string
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions/attrs/action/attrs/AUTH_CODE - string
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions/attrs/action/attrs/TRANSFER_NUMBER_1 - string
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions/attrs/action/attrs/TRANSFER_NUMBER_2 - string
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions/attrs/action/attrs/TRANSFER_NUMBER_3 - string
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Body Parameters/callingPermissions/attrs/transferEnabled - boolean
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/Query Parameters/orgId - string
+Webex Calling Workspace Settings/Modify Outgoing Permission Settings for a Workspace/URI Parameters/workspaceId - string (required)
+Webex Calling Workspace Settings/Retrieve Access Codes for a Workspace/Query Parameters/orgId - string
+Webex Calling Workspace Settings/Retrieve Access Codes for a Workspace/Response Properties/accessCodes - array[AuthorizationCode]
+Webex Calling Workspace Settings/Retrieve Access Codes for a Workspace/Response Properties/accessCodes/attrs/code - string
+Webex Calling Workspace Settings/Retrieve Access Codes for a Workspace/Response Properties/accessCodes/attrs/description - string
+Webex Calling Workspace Settings/Retrieve Access Codes for a Workspace/URI Parameters/workspaceId - string (required)
+Webex Calling Workspace Settings/Modify Access Codes for a Workspace/Body Parameters/deleteCodes - array[string]
+Webex Calling Workspace Settings/Modify Access Codes for a Workspace/Query Parameters/orgId - string
+Webex Calling Workspace Settings/Modify Access Codes for a Workspace/URI Parameters/workspaceId - string (required)
+Webex Calling Workspace Settings/Create Access Codes for a Workspace/Body Parameters/code - string (required)
+Webex Calling Workspace Settings/Create Access Codes for a Workspace/Body Parameters/description - string (required)
+Webex Calling Workspace Settings/Create Access Codes for a Workspace/Query Parameters/orgId - string
+Webex Calling Workspace Settings/Create Access Codes for a Workspace/URI Parameters/workspaceId - string (required)
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Query Parameters/orgId - string
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/enabled - boolean
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/incoming - InterceptIncomingGet
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/incoming/attrs/type - enum
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/incoming/attrs/type/attrs/INTERCEPT_ALL - string
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/incoming/attrs/type/attrs/ALLOW_ALL - string
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/incoming/attrs/voicemailEnabled - boolean
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/incoming/attrs/announcements - InterceptAnnouncementsGet
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/incoming/attrs/announcements/attrs/greeting - enum
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/incoming/attrs/announcements/attrs/greeting/attrs/CUSTOM - string
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/incoming/attrs/announcements/attrs/greeting/attrs/DEFAULT - string
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/incoming/attrs/announcements/attrs/filename - string
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/incoming/attrs/announcements/attrs/newNumber - InterceptNumberGet
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/incoming/attrs/announcements/attrs/newNumber/attrs/enabled - boolean
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/incoming/attrs/announcements/attrs/newNumber/attrs/destination - string
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/incoming/attrs/announcements/attrs/zeroTransfer - InterceptNumberGet
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/incoming/attrs/announcements/attrs/zeroTransfer/attrs/enabled - boolean
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/incoming/attrs/announcements/attrs/zeroTransfer/attrs/destination - string
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/outgoing - InterceptOutGoingGet
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/outgoing/attrs/type - enum
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/outgoing/attrs/type/attrs/INTERCEPT_ALL - string
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/outgoing/attrs/type/attrs/ALLOW_LOCAL_ONLY - string
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/outgoing/attrs/transferEnabled - boolean
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/Response Properties/outgoing/attrs/destination - string
+Webex Calling Workspace Settings/Read Call Intercept Settings for a Workspace/URI Parameters/workspaceId - string (required)
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/enabled - boolean
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/incoming - InterceptIncomingPatch
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/incoming/attrs/type - enum
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/incoming/attrs/type/attrs/INTERCEPT_ALL - string
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/incoming/attrs/type/attrs/ALLOW_ALL - string
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/incoming/attrs/voicemailEnabled - boolean
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/incoming/attrs/announcements - InterceptAnnouncementsPatch
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/incoming/attrs/announcements/attrs/greeting - enum
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/incoming/attrs/announcements/attrs/greeting/attrs/CUSTOM - string
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/incoming/attrs/announcements/attrs/greeting/attrs/DEFAULT - string
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/incoming/attrs/announcements/attrs/newNumber - object
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/incoming/attrs/announcements/attrs/newNumber/attrs/enabled - boolean
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/incoming/attrs/announcements/attrs/newNumber/attrs/destination - string
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/incoming/attrs/announcements/attrs/zeroTransfer - object
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/incoming/attrs/announcements/attrs/zeroTransfer/attrs/enabled - boolean
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/incoming/attrs/announcements/attrs/zeroTransfer/attrs/destination - string
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/outgoing - InterceptOutGoingPatch
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/outgoing/attrs/type - enum
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/outgoing/attrs/type/attrs/INTERCEPT_ALL - string
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/outgoing/attrs/type/attrs/ALLOW_LOCAL_ONLY - string
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/outgoing/attrs/transferEnabled - boolean
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Body Parameters/outgoing/attrs/destination - string
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/Query Parameters/orgId - string
+Webex Calling Workspace Settings/Configure Call Intercept Settings for a Workspace/URI Parameters/workspaceId - string (required)
+Webex Calling Workspace Settings/Retrieve Transfer Numbers Settings for a Workspace/Query Parameters/orgId - string
+Webex Calling Workspace Settings/Retrieve Transfer Numbers Settings for a Workspace/Response Properties/autoTransferNumber1 - string
+Webex Calling Workspace Settings/Retrieve Transfer Numbers Settings for a Workspace/Response Properties/autoTransferNumber2 - string
+Webex Calling Workspace Settings/Retrieve Transfer Numbers Settings for a Workspace/Response Properties/autoTransferNumber3 - string
+Webex Calling Workspace Settings/Retrieve Transfer Numbers Settings for a Workspace/URI Parameters/workspaceId - string (required)
+Webex Calling Workspace Settings/Modify Transfer Numbers Settings for a Workspace/Body Parameters/autoTransferNumber1 - string
+Webex Calling Workspace Settings/Modify Transfer Numbers Settings for a Workspace/Body Parameters/autoTransferNumber2 - string
+Webex Calling Workspace Settings/Modify Transfer Numbers Settings for a Workspace/Body Parameters/autoTransferNumber3 - string
+Webex Calling Workspace Settings/Modify Transfer Numbers Settings for a Workspace/Query Parameters/orgId - string
+Webex Calling Workspace Settings/Modify Transfer Numbers Settings for a Workspace/URI Parameters/workspaceId - string (required)
 
 Action: 1
 ActionOnRouteList: 1
 array[AlternateNumbersObject]: 3
 array[AlternateNumbersWithPattern]: 4
+array[AuthorizationCode]: 1
 array[Call History Record]: 1
 array[Call]: 1
 array[CallerIdSelectedType]: 1
@@ -4245,11 +4657,13 @@ array[CallForwardRulesModifyObject]: 1
 array[CallForwardRulesObject]: 1
 array[CallForwardRulesSet]: 2
 array[CallForwardSelectiveCallsToNumbersObject]: 3
+array[CallingPermission]: 1
 array[CallingPermissionObject]: 2
 array[CallQueueAudioFilesObject]: 10
 array[CallQueueHolidaySchedulesObject]: 1
 array[CallQueueNightSchedulesObject]: 1
 array[CallQueueObject]: 1
+array[CLIDPolicySelection]: 1
 array[DeviceType]: 1
 array[DialPattern]: 1
 array[DialPatternValidate]: 1
@@ -4264,7 +4678,8 @@ array[GetMonitoredElementsObject]: 1
 array[GetPagingGroupAgentObject]: 2
 array[GetPersonPlaceCallParksObject]: 2
 array[GetPersonPlaceCallPickupObject]: 2
-array[GetPersonPlaceObject]: 2
+array[GetPersonPlaceCallQueueObject]: 1
+array[GetPersonPlaceObject]: 1
 array[GetScheduleEventObject]: 1
 array[GetUserNumberItemObject]: 4
 array[GetVoicemailGroupObject]: 1
@@ -4278,6 +4693,8 @@ array[ListPagingGroupObject]: 1
 array[ListScheduleObject]: 1
 array[LocalGateways]: 3
 array[Location]: 5
+array[ModifyCallingPermission]: 1
+array[ModifyPersonPlaceCallQueueObject]: 1
 array[ModifyScheduleEventListObject]: 1
 array[MonitoredMemberObject]: 1
 array[MonitoredNumberObject]: 2
@@ -4286,7 +4703,8 @@ array[object]: 17
 array[PasswordGenerate]: 1
 array[Person]: 1
 array[PhoneNumber]: 1
-array[PostPersonPlaceObject]: 4
+array[PostPersonPlaceCallQueueObject]: 1
+array[PostPersonPlaceObject]: 2
 array[PushToTalkNumberObject]: 2
 array[Redirection Information]: 2
 array[RouteGroup]: 1
@@ -4299,19 +4717,24 @@ array[RouteListNumberPatch]: 1
 array[RouteListNumberPatchResponse]: 1
 array[ScheduleEventObject]: 1
 array[ScheduleShortDetails]: 1
-array[string]: 64
+array[string]: 84
 array[Trunk]: 1
 array[TrunkTypeWithDeviceType]: 1
+array[UserNumberItem]: 1
 array[VoiceMessageDetails]: 1
 array[{"type": "personal-room","value": "testuser5@mycompany.webex.com","primary": false}]: 5
 AutoAttendantCallForwardSettingsDetailsObject: 1
 AutoAttendantCallForwardSettingsModifyDetailsObject: 1
-boolean: 499
+boolean: 575
 Call History Record Type Enum: 1
 Call Personality Enum: 2
 Call State Enum: 2
 Call Type Enum: 7
 CallerIdSelectedType: 2
+CallForwardingBusyGet: 2
+CallForwardingNoAnswerGet: 1
+CallForwardingPlaceSettingGet: 1
+CallForwardingPlaceSettingPatch: 1
 CallForwardSelectiveCallsFromCustomNumbersObject: 3
 CallForwardSelectiveCallsFromObject: 3
 CallForwardSelectiveCallsToObject: 3
@@ -4328,7 +4751,8 @@ DialPatternAction: 1
 DialPatternStatus: 1
 DialPatternValidationStatus: 1
 Emergency: 1
-enum: 200
+enum: 237
+ExternalCallerIdNamePolicy: 1
 FeatureAccessCode: 1
 GetCallForwardAlwaysSettingObject: 1
 GetCallForwardSelectiveSettingObject: 1
@@ -4340,15 +4764,27 @@ HostedAgentType: 1
 HostedFeature: 1
 HoursMenuObject: 6
 HuntPolicySelection: 6
+HuntRoutingTypeSelection: 3
+InterceptAnnouncementsGet: 1
+InterceptAnnouncementsPatch: 1
+InterceptIncomingGet: 1
+InterceptIncomingPatch: 1
+InterceptNumberGet: 2
+InterceptOutGoingGet: 1
+InterceptOutGoingPatch: 1
 KeyConfigurationsObject: 6
 Location: 5
 ModifyCallForwardAlwaysSettingObject: 1
+ModifyCallForwardingNoAnswer: 1
 ModifyCallForwardSelectiveSettingObject: 1
 ModifyCallQueueCallPolicyObject: 1
-number: 163
+MonitoredElementCallParkExtension: 1
+MonitoredElementItem: 1
+MonitoredElementUser: 1
+number: 191
 NumberListGetObject: 1
 NumberStatus: 1
-object: 176
+object: 202
 Organization: 1
 OriginatorType: 1
 Party Information: 7
@@ -4381,7 +4817,7 @@ RouteType: 9
 ScheduleType: 11
 ServiceType: 1
 State: 2
-string: 2809
+string: 3007
 string array: 6
 TrunkType: 4
 UnknownExtension: 1

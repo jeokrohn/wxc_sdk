@@ -25,7 +25,7 @@ class CallerIdSelectedType(str, Enum):
 
 class ExternalCallerIdNamePolicy(str, Enum):
     """
-    Designates which type of External Caller Id Name policy is used. Default is DIRECT_LINE.
+    Designates which type of External Caller ID Name policy is used. Default is DIRECT_LINE.
     """
     #: Outgoing caller ID will show the caller's direct line name
     direct_line = 'DIRECT_LINE'
@@ -66,9 +66,9 @@ class CallerId(ApiModel):
     last_name: Optional[str]
     #: block caller id in forwarded calls
     block_in_forward_calls_enabled: Optional[bool]
-    #: Designates which type of External Caller Id Name policy is used. Default is DIRECT_LINE.
+    #: Designates which type of External Caller ID Name policy is used. Default is DIRECT_LINE.
     external_caller_id_name_policy: Optional[ExternalCallerIdNamePolicy]
-    #: Custom External Caller Name, which will be shown if External Caller Id Name is OTHER.
+    #: Custom External Caller Name, which will be shown if External Caller ID Name is OTHER.
     custom_external_caller_id_name: Optional[str]
     #: location external caller ID name
     location_external_caller_id_name: Optional[str]
@@ -160,10 +160,10 @@ class CallerIdApi(PersonSettingsApiChild):
         :param last_name: Person\'s Caller ID last name. Characters of %, +, \`, \" and Unicode characters are not
             allowed.
         :type last_name: str
-        :param external_caller_id_name_policy: Designates which type of External Caller Id Name policy is used.
+        :param external_caller_id_name_policy: Designates which type of External Caller ID Name policy is used.
             Default is DIRECT_LINE.
         :type external_caller_id_name_policy: ExternalCallerIdNamePolicy
-        :param custom_external_caller_id_name: Custom External Caller Name, which will be shown if External Caller Id
+        :param custom_external_caller_id_name: Custom External Caller Name, which will be shown if External Caller ID
             Name is OTHER.
         :type custom_external_caller_id_name: str
 

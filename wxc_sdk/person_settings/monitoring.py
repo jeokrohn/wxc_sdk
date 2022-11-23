@@ -16,7 +16,7 @@ __all__ = ['MonitoredElementMember', 'MonitoredElement', 'Monitoring',
 class MonitoredElementMember(MonitoredMember):
     #: The location name where the call park extension is.
     location_name: Optional[str] = Field(alias='location')
-    #: The location Id for the location.
+    #: The location ID for the location.
     location_id: Optional[str]
 
     @property
