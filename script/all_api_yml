@@ -17,5 +17,7 @@ developer.webex.com/read_api_spec.py -s Messaging -t Rooms -f developer.webex.co
 developer.webex.com/read_api_spec.py -s Messaging -t "Team Memberships" -f developer.webex.com/team_memberships.yml
 developer.webex.com/read_api_spec.py -s Messaging -t Teams -f developer.webex.com/teams.yml
 developer.webex.com/read_api_spec.py -s Messaging -t "Attachment Actions" Events Memberships Messages, People, "Room Tabs" "Rooms" "Team Memberships" Teams Webhooks -f developer.webex.com/messaging.yml
+developer.webex.com/read_api_spec.py -s Calling -t "Webex Calling Voice Messaging" -f developer.webex.com/voice_messaging.yml
+developer.webex.com/read_api_spec.py -s Calling -t "Webex Calling Workspace Settings" -f developer.webex.com/wxc_ws_settings.yml
 
 for i in developer.webex.com/*.yml; do developer.webex.com/classes.py "$i" -o "${i/.yml/_auto.py}"; done
