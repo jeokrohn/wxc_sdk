@@ -14,6 +14,7 @@ Release history
 - feat: SafeEnum instead of Enum to tolerate unknown enum values
 - fix: use_enum_values = True in ApiModel so that enum values are not stored as Enum instances; CAUTION: might break
   code that uses .name and .value attributes of enums.
+- feat: new API: :attr:`wxc_sdk.telephony.TelephonyApi.voice_messaging`
 
 1.9.0
 -----

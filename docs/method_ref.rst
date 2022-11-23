@@ -878,6 +878,21 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.schedules.update
         Update a Schedule
      - :meth:`~wxc_sdk.common.schedules.ScheduleApi.update`
+   * - api.telephony.voice_messaging.delete
+        Delete a specfic voicemail message for the user
+     - :meth:`~wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.delete`
+   * - api.telephony.voice_messaging.list
+        Get the list of all voicemail messages for the user
+     - :meth:`~wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.list`
+   * - api.telephony.voice_messaging.mark_as_read
+        Update the voicemail message(s) as read for the user
+     - :meth:`~wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.mark_as_read`
+   * - api.telephony.voice_messaging.mark_as_unread
+        Update the voicemail message(s) as unread for the user
+     - :meth:`~wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.mark_as_unread`
+   * - api.telephony.voice_messaging.summary
+        Get a summary of the voicemail messages for the user
+     - :meth:`~wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.summary`
    * - api.telephony.voicemail_groups.create
         Create new voicemail group for the given location for a customer
      - :meth:`~wxc_sdk.telephony.voicemail_groups.VoicemailGroupsApi.create`

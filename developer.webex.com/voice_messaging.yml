@@ -1,0 +1,258 @@
+# command: ./developer.webex.com/read_api_spec.py -s Calling -t "Webex Calling Voice Messaging" -f voice_messaging.yml
+docs:
+  BroadWorks Billing Reports:
+    doc: null
+    header: null
+    methods: []
+  BroadWorks Device Provisioning:
+    doc: null
+    header: null
+    methods: []
+  BroadWorks Enterprises:
+    doc: null
+    header: null
+    methods: []
+  BroadWorks Subscribers:
+    doc: null
+    header: null
+    methods: []
+  Call Controls:
+    doc: null
+    header: null
+    methods: []
+  Locations:
+    doc: null
+    header: null
+    methods: []
+  People:
+    doc: null
+    header: null
+    methods: []
+  Recording Report:
+    doc: null
+    header: null
+    methods: []
+  Video Mesh:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Organization Settings:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Person Settings:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Voice Messaging:
+    doc: Voice Messaging APIs provide support for handling voicemail and message waiting
+      indicators in Webex Calling.  The APIs are limited to user access (no admin
+      access), and all GET commands require the spark:calls_read scope, while the
+      other commands require the spark:calls_write scope.
+    header: Webex Calling Voice Messaging
+    methods:
+    - doc: Get a summary of the voicemail messages for the user.
+      documentation:
+        doc: Get Message Summary
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-voice-messaging/get-message-summary
+        endpoint: https://webexapis.com/v1/telephony/voiceMessages/summary
+        http_method: GET
+      header: Get Message Summary
+      parameters_and_response:
+        Response Properties:
+        - doc: The number of new (unread) voicemail messages.
+          name: newMessages
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: The number of old (read) voicemail messages.
+          name: oldMessages
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: The number of new (unread) urgent voicemail messages.
+          name: newUrgentMessages
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: The number of old (read) urgent voicemail messages.
+          name: oldUrgentMessages
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+    - doc: Get the list of all voicemail messages for the user.
+      documentation:
+        doc: List Messages
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-voice-messaging/list-messages
+        endpoint: https://webexapis.com/v1/telephony/voiceMessages
+        http_method: GET
+      header: List Messages
+      parameters_and_response:
+        Response Properties:
+        - doc: ''
+          name: items
+          param_attrs:
+          - doc: The message identifier of the voicemail message.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ' The duration (in seconds) of the voicemail message.  Duration is
+              not present for a FAX message.'
+            name: duration
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: The calling party's details. For example, if user A calls user B
+              and leaves a voicemail message, then A is the calling party.
+            name: callingParty
+            param_attrs:
+            - doc: The party's name. Only present when the name is available and privacy
+                is not enabled.
+              name: name
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: 'The party''s number. Only present when the number is available
+                and privacy is not enabled. The number can be digits or a URI. Some
+                examples for number include: 1234, 2223334444, +12223334444, *73,
+                and user@company.domain.'
+              name: number
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The party's person ID. Only present when the person ID is available
+                and privacy is not enabled.
+              name: personId
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The party's place ID. Only present when the place ID is available
+                and privacy is not enabled.
+              name: placeId
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates whether privacy is enabled for the name, number and personId/placeId.
+              name: privacyEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            param_object: []
+            type: VoiceMailPartyInformation
+            type_spec: null
+          - doc: true if the voicemail message is urgent.
+            name: urgent
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: true if the voicemail message is confidential.
+            name: confidential
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: true if the voicemail message has been read.
+            name: read
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Number of pages for the FAX.  Only set for a FAX.
+            name: faxPageCount
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: The date and time the voicemail message was created.
+            name: created
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[VoiceMessageDetails]
+          type_spec: null
+    - doc: Delete a specfic voicemail message for the user.
+      documentation:
+        doc: Delete Message
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-voice-messaging/delete-message
+        endpoint: https://webexapis.com/v1/telephony/voiceMessages/{messageId}
+        http_method: DELETE
+      header: Delete Message
+      parameters_and_response:
+        URI Parameters:
+        - doc: The message identifer of the voicemail message to delete
+          name: messageId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Update the voicemail message(s) as read for the user.
+
+        If the messageId is provided, then only mark that message as read.  Otherwise,
+        all messages for the user are marked as read.'
+      documentation:
+        doc: Mark As Read
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-voice-messaging/mark-as-read
+        endpoint: https://webexapis.com/v1/telephony/voiceMessages/markAsRead
+        http_method: POST
+      header: Mark As Read
+      parameters_and_response:
+        Body Parameters:
+        - doc: The voicemail message identifier of the message to mark as read.  If
+            the messageId is not provided, then all voicemail messages for the user
+            are marked as read.
+          name: messageId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+    - doc: 'Update the voicemail message(s) as unread for the user.
+
+        If the messageId is provided, then only mark that message as unread.  Otherwise,
+        all messages for the user are marked as unread.'
+      documentation:
+        doc: Mark As Unread
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-voice-messaging/mark-as-unread
+        endpoint: https://webexapis.com/v1/telephony/voiceMessages/markAsUnread
+        http_method: POST
+      header: Mark As Unread
+      parameters_and_response:
+        Body Parameters:
+        - doc: The voicemail message identifier of the message to mark as unread.  If
+            the messageId is not provided, then all voicemail messages for the user
+            are marked as unread.
+          name: messageId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+  Webex Calling Workspace Settings:
+    doc: null
+    header: null
+    methods: []
+  Wholesale Billing Reports:
+    doc: null
+    header: null
+    methods: []
+  Wholesale Customers:
+    doc: null
+    header: null
+    methods: []
+  Wholesale Subscribers:
+    doc: null
+    header: null
+    methods: []

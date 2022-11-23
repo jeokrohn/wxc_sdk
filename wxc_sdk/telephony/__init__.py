@@ -24,6 +24,7 @@ from .paging import PagingApi
 from .pnc import PrivateNetworkConnectApi
 from .prem_pstn import PremisePstnApi
 from .vm_rules import VoicemailRulesApi
+from .voice_messaging import VoiceMessagingApi
 from .voicemail_groups import VoicemailGroupsApi
 from .voiceportal import VoicePortalApi
 from ..api_child import ApiChild
@@ -446,6 +447,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     # location voicemail groups
     voicemail_groups: VoicemailGroupsApi
     voicemail_rules: VoicemailRulesApi
+    voice_messaging: VoiceMessagingApi
     voiceportal: VoicePortalApi
 
     def __init__(self, session: RestSession):
@@ -470,6 +472,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.schedules = ScheduleApi(session=session, base=ScheduleApiBase.locations)
         self.voicemail_groups = VoicemailGroupsApi(session=session)
         self.voicemail_rules = VoicemailRulesApi(session=session)
+        self.voice_messaging = VoiceMessagingApi(session=session)
         self.voiceportal = VoicePortalApi(session=session)
 
     def phone_numbers(self, location_id: str = None, phone_number: str = None, available: bool = None,

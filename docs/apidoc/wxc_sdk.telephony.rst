@@ -37,5 +37,6 @@ Submodules
    wxc_sdk.telephony.paging
    wxc_sdk.telephony.pnc
    wxc_sdk.telephony.vm_rules
+   wxc_sdk.telephony.voice_messaging
    wxc_sdk.telephony.voicemail_groups
    wxc_sdk.telephony.voiceportal

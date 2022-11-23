@@ -62,8 +62,8 @@ __all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsApi
            'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsReceptionistApi',
            'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi',
            'AsScheduleApi', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi',
-           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi', 'AsVoicePortalApi', 'AsVoicemailApi',
-           'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi',
+           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi',
+           'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi',
            'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi', 'AsWorkspaceSettingsApi',
            'AsWorkspacesApi']
 
@@ -1492,15 +1492,20 @@ class AsPeopleApi(AsApiChild, base='people'):
     def list_gen(self, email: str = None, display_name: str = None, id_list: list[str] = None, org_id: str = None,
              calling_data: bool = None, location_id: str = None, **params) -> AsyncGenerator[Person, None, None]:
         """
-        List people in your organization. For most users, either the email or display_name parameter is required. Admin
+        List people in your organization. For most users, either the email or displayName parameter is required. Admin
         users can omit these fields and list all users in their organization.
 
-        Response properties associated with a user's presence status, such as status or last_activity, will only be
-        displayed for people within your organization or an organization you manage. Presence information will not be
-        shown if the authenticated user has disabled status sharing.
+        Response properties associated with a user's presence status, such as status or lastActivity, will only be
+        returned for people within your organization or an organization you manage. Presence information will not be
+        returned if the authenticated user has disabled status sharing.
 
-        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying calling_data
-        parameter as True. Admin users can list all users in a location or with a specific phone number.
+        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData
+        parameter as true. Admin users can list all users in a location or with a specific phone number. Admin users
+        will receive an enriched payload with additional administrative fields like liceneses,roles etc. These fields
+        are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=
+
+        Lookup by email is only supported for people within the same org or where a partner admin relationship is in
+        place.
 
         :param email: List people with this email address. For non-admin requests, either this or displayName are
             required.
@@ -1537,15 +1542,20 @@ class AsPeopleApi(AsApiChild, base='people'):
     async def list(self, email: str = None, display_name: str = None, id_list: list[str] = None, org_id: str = None,
              calling_data: bool = None, location_id: str = None, **params) -> List[Person]:
         """
-        List people in your organization. For most users, either the email or display_name parameter is required. Admin
+        List people in your organization. For most users, either the email or displayName parameter is required. Admin
         users can omit these fields and list all users in their organization.
 
-        Response properties associated with a user's presence status, such as status or last_activity, will only be
-        displayed for people within your organization or an organization you manage. Presence information will not be
-        shown if the authenticated user has disabled status sharing.
+        Response properties associated with a user's presence status, such as status or lastActivity, will only be
+        returned for people within your organization or an organization you manage. Presence information will not be
+        returned if the authenticated user has disabled status sharing.
 
-        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying calling_data
-        parameter as True. Admin users can list all users in a location or with a specific phone number.
+        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData
+        parameter as true. Admin users can list all users in a location or with a specific phone number. Admin users
+        will receive an enriched payload with additional administrative fields like liceneses,roles etc. These fields
+        are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=
+
+        Lookup by email is only supported for people within the same org or where a partner admin relationship is in
+        place.
 
         :param email: List people with this email address. For non-admin requests, either this or displayName are
             required.
@@ -1655,25 +1665,25 @@ class AsPeopleApi(AsApiChild, base='people'):
         """
         Update details for a person, by ID.
 
-        Only an admin can update a person details.
+        Specify the person ID in the personId parameter in the URI. Only an admin can update a person details.
 
-        Include all details for the person. This action expects all user details to be present in the request. A
-        common approach is to first GET the person's details, make changes, then PUT both the changed and unchanged
-        values.
+        Include all details for the person. This action expects all user details to be present in the request. A common
+        approach is to first GET the person's details, make changes, then PUT both the changed and unchanged values.
 
-        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying calling_data
-        parameter as True.
+        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData
+        parameter as true.
 
-        Note: The location_id can only be set when adding a calling license to a user. It cannot be changed if a user
-        is already an existing calling user.
+        Note: The locationId can only be set when adding a calling license to a user. It cannot be changed if a user is
+        already an existing calling user.
 
-        When doing attendee management, to update a user “from host to attendee” for a site append #attendee to the
-        respective site_url and remove the meeting host license for this site from the license array. To update a
-        person “from attendee to host” for a site, add the meeting license for this site in the meeting array and
-        remove that site from the site_url parameter.
+        When doing attendee management, to update a user from host role to an attendee for a site append #attendee to
+        the respective siteUrl and remove the meeting host license for this site from the license array.
 
-        Removing the attendee privilege for a user on a meeting site is done by removing that sitename#attendee from
-        the siteUrls array. The show_all_types parameter must be set to True.
+        To update a person from an attendee role to a host for a site, add the meeting license for this site in the
+        meeting array, and remove that site from the siteurl parameter.
+
+        To remove the attendee privilege for a user on a meeting site, remove the sitename#attendee from the siteUrls
+        array. The showAllTypes parameter must be set to true.
 
         :param person: The person to update
         :type person: Person
@@ -9365,6 +9375,77 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         return DeviceCustomization.parse_obj(data)
 
 
+class AsVoiceMessagingApi(AsApiChild, base='telephony/voiceMessages'):
+    """
+    Voice Messaging APIs provide support for handling voicemail and message waiting indicators in Webex Calling.  The
+    APIs are limited to user access (no admin access), and all GET commands require the spark:calls_read scope, while
+    the other commands require the spark:calls_write scope.
+    """
+
+    async def summary(self) -> MessageSummary:
+        """
+        Get a summary of the voicemail messages for the user.
+        """
+        url = self.ep('summary')
+        data = await super().get(url=url)
+        return MessageSummary.parse_obj(data)
+
+    def list_gen(self, **params) -> AsyncGenerator[VoiceMessageDetails, None, None]:
+        """
+        Get the list of all voicemail messages for the user.
+        """
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=VoiceMessageDetails, params=params)
+
+    async def list(self, **params) -> List[VoiceMessageDetails]:
+        """
+        Get the list of all voicemail messages for the user.
+        """
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=VoiceMessageDetails, params=params)]
+
+    async def delete(self, message_id: str):
+        """
+        Delete a specfic voicemail message for the user.
+
+        :param message_id: The message identifer of the voicemail message to delete
+        :type message_id: str
+        """
+        url = self.ep(f'{message_id}')
+        await super().delete(url=url)
+        return
+
+    async def mark_as_read(self, message_id: str):
+        """
+        Update the voicemail message(s) as read for the user.
+        If the messageId is provided, then only mark that message as read.  Otherwise, all messages for the user are
+        marked as read.
+
+        :param message_id: The voicemail message identifier of the message to mark as read.  If the messageId is not
+            provided, then all voicemail messages for the user are marked as read.
+        :type message_id: str
+        """
+        body = {'messageId': message_id}
+        url = self.ep('markAsRead')
+        await super().post(url=url, json=body)
+        return
+
+    async def mark_as_unread(self, message_id: str):
+        """
+        Update the voicemail message(s) as unread for the user.
+        If the messageId is provided, then only mark that message as unread.  Otherwise, all messages for the user are
+        marked as unread.
+
+        :param message_id: The voicemail message identifier of the message to mark as unread.  If the messageId is not
+            provided, then all voicemail messages for the user are marked as unread.
+        :type message_id: str
+        """
+        body = {'messageId': message_id}
+        url = self.ep('markAsUnread')
+        await super().post(url=url, json=body)
+        return
+
+
 class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
     """
     location voice portal API
@@ -9703,6 +9784,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     # location voicemail groups
     voicemail_groups: AsVoicemailGroupsApi
     voicemail_rules: AsVoicemailRulesApi
+    voice_messaging: AsVoiceMessagingApi
     voiceportal: AsVoicePortalApi
 
     def __init__(self, session: AsRestSession):

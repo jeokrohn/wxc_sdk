@@ -100,6 +100,7 @@ from wxc_sdk.telephony.prem_pstn.trunk import CnameRecord, DeviceStatus, Outboun
     TrunkUsage
 from wxc_sdk.telephony.vm_rules import BlockContiguousSequences, BlockPreviousPasscodes, BlockRepeatedDigits,\
     DefaultVoicemailPinRules, EnabledAndNumberOfDays, PinLength, VoiceMailRules
+from wxc_sdk.telephony.voice_messaging import MessageSummary, VoiceMailPartyInformation, VoiceMessageDetails
 from wxc_sdk.telephony.voicemail_groups import VoicemailGroup, VoicemailGroupDetail
 from wxc_sdk.telephony.voiceportal import ExpirePasscode, FailedAttempts, PasscodeRules, VoicePortalSettings
 from wxc_sdk.tokens import Tokens
@@ -143,14 +144,14 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'Location', 'LocationAddress', 'LocationAndNumbers', 'LocationCallParkSettings', 'LocationMoHGreetingType',
            'LocationMoHSetting', 'LocationVoiceMailSettings', 'LoggingLevel', 'MACState', 'MACStatus',
            'MACValidationResponse', 'MediaFileType', 'MemberCommon', 'Membership', 'MenuKey', 'Message',
-           'MessageAttachment', 'MohMessageSetting', 'MonitoredElement', 'MonitoredElementMember', 'MonitoredMember',
-           'Monitoring', 'MppCustomization', 'NetworkConnectionType', 'NightService', 'NoAnswer', 'Notification',
-           'NotificationRepeat', 'NotificationType', 'NumberAndAction', 'NumberDetails', 'NumberListPhoneNumber',
-           'NumberListPhoneNumberType', 'NumberLocation', 'NumberOwner', 'NumberState', 'NumberType',
-           'OnboardingMethod', 'OrganisationVoicemailSettings', 'OrganisationVoicemailSettingsAPI', 'Organization',
-           'OriginatorType', 'OutboundProxy', 'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction',
-           'OverflowSetting', 'OwnerType', 'PSTNConnection', 'PTTConnectionType', 'Paging', 'PagingAgent',
-           'ParkedAgainst', 'PasscodeRules', 'PatternAction', 'PatternAndAction', 'PbxUserDestination',
+           'MessageAttachment', 'MessageSummary', 'MohMessageSetting', 'MonitoredElement', 'MonitoredElementMember',
+           'MonitoredMember', 'Monitoring', 'MppCustomization', 'NetworkConnectionType', 'NightService', 'NoAnswer',
+           'Notification', 'NotificationRepeat', 'NotificationType', 'NumberAndAction', 'NumberDetails',
+           'NumberListPhoneNumber', 'NumberListPhoneNumberType', 'NumberLocation', 'NumberOwner', 'NumberState',
+           'NumberType', 'OnboardingMethod', 'OrganisationVoicemailSettings', 'OrganisationVoicemailSettingsAPI',
+           'Organization', 'OriginatorType', 'OutboundProxy', 'OutgoingPermissionCallType', 'OutgoingPermissions',
+           'OverflowAction', 'OverflowSetting', 'OwnerType', 'PSTNConnection', 'PTTConnectionType', 'Paging',
+           'PagingAgent', 'ParkedAgainst', 'PasscodeRules', 'PatternAction', 'PatternAndAction', 'PbxUserDestination',
            'PeopleStatus', 'Person', 'PersonDevicesResponse', 'PersonForwardingSetting', 'PersonNumbers',
            'PersonPhoneNumber', 'PersonPlaceAgent', 'PersonSettingsApiChild', 'PersonType', 'Personality',
            'PhoneLanguage', 'PhoneNumber', 'PhoneNumberType', 'PinLength', 'Policy', 'PrimaryOrShared', 'Privacy',
@@ -169,11 +170,12 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'UpdatePersonNumbers', 'UpdatePersonPhoneNumber', 'UsageRouteLists', 'UserBase', 'UserNumber', 'UserType',
            'ValidateExtensionStatus', 'ValidateExtensionStatusState', 'ValidateExtensionsResponse',
            'ValidatePhoneNumberStatus', 'ValidatePhoneNumberStatusState', 'ValidatePhoneNumbersResponse',
-           'ValidationRules', 'ValidationStatus', 'VirtualExtensionDestination', 'VlanSetting', 'VoiceMailRules',
-           'VoicePortalSettings', 'VoicemailCopyOfMessage', 'VoicemailEnabled', 'VoicemailEnabledWithGreeting',
-           'VoicemailFax', 'VoicemailGroup', 'VoicemailGroupDetail', 'VoicemailMessageStorage',
-           'VoicemailNotifications', 'VoicemailSettings', 'VoicemailTransferToNumber', 'WaitMessageSetting',
-           'WaitMode', 'WebHook', 'WebHookCreate', 'WebHookEvent', 'WebHookResource', 'WebHookStatus',
-           'WelcomeMessageSetting', 'WifiCustomization', 'WifiNetwork', 'WorkSpaceNumbers', 'WorkSpaceType',
-           'Workspace', 'WorkspaceEmail', 'WorkspaceLocation', 'WorkspaceLocationFloor', '_Helper', 'dt_iso_str',
-           'plus1', 'to_camel', 'webex_id_to_uuid']
+           'ValidationRules', 'ValidationStatus', 'VirtualExtensionDestination', 'VlanSetting',
+           'VoiceMailPartyInformation', 'VoiceMailRules', 'VoiceMessageDetails', 'VoicePortalSettings',
+           'VoicemailCopyOfMessage', 'VoicemailEnabled', 'VoicemailEnabledWithGreeting', 'VoicemailFax',
+           'VoicemailGroup', 'VoicemailGroupDetail', 'VoicemailMessageStorage', 'VoicemailNotifications',
+           'VoicemailSettings', 'VoicemailTransferToNumber', 'WaitMessageSetting', 'WaitMode', 'WebHook',
+           'WebHookCreate', 'WebHookEvent', 'WebHookResource', 'WebHookStatus', 'WelcomeMessageSetting',
+           'WifiCustomization', 'WifiNetwork', 'WorkSpaceNumbers', 'WorkSpaceType', 'Workspace', 'WorkspaceEmail',
+           'WorkspaceLocation', 'WorkspaceLocationFloor', '_Helper', 'dt_iso_str', 'plus1', 'to_camel',
+           'webex_id_to_uuid']
