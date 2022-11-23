@@ -131,7 +131,8 @@ def main():
     setup_logging(console_level=logging.DEBUG if args.debug else logging.INFO,
                   log_path=args.log_path)
 
-    doc_details = DocMethodDetails(info=f'command: {" ".join(sys.argv)}')
+    param_strings = [f'"{s}"' if ' ' in s else s for s in sys.argv]
+    doc_details = DocMethodDetails(info=f'command: {" ".join(param_strings)}')
 
     if args.baseline:
         logging.info(f'reading base api spec from {args.baseline}')
