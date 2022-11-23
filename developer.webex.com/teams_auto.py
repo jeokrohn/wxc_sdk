@@ -6,30 +6,25 @@ from typing import List, Optional
 from pydantic import Field
 
 
-__all__ = ['ListTeamsResponse', 'Team', 'TeamsApi']
+__all__ = ['CreateTeamBody', 'ListTeamsResponse', 'Team', 'TeamsApi']
 
 
-class Team(ApiModel):
-    #: A unique identifier for the team.
-    id: Optional[str]
+class CreateTeamBody(ApiModel):
     #: A user-friendly name for the team.
     name: Optional[str]
+    #: The teams description.
+    description: Optional[str]
+
+
+class Team(CreateTeamBody):
+    #: A unique identifier for the team.
+    id: Optional[str]
     #: The date and time the team was created.
     created: Optional[str]
 
 
 class ListTeamsResponse(ApiModel):
     items: Optional[list[Team]]
-
-
-class CreateTeamBody(ApiModel):
-    #: A user-friendly name for the team.
-    name: Optional[str]
-
-
-class UpdateTeamBody(ApiModel):
-    #: A user-friendly name for the team.
-    name: Optional[str]
 
 
 class TeamsApi(ApiChild, base='teams'):
@@ -46,34 +41,43 @@ class TeamsApi(ApiChild, base='teams'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Team, params=params)
 
-    def create(self, name: str) -> Team:
+    def create(self, name: str, description: str = None) -> Team:
         """
         Creates a team.
         The authenticated user is automatically added as a member of the team. See the Team Memberships API to learn how to add more people to the team.
 
         :param name: A user-friendly name for the team.
         :type name: str
+        :param description: The teams description.
+        :type description: str
         """
         body = {}
         if name is not None:
             body['name'] = name
+        if description is not None:
+            body['description'] = description
         url = self.ep()
         data = super().post(url=url, json=body)
         return Team.parse_obj(data)
 
-    def details(self, team_id: str) -> Team:
+    def details(self, team_id: str, description: str = None) -> Team:
         """
         Shows details for a team, by ID.
         Specify the team ID in the teamId parameter in the URI.
 
         :param team_id: The unique identifier for the team.
         :type team_id: str
+        :param description: The teams description.
+        :type description: str
         """
+        params = {}
+        if description is not None:
+            params['description'] = description
         url = self.ep(f'{team_id}')
-        data = super().get(url=url)
+        data = super().get(url=url, params=params)
         return Team.parse_obj(data)
 
-    def update(self, team_id: str, name: str) -> Team:
+    def update(self, team_id: str, name: str, description: str = None) -> Team:
         """
         Updates details for a team, by ID.
         Specify the team ID in the teamId parameter in the URI.
@@ -82,10 +86,14 @@ class TeamsApi(ApiChild, base='teams'):
         :type team_id: str
         :param name: A user-friendly name for the team.
         :type name: str
+        :param description: The teams description.
+        :type description: str
         """
         body = {}
         if name is not None:
             body['name'] = name
+        if description is not None:
+            body['description'] = description
         url = self.ep(f'{team_id}')
         data = super().put(url=url, json=body)
         return Team.parse_obj(data)

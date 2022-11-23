@@ -134,7 +134,7 @@ class Data(ApiModel):
     #: The meeting's host data
     host: Optional[object]
     #: Common Identity (CI) authenticated meeting attendees
-    attendees: Optional[list[str]]
+    attendees: Optional[list[]]
     #: indicates whether or not the Voice Assistant was enabled during the meeting. If true a transcript should be available a couple minutes after the meeting ended at the meetingTranscripts resource
     transcription_enabled: Optional[str]
     #: indicates if recording was enabled for all or parts of the meeting. If true a recording should be available shortly after the meeting ended at the recordings resource

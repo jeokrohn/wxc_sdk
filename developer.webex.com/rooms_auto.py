@@ -25,6 +25,10 @@ class CreateRoomBody(ApiModel):
     classification_id: Optional[str]
     #: Set the space as locked/moderated and the creator becomes a moderator
     is_locked: Optional[bool]
+    #: The room is public and therefore discoverable within the org. Anyone can find and join that room. When true the description must be filled in.
+    is_public: Optional[bool]
+    #: The description of the space.
+    description: Optional[str]
     #: Sets the space into announcement Mode.
     is_announcement_only: Optional[bool]
 
@@ -44,6 +48,8 @@ class Room(CreateRoomBody):
     owner_id: Optional[str]
     #: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in this space, while maintaing historical data.
     is_read_only: Optional[bool]
+    #: Date and time when the room was made public.
+    made_public: Optional[str]
 
 
 class ListRoomsResponse(ApiModel):
@@ -74,13 +80,13 @@ class UpdateRoomBody(CreateRoomBody):
 
 class RoomsApi(ApiChild, base='rooms'):
     """
-    Rooms are virtual meeting places where people post messages and collaborate to get work done. This API is used to manage the rooms themselves. Rooms are created and deleted with this API. You can also update a room to change its title, for example.
+    Rooms are virtual meeting places where people post messages and collaborate to get work done. This API is used to manage the rooms themselves. Rooms are created and deleted with this API. You can also update a room to change its title or make it public, for example.
     To create a team room, specify the a teamId in the POST payload. Note that once a room is added to a team, it cannot be moved. To learn more about managing teams, see the Teams API.
     To manage people in a room see the Memberships API.
     To post content see the Messages API.
     """
 
-    def list(self, team_id: str = None, type_: str = None, sort_by: str = None, **params) -> Generator[Room, None, None]:
+    def list(self, team_id: str = None, type_: str = None, org_public_spaces: bool = None, from_: str = None, to_: str = None, sort_by: str = None, **params) -> Generator[Room, None, None]:
         """
         List rooms.
         The title of the room for 1:1 rooms will be the display name of the other person.
@@ -89,12 +95,18 @@ class RoomsApi(ApiChild, base='rooms'):
         Known Limitations:
         The underlying database does not support natural sorting by lastactivity and will only sort on limited set of results, which are pulled from the database in order of roomId. For users or bots in more than 3000 spaces this can result in anomalies such as spaces that have had recent activity not being returned in the results when sorting by lastacivity.
 
-        :param team_id: List rooms associated with a team, by ID.
+        :param team_id: List rooms associated with a team, by ID. Cannot be set in combination with orgPublicSpaces.
         :type team_id: str
-        :param type_: List rooms by type.
+        :param type_: List rooms by type. Cannot be set in combination with orgPublicSpaces.
 Possible values: direct, group
         :type type_: str
-        :param sort_by: Sort results.
+        :param org_public_spaces: Shows the org's public spaces joined and unjoined. When set the result list is sorted by the madePublic timestamp.
+        :type org_public_spaces: bool
+        :param from_: Filters rooms, that were made public after this time. See madePublic timestamp
+        :type from_: str
+        :param to_: Filters rooms, that were made public before this time. See maePublic timestamp
+        :type to_: str
+        :param sort_by: Sort results. Cannot be set in combination with orgPublicSpaces.
 Possible values: id, lastactivity, created
         :type sort_by: str
         """
@@ -102,12 +114,18 @@ Possible values: id, lastactivity, created
             params['teamId'] = team_id
         if type_ is not None:
             params['type'] = type_
+        if org_public_spaces is not None:
+            params['orgPublicSpaces'] = org_public_spaces
+        if from_ is not None:
+            params['from'] = from_
+        if to_ is not None:
+            params['to'] = to_
         if sort_by is not None:
             params['sortBy'] = sort_by
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Room, params=params)
 
-    def create(self, title: str, team_id: str = None, classification_id: str = None, is_locked: bool = None, is_announcement_only: bool = None) -> Room:
+    def create(self, title: str, team_id: str = None, classification_id: str = None, is_locked: bool = None, is_public: bool = None, description: str = None, is_announcement_only: bool = None) -> Room:
         """
         Creates a room. The authenticated user is automatically added as a member of the room. See the Memberships API to learn how to add more people to the room.
         To create a 1:1 room, use the Create Messages endpoint to send a message directly to another person by using the toPersonId or toPersonEmail parameters.
@@ -122,6 +140,10 @@ Possible values: id, lastactivity, created
         :type classification_id: str
         :param is_locked: Set the space as locked/moderated and the creator becomes a moderator
         :type is_locked: bool
+        :param is_public: The room is public and therefore discoverable within the org. Anyone can find and join that room. When true the description must be filled in.
+        :type is_public: bool
+        :param description: The description of the space.
+        :type description: str
         :param is_announcement_only: Sets the space into announcement Mode.
         :type is_announcement_only: bool
         """
@@ -134,6 +156,10 @@ Possible values: id, lastactivity, created
             body['classificationId'] = classification_id
         if is_locked is not None:
             body['isLocked'] = is_locked
+        if is_public is not None:
+            body['isPublic'] = is_public
+        if description is not None:
+            body['description'] = description
         if is_announcement_only is not None:
             body['isAnnouncementOnly'] = is_announcement_only
         url = self.ep()
@@ -165,11 +191,12 @@ Possible values: id, lastactivity, created
         data = super().get(url=url)
         return GetRoomMeetingDetailsResponse.parse_obj(data)
 
-    def update(self, room_id: str, title: str, classification_id: str = None, team_id: str = None, is_locked: bool = None, is_announcement_only: bool = None, is_read_only: bool = None) -> Room:
+    def update(self, room_id: str, title: str, classification_id: str = None, team_id: str = None, is_locked: bool = None, is_public: bool = None, description: str = None, is_announcement_only: bool = None, is_read_only: bool = None) -> Room:
         """
         Updates details for a room, by ID.
         Specify the room ID in the roomId parameter in the URI.
         A space can only be put into announcement mode when it is locked.
+        Any space participant or compliance officer can convert a space from public to private. Conversion from private to public is currently not supported. To remove a description please use a space character   by itself.
 
         :param room_id: The unique identifier for the room.
         :type room_id: str
@@ -181,6 +208,10 @@ Possible values: id, lastactivity, created
         :type team_id: str
         :param is_locked: Set the space as locked/moderated and the creator becomes a moderator
         :type is_locked: bool
+        :param is_public: The room is public and therefore discoverable within the org. Anyone can find and join that room. When true the description must be filled in.
+        :type is_public: bool
+        :param description: The description of the space.
+        :type description: str
         :param is_announcement_only: Sets the space into Announcement Mode or clears the Anouncement Mode (false)
         :type is_announcement_only: bool
         :param is_read_only: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in this space, while maintaing historical data.
@@ -195,6 +226,10 @@ Possible values: id, lastactivity, created
             body['teamId'] = team_id
         if is_locked is not None:
             body['isLocked'] = is_locked
+        if is_public is not None:
+            body['isPublic'] = is_public
+        if description is not None:
+            body['description'] = description
         if is_announcement_only is not None:
             body['isAnnouncementOnly'] = is_announcement_only
         if is_read_only is not None:

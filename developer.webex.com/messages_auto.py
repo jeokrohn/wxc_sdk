@@ -146,7 +146,9 @@ class CreateMessageResponse(ListMessage):
 
 class MessagesApi(ApiChild, base='messages'):
     """
-
+    Messages are how you communicate in a room. In Webex, each message is displayed on its own line along with a timestamp and sender information. Use this API to list, create, update, and delete messages.
+    Message can contain plain text, rich text, and a file attachment.
+    Just like in the Webex app, you must be a member of the room in order to target it with this API.
     """
 
     def list(self, room_id: str, parent_id: str = None, mentioned_people: List[str] = None, before: str = None, before_message: str = None, **params) -> Generator[ListMessagesResponse, None, None]:

@@ -144,7 +144,7 @@ class PeopleApi(ApiChild, base='people'):
         """
         List people in your organization. For most users, either the email or displayName parameter is required. Admin users can omit these fields and list all users in their organization.
         Response properties associated with a user's presence status, such as status or lastActivity, will only be returned for people within your organization or an organization you manage. Presence information will not be returned if the authenticated user has disabled status sharing.
-        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData parameter as true. Admin users can list all users in a location or with a specific phone number.
+        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData parameter as true. Admin users can list all users in a location or with a specific phone number. Admin users will receive an enriched payload with additional administrative fields like liceneses,roles etc. These fields are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=
         Lookup by email is only supported for people within the same org or where a partner admin relationship is in place.
         Long result sets will be split into pages.
 
@@ -296,7 +296,7 @@ Possible values: mysite.webex.com#attendee
         Note: The locationId can only be set when adding a calling license to a user. It cannot be changed if a user is already an existing calling user.
         When doing attendee management, to update a user from host role to an attendee for a site append #attendee to the respective siteUrl and remove the meeting host license for this site from the license array.
         To update a person from an attendee role to a host for a site, add the meeting license for this site in the meeting array, and remove that site from the siteurl parameter.
-        Removing the attendee privilege for a  user on a meeting site is done by removing that sitename#attendee  from the siteUrls array. The showAllTypes parameter must be set to true.
+        To remove the attendee privilege for a user on a meeting site, remove the sitename#attendee from the siteUrls array. The showAllTypes parameter must be set to true.
 
         :param person_id: A unique identifier for the person.
         :type person_id: str
