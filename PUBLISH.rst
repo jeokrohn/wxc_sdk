@@ -18,7 +18,7 @@
 * push to GitHub: MAKE SURE TO PUSH TAGS!
 
 * poetry publish
-* review read the docs
+* review read the docs: especially check build logs for errors
 * build docs for last tag on readthedocs; under "Versions"
 * review pypi
 * review GitHub

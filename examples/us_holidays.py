@@ -31,7 +31,7 @@ CLEAN_UP = False
 
 # first and last year for which to create public holiday events
 FIRST_YEAR = 2022
-LAST_YEAR = 2022
+LAST_YEAR = 2024
 
 LAST_YEAR = not CLEAN_UP and LAST_YEAR or FIRST_YEAR
 
@@ -200,9 +200,11 @@ if __name__ == '__main__':
                         for location in wx_api.locations.list()
                         if location.address.country == 'US']
 
+        # set up location locks
+        # location_locks is a defaultdict -> accessing with all potential keys creates the locks
+        list(location_locks[loc.location_id] for loc in us_locations)
+
         # create national holiday schedule for given year(s) and locations
-        start_year = 2022
-        last_year = 2023
         if USE_THREADING:
             with ThreadPoolExecutor() as pool:
                 list(pool.map(

@@ -86,7 +86,8 @@ def main():
                     # try again with new tokens
                     continue
             # find space
-            # ... the complicated way to avoid to have to paginate through the whole thing if the target ha
+            # ... the complicated way to avoid to have to paginate through the whole thing if the target happend to
+            # be in the 1st "few" spaces
             target = next((space for space in api.rooms.list(max=500)
                            if space.title == args.space), None)
             if target is None:
