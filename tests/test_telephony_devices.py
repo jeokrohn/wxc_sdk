@@ -29,6 +29,7 @@ class TestSupportedDevices(TestCaseWithLog):
         """
         supported_devices = self.api.telephony.supported_devices()
         print(f'Got {len(supported_devices)} supported devices')
+        print('\n'.join(f'{sd}' for sd in supported_devices))
 
     def test_002_dect_device_types(self):
         """

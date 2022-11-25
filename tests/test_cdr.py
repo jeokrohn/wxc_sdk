@@ -11,6 +11,9 @@ from wxc_sdk.rest import RestError
 
 class TestCDR(TestCaseWithLog):
     def test_001(self):
+        """
+        Get CDRs
+        """
         api = self.api.cdr
         try:
             cdrs = list(api.get_cdr_history())
@@ -38,6 +41,9 @@ class TestCDR(TestCaseWithLog):
         foo = 1
 
     def test_002_pagination(self):
+        """
+        GET CDRs w/ pagination
+        """
         api = self.api.cdr
         try:
             cdrs = list(api.get_cdr_history(max=5))

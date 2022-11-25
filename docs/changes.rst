@@ -1,6 +1,9 @@
 Release history
 ===============
 
+- feat: new example queue_helper.py
+- feat: new attributes in :class:`wxc_sdk.cdr.CDR`
+
 1.10.1
 ------
 - fix: missing requirement: pyyaml

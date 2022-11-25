@@ -58,18 +58,24 @@ def main():
     parser = ArgumentParser(description='read contents of a space')
     parser.add_argument('--email', '-e', type=email_type, required=False, help='email address of user')
     parser.add_argument('space', type=str, help='space name')
+    parser.add_argument('--token', type=str, required=False, help='admin access token to use')
+
     args = parser.parse_args()
 
     # get tokens
+    tokens = args.token
     load_dotenv(os.path.join(os.getcwd(),
                              f'{os.path.splitext(os.path.basename(__file__))[0]}.env'))
-    integration = build_integration()
+
     # try to get token from file .. or in the 2nd round force new tokens if the token is for a different email address
     for force_new in (False, True):
-        tokens = integration.get_cached_tokens_from_yml(
-            yml_path=os.path.join(os.getcwd(),
-                                  f'{os.path.splitext(os.path.basename(__file__))[0]}.yml'),
-            force_new=force_new)
+        if not tokens:
+            integration = build_integration()
+            tokens = integration.get_cached_tokens_from_yml(
+                yml_path=os.path.join(os.getcwd(),
+                                      f'{os.path.splitext(os.path.basename(__file__))[0]}.yml'),
+                force_new=force_new)
+
         if not tokens:
             print('failed to get valid access token', file=sys.stderr)
             exit(1)
@@ -84,9 +90,14 @@ def main():
                     exit(1)
                 else:
                     # try again with new tokens
-                    continue
+                    if not args.token:
+                        continue
+                    else:
+                        break
+                # if
+            # if
             # find space
-            # ... the complicated way to avoid to have to paginate through the whole thing if the target happend to
+            # ... the complicated way to avoid to have to paginate through the whole thing if the target happened to
             # be in the 1st "few" spaces
             target = next((space for space in api.rooms.list(max=500)
                            if space.title == args.space), None)
