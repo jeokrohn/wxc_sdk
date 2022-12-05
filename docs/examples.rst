@@ -155,6 +155,54 @@ Source: |call_intercept.py|_
 .. literalinclude:: ../examples/call_intercept.py
     :linenos:
 
+Read/update call queue agent join states
+----------------------------------------
+
+    | usage: queue_helper.py [-h] [--location LOCATION [LOCATION ...]]
+    |                        [--queue QUEUE [QUEUE ...]]
+    |                        [--join JOIN_AGENT [JOIN_AGENT ...]]
+    |                        [--unjoin UNJOIN_AGENT [UNJOIN_AGENT ...]]
+    |                        [--remove REMOVE_USER [REMOVE_USER ...]]
+    |                        [--add ADD_USER [ADD_USER ...]] [--dryrun]
+    |                        [--token TOKEN]
+    | 
+    | Modify call queue settings from the CLI
+    | 
+    | optional arguments:
+    |   -h, --help            show this help message and exit
+    |   --location LOCATION [LOCATION ...], -l LOCATION [LOCATION ...]
+    |                         name of location to work on. If missing then work on
+    |                         all locations.
+    |   --queue QUEUE [QUEUE ...], -q QUEUE [QUEUE ...]
+    |                         name(s) of queue(s) to operate on. If missing then
+    |                         work on all queues in location.
+    |   --join JOIN_AGENT [JOIN_AGENT ...], -j JOIN_AGENT [JOIN_AGENT ...]
+    |                         Join given user(s) on given queue(s). Can be "all" to
+    |                         act on all agents.
+    |   --unjoin UNJOIN_AGENT [UNJOIN_AGENT ...], -u UNJOIN_AGENT [UNJOIN_AGENT ...]
+    |                         Unjoin given agent(s) from given queue(s). Can be
+    |                         "all" to act on all agents.
+    |   --remove REMOVE_USER [REMOVE_USER ...], -r REMOVE_USER [REMOVE_USER ...]
+    |                         Remove given agent from given queue(s). Can be "all"
+    |                         to act on all agents.
+    |   --add ADD_USER [ADD_USER ...], -a ADD_USER [ADD_USER ...]
+    |                         Add given users to given queue(s).
+    |   --dryrun, -d          Dry run; don't apply any changes
+    |   --token TOKEN         admin access token to use
+
+The script uses the access token passed via the CLI, reads one from the WEBEX_ACCESS_TOKEN environment variable or
+obtains tokens via an OAuth flow. For the last option the integration parameters are read from environment variables
+which can be set in a ``queue_helper.env`` file in the current directory.
+
+Source: |queue_helper.py|_
+
+.. |queue_helper.py| replace:: ``queue_helper.py``
+
+.. literalinclude:: ../examples/queue_helper.py
+    :linenos:
+
+
+
 .. _examples directory on GitHub: https://github.com/jeokrohn/wxc_sdk/tree/master/examples
 .. _"Integrations" page on developer.cisco.com: https://developer.webex.com/docs/integrations
 
@@ -167,6 +215,7 @@ Source: |call_intercept.py|_
 .. _reset_call_forwarding.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/reset_call_forwarding.py
 .. _modify_voicemail.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/modify_voicemail.py
 .. _call_intercept.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/call_intercept.py
+.. _queue_helper.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/queue_helper.py
 
 .. _webbrowser module: https://docs.python.org/3/library/webbrowser.html
 .. _My Webex Apps on developer.webex.com: https://developer.webex.com/my-apps
