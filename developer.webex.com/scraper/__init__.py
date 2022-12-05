@@ -843,14 +843,16 @@ class DevWebexComScraper:
         try:
             # wait for button to accept cookies to be steady
             accept_cookies = WebDriverWait(driver=self.driver, timeout=10).until(
-                method=steady((By.ID, 'onetrust-accept-btn-handler')))
+                method=steady((By.ID, 'onetrust-close-btn-container')))
         except TimeoutException:
             # if there is no accept cookies button after 10 seconds then we are probably ok
             log('No popup to accept cookies', level=logging.WARNING)
         else:
             accept_cookies: WebElement
+            # there is a button in there that we need to click
+            button = accept_cookies.find_element(by=By.TAG_NAME, value='button')
             log('accept cookies')
-            accept_cookies.click()
+            button.click()
 
         if self.credentials:
             self.login()
