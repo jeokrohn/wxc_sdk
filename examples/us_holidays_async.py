@@ -28,7 +28,7 @@ location_locks: dict[str, asyncio.Lock] = defaultdict(asyncio.Lock)
 USE_TASKS = True
 
 # True: delete holiday schedule instead of creating one
-CLEAN_UP = True
+CLEAN_UP = False
 
 # first and last year for which to create public holiday events
 FIRST_YEAR = 2022
