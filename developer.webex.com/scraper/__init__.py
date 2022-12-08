@@ -68,6 +68,13 @@ def div_repr(d) -> str:
 
 
 def python_type(type_str: str, for_list: bool = False) -> str:
+    """
+    Transform a type description from developer.cisco.com to a type that can be used in Python code
+
+    :param type_str:
+    :param for_list:
+    :return:
+    """
     # transform "Some Class" to "SomeClass"
     type_str, _ = re.subn(r'\s([A-Z])', '\g<1>', type_str)
     if type_str == 'number':
@@ -78,7 +85,7 @@ def python_type(type_str: str, for_list: bool = False) -> str:
         return 'str'
     elif m := re.match(r'array\[(\w+)]', type_str):
         return f'List[{python_type(m.group(1))}]'
-    elif type_str == 'array':
+    elif type_str == 'array' or type_str == 'string array':
         return 'List[str]'
     if (referenced_class := Class.registry.get(type_str)) and referenced_class.base and \
             not referenced_class.attributes:
@@ -91,7 +98,7 @@ def python_type(type_str: str, for_list: bool = False) -> str:
                           for a in referenced_class.attributes
                           if a.param_class and re.match(r'array\[\w+]', a.type)), None)
         if list_attr:
-            return list_attr.param_class.name
+            return python_type(list_attr.param_class.name)
 
     return type_str
 
@@ -294,7 +301,7 @@ class Class:
             # we are done here; source already generated
             return
 
-        if not self.attributes:
+        if not self.attributes and not self.base:
             # empty classes don't need to be generated
             return
 
@@ -308,7 +315,10 @@ class Class:
         if self.base:
             yield from self.registry[self.base].sources()
 
-        if only_childs:
+        if only_childs or not self.attributes:
+            # don't need to actually create a source for this class if
+            # * we only were asked to create child classes
+            # * or this is a class w/o attributes --> this class is redundant and is represented by its base
             return
 
         # then yield source for this class

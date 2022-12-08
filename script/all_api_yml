@@ -8,6 +8,7 @@ developer.webex.com/read_api_spec.py -f developer.webex.com/api_spec.yml
 developer.webex.com/read_api_spec.py -a developer.webex.com/.env -f developer.webex.com/auth_api_spec.yml
 developer.webex.com/read_api_spec.py -a developer.webex.com/.env -s Calling -t "Webex Calling Detailed Call History" -f developer.webex.com/cdr.yml
 developer.webex.com/read_api_spec.py -s "Full API Reference" -t "Report Templates" "Reports" -f developer.webex.com/reports.yml
+developer.webex.com/read_api_spec.py -s Messaging -t "Attachment Actions" Events Memberships Messages, People, "Room Tabs" "Rooms" "Team Memberships" Teams Webhooks -f developer.webex.com/messaging.yml
 developer.webex.com/read_api_spec.py -s Messaging -t Events -f developer.webex.com/events.yml
 developer.webex.com/read_api_spec.py -s Messaging -t Memberships -f developer.webex.com/memberships.yml
 developer.webex.com/read_api_spec.py -s Messaging -t Messages -f developer.webex.com/messages.yml
@@ -16,8 +17,14 @@ developer.webex.com/read_api_spec.py -s Messaging -t "Room Tabs" -f developer.we
 developer.webex.com/read_api_spec.py -s Messaging -t Rooms -f developer.webex.com/rooms.yml
 developer.webex.com/read_api_spec.py -s Messaging -t "Team Memberships" -f developer.webex.com/team_memberships.yml
 developer.webex.com/read_api_spec.py -s Messaging -t Teams -f developer.webex.com/teams.yml
-developer.webex.com/read_api_spec.py -s Messaging -t "Attachment Actions" Events Memberships Messages, People, "Room Tabs" "Rooms" "Team Memberships" Teams Webhooks -f developer.webex.com/messaging.yml
+developer.webex.com/read_api_spec.py -s Messaging -t "Tracking Codes" -f developer.webex.com/tracking_codes.yml
+developer.webex.com/read_api_spec.py -s Messaging -t Webhooks -f developer.webex.com/webhooks.yml
 developer.webex.com/read_api_spec.py -s Calling -t "Webex Calling Voice Messaging" -f developer.webex.com/voice_messaging.yml
 developer.webex.com/read_api_spec.py -s Calling -t "Webex Calling Workspace Settings" -f developer.webex.com/wxc_ws_settings.yml
+developer.webex.com/read_api_spec.py -a developer.webex.com/.env -s Calling -t "Webex Calling Organization Settings with Move Numbers Features" -f developer.webex.com/wxc_move_numbers.yml
+developer.webex.com/read_api_spec.py -a developer.webex.com/.env -s Calling -t "Webex Calling Organization Settings with Devices Features" -f developer.webex.com/wxc_cust_devices.yml
+developer.webex.com/read_api_spec.py -a developer.webex.com/.env -s Calling -t "Webex Calling Organization Settings with Customer Managed Devices Features" -f developer.webex.com/wxc_cust_devices.yml
+developer.webex.com/read_api_spec.py -s Meetings -f developer.webex.com/meetings.yml
+
 
 for i in developer.webex.com/*.yml; do developer.webex.com/classes.py "$i" -o "${i/.yml/_auto.py}"; done

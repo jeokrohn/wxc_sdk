@@ -26,7 +26,7 @@ from io import StringIO
 from itertools import chain
 from json import JSONDecodeError
 from sys import stderr, stdout
-from typing import TextIO, Optional
+from typing import TextIO, Optional, NamedTuple
 
 from inflection import underscore
 
@@ -137,25 +137,34 @@ class APIMethod:
             for param in uri_parameters:
                 add_param(param)
 
-        # we also need to add query parameters (mandatory 1st)
+        # collect parameters, differentiate between mandatory and optional parameters
+        # 1st collect query parameters and then body parameters
+        class ParameterInfo(NamedTuple):
+            p: Parameter
+            is_query: bool
+            is_body: bool
+
+        mandatory: list[ParameterInfo] = list()
+        optional: list[ParameterInfo] = list()
+
+        # add query parameters (mandatory 1st)
         query_parameters = self.methods_details.parameters_and_response.get('Query Parameters')
         if query_parameters:
-            mandatory = [p for p in query_parameters if p.required]
-            optional = [p for p in query_parameters if not p.required]
-            for param in mandatory:
-                add_param(param, is_query=True)
-            for param in optional:
-                add_param(param, is_query=True)
+            mandatory.extend(ParameterInfo(p=p, is_query=True, is_body=False) for p in query_parameters if p.required)
+            optional.extend(
+                ParameterInfo(p=p, is_query=True, is_body=False) for p in query_parameters if not p.required)
 
         # ... finally we need the request body
         body_parameters = self.methods_details.parameters_and_response.get('Body Parameters')
         if body_parameters:
-            mandatory = [p for p in body_parameters if p.required]
-            optional = [p for p in body_parameters if not p.required]
-            for param in mandatory:
-                add_param(param, is_body=True)
-            for param in optional:
-                add_param(param, is_body=True)
+            mandatory.extend(ParameterInfo(p=p, is_query=False, is_body=True) for p in body_parameters if p.required)
+            optional.extend(ParameterInfo(p=p, is_query=False, is_body=True) for p in body_parameters if not p.required)
+
+        # ... now we can actually add the parameters to the code, mandatory 1st
+        for param in mandatory:
+            add_param(param.p, is_query=param.is_query, is_body=param.is_body)
+        for param in optional:
+            add_param(param.p, is_query=param.is_query, is_body=param.is_body)
 
         method_doc = '\n'.join(f'        {line}' for line in self.methods_details.doc.splitlines())
         if method_doc:
@@ -164,12 +173,15 @@ class APIMethod:
             param_docs = '\n'.join((p for pd in param_docs if (p := pd.strip('\n'))))
             method_doc = '\n'.join((method_doc, param_docs))
         method_doc = method_doc.strip('\n')
-        kwargs = False
+
+        # in list_ methods we want to add "**params" to allow additional parameters
+        if name.startswith('list_'):
+            param_list.append('**params')
+            kwargs = True
+        else:
+            kwargs = False
+
         if param_list:
-            # in list_ methods we want to add "**params" to allow additional parameters
-            if name.startswith('list_'):
-                param_list.append('**params')
-                kwargs = True
             param_list = f', {", ".join(param_list)}'
         else:
             param_list = ''
