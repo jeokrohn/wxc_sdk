@@ -581,8 +581,11 @@ class DevWebexComScraper:
         login = self.driver.find_element(by=By.ID, value='header-login-link')
         login.click()
 
-        # enter email
-        email = self.driver.find_element(by=By.ID, value='IDToken1')
+        # wait for field to enter email address
+        email = WebDriverWait(driver=self.driver, timeout=10).until(
+            method=EC.visibility_of_element_located((By.ID, 'IDToken1'))
+        )
+        # email = self.driver.find_element(by=By.ID, value='IDToken1')
         email.send_keys(self.credentials.user)
 
         # wait for "Sign In" button
