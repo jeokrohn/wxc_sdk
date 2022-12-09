@@ -1,6 +1,7 @@
 import logging
 import re
 import sys
+from collections import defaultdict
 from collections.abc import Generator, Iterable
 from dataclasses import dataclass, field
 from io import StringIO
@@ -232,9 +233,18 @@ class Class:
             self._name = new_name
         self.registry[self._name] = self
 
+    def all_attributes(self) -> Generator[Parameter, None, None]:
+        """
+        all attributes: base attributes and attributes at the class level
+        """
+        if self.base:
+            yield from self.registry[self.base].all_attributes()
+        yield from self.attributes
+
     def equivalent(self, other: 'Class'):
         """
         check if both have the same attributes
+
         :param other:
         :return:
         """
@@ -367,13 +377,20 @@ class Class:
         :param other:
         :return:
         """
+
+        def eq_type(type_a: str, type_b: str):
+            # for comparing types 'number' and 'string' are considered equivalent
+            a = type_a.replace('number', 'string')
+            b = type_b.replace('number', 'string')
+            return a == b
+
         other_attrs = {a.name: a for a in other.attributes}
         common = list()
         for attr in self.attributes:
             if (other_attr := other_attrs.get(attr.name)) is None:
                 continue
             other_attr: Parameter
-            if attr.type != other_attr.type:
+            if not eq_type(attr.type, other_attr.type):
                 continue
             common.append(attr)
         return common
@@ -393,18 +410,26 @@ class Class:
         # for all pairs or classes
         # * determine set of common (same name and type) attributes
         # * create new base classes as required
-        for class_a in cls.registry.values():
+        for class_a in reversed(cls.registry.values()):
             if not class_a.attributes:
                 # log_(f'{class_a._name}, skipping, no attributes')
                 continue
-            # for now ignore multiple tiers of hierachy
+            # for now ignore multiple tiers of hierarchy
             # if this class already has a base then don't check whether this class is subclass of another
             if class_a.base:
                 # log_(f'{class_a._name}, skipping, base {class_a.base}')
                 continue
 
+            class ClassCommon(NamedTuple):
+                class_: Class
+                common: list[Parameter]
+
+            # collect all candidate base classes: classes with common attributes and group them by number of common
+            # attributes
+            candidates: dict[int, list[ClassCommon]] = defaultdict(list)
+
             # look at all other classes
-            for class_b in cls.registry.values():
+            for class_b in reversed(cls.registry.values()):
                 if class_b._name == class_a._name:
                     continue
                 # if class_b already has a base then skip
@@ -414,17 +439,24 @@ class Class:
 
                 # determine common attributes
                 common = class_a.common_attributes(class_b)
-                if len(common) == len(class_a.attributes) and len(common) > 1:
+                if len(common) == len(class_b.attributes) and len(common) > 1:
+                    # all attributes of class_b also exist in our class_a -> candidate base class for class_a
                     log_(f'{class_a._name}/{class_b._name}, common attributes: {", ".join(a.name for a in common)}')
-
-                    # of all class_a attributes also exist in class_b then class_a is subclass of class_b
-                    class_b.base = class_a._name
-                    # ... and we can remove all common attributes from class_b
-                    names = {a.name for a in common}
-                    class_b.attributes = [a for a in class_b.attributes
-                                          if a.name not in names]
+                    candidates[len(common)].append(ClassCommon(class_=class_b, common=common))
                 # if
             # for
+            # now pick the candidate base class with the largest overlap
+            if candidates:
+                cand_list = candidates[max(candidates)]
+                class_b, common = cand_list[-1]
+
+                # class_b is base for class_a
+                class_a.base = class_b._name
+                # ... and we can remove all common attributes from class_a
+                names = {a.name for a in common}
+                class_a.attributes = [a for a in class_a.attributes
+                                      if a.name not in names]
+            # if
         # for
         return
 
