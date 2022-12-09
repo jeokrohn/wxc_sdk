@@ -771,7 +771,15 @@ docs:
     doc: null
     header: null
     methods: []
+  Webex Calling Organization Settings with Customer Managed Devices Features:
+    doc: null
+    header: null
+    methods: []
   Webex Calling Organization Settings with Devices Features:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Organization Settings with Move Numbers Features:
     doc: null
     header: null
     methods: []
@@ -807,23 +815,7 @@ docs:
     doc: null
     header: null
     methods: []
-  Wholesale Customers with Meetings and Suite:
-    doc: null
-    header: null
-    methods: []
-  Wholesale Customers with Webex Voice:
-    doc: null
-    header: null
-    methods: []
   Wholesale Subscribers:
-    doc: null
-    header: null
-    methods: []
-  Wholesale Subscribers with Meetings and Suite:
-    doc: null
-    header: null
-    methods: []
-  Wholesale Subscribers with Webex Voice:
     doc: null
     header: null
     methods: []

@@ -1,7 +1,8 @@
 from collections.abc import Generator
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, Enum
+from wxc_sdk.base import ApiModel
+from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
 from pydantic import Field
 
@@ -202,7 +203,7 @@ class MessagesApi(ApiChild, base='messages'):
         url = self.ep('direct')
         return self.session.follow_pagination(url=url, model=ListDirectMessagesResponse, params=params)
 
-    def create(self, room_id: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None, text: str = None, markdown: str = None, files: List[str] = None, attachments: List[Attachment] = None) -> CreateMessageResponse:
+    def create(self, room_id: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None, text: str = None, markdown: str = None, files: List[str] = None, attachments: Attachment = None) -> CreateMessageResponse:
         """
         Post a plain text or rich text message, and optionally, a file attachment attachment, to a room.
         The files parameter is an array, which accepts multiple values to allow for future expansion, but currently only one file may be included with the message. File previews are only rendered for attachments of 1MB or less.
@@ -223,7 +224,7 @@ class MessagesApi(ApiChild, base='messages'):
 Possible values: http://www.example.com/images/media.png
         :type files: List[str]
         :param attachments: Content attachments to attach to the message. Only one card per message is supported. See the Cards Guide for more information.
-        :type attachments: List[Attachment]
+        :type attachments: Attachment
         """
         body = {}
         if room_id is not None:

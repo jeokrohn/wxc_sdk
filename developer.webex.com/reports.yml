@@ -561,6 +561,10 @@ docs:
     doc: null
     header: null
     methods: []
+  Webex Calling Detailed Call History:
+    doc: null
+    header: null
+    methods: []
   Webex Calling Organization Settings:
     doc: null
     header: null
@@ -589,15 +593,7 @@ docs:
     doc: null
     header: null
     methods: []
-  Wholesale Customers with Precheck APIs:
-    doc: null
-    header: null
-    methods: []
   Wholesale Subscribers:
-    doc: null
-    header: null
-    methods: []
-  Wholesale Subscribers with Pre-check APIs:
     doc: null
     header: null
     methods: []

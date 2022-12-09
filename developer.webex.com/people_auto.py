@@ -1,7 +1,8 @@
 from collections.abc import Generator
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, Enum
+from wxc_sdk.base import ApiModel
+from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
 from pydantic import Field
 
@@ -176,7 +177,7 @@ class PeopleApi(ApiChild, base='people'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Person, params=params)
 
-    def create(self, calling_data: bool = None, emails: List[str], phone_numbers: List[object] = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: List[object] = None, site_urls: List[str] = None) -> Person:
+    def create(self, emails: List[str], calling_data: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: List[object] = None, site_urls: List[str] = None) -> Person:
         """
         Create a new user account for a given organization. Only an admin can create a new user account.
         At least one of the following body parameters is required to create a new user: displayName, firstName, lastName.
@@ -184,13 +185,13 @@ class PeopleApi(ApiChild, base='people'):
         Admin users can include Webex calling (BroadCloud) user details in the response by specifying callingData parameter as true.
         When doing attendee management, append #attendee to the siteUrl parameter (e.g. mysite.webex.com#attendee) to make the new user an attendee for a site.
 
-        :param calling_data: Include Webex Calling user details in the response.
-        :type calling_data: bool
         :param emails: The email addresses of the person. Only one email address is allowed per person.
 Possible values: john.andersen@example.com
         :type emails: List[str]
+        :param calling_data: Include Webex Calling user details in the response.
+        :type calling_data: bool
         :param phone_numbers: Phone numbers for the person. Only settable for Webex Calling. Requires a Webex Calling license.
-        :type phone_numbers: List[object]
+        :type phone_numbers: PhoneNumbers
         :param extension: Webex Calling extension of the person. This is only settable for a person with a Webex Calling license.
         :type extension: str
         :param location_id: The ID of the location for this person.
@@ -287,7 +288,7 @@ Possible values: mysite.webex.com#attendee
         data = super().get(url=url, params=params)
         return Person.parse_obj(data)
 
-    def update(self, person_id: str, calling_data: bool = None, show_all_types: bool = None, display_name: str, emails: List[str] = None, phone_numbers: List[object] = None, extension: str = None, location_id: str = None, first_name: str = None, last_name: str = None, nick_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: List[object] = None, site_urls: List[str] = None, login_enabled: bool = None) -> Person:
+    def update(self, person_id: str, display_name: str, calling_data: bool = None, show_all_types: bool = None, emails: List[str] = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, first_name: str = None, last_name: str = None, nick_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: List[object] = None, site_urls: List[str] = None, login_enabled: bool = None) -> Person:
         """
         Update details for a person, by ID.
         Specify the person ID in the personId parameter in the URI. Only an admin can update a person details.
@@ -300,17 +301,17 @@ Possible values: mysite.webex.com#attendee
 
         :param person_id: A unique identifier for the person.
         :type person_id: str
+        :param display_name: The full name of the person.
+        :type display_name: str
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
         :param show_all_types: Include additional user data like #attendee role
         :type show_all_types: bool
-        :param display_name: The full name of the person.
-        :type display_name: str
         :param emails: The email addresses of the person. Only one email address is allowed per person.
 Possible values: john.andersen@example.com
         :type emails: List[str]
         :param phone_numbers: Phone numbers for the person. Can only be set for Webex Calling. Needs a Webex Calling license.
-        :type phone_numbers: List[object]
+        :type phone_numbers: PhoneNumbers
         :param extension: Webex Calling extension of the person. This is only settable for a person with a Webex Calling license
         :type extension: str
         :param location_id: The ID of the location for this person.

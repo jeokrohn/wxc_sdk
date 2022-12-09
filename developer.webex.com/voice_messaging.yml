@@ -1,4 +1,4 @@
-# command: ./developer.webex.com/read_api_spec.py -s Calling -t "Webex Calling Voice Messaging" -f voice_messaging.yml
+# command: developer.webex.com/read_api_spec.py -s Calling -t "Webex Calling Voice Messaging" -f developer.webex.com/voice_messaging.yml
 docs:
   BroadWorks Billing Reports:
     doc: null
@@ -33,6 +33,10 @@ docs:
     header: null
     methods: []
   Video Mesh:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Detailed Call History:
     doc: null
     header: null
     methods: []

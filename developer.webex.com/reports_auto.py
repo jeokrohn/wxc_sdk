@@ -1,7 +1,8 @@
 from collections.abc import Generator
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, Enum
+from wxc_sdk.base import ApiModel
+from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
 from pydantic import Field
 
@@ -48,7 +49,7 @@ class ReportTemplatesApi(ApiChild, base='report/templates'):
     For more information about Report Templates, see the Admin API guide.
     """
 
-    def list_report_templates(self) -> Generator[Template, None, None]:
+    def list_report_templates(self, **params) -> Generator[Template, None, None]:
         """
         List all the available report templates that can be generated.
         CSV (comma separated value) reports for Webex services are only supported for organizations based in the North American region. Organizations based in other regions will return blank CSV files for any Webex reports.

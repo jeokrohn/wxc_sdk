@@ -1,7 +1,8 @@
 from collections.abc import Generator
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, Enum
+from wxc_sdk.base import ApiModel
+from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
 from pydantic import Field
 
@@ -52,7 +53,7 @@ class AttachmentActionsApi(ApiChild, base='attachment/actions'):
     Users create attachment actions by interacting with message attachments such as clicking on a submit button in a card.
     """
 
-    def create_action(self, type_: str, message_id: str, inputs: object) -> CreateAttachmentActionResponse:
+    def create_action(self, type_: str, message_id: str, inputs: Inputs) -> CreateAttachmentActionResponse:
         """
         Create a new attachment action.
 
@@ -62,7 +63,7 @@ class AttachmentActionsApi(ApiChild, base='attachment/actions'):
         :param message_id: The ID of the message which contains the attachment.
         :type message_id: str
         :param inputs: The attachment action's inputs.
-        :type inputs: object
+        :type inputs: Inputs
         """
         body = {}
         if type_ is not None:
@@ -855,7 +856,7 @@ class TeamsApi(ApiChild, base='teams'):
     To manage team rooms see the Rooms API.
     """
 
-    def list(self) -> Generator[Team, None, None]:
+    def list(self, **params) -> Generator[Team, None, None]:
         """
         Lists teams to which the authenticated user belongs.
         """
@@ -938,6 +939,25 @@ class Status(str, Enum):
     inactive = 'inactive'
 
 
+class Resource(str, Enum):
+    #: The Attachment Actions resource.
+    attachment_actions = 'attachmentActions'
+    #: The Memberships resource.
+    memberships = 'memberships'
+    #: The Messages resource.
+    messages = 'messages'
+    #: The Rooms resource.
+    rooms = 'rooms'
+    #: The Meetings resource.
+    meetings = 'meetings'
+    #: The Recordings resource.
+    recordings = 'recordings'
+    #: The Meeting Participants resource.
+    meeting_participants = 'meetingParticipants'
+    #: The Meeting Transcripts resource.
+    meeting_transcripts = 'meetingTranscripts'
+
+
 class Event2(EventTypeEnum):
     #: A meeting is started.
     started = 'started'
@@ -1011,7 +1031,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Webhook, params=params)
 
-    def create(self, name: str, target_url: str, resource: enum, event: enum, filter: str = None, secret: str = None, owned_by: str = None) -> Webhook:
+    def create(self, name: str, target_url: str, resource: Resource, event: Event2, filter: str = None, secret: str = None, owned_by: str = None) -> Webhook:
         """
         Creates a webhook.
         To learn more about how to create and use webhooks, see The Webhooks Guide.
@@ -1021,9 +1041,9 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :param target_url: The URL that receives POST requests for each event.
         :type target_url: str
         :param resource: The resource type for the webhook. Creating a webhook requires 'read' scope on the resource the webhook is for.
-        :type resource: enum
+        :type resource: Resource
         :param event: The event type for the webhook.
-        :type event: enum
+        :type event: Event2
         :param filter: The filter that defines the webhook scope. See Filtering Webhooks for more information.
         :type filter: str
         :param secret: The secret used to generate payload signature.
@@ -1062,7 +1082,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
         data = super().get(url=url)
         return Webhook.parse_obj(data)
 
-    def update(self, webhook_id: str, name: str, target_url: str, secret: str = None, owned_by: str = None, status: enum = None) -> Webhook:
+    def update(self, webhook_id: str, name: str, target_url: str, secret: str = None, owned_by: str = None, status: Status = None) -> Webhook:
         """
         Updates a webhook, by ID. You cannot use this call to deactivate a webhook, only to activate a webhook that was auto deactivated. 
         The fields that can be updated are name, targetURL, secret and status. All other fields, if supplied, are ignored.
@@ -1079,7 +1099,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :param owned_by: Specified when creating an org/admin level webhook. Supported for meetings, recordings, meetingParticipants and meetingTranscripts resources.
         :type owned_by: str
         :param status: The status of the webhook. Use "active" to reactivate a disabled webhook.
-        :type status: enum
+        :type status: Status
         """
         body = {}
         if name is not None:
