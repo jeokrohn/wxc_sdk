@@ -116,7 +116,11 @@ class APIMethod:
 
         def add_param(param: Parameter, is_query: bool = False, is_body: bool = False):
             p_name = param.python_name
-            p_type = python_type(param.type)
+            if param.param_class:
+                # type of parameter is actually a class we generated
+                p_type = python_type(param.param_class.name)
+            else:
+                p_type = python_type(param.type)
             for_param_list = f'{p_name}: {p_type}'
             if not param.required:
                 for_param_list = f'{for_param_list} = None'
@@ -511,7 +515,7 @@ class ClassGenerator:
             # if
         # for
 
-        # if the class name has multiple word then make camel case
+        # if the class name has multiple words then make camel case
         class_name = ''.join(f'{w[0].upper()}{w[1:]}' for w in class_name.split())
         # strip illegal characters from class names
         class_name = re.sub(r'\W', '', class_name)
@@ -549,10 +553,10 @@ class ClassGenerator:
             api = API(section=section, doc=section_details.doc)
             self.api_list.append(api)
             for method_details in methods:
-                # look at "Body Parameters" and "Response Properties"
                 method_name = self.method_name_from_header(method_details.header)
                 body_class = None
                 response_class = None
+                # look at "Body Parameters" and "Response Properties"
                 if body := method_details.parameters_and_response.get('Body Parameters'):
                     body_class = self.create_class(class_name=f'{method_name}Body', attributes=body)
                 if response := method_details.parameters_and_response.get('Response Properties'):
