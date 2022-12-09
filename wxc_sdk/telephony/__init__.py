@@ -405,9 +405,9 @@ class SupportedDevice(ApiModel):
     #: The default upgrade channel.
     default_upgrade_channel: Optional[str]
     #: Enables / disables the additional primary line appearances.
-    additional_primary_line_appearances_enabled: bool
+    additional_primary_line_appearances_enabled: Optional[bool]
     #: Enables / disables Basic emergency nomadic.
-    basic_emergency_nomadic_enabled: bool
+    basic_emergency_nomadic_enabled: Optional[bool]
     #: Enables / disables customized behavior support on devices
     customized_behaviors_enabled: bool
     #: Enables / disables configuring port support on device.

@@ -160,8 +160,8 @@ class APIMethod:
                 ParameterInfo(p=p, is_query=True, is_body=False) for p in query_parameters if not p.required)
 
         # ... finally we need the request body
-        body_parameters = self.methods_details.parameters_and_response.get('Body Parameters')
-        if body_parameters:
+        if self.body_class:
+            body_parameters = list(self.body_class.all_attributes())
             mandatory.extend(ParameterInfo(p=p, is_query=False, is_body=True) for p in body_parameters if p.required)
             optional.extend(ParameterInfo(p=p, is_query=False, is_body=True) for p in body_parameters if not p.required)
 
