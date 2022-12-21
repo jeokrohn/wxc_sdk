@@ -1,12 +1,13 @@
 from collections.abc import Generator
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, Enum
+from wxc_sdk.base import ApiModel
+from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
 from pydantic import Field
 
 
-__all__ = ['AcdObject', 'Action', 'Action3', 'ActivationStates', 'AlternateNumberSettings', 'AlternateNumbersWithPattern', 'AtaDtmfMethodObject', 'AtaDtmfModeObject', 'AtaObject', 'AudioCodecPriority', 'AudioCodecPriorityObject', 'AuthorizationCode', 'AvailableSharedLineMemberItem', 'BackgroundImage', 'BacklightTimerObject', 'BroadWorksEnterprisesWithDeleteOrgImprovementsApi', 'BroadWorksWorkspacesApi', 'BroadworksDirectorySync', 'CDR', 'CLIDPolicySelection', 'CallBounce', 'CallForwardingBusyGet', 'CallForwardingNoAnswerGet', 'CallForwardingPlaceSettingGet', 'CallForwardingPlaceSettingPatch', 'CallQueueQueueSettingsObject', 'CallType', 'CallType1', 'CallingPermission', 'ChangeDeviceSettingsAcrossOrganizationOrLocationJobResponse', 'ClientType', 'ComfortMessage', 'ComfortMessageBypass', 'CreateCallQueueResponse', 'CreatePersonBody', 'CustomizationDeviceLevelObject', 'CustomizationObject', 'CustomizationObject1', 'DectDeviceList', 'DectObject', 'DectObject1', 'DefaultLoggingLevelObject', 'DeviceObject', 'DeviceOwner', 'Devices', 'Direction', 'DirectorySyncStatus', 'DisplayCallqueueAgentSoftkeysObject', 'DisplayNameSelection', 'DistinctiveRing', 'ErrorMessageObject', 'ErrorObject', 'Errors', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'GetAnnouncementFileInfo', 'GetChangeDeviceSettingsJobStatusResponse', 'GetDetailedCallHistoryResponse', 'GetDetailsForCallQueueResponse', 'GetDeviceMembersResponse', 'GetDeviceSettingsResponse', 'GetPersonPlaceCallQueueObject', 'GetSharedLineAppearanceMembersResponse', 'GetSharedLineMemberItem', 'GetUserDevicesResponse', 'GetWorkspaceDevicesResponse', 'Greeting', 'Hoteling', 'HuntPolicySelection', 'HuntRoutingTypeSelection', 'InterceptAnnouncementsGet', 'InterceptAnnouncementsPatch', 'InterceptIncomingGet', 'InterceptIncomingPatch', 'InterceptNumberGet', 'InterceptOutGoingGet', 'ItemObject', 'JobExecutionStatusObject', 'KemModuleTypeObject', 'LineKeyLEDPattern', 'LineKeyLabelSelection', 'LineType', 'ListBroadWorksEnterprisesResponse', 'ListChangeDeviceSettingsJobErrorsResponse', 'ListChangeDeviceSettingsJobsResponse', 'ListJobResponse', 'ListPeopleResponse', 'MacStatusObject', 'ManagedByObject', 'ManufacturerObject', 'MemberObject', 'MemberType', 'ModifyCallForwardingNoAnswer', 'ModifyPersonPlaceCallQueueObject', 'MohMessage', 'MonitoredElementCallParkExtension', 'MonitoredElementItem', 'MonitoredElementUser', 'MppAudioCodecPriorityObject', 'MppObject', 'MppVlanObject', 'NormalSource', 'OnboardingMethodObject', 'OriginalReason', 'Overflow', 'PeoplewithCallingApi', 'Person', 'PhoneLanguage', 'PhoneNumbers', 'PlaceDevices', 'PostCallQueueCallPolicyObject', 'PostPersonPlaceCallQueueObject', 'ProvisionBroadWorksWorkspaceBody', 'ProvisionBroadWorksWorkspaceResponse', 'PutMemberObject', 'PutSharedLineMemberItem', 'ReadCallInterceptSettingsForWorkspaceResponse', 'ReadDECTDeviceTypeListResponse', 'ReadListOfCallQueueAnnouncementFilesResponse', 'ReadListOfSupportedDevicesResponse', 'ReaddeviceOverrideSettingsFororganizationResponse', 'RedirectReason', 'RelatedReason', 'RetrieveAccessCodesForWorkspaceResponse', 'RetrieveCallForwardingSettingsForWorkspaceResponse', 'RetrieveCallWaitingSettingsForWorkspaceResponse', 'RetrieveCallerIDSettingsForWorkspaceResponse', 'RetrieveIncomingPermissionSettingsForWorkspaceResponse', 'RetrieveMonitoringSettingsForWorkspaceResponse', 'RetrieveOutgoingPermissionSettingsForWorkspaceResponse', 'RetrieveTransferNumbersSettingsForWorkspaceResponse', 'RingPatternObject', 'SearchMemberObject', 'SearchMembersResponse', 'SearchSharedLineAppearanceMembersResponse', 'SelectionType', 'State', 'Status', 'Status1', 'Status6', 'StepExecutionStatusesObject', 'TriggerDirectorySyncForUserResponse', 'Type', 'Type6', 'Type7', 'TypeObject', 'UpdateBroadworksWorkspaceBody', 'UpdateBroadworksWorkspaceResponse', 'UpdateDeviceSettingsBody', 'UserNumberItem', 'UserResponse', 'UserType', 'ValidatelistOfMACAddressResponse', 'VlanObject', 'WaitMessage', 'WaitMode', 'WebexCallingDetailedCallHistoryApi', 'WebexCallingOrganizationSettingsWithAgentJoinUnjoinAndAnnouncementFeaturesApi', 'WebexCallingOrganizationSettingswithDevicesFeaturesApi', 'WebexCallingPersonSettingsWithSharedLineApi', 'WebexCallingPersonSettingswithCallingBehaviorApi', 'WebexforBroadworksphonelistsyncApi', 'WelcomeMessage', 'WifiNetworkObject']
+__all__ = ['AcdObject', 'Action', 'Action3', 'ActivationStates', 'AlternateNumberSettings', 'AlternateNumbersWithPattern', 'AtaDtmfMethodObject', 'AtaDtmfModeObject', 'AtaObject', 'AudioCodecPriorityObject', 'AuthorizationCode', 'AvailableSharedLineMemberItem', 'BackgroundImage', 'BacklightTimerObject', 'BroadWorksEnterprisesWithDeleteOrgImprovementsApi', 'BroadWorksWorkspacesApi', 'BroadworksDirectorySync', 'CDR', 'CLIDPolicySelection', 'CallBounce', 'CallForwardingBusyGet', 'CallForwardingNoAnswerGet', 'CallForwardingPlaceSettingGet', 'CallForwardingPlaceSettingPatch', 'CallQueueQueueSettingsObject', 'CallType', 'CallType1', 'CallingPermission', 'ChangeDeviceSettingsAcrossOrganizationOrLocationJobResponse', 'ClientType', 'ComfortMessage', 'ComfortMessageBypass', 'CreateCallQueueResponse', 'CreatePersonBody', 'CustomizationDeviceLevelObject', 'CustomizationObject', 'DectDeviceList', 'DectObject', 'DefaultLoggingLevelObject', 'DeviceObject', 'DeviceOwner', 'Devices', 'Direction', 'DirectorySyncStatus', 'DisplayCallqueueAgentSoftkeysObject', 'DisplayNameSelection', 'DistinctiveRing', 'ErrorMessageObject', 'ErrorObject', 'Errors', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'GetAnnouncementFileInfo', 'GetChangeDeviceSettingsJobStatusResponse', 'GetDetailedCallHistoryResponse', 'GetDetailsForCallQueueResponse', 'GetDeviceMembersResponse', 'GetDeviceSettingsResponse', 'GetPersonPlaceCallQueueObject', 'GetSharedLineAppearanceMembersResponse', 'GetSharedLineMemberItem', 'GetUserDevicesResponse', 'GetWorkspaceDevicesResponse', 'Greeting', 'Hoteling', 'HuntPolicySelection', 'HuntRoutingTypeSelection', 'InterceptAnnouncementsGet', 'InterceptAnnouncementsPatch', 'InterceptIncomingGet', 'InterceptIncomingPatch', 'InterceptNumberGet', 'InterceptOutGoingGet', 'ItemObject', 'JobExecutionStatusObject', 'KemModuleTypeObject', 'LineKeyLEDPattern', 'LineKeyLabelSelection', 'LineType', 'ListBroadWorksEnterprisesResponse', 'ListChangeDeviceSettingsJobErrorsResponse', 'ListChangeDeviceSettingsJobsResponse', 'ListJobResponse', 'ListPeopleResponse', 'MacStatusObject', 'ManagedByObject', 'ManufacturerObject', 'MemberObject', 'MemberType', 'ModifyPersonPlaceCallQueueObject', 'MohMessage', 'MonitoredElementCallParkExtension', 'MonitoredElementItem', 'MonitoredElementUser', 'MppAudioCodecPriorityObject', 'MppObject', 'MppVlanObject', 'NormalSource', 'OnboardingMethodObject', 'OriginalReason', 'Overflow', 'PeoplewithCallingApi', 'Person', 'PhoneLanguage', 'PhoneNumbers', 'PlaceDevices', 'PostCallQueueCallPolicyObject', 'PostPersonPlaceCallQueueObject', 'ProvisionBroadWorksWorkspaceBody', 'ProvisionBroadWorksWorkspaceResponse', 'PutMemberObject', 'PutSharedLineMemberItem', 'ReadCallInterceptSettingsForWorkspaceResponse', 'ReadDECTDeviceTypeListResponse', 'ReadListOfCallQueueAnnouncementFilesResponse', 'ReadListOfSupportedDevicesResponse', 'ReaddeviceOverrideSettingsFororganizationResponse', 'RedirectReason', 'RelatedReason', 'RetrieveAccessCodesForWorkspaceResponse', 'RetrieveCallForwardingSettingsForWorkspaceResponse', 'RetrieveCallWaitingSettingsForWorkspaceResponse', 'RetrieveCallerIDSettingsForWorkspaceResponse', 'RetrieveIncomingPermissionSettingsForWorkspaceResponse', 'RetrieveMonitoringSettingsForWorkspaceResponse', 'RetrieveOutgoingPermissionSettingsForWorkspaceResponse', 'RetrieveTransferNumbersSettingsForWorkspaceResponse', 'RingPatternObject', 'SearchMemberObject', 'SearchMembersResponse', 'SearchSharedLineAppearanceMembersResponse', 'SelectionType', 'State', 'Status', 'Status1', 'Status6', 'StepExecutionStatusesObject', 'TriggerDirectorySyncForUserResponse', 'Type', 'Type6', 'Type7', 'TypeObject', 'UpdateBroadworksWorkspaceBody', 'UpdateCallQueueBody', 'UpdateDeviceSettingsBody', 'UserNumberItem', 'UserResponse', 'UserType', 'ValidatelistOfMACAddressResponse', 'VlanObject', 'WaitMessage', 'WaitMode', 'WebexCallingDetailedCallHistoryApi', 'WebexCallingOrganizationSettingsWithAgentJoinUnjoinAndAnnouncementFeaturesApi', 'WebexCallingOrganizationSettingswithDevicesFeaturesApi', 'WebexCallingPersonSettingsWithSharedLineApi', 'WebexCallingPersonSettingswithCallingBehaviorApi', 'WebexforBroadworksphonelistsyncApi', 'WelcomeMessage', 'WifiNetworkObject']
 
 
 class Errors(ApiModel):
@@ -238,31 +239,24 @@ class ProvisionBroadWorksWorkspaceResponse(ProvisionBroadWorksWorkspaceBody):
     created: Optional[str]
 
 
-class UpdateBroadworksWorkspaceResponse(ProvisionBroadWorksWorkspaceBody):
-    #: A unique Cisco identifier for the workspace.
-    id: Optional[str]
-    #: The date and time the workspace was provisioned.
-    created: Optional[str]
-
-
 class BroadWorksWorkspacesApi(ApiChild, base='broadworks/workspaces'):
     """
 
     """
 
-    def provision_broad_works(self, provisioning_id: str, user_id: str, sp_enterprise_id: str, display_name: str, primary_phone_number: str = None, extension: str = None) -> ProvisionBroadWorksWorkspaceResponse:
+    def provision_broad_works(self, provisioning_id: str, sp_enterprise_id: str, display_name: str, user_id: str = None, primary_phone_number: str = None, extension: str = None) -> ProvisionBroadWorksWorkspaceResponse:
         """
         Provision a new BroadWorks workspace for Cisco Webex services.
         This API will allow a Service Provider to provision a workspace for an existing customer.
 
         :param provisioning_id: This Provisioning ID defines how this workspace is to be provisioned for Cisco Webex Services. Each Customer Template will have their own unique Provisioning ID. This ID will be displayed under the chosen Customer Template on Cisco Webex Control Hub.
         :type provisioning_id: str
-        :param user_id: The user ID of the workspace on BroadWorks.
-        :type user_id: str
         :param sp_enterprise_id: The Service Provider supplied unique identifier for the workspace's enterprise.
         :type sp_enterprise_id: str
         :param display_name: The display name of the workspace.
         :type display_name: str
+        :param user_id: The user ID of the workspace on BroadWorks.
+        :type user_id: str
         :param primary_phone_number: The primary phone number configured against the workspace on BroadWorks.
         :type primary_phone_number: str
         :param extension: The extension number configured against the workspace on BroadWorks.
@@ -271,12 +265,12 @@ class BroadWorksWorkspacesApi(ApiChild, base='broadworks/workspaces'):
         body = {}
         if provisioning_id is not None:
             body['provisioningId'] = provisioning_id
-        if user_id is not None:
-            body['userId'] = user_id
         if sp_enterprise_id is not None:
             body['spEnterpriseId'] = sp_enterprise_id
         if display_name is not None:
             body['displayName'] = display_name
+        if user_id is not None:
+            body['userId'] = user_id
         if primary_phone_number is not None:
             body['primaryPhoneNumber'] = primary_phone_number
         if extension is not None:
@@ -285,7 +279,7 @@ class BroadWorksWorkspacesApi(ApiChild, base='broadworks/workspaces'):
         data = super().post(url=url, json=body)
         return ProvisionBroadWorksWorkspaceResponse.parse_obj(data)
 
-    def update_broadworks(self, workspace_id: str, user_id: str = None, primary_phone_number: str = None, extension: str = None) -> UpdateBroadworksWorkspaceResponse:
+    def update_broadworks(self, workspace_id: str, user_id: str = None, primary_phone_number: str = None, extension: str = None) -> ProvisionBroadWorksWorkspaceResponse:
         """
         This API will allow a Service Provider to update certain details of a provisioned BroadWorks workspace on Cisco Webex.
 
@@ -307,7 +301,7 @@ class BroadWorksWorkspacesApi(ApiChild, base='broadworks/workspaces'):
             body['extension'] = extension
         url = self.ep(f'{workspace_id}')
         data = super().put(url=url, json=body)
-        return UpdateBroadworksWorkspaceResponse.parse_obj(data)
+        return ProvisionBroadWorksWorkspaceResponse.parse_obj(data)
 
     def remove_broad_works(self, workspace_id: str):
         """
@@ -348,6 +342,15 @@ class Type(str, Enum):
     bot = 'bot'
     #: account is a guest user
     appuser = 'appuser'
+
+
+class PhoneNumbers(ApiModel):
+    #: The type of phone number.
+    #: Possible values: work, mobile, fax
+    type: Optional[str]
+    #: The phone number.
+    #: Possible values: +1 408 526 7209
+    value: Optional[str]
 
 
 class CreatePersonBody(ApiModel):
@@ -447,19 +450,19 @@ class PeoplewithCallingApi(ApiChild, base='people'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Person, params=params)
 
-    def create(self, calling_data: bool = None, emails: List[str], phone_numbers: List[object] = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None) -> Person:
+    def create(self, emails: List[str], calling_data: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None) -> Person:
         """
         Create a new user account for a given organization. Only an admin can create a new user account.
         Admin users can include BroadCloud user details in the response by specifying callingData parameter as true.
         Currently, users may have only one email address associated with their account. The emails parameter is an array, which accepts multiple values to allow for future expansion, but currently only one email address will be used for the new user.
 
-        :param calling_data: Include BroadCloud user details in the response.
-        :type calling_data: bool
         :param emails: The email addresses of the person. Only one email address is allowed per person.
 Possible values: john.andersen@example.com
         :type emails: List[str]
+        :param calling_data: Include BroadCloud user details in the response.
+        :type calling_data: bool
         :param phone_numbers: Phone numbers for the person.
-        :type phone_numbers: List[object]
+        :type phone_numbers: PhoneNumbers
         :param extension: The extension of the person retrieved from BroadCloud.
         :type extension: str
         :param location_id: The ID of the location for this person retrieved from BroadCloud.
@@ -529,7 +532,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTI
         data = super().get(url=url, params=params)
         return Person.parse_obj(data)
 
-    def update(self, person_id: str, calling_data: bool = None, emails: List[str] = None, phone_numbers: List[object] = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None) -> Person:
+    def update(self, person_id: str, emails: List[str], calling_data: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None) -> Person:
         """
         Update details for a person, by ID.
         Specify the person ID in the personId parameter in the URI. Only an admin can update a person details.
@@ -539,13 +542,13 @@ Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTI
 
         :param person_id: A unique identifier for the person.
         :type person_id: str
-        :param calling_data: Include BroadCloud user details in the response.
-        :type calling_data: bool
         :param emails: The email addresses of the person. Only one email address is allowed per person.
 Possible values: john.andersen@example.com
         :type emails: List[str]
+        :param calling_data: Include BroadCloud user details in the response.
+        :type calling_data: bool
         :param phone_numbers: Phone numbers for the person.
-        :type phone_numbers: List[object]
+        :type phone_numbers: PhoneNumbers
         :param extension: The extension of the person retrieved from BroadCloud.
         :type extension: str
         :param location_id: The ID of the location for this person retrieved from BroadCloud.
@@ -1003,6 +1006,19 @@ class PostPersonPlaceCallQueueObject(ApiModel):
     skill_level: Optional[int]
 
 
+class GetPersonPlaceCallQueueObject(PostPersonPlaceCallQueueObject):
+    #: First name of person or workspace.
+    first_name: Optional[str]
+    #: First name of person or workspace.
+    last_name: Optional[str]
+    #: Phone number of person or workspace.
+    phone_number: Optional[str]
+    #: Extension of person or workspace.
+    extension: Optional[str]
+    #: Indicates the join status of the agent for this queue. The default value while creating call queue is true.
+    join_enabled: Optional[bool]
+
+
 class AlternateNumbersWithPattern(ApiModel):
     #: Alternate phone number for the hunt group.
     phone_number: Optional[str]
@@ -1017,22 +1033,40 @@ class AlternateNumberSettings(ApiModel):
     alternate_numbers: Optional[list[AlternateNumbersWithPattern]]
 
 
-class GetPersonPlaceCallQueueObject(PostPersonPlaceCallQueueObject):
-    #: First name of person or workspace.
-    first_name: Optional[str]
-    #: First name of person or workspace.
-    last_name: Optional[str]
-    #: Phone number of person or workspace.
-    phone_number: Optional[str]
-    #: Extension of person or workspace.
-    extension: Optional[str]
-    #: Indicates the join status of the agent for this queue. The default value while creating call queue is true.
-    join_enabled: Optional[bool]
-
-
 class ModifyPersonPlaceCallQueueObject(PostPersonPlaceCallQueueObject):
     #: Indicates the join status of the agent for this queue. The default value for newly added agents is true.
     join_enabled: Optional[bool]
+
+
+class UpdateCallQueueBody(ApiModel):
+    #: Whether or not the call queue is enabled.
+    enabled: Optional[bool]
+    #: Unique name for the call queue.
+    name: Optional[str]
+    #: Language code.
+    language_code: Optional[str]
+    #: First name to be shown when calls are forwarded out of this call queue. Defaults to ..
+    first_name: Optional[str]
+    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the phone number if set, otherwise defaults to call group name.
+    last_name: Optional[str]
+    #: Time zone for the hunt group.
+    time_zone: Optional[str]
+    #: Primary phone number of the call queue.
+    phone_number: Optional[str]
+    #: Extension of the call queue.
+    extension: Optional[str]
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
+    alternate_number_settings: Optional[AlternateNumberSettings]
+    #: Policy controlling how calls are routed to agents.
+    call_policies: Optional[PostCallQueueCallPolicyObject]
+    #: Overall call queue settings.
+    queue_settings: Optional[CallQueueQueueSettingsObject]
+    #: Flag to indicate whether call waiting is enabled for agents.
+    allow_call_waiting_for_agents_enabled: Optional[bool]
+    #: People, including workspaces, that are eligible to receive calls.
+    agents: Optional[list[ModifyPersonPlaceCallQueueObject]]
+    #: Whether or not to allow agents to join or unjoin a queue.
+    allow_agent_join_enabled: Optional[bool]
 
 
 class GetAnnouncementFileInfo(ApiModel):
@@ -1072,76 +1106,17 @@ class CreateCallQueueResponse(ApiModel):
     id: Optional[str]
 
 
-class GetDetailsForCallQueueResponse(ApiModel):
+class GetDetailsForCallQueueResponse(UpdateCallQueueBody):
     #: A unique identifier for the call queue.
     id: Optional[str]
-    #: Unique name for the call queue.
-    name: Optional[str]
-    #: Whether or not the call queue is enabled.
-    enabled: Optional[bool]
     #: Language for the call queue.
     language: Optional[str]
-    #: Language code.
-    language_code: Optional[str]
-    #: First name to be shown when calls are forwarded out of this call queue. Defaults to ..
-    first_name: Optional[str]
-    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the phone number if set, otherwise defaults to call group name.
-    last_name: Optional[str]
-    #: Time zone for the call queue.
-    time_zone: Optional[str]
-    #: Primary phone number of the call queue.
-    phone_number: Optional[str]
-    #: Extension of the call queue.
-    extension: Optional[str]
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
-    alternate_number_settings: Optional[AlternateNumberSettings]
     #: Language for the call queue.
     language: Optional[str]
-    #: Language code for the call queue.
-    language_code: Optional[str]
-    #: Time zone for the call queue.
-    time_zone: Optional[str]
     #: Policy controlling how calls are routed to agents.
     call_policies: Optional[PostCallQueueCallPolicyObject]
-    #: Overall call queue settings.
-    queue_settings: Optional[CallQueueQueueSettingsObject]
-    #: Flag to indicate whether call waiting is enabled for agents.
-    allow_call_waiting_for_agents_enabled: Optional[bool]
     #: People, including workspaces, that are eligible to receive calls.
     agents: Optional[list[GetPersonPlaceCallQueueObject]]
-    #: Whether or not to allow agents to join or unjoin a queue.
-    allow_agent_join_enabled: Optional[bool]
-
-
-class UpdateCallQueueBody(ApiModel):
-    #: Whether or not the call queue is enabled.
-    enabled: Optional[bool]
-    #: Unique name for the call queue.
-    name: Optional[str]
-    #: Language code.
-    language_code: Optional[str]
-    #: First name to be shown when calls are forwarded out of this call queue. Defaults to ..
-    first_name: Optional[str]
-    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the phone number if set, otherwise defaults to call group name.
-    last_name: Optional[str]
-    #: Time zone for the hunt group.
-    time_zone: Optional[str]
-    #: Primary phone number of the call queue.
-    phone_number: Optional[str]
-    #: Extension of the call queue.
-    extension: Optional[str]
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
-    alternate_number_settings: Optional[AlternateNumberSettings]
-    #: Policy controlling how calls are routed to agents.
-    call_policies: Optional[PostCallQueueCallPolicyObject]
-    #: Overall call queue settings.
-    queue_settings: Optional[CallQueueQueueSettingsObject]
-    #: Flag to indicate whether call waiting is enabled for agents.
-    allow_call_waiting_for_agents_enabled: Optional[bool]
-    #: People, including workspaces, that are eligible to receive calls.
-    agents: Optional[list[ModifyPersonPlaceCallQueueObject]]
-    #: Whether or not to allow agents to join or unjoin a queue.
-    allow_agent_join_enabled: Optional[bool]
 
 
 class ReadListOfCallQueueAnnouncementFilesResponse(ApiModel):
@@ -1154,7 +1129,7 @@ class WebexCallingOrganizationSettingsWithAgentJoinUnjoinAndAnnouncementFeatures
 
     """
 
-    def create_queue(self, location_id: str, org_id: str = None, name: str, call_policies: PostCallQueueCallPolicyObject, queue_settings: CallQueueQueueSettingsObject, agents: List[PostPersonPlaceCallQueueObject], phone_number: str = None, extension: str = None, language_code: str = None, first_name: str = None, last_name: str = None, time_zone: str = None, allow_agent_join_enabled: bool = None) -> str:
+    def create_queue(self, location_id: str, name: str, call_policies: PostCallQueueCallPolicyObject, queue_settings: CallQueueQueueSettingsObject, agents: PostPersonPlaceCallQueueObject, org_id: str = None, phone_number: str = None, extension: str = None, language_code: str = None, first_name: str = None, last_name: str = None, time_zone: str = None, allow_agent_join_enabled: bool = None) -> str:
         """
         Create new Call Queues for the given location.
         Call queues temporarily hold calls in the cloud when all agents, which
@@ -1168,8 +1143,6 @@ class WebexCallingOrganizationSettingsWithAgentJoinUnjoinAndAnnouncementFeatures
 
         :param location_id: Create the call queue for this location.
         :type location_id: str
-        :param org_id: Create the call queue for this organization.
-        :type org_id: str
         :param name: Unique name for the call queue.
         :type name: str
         :param call_policies: Policy controlling how calls are routed to agents.
@@ -1177,7 +1150,9 @@ class WebexCallingOrganizationSettingsWithAgentJoinUnjoinAndAnnouncementFeatures
         :param queue_settings: Overall call queue settings.
         :type queue_settings: CallQueueQueueSettingsObject
         :param agents: People, including workspaces, that are eligible to receive calls.
-        :type agents: List[PostPersonPlaceCallQueueObject]
+        :type agents: PostPersonPlaceCallQueueObject
+        :param org_id: Create the call queue for this organization.
+        :type org_id: str
         :param phone_number: Primary phone number of the call queue. Either phone number or extension is mandatory.
         :type phone_number: str
         :param extension: Primary phone extension of the call queue. Either phone number or extension is mandatory.
@@ -1275,7 +1250,7 @@ class WebexCallingOrganizationSettingsWithAgentJoinUnjoinAndAnnouncementFeatures
         data = super().get(url=url, params=params)
         return GetDetailsForCallQueueResponse.parse_obj(data)
 
-    def update_queue(self, location_id: str, queue_id: str, org_id: str = None, queue_settings: CallQueueQueueSettingsObject, enabled: bool = None, name: str = None, language_code: str = None, first_name: str = None, last_name: str = None, time_zone: str = None, phone_number: str = None, extension: str = None, alternate_number_settings: object = None, call_policies: PostCallQueueCallPolicyObject = None, allow_call_waiting_for_agents_enabled: bool = None, agents: List[ModifyPersonPlaceCallQueueObject] = None, allow_agent_join_enabled: bool = None):
+    def update_queue(self, location_id: str, queue_id: str, queue_settings: CallQueueQueueSettingsObject, org_id: str = None, enabled: bool = None, name: str = None, language_code: str = None, first_name: str = None, last_name: str = None, time_zone: str = None, phone_number: str = None, extension: str = None, alternate_number_settings: AlternateNumberSettings = None, call_policies: PostCallQueueCallPolicyObject = None, allow_call_waiting_for_agents_enabled: bool = None, agents: ModifyPersonPlaceCallQueueObject = None, allow_agent_join_enabled: bool = None):
         """
         Update the designated Call Queue.
         Call queues temporarily hold calls in the cloud when all agents, which
@@ -1291,10 +1266,10 @@ class WebexCallingOrganizationSettingsWithAgentJoinUnjoinAndAnnouncementFeatures
         :type location_id: str
         :param queue_id: Update setting for the call queue with the matching ID.
         :type queue_id: str
-        :param org_id: Update call queue settings from this organization.
-        :type org_id: str
         :param queue_settings: Overall call queue settings.
         :type queue_settings: CallQueueQueueSettingsObject
+        :param org_id: Update call queue settings from this organization.
+        :type org_id: str
         :param enabled: Whether or not the call queue is enabled.
         :type enabled: bool
         :param name: Unique name for the call queue.
@@ -1312,13 +1287,13 @@ class WebexCallingOrganizationSettingsWithAgentJoinUnjoinAndAnnouncementFeatures
         :param extension: Extension of the call queue.
         :type extension: str
         :param alternate_number_settings: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
-        :type alternate_number_settings: object
+        :type alternate_number_settings: AlternateNumberSettings
         :param call_policies: Policy controlling how calls are routed to agents.
         :type call_policies: PostCallQueueCallPolicyObject
         :param allow_call_waiting_for_agents_enabled: Flag to indicate whether call waiting is enabled for agents.
         :type allow_call_waiting_for_agents_enabled: bool
         :param agents: People, including workspaces, that are eligible to receive calls.
-        :type agents: List[ModifyPersonPlaceCallQueueObject]
+        :type agents: ModifyPersonPlaceCallQueueObject
         :param allow_agent_join_enabled: Whether or not to allow agents to join or unjoin a queue.
         :type allow_agent_join_enabled: bool
         """
@@ -1408,6 +1383,13 @@ class MemberType(ApiModel):
     place: Optional[str]
 
 
+class LineType(ApiModel):
+    #: Indicates a Primary line for the member.
+    primary: Optional[str]
+    #: Indicates a Shared line for the member. Shared line appearance allows users to receive and place calls to and from another user's extension, using their device.
+    shared_call_appearance: Optional[str]
+
+
 class PutMemberObject(ApiModel):
     #: Person's assigned port number.
     port: Optional[int]
@@ -1463,161 +1445,6 @@ class SearchMemberObject(ApiModel):
     allow_call_decline_enabled: Optional[bool]
     #: Indicates if member is of type PEOPLE or PLACE.
     member_type: Optional[MemberType]
-
-
-class UpdateDeviceSettingsBody(ApiModel):
-    #: Indicates the customization object of the device settings.
-    customizations: Optional[CustomizationDeviceLevelObject]
-    #: Indicates if customization is allowed at a device level. If true, customized at a device level. If false, not customized; uses customer-level configuration.
-    custom_enabled: Optional[bool]
-
-
-class DeviceOwner(ApiModel):
-    #: Unique identifier of a person or a workspace.
-    id: Optional[str]
-    #: Enumeration that indicates if the member is of type PEOPLE or PLACE.
-    type: Optional[MemberType]
-    #: First name of device owner.
-    first_name: Optional[str]
-    #: Last name of device owner.
-    last_name: Optional[str]
-
-
-class ActivationStates(ApiModel):
-    #: Indicates a device is activating.
-    activating: Optional[str]
-    #: Indicates a device is activated.
-    activated: Optional[str]
-    #: Indicates a device is deactivated.
-    deactivated: Optional[str]
-
-
-class Devices(ApiModel):
-    #: Unique identifier for a device.
-    id: Optional[str]
-    #: Comma separated array of tags used to describe device.
-    description: Optional[list[str]]
-    #: Identifier for device model.
-    model: Optional[str]
-    #: MAC address of device.
-    mac: Optional[str]
-    #: IP address of device.
-    ip_address: Optional[str]
-    #: Indicates whether the person or the workspace is the owner of the device, and points to a primary Line/Port of the device.
-    primary_owner: Optional[bool]
-    #: Indicates if the line is acting as a primary line or a shared line for this device.
-    type: Optional[LineType]
-    #: Owner of device.
-    owner: Optional[DeviceOwner]
-    #: Activation state of device.
-    activation_state: Optional[ActivationStates]
-
-
-class Hoteling(ApiModel):
-    #: Enable/Disable hoteling Host. Enabling the device for hoteling means that a guest(end user) can log into this host(workspace device) and use this device
-    #: as if it were their own. This is useful when traveling to a remote office but still needing to place/receive calls with their telephone number and access features normally available to them on their office phone.
-    enabled: Optional[bool]
-    #: Enable limiting the time a guest can use the device. The time limit is configured via guestHoursLimit.
-    limit_guest_use: Optional[bool]
-    #: Time Limit in hours until hoteling is enabled. Mandatory if limitGuestUse is enabled.
-    guest_hours_limit: Optional[int]
-
-
-class PlaceDevices(Devices):
-    #: Indicates Hoteling details of a device.
-    hoteling: Optional[Hoteling]
-
-
-class TypeObject(ApiModel):
-    #: Cisco Multiplatform Phone
-    mpp: Optional[str]
-    #: Analog Telephone Adapters
-    ata: Optional[str]
-    #: GENERIC Session Initiation Protocol
-    generic_sip: Optional[str]
-    #: Esim Supported Webex Go
-    esim: Optional[str]
-
-
-class ManufacturerObject(ApiModel):
-    #: Devices manufactured by Cisco.
-    cisco: Optional[str]
-    #: Devices manufactured by a third-party that are approved by a Cisco account manager to be enabled for provisioning in the control hub.
-    third_party: Optional[str]
-
-
-class ManagedByObject(ApiModel):
-    #: Devices managed by Cisco.
-    cisco: Optional[str]
-    #: Devices managed by a customer that are approved by a Cisco account manager to be enabled for provisioning in the control hub.
-    customer: Optional[str]
-
-
-class OnboardingMethodObject(ApiModel):
-    mac_address: Optional[str]
-    activation_code: Optional[str]
-    none: Optional[str]
-
-
-class KemModuleTypeObject(ApiModel):
-    kem_14_keys: Optional[str]
-    kem_18_keys: Optional[str]
-
-
-class DeviceObject(ApiModel):
-    #: Model name of the device.
-    model: Optional[str]
-    #: Display name of the device.
-    display_name: Optional[str]
-    #: Type of the device.
-    type: Optional[TypeObject]
-    #: Manufacturer of the device.
-    manufacturer: Optional[ManufacturerObject]
-    #: Users who manage the device.
-    managed_by: Optional[ManagedByObject]
-    #: List of places the device is supported for.
-    supported_for: Optional[list[MemberType]]
-    #: Onboarding method.
-    onboarding_method: Optional[list[OnboardingMethodObject]]
-    #: Enables / Disables layout configuration for devices.
-    allow_configure_layout_enabled: Optional[bool]
-    #: Number of port lines.
-    number_of_line_ports: Optional[int]
-    #: Indicates whether Kem support is enabled or not.
-    kem_support_enabled: Optional[bool]
-    #: Module count.
-    kem_module_count: Optional[int]
-    #: Key expansion module type of the device.
-    kem_module_type: Optional[list[KemModuleTypeObject]]
-    #: Enables / Disables the upgrade channel.
-    upgrade_channel_enabled: Optional[bool]
-    #: The default upgrade channel.
-    default_upgrade_channel: Optional[str]
-    #: Enables / disables the additional primary line appearances.
-    additional_primary_line_appearances_enabled: Optional[bool]
-    #: Enables / disables Basic emergency nomadic.
-    basic_emergency_nomadic_enabled: Optional[bool]
-    #: Enables / disables customized behavior support on devices.
-    customized_behaviors_enabled: Optional[bool]
-    #: Enables / disables configuring port support on device.
-    allow_configure_ports_enabled: Optional[bool]
-
-
-class DectObject(ApiModel):
-    #: Choose up to three predefined codec priority options available for your region.
-    audio_codec_priority: Optional[AudioCodecPriorityObject]
-    #: Enable/disable Cisco Discovery Protocol for local devices.
-    cdp_enabled: Optional[bool]
-    #: Specify the destination number to be dialled from the DECT Handset top button when pressed.
-    dect6825_handset_emergency_number: Optional[str]
-    #: Enable/disable Link Layer Discovery Protocol for local devices.
-    lldp_enabled: Optional[bool]
-    #: Specify up to 3 multicast group URLs each with a unique listening port.
-    multicast: Optional[str]
-    #: Enable/disable quality of service tagging of packets from the local device to the Webex Calling platform.
-    qos_enabled: Optional[bool]
-    #: Specify a numeric Virtual LAN ID for devices.
-    vlan: Optional[VlanObject]
 
 
 class SelectionType(ApiModel):
@@ -1872,6 +1699,170 @@ class CustomizationDeviceLevelObject(ApiModel):
     mpp: Optional[MppObject]
 
 
+class UpdateDeviceSettingsBody(ApiModel):
+    #: Indicates the customization object of the device settings.
+    customizations: Optional[CustomizationDeviceLevelObject]
+    #: Indicates if customization is allowed at a device level. If true, customized at a device level. If false, not customized; uses customer-level configuration.
+    custom_enabled: Optional[bool]
+
+
+class GetDeviceSettingsResponse(UpdateDeviceSettingsBody):
+    #: Customer devices setting update status. If true, an update is in progress (no further changes are allowed). If false, no update in progress (changes are allowed).
+    update_in_progress: Optional[bool]
+    #: Number of devices that will be updated.
+    device_count: Optional[int]
+    #: Indicates the last updated time.
+    last_update_time: Optional[int]
+
+
+class DeviceOwner(ApiModel):
+    #: Unique identifier of a person or a workspace.
+    id: Optional[str]
+    #: Enumeration that indicates if the member is of type PEOPLE or PLACE.
+    type: Optional[MemberType]
+    #: First name of device owner.
+    first_name: Optional[str]
+    #: Last name of device owner.
+    last_name: Optional[str]
+
+
+class ActivationStates(ApiModel):
+    #: Indicates a device is activating.
+    activating: Optional[str]
+    #: Indicates a device is activated.
+    activated: Optional[str]
+    #: Indicates a device is deactivated.
+    deactivated: Optional[str]
+
+
+class Devices(ApiModel):
+    #: Unique identifier for a device.
+    id: Optional[str]
+    #: Comma separated array of tags used to describe device.
+    description: Optional[list[str]]
+    #: Identifier for device model.
+    model: Optional[str]
+    #: MAC address of device.
+    mac: Optional[str]
+    #: IP address of device.
+    ip_address: Optional[str]
+    #: Indicates whether the person or the workspace is the owner of the device, and points to a primary Line/Port of the device.
+    primary_owner: Optional[bool]
+    #: Indicates if the line is acting as a primary line or a shared line for this device.
+    type: Optional[LineType]
+    #: Owner of device.
+    owner: Optional[DeviceOwner]
+    #: Activation state of device.
+    activation_state: Optional[ActivationStates]
+
+
+class Hoteling(ApiModel):
+    #: Enable/Disable hoteling Host. Enabling the device for hoteling means that a guest(end user) can log into this host(workspace device) and use this device
+    #: as if it were their own. This is useful when traveling to a remote office but still needing to place/receive calls with their telephone number and access features normally available to them on their office phone.
+    enabled: Optional[bool]
+    #: Enable limiting the time a guest can use the device. The time limit is configured via guestHoursLimit.
+    limit_guest_use: Optional[bool]
+    #: Time Limit in hours until hoteling is enabled. Mandatory if limitGuestUse is enabled.
+    guest_hours_limit: Optional[int]
+
+
+class PlaceDevices(Devices):
+    #: Indicates Hoteling details of a device.
+    hoteling: Optional[Hoteling]
+
+
+class TypeObject(ApiModel):
+    #: Cisco Multiplatform Phone
+    mpp: Optional[str]
+    #: Analog Telephone Adapters
+    ata: Optional[str]
+    #: GENERIC Session Initiation Protocol
+    generic_sip: Optional[str]
+    #: Esim Supported Webex Go
+    esim: Optional[str]
+
+
+class ManufacturerObject(ApiModel):
+    #: Devices manufactured by Cisco.
+    cisco: Optional[str]
+    #: Devices manufactured by a third-party that are approved by a Cisco account manager to be enabled for provisioning in the control hub.
+    third_party: Optional[str]
+
+
+class ManagedByObject(ApiModel):
+    #: Devices managed by Cisco.
+    cisco: Optional[str]
+    #: Devices managed by a customer that are approved by a Cisco account manager to be enabled for provisioning in the control hub.
+    customer: Optional[str]
+
+
+class OnboardingMethodObject(ApiModel):
+    mac_address: Optional[str]
+    activation_code: Optional[str]
+    none: Optional[str]
+
+
+class KemModuleTypeObject(ApiModel):
+    kem_14_keys: Optional[str]
+    kem_18_keys: Optional[str]
+
+
+class DeviceObject(ApiModel):
+    #: Model name of the device.
+    model: Optional[str]
+    #: Display name of the device.
+    display_name: Optional[str]
+    #: Type of the device.
+    type: Optional[TypeObject]
+    #: Manufacturer of the device.
+    manufacturer: Optional[ManufacturerObject]
+    #: Users who manage the device.
+    managed_by: Optional[ManagedByObject]
+    #: List of places the device is supported for.
+    supported_for: Optional[list[MemberType]]
+    #: Onboarding method.
+    onboarding_method: Optional[list[OnboardingMethodObject]]
+    #: Enables / Disables layout configuration for devices.
+    allow_configure_layout_enabled: Optional[bool]
+    #: Number of port lines.
+    number_of_line_ports: Optional[int]
+    #: Indicates whether Kem support is enabled or not.
+    kem_support_enabled: Optional[bool]
+    #: Module count.
+    kem_module_count: Optional[int]
+    #: Key expansion module type of the device.
+    kem_module_type: Optional[list[KemModuleTypeObject]]
+    #: Enables / Disables the upgrade channel.
+    upgrade_channel_enabled: Optional[bool]
+    #: The default upgrade channel.
+    default_upgrade_channel: Optional[str]
+    #: Enables / disables the additional primary line appearances.
+    additional_primary_line_appearances_enabled: Optional[bool]
+    #: Enables / disables Basic emergency nomadic.
+    basic_emergency_nomadic_enabled: Optional[bool]
+    #: Enables / disables customized behavior support on devices.
+    customized_behaviors_enabled: Optional[bool]
+    #: Enables / disables configuring port support on device.
+    allow_configure_ports_enabled: Optional[bool]
+
+
+class DectObject(ApiModel):
+    #: Choose up to three predefined codec priority options available for your region.
+    audio_codec_priority: Optional[AudioCodecPriorityObject]
+    #: Enable/disable Cisco Discovery Protocol for local devices.
+    cdp_enabled: Optional[bool]
+    #: Specify the destination number to be dialled from the DECT Handset top button when pressed.
+    dect6825_handset_emergency_number: Optional[str]
+    #: Enable/disable Link Layer Discovery Protocol for local devices.
+    lldp_enabled: Optional[bool]
+    #: Specify up to 3 multicast group URLs each with a unique listening port.
+    multicast: Optional[str]
+    #: Enable/disable quality of service tagging of packets from the local device to the Webex Calling platform.
+    qos_enabled: Optional[bool]
+    #: Specify a numeric Virtual LAN ID for devices.
+    vlan: Optional[VlanObject]
+
+
 class CustomizationObject(CustomizationDeviceLevelObject):
     #: Settings that are applicable to DECT devices.
     dect: Optional[DectObject]
@@ -1915,28 +1906,6 @@ class MacStatusObject(ApiModel):
     error_code: Optional[int]
     #: Provides a status message about the MAC address.
     message: Optional[str]
-
-
-class DectObject1(ApiModel):
-    #: Choose up to three predefined codec priority options available for your region.
-    audio_codec_priority: Optional[AudioCodecPriority]
-    #: Enable/disable Cisco Discovery Protocol for local devices.
-    cdp_enabled: Optional[bool]
-    #: Specify the destination number to be dialled from the DECT Handset top button when pressed.
-    dect6825_handset_emergency_number: Optional[str]
-    #: Enable/disable Link Layer Discovery Protocol for local devices.
-    lldp_enabled: Optional[bool]
-    #: Specify up to 3 multicast group URLs each with a unique listening port.
-    multicast: Optional[str]
-    #: Enable/disable quality of service tagging of packets from the local device to the Webex Calling platform.
-    qos_enabled: Optional[bool]
-    #: Specify a numeric Virtual LAN ID for devices.
-    vlan: Optional[VlanObject]
-
-
-class CustomizationObject1(CustomizationDeviceLevelObject):
-    #: Settings that are applicable to DECT devices.
-    dect: Optional[DectObject1]
 
 
 class StepExecutionStatusesObject(ApiModel):
@@ -2085,15 +2054,6 @@ class SearchMembersResponse(ApiModel):
     members: Optional[list[SearchMemberObject]]
 
 
-class GetDeviceSettingsResponse(UpdateDeviceSettingsBody):
-    #: Customer devices setting update status. If true, an update is in progress (no further changes are allowed). If false, no update in progress (changes are allowed).
-    update_in_progress: Optional[bool]
-    #: Number of devices that will be updated.
-    device_count: Optional[int]
-    #: Indicates the last updated time.
-    last_update_time: Optional[int]
-
-
 class GetUserDevicesResponse(ApiModel):
     #: Array of devices available to person.
     devices: Optional[list[Devices]]
@@ -2148,7 +2108,7 @@ class ChangeDeviceSettingsAcrossOrganizationOrLocationJobBody(ApiModel):
     #: Indicates if all the devices within this location will be customized with new requested customizations(if set to true) or will be overridden with the one at organization level (if set to false or any other value). This field has no effect when the job is being triggered at organization level.
     location_customizations_enabled: Optional[bool]
     #: Indicates the settings for ATA devices, DECT devices and MPP devices.
-    customizations: Optional[CustomizationObject1]
+    customizations: Optional[CustomizationObject]
 
 
 class ListChangeDeviceSettingsJobsResponse(ApiModel):
@@ -2189,7 +2149,7 @@ class WebexCallingOrganizationSettingswithDevicesFeaturesApi(ApiChild, base='tel
         data = super().get(url=url, params=params)
         return GetDeviceMembersResponse.parse_obj(data)
 
-    def update_members_ondevice(self, device_id: str, org_id: str = None, members: List[PutMemberObject] = None):
+    def update_members_ondevice(self, device_id: str, org_id: str = None, members: PutMemberObject = None):
         """
         Modify member details on the device.
         A device member can be either a person or a workspace. An admin can access the list of member details, modify member details and
@@ -2201,7 +2161,7 @@ class WebexCallingOrganizationSettingswithDevicesFeaturesApi(ApiChild, base='tel
         :param org_id: Modify members on the device in this organization.
         :type org_id: str
         :param members: If the member's list is missing then all the users are removed except the primary user.
-        :type members: List[PutMemberObject]
+        :type members: PutMemberObject
         """
         params = {}
         if org_id is not None:
@@ -2295,7 +2255,7 @@ class WebexCallingOrganizationSettingswithDevicesFeaturesApi(ApiChild, base='tel
         data = super().get(url=url, params=params)
         return GetDeviceSettingsResponse.parse_obj(data)
 
-    def update_settings(self, device_id: str, org_id: str = None, device_model: str = None, customizations: CustomizationDeviceLevelObject, custom_enabled: bool):
+    def update_settings(self, device_id: str, customizations: CustomizationDeviceLevelObject, custom_enabled: bool, org_id: str = None, device_model: str = None):
         """
         Modify override settings for a device.
         Device settings list all the applicable settings for an MPP and an ATA devices at the device level. Admins can also modify the settings. NOTE: DECT devices do not support settings at the device level.
@@ -2303,14 +2263,14 @@ class WebexCallingOrganizationSettingswithDevicesFeaturesApi(ApiChild, base='tel
 
         :param device_id: Unique identifier for the device.
         :type device_id: str
-        :param org_id: Organization in which the device resides..
-        :type org_id: str
-        :param device_model: Device model name.
-        :type device_model: str
         :param customizations: Indicates the customization object of the device settings.
         :type customizations: CustomizationDeviceLevelObject
         :param custom_enabled: Indicates if customization is allowed at a device level. If true, customized at a device level. If false, not customized; uses customer-level configuration.
         :type custom_enabled: bool
+        :param org_id: Organization in which the device resides..
+        :type org_id: str
+        :param device_model: Device model name.
+        :type device_model: str
         """
         params = {}
         if org_id is not None:
@@ -2377,7 +2337,7 @@ class WebexCallingOrganizationSettingswithDevicesFeaturesApi(ApiChild, base='tel
         data = super().get(url=url, params=params)
         return GetWorkspaceDevicesResponse.parse_obj(data)
 
-    def modify_workspace(self, workspace_id: str, org_id: str = None, enabled: bool, limit_guest_use: bool = None, guest_hours_limit: int = None):
+    def modify_workspace(self, workspace_id: str, org_id: str = None, enabled: bool = None, limit_guest_use: bool = None, guest_hours_limit: int = None):
         """
         Modify devices for a workspace.
         Modifying devices for a workspace requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
@@ -2453,16 +2413,16 @@ as if it were their own. This is useful when traveling to a remote office but st
         data = super().get(url=url, params=params)
         return data["devices"]
 
-    def validatelist_of_mac_address(self, org_id: str = None, macs: List[str]) -> ValidatelistOfMACAddressResponse:
+    def validatelist_of_mac_address(self, macs: List[str], org_id: str = None) -> ValidatelistOfMACAddressResponse:
         """
         Validate a list of MAC addresses.
         Validating this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_write.
 
-        :param org_id: Validate the mac address(es) for this organization.
-        :type org_id: str
         :param macs: MAC addresses to be validated.
 Possible values: {["ab125678cdef", "00005E0053B4"]}
         :type macs: List[str]
+        :param org_id: Validate the mac address(es) for this organization.
+        :type org_id: str
         """
         params = {}
         if org_id is not None:
@@ -2563,29 +2523,6 @@ class AvailableSharedLineMemberItem(ApiModel):
     line_type: Optional[LineType]
 
 
-class GetSharedLineMemberItem(AvailableSharedLineMemberItem):
-    #: Device port number assigned to person or workspace.
-    port: Optional[int]
-    #: T.38 Fax Compression setting. Only valid for ATA Devices. Choose T.38 fax compression if the device requires this option. This will override user level compression options.
-    t38_fax_compression_enabled: Optional[bool]
-    #: Indicates whether the person or the workspace is the owner of the device. Points to primary Line/Port of the device.
-    primary_owner: Optional[str]
-    #: Number of lines that have been configured for the person on the device.
-    line_weight: Optional[int]
-    #: Registration home IP for the line port.
-    host_ip: Optional[str]
-    #: Registration remote IP for the line port.
-    remote_ip: Optional[str]
-    #: Enable Hotline. Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line can only make calls to the predefined number set in hotlineDestination.
-    hotline_enabled: Optional[bool]
-    #: The preconfigured number for Hotline. Required only if hotlineEnabled is set to true.
-    hotline_destination: Optional[str]
-    #: Set how person device behaves when a call is declined. When set to true, a call decline request is extended to all the endpoints on the device. When set to false, a call decline request only decline the current endpoint.
-    allow_call_decline_enabled: Optional[bool]
-    #: Enumeration that indicates if the member is of type PEOPLE or PLACE.
-    member_type: Optional[MemberType]
-
-
 class PutSharedLineMemberItem(ApiModel):
     #: Unique identifier for the person or workspace.
     id: Optional[str]
@@ -2605,6 +2542,23 @@ class PutSharedLineMemberItem(ApiModel):
     hotline_destination: Optional[str]
     #: Set how person device behaves when a call is declined. When set to true, a call decline request is extended to all the endpoints on the device. When set to false, a call decline request only decline the current endpoint.
     allow_call_decline_enabled: Optional[bool]
+
+
+class GetSharedLineMemberItem(PutSharedLineMemberItem):
+    #: First name of person or workspace.
+    first_name: Optional[str]
+    #: Last name of person or workspace.
+    last_name: Optional[str]
+    #: Phone Number of person or workspace. Currently E.164 format is not supported.
+    phone_number: Optional[str]
+    #: Phone extension of person or workspace.
+    extension: Optional[str]
+    #: Registration home IP for the line port.
+    host_ip: Optional[str]
+    #: Registration remote IP for the line port.
+    remote_ip: Optional[str]
+    #: Enumeration that indicates if the member is of type PEOPLE or PLACE.
+    member_type: Optional[MemberType]
 
 
 class SearchSharedLineAppearanceMembersBody(ApiModel):
@@ -2703,7 +2657,7 @@ class WebexCallingPersonSettingsWithSharedLineApi(ApiChild, base='telephony/conf
         data = super().get(url=url)
         return GetSharedLineAppearanceMembersResponse.parse_obj(data)
 
-    def put_line_appearance_members(self, person_id: str, application_id: str, members: List[PutSharedLineMemberItem] = None):
+    def put_line_appearance_members(self, person_id: str, application_id: str, members: PutSharedLineMemberItem = None):
         """
         Add or Modify primary and secondary users assigned to shared-lines on a Webex Calling Apps Desktop device.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
@@ -2713,7 +2667,7 @@ class WebexCallingPersonSettingsWithSharedLineApi(ApiChild, base='telephony/conf
         :param application_id: A unique identifier for the application.
         :type application_id: str
         :param members: 
-        :type members: List[PutSharedLineMemberItem]
+        :type members: PutSharedLineMemberItem
         """
         body = {}
         if members is not None:
@@ -2748,18 +2702,11 @@ class CallForwardingPlaceSettingGet(ApiModel):
     no_answer: Optional[CallForwardingNoAnswerGet]
 
 
-class ModifyCallForwardingNoAnswer(CallForwardingBusyGet):
-    #: Number of rings before the call will be forwarded if unanswered.
-    number_of_rings: Optional[int]
-    #: Max number of rings before the call will be forwarded if unanswered.
-    system_max_number_of_rings: Optional[int]
-
-
 class CallForwardingPlaceSettingPatch(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the workspace is busy.
     busy: Optional[CallForwardingBusyGet]
     #: Settings for forwarding which only occurs when you are away or not answering your phone.
-    no_answer: Optional[ModifyCallForwardingNoAnswer]
+    no_answer: Optional[CallForwardingNoAnswerGet]
 
 
 class CLIDPolicySelection(ApiModel):
@@ -2839,6 +2786,17 @@ class ExternalTransfer(str, Enum):
     allow_only_transferred_external = 'ALLOW_ONLY_TRANSFERRED_EXTERNAL'
     #: All external calls are blocked.
     block_all_external = 'BLOCK_ALL_EXTERNAL'
+
+
+class RetrieveIncomingPermissionSettingsForWorkspaceResponse(ApiModel):
+    #: Incoming Permission state. If disabled, the default settings are used.
+    use_custom_enabled: Optional[bool]
+    #: Indicate call transfer setting.
+    external_transfer: Optional[ExternalTransfer]
+    #: Flag to indicate if workspace can receive internal calls.
+    internal_calls_enabled: Optional[bool]
+    #: Flag to indicate if workspace can receive collect calls.
+    collect_calls_enabled: Optional[bool]
 
 
 class CallType1(str, Enum):
@@ -2953,6 +2911,15 @@ class InterceptIncomingPatch(ApiModel):
     announcements: Optional[InterceptAnnouncementsPatch]
 
 
+class RetrieveTransferNumbersSettingsForWorkspaceResponse(ApiModel):
+    #: When calling a specific call type, this workspace will be automatically transferred to another number.
+    auto_transfer_number1: Optional[str]
+    #: When calling a specific call type, this workspace will be automatically transferred to another number.
+    auto_transfer_number2: Optional[str]
+    #: When calling a specific call type, this workspace will be automatically transferred to another number.
+    auto_transfer_number3: Optional[str]
+
+
 class RetrieveCallForwardingSettingsForWorkspaceResponse(ApiModel):
     #: Call forwarding settings for a Workspace.
     call_forwarding: Optional[CallForwardingPlaceSettingGet]
@@ -3034,17 +3001,6 @@ class ModifyMonitoringSettingsForWorkspaceBody(ApiModel):
     monitored_elements: Optional[list[str]]
 
 
-class RetrieveIncomingPermissionSettingsForWorkspaceResponse(ApiModel):
-    #: Incoming Permission state. If disabled, the default settings are used.
-    use_custom_enabled: Optional[bool]
-    #: Indicate call transfer setting.
-    external_transfer: Optional[ExternalTransfer]
-    #: Flag to indicate if workspace can receive internal calls.
-    internal_calls_enabled: Optional[bool]
-    #: Flag to indicate if workspace can receive collect calls.
-    collect_calls_enabled: Optional[bool]
-
-
 class RetrieveOutgoingPermissionSettingsForWorkspaceResponse(ApiModel):
     #: Outgoing Permission state. If disabled, the default settings are used.
     use_custom_enabled: Optional[bool]
@@ -3087,15 +3043,6 @@ class ConfigureCallInterceptSettingsForWorkspaceBody(ApiModel):
     outgoing: Optional[InterceptOutGoingGet]
 
 
-class RetrieveTransferNumbersSettingsForWorkspaceResponse(ApiModel):
-    #: When calling a specific call type, this workspace will be automatically transferred to another number.
-    auto_transfer_number1: Optional[str]
-    #: When calling a specific call type, this workspace will be automatically transferred to another number.
-    auto_transfer_number2: Optional[str]
-    #: When calling a specific call type, this workspace will be automatically transferred to another number.
-    auto_transfer_number3: Optional[str]
-
-
 class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspaces/{workspaceId}/features/'):
     """
 
@@ -3119,7 +3066,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         data = super().get(url=url, params=params)
         return data["callForwarding"]
 
-    def modify_callwarding_settings_workspace(self, workspace_id: str, org_id: str = None, call_forwarding: CallForwardingPlaceSettingPatch):
+    def modify_callwarding_settings_workspace(self, workspace_id: str, call_forwarding: CallForwardingPlaceSettingPatch, org_id: str = None):
         """
         Modify call forwarding settings for a Workspace.
         Two types of call forwarding are supported:
@@ -3127,10 +3074,10 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
-        :type org_id: str
         :param call_forwarding: Call forwarding settings for a Workspace.
         :type call_forwarding: CallForwardingPlaceSettingPatch
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :type org_id: str
         """
         params = {}
         if org_id is not None:
@@ -3201,7 +3148,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         data = super().get(url=url, params=params)
         return RetrieveCallerIDSettingsForWorkspaceResponse.parse_obj(data)
 
-    def modify_caller_id_settings_workspace(self, workspace_id: str, org_id: str = None, selected: enum, custom_number: str = None, display_name: str = None, display_detail: str = None, block_in_forward_calls_enabled: bool = None, external_caller_id_name_policy: ExternalCallerIdNamePolicy = None, custom_external_caller_id_name: str = None, location_external_caller_id_name: str = None):
+    def modify_caller_id_settings_workspace(self, workspace_id: str, selected: CLIDPolicySelection, org_id: str = None, custom_number: str = None, display_name: str = None, display_detail: str = None, block_in_forward_calls_enabled: bool = None, external_caller_id_name_policy: ExternalCallerIdNamePolicy = None, custom_external_caller_id_name: str = None, location_external_caller_id_name: str = None):
         """
         Modify Caller ID settings for a Workspace.
         Caller ID settings control how a workspace's information is displayed when making outgoing calls.
@@ -3209,10 +3156,10 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
+        :param selected: Which type of outgoing Caller ID will be used.
+        :type selected: CLIDPolicySelection
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
-        :param selected: Which type of outgoing Caller ID will be used.
-        :type selected: enum
         :param custom_number: This value must be an assigned number from the workspace's location.
         :type custom_number: str
         :param display_name: Workspace's caller ID display name.
@@ -3316,7 +3263,7 @@ Possible values: DIRECT_LINE
         data = super().get(url=url, params=params)
         return RetrieveIncomingPermissionSettingsForWorkspaceResponse.parse_obj(data)
 
-    def modify_incoming_permission_settings_workspace(self, workspace_id: str, org_id: str = None, use_custom_enabled: bool = None, external_transfer: enum = None, internal_calls_enabled: bool = None, collect_calls_enabled: bool = None):
+    def modify_incoming_permission_settings_workspace(self, workspace_id: str, org_id: str = None, use_custom_enabled: bool = None, external_transfer: ExternalTransfer = None, internal_calls_enabled: bool = None, collect_calls_enabled: bool = None):
         """
         Modify Incoming Permission settings for a Workspace.
         Incoming permission settings allow modifying permissions for a workspace that can be different from the organization's default to manage different call types.
@@ -3329,10 +3276,10 @@ Possible values: DIRECT_LINE
         :param use_custom_enabled: Incoming Permission state. If disabled, the default settings are used.
         :type use_custom_enabled: bool
         :param external_transfer: Indicate call transfer setting.
-        :type external_transfer: enum
-        :param internal_calls_enabled: Flag to indicate if the workspace can receive internal calls.
+        :type external_transfer: ExternalTransfer
+        :param internal_calls_enabled: Flag to indicate if workspace can receive internal calls.
         :type internal_calls_enabled: bool
-        :param collect_calls_enabled: Flag to indicate if the workspace can receive collect calls.
+        :param collect_calls_enabled: Flag to indicate if workspace can receive collect calls.
         :type collect_calls_enabled: bool
         """
         params = {}
@@ -3369,7 +3316,7 @@ Possible values: DIRECT_LINE
         data = super().get(url=url, params=params)
         return RetrieveOutgoingPermissionSettingsForWorkspaceResponse.parse_obj(data)
 
-    def modify_outgoing_permission_settings_workspace(self, workspace_id: str, org_id: str = None, use_custom_enabled: bool = None, calling_permissions: List[CallingPermission] = None):
+    def modify_outgoing_permission_settings_workspace(self, workspace_id: str, org_id: str = None, use_custom_enabled: bool = None, calling_permissions: CallingPermission = None):
         """
         Modify Outgoing Permission settings for a Place.
         Turn on outgoing call settings for this workspace to override the calling settings from the location that are used by default.
@@ -3382,7 +3329,7 @@ Possible values: DIRECT_LINE
         :param use_custom_enabled: Outgoing Permission state. If disabled, the default settings are used.
         :type use_custom_enabled: bool
         :param calling_permissions: Workspace's list of outgoing permissions.
-        :type calling_permissions: List[CallingPermission]
+        :type calling_permissions: CallingPermission
         """
         params = {}
         if org_id is not None:
@@ -3437,7 +3384,7 @@ Possible values: DIRECT_LINE
         super().put(url=url, params=params, json=body)
         return
 
-    def create_access_codes_workspace(self, workspace_id: str, org_id: str = None, code: str, description: str):
+    def create_access_codes_workspace(self, workspace_id: str, org_id: str = None, code: str = None, description: str = None):
         """
         Create new Access codes for the given workspace.
         Access codes are used to bypass permissions.

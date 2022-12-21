@@ -4328,6 +4328,725 @@ docs:
     doc: null
     header: null
     methods: []
+  Webex Calling Detailed Call History:
+    doc: 'The base URL for these APIs is analytics.webexapis.com (or analytics-f.webex.com
+      for Government), which does not work with the API reference''s Try It feature.
+      If you have any questions or need help please contact the Webex Developer Support
+      team at devsupport@webex.com.
+
+      To retrieve Detailed Call History information, you must use a token with the
+      spark-admin:calling_cdr_read scope. The authenticating user must be a read-only-admin
+      or full-admin of the organization and have the administrator role "Webex Calling
+      Detailed Call History API access" enabled.
+
+      Detailed Call History information is available 5 minutes after a call has ended
+      and may be retrieved for up to 48 hours. For example, if a call ends at 9:46
+      am, the record for that call can be collected using the API from 9:51 am, and
+      is available until 9:46 am two days later.
+
+      This API is rate-limited to one call every 5 minutes for a given organization
+      ID.
+
+      Details on the fields returned from this API and their potential values are
+      available at https://help.webex.com/en-us/article/nmug598/Reports-for-Your-Cloud-Collaboration-Portfolio
+      under the section Detailed Call History.'
+    header: Webex Calling Detailed Call History
+    methods:
+    - doc: 'Provides Webex Calling Detailed Call History data for your organization.
+
+        Results can be filtered with the startTime, endTime and locations request
+        parameters. The startTime and endTime parameters specify the start and end
+        of the time period for the Detailed Call History reports you wish to collect.
+        The API will return all reports that were created between startTime and endTime.
+
+
+        Response entries may be added as more information is made available for the
+        reports.
+
+        Values in response items may be extended as more capabilities are added to
+        Webex Calling.'
+      documentation:
+        doc: Get Detailed Call History
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-detailed-call-history/get-detailed-call-history
+        endpoint: https://analytics.webexapis.com/v1/cdr_feed
+        http_method: GET
+      header: Get Detailed Call History
+      parameters_and_response:
+        Query Parameters:
+        - doc: 'Time of the first report you wish to collect. (Report time is the
+            time the call finished). Note: The specified time must be between 5 minutes
+            ago and 48 hours ago, and be formatted as YYYY-MM-DDTHH:MM:SS.mmmZ.'
+          name: startTime
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: 'Time of the last report you wish to collect. (Report time is the time
+            the call finished). Note: The specified time should be later than startTime
+            but no later than 48 hours, and be formatted as YYYY-MM-DDTHH:MM:SS.mmmZ.'
+          name: endTime
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Name of the location (as shown in Control Hub). Up to 10 comma-separated
+            locations can be provided. Allows you to query reports by location.
+          name: locations
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Limit the maximum number of reports in the response. Range is 1 to
+            500. When the API has more reports to return than the max value, the API
+            response will be paginated.
+          name: max
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        Response Properties:
+        - doc: ''
+          name: items
+          param_attrs:
+          - doc: The time the call was answered. Time is in UTC.
+            name: Answer time
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Whether the call leg was answered. For example, in a hunt group case,
+              some legs will be unanswered, and one will be answered.
+            name: Answered
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The authorization code admin created for a location or site for users
+              to use. Collected by the Account/Authorization Codes or Enhanced Outgoing
+              Calling Plan services.
+            name: Authorization code
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: SIP Call ID used to identify the call. You can share the Call ID
+              with Cisco TAC to help them pinpoint a call if necessary.
+            name: Call ID
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'Type of call. For example:'
+            name: Call type
+            param_attrs:
+            - doc: ''
+              name: SIP_MEETING
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: SIP_INTERNATIONAL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: SIP_SHORTCODE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: SIP_INBOUND
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: UNKNOWN
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: SIP_EMERGENCY
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: SIP_PREMIUM
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: SIP_ENTERPRISE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: SIP_TOLLFREE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: SIP_NATIONAL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: SIP_MOBILE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: For incoming calls, the calling line ID of the user. For outgoing
+              calls, it's the calling line ID of the called party.
+            name: Called line ID
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: For incoming calls, the telephone number of the user. For outgoing
+              calls, it's the telephone number of the called party.
+            name: Called number
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: For incoming calls, the calling line ID of the calling party. For
+              outgoing calls, it's the calling line ID of the user.
+            name: Calling line ID
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: For incoming calls, the telephone number of the calling party. For
+              outgoing calls, it's the telephone number of the user.
+            name: Calling number
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'The type of client that the user (creating this record) is using
+              to make or receive the call. For example:'
+            name: Client type
+            param_attrs:
+            - doc: ''
+              name: SIP
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: WXC_CLIENT
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: WXC_THIRD_PARTY
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: TEAMS_WXC_CLIENT
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: WXC_DEVICE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: WXC_SIP_GW
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: The version of the client that the user (creating this record) is
+              using to make or receive the call.
+            name: Client version
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Correlation ID to tie together multiple call legs of the same call
+              session.
+            name: Correlation ID
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A unique identifier for the user's department name.
+            name: Department ID
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The MAC address of the device, if known.
+            name: Device MAC
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: "The keypad digits as dialed by the user, before pre-translations.\
+              \ \nThis field reports multiple call dial possibilities:"
+            name: Dialed digits
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'Whether the call was inbound or outbound. The possible values are:'
+            name: Direction
+            param_attrs:
+            - doc: ''
+              name: ORIGINATING
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: TERMINATING
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: The length of the call in seconds.
+            name: Duration
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: Inbound trunk may be presented in Originating and Terminating records.
+            name: Inbound trunk
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The country code of the dialed number. This is only populated for
+              international calls.
+            name: International country
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Location of the report.
+            name: Location
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'The device model type the user is using to make or receive the call. '
+            name: Model
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A unique identifier for the organization that made the call. This
+              is a unique identifier across Cisco.
+            name: Org UUID
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'Populated for calls that transfer, hold, wait, and so on. For example:'
+            name: Original reason
+            param_attrs:
+            - doc: ''
+              name: Unconditional
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: NoAnswer
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: CallQueue
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: TimeOfDay
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: UserBusy
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: FollowMe
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: Unrecognised
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: Unknown
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: The operating system that the app was running on, if available.
+            name: OS type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Outbound trunk may be presented in Originating and Terminating records.
+            name: Outbound trunk
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'Populated for calls that transfer, hold, wait, and so on. For example:'
+            name: Redirect reason
+            param_attrs:
+            - doc: ''
+              name: Unconditional
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: NoAnswer
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: CallQueue
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: TimeOfDay
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: UserBusy
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: FollowMe
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: HuntGroup
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: Deflection
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: Unknown
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: Unavailable
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: When the call has been redirected one or more times, this field reports
+              the last redirecting number. Identifies who last redirected the call.
+              Only applies to call scenarios such as transfer, call forwarded calls,
+              simultaneous rings, etc.
+            name: Redirecting number
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'Populated for calls that transfer, hold, wait, and so on. For example:'
+            name: Related reason
+            param_attrs:
+            - doc: ''
+              name: ConsultativeTransfer
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: CallForwardSelective
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: CallQueue
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: Unrecognised
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: CallPickup
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: CallForwardAlways
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: FaxDeposit
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: HuntGroup
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: PushNotificationRetrieval
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: VoiceXMLScriptTermination
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: CallForwardNoAnswer
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: AnywhereLocation
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: 'Indicates which party released the call first. The possible values
+              are:'
+            name: Releasing party
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A unique ID for this particular record. This can be used when processing
+              records to aid in deduplication.
+            name: Report ID
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The time this report was created. Time is in UTC.
+            name: Report time
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: If present, this field's only reported in Originating records. Route
+              group identifies the route group used for outbound calls routed via
+              a route group to Premises-based PSTN or an on-prem deployment integrated
+              with Webex Calling (dial plan or unknown extension).
+            name: Route group
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The main number for the user's site where the call was made or received.
+            name: Site main number
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Site timezone is the offset in minutes from UTC time of the user's
+              timezone.
+            name: Site timezone
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A unique identifier for the site associated with the call. Unique
+              across Cisco products.
+            name: Site UUID
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'This is the start time of the call, the answer time may be slightly
+              after this. Time is in UTC. '
+            name: Start time
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: If the call is TO or FROM a mobile phone using Webex Go, the Client
+              type will show SIP, and Sub client type will show MOBILE_NETWORK.
+            name: Sub client type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Transfer related call ID is used as a call identifier of the other
+              call involved in the transfer. You can share this ID with Cisco TAC
+              to help them pinpoint parties who are involved during a call transfer.
+            name: Transfer related call ID
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'The type of user (user or workspace) that made or received the call.
+              For example:'
+            name: User type
+            param_attrs:
+            - doc: ''
+              name: AutomatedAttendantVideo
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: Anchor
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: BroadworksAnywhere
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: VoiceMailRetrieval
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: LocalGateway
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: HuntGroup
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: GroupPaging
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: User
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: VoiceMailGroup
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: CallCenterStandard
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: VoiceXML
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: RoutePoint
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: A unique identifier for the user associated with the call. This is
+              a unique identifier across Cisco products.
+            name: User UUID
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[CDR]
+          type_spec: null
   Webex Calling Organization Settings:
     doc: 'Not supported for Webex for Government (FedRAMP)
 
@@ -18155,6 +18874,803 @@ docs:
             type_spec: null
           param_object: []
           type: NumberListGetObject
+          type_spec: null
+    - doc: 'Lists all Manage Numbers jobs for the given organization in order of most
+        recent one to oldest one irrespective of its status.
+
+        The public API only supports initiating jobs which move numbers between locations.
+
+        Via Control Hub they can initiate both the move and delete, so this listing
+        can show both.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.'
+      documentation:
+        doc: List Manage Numbers Jobs
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/list-manage-numbers-jobs
+        endpoint: https://webexapis.com/v1/telephony/config/jobs/numbers/manageNumbers
+        http_method: GET
+      header: List Manage Numbers Jobs
+      parameters_and_response:
+        Query Parameters:
+        - doc: Retrieve list of Manage Number jobs for this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Start at the zero-based offset in the list of jobs. Default is 0.
+          name: start
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Limit the number of jobs returned to this maximum count. Default is
+            2000.
+          name: max
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        Response Properties:
+        - doc: Lists all jobs for the customer in order of most recent one to oldest
+            one irrespective of its status.
+          name: items
+          param_attrs:
+          - doc: Job name.
+            name: name
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unique identifier of the job.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Job type.
+            name: jobType
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unique identifier to track the flow of HTTP requests.
+            name: trackingId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unique identifier to identify which user has run the job.
+            name: sourceUserId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unique identifier to identify the customer who has run the job.
+            name: sourceCustomerId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unique identifier to identify the customer for which the job was
+              run.
+            name: targetCustomerId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unique identifier to identify the instance of the job.
+            name: instanceId
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: Displays the most recent step's execution status. Contains execution
+              statuses of all the steps involved in the execution of the job.
+            name: jobExecutionStatus
+            param_attrs:
+            - doc: Unique identifier that identifies each instance of the job.
+              name: id
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: null
+            - doc: Last updated time (in UTC format) post one of the step execution
+                completion.
+              name: lastUpdated
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Displays status for overall steps that are part of the job.
+              name: statusMessage
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Exit Code for a job.
+              name: exitCode
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Job creation time in UTC format.
+              name: createdTime
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Time lapsed since the job execution started.
+              name: timeElapsed
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: array[JobExecutionStatusObject1]
+            type_spec: null
+          - doc: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED)
+              of the job at the time of invocation.
+            name: latestExecutionStatus
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Indicates operation type that was carried out.
+            name: operationType
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unique location identifier for which the job was run.
+            name: sourceLocationId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unique location identifier for which the numbers have been moved.
+            name: targetLocationId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Job statistics.
+            name: counts
+            param_attrs:
+            - doc: Indicates the total number of phone numbers requested to be moved.
+              name: totalNumbers
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: null
+            - doc: Indicates the total number of phone numbers successfully deleted.
+              name: numbersDeleted
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: null
+            - doc: Indicates the total number of phone numbers successfully moved.
+              name: numbersMoved
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: null
+            - doc: Indicates the total number of phone numbers failed.
+              name: numbersFailed
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: null
+            param_object: []
+            type: CountObject
+            type_spec: null
+          param_object: []
+          type: array[StartJobResponse]
+          type_spec: null
+    - doc: 'Starts the numbers move from one location to another location. Although
+        jobs can do both MOVE and DELETE actions internally, only MOVE is supported
+        publicly.
+
+        In order to move a number,
+
+        For example, you can move from Cisco PSTN to Cisco PSTN, but you cannot move
+        from Cisco PSTN to a location with Cloud Connected PSTN.
+
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.'
+      documentation:
+        doc: Initiate Move Number Jobs
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/initiate-move-number-jobs
+        endpoint: https://webexapis.com/v1/telephony/config/jobs/numbers/manageNumbers
+        http_method: POST
+      header: Initiate Move Number Jobs
+      parameters_and_response:
+        Body Parameters:
+        - doc: Indicates the kind of operation to be carried out.
+          name: operation
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: The target location within organization where the unassigned numbers
+            will be moved from the source location.
+          name: targetLocationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Indicates the numbers to be moved from source to target locations.
+          name: numberList
+          param_attrs:
+          - doc: The source location of the numbers to be moved.
+            name: locationId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: required
+          - doc: Indicates the numbers to be moved from one location to another location.
+            name: numbers
+            param_attrs: []
+            param_object: []
+            type: array[string]
+            type_spec: required
+          param_object: []
+          type: array[numberItem]
+          type_spec: required
+        Response Properties:
+        - doc: Job name.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier of the job.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Job type.
+          name: jobType
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier to track the flow of HTTP requests.
+          name: trackingId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier to identify which user has run the job.
+          name: sourceUserId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier to identify the customer who has run the job.
+          name: sourceCustomerId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier to identify the customer for which the job was run.
+          name: targetCustomerId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier to identify the instance of the job.
+          name: instanceId
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Displays the most recent step's execution status. Contains execution
+            statuses of all the steps involved in the execution of the job.
+          name: jobExecutionStatus
+          param_attrs:
+          - doc: Unique identifier that identifies each instance of the job.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: Last updated time (in UTC format) post one of the step execution
+              completion.
+            name: lastUpdated
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Displays status for overall steps that are part of the job.
+            name: statusMessage
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Exit Code for a job.
+            name: exitCode
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Job creation time in UTC format.
+            name: createdTime
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Time lapsed since the job execution started.
+            name: timeElapsed
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[JobExecutionStatusObject1]
+          type_spec: null
+        - doc: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED)
+            of the job at the time of invocation.
+          name: latestExecutionStatus
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Indicates operation type that was carried out.
+          name: operationType
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique location identifier for which the job was run.
+          name: sourceLocationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique location identifier for which the numbers have been moved.
+          name: targetLocationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Job statistics.
+          name: counts
+          param_attrs:
+          - doc: Indicates the total number of phone numbers requested to be moved.
+            name: totalNumbers
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: Indicates the total number of phone numbers successfully deleted.
+            name: numbersDeleted
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: Indicates the total number of phone numbers successfully moved.
+            name: numbersMoved
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: Indicates the total number of phone numbers failed.
+            name: numbersFailed
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          param_object: []
+          type: CountObject
+          type_spec: null
+    - doc: 'Returns the status and other details of the job.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.'
+      documentation:
+        doc: Get Manage Numbers Job Status
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-manage-numbers-job-status
+        endpoint: https://webexapis.com/v1/telephony/config/jobs/numbers/manageNumbers/{jobId}
+        http_method: GET
+      header: Get Manage Numbers Job Status
+      parameters_and_response:
+        Response Properties:
+        - doc: Job name.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier of the job.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Job type.
+          name: jobType
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier to track the flow of HTTP requests.
+          name: trackingId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier to identify which user has run the job.
+          name: sourceUserId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier to identify the customer who has run the job.
+          name: sourceCustomerId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier to identify the customer for which the job was run.
+          name: targetCustomerId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier to identify the instance of the job.
+          name: instanceId
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Displays the most recent step's execution status. Contains execution
+            statuses of all the steps involved in the execution of the job.
+          name: jobExecutionStatus
+          param_attrs:
+          - doc: Unique identifier that identifies each instance of the job.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: Last updated time (in UTC format) post one of the step execution
+              completion.
+            name: lastUpdated
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Displays status for overall steps that are part of the job.
+            name: statusMessage
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Exit Code for a job.
+            name: exitCode
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Job creation time in UTC format.
+            name: createdTime
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Time lapsed since the job execution started.
+            name: timeElapsed
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Status of each step within a job.
+            name: stepExecutionStatuses
+            param_attrs:
+            - doc: Unique identifier that identifies each step in a job.
+              name: id
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: null
+            - doc: Step execution start time in UTC format.
+              name: startTime
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Step execution end time in UTC format.
+              name: endTime
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Last updated time for a step in UTC format.
+              name: lastUpdated
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Displays status for a step.
+              name: statusMessage
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Exit Code for a step.
+              name: exitCode
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Step name.
+              name: name
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Time lapsed since the step execution started.
+              name: timeElapsed
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: array[stepExecutionStatusesObject]
+            type_spec: null
+          param_object: []
+          type: array[JobExecutionStatusObject]
+          type_spec: null
+        - doc: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED)
+            of the job at the time of invocation.
+          name: latestExecutionStatus
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Indicates the operation type that was carried out.
+          name: operationType
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique location identifier for which the job was run.
+          name: sourceLocationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique location identifier for which the numbers have been moved.
+          name: targetLocationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The location name for which the job was run.
+          name: sourceLocationName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The location name for which the numbers have been moved.
+          name: targetLocationName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Job statistics.
+          name: counts
+          param_attrs:
+          - doc: Indicates the total number of phone numbers requested to be moved.
+            name: totalNumbers
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: Indicates the total number of phone numbers successfully deleted.
+            name: numbersDeleted
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: Indicates the total number of phone numbers successfully moved.
+            name: numbersMoved
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: Indicates the total number of phone numbers failed.
+            name: numbersFailed
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          param_object: []
+          type: CountObject
+          type_spec: null
+        URI Parameters:
+        - doc: Retrieve job details for this jobId.
+          name: jobId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+    - doc: 'Pause the running Manage Numbers Job. A paused job can be resumed or abandoned.
+
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.'
+      documentation:
+        doc: Pause the Manage Numbers Job
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/pause-the-manage-numbers-job
+        endpoint: https://webexapis.com/v1/telephony/config/jobs/numbers/manageNumbers/{jobId}/actions/pause/invoke
+        http_method: POST
+      header: Pause the Manage Numbers Job
+      parameters_and_response:
+        Query Parameters:
+        - doc: Pause the Manage Numbers job for this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Pause the Manage Numbers job for this jobId.
+          name: jobId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+    - doc: 'Resume the paused Manage Numbers Job. A paused job can be resumed or abandoned.
+
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.'
+      documentation:
+        doc: Resume the Manage Numbers Job
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/resume-the-manage-numbers-job
+        endpoint: https://webexapis.com/v1/telephony/config/jobs/numbers/manageNumbers/{jobId}/actions/resume/invoke
+        http_method: POST
+      header: Resume the Manage Numbers Job
+      parameters_and_response:
+        Query Parameters:
+        - doc: Resume the Manage Numbers job for this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Resume the Manage Numbers job for this jobId.
+          name: jobId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+    - doc: 'Abandon the Manage Numbers Job.
+
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.'
+      documentation:
+        doc: Abandon the Manage Numbers Job
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/abandon-the-manage-numbers-job
+        endpoint: https://webexapis.com/v1/telephony/config/jobs/numbers/manageNumbers/{jobId}/actions/abandon/invoke
+        http_method: POST
+      header: Abandon the Manage Numbers Job
+      parameters_and_response:
+        Query Parameters:
+        - doc: Abandon the Manage Numbers job for this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Abandon the Manage Numbers job for this jobId.
+          name: jobId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+    - doc: 'Lists all error details of Manage Numbers job. This will not list any
+        errors if exitCode is COMPLETED. If the status is COMPLETED_WITH_ERRORS then
+        this lists the cause of failures.
+
+        List of possible Errors:
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.'
+      documentation:
+        doc: List Manage Numbers Job errors
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/list-manage-numbers-job-errors
+        endpoint: https://webexapis.com/v1/telephony/config/jobs/numbers/manageNumbers/{jobId}/errors
+        http_method: GET
+      header: List Manage Numbers Job errors
+      parameters_and_response:
+        Query Parameters:
+        - doc: Retrieve list of jobs for this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Specifies the error offset from the first result that you want to fetch.
+          name: start
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Specifies the maximum number of records that you want to fetch.
+          name: max
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        Response Properties:
+        - doc: ''
+          name: items
+          param_attrs:
+          - doc: Phone number
+            name: item
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Index of error number.
+            name: itemNumber
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: Unique identifier to track the HTTP requests.
+            name: trackingId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: error
+            param_attrs:
+            - doc: HTTP error code.
+              name: key
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: message
+              param_attrs:
+              - doc: Error message.
+                name: description
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Internal error code.
+                name: code
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Error messages describing the location id in which the error
+                  occurs. For a move operation this is the target location ID.
+                name: locationId
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: array[ErrorMessageObject]
+              type_spec: null
+            param_object: []
+            type: ErrorObject
+            type_spec: null
+          param_object: []
+          type: array[ItemObject]
+          type_spec: null
+        URI Parameters:
+        - doc: Retrieve the error details for this jobId.
+          name: jobId
+          param_attrs: []
+          param_object: []
+          type: string
           type_spec: null
     - doc: 'Retrieve the location''s network connection type.
 

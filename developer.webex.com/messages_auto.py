@@ -203,23 +203,23 @@ class MessagesApi(ApiChild, base='messages'):
         url = self.ep('direct')
         return self.session.follow_pagination(url=url, model=ListDirectMessagesResponse, params=params)
 
-    def create(self, room_id: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None, text: str = None, markdown: str = None, files: List[str] = None, attachments: Attachment = None) -> CreateMessageResponse:
+    def create(self, room_id: str = None, text: str = None, markdown: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None, files: List[str] = None, attachments: Attachment = None) -> CreateMessageResponse:
         """
         Post a plain text or rich text message, and optionally, a file attachment attachment, to a room.
         The files parameter is an array, which accepts multiple values to allow for future expansion, but currently only one file may be included with the message. File previews are only rendered for attachments of 1MB or less.
 
         :param room_id: The room ID of the message.
         :type room_id: str
+        :param text: The message, in plain text. If markdown is specified this parameter may be optionally used to provide alternate text for UI clients that do not support rich text. The maximum message length is 7439 bytes.
+        :type text: str
+        :param markdown: The message, in Markdown format. If this attribute is set ensure that the request does NOT contain an html attribute.
+        :type markdown: str
         :param parent_id: The parent message to reply to.
         :type parent_id: str
         :param to_person_id: The person ID of the recipient when sending a private 1:1 message.
         :type to_person_id: str
         :param to_person_email: The email address of the recipient when sending a private 1:1 message.
         :type to_person_email: str
-        :param text: The message, in plain text. If markdown is specified this parameter may be optionally used to provide alternate text for UI clients that do not support rich text. The maximum message length is 7439 bytes.
-        :type text: str
-        :param markdown: The message, in Markdown format. The maximum message length is 7439 bytes.
-        :type markdown: str
         :param files: The public URL to a binary file to be posted into the room. Only one file is allowed per message. Uploaded files are automatically converted into a format that all Webex clients can render. For the supported media types and the behavior of uploads, see the Message Attachments Guide.
 Possible values: http://www.example.com/images/media.png
         :type files: List[str]
@@ -229,16 +229,16 @@ Possible values: http://www.example.com/images/media.png
         body = {}
         if room_id is not None:
             body['roomId'] = room_id
+        if text is not None:
+            body['text'] = text
+        if markdown is not None:
+            body['markdown'] = markdown
         if parent_id is not None:
             body['parentId'] = parent_id
         if to_person_id is not None:
             body['toPersonId'] = to_person_id
         if to_person_email is not None:
             body['toPersonEmail'] = to_person_email
-        if text is not None:
-            body['text'] = text
-        if markdown is not None:
-            body['markdown'] = markdown
         if files is not None:
             body['files'] = files
         if attachments is not None:

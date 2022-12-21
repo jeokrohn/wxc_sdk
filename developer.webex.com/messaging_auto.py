@@ -7,7 +7,7 @@ from typing import List, Optional
 from pydantic import Field
 
 
-__all__ = ['AttachmentActionsApi', 'CreateAttachmentActionBody', 'CreateAttachmentActionResponse', 'CreateMembershipBody', 'CreateRoomBody', 'CreateRoomTabBody', 'CreateTeamBody', 'CreateTeamMembershipBody', 'CreateWebhookBody', 'Data', 'Event', 'Event2', 'EventResourceEnum', 'EventTypeEnum', 'EventsApi', 'GetAttachmentActionDetailsResponse', 'GetRoomMeetingDetailsResponse', 'Inputs', 'ListEventsResponse', 'ListMembershipsResponse', 'ListRoomTabsResponse', 'ListRoomsResponse', 'ListTeamMembershipsResponse', 'ListTeamsResponse', 'ListWebhooksResponse', 'Membership', 'MembershipsApi', 'Resource', 'Room', 'RoomTab', 'RoomTabsApi', 'RoomType', 'RoomsApi', 'Status', 'Team', 'TeamMembership', 'TeamMembershipsApi', 'TeamsApi', 'Webhook', 'WebhooksApi']
+__all__ = ['AttachmentActionsApi', 'CreateAttachmentActionBody', 'CreateAttachmentActionResponse', 'CreateMembershipBody', 'CreateRoomBody', 'CreateRoomTabBody', 'CreateTeamBody', 'CreateTeamMembershipBody', 'CreateWebhookBody', 'Data', 'Event', 'Event1', 'EventResourceEnum', 'EventTypeEnum', 'EventsApi', 'GetRoomMeetingDetailsResponse', 'Inputs', 'ListEventsResponse', 'ListMembershipsResponse', 'ListRoomTabsResponse', 'ListRoomsResponse', 'ListTeamMembershipsResponse', 'ListTeamsResponse', 'ListWebhooksResponse', 'Membership', 'MembershipsApi', 'Resource', 'Room', 'RoomTab', 'RoomTabsApi', 'RoomType', 'RoomsApi', 'Status', 'Team', 'TeamMembership', 'TeamMembershipsApi', 'TeamsApi', 'Webhook', 'WebhooksApi']
 
 
 class Inputs(ApiModel):
@@ -27,17 +27,6 @@ class CreateAttachmentActionBody(ApiModel):
 
 
 class CreateAttachmentActionResponse(CreateAttachmentActionBody):
-    #: A unique identifier for the action.
-    id: Optional[str]
-    #: The ID of the person who performed the action.
-    person_id: Optional[str]
-    #: The ID of the room in which the action was performed.
-    room_id: Optional[str]
-    #: The date and time the action was created.
-    created: Optional[str]
-
-
-class GetAttachmentActionDetailsResponse(CreateAttachmentActionBody):
     #: A unique identifier for the action.
     id: Optional[str]
     #: The ID of the person who performed the action.
@@ -76,7 +65,7 @@ class AttachmentActionsApi(ApiChild, base='attachment/actions'):
         data = super().post(url=url, json=body)
         return CreateAttachmentActionResponse.parse_obj(data)
 
-    def action_details(self, id: str) -> GetAttachmentActionDetailsResponse:
+    def action_details(self, id: str) -> CreateAttachmentActionResponse:
         """
         Shows details for a attachment action, by ID.
         Specify the attachment action ID in the id URI parameter.
@@ -86,7 +75,7 @@ class AttachmentActionsApi(ApiChild, base='attachment/actions'):
         """
         url = self.ep(f'{id}')
         data = super().get(url=url)
-        return GetAttachmentActionDetailsResponse.parse_obj(data)
+        return CreateAttachmentActionResponse.parse_obj(data)
 
 class EventResourceEnum(str, Enum):
     #: State changed on a messages resource
@@ -448,9 +437,9 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
 
         :param id: The unique identifier for the Room Tab.
         :type id: str
-        :param room_id: ID of the room that contains the room tab in question.
+        :param room_id: A unique identifier for the room.
         :type room_id: str
-        :param content_url: Content URL of the Room Tab. URL must use https protocol.
+        :param content_url: URL of the Room Tab. Must use https protocol.
         :type content_url: str
         :param display_name: User-friendly name for the room tab.
         :type display_name: str
@@ -652,7 +641,7 @@ Possible values: id, lastactivity, created
         data = super().get(url=url)
         return GetRoomMeetingDetailsResponse.parse_obj(data)
 
-    def update(self, room_id: str, title: str, classification_id: str = None, team_id: str = None, is_locked: bool = None, is_public: bool = None, description: str = None, is_announcement_only: bool = None, is_read_only: bool = None) -> Room:
+    def update(self, room_id: str, title: str, team_id: str = None, classification_id: str = None, is_locked: bool = None, is_public: bool = None, description: str = None, is_announcement_only: bool = None, is_read_only: bool = None) -> Room:
         """
         Updates details for a room, by ID.
         Specify the room ID in the roomId parameter in the URI.
@@ -663,17 +652,17 @@ Possible values: id, lastactivity, created
         :type room_id: str
         :param title: A user-friendly name for the room.
         :type title: str
+        :param team_id: The ID for the team with which this room is associated.
+        :type team_id: str
         :param classification_id: The classificationId for the room.
         :type classification_id: str
-        :param team_id: The teamId to which this space should be assigned. Only unowned spaces can be assigned to a team. Assignment between teams is unsupported.
-        :type team_id: str
         :param is_locked: Set the space as locked/moderated and the creator becomes a moderator
         :type is_locked: bool
         :param is_public: The room is public and therefore discoverable within the org. Anyone can find and join that room. When true the description must be filled in.
         :type is_public: bool
         :param description: The description of the space.
         :type description: str
-        :param is_announcement_only: Sets the space into Announcement Mode or clears the Anouncement Mode (false)
+        :param is_announcement_only: Sets the space into announcement Mode.
         :type is_announcement_only: bool
         :param is_read_only: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in this space, while maintaing historical data.
         :type is_read_only: bool
@@ -681,10 +670,10 @@ Possible values: id, lastactivity, created
         body = {}
         if title is not None:
             body['title'] = title
-        if classification_id is not None:
-            body['classificationId'] = classification_id
         if team_id is not None:
             body['teamId'] = team_id
+        if classification_id is not None:
+            body['classificationId'] = classification_id
         if is_locked is not None:
             body['isLocked'] = is_locked
         if is_public is not None:
@@ -958,8 +947,8 @@ class Resource(str, Enum):
     meeting_transcripts = 'meetingTranscripts'
 
 
-class Event2(EventTypeEnum):
-    #: A meeting is started.
+class Event1(EventTypeEnum):
+    #: A meeting was started.
     started = 'started'
     #: A participant joined.
     joined = 'joined'
@@ -975,7 +964,7 @@ class CreateWebhookBody(ApiModel):
     #: The resource type for the webhook. Creating a webhook requires 'read' scope on the resource the webhook is for.
     resource: Optional[Resource]
     #: The event type for the webhook.
-    event: Optional[Event2]
+    event: Optional[Event1]
     #: The filter that defines the webhook scope. See Filtering Webhooks for more information.
     filter: Optional[str]
     #: The secret used to generate payload signature.
@@ -1031,7 +1020,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Webhook, params=params)
 
-    def create(self, name: str, target_url: str, resource: Resource, event: Event2, filter: str = None, secret: str = None, owned_by: str = None) -> Webhook:
+    def create(self, name: str, target_url: str, resource: Resource, event: Event1, filter: str = None, secret: str = None, owned_by: str = None) -> Webhook:
         """
         Creates a webhook.
         To learn more about how to create and use webhooks, see The Webhooks Guide.
@@ -1043,7 +1032,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :param resource: The resource type for the webhook. Creating a webhook requires 'read' scope on the resource the webhook is for.
         :type resource: Resource
         :param event: The event type for the webhook.
-        :type event: Event2
+        :type event: Event1
         :param filter: The filter that defines the webhook scope. See Filtering Webhooks for more information.
         :type filter: str
         :param secret: The secret used to generate payload signature.

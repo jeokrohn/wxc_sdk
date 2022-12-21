@@ -98,9 +98,9 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
 
         :param id: The unique identifier for the Room Tab.
         :type id: str
-        :param room_id: ID of the room that contains the room tab in question.
+        :param room_id: A unique identifier for the room.
         :type room_id: str
-        :param content_url: Content URL of the Room Tab. URL must use https protocol.
+        :param content_url: URL of the Room Tab. Must use https protocol.
         :type content_url: str
         :param display_name: User-friendly name for the room tab.
         :type display_name: str

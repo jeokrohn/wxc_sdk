@@ -21,7 +21,6 @@ developer.webex.com/read_api_spec.py -s Messaging -t "Tracking Codes" -f develop
 developer.webex.com/read_api_spec.py -s Messaging -t Webhooks -f developer.webex.com/webhooks.yml
 developer.webex.com/read_api_spec.py -s Calling -t "Webex Calling Voice Messaging" -f developer.webex.com/voice_messaging.yml
 developer.webex.com/read_api_spec.py -s Calling -t "Webex Calling Workspace Settings" -f developer.webex.com/wxc_ws_settings.yml
-developer.webex.com/read_api_spec.py -a developer.webex.com/.env -s Calling -t "Webex Calling Organization Settings with Move Numbers Features" -f developer.webex.com/wxc_move_numbers.yml
 developer.webex.com/read_api_spec.py -a developer.webex.com/.env -s Calling -t "Webex Calling Organization Settings with Devices Features" -f developer.webex.com/wxc_cust_devices.yml
 developer.webex.com/read_api_spec.py -a developer.webex.com/.env -s Calling -t "Webex Calling Organization Settings with Customer Managed Devices Features" -f developer.webex.com/wxc_cust_devices.yml
 developer.webex.com/read_api_spec.py -s Meetings -f developer.webex.com/meetings.yml

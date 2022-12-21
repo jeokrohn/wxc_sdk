@@ -1,0 +1,985 @@
+# command: developer.webex.com/read_api_spec.py -s Messaging -t Webhooks -f developer.webex.com/webhooks.yml
+docs:
+  Attachment Actions:
+    doc: null
+    header: null
+    methods: []
+  Events:
+    doc: null
+    header: null
+    methods: []
+  Memberships:
+    doc: null
+    header: null
+    methods: []
+  Messages:
+    doc: null
+    header: null
+    methods: []
+  People:
+    doc: null
+    header: null
+    methods: []
+  Room Tabs:
+    doc: null
+    header: null
+    methods: []
+  Rooms:
+    doc: null
+    header: null
+    methods: []
+  Team Memberships:
+    doc: null
+    header: null
+    methods: []
+  Teams:
+    doc: null
+    header: null
+    methods: []
+  Tracking Codes:
+    doc: null
+    header: null
+    methods: []
+  Webhooks:
+    doc: 'For Webex for Government (FedRAMP), the following resource types are not
+      available for Webhooks: meetings, recordings, meetingParticipants, and meetingTranscripts.
+
+      Webhooks allow your app to be notified via HTTP when a specific event occurs
+      in Webex. For example, your app can register a webhook to be notified when a
+      new message is posted into a specific room.
+
+      Events trigger in near real-time allowing your app and backend IT systems to
+      stay in sync with new content and room activity.
+
+      Check The Webhooks Guide and our blog regularly for announcements of additional
+      webhook resources and event types.
+
+      Long result sets will be split into pages.'
+    header: Webhooks
+    methods:
+    - doc: List all of your webhooks.
+      documentation:
+        doc: List Webhooks
+        doc_link: https://developer.webex.com/docs/api/v1/webhooks/list-webhooks
+        endpoint: https://webexapis.com/v1/webhooks
+        http_method: GET
+      header: List Webhooks
+      parameters_and_response:
+        Query Parameters:
+        - doc: Limit the maximum number of webhooks in the response.
+          name: max
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Limit the result list to org wide webhooks. Only allowed value is org.
+          name: ownedBy
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: ''
+          name: items
+          param_attrs:
+          - doc: A unique identifier for the webhook.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A user-friendly name for the webhook.
+            name: name
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The URL that receives POST requests for each event.
+            name: targetUrl
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The resource type for the webhook. Creating a webhook requires 'read'
+              scope on the resource the webhook is for.
+            name: resource
+            param_attrs:
+            - doc: The Attachment Actions resource.
+              name: attachmentActions
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The Memberships resource.
+              name: memberships
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The Messages resource.
+              name: messages
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The Rooms resource.
+              name: rooms
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The Meetings resource.
+              name: meetings
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The Recordings resource.
+              name: recordings
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The Meeting Participants resource.
+              name: meetingParticipants
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The Meeting Transcripts resource.
+              name: meetingTranscripts
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: The event type for the webhook.
+            name: event
+            param_attrs:
+            - doc: An object was created.
+              name: created
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: An object was updated.
+              name: updated
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: An object was deleted.
+              name: deleted
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: A meeting was started.
+              name: started
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: A meeting was ended.
+              name: ended
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: A participant joined.
+              name: joined
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: A participant left.
+              name: left
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: The filter that defines the webhook scope.
+            name: filter
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The secret used to generate payload signature.
+            name: secret
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The status of the webhook. Use active to reactivate a disabled webhook.
+            name: status
+            param_attrs:
+            - doc: The webhook is active.
+              name: active
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The webhook is inactive.
+              name: inactive
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: The date and time the webhook was created.
+            name: created
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Specified when creating an org/admin level webhook.
+            name: ownedBy
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[Webhook]
+          type_spec: null
+    - doc: 'Creates a webhook.
+
+        To learn more about how to create and use webhooks, see The Webhooks Guide.'
+      documentation:
+        doc: Create a Webhook
+        doc_link: https://developer.webex.com/docs/api/v1/webhooks/create-a-webhook
+        endpoint: https://webexapis.com/v1/webhooks
+        http_method: POST
+      header: Create a Webhook
+      parameters_and_response:
+        Body Parameters:
+        - doc: A user-friendly name for the webhook.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: The URL that receives POST requests for each event.
+          name: targetUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: The resource type for the webhook. Creating a webhook requires 'read'
+            scope on the resource the webhook is for.
+          name: resource
+          param_attrs:
+          - doc: The Attachment Actions resource.
+            name: attachmentActions
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Memberships resource.
+            name: memberships
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Messages resource.
+            name: messages
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Rooms resource.
+            name: rooms
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Meetings resource.
+            name: meetings
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Recordings resource.
+            name: recordings
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Meeting Participants resource.
+            name: meetingParticipants
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Meeting Transcripts resource.
+            name: meetingTranscripts
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: required
+        - doc: The event type for the webhook.
+          name: event
+          param_attrs:
+          - doc: An object is created.
+            name: created
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: An object is updated.
+            name: updated
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: An object is deleted.
+            name: deleted
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A meeting is started.
+            name: started
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A meeting is ended.
+            name: ended
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A participant joined.
+            name: joined
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A participant left.
+            name: left
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: required
+        - doc: The filter that defines the webhook scope. See Filtering Webhooks for
+            more information.
+          name: filter
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The secret used to generate payload signature.
+          name: secret
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Specified when creating an org/admin level webhook. Supported for meetings,
+            recordings, meetingParticipants, and meetingTranscripts resources.
+          name: ownedBy
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: A unique identifier for the webhook.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A user-friendly name for the webhook.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The URL that receives POST requests for each event.
+          name: targetUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The resource type for the webhook. Creating a webhook requires 'read'
+            scope on the resource the webhook is for.
+          name: resource
+          param_attrs:
+          - doc: The Attachment Actions resource.
+            name: attachmentActions
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Memberships resource.
+            name: memberships
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Messages resource.
+            name: messages
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Rooms resource.
+            name: rooms
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Meetings resource.
+            name: meetings
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Recordings resource.
+            name: recordings
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Meeting Participants resource.
+            name: meetingParticipants
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Meeting Transcripts resource.
+            name: meetingTranscripts
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The event type for the webhook.
+          name: event
+          param_attrs:
+          - doc: An object was created.
+            name: created
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: An object was updated.
+            name: updated
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: An object was deleted.
+            name: deleted
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A meeting was started.
+            name: started
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A meeting was ended.
+            name: ended
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A participant joined.
+            name: joined
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A participant left.
+            name: left
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The filter that defines the webhook scope.
+          name: filter
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The secret used to generate payload signature.
+          name: secret
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The status of the webhook. Use active to reactivate a disabled webhook.
+          name: status
+          param_attrs:
+          - doc: The webhook is active.
+            name: active
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The webhook is inactive.
+            name: inactive
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The date and time the webhook was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Specified when creating an org/admin level webhook.
+          name: ownedBy
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+    - doc: 'Shows details for a webhook, by ID.
+
+        Specify the webhook ID in the webhookId parameter in the URI.'
+      documentation:
+        doc: Get Webhook Details
+        doc_link: https://developer.webex.com/docs/api/v1/webhooks/get-webhook-details
+        endpoint: https://webexapis.com/v1/webhooks/{webhookId}
+        http_method: GET
+      header: Get Webhook Details
+      parameters_and_response:
+        Response Properties:
+        - doc: A unique identifier for the webhook.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A user-friendly name for the webhook.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The URL that receives POST requests for each event.
+          name: targetUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The resource type for the webhook. Creating a webhook requires 'read'
+            scope on the resource the webhook is for.
+          name: resource
+          param_attrs:
+          - doc: The Attachment Actions resource.
+            name: attachmentActions
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Memberships resource.
+            name: memberships
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Messages resource.
+            name: messages
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Rooms resource.
+            name: rooms
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Meetings resource.
+            name: meetings
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Recordings resource.
+            name: recordings
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Meeting Participants resource.
+            name: meetingParticipants
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Meeting Transcripts resource.
+            name: meetingTranscripts
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The event type for the webhook.
+          name: event
+          param_attrs:
+          - doc: An object was created.
+            name: created
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: An object was updated.
+            name: updated
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: An object was deleted.
+            name: deleted
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A meeting was started.
+            name: started
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A meeting was ended.
+            name: ended
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A participant joined.
+            name: joined
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A participant left.
+            name: left
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The filter that defines the webhook scope.
+          name: filter
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The secret used to generate payload signature.
+          name: secret
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The status of the webhook. Use active to reactivate a disabled webhook.
+          name: status
+          param_attrs:
+          - doc: The webhook is active.
+            name: active
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The webhook is inactive.
+            name: inactive
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The date and time the webhook was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Specified when creating an org/admin level webhook.
+          name: ownedBy
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: The unique identifier for the webhook.
+          name: webhookId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: "Updates a webhook, by ID. You cannot use this call to deactivate a webhook,\
+        \ only to activate a webhook that was auto deactivated. \nThe fields that\
+        \ can be updated are name, targetURL, secret and status. All other fields,\
+        \ if supplied, are ignored.\nSpecify the webhook ID in the webhookId parameter\
+        \ in the URI."
+      documentation:
+        doc: Update a Webhook
+        doc_link: https://developer.webex.com/docs/api/v1/webhooks/update-a-webhook
+        endpoint: https://webexapis.com/v1/webhooks/{webhookId}
+        http_method: PUT
+      header: Update a Webhook
+      parameters_and_response:
+        Body Parameters:
+        - doc: A user-friendly name for the webhook.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: The URL that receives POST requests for each event.
+          name: targetUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: The secret used to generate payload signature.
+          name: secret
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Specified when creating an org/admin level webhook. Supported for meetings,
+            recordings, meetingParticipants and meetingTranscripts resources.
+          name: ownedBy
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The status of the webhook. Use "active" to reactivate a disabled webhook.
+          name: status
+          param_attrs:
+          - doc: ''
+            name: active
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: inactive
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        Response Properties:
+        - doc: A unique identifier for the webhook.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A user-friendly name for the webhook.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The URL that receives POST requests for each event.
+          name: targetUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The resource type for the webhook. Creating a webhook requires 'read'
+            scope on the resource the webhook is for.
+          name: resource
+          param_attrs:
+          - doc: The Attachment Actions resource.
+            name: attachmentActions
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Memberships resource.
+            name: memberships
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Messages resource.
+            name: messages
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Rooms resource.
+            name: rooms
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Meetings resource.
+            name: meetings
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Recordings resource.
+            name: recordings
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Meeting Participants resource.
+            name: meetingParticipants
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The Meeting Transcripts resource.
+            name: meetingTranscripts
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The event type for the webhook.
+          name: event
+          param_attrs:
+          - doc: An object was created.
+            name: created
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: An object was updated.
+            name: updated
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: An object was deleted.
+            name: deleted
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A meeting was started.
+            name: started
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A meeting was ended.
+            name: ended
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A participant joined.
+            name: joined
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A participant left.
+            name: left
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The filter that defines the webhook scope.
+          name: filter
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The secret used to generate payload signature.
+          name: secret
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The status of the webhook. Use active to reactivate a disabled webhook.
+          name: status
+          param_attrs:
+          - doc: The webhook is active.
+            name: active
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The webhook is inactive.
+            name: inactive
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The date and time the webhook was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Specified when creating an org/admin level webhook.
+          name: ownedBy
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: The unique identifier for the webhook.
+          name: webhookId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Deletes a webhook, by ID.
+
+        Specify the webhook ID in the webhookId parameter in the URI.'
+      documentation:
+        doc: Delete a Webhook
+        doc_link: https://developer.webex.com/docs/api/v1/webhooks/delete-a-webhook
+        endpoint: https://webexapis.com/v1/webhooks/{webhookId}
+        http_method: DELETE
+      header: Delete a Webhook
+      parameters_and_response:
+        URI Parameters:
+        - doc: The unique identifier for the webhook.
+          name: webhookId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required

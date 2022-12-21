@@ -192,7 +192,7 @@ Possible values: id, lastactivity, created
         data = super().get(url=url)
         return GetRoomMeetingDetailsResponse.parse_obj(data)
 
-    def update(self, room_id: str, title: str, classification_id: str = None, team_id: str = None, is_locked: bool = None, is_public: bool = None, description: str = None, is_announcement_only: bool = None, is_read_only: bool = None) -> Room:
+    def update(self, room_id: str, title: str, team_id: str = None, classification_id: str = None, is_locked: bool = None, is_public: bool = None, description: str = None, is_announcement_only: bool = None, is_read_only: bool = None) -> Room:
         """
         Updates details for a room, by ID.
         Specify the room ID in the roomId parameter in the URI.
@@ -203,17 +203,17 @@ Possible values: id, lastactivity, created
         :type room_id: str
         :param title: A user-friendly name for the room.
         :type title: str
+        :param team_id: The ID for the team with which this room is associated.
+        :type team_id: str
         :param classification_id: The classificationId for the room.
         :type classification_id: str
-        :param team_id: The teamId to which this space should be assigned. Only unowned spaces can be assigned to a team. Assignment between teams is unsupported.
-        :type team_id: str
         :param is_locked: Set the space as locked/moderated and the creator becomes a moderator
         :type is_locked: bool
         :param is_public: The room is public and therefore discoverable within the org. Anyone can find and join that room. When true the description must be filled in.
         :type is_public: bool
         :param description: The description of the space.
         :type description: str
-        :param is_announcement_only: Sets the space into Announcement Mode or clears the Anouncement Mode (false)
+        :param is_announcement_only: Sets the space into announcement Mode.
         :type is_announcement_only: bool
         :param is_read_only: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in this space, while maintaing historical data.
         :type is_read_only: bool
@@ -221,10 +221,10 @@ Possible values: id, lastactivity, created
         body = {}
         if title is not None:
             body['title'] = title
-        if classification_id is not None:
-            body['classificationId'] = classification_id
         if team_id is not None:
             body['teamId'] = team_id
+        if classification_id is not None:
+            body['classificationId'] = classification_id
         if is_locked is not None:
             body['isLocked'] = is_locked
         if is_public is not None:

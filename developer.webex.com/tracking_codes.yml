@@ -1,0 +1,1383 @@
+# command: developer.webex.com/read_api_spec.py -s Messaging -t "Tracking Codes" -f developer.webex.com/tracking_codes.yml
+docs:
+  Attachment Actions:
+    doc: null
+    header: null
+    methods: []
+  Events:
+    doc: null
+    header: null
+    methods: []
+  Memberships:
+    doc: null
+    header: null
+    methods: []
+  Messages:
+    doc: null
+    header: null
+    methods: []
+  People:
+    doc: null
+    header: null
+    methods: []
+  Room Tabs:
+    doc: null
+    header: null
+    methods: []
+  Rooms:
+    doc: null
+    header: null
+    methods: []
+  Team Memberships:
+    doc: null
+    header: null
+    methods: []
+  Teams:
+    doc: null
+    header: null
+    methods: []
+  Tracking Codes:
+    doc: Tracking codes are alphanumeric codes that identify categories of users on
+      a Webex site. With tracking codes, you can analyze usage by various groups within
+      an organization.
+    header: Tracking Codes
+    methods:
+    - doc: Lists tracking codes on a site by an admin user.
+      documentation:
+        doc: List Tracking Codes
+        doc_link: https://developer.webex.com/docs/api/v1/tracking-codes/list-tracking-codes
+        endpoint: 'https: //webexapis.com/v1/admin/meeting/config/trackingCodes'
+        http_method: GET
+      header: List Tracking Codes
+      parameters_and_response:
+        Query Parameters:
+        - doc: URL of the Webex site which the API retrieves the tracking code from.
+            If not specified, the API retrieves the tracking code from the user's
+            preferred site. All available Webex sites and preferred sites of a user
+            can be retrieved by the Get Site List API.
+          name: siteUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Tracking codes information.
+          name: items
+          param_attrs:
+          - doc: Unique identifier for tracking code.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Name for tracking code.
+            name: name
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Site URL for the tracking code.
+            name: siteUrl
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Tracking code option list.
+            name: options
+            param_attrs:
+            - doc: The value of a tracking code option.
+              name: value
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Whether or not the option is the default option of a tracking code.
+              name: defaultValue
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            param_object: []
+            type: array[OptionsForTrackingCodeObject]
+            type_spec: null
+          - doc: An option for how an admin user can provide a code value.
+            name: inputMode
+            param_attrs:
+            - doc: Text input.
+              name: text
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Drop down list which requires options.
+              name: select
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Both text input and select from list.
+              name: editableSelect
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: An input method is only available for the host profile and sign-up
+                pages.
+              name: hostProfileSelect
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Type for the host profile.
+            name: hostProfileCode
+            param_attrs:
+            - doc: Available to be chosen but not compulsory.
+              name: optional
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Officially compulsory.
+              name: required
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The value is set by admin.
+              name: adminSet
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The value cannot be used.
+              name: notUsed
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Specify how tracking codes are used for each service on the meeting
+              scheduler or meeting start pages.
+            name: scheduleStartCodes
+            param_attrs:
+            - doc: Service for schedule or sign up pages
+              name: service
+              param_attrs:
+              - doc: Tracking codes apply to all services.
+                name: All
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Users can set tracking codes when scheduling a meeting.
+                name: MeetingCenter
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Users can set tracking codes when scheduling an event.
+                name: EventCenter
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Users can set tracking codes when scheduling a training session.
+                name: TrainingCenter
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Users can set tracking codes when scheduling a support meeting.
+                name: SupportCenter
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            - doc: Type for meeting scheduler or meeting start pages.
+              name: type
+              param_attrs:
+              - doc: Available to be chosen but not compulsory.
+                name: optional
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Officially compulsory.
+                name: required
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: The value is set by admin. This value only applies when hostProfileCode
+                  is adminSet.
+                name: adminSet
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: The value cannot be used.
+                name: notUsed
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: This value only applies to the service of All. When the type
+                  of All for a tracking code is notApplicable, there are different
+                  types for different services. For example, required for MeetingCenter,
+                  optional for EventCenter and notUsed for others.
+                name: notApplicable
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            param_object: []
+            type: array[ScheduleStartCodeObject]
+            type_spec: null
+          param_object: []
+          type: array[GetTrackingCodeObject]
+          type_spec: null
+    - doc: Retrieves details for a tracking code by an admin user.
+      documentation:
+        doc: Get a Tracking Code
+        doc_link: https://developer.webex.com/docs/api/v1/tracking-codes/get-a-tracking-code
+        endpoint: 'https: //webexapis.com/v1/admin/meeting/config/trackingCodes/{trackingCodeId}'
+        http_method: GET
+      header: Get a Tracking Code
+      parameters_and_response:
+        Query Parameters:
+        - doc: URL of the Webex site which the API retrieves the tracking code from.
+            If not specified, the API retrieves the tracking code from the user's
+            preferred site. All available Webex sites and the preferred sites of a
+            user can be retrieved by the Get Site List API.
+          name: siteUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Unique identifier for tracking code.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Name for tracking code.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Site URL for the tracking code.
+          name: siteUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Tracking code option list.
+          name: options
+          param_attrs:
+          - doc: The value of a tracking code option.
+            name: value
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Whether or not the option is the default option of a tracking code.
+            name: defaultValue
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          param_object: []
+          type: array[OptionsForTrackingCodeObject]
+          type_spec: null
+        - doc: An option for how an admin user can provide a code value.
+          name: inputMode
+          param_attrs:
+          - doc: Text input.
+            name: text
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Drop down list which requires options.
+            name: select
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Both text input and select from list.
+            name: editableSelect
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: An input method is only available for the host profile and sign-up
+              pages.
+            name: hostProfileSelect
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Type for the host profile.
+          name: hostProfileCode
+          param_attrs:
+          - doc: Available to be chosen but not compulsory.
+            name: optional
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Officially compulsory.
+            name: required
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The value is set by admin.
+            name: adminSet
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The value cannot be used.
+            name: notUsed
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Specify how tracking codes are used for each service on the meeting
+            scheduler or meeting start pages.
+          name: scheduleStartCodes
+          param_attrs:
+          - doc: Service for schedule or sign up pages
+            name: service
+            param_attrs:
+            - doc: Tracking codes apply to all services.
+              name: All
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling a meeting.
+              name: MeetingCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling an event.
+              name: EventCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling a training session.
+              name: TrainingCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling a support meeting.
+              name: SupportCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Type for meeting scheduler or meeting start pages.
+            name: type
+            param_attrs:
+            - doc: Available to be chosen but not compulsory.
+              name: optional
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Officially compulsory.
+              name: required
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The value is set by admin. This value only applies when hostProfileCode
+                is adminSet.
+              name: adminSet
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The value cannot be used.
+              name: notUsed
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: This value only applies to the service of All. When the type of
+                All for a tracking code is notApplicable, there are different types
+                for different services. For example, required for MeetingCenter, optional
+                for EventCenter and notUsed for others.
+              name: notApplicable
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          param_object: []
+          type: array[ScheduleStartCodeObject]
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the tracking code whose details are being requested.
+          name: trackingCodeId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: Create a new tracking code by an admin user.
+      documentation:
+        doc: Create a Tracking Code
+        doc_link: https://developer.webex.com/docs/api/v1/tracking-codes/create-a-tracking-code
+        endpoint: 'https: //webexapis.com/v1/admin/meeting/config/trackingCodes'
+        http_method: POST
+      header: Create a Tracking Code
+      parameters_and_response:
+        Body Parameters:
+        - doc: Name for tracking code. The name cannot be empty and the maximum size
+            is 120 characters.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Site URL for the tracking code.
+          name: siteUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Tracking code option list. The maximum size of options is 500.
+          name: options
+          param_attrs:
+          - doc: The value of a tracking code option. value cannot be empty and the
+              maximum size is 120 characters.
+            name: value
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: required
+          - doc: Whether or not the option is the default option of a tracking code.
+            name: defaultValue
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: required
+          param_object: []
+          type: array[OptionsForCreateOrUpdateTrackingCodeObject]
+          type_spec: required
+        - doc: Select an option for how users can provide a code value. Please note
+            that if users set inputMode as hostProfileSelect, scheduleStartCode should
+            be null, which means hostProfileSelect only applies to "Host Profile".
+          name: inputMode
+          param_attrs:
+          - doc: Text input.
+            name: text
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Drop down list which requires options.
+            name: select
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Both text input and select from list.
+            name: editableSelect
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: An input method is only available for the host profile and sign-up
+              pages.
+            name: hostProfileSelect
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: required
+        - doc: Type for the host profile.
+          name: hostProfileCode
+          param_attrs:
+          - doc: Available to be chosen but not compulsory.
+            name: optional
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Officially compulsory.
+            name: required
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The value is set by admin.
+            name: adminSet
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The value cannot be used.
+            name: notUsed
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: required
+        - doc: Specify how tracking codes are used for each service on the meeting
+            scheduler or meeting start pages. The maximum size of scheduleStartCodes
+            is 5.
+          name: scheduleStartCodes
+          param_attrs:
+          - doc: Service for schedule or sign up pages
+            name: service
+            param_attrs:
+            - doc: Tracking codes apply to all services.
+              name: All
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling a meeting.
+              name: MeetingCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling an event.
+              name: EventCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling a training session.
+              name: TrainingCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling a support meeting.
+              name: SupportCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: required
+          - doc: Type for meeting scheduler or meeting start pages.
+            name: type
+            param_attrs:
+            - doc: Available to be chosen but not compulsory.
+              name: optional
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Officially compulsory.
+              name: required
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The value is set by admin. This value only applies when hostProfileCode
+                is adminSet.
+              name: adminSet
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The value cannot be used.
+              name: notUsed
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: This value only applies to the service of All. When the type of
+                All for a tracking code is notApplicable, there are different types
+                for different services. For example, required for MeetingCenter, optional
+                for EventCenter and notUsed for others.
+              name: notApplicable
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: required
+          param_object: []
+          type: array[ScheduleStartCodeObject]
+          type_spec: required
+        Response Properties:
+        - doc: Unique identifier for tracking code.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Name for tracking code.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Site URL for the tracking code.
+          name: siteUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Tracking code option list.
+          name: options
+          param_attrs:
+          - doc: The value of a tracking code option.
+            name: value
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Whether or not the option is the default option of a tracking code.
+            name: defaultValue
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          param_object: []
+          type: array[OptionsForTrackingCodeObject]
+          type_spec: null
+        - doc: An option for how an admin user can provide a code value.
+          name: inputMode
+          param_attrs:
+          - doc: Text input.
+            name: text
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Drop down list which requires options.
+            name: select
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Both text input and select from list.
+            name: editableSelect
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: An input method is only available for the host profile and sign-up
+              pages.
+            name: hostProfileSelect
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Type for the host profile.
+          name: hostProfileCode
+          param_attrs:
+          - doc: Available to be chosen but not compulsory.
+            name: optional
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Officially compulsory.
+            name: required
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The value is set by admin.
+            name: adminSet
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The value cannot be used.
+            name: notUsed
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Specify how tracking codes are used for each service on the meeting
+            scheduler or meeting start pages.
+          name: scheduleStartCodes
+          param_attrs:
+          - doc: Service for schedule or sign up pages
+            name: service
+            param_attrs:
+            - doc: Tracking codes apply to all services.
+              name: All
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling a meeting.
+              name: MeetingCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling an event.
+              name: EventCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling a training session.
+              name: TrainingCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling a support meeting.
+              name: SupportCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Type for meeting scheduler or meeting start pages.
+            name: type
+            param_attrs:
+            - doc: Available to be chosen but not compulsory.
+              name: optional
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Officially compulsory.
+              name: required
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The value is set by admin. This value only applies when hostProfileCode
+                is adminSet.
+              name: adminSet
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The value cannot be used.
+              name: notUsed
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: This value only applies to the service of All. When the type of
+                All for a tracking code is notApplicable, there are different types
+                for different services. For example, required for MeetingCenter, optional
+                for EventCenter and notUsed for others.
+              name: notApplicable
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          param_object: []
+          type: array[ScheduleStartCodeObject]
+          type_spec: null
+    - doc: Updates details for a tracking code by an admin user.
+      documentation:
+        doc: Update a Tracking Code
+        doc_link: https://developer.webex.com/docs/api/v1/tracking-codes/update-a-tracking-code
+        endpoint: 'https: //webexapis.com/v1/admin/meeting/config/trackingCodes/{trackingCodeId}'
+        http_method: PUT
+      header: Update a Tracking Code
+      parameters_and_response:
+        Body Parameters:
+        - doc: Name for tracking code. The name cannot be empty and the maximum size
+            is 120 characters.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Site URL for the tracking code.
+          name: siteUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Tracking code option list. The maximum size of options is 500.
+          name: options
+          param_attrs:
+          - doc: The value of a tracking code option. value cannot be empty and the
+              maximum size is 120 characters.
+            name: value
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: required
+          - doc: Whether or not the option is the default option of a tracking code.
+            name: defaultValue
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: required
+          param_object: []
+          type: array[OptionsForCreateOrUpdateTrackingCodeObject]
+          type_spec: required
+        - doc: Select an option for how users can provide a code value. Please note
+            that if users set inputMode as hostProfileSelect, scheduleStartCode should
+            be null, which means hostProfileSelect only applies to "Host Profile".
+          name: inputMode
+          param_attrs:
+          - doc: Text input.
+            name: text
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Drop down list which requires options.
+            name: select
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Both text input and select from list.
+            name: editableSelect
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: An input method is only available for the host profile and sign-up
+              pages.
+            name: hostProfileSelect
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: required
+        - doc: Type for the host profile.
+          name: hostProfileCode
+          param_attrs:
+          - doc: Available to be chosen but not compulsory.
+            name: optional
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Officially compulsory.
+            name: required
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The value is set by admin.
+            name: adminSet
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The value cannot be used.
+            name: notUsed
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: required
+        - doc: Specify how tracking codes are used for each service on the meeting
+            scheduler or meeting start pages. The maximum size of scheduleStartCodes
+            is 5.
+          name: scheduleStartCodes
+          param_attrs:
+          - doc: Service for schedule or sign up pages
+            name: service
+            param_attrs:
+            - doc: Tracking codes apply to all services.
+              name: All
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling a meeting.
+              name: MeetingCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling an event.
+              name: EventCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling a training session.
+              name: TrainingCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling a support meeting.
+              name: SupportCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: required
+          - doc: Type for meeting scheduler or meeting start pages.
+            name: type
+            param_attrs:
+            - doc: Available to be chosen but not compulsory.
+              name: optional
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Officially compulsory.
+              name: required
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The value is set by admin. This value only applies when hostProfileCode
+                is adminSet.
+              name: adminSet
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The value cannot be used.
+              name: notUsed
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: This value only applies to the service of All. When the type of
+                All for a tracking code is notApplicable, there are different types
+                for different services. For example, required for MeetingCenter, optional
+                for EventCenter and notUsed for others.
+              name: notApplicable
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: required
+          param_object: []
+          type: array[ScheduleStartCodeObject]
+          type_spec: required
+        Response Properties:
+        - doc: Unique identifier for tracking code.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Name for tracking code.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Site URL for the tracking code.
+          name: siteUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Tracking code option list.
+          name: options
+          param_attrs:
+          - doc: The value of a tracking code option.
+            name: value
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Whether or not the option is the default option of a tracking code.
+            name: defaultValue
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          param_object: []
+          type: array[OptionsForTrackingCodeObject]
+          type_spec: null
+        - doc: An option for how an admin user can provide a code value.
+          name: inputMode
+          param_attrs:
+          - doc: Text input.
+            name: text
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Drop down list which requires options.
+            name: select
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Both text input and select from list.
+            name: editableSelect
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: An input method is only available for the host profile and sign-up
+              pages.
+            name: hostProfileSelect
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Type for the host profile.
+          name: hostProfileCode
+          param_attrs:
+          - doc: Available to be chosen but not compulsory.
+            name: optional
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Officially compulsory.
+            name: required
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The value is set by admin.
+            name: adminSet
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The value cannot be used.
+            name: notUsed
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Specify how tracking codes are used for each service on the meeting
+            scheduler or meeting start pages.
+          name: scheduleStartCodes
+          param_attrs:
+          - doc: Service for schedule or sign up pages
+            name: service
+            param_attrs:
+            - doc: Tracking codes apply to all services.
+              name: All
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling a meeting.
+              name: MeetingCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling an event.
+              name: EventCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling a training session.
+              name: TrainingCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Users can set tracking codes when scheduling a support meeting.
+              name: SupportCenter
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Type for meeting scheduler or meeting start pages.
+            name: type
+            param_attrs:
+            - doc: Available to be chosen but not compulsory.
+              name: optional
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Officially compulsory.
+              name: required
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The value is set by admin. This value only applies when hostProfileCode
+                is adminSet.
+              name: adminSet
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The value cannot be used.
+              name: notUsed
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: This value only applies to the service of All. When the type of
+                All for a tracking code is notApplicable, there are different types
+                for different services. For example, required for MeetingCenter, optional
+                for EventCenter and notUsed for others.
+              name: notApplicable
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          param_object: []
+          type: array[ScheduleStartCodeObject]
+          type_spec: null
+    - doc: Deletes a tracking code by an admin user.
+      documentation:
+        doc: Delete a Tracking Code
+        doc_link: https://developer.webex.com/docs/api/v1/tracking-codes/delete-a-tracking-code
+        endpoint: 'https: //webexapis.com/v1/admin/meeting/config/trackingCodes/{trackingCodeId}'
+        http_method: DELETE
+      header: Delete a Tracking Code
+      parameters_and_response:
+        Query Parameters:
+        - doc: URL of the Webex site from which the API deletes the tracking code.
+            All available Webex sites and preferred sites of a user can be retrieved
+            by the Get Site List API.
+          name: siteUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        URI Parameters:
+        - doc: Unique identifier for the tracking code to be deleted.
+          name: trackingCodeId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: Lists user's tracking codes by an admin user.
+      documentation:
+        doc: Get User's Tracking Codes
+        doc_link: https://developer.webex.com/docs/api/v1/tracking-codes/get-user's-tracking-codes
+        endpoint: 'https: //webexapis.com/v1/admin/meeting/userconfig/trackingCodes'
+        http_method: GET
+      header: Get User's Tracking Codes
+      parameters_and_response:
+        Query Parameters:
+        - doc: URL of the Webex site from which the API retrieves the tracking code.
+            If not specified, the API retrieves the tracking code from the user's
+            preferred site. All available Webex sites and preferred sites of a user
+            can be retrieved by the Get Site List API.
+          name: siteUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier for the user whose tracking codes are being retrieved.
+            The admin user can specify the personId of a user on a site they manage
+            and the API returns details for the user's tracking codes. At least one
+            parameter of personId or email is required.
+          name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Site URL for the tracking code.
+          name: siteUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier for the user.
+          name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Email address for the user.
+          name: email
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Tracking code information.
+          name: trackingCodes
+          param_attrs:
+          - doc: Unique identifier for tracking code.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Name for tracking code.
+            name: name
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Value for tracking code.
+            name: value
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[GetTrackingCodeItemForUserObject]
+          type_spec: null
+    - doc: Updates tracking codes for a specified user by an admin user.
+      documentation:
+        doc: Update User's Tracking Codes
+        doc_link: https://developer.webex.com/docs/api/v1/tracking-codes/update-user's-tracking-codes
+        endpoint: 'https: //webexapis.com/v1/admin/meeting/userconfig/trackingCodes'
+        http_method: PUT
+      header: Update User's Tracking Codes
+      parameters_and_response:
+        Body Parameters:
+        - doc: Site URL for the tracking code.
+          name: siteUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Unique identifier for the user. At least one parameter of personId
+            or email is required. personId must precede email if both are specified.
+          name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Email address for the user. At least one parameter of personId or email
+            is required. personId must precede email if both are specified.
+          name: email
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Tracking code information for updates.
+          name: trackingCodes
+          param_attrs:
+          - doc: Name for tracking code. The name cannot be empty and the maximum
+              size is 120 characters.
+            name: name
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: required
+          - doc: Value for tracking code. value cannot be empty and the maximum size
+              is 120 characters.
+            name: value
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: required
+          param_object: []
+          type: array[UpdateTrackingCodeItemForUserObject]
+          type_spec: null
+        Response Properties:
+        - doc: Site URL for the tracking code.
+          name: siteUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier for the user.
+          name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Email address for the user.
+          name: email
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Tracking code information.
+          name: trackingCodes
+          param_attrs:
+          - doc: Unique identifier for tracking code.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Name for tracking code.
+            name: name
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Value for tracking code.
+            name: value
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[GetTrackingCodeItemForUserObject]
+          type_spec: null
+  Webhooks:
+    doc: null
+    header: null
+    methods: []

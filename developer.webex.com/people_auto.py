@@ -288,7 +288,7 @@ Possible values: mysite.webex.com#attendee
         data = super().get(url=url, params=params)
         return Person.parse_obj(data)
 
-    def update(self, person_id: str, display_name: str, calling_data: bool = None, show_all_types: bool = None, emails: List[str] = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, first_name: str = None, last_name: str = None, nick_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: List[object] = None, site_urls: List[str] = None, login_enabled: bool = None) -> Person:
+    def update(self, person_id: str, emails: List[str], calling_data: bool = None, show_all_types: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: List[object] = None, site_urls: List[str] = None, nick_name: str = None, login_enabled: bool = None) -> Person:
         """
         Update details for a person, by ID.
         Specify the person ID in the personId parameter in the URI. Only an admin can update a person details.
@@ -301,27 +301,25 @@ Possible values: mysite.webex.com#attendee
 
         :param person_id: A unique identifier for the person.
         :type person_id: str
-        :param display_name: The full name of the person.
-        :type display_name: str
+        :param emails: The email addresses of the person. Only one email address is allowed per person.
+Possible values: john.andersen@example.com
+        :type emails: List[str]
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
         :param show_all_types: Include additional user data like #attendee role
         :type show_all_types: bool
-        :param emails: The email addresses of the person. Only one email address is allowed per person.
-Possible values: john.andersen@example.com
-        :type emails: List[str]
-        :param phone_numbers: Phone numbers for the person. Can only be set for Webex Calling. Needs a Webex Calling license.
+        :param phone_numbers: Phone numbers for the person. Only settable for Webex Calling. Requires a Webex Calling license.
         :type phone_numbers: PhoneNumbers
-        :param extension: Webex Calling extension of the person. This is only settable for a person with a Webex Calling license
+        :param extension: Webex Calling extension of the person. This is only settable for a person with a Webex Calling license.
         :type extension: str
         :param location_id: The ID of the location for this person.
         :type location_id: str
+        :param display_name: The full name of the person.
+        :type display_name: str
         :param first_name: The first name of the person.
         :type first_name: str
         :param last_name: The last name of the person.
         :type last_name: str
-        :param nick_name: The nickname of the person if configured. Set to the firstName automatically in update request.
-        :type nick_name: str
         :param avatar: The URL to the person's avatar in PNG format.
         :type avatar: str
         :param org_id: The ID of the organization to which this person belongs.
@@ -334,7 +332,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTI
         :type licenses: List[str]
         :param department: The business department the user belongs to.
         :type department: str
-        :param manager: A manager identifier
+        :param manager: A manager identifier.
         :type manager: str
         :param manager_id: Person Id of the manager
         :type manager_id: str
@@ -343,9 +341,11 @@ Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTI
         :param addresses: Person's address
 Possible values: , country: `US`, locality: `Charlotte`, region: `North Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode: `99212`
         :type addresses: List[object]
-        :param site_urls: One or several site names where this user has a role (host or attendee). Append #attendee to the site name to designate the attendee role on that site.
+        :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg: mysite.webex.com#attendee)
 Possible values: mysite.webex.com#attendee
         :type site_urls: List[str]
+        :param nick_name: The nickname of the person if configured. Set to the firstName automatically in update request.
+        :type nick_name: str
         :param login_enabled: Whether or not the user is allowed to use Webex. This property is only accessible if the authenticated user is an admin user for the person's organization.
         :type login_enabled: bool
         """
@@ -355,8 +355,6 @@ Possible values: mysite.webex.com#attendee
         if show_all_types is not None:
             params['showAllTypes'] = show_all_types
         body = {}
-        if display_name is not None:
-            body['displayName'] = display_name
         if emails is not None:
             body['emails'] = emails
         if phone_numbers is not None:
@@ -365,12 +363,12 @@ Possible values: mysite.webex.com#attendee
             body['extension'] = extension
         if location_id is not None:
             body['locationId'] = location_id
+        if display_name is not None:
+            body['displayName'] = display_name
         if first_name is not None:
             body['firstName'] = first_name
         if last_name is not None:
             body['lastName'] = last_name
-        if nick_name is not None:
-            body['nickName'] = nick_name
         if avatar is not None:
             body['avatar'] = avatar
         if org_id is not None:
@@ -391,6 +389,8 @@ Possible values: mysite.webex.com#attendee
             body['addresses'] = addresses
         if site_urls is not None:
             body['siteUrls'] = site_urls
+        if nick_name is not None:
+            body['nickName'] = nick_name
         if login_enabled is not None:
             body['loginEnabled'] = login_enabled
         url = self.ep(f'{person_id}')

@@ -1,12 +1,13 @@
 from collections.abc import Generator
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, Enum
+from wxc_sdk.base import ApiModel
+from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
 from pydantic import Field
 
 
-__all__ = ['Action', 'AuthorizationCode', 'CLIDPolicySelection', 'CallForwardingBusyGet', 'CallForwardingNoAnswerGet', 'CallForwardingPlaceSettingGet', 'CallForwardingPlaceSettingPatch', 'CallType', 'CallingPermission', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'Greeting', 'InterceptAnnouncementsGet', 'InterceptAnnouncementsPatch', 'InterceptIncomingGet', 'InterceptIncomingPatch', 'InterceptNumberGet', 'InterceptOutGoingGet', 'ModifyCallForwardingNoAnswer', 'MonitoredElementCallParkExtension', 'MonitoredElementItem', 'MonitoredElementUser', 'ReadCallInterceptSettingsForWorkspaceResponse', 'RetrieveAccessCodesForWorkspaceResponse', 'RetrieveCallForwardingSettingsForWorkspaceResponse', 'RetrieveCallWaitingSettingsForWorkspaceResponse', 'RetrieveCallerIDSettingsForWorkspaceResponse', 'RetrieveIncomingPermissionSettingsForWorkspaceResponse', 'RetrieveMonitoringSettingsForWorkspaceResponse', 'RetrieveOutgoingPermissionSettingsForWorkspaceResponse', 'RetrieveTransferNumbersSettingsForWorkspaceResponse', 'Type', 'Type1', 'Type2', 'UserNumberItem', 'WebexCallingWorkspaceSettingsApi']
+__all__ = ['Action', 'AuthorizationCode', 'CLIDPolicySelection', 'CallForwardingBusyGet', 'CallForwardingNoAnswerGet', 'CallForwardingPlaceSettingGet', 'CallForwardingPlaceSettingPatch', 'CallType', 'CallingPermission', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'Greeting', 'InterceptAnnouncementsGet', 'InterceptAnnouncementsPatch', 'InterceptIncomingGet', 'InterceptIncomingPatch', 'InterceptNumberGet', 'InterceptOutGoingGet', 'MonitoredElementCallParkExtension', 'MonitoredElementItem', 'MonitoredElementUser', 'ReadCallInterceptSettingsForWorkspaceResponse', 'RetrieveAccessCodesForWorkspaceResponse', 'RetrieveCallForwardingSettingsForWorkspaceResponse', 'RetrieveCallWaitingSettingsForWorkspaceResponse', 'RetrieveCallerIDSettingsForWorkspaceResponse', 'RetrieveIncomingPermissionSettingsForWorkspaceResponse', 'RetrieveMonitoringSettingsForWorkspaceResponse', 'RetrieveOutgoingPermissionSettingsForWorkspaceResponse', 'RetrieveTransferNumbersSettingsForWorkspaceResponse', 'Type', 'Type1', 'Type2', 'UserNumberItem', 'WebexCallingWorkspaceSettingsApi']
 
 
 class InterceptNumberGet(ApiModel):
@@ -35,18 +36,11 @@ class CallForwardingPlaceSettingGet(ApiModel):
     no_answer: Optional[CallForwardingNoAnswerGet]
 
 
-class ModifyCallForwardingNoAnswer(CallForwardingBusyGet):
-    #: Number of rings before the call will be forwarded if unanswered.
-    number_of_rings: Optional[int]
-    #: Max number of rings before the call will be forwarded if unanswered.
-    system_max_number_of_rings: Optional[int]
-
-
 class CallForwardingPlaceSettingPatch(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the workspace is busy.
     busy: Optional[CallForwardingBusyGet]
     #: Settings for forwarding which only occurs when you are away or not answering your phone.
-    no_answer: Optional[ModifyCallForwardingNoAnswer]
+    no_answer: Optional[CallForwardingNoAnswerGet]
 
 
 class CLIDPolicySelection(ApiModel):
@@ -133,6 +127,17 @@ class ExternalTransfer(str, Enum):
     allow_only_transferred_external = 'ALLOW_ONLY_TRANSFERRED_EXTERNAL'
     #: All external calls are blocked.
     block_all_external = 'BLOCK_ALL_EXTERNAL'
+
+
+class RetrieveIncomingPermissionSettingsForWorkspaceResponse(ApiModel):
+    #: Incoming Permission state. If disabled, the default settings are used.
+    use_custom_enabled: Optional[bool]
+    #: Indicate call transfer setting.
+    external_transfer: Optional[ExternalTransfer]
+    #: Flag to indicate if workspace can receive internal calls.
+    internal_calls_enabled: Optional[bool]
+    #: Flag to indicate if workspace can receive collect calls.
+    collect_calls_enabled: Optional[bool]
 
 
 class CallType(str, Enum):
@@ -257,6 +262,15 @@ class InterceptIncomingPatch(ApiModel):
     announcements: Optional[InterceptAnnouncementsPatch]
 
 
+class RetrieveTransferNumbersSettingsForWorkspaceResponse(ApiModel):
+    #: When calling a specific call type, this workspace will be automatically transferred to another number.
+    auto_transfer_number1: Optional[str]
+    #: When calling a specific call type, this workspace will be automatically transferred to another number.
+    auto_transfer_number2: Optional[str]
+    #: When calling a specific call type, this workspace will be automatically transferred to another number.
+    auto_transfer_number3: Optional[str]
+
+
 class RetrieveCallForwardingSettingsForWorkspaceResponse(ApiModel):
     #: Call forwarding settings for a Workspace.
     call_forwarding: Optional[CallForwardingPlaceSettingGet]
@@ -338,17 +352,6 @@ class ModifyMonitoringSettingsForWorkspaceBody(ApiModel):
     monitored_elements: Optional[list[str]]
 
 
-class RetrieveIncomingPermissionSettingsForWorkspaceResponse(ApiModel):
-    #: Incoming Permission state. If disabled, the default settings are used.
-    use_custom_enabled: Optional[bool]
-    #: Indicate call transfer setting.
-    external_transfer: Optional[ExternalTransfer]
-    #: Flag to indicate if workspace can receive internal calls.
-    internal_calls_enabled: Optional[bool]
-    #: Flag to indicate if workspace can receive collect calls.
-    collect_calls_enabled: Optional[bool]
-
-
 class RetrieveOutgoingPermissionSettingsForWorkspaceResponse(ApiModel):
     #: Outgoing Permission state. If disabled, the default settings are used.
     use_custom_enabled: Optional[bool]
@@ -391,15 +394,6 @@ class ConfigureCallInterceptSettingsForWorkspaceBody(ApiModel):
     outgoing: Optional[InterceptOutGoingGet]
 
 
-class RetrieveTransferNumbersSettingsForWorkspaceResponse(ApiModel):
-    #: When calling a specific call type, this workspace will be automatically transferred to another number.
-    auto_transfer_number1: Optional[str]
-    #: When calling a specific call type, this workspace will be automatically transferred to another number.
-    auto_transfer_number2: Optional[str]
-    #: When calling a specific call type, this workspace will be automatically transferred to another number.
-    auto_transfer_number3: Optional[str]
-
-
 class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/features/'):
     """
     Workspaces represent places where people work, such as conference rooms, meeting spaces, lobbies, and lunchrooms. Devices may be associated with workspaces.
@@ -428,7 +422,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         data = super().get(url=url, params=params)
         return data["callForwarding"]
 
-    def modify_callwarding_settings_workspace(self, workspace_id: str, org_id: str = None, call_forwarding: CallForwardingPlaceSettingPatch):
+    def modify_callwarding_settings_workspace(self, workspace_id: str, call_forwarding: CallForwardingPlaceSettingPatch, org_id: str = None):
         """
         Modify call forwarding settings for a Workspace.
         Two types of call forwarding are supported:
@@ -436,10 +430,10 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
-        :type org_id: str
         :param call_forwarding: Call forwarding settings for a Workspace.
         :type call_forwarding: CallForwardingPlaceSettingPatch
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :type org_id: str
         """
         params = {}
         if org_id is not None:
@@ -510,7 +504,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         data = super().get(url=url, params=params)
         return RetrieveCallerIDSettingsForWorkspaceResponse.parse_obj(data)
 
-    def modify_caller_id_settings_workspace(self, workspace_id: str, org_id: str = None, selected: enum, custom_number: str = None, display_name: str = None, display_detail: str = None, block_in_forward_calls_enabled: bool = None, external_caller_id_name_policy: ExternalCallerIdNamePolicy = None, custom_external_caller_id_name: str = None, location_external_caller_id_name: str = None):
+    def modify_caller_id_settings_workspace(self, workspace_id: str, selected: CLIDPolicySelection, org_id: str = None, custom_number: str = None, display_name: str = None, display_detail: str = None, block_in_forward_calls_enabled: bool = None, external_caller_id_name_policy: ExternalCallerIdNamePolicy = None, custom_external_caller_id_name: str = None, location_external_caller_id_name: str = None):
         """
         Modify Caller ID settings for a Workspace.
         Caller ID settings control how a workspace's information is displayed when making outgoing calls.
@@ -518,10 +512,10 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
+        :param selected: Which type of outgoing Caller ID will be used.
+        :type selected: CLIDPolicySelection
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
-        :param selected: Which type of outgoing Caller ID will be used.
-        :type selected: enum
         :param custom_number: This value must be an assigned number from the workspace's location.
         :type custom_number: str
         :param display_name: Workspace's caller ID display name.
@@ -625,7 +619,7 @@ Possible values: DIRECT_LINE
         data = super().get(url=url, params=params)
         return RetrieveIncomingPermissionSettingsForWorkspaceResponse.parse_obj(data)
 
-    def modify_incoming_permission_settings_workspace(self, workspace_id: str, org_id: str = None, use_custom_enabled: bool = None, external_transfer: enum = None, internal_calls_enabled: bool = None, collect_calls_enabled: bool = None):
+    def modify_incoming_permission_settings_workspace(self, workspace_id: str, org_id: str = None, use_custom_enabled: bool = None, external_transfer: ExternalTransfer = None, internal_calls_enabled: bool = None, collect_calls_enabled: bool = None):
         """
         Modify Incoming Permission settings for a Workspace.
         Incoming permission settings allow modifying permissions for a workspace that can be different from the organization's default to manage different call types.
@@ -638,10 +632,10 @@ Possible values: DIRECT_LINE
         :param use_custom_enabled: Incoming Permission state. If disabled, the default settings are used.
         :type use_custom_enabled: bool
         :param external_transfer: Indicate call transfer setting.
-        :type external_transfer: enum
-        :param internal_calls_enabled: Flag to indicate if the workspace can receive internal calls.
+        :type external_transfer: ExternalTransfer
+        :param internal_calls_enabled: Flag to indicate if workspace can receive internal calls.
         :type internal_calls_enabled: bool
-        :param collect_calls_enabled: Flag to indicate if the workspace can receive collect calls.
+        :param collect_calls_enabled: Flag to indicate if workspace can receive collect calls.
         :type collect_calls_enabled: bool
         """
         params = {}
@@ -678,7 +672,7 @@ Possible values: DIRECT_LINE
         data = super().get(url=url, params=params)
         return RetrieveOutgoingPermissionSettingsForWorkspaceResponse.parse_obj(data)
 
-    def modify_outgoing_permission_settings_workspace(self, workspace_id: str, org_id: str = None, use_custom_enabled: bool = None, calling_permissions: List[CallingPermission] = None):
+    def modify_outgoing_permission_settings_workspace(self, workspace_id: str, org_id: str = None, use_custom_enabled: bool = None, calling_permissions: CallingPermission = None):
         """
         Modify Outgoing Permission settings for a Place.
         Turn on outgoing call settings for this workspace to override the calling settings from the location that are used by default.
@@ -691,7 +685,7 @@ Possible values: DIRECT_LINE
         :param use_custom_enabled: Outgoing Permission state. If disabled, the default settings are used.
         :type use_custom_enabled: bool
         :param calling_permissions: Workspace's list of outgoing permissions.
-        :type calling_permissions: List[CallingPermission]
+        :type calling_permissions: CallingPermission
         """
         params = {}
         if org_id is not None:
@@ -746,7 +740,7 @@ Possible values: DIRECT_LINE
         super().put(url=url, params=params, json=body)
         return
 
-    def create_access_codes_workspace(self, workspace_id: str, org_id: str = None, code: str, description: str):
+    def create_access_codes_workspace(self, workspace_id: str, org_id: str = None, code: str = None, description: str = None):
         """
         Create new Access codes for the given workspace.
         Access codes are used to bypass permissions.
