@@ -573,7 +573,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTI
         params = {}
         if calling_data is not None:
             params['callingData'] = calling_data
-        body = UpdatePersonBody()
+        body = CreatePersonBody()
         if emails is not None:
             body.emails = emails
         if phone_numbers is not None:
@@ -2357,7 +2357,7 @@ as if it were their own. This is useful when traveling to a remote office but st
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ModifyWorkspaceDevicesBody()
+        body = Hoteling()
         if enabled is not None:
             body.enabled = enabled
         if limit_guest_use is not None:
@@ -3285,7 +3285,7 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ModifyIncomingPermissionSettingsForWorkspaceBody()
+        body = RetrieveIncomingPermissionSettingsForWorkspaceResponse()
         if use_custom_enabled is not None:
             body.use_custom_enabled = use_custom_enabled
         if external_transfer is not None:
@@ -3402,7 +3402,7 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = CreateAccessCodesForWorkspaceBody()
+        body = AuthorizationCode()
         if code is not None:
             body.code = code
         if description is not None:
@@ -3498,7 +3498,7 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ModifyTransferNumbersSettingsForWorkspaceBody()
+        body = RetrieveTransferNumbersSettingsForWorkspaceResponse()
         if auto_transfer_number1 is not None:
             body.auto_transfer_number1 = auto_transfer_number1
         if auto_transfer_number2 is not None:

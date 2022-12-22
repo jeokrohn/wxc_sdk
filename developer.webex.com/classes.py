@@ -202,7 +202,7 @@ class APIMethod:
 
         # initialization of JSON body
         if body_params:
-            print(f'        body = {self.body_class.name}()', file=method_body)
+            print(f'        body = {python_type(self.body_class.name)}()', file=method_body)
             print('\n'.join(p.strip('\n') for p in body_params), file=method_body)
             json_param = ', data=body.json()'
         else:

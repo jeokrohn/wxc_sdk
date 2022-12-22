@@ -1235,7 +1235,7 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             params['userEmail'] = user_email
         if site_url is not None:
             params['siteUrl'] = site_url
-        body = UpdateAudioOptionsBody()
+        body = Audio()
         if default_audio_type is not None:
             body.default_audio_type = default_audio_type
         if other_teleconference_description is not None:
@@ -1337,7 +1337,7 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             params['userEmail'] = user_email
         if site_url is not None:
             params['siteUrl'] = site_url
-        body = UpdateSchedulingOptionsBody()
+        body = SchedulingOptionsObject()
         if enabled_join_before_host is not None:
             body.enabled_join_before_host = enabled_join_before_host
         if join_before_host_minutes is not None:
@@ -3597,7 +3597,7 @@ Possible values: meeting, webinar
         params = {}
         if meeting_id is not None:
             params['meetingId'] = meeting_id
-        body = UpdateMeetingControlStatusBody()
+        body = GetMeetingControlStatusResponse()
         if locked is not None:
             body.locked = locked
         if recording_started is not None:
@@ -3943,7 +3943,7 @@ Registrant ID.
         :param interpreters: Interpreters for meeting.
         :type interpreters: InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting
         """
-        body = UpdateMeetingSimultaneousInterpretationBody()
+        body = SimultaneousInterpretation()
         if enabled is not None:
             body.enabled = enabled
         if interpreters is not None:
@@ -4047,7 +4047,7 @@ Possible values: John Andersen
         :param send_email: If true, send email to the interpreter.
         :type send_email: bool
         """
-        body = UpdateMeetingInterpreterBody()
+        body = CreateMeetingInterpreterBody()
         if language_code1 is not None:
             body.language_code1 = language_code1
         if language_code2 is not None:
@@ -4867,7 +4867,7 @@ Possible values: available, deleted
         params = {}
         if host_email is not None:
             params['hostEmail'] = host_email
-        body = DeleteRecordingBody()
+        body = DeleteTranscriptBody()
         if reason is not None:
             body.reason = reason
         if comment is not None:
@@ -5223,7 +5223,7 @@ class TrackingCodesApi(ApiChild, base=''):
         :param schedule_start_codes: Specify how tracking codes are used for each service on the meeting scheduler or meeting start pages. The maximum size of scheduleStartCodes is 5.
         :type schedule_start_codes: ScheduleStartCodeObject
         """
-        body = UpdateTrackingCodeBody()
+        body = CreateTrackingCodeBody()
         if name is not None:
             body.name = name
         if site_url is not None:

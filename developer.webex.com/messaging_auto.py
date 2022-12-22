@@ -444,7 +444,7 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         :param display_name: User-friendly name for the room tab.
         :type display_name: str
         """
-        body = UpdateRoomTabBody()
+        body = CreateRoomTabBody()
         if room_id is not None:
             body.room_id = room_id
         if content_url is not None:
@@ -900,7 +900,7 @@ class TeamsApi(ApiChild, base='teams'):
         :param description: The teams description.
         :type description: str
         """
-        body = UpdateTeamBody()
+        body = CreateTeamBody()
         if name is not None:
             body.name = name
         if description is not None:

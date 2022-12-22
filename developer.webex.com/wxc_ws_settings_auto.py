@@ -641,7 +641,7 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ModifyIncomingPermissionSettingsForWorkspaceBody()
+        body = RetrieveIncomingPermissionSettingsForWorkspaceResponse()
         if use_custom_enabled is not None:
             body.use_custom_enabled = use_custom_enabled
         if external_transfer is not None:
@@ -758,7 +758,7 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = CreateAccessCodesForWorkspaceBody()
+        body = AuthorizationCode()
         if code is not None:
             body.code = code
         if description is not None:
@@ -854,7 +854,7 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ModifyTransferNumbersSettingsForWorkspaceBody()
+        body = RetrieveTransferNumbersSettingsForWorkspaceResponse()
         if auto_transfer_number1 is not None:
             body.auto_transfer_number1 = auto_transfer_number1
         if auto_transfer_number2 is not None:

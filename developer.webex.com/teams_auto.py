@@ -90,7 +90,7 @@ class TeamsApi(ApiChild, base='teams'):
         :param description: The teams description.
         :type description: str
         """
-        body = UpdateTeamBody()
+        body = CreateTeamBody()
         if name is not None:
             body.name = name
         if description is not None:

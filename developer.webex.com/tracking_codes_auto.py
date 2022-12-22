@@ -219,7 +219,7 @@ class TrackingCodesApi(ApiChild, base=''):
         :param schedule_start_codes: Specify how tracking codes are used for each service on the meeting scheduler or meeting start pages. The maximum size of scheduleStartCodes is 5.
         :type schedule_start_codes: ScheduleStartCodeObject
         """
-        body = UpdateTrackingCodeBody()
+        body = CreateTrackingCodeBody()
         if name is not None:
             body.name = name
         if site_url is not None:

@@ -5054,7 +5054,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = UpdateAutoAttendantBody()
+        body = CreateAutoAttendantBody()
         if business_schedule is not None:
             body.business_schedule = business_schedule
         if business_hours_menu is not None:
@@ -5259,7 +5259,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = UpdateSelectiveCallForwardingRuleForAutoAttendantBody()
+        body = CreateSelectiveCallForwardingRuleForAutoAttendantBody()
         if name is not None:
             body.name = name
         if forward_to is not None:
@@ -5434,7 +5434,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = UpdateCallParkBody()
+        body = CreateCallParkBody()
         if name is not None:
             body.name = name
         if recall is not None:
@@ -5648,7 +5648,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = CreateCallParkExtensionBody()
+        body = GetDetailsForCallParkExtensionResponse()
         if extension is not None:
             body.extension = extension
         if name is not None:
@@ -5697,7 +5697,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = UpdateCallParkExtensionBody()
+        body = GetDetailsForCallParkExtensionResponse()
         if extension is not None:
             body.extension = extension
         if name is not None:
@@ -5832,7 +5832,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = UpdateCallPickupBody()
+        body = CreateCallPickupBody()
         if name is not None:
             body.name = name
         if agents is not None:
@@ -6332,7 +6332,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = UpdateSelectiveCallForwardingRuleForCallQueueBody()
+        body = CreateSelectiveCallForwardingRuleForCallQueueBody()
         if name is not None:
             body.name = name
         if calls_from is not None:
@@ -6816,7 +6816,7 @@ Possible values: 12345, 3456
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = CreateSelectiveCallForwardingRuleForHuntGroupBody()
+        body = CreateSelectiveCallForwardingRuleForCallQueueBody()
         if name is not None:
             body.name = name
         if calls_from is not None:
@@ -6893,7 +6893,7 @@ Possible values: 12345, 3456
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = UpdateSelectiveCallForwardingRuleForHuntGroupBody()
+        body = CreateSelectiveCallForwardingRuleForCallQueueBody()
         if name is not None:
             body.name = name
         if calls_from is not None:
@@ -6974,7 +6974,7 @@ Possible values: 12345, 3456
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = PutLocationInterceptBody()
+        body = GetLocationInterceptResponse()
         if enabled is not None:
             body.enabled = enabled
         if incoming is not None:
@@ -7199,7 +7199,7 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = PutOutgoingPermissionAutoTransferNumberBody()
+        body = GetOutgoingPermissionAutoTransferNumberResponse()
         if auto_transfer_number1 is not None:
             body.auto_transfer_number1 = auto_transfer_number1
         if auto_transfer_number2 is not None:
@@ -7539,7 +7539,7 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = RemovePhoneNumbersFromlocationBody()
+        body = AddPhoneNumbersTolocationBody()
         if phone_numbers is not None:
             body.phone_numbers = phone_numbers
         if state is not None:
@@ -8018,7 +8018,7 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = CreateScheduleEventBody()
+        body = ScheduleEventObject()
         if name is not None:
             body.name = name
         if start_date is not None:
@@ -8072,7 +8072,7 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = UpdateScheduleEventBody()
+        body = ScheduleEventObject()
         if name is not None:
             body.name = name
         if start_date is not None:
@@ -8151,7 +8151,7 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = UpdateVoicemailSettingsBody()
+        body = GetVoicemailSettingsResponse()
         if message_expiry_enabled is not None:
             body.message_expiry_enabled = message_expiry_enabled
         if number_of_days_for_message_expiry is not None:
@@ -8382,7 +8382,7 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = UpdateMusicOnHoldBody()
+        body = GetMusicOnHoldResponse()
         if call_hold_enabled is not None:
             body.call_hold_enabled = call_hold_enabled
         if call_park_enabled is not None:
@@ -9183,7 +9183,7 @@ Possible values: +5555,+5556
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ModifyRouteGroupForOrganizationBody()
+        body = CreateRouteGroupForOrganizationBody()
         if name is not None:
             body.name = name
         if local_gateways is not None:
@@ -9892,7 +9892,7 @@ Possible values: +5555,+5556
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = UpdateCallQueueForcedForwardServiceBody()
+        body = GetDetailsForCallQueueForcedForwardResponse()
         if forced_forward_enabled is not None:
             body.forced_forward_enabled = forced_forward_enabled
         if transfer_phone_number is not None:
@@ -9952,7 +9952,7 @@ Possible values: +5555,+5556
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = UpdateCallQueueStrandedCallsServiceBody()
+        body = GetDetailsForCallQueueStrandedCallsResponse()
         if action is not None:
             body.action = action
         if transfer_phone_number is not None:
@@ -11332,7 +11332,7 @@ as if it were their own. This is useful when traveling to a remote office but st
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ModifyWorkspaceDevicesBody()
+        body = Hoteling()
         if enabled is not None:
             body.enabled = enabled
         if limit_guest_use is not None:
@@ -12154,7 +12154,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ConfigureBargeInSettingsForPersonBody()
+        body = ReadBargeInSettingsForPersonResponse()
         if enabled is not None:
             body.enabled = enabled
         if tone_enabled is not None:
@@ -12201,7 +12201,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ConfigureCallForwardingSettingsForPersonBody()
+        body = ReadForwardingSettingsForPersonResponse()
         if call_forwarding is not None:
             body.call_forwarding = call_forwarding
         if business_continuity is not None:
@@ -12248,7 +12248,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ConfigureCallInterceptSettingsForPersonBody()
+        body = GetLocationInterceptResponse()
         if enabled is not None:
             body.enabled = enabled
         if incoming is not None:
@@ -12441,7 +12441,7 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ConfigureDoNotDisturbSettingsForPersonBody()
+        body = ReadDoNotDisturbSettingsForPersonResponse()
         if enabled is not None:
             body.enabled = enabled
         if ring_splash_enabled is not None:
@@ -12502,7 +12502,7 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ConfigureVoicemailSettingsForPersonBody()
+        body = ReadVoicemailSettingsForPersonResponse()
         if enabled is not None:
             body.enabled = enabled
         if send_all_calls is not None:
@@ -12755,7 +12755,7 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = AddNewEventForPersonsScheduleBody()
+        body = EventLongDetails()
         if name is not None:
             body.name = name
         if start_date is not None:
@@ -13313,7 +13313,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ConfigureIncomingPermissionSettingsForPersonBody()
+        body = ReadIncomingPermissionSettingsForPersonResponse()
         if use_custom_enabled is not None:
             body.use_custom_enabled = use_custom_enabled
         if external_transfer is not None:
@@ -13362,7 +13362,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ModifypersonsOutgoingCallingPermissionsSettingsBody()
+        body = RetrievepersonsOutgoingCallingPermissionsSettingsResponse()
         if use_custom_enabled is not None:
             body.use_custom_enabled = use_custom_enabled
         if calling_permissions is not None:
@@ -14002,7 +14002,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ModifyMonitoringSettingsForWorkspaceBody()
+        body = ModifypersonsMonitoringSettingsBody()
         if enable_call_park_notification is not None:
             body.enable_call_park_notification = enable_call_park_notification
         if monitored_elements is not None:
@@ -14051,7 +14051,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ModifyIncomingPermissionSettingsForWorkspaceBody()
+        body = ReadIncomingPermissionSettingsForPersonResponse()
         if use_custom_enabled is not None:
             body.use_custom_enabled = use_custom_enabled
         if external_transfer is not None:
@@ -14168,7 +14168,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = CreateAccessCodesForWorkspaceBody()
+        body = AccessCodes()
         if code is not None:
             body.code = code
         if description is not None:
@@ -14264,7 +14264,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ModifyTransferNumbersSettingsForWorkspaceBody()
+        body = GetOutgoingPermissionAutoTransferNumberResponse()
         if auto_transfer_number1 is not None:
             body.auto_transfer_number1 = auto_transfer_number1
         if auto_transfer_number2 is not None:
@@ -14551,7 +14551,7 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ModifyCallerIDSettingsForWorkspaceBody1()
+        body = ModifyCallerIDSettingsForWorkspaceBody()
         if selected is not None:
             body.selected = selected
         if custom_number is not None:
@@ -14609,7 +14609,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ModifyMonitoringSettingsForWorkspaceBody1()
+        body = ModifypersonsMonitoringSettingsBody()
         if enable_call_park_notification is not None:
             body.enable_call_park_notification = enable_call_park_notification
         if monitored_elements is not None:
@@ -14658,7 +14658,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ModifyIncomingPermissionSettingsForWorkspaceBody1()
+        body = ReadIncomingPermissionSettingsForPersonResponse()
         if use_custom_enabled is not None:
             body.use_custom_enabled = use_custom_enabled
         if external_transfer is not None:
@@ -14707,7 +14707,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ModifyOutgoingPermissionSettingsForWorkspaceBody1()
+        body = ModifyOutgoingPermissionSettingsForWorkspaceBody()
         if use_custom_enabled is not None:
             body.use_custom_enabled = use_custom_enabled
         if calling_permissions is not None:
@@ -14775,7 +14775,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = CreateAccessCodesForWorkspaceBody1()
+        body = AccessCodes()
         if code is not None:
             body.code = code
         if description is not None:
@@ -14822,7 +14822,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ConfigureCallInterceptSettingsForWorkspaceBody1()
+        body = ConfigureCallInterceptSettingsForWorkspaceBody()
         if enabled is not None:
             body.enabled = enabled
         if incoming is not None:
@@ -14871,7 +14871,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = ModifyTransferNumbersSettingsForWorkspaceBody1()
+        body = GetOutgoingPermissionAutoTransferNumberResponse()
         if auto_transfer_number1 is not None:
             body.auto_transfer_number1 = auto_transfer_number1
         if auto_transfer_number2 is not None:
