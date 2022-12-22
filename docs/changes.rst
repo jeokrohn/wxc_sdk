@@ -3,6 +3,10 @@ Release history
 
 - feat: new example queue_helper.py
 - feat: new attributes in :class:`wxc_sdk.cdr.CDR`
+- fix: additional_primary_line_appearances_enabled and basic_emergency_nomadic_enabled optional in :class:`wxc_sdk.telephony.SupportedDevice`
+- feat: manage numbers jobs api :attr:`wxc_sdk.telephony.jobs.JobsApi.manage_numbers`
+- fix: attribute 'browser_client_enabled' instead of 'browser_client_id' in :class:`wxc_sdk.person_settings.appservices.AppServicesSettings`
+- fix: :class:`wxc_sdk.telephony.jobs.ManageNumbersJobsApi`, updated method names, fixed type issues in list method
 
 1.10.1
 ------
