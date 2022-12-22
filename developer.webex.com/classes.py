@@ -101,9 +101,10 @@ class APIMethod:
     PARAM_INIT = '''
         if {p_name} is not None:
             params['{p_name_camel}'] = {p_name}'''
+
     BODY_INIT = '''
         if {p_name} is not None:
-            body['{p_name_camel}'] = {p_name}'''
+            body.{p_name} = {p_name}'''
 
     def source(self, common_prefix: str, transform_name: Callable[[str], str]) -> Generator[str, None, None]:
         """
@@ -134,7 +135,7 @@ class APIMethod:
                 if is_query:
                     param_code.append(self.PARAM_INIT.format(p_name=p_name, p_name_camel=param.name))
             if is_body:
-                body_params.append(self.BODY_INIT.format(p_name=p_name, p_name_camel=param.name))
+                body_params.append(self.BODY_INIT.format(p_name=p_name))
 
         name = underscore(self.name)
         uri_parameters = self.methods_details.parameters_and_response.get('URI Parameters')
@@ -201,9 +202,9 @@ class APIMethod:
 
         # initialization of JSON body
         if body_params:
-            print('        body = {}', file=method_body)
+            print(f'        body = {self.body_class.name}()', file=method_body)
             print('\n'.join(p.strip('\n') for p in body_params), file=method_body)
-            json_param = ', json=body'
+            json_param = ', data=body.json()'
         else:
             json_param = ''
 
