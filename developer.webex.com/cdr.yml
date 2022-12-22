@@ -775,14 +775,6 @@ docs:
     doc: null
     header: null
     methods: []
-  Webex Calling Organization Settings with Devices Features:
-    doc: null
-    header: null
-    methods: []
-  Webex Calling Organization Settings with Move Numbers Features:
-    doc: null
-    header: null
-    methods: []
   Webex Calling Person Settings:
     doc: null
     header: null
@@ -792,6 +784,10 @@ docs:
     header: null
     methods: []
   Webex Calling Person Settings with Calling Behavior:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Person Settings with Customer Managed Device Features:
     doc: null
     header: null
     methods: []

@@ -7,7 +7,7 @@ from typing import List, Optional
 from pydantic import Field
 
 
-__all__ = ['AnswerForCustomizedQuestion', 'AnswerObject', 'AnswerSummaryItem', 'Answers', 'AttendeePrivileges', 'Audio', 'AudioType', 'BatchRegisterMeetingRegistrantsResponse', 'BreakoutSessionObject', 'CallInNumbers', 'CallType', 'ChatObject', 'ClosedCaptionObject', 'CoHosts', 'Condition', 'CreateInvitationSourcesResponse', 'CreateInviteesItemObject', 'CreateMeetingBody', 'CreateMeetingInterpreterBody', 'CreateMeetingInviteesResponse', 'CreateMeetingResponse', 'CreatePersonBody', 'CreateTrackingCodeBody', 'CreateWebhookBody', 'CustomizedQuestionForCreateMeeting', 'CustomizedQuestionForGetMeeting', 'CustomizedRegistrant', 'DefaultAudioType', 'DeleteTranscriptBody', 'Device', 'Event', 'Format', 'GetBreakoutSessionObject', 'GetInviteeObject', 'GetMeetingControlStatusResponse', 'GetMeetingPollResultsResponse', 'GetMeetingPreferenceDetailsResponse', 'GetMeetingQualitiesResponse', 'GetMeetingSurveyResponse', 'GetMeetingTemplateResponse', 'GetPersonalMeetingRoomOptionsResponse', 'GetRecordingDetailsResponse', 'GetRegistrationFormFormeetingResponse', 'GetSiteListResponse', 'GetTrackingCodeItemForUserObject', 'GetTrackingCodeObject', 'GetUsersTrackingCodesResponse', 'GetVideoOptionsResponse', 'GetmeetingRegistrantsDetailInformationResponse', 'HostProfileCode', 'InProgressDevice', 'InputMode', 'InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting', 'InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting', 'InvitationSourceCreateObject', 'InvitationSourceObject', 'InviteeObjectForCreateMeeting', 'JoinMeetingResponse', 'Link', 'Links', 'ListAnswersOfQuestionResponse', 'ListInvitationSourcesResponse', 'ListMeetingBreakoutSessionsResponse', 'ListMeetingChatsResponse', 'ListMeetingClosedCaptionSnippetsResponse', 'ListMeetingClosedCaptionsResponse', 'ListMeetingInterpretersResponse', 'ListMeetingInviteesResponse', 'ListMeetingParticipantsResponse', 'ListMeetingPollsResponse', 'ListMeetingQAndAResponse', 'ListMeetingRegistrantsResponse', 'ListMeetingSessionTypesResponse', 'ListMeetingSurveyResultsResponse', 'ListMeetingTemplatesResponse', 'ListMeetingTrackingCodesResponse', 'ListMeetingTranscriptsForComplianceOfficerResponse', 'ListMeetingTranscriptsResponse', 'ListMeetingsOfMeetingSeriesResponse', 'ListMeetingsResponse', 'ListPeopleResponse', 'ListRecordingsForAdminOrComplianceOfficerResponse', 'ListRecordingsResponse', 'ListRespondentsOfQuestionResponse', 'ListSiteSessionTypesResponse', 'ListSnippetsOfMeetingTranscriptResponse', 'ListTrackingCodesResponse', 'ListUserSessionTypeResponse', 'ListWebhooksResponse', 'MediaSessionQuality', 'MeetingChatsApi', 'MeetingClosedCaptionsApi', 'MeetingInviteesApi', 'MeetingOptions', 'MeetingParticipantsApi', 'MeetingPollsApi', 'MeetingPreferencesApi', 'MeetingQandAApi', 'MeetingQualitiesApi', 'MeetingSeriesObjectForListMeeting', 'MeetingSessionTypeObject', 'MeetingTranscriptsApi', 'MeetingType', 'MeetingsApi', 'MoveRecordingsIntoRecycleBinBody', 'NetworkType', 'NoteType', 'OfficeNumber', 'Option', 'Options', 'OptionsForTrackingCodeObject', 'OrderBy', 'OrderType', 'Participant', 'PeopleApi', 'Person', 'PersonalMeetingRoom', 'PhoneNumbers', 'Poll', 'PollResult', 'QAObject', 'QueryMeetingParticipantsWithEmailResponse', 'QueryMeetingRegistrantsResponse', 'Question', 'Question1', 'QuestionObject', 'QuestionResult', 'QuestionWithAnswersObject', 'RecordingObject', 'RecordingsApi', 'RegisterMeetingRegistrantBody', 'RegisterMeetingRegistrantResponse', 'Registration', 'Registration1', 'Resource', 'Resources', 'Respondent', 'RespondentsReferenceLinks', 'Result', 'Rules', 'ScheduleStartCodeObject', 'ScheduledMeetingObject', 'ScheduledType', 'SchedulingOptionsObject', 'Sender', 'Service', 'ServiceType', 'SessionType', 'SessionTypesApi', 'SimultaneousInterpretation', 'SimultaneousInterpretation1', 'SipAddressesType', 'SiteSessionType', 'Sites', 'SnippetObject', 'SnippetObject1', 'StandardRegistrationApproveRule', 'State', 'State3', 'State4', 'Status', 'Status16', 'Status2', 'Status8', 'SurveyResultObject', 'Telephony', 'Telephony6', 'TemplateObject', 'TemplateType', 'TemporaryDirectDownloadLinks', 'TrackingCodeItemForCreateMeetingObject', 'TrackingCodesApi', 'TranscriptObject', 'TransportType', 'Type', 'Type10', 'Type12', 'Type13', 'Type18', 'Type2', 'Type5', 'UnlockedMeetingJoinSecurity', 'UpdateMeetingBody', 'UpdateMeetingBreakoutSessionsResponse', 'UpdateMeetingResponse', 'UpdateParticipantResponse', 'UpdatePersonalMeetingRoomOptionsBody', 'UpdateVideoOptionsResponse', 'UserSessionTypes', 'Video', 'Video4', 'VideoDevices', 'VideoIn', 'Webhook', 'WebhooksApi']
+__all__ = ['AnswerForCustomizedQuestion', 'AnswerObject', 'AnswerSummaryItem', 'Answers', 'AttendeePrivileges', 'Audio', 'AudioType', 'BatchRegisterMeetingRegistrantsResponse', 'BreakoutSessionObject', 'CallInNumbers', 'CallType', 'ChatObject', 'ClosedCaptionObject', 'CoHosts', 'Condition', 'CreateInvitationSourcesResponse', 'CreateInviteesItemObject', 'CreateMeetingBody', 'CreateMeetingInterpreterBody', 'CreateMeetingInviteesResponse', 'CreateMeetingResponse', 'CreatePersonBody', 'CreateTrackingCodeBody', 'CreateWebhookBody', 'CustomizedQuestionForCreateMeeting', 'CustomizedQuestionForGetMeeting', 'CustomizedRegistrant', 'DefaultAudioType', 'DeleteTranscriptBody', 'Device', 'Event', 'Format', 'GetBreakoutSessionObject', 'GetInviteeObject', 'GetMeetingControlStatusResponse', 'GetMeetingPollResultsResponse', 'GetMeetingPreferenceDetailsResponse', 'GetMeetingQualitiesResponse', 'GetMeetingSurveyResponse', 'GetMeetingTemplateResponse', 'GetPersonalMeetingRoomOptionsResponse', 'GetRecordingDetailsResponse', 'GetRegistrationFormFormeetingResponse', 'GetSiteListResponse', 'GetTrackingCodeItemForUserObject', 'GetTrackingCodeObject', 'GetUserTrackingCodesResponse', 'GetVideoOptionsResponse', 'GetmeetingRegistrantsDetailInformationResponse', 'HostProfileCode', 'InProgressDevice', 'InputMode', 'InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting', 'InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting', 'InvitationSourceCreateObject', 'InvitationSourceObject', 'InviteeObjectForCreateMeeting', 'JoinMeetingResponse', 'Link', 'Links', 'ListAnswersOfQuestionResponse', 'ListInvitationSourcesResponse', 'ListMeetingBreakoutSessionsResponse', 'ListMeetingChatsResponse', 'ListMeetingClosedCaptionSnippetsResponse', 'ListMeetingClosedCaptionsResponse', 'ListMeetingInterpretersResponse', 'ListMeetingInviteesResponse', 'ListMeetingParticipantsResponse', 'ListMeetingPollsResponse', 'ListMeetingQAndAResponse', 'ListMeetingRegistrantsResponse', 'ListMeetingSessionTypesResponse', 'ListMeetingSurveyResultsResponse', 'ListMeetingTemplatesResponse', 'ListMeetingTrackingCodesResponse', 'ListMeetingTranscriptsForComplianceOfficerResponse', 'ListMeetingTranscriptsResponse', 'ListMeetingsOfMeetingSeriesResponse', 'ListMeetingsResponse', 'ListPeopleResponse', 'ListRecordingsForAdminOrComplianceOfficerResponse', 'ListRecordingsResponse', 'ListRespondentsOfQuestionResponse', 'ListSiteSessionTypesResponse', 'ListSnippetsOfMeetingTranscriptResponse', 'ListTrackingCodesResponse', 'ListUserSessionTypeResponse', 'ListWebhooksResponse', 'MediaSessionQuality', 'MeetingChatsApi', 'MeetingClosedCaptionsApi', 'MeetingInviteesApi', 'MeetingMessagesApi', 'MeetingOptions', 'MeetingParticipantsApi', 'MeetingPollsApi', 'MeetingPreferencesApi', 'MeetingQandAApi', 'MeetingQualitiesApi', 'MeetingSeriesObjectForListMeeting', 'MeetingSessionTypeObject', 'MeetingTranscriptsApi', 'MeetingType', 'MeetingsApi', 'MoveRecordingsIntoRecycleBinBody', 'NetworkType', 'NoteType', 'OfficeNumber', 'Option', 'Options', 'OptionsForTrackingCodeObject', 'OrderBy', 'OrderType', 'Participant', 'PeopleApi', 'Person', 'PersonalMeetingRoom', 'PhoneNumbers', 'Poll', 'PollResult', 'QAObject', 'QueryMeetingParticipantsWithEmailResponse', 'QueryMeetingRegistrantsResponse', 'Question', 'Question1', 'QuestionObject', 'QuestionResult', 'QuestionWithAnswersObject', 'RecordingObject', 'RecordingsApi', 'RegisterMeetingRegistrantBody', 'RegisterMeetingRegistrantResponse', 'Registration', 'Registration1', 'Resource', 'Resources', 'Respondent', 'RespondentsReferenceLinks', 'Result', 'Rules', 'ScheduleStartCodeObject', 'ScheduledMeetingObject', 'ScheduledType', 'SchedulingOptionsObject', 'Sender', 'Service', 'ServiceType', 'SessionType', 'SessionTypesApi', 'SimultaneousInterpretation', 'SimultaneousInterpretation1', 'SipAddressesType', 'SiteSessionType', 'Sites', 'SnippetObject', 'SnippetObject1', 'StandardRegistrationApproveRule', 'State', 'State3', 'State4', 'Status', 'Status16', 'Status2', 'Status8', 'SurveyResultObject', 'Telephony', 'Telephony6', 'TemplateObject', 'TemplateType', 'TemporaryDirectDownloadLinks', 'TrackingCodeItemForCreateMeetingObject', 'TrackingCodesApi', 'TranscriptObject', 'TransportType', 'Type', 'Type10', 'Type12', 'Type13', 'Type18', 'Type2', 'Type5', 'UnlockedMeetingJoinSecurity', 'UpdateMeetingBody', 'UpdateMeetingBreakoutSessionsResponse', 'UpdateMeetingResponse', 'UpdateParticipantResponse', 'UpdatePersonalMeetingRoomOptionsBody', 'UpdateVideoOptionsResponse', 'UserSessionTypes', 'Video', 'Video4', 'VideoDevices', 'VideoIn', 'Webhook', 'WebhooksApi']
 
 
 class CoHosts(ApiModel):
@@ -421,6 +421,27 @@ Possible values: John Andersen
             params['sendEmail'] = send_email
         url = self.ep(f'{meeting_invitee_id}')
         super().delete(url=url, params=params)
+        return
+
+class MeetingMessagesApi(ApiChild, base='meeting/messages/{meetingMessageId}'):
+    """
+    Meeting Messages are how we communicate through text within an active unified meeting
+    Meeting Messages are also how we communicate through text within a space bound meeting.
+    In a Webex meeting, each meeting message is displayed on its own line along with a timestamp and sender information.
+    Message can contain plain text and rich text
+    """
+
+    def delete_meeting_message(self, meeting_message_id: str):
+        """
+        Deletes a Meeting Message from the In Meeting Chat, using its ID.
+        This ID can be retrieved by a Compliance Officer using the events API filtering on the meetingMessages resource type.
+        Specify the meetingMessage ID in the meetingMessageId parameter in the URI.
+
+        :param meeting_message_id: The unique identifier for the message.
+        :type meeting_message_id: str
+        """
+        url = self.ep(f'')
+        super().delete(url=url)
         return
 
 class Video(str, Enum):
@@ -2077,7 +2098,7 @@ class UpdateMeetingBody(ApiModel):
     end: Optional[str]
     #: Time zone in which the meeting was originally scheduled (conforming with the IANA time zone database).
     timezone: Optional[str]
-    #: Meeting series recurrence rule (conforming with RFC 2445). Applies only to a recurring meeting series, not to a meeting series with only one scheduled meeting.
+    #: Meeting series recurrence rule (conforming with RFC 2445). Applies only to a recurring meeting series, not to a meeting series with only one scheduled meeting. Multiple days or dates for monthly or yearly recurrence rule are not supported, only the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
     recurrence: Optional[str]
     #: Whether or not meeting is recorded automatically.
     enabled_auto_record_meeting: Optional[bool]
@@ -2200,7 +2221,7 @@ class CreateMeetingResponse(ApiModel):
     start: Optional[str]
     #: End time for a meeting in ISO 8601 compliant format. If the meeting is a meeting series, end is the date and time the first meeting of the series ends. If the meeting is a meeting series and the current filter is true, end is the date and time the upcoming or ongoing meeting of the series ends. If the meeting is a scheduled meeting from a meeting series, end is the date and time when that scheduled meeting ends. If the meeting is a meeting instance that has happened, end is the date and time that instance actually ends. If a meeting instance is in progress, end is not available. Can be modified for a meeting series or a scheduled meeting using the  Update a Meeting API.
     end: Optional[str]
-    #: Meeting series recurrence rule (conforming with RFC 2445). Applies only to a recurring meeting series, not to a meeting series with only one scheduled meeting. Can be modified for a meeting series using the  Update a Meeting API.
+    #: Meeting series recurrence rule (conforming with RFC 2445). Applies only to a recurring meeting series, not to a meeting series with only one scheduled meeting. Can be modified for a meeting series using the  Update a Meeting API. Multiple days or dates for monthly or yearly recurrence rule are not supported, only the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
     recurrence: Optional[str]
     #: Unique identifier for the meeting host.
     host_user_id: Optional[str]
@@ -2295,7 +2316,7 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     start: Optional[str]
     #: End time for a meeting in ISO 8601 compliant format. If the meeting is a meeting series, end is the date and time the first meeting of the series ends. If the meeting is a meeting series and the current filter is true, end is the date and time the upcoming or ongoing meeting of the series ends. If the meeting is a scheduled meeting from a meeting series, end is the date and time when that scheduled meeting ends. If the meeting is a meeting instance that has happened, end is the date and time that instance actually ends. If a meeting instance is in progress, end is not available. Can be modified for a meeting series or a scheduled meeting using the  Update a Meeting API.
     end: Optional[str]
-    #: Meeting series recurrence rule (conforming with RFC 2445). Applies only to a recurring meeting series, not to a meeting series with only one scheduled meeting. Can be modified for a meeting series using the  Update a Meeting API.
+    #: Meeting series recurrence rule (conforming with RFC 2445). Applies only to a recurring meeting series, not to a meeting series with only one scheduled meeting. Can be modified for a meeting series using the  Update a Meeting API. Multiple days or dates for monthly or yearly recurrence rule are not supported, only the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
     recurrence: Optional[str]
     #: Unique identifier for the meeting host.
     host_user_id: Optional[str]
@@ -2620,14 +2641,20 @@ class RegisterMeetingRegistrantBody(Question1):
 
 class RegisterMeetingRegistrantResponse(RegisterMeetingRegistrantBody):
     #: New registrant's ID.
-    registrant_id: Optional[str]
+    id: Optional[str]
     #: New registrant's status.
     status: Optional[Status2]
     #: Registrant's registration time.
     registration_time: Optional[str]
 
 
-class GetmeetingRegistrantsDetailInformationResponse(RegisterMeetingRegistrantResponse):
+class GetmeetingRegistrantsDetailInformationResponse(RegisterMeetingRegistrantBody):
+    #: New registrant's ID.
+    registrant_id: Optional[str]
+    #: New registrant's status.
+    status: Optional[Status2]
+    #: Registrant's registration time.
+    registration_time: Optional[str]
     #: Registrant's source id.The sourceId is from Create Invitation Sources API.
     source_id: Optional[str]
 
@@ -3024,7 +3051,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type agenda: str
         :param timezone: Time zone in which the meeting was originally scheduled (conforming with the IANA time zone database).
         :type timezone: str
-        :param recurrence: Meeting series recurrence rule (conforming with RFC 2445). Applies only to a recurring meeting series, not to a meeting series with only one scheduled meeting.
+        :param recurrence: Meeting series recurrence rule (conforming with RFC 2445). Applies only to a recurring meeting series, not to a meeting series with only one scheduled meeting. Multiple days or dates for monthly or yearly recurrence rule are not supported, only the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
         :type recurrence: str
         :param enabled_auto_record_meeting: Whether or not meeting is recorded automatically.
         :type enabled_auto_record_meeting: bool
@@ -3329,7 +3356,7 @@ Possible values: scheduled, ready, lobby, inProgress, ended, missed
         :type agenda: str
         :param timezone: Time zone in which the meeting was originally scheduled (conforming with the IANA time zone database).
         :type timezone: str
-        :param recurrence: Meeting series recurrence rule (conforming with RFC 2445). Applies only to a recurring meeting series, not to a meeting series with only one scheduled meeting.
+        :param recurrence: Meeting series recurrence rule (conforming with RFC 2445). Applies only to a recurring meeting series, not to a meeting series with only one scheduled meeting. Multiple days or dates for monthly or yearly recurrence rule are not supported, only the first day or date specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
         :type recurrence: str
         :param enabled_auto_record_meeting: Whether or not meeting is recorded automatically.
         :type enabled_auto_record_meeting: bool
@@ -3830,7 +3857,7 @@ Possible values: meeting, webinar
         data = super().post(url=url, json=body)
         return data["items"]
 
-    def getmeeting_registrants_detail_information(self, meeting_id: str, registrant_id: str) -> str:
+    def getmeeting_registrants_detail_information(self, meeting_id: str, registrant_id: str) -> GetmeetingRegistrantsDetailInformationResponse:
         """
         Retrieves details for a meeting registrant with a specified registrant Id.
 
@@ -3841,7 +3868,7 @@ Possible values: meeting, webinar
         """
         url = self.ep(f'{meeting_id}/registrants/{registrant_id}')
         data = super().get(url=url)
-        return data["sourceId"]
+        return GetmeetingRegistrantsDetailInformationResponse.parse_obj(data)
 
     def list_registrants(self, meeting_id: str, email: str = None, register_time_from: str = None, register_time_to: str = None, **params) -> Generator[GetmeetingRegistrantsDetailInformationResponse, None, None]:
         """
@@ -5112,7 +5139,7 @@ class GetTrackingCodeItemForUserObject(TrackingCodeItemForCreateMeetingObject):
     id: Optional[str]
 
 
-class GetUsersTrackingCodesResponse(ApiModel):
+class GetUserTrackingCodesResponse(ApiModel):
     #: Site URL for the tracking code.
     site_url: Optional[str]
     #: Unique identifier for the user.
@@ -5128,7 +5155,7 @@ class ListTrackingCodesResponse(ApiModel):
     items: Optional[list[GetTrackingCodeObject]]
 
 
-class UpdateUsersTrackingCodesBody(ApiModel):
+class UpdateUserTrackingCodesBody(ApiModel):
     #: Site URL for the tracking code.
     site_url: Optional[str]
     #: Unique identifier for the user. At least one parameter of personId or email is required. personId must precede email if both are specified.
@@ -5142,6 +5169,7 @@ class UpdateUsersTrackingCodesBody(ApiModel):
 class TrackingCodesApi(ApiChild, base=''):
     """
     Tracking codes are alphanumeric codes that identify categories of users on a Webex site. With tracking codes, you can analyze usage by various groups within an organization.
+    The authenticated user calling this API must have an Administrator role with the meeting:admin_schedule_write and meeting:admin_schedule_read scopes.
     """
 
     def list_codes(self, site_url: str = None, **params) -> Generator[GetTrackingCodeObject, None, None]:
@@ -5256,7 +5284,7 @@ class TrackingCodesApi(ApiChild, base=''):
         super().delete(url=url, params=params)
         return
 
-    def users_codes(self, site_url: str = None, person_id: str = None) -> GetUsersTrackingCodesResponse:
+    def user_codes(self, site_url: str = None, person_id: str = None) -> GetUserTrackingCodesResponse:
         """
         Lists user's tracking codes by an admin user.
 
@@ -5272,9 +5300,9 @@ class TrackingCodesApi(ApiChild, base=''):
             params['personId'] = person_id
         url = self.ep('https: //webexapis.com/v1/admin/meeting/userconfig/trackingCodes')
         data = super().get(url=url, params=params)
-        return GetUsersTrackingCodesResponse.parse_obj(data)
+        return GetUserTrackingCodesResponse.parse_obj(data)
 
-    def update_users_codes(self, site_url: str, person_id: str = None, email: str = None, tracking_codes: TrackingCodeItemForCreateMeetingObject = None) -> GetUsersTrackingCodesResponse:
+    def update_user_codes(self, site_url: str, person_id: str = None, email: str = None, tracking_codes: TrackingCodeItemForCreateMeetingObject = None) -> GetUserTrackingCodesResponse:
         """
         Updates tracking codes for a specified user by an admin user.
 
@@ -5298,7 +5326,7 @@ class TrackingCodesApi(ApiChild, base=''):
             body['trackingCodes'] = tracking_codes
         url = self.ep('https: //webexapis.com/v1/admin/meeting/userconfig/trackingCodes')
         data = super().put(url=url, json=body)
-        return GetUsersTrackingCodesResponse.parse_obj(data)
+        return GetUserTrackingCodesResponse.parse_obj(data)
 
 class Resource(str, Enum):
     #: The Attachment Actions resource.

@@ -80,6 +80,10 @@ docs:
     doc: null
     header: null
     methods: []
+  Meeting Messages:
+    doc: null
+    header: null
+    methods: []
   Meeting Participants:
     doc: null
     header: null
