@@ -226,25 +226,25 @@ Possible values: http://www.example.com/images/media.png
         :param attachments: Content attachments to attach to the message. Only one card per message is supported. See the Cards Guide for more information.
         :type attachments: Attachment
         """
-        body = {}
+        body = CreateMessageBody()
         if room_id is not None:
-            body['roomId'] = room_id
+            body.room_id = room_id
         if text is not None:
-            body['text'] = text
+            body.text = text
         if markdown is not None:
-            body['markdown'] = markdown
+            body.markdown = markdown
         if parent_id is not None:
-            body['parentId'] = parent_id
+            body.parent_id = parent_id
         if to_person_id is not None:
-            body['toPersonId'] = to_person_id
+            body.to_person_id = to_person_id
         if to_person_email is not None:
-            body['toPersonEmail'] = to_person_email
+            body.to_person_email = to_person_email
         if files is not None:
-            body['files'] = files
+            body.files = files
         if attachments is not None:
-            body['attachments'] = attachments
+            body.attachments = attachments
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return CreateMessageResponse.parse_obj(data)
 
     def edit(self, message_id: str, room_id: str = None, text: str = None, markdown: str = None) -> ListMessage:
@@ -267,15 +267,15 @@ Possible values: http://www.example.com/images/media.png
         :param markdown: The message, in Markdown format. If this attribute is set ensure that the request does NOT contain an html attribute.
         :type markdown: str
         """
-        body = {}
+        body = EditMessageBody()
         if room_id is not None:
-            body['roomId'] = room_id
+            body.room_id = room_id
         if text is not None:
-            body['text'] = text
+            body.text = text
         if markdown is not None:
-            body['markdown'] = markdown
+            body.markdown = markdown
         url = self.ep(f'{message_id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return ListMessage.parse_obj(data)
 
     def details(self, message_id: str) -> ListMessage:

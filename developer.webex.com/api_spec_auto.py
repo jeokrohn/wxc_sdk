@@ -7,7 +7,7 @@ from typing import List, Optional
 from pydantic import Field
 
 
-__all__ = ['AccessCodes', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 'AddNewEventForPersonsScheduleResponse', 'AddPhoneNumbersTolocationBody', 'Address', 'AlternateNumberSettings', 'AlternateNumbersObject', 'AlternateNumbersWithPattern', 'AlternateNumbersWithPattern1', 'Always', 'AnnouncementMode', 'Announcements', 'Announcements3', 'AutoAttendantCallForwardSettingsDetailsObject', 'AutoAttendantCallForwardSettingsModifyDetailsObject', 'BehaviorType', 'BlockContiguousSequences', 'BlockPreviousPasscodes', 'BlockRepeatedDigits', 'BusinessContinuity', 'CDR', 'CLIDPolicySelection', 'Call', 'CallBounce', 'CallControlsApi', 'CallForwardRulesGet', 'CallForwardRulesModifyObject', 'CallForwardRulesObject', 'CallForwardSelectiveCallsFromCustomNumbersObject', 'CallForwardSelectiveCallsFromObject', 'CallForwardSelectiveCallsToNumbersObject', 'CallForwardSelectiveCallsToObject', 'CallForwardSelectiveForwardToObject', 'CallForwarding', 'CallForwarding1', 'CallForwarding4', 'CallForwardingPlaceSettingGet', 'CallForwardingPlaceSettingPatch', 'CallHistoryRecord', 'CallHistoryRecordTypeEnum', 'CallParkSettingsObject', 'CallPersonalityEnum', 'CallQueueAudioFilesObject', 'CallQueueHolidaySchedulesObject', 'CallQueueObject', 'CallQueueQueueSettingsObject', 'CallSourceInfo', 'CallSourceType', 'CallStateEnum', 'CallType', 'CallType1', 'CallTypeEnum', 'CallerIdSelectedType', 'CallingLineId', 'CallingPermissionObject', 'CallingPermissions', 'Callparkextension', 'CallsFrom', 'CallsTo', 'ClientType', 'ComfortMessage', 'ComfortMessageBypass', 'ConfigureCallRecordingSettingsForPersonBody', 'ConfigureCallerIDSettingsForPersonBody', 'ConfigurepersonsCallingBehaviorBody', 'CountObject', 'CreateAutoAttendantBody', 'CreateAutoAttendantResponse', 'CreateCallParkBody', 'CreateCallParkExtensionResponse', 'CreateCallParkResponse', 'CreateCallPickupBody', 'CreateCallPickupResponse', 'CreateCallQueueBody', 'CreateCallQueueResponse', 'CreateDialPlanResponse', 'CreateHuntGroupResponse', 'CreateLocationResponse', 'CreatePersonBody', 'CreateRouteGroupForOrganizationBody', 'CreateRouteGroupForOrganizationResponse', 'CreateRouteListResponse', 'CreateScheduleEventResponse', 'CreateScheduleForPersonBody', 'CreateScheduleForPersonResponse', 'CreateScheduleResponse', 'CreateSelectiveCallForwardingRuleForAutoAttendantBody', 'CreateSelectiveCallForwardingRuleForAutoAttendantResponse', 'CreateSelectiveCallForwardingRuleForCallQueueBody', 'CreateSelectiveCallForwardingRuleForCallQueueResponse', 'CreateSelectiveCallForwardingRuleForHuntGroupResponse', 'CreateTrunkResponse', 'CreatenewPagingGroupBody', 'CreatenewPagingGroupResponse', 'CreatenewVoicemailGroupForLocationResponse', 'Day', 'DefaultVoicemailPinRules', 'DestinationType', 'DeviceStatus', 'DeviceType', 'DialPattern', 'DialPatternAction', 'DialPatternStatus', 'DialPatternValidate', 'DialPlan', 'DialResponse', 'Direction', 'DistinctiveRing', 'EffectiveBehaviorType', 'EmailCopyOfMessage', 'Emergency', 'ErrorMessageObject', 'ErrorObject', 'EventLongDetails', 'ExpirePasscode', 'ExtensionDialing', 'ExtensionStatusObject', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts', 'FaxMessage', 'FeatureAccessCode', 'FetchEventForpersonsScheduleResponse', 'GenerateExamplePasswordForLocationResponse', 'GetAnnouncementFileInfo', 'GetAvailableAgentsFromCallParksResponse', 'GetAvailableAgentsFromCallPickupsResponse', 'GetAvailableRecallHuntGroupsFromCallParksResponse', 'GetAvailableRecallHuntGroupsObject', 'GetCallForwardAlwaysSettingObject', 'GetCallForwardingSettingsForAutoAttendantResponse', 'GetCallForwardingSettingsForCallQueueResponse', 'GetCallForwardingSettingsForHuntGroupResponse', 'GetCallParkSettingsResponse', 'GetCallRecordingSettingsResponse', 'GetCallRecordingTermsOfServiceSettingsResponse', 'GetDetailedCallHistoryResponse', 'GetDetailsForAutoAttendantResponse', 'GetDetailsForCallParkExtensionResponse', 'GetDetailsForCallParkResponse', 'GetDetailsForCallPickupResponse', 'GetDetailsForCallQueueForcedForwardResponse', 'GetDetailsForCallQueueHolidayServiceResponse', 'GetDetailsForCallQueueNightServiceResponse', 'GetDetailsForCallQueueResponse', 'GetDetailsForCallQueueStrandedCallsResponse', 'GetDetailsForHuntGroupResponse', 'GetDetailsForPagingGroupResponse', 'GetDetailsForScheduleResponse', 'GetDialPlanResponse', 'GetListOfPhoneNumbersForPersonResponse', 'GetLocalGatewayCallToOnPremisesExtensionUsageForTrunkResponse', 'GetLocalGatewayDialPlanUsageForTrunkResponse', 'GetLocalGatewayUsageCountResponse', 'GetLocationInterceptResponse', 'GetLocationOutgoingPermissionResponse', 'GetLocationVoicemailGroupResponse', 'GetLocationVoicemailResponse', 'GetLocationWebexCallingDetailsResponse', 'GetLocationsUsingLocalGatewayAsPSTNConnectionRoutingResponse', 'GetManageNumbersJobStatusResponse', 'GetMessageSummaryResponse', 'GetMonitoredElementsObject', 'GetMusicOnHoldResponse', 'GetNumbersAssignedToRouteListResponse', 'GetOutgoingPermissionAutoTransferNumberResponse', 'GetOutgoingPermissionLocationAccessCodeResponse', 'GetPagingGroupAgentObject', 'GetPersonPlaceCallParksObject', 'GetPersonPlaceCallQueueObject', 'GetPersonPlaceObject', 'GetPhoneNumbersForOrganizationWithGivenCriteriasResponse', 'GetPrivateNetworkConnectResponse', 'GetRecallHuntGroupObject', 'GetRouteGroupsUsingLocalGatewayResponse', 'GetRouteListResponse', 'GetScheduleDetailsResponse', 'GetScheduleEventObject', 'GetSelectiveCallForwardingRuleForAutoAttendantResponse', 'GetSelectiveCallForwardingRuleForCallQueueResponse', 'GetTrunkResponse', 'GetUserNumberItemObject', 'GetVoicePortalPasscodeRuleResponse', 'GetVoicePortalResponse', 'GetVoicemailGroupObject', 'GetVoicemailRulesResponse', 'GetVoicemailSettingsResponse', 'GetpersonsPrivacySettingsResponse', 'Greeting', 'Greeting29', 'HolidayScheduleLevel', 'HostedAgent', 'HostedFeature', 'HoursMenuObject', 'HuntPolicySelection', 'HuntRoutingTypeSelection', 'Incoming', 'InterceptAnnouncementsGet', 'InterceptIncomingGet', 'InterceptIncomingPatch', 'ItemObject', 'JobExecutionStatusObject', 'JobExecutionStatusObject1', 'Key', 'KeyConfigurationsObject', 'Length', 'ListAutoAttendantObject', 'ListCallHistoryResponse', 'ListCallParkExtensionObject', 'ListCallParkObject', 'ListCallQueueObject', 'ListCallsResponse', 'ListLocationsResponse', 'ListManageNumbersJobErrorsResponse', 'ListManageNumbersJobsResponse', 'ListMessagesResponse', 'ListOfSchedulesForPersonResponse', 'ListPeopleResponse', 'ListScheduleObject', 'ListVoicemailGroupResponse', 'LocalGateways', 'Location', 'LocationsApi', 'MediaFileType', 'Member', 'MessageStorage', 'MessageStorage3', 'ModifyDialPlanBody', 'ModifyNumbersForRouteListResponse', 'ModifyPersonPlaceCallQueueObject', 'ModifyRouteListBody', 'ModifyScheduleEventListObject', 'ModifyTrunkBody', 'ModifypersonsApplicationServicesSettingsBody', 'ModifypersonsMonitoringSettingsBody', 'MohMessage', 'MonitoredElementItem', 'MonitoredElementUser', 'MonitoredMemberObject', 'MonitoredPersonObject', 'Month', 'NetworkConnectionType', 'NewNumber', 'NoAnswer', 'NoAnswer3', 'NormalSource', 'NumberItem', 'NumberListGetObject', 'NumberStatus', 'Option', 'OriginalReason', 'OriginatorType', 'Outgoing', 'Overflow', 'Owner', 'ParkResponse', 'PartyInformation', 'Passcode', 'PbxUser', 'PeopleApi', 'Person', 'PhoneNumber', 'PhoneNumbers', 'PhoneNumbers7', 'PostCallQueueCallPolicyObject', 'PostHuntGroupCallPolicyObject', 'PostPersonPlaceCallQueueObject', 'PostPersonPlaceObject', 'PstnNumber', 'PushToTalkAccessType', 'PushToTalkConnectionType', 'PutRecallHuntGroupObject', 'ReadBargeInSettingsForPersonResponse', 'ReadCallInterceptSettingsForWorkspaceResponse', 'ReadCallRecordingSettingsForPersonResponse', 'ReadCallToExtensionLocationsOfRoutingGroupResponse', 'ReadCallWaitingSettingsForPersonResponse', 'ReadCallerIDSettingsForPersonResponse', 'ReadDialPlanLocationsOfRoutingGroupResponse', 'ReadDoNotDisturbSettingsForPersonResponse', 'ReadForwardingSettingsForPersonResponse', 'ReadHotelingSettingsForPersonResponse', 'ReadIncomingPermissionSettingsForPersonResponse', 'ReadInternalDialingConfigurationForlocationResponse', 'ReadListOfAutoAttendantsResponse', 'ReadListOfCallParkExtensionsResponse', 'ReadListOfCallParksResponse', 'ReadListOfCallPickupsResponse', 'ReadListOfCallQueueAnnouncementFilesResponse', 'ReadListOfCallQueuesResponse', 'ReadListOfDialPatternsResponse', 'ReadListOfDialPlansResponse', 'ReadListOfHuntGroupsResponse', 'ReadListOfPagingGroupsResponse', 'ReadListOfRouteListsResponse', 'ReadListOfRoutingChoicesResponse', 'ReadListOfRoutingGroupsResponse', 'ReadListOfSchedulesResponse', 'ReadListOfTrunkTypesResponse', 'ReadListOfTrunksResponse', 'ReadListOfUCManagerProfilesResponse', 'ReadPSTNConnectionLocationsOfRoutingGroupResponse', 'ReadPersonsCallingBehaviorResponse', 'ReadPushtoTalkSettingsForPersonResponse', 'ReadReceptionistClientSettingsForPersonResponse', 'ReadRouteGroupForOrganizationResponse', 'ReadRouteListsOfRoutingGroupResponse', 'ReadUsageOfRoutingGroupResponse', 'ReadVoicemailSettingsForPersonResponse', 'RecallInformation', 'RecallTypeEnum', 'Record', 'RecordingStateEnum', 'RecurWeekly2', 'RecurWeeklyObject', 'RecurYearlyByDateObject', 'RecurYearlyByDayObject', 'Recurrence', 'RecurrenceObject1', 'RedirectReason', 'RedirectionInformation', 'RedirectionReasonEnum', 'RejectActionEnum', 'RelatedReason', 'Repeat', 'ResponseStatus', 'ResponseStatusType', 'RetrieveAccessCodesForWorkspaceResponse', 'RetrieveCallForwardingSettingsForWorkspaceResponse', 'RetrieveCallQueueAgentsCallerIDInformationResponse', 'RetrieveCallWaitingSettingsForWorkspaceResponse', 'RetrieveCallerIDSettingsForWorkspaceResponse', 'RetrieveExecutiveAssistantSettingsForPersonResponse', 'RetrieveListOfCallQueueCallerIDInformationResponse', 'RetrieveMonitoringSettingsForWorkspaceResponse', 'RetrieveOutgoingPermissionSettingsForWorkspaceResponse', 'RetrievepersonsApplicationServicesSettingsResponse', 'RetrievepersonsMonitoringSettingsResponse', 'RetrievepersonsOutgoingCallingPermissionsSettingsResponse', 'RingPattern', 'RouteGroup', 'RouteGroupUsageRouteListGet', 'RouteIdentity', 'RouteList', 'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteType', 'ScheduleEventObject', 'ScheduleShortDetails', 'Selection', 'Selection1', 'SendAllCalls', 'SendBusyCalls', 'SendBusyCalls1', 'SendUnansweredCalls', 'ServiceType', 'SipAddressesType', 'StartJobResponse', 'State', 'State1', 'Status', 'Status5', 'StepExecutionStatusesObject', 'StorageType', 'TestCallRoutingResponse', 'Trunk', 'TrunkType', 'TrunkTypeWithDeviceType', 'Type', 'Type18', 'Type19', 'Type24', 'Type31', 'Type5', 'Type8', 'UnknownExtensionRouteIdentity', 'UpdateCallParkResponse', 'UpdateCallPickupResponse', 'UpdateEventForpersonsScheduleResponse', 'UpdateLocationBody', 'UpdateLocationWebexCallingDetailsBody', 'UpdateScheduleEventResponse', 'UpdateScheduleResponse', 'UpdateScheduleResponse1', 'UpdateSelectiveCallForwardingRuleForAutoAttendantResponse', 'UpdateSelectiveCallForwardingRuleForCallQueueResponse', 'UpdateSelectiveCallForwardingRuleForHuntGroupResponse', 'UserNumberItem', 'UserType', 'ValidateDialPatternResponse', 'ValidateExtensionsResponse', 'ValidateLocalGatewayFQDNAndDomainForTrunkBody', 'VirtualExtension', 'VoiceMailPartyInformation', 'VoiceMessageDetails', 'WaitMessage', 'WaitMode', 'WebexCallingDetailedCallHistoryApi', 'WebexCallingOrganizationSettingsApi', 'WebexCallingPersonSettingsApi', 'WebexCallingVoiceMessagingApi', 'WebexCallingWorkspaceSettingsApi', 'Week', 'WelcomeMessage']
+__all__ = ['AccessCodes', 'AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 'ActivationStates', 'AddNewEventForPersonsScheduleResponse', 'AddPhoneNumbersTolocationBody', 'Address', 'AlternateNumberSettings', 'AlternateNumbersObject', 'AlternateNumbersWithPattern', 'AlternateNumbersWithPattern1', 'Always', 'AnnouncementMode', 'Announcements', 'Announcements3', 'AtaDtmfMethodObject', 'AtaDtmfModeObject', 'AtaObject', 'AudioCodecPriorityObject', 'AutoAttendantCallForwardSettingsDetailsObject', 'AutoAttendantCallForwardSettingsModifyDetailsObject', 'BackgroundImage', 'BacklightTimerObject', 'BehaviorType', 'BlockContiguousSequences', 'BlockPreviousPasscodes', 'BlockRepeatedDigits', 'BusinessContinuity', 'CDR', 'CLIDPolicySelection', 'Call', 'CallBounce', 'CallControlsApi', 'CallForwardRulesGet', 'CallForwardRulesModifyObject', 'CallForwardRulesObject', 'CallForwardSelectiveCallsFromCustomNumbersObject', 'CallForwardSelectiveCallsFromObject', 'CallForwardSelectiveCallsToNumbersObject', 'CallForwardSelectiveCallsToObject', 'CallForwardSelectiveForwardToObject', 'CallForwarding', 'CallForwarding1', 'CallForwarding4', 'CallForwardingPlaceSettingGet', 'CallForwardingPlaceSettingPatch', 'CallHistoryRecord', 'CallHistoryRecordTypeEnum', 'CallParkSettingsObject', 'CallPersonalityEnum', 'CallQueueAudioFilesObject', 'CallQueueHolidaySchedulesObject', 'CallQueueObject', 'CallQueueQueueSettingsObject', 'CallSourceInfo', 'CallSourceType', 'CallStateEnum', 'CallType', 'CallType1', 'CallTypeEnum', 'CallerIdSelectedType', 'CallingLineId', 'CallingPermissionObject', 'CallingPermissions', 'Callparkextension', 'CallsFrom', 'CallsTo', 'ClientType', 'ComfortMessage', 'ComfortMessageBypass', 'ConfigureCallRecordingSettingsForPersonBody', 'ConfigureCallerIDSettingsForPersonBody', 'ConfigurepersonsCallingBehaviorBody', 'CountObject', 'CreateAutoAttendantBody', 'CreateAutoAttendantResponse', 'CreateCallParkBody', 'CreateCallParkExtensionResponse', 'CreateCallParkResponse', 'CreateCallPickupBody', 'CreateCallPickupResponse', 'CreateCallQueueBody', 'CreateCallQueueResponse', 'CreateDialPlanResponse', 'CreateHuntGroupResponse', 'CreateLocationResponse', 'CreatePersonBody', 'CreateRouteGroupForOrganizationBody', 'CreateRouteGroupForOrganizationResponse', 'CreateRouteListResponse', 'CreateScheduleEventResponse', 'CreateScheduleForPersonBody', 'CreateScheduleForPersonResponse', 'CreateScheduleResponse', 'CreateSelectiveCallForwardingRuleForAutoAttendantBody', 'CreateSelectiveCallForwardingRuleForAutoAttendantResponse', 'CreateSelectiveCallForwardingRuleForCallQueueBody', 'CreateSelectiveCallForwardingRuleForCallQueueResponse', 'CreateSelectiveCallForwardingRuleForHuntGroupResponse', 'CreateTrunkResponse', 'CreatenewPagingGroupBody', 'CreatenewPagingGroupResponse', 'CreatenewVoicemailGroupForLocationResponse', 'CustomizationDeviceLevelObject', 'CustomizationObject', 'Day', 'DectDeviceList', 'DectObject', 'DefaultLoggingLevelObject', 'DefaultVoicemailPinRules', 'DestinationType', 'DeviceObject', 'DeviceOwner', 'DeviceStatus', 'DeviceType', 'Devices', 'DialPattern', 'DialPatternAction', 'DialPatternStatus', 'DialPatternValidate', 'DialPlan', 'DialResponse', 'Direction', 'DisplayCallqueueAgentSoftkeysObject', 'DisplayNameSelection', 'DistinctiveRing', 'EffectiveBehaviorType', 'EmailCopyOfMessage', 'Emergency', 'ErrorMessageObject', 'ErrorObject', 'EventLongDetails', 'ExpirePasscode', 'ExtensionDialing', 'ExtensionStatusObject', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts', 'FaxMessage', 'FeatureAccessCode', 'FetchEventForpersonsScheduleResponse', 'GenerateExamplePasswordForLocationResponse', 'GetAnnouncementFileInfo', 'GetAvailableAgentsFromCallParksResponse', 'GetAvailableAgentsFromCallPickupsResponse', 'GetAvailableRecallHuntGroupsFromCallParksResponse', 'GetAvailableRecallHuntGroupsObject', 'GetCallForwardAlwaysSettingObject', 'GetCallForwardingSettingsForAutoAttendantResponse', 'GetCallForwardingSettingsForCallQueueResponse', 'GetCallForwardingSettingsForHuntGroupResponse', 'GetCallParkSettingsResponse', 'GetCallRecordingSettingsResponse', 'GetCallRecordingTermsOfServiceSettingsResponse', 'GetDetailedCallHistoryResponse', 'GetDetailsForAutoAttendantResponse', 'GetDetailsForCallParkExtensionResponse', 'GetDetailsForCallParkResponse', 'GetDetailsForCallPickupResponse', 'GetDetailsForCallQueueForcedForwardResponse', 'GetDetailsForCallQueueHolidayServiceResponse', 'GetDetailsForCallQueueNightServiceResponse', 'GetDetailsForCallQueueResponse', 'GetDetailsForCallQueueStrandedCallsResponse', 'GetDetailsForHuntGroupResponse', 'GetDetailsForPagingGroupResponse', 'GetDetailsForScheduleResponse', 'GetDeviceMembersResponse', 'GetDeviceSettingsResponse', 'GetDialPlanResponse', 'GetListOfPhoneNumbersForPersonResponse', 'GetLocalGatewayCallToOnPremisesExtensionUsageForTrunkResponse', 'GetLocalGatewayDialPlanUsageForTrunkResponse', 'GetLocalGatewayUsageCountResponse', 'GetLocationInterceptResponse', 'GetLocationOutgoingPermissionResponse', 'GetLocationVoicemailGroupResponse', 'GetLocationVoicemailResponse', 'GetLocationWebexCallingDetailsResponse', 'GetLocationsUsingLocalGatewayAsPSTNConnectionRoutingResponse', 'GetManageNumbersJobStatusResponse', 'GetMessageSummaryResponse', 'GetMonitoredElementsObject', 'GetMusicOnHoldResponse', 'GetNumbersAssignedToRouteListResponse', 'GetOutgoingPermissionAutoTransferNumberResponse', 'GetOutgoingPermissionLocationAccessCodeResponse', 'GetPagingGroupAgentObject', 'GetPersonPlaceCallParksObject', 'GetPersonPlaceCallQueueObject', 'GetPersonPlaceObject', 'GetPhoneNumbersForOrganizationWithGivenCriteriasResponse', 'GetPrivateNetworkConnectResponse', 'GetRecallHuntGroupObject', 'GetRouteGroupsUsingLocalGatewayResponse', 'GetRouteListResponse', 'GetScheduleDetailsResponse', 'GetScheduleEventObject', 'GetSelectiveCallForwardingRuleForAutoAttendantResponse', 'GetSelectiveCallForwardingRuleForCallQueueResponse', 'GetTrunkResponse', 'GetUserDevicesResponse', 'GetUserNumberItemObject', 'GetVoicePortalPasscodeRuleResponse', 'GetVoicePortalResponse', 'GetVoicemailGroupObject', 'GetVoicemailRulesResponse', 'GetVoicemailSettingsResponse', 'GetWorkspaceDevicesResponse', 'GetpersonsPrivacySettingsResponse', 'Greeting', 'Greeting29', 'HolidayScheduleLevel', 'HostedAgent', 'HostedFeature', 'Hoteling', 'HoursMenuObject', 'HuntPolicySelection', 'HuntRoutingTypeSelection', 'Incoming', 'InterceptAnnouncementsGet', 'InterceptIncomingGet', 'InterceptIncomingPatch', 'ItemObject', 'JobExecutionStatusObject', 'JobExecutionStatusObject1', 'KemModuleTypeObject', 'Key', 'KeyConfigurationsObject', 'Length', 'LineKeyLEDPattern', 'LineKeyLabelSelection', 'LineType', 'ListAutoAttendantObject', 'ListCallHistoryResponse', 'ListCallParkExtensionObject', 'ListCallParkObject', 'ListCallQueueObject', 'ListCallsResponse', 'ListChangeDeviceSettingsJobErrorsResponse', 'ListChangeDeviceSettingsJobsResponse', 'ListLocationsResponse', 'ListManageNumbersJobErrorsResponse', 'ListManageNumbersJobsResponse', 'ListMessagesResponse', 'ListOfSchedulesForPersonResponse', 'ListPeopleResponse', 'ListScheduleObject', 'ListVoicemailGroupResponse', 'LocalGateways', 'Location', 'LocationsApi', 'MacStatusObject', 'ManagedByObject', 'ManufacturerObject', 'MediaFileType', 'Member', 'MemberObject', 'MessageStorage', 'MessageStorage3', 'ModifyDialPlanBody', 'ModifyNumbersForRouteListResponse', 'ModifyPersonPlaceCallQueueObject', 'ModifyRouteListBody', 'ModifyScheduleEventListObject', 'ModifyTrunkBody', 'ModifypersonsApplicationServicesSettingsBody', 'ModifypersonsMonitoringSettingsBody', 'MohMessage', 'MonitoredElementItem', 'MonitoredElementUser', 'MonitoredMemberObject', 'MonitoredPersonObject', 'Month', 'MppAudioCodecPriorityObject', 'MppObject', 'MppVlanObject', 'NetworkConnectionType', 'NewNumber', 'NoAnswer', 'NoAnswer3', 'NormalSource', 'NumberItem', 'NumberListGetObject', 'NumberStatus', 'OnboardingMethodObject', 'Option', 'OriginalReason', 'OriginatorType', 'Outgoing', 'Overflow', 'Owner', 'ParkResponse', 'PartyInformation', 'Passcode', 'PbxUser', 'PeopleApi', 'Person', 'PhoneLanguage', 'PhoneNumber', 'PhoneNumbers', 'PhoneNumbers7', 'PlaceDevices', 'PostCallQueueCallPolicyObject', 'PostHuntGroupCallPolicyObject', 'PostPersonPlaceCallQueueObject', 'PostPersonPlaceObject', 'PstnNumber', 'PushToTalkAccessType', 'PushToTalkConnectionType', 'PutMemberObject', 'PutRecallHuntGroupObject', 'ReadBargeInSettingsForPersonResponse', 'ReadCallInterceptSettingsForWorkspaceResponse', 'ReadCallRecordingSettingsForPersonResponse', 'ReadCallToExtensionLocationsOfRoutingGroupResponse', 'ReadCallWaitingSettingsForPersonResponse', 'ReadCallerIDSettingsForPersonResponse', 'ReadDECTDeviceTypeListResponse', 'ReadDialPlanLocationsOfRoutingGroupResponse', 'ReadDoNotDisturbSettingsForPersonResponse', 'ReadForwardingSettingsForPersonResponse', 'ReadHotelingSettingsForPersonResponse', 'ReadIncomingPermissionSettingsForPersonResponse', 'ReadInternalDialingConfigurationForlocationResponse', 'ReadListOfAutoAttendantsResponse', 'ReadListOfCallParkExtensionsResponse', 'ReadListOfCallParksResponse', 'ReadListOfCallPickupsResponse', 'ReadListOfCallQueueAnnouncementFilesResponse', 'ReadListOfCallQueuesResponse', 'ReadListOfDialPatternsResponse', 'ReadListOfDialPlansResponse', 'ReadListOfHuntGroupsResponse', 'ReadListOfPagingGroupsResponse', 'ReadListOfRouteListsResponse', 'ReadListOfRoutingChoicesResponse', 'ReadListOfRoutingGroupsResponse', 'ReadListOfSchedulesResponse', 'ReadListOfSupportedDevicesResponse', 'ReadListOfTrunkTypesResponse', 'ReadListOfTrunksResponse', 'ReadListOfUCManagerProfilesResponse', 'ReadPSTNConnectionLocationsOfRoutingGroupResponse', 'ReadPersonsCallingBehaviorResponse', 'ReadPushtoTalkSettingsForPersonResponse', 'ReadReceptionistClientSettingsForPersonResponse', 'ReadRouteGroupForOrganizationResponse', 'ReadRouteListsOfRoutingGroupResponse', 'ReadUsageOfRoutingGroupResponse', 'ReadVoicemailSettingsForPersonResponse', 'ReaddeviceOverrideSettingsFororganizationResponse', 'RecallInformation', 'RecallTypeEnum', 'Record', 'RecordingStateEnum', 'RecurWeekly2', 'RecurWeeklyObject', 'RecurYearlyByDateObject', 'RecurYearlyByDayObject', 'Recurrence', 'RecurrenceObject1', 'RedirectReason', 'RedirectionInformation', 'RedirectionReasonEnum', 'RejectActionEnum', 'RelatedReason', 'Repeat', 'ResponseStatus', 'ResponseStatusType', 'RetrieveAccessCodesForWorkspaceResponse', 'RetrieveCallForwardingSettingsForWorkspaceResponse', 'RetrieveCallQueueAgentsCallerIDInformationResponse', 'RetrieveCallWaitingSettingsForWorkspaceResponse', 'RetrieveCallerIDSettingsForWorkspaceResponse', 'RetrieveExecutiveAssistantSettingsForPersonResponse', 'RetrieveListOfCallQueueCallerIDInformationResponse', 'RetrieveMonitoringSettingsForWorkspaceResponse', 'RetrieveOutgoingPermissionSettingsForWorkspaceResponse', 'RetrievepersonsApplicationServicesSettingsResponse', 'RetrievepersonsMonitoringSettingsResponse', 'RetrievepersonsOutgoingCallingPermissionsSettingsResponse', 'RingPattern', 'RouteGroup', 'RouteGroupUsageRouteListGet', 'RouteIdentity', 'RouteList', 'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteType', 'ScheduleEventObject', 'ScheduleShortDetails', 'SearchMemberObject', 'SearchMembersResponse', 'Selection', 'Selection1', 'SelectionType', 'SendAllCalls', 'SendBusyCalls', 'SendBusyCalls1', 'SendUnansweredCalls', 'ServiceType', 'SipAddressesType', 'StartJobResponse', 'State', 'State1', 'State3', 'Status', 'Status5', 'StepExecutionStatusesObject', 'StorageType', 'TestCallRoutingResponse', 'Trunk', 'TrunkType', 'TrunkTypeWithDeviceType', 'Type', 'Type18', 'Type19', 'Type24', 'Type31', 'Type5', 'Type8', 'TypeObject', 'UnknownExtensionRouteIdentity', 'UpdateCallParkResponse', 'UpdateCallPickupResponse', 'UpdateDeviceSettingsBody', 'UpdateEventForpersonsScheduleResponse', 'UpdateLocationBody', 'UpdateLocationWebexCallingDetailsBody', 'UpdateScheduleEventResponse', 'UpdateScheduleResponse', 'UpdateScheduleResponse1', 'UpdateSelectiveCallForwardingRuleForAutoAttendantResponse', 'UpdateSelectiveCallForwardingRuleForCallQueueResponse', 'UpdateSelectiveCallForwardingRuleForHuntGroupResponse', 'UserNumberItem', 'UserType', 'ValidateDialPatternResponse', 'ValidateExtensionsResponse', 'ValidateLocalGatewayFQDNAndDomainForTrunkBody', 'ValidatelistOfMACAddressResponse', 'VirtualExtension', 'VlanObject', 'VoiceMailPartyInformation', 'VoiceMessageDetails', 'WaitMessage', 'WaitMode', 'WebexCallingDetailedCallHistoryApi', 'WebexCallingOrganizationSettingsApi', 'WebexCallingPersonSettingsApi', 'WebexCallingVoiceMessagingApi', 'WebexCallingWorkspaceSettingsApi', 'Week', 'WelcomeMessage', 'WifiNetworkObject']
 
 
 class RejectActionEnum(str, Enum):
@@ -282,11 +282,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param destination: The destination to be dialed. The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444, +12223334444, *73, tel:+12223334444, user@company.domain, and sip:user@company.domain.
         :type destination: str
         """
-        body = {}
+        body = DialBody()
         if destination is not None:
-            body['destination'] = destination
+            body.destination = destination
         url = self.ep('dial')
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return DialResponse.parse_obj(data)
 
     def answer(self, call_id: str):
@@ -296,11 +296,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param call_id: The call identifier of the call to be answered.
         :type call_id: str
         """
-        body = {}
+        body = AnswerBody()
         if call_id is not None:
-            body['callId'] = call_id
+            body.call_id = call_id
         url = self.ep('answer')
-        super().post(url=url, json=body)
+        super().post(url=url, data=body.json())
         return
 
     def reject(self, call_id: str, action: RejectActionEnum = None):
@@ -312,13 +312,13 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param action: The rejection action to apply to the call. The busy action is applied if no specific action is provided.
         :type action: RejectActionEnum
         """
-        body = {}
+        body = RejectBody()
         if call_id is not None:
-            body['callId'] = call_id
+            body.call_id = call_id
         if action is not None:
-            body['action'] = action
+            body.action = action
         url = self.ep('reject')
-        super().post(url=url, json=body)
+        super().post(url=url, data=body.json())
         return
 
     def hangup(self, call_id: str):
@@ -328,11 +328,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param call_id: The call identifier of the call to hangup.
         :type call_id: str
         """
-        body = {}
+        body = HangupBody()
         if call_id is not None:
-            body['callId'] = call_id
+            body.call_id = call_id
         url = self.ep('hangup')
-        super().post(url=url, json=body)
+        super().post(url=url, data=body.json())
         return
 
     def hold(self, call_id: str):
@@ -342,11 +342,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param call_id: The call identifier of the call to hold.
         :type call_id: str
         """
-        body = {}
+        body = HoldBody()
         if call_id is not None:
-            body['callId'] = call_id
+            body.call_id = call_id
         url = self.ep('hold')
-        super().post(url=url, json=body)
+        super().post(url=url, data=body.json())
         return
 
     def resume(self, call_id: str):
@@ -356,11 +356,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param call_id: The call identifier of the call to resume.
         :type call_id: str
         """
-        body = {}
+        body = ResumeBody()
         if call_id is not None:
-            body['callId'] = call_id
+            body.call_id = call_id
         url = self.ep('resume')
-        super().post(url=url, json=body)
+        super().post(url=url, data=body.json())
         return
 
     def divert(self, call_id: str, destination: str = None, to_voicemail: bool = None):
@@ -374,15 +374,15 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param to_voicemail: If set to true, the call is diverted to voicemail. If no destination is specified, the call is diverted to the user's own voicemail. If a destination is specified, the call is diverted to the specified user's voicemail.
         :type to_voicemail: bool
         """
-        body = {}
+        body = DivertBody()
         if call_id is not None:
-            body['callId'] = call_id
+            body.call_id = call_id
         if destination is not None:
-            body['destination'] = destination
+            body.destination = destination
         if to_voicemail is not None:
-            body['toVoicemail'] = to_voicemail
+            body.to_voicemail = to_voicemail
         url = self.ep('divert')
-        super().post(url=url, json=body)
+        super().post(url=url, data=body.json())
         return
 
     def transfer(self, call_id1: str = None, call_id2: str = None, destination: str = None):
@@ -401,15 +401,15 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param destination: The destination to be transferred to. The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain. This parameter is mandatory if callId1 is provided and callId2 is not provided.
         :type destination: str
         """
-        body = {}
+        body = TransferBody()
         if call_id1 is not None:
-            body['callId1'] = call_id1
+            body.call_id1 = call_id1
         if call_id2 is not None:
-            body['callId2'] = call_id2
+            body.call_id2 = call_id2
         if destination is not None:
-            body['destination'] = destination
+            body.destination = destination
         url = self.ep('transfer')
-        super().post(url=url, json=body)
+        super().post(url=url, data=body.json())
         return
 
     def park(self, call_id: str, destination: str = None, is_group_park: bool = None) -> PartyInformation:
@@ -423,15 +423,15 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param is_group_park: If set totrue, the call is parked against an automatically selected member of the user's call park group and the destination parameter is ignored.
         :type is_group_park: bool
         """
-        body = {}
+        body = ParkBody()
         if call_id is not None:
-            body['callId'] = call_id
+            body.call_id = call_id
         if destination is not None:
-            body['destination'] = destination
+            body.destination = destination
         if is_group_park is not None:
-            body['isGroupPark'] = is_group_park
+            body.is_group_park = is_group_park
         url = self.ep('park')
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return data["parkedAgainst"]
 
     def retrieve(self, destination: str = None) -> DialResponse:
@@ -441,11 +441,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param destination: Identifies where the call is parked. The number field from the park command response can be used as the destination for the retrieve command. If not provided, the call parked against the retrieving user is retrieved. The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444, +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain
         :type destination: str
         """
-        body = {}
+        body = RetrieveBody()
         if destination is not None:
-            body['destination'] = destination
+            body.destination = destination
         url = self.ep('retrieve')
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return DialResponse.parse_obj(data)
 
     def start(self, call_id: str = None):
@@ -455,11 +455,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param call_id: The call identifier of the call to start recording.
         :type call_id: str
         """
-        body = {}
+        body = StartRecordingBody()
         if call_id is not None:
-            body['callId'] = call_id
+            body.call_id = call_id
         url = self.ep('startRecording')
-        super().post(url=url, json=body)
+        super().post(url=url, data=body.json())
         return
 
     def stop(self, call_id: str = None):
@@ -469,11 +469,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param call_id: The call identifier of the call to stop recording.
         :type call_id: str
         """
-        body = {}
+        body = StopRecordingBody()
         if call_id is not None:
-            body['callId'] = call_id
+            body.call_id = call_id
         url = self.ep('stopRecording')
-        super().post(url=url, json=body)
+        super().post(url=url, data=body.json())
         return
 
     def pause(self, call_id: str = None):
@@ -483,11 +483,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param call_id: The call identifier of the call to pause recording.
         :type call_id: str
         """
-        body = {}
+        body = PauseRecordingBody()
         if call_id is not None:
-            body['callId'] = call_id
+            body.call_id = call_id
         url = self.ep('pauseRecording')
-        super().post(url=url, json=body)
+        super().post(url=url, data=body.json())
         return
 
     def resume(self, call_id: str = None):
@@ -497,11 +497,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param call_id: The call identifier of the call to resume recording.
         :type call_id: str
         """
-        body = {}
+        body = ResumeRecordingBody()
         if call_id is not None:
-            body['callId'] = call_id
+            body.call_id = call_id
         url = self.ep('resumeRecording')
-        super().post(url=url, json=body)
+        super().post(url=url, data=body.json())
         return
 
     def transmit_dtmf(self, call_id: str = None, dtmf: str = None):
@@ -513,13 +513,13 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param dtmf: The DTMF digits to transmit. Each digit must be part of the following set: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, *, #, A, B, C, D]. A comma "," may be included to indicate a pause between digits. For the value “1,234”, the DTMF 1 digit is initially sent. After a pause, the DTMF 2, 3, and 4 digits are sent successively.
         :type dtmf: str
         """
-        body = {}
+        body = TransmitDTMFBody()
         if call_id is not None:
-            body['callId'] = call_id
+            body.call_id = call_id
         if dtmf is not None:
-            body['dtmf'] = dtmf
+            body.dtmf = dtmf
         url = self.ep('transmitDtmf')
-        super().post(url=url, json=body)
+        super().post(url=url, data=body.json())
         return
 
     def push(self, call_id: str = None):
@@ -529,11 +529,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param call_id: The call identifier of the call to push.
         :type call_id: str
         """
-        body = {}
+        body = PushBody()
         if call_id is not None:
-            body['callId'] = call_id
+            body.call_id = call_id
         url = self.ep('push')
-        super().post(url=url, json=body)
+        super().post(url=url, data=body.json())
         return
 
     def pickup(self, target: str = None) -> DialResponse:
@@ -543,11 +543,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param target: Identifies the user to pickup an incoming call from. If not provided, an incoming call to the user's call pickup group is picked up. The target can be digits or a URI. Some examples for target include: 1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain
         :type target: str
         """
-        body = {}
+        body = PickupBody()
         if target is not None:
-            body['target'] = target
+            body.target = target
         url = self.ep('pickup')
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return DialResponse.parse_obj(data)
 
     def barge_in(self, target: str) -> DialResponse:
@@ -557,11 +557,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param target: Identifies the user to barge-in on. The target can be digits or a URI. Some examples for target include: 1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain
         :type target: str
         """
-        body = {}
+        body = BargeInBody()
         if target is not None:
-            body['target'] = target
+            body.target = target
         url = self.ep('bargeIn')
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return DialResponse.parse_obj(data)
 
     def list_calls(self, **params) -> Generator[Call, None, None]:
@@ -707,19 +707,19 @@ class LocationsApi(ApiChild, base='locations'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateLocationBody()
         if announcement_language is not None:
-            body['announcementLanguage'] = announcement_language
+            body.announcement_language = announcement_language
         if name is not None:
-            body['name'] = name
+            body.name = name
         if time_zone is not None:
-            body['timeZone'] = time_zone
+            body.time_zone = time_zone
         if preferred_language is not None:
-            body['preferredLanguage'] = preferred_language
+            body.preferred_language = preferred_language
         if address is not None:
-            body['address'] = address
+            body.address = address
         url = self.ep()
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def update(self, location_id: str, org_id: str = None, name: str = None, time_zone: str = None, preferred_language: str = None, address: Address = None):
@@ -742,17 +742,17 @@ class LocationsApi(ApiChild, base='locations'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateLocationBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if time_zone is not None:
-            body['timeZone'] = time_zone
+            body.time_zone = time_zone
         if preferred_language is not None:
-            body['preferredLanguage'] = preferred_language
+            body.preferred_language = preferred_language
         if address is not None:
-            body['address'] = address
+            body.address = address
         url = self.ep(f'{location_id}')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
 class PhoneNumbers(ApiModel):
@@ -975,43 +975,43 @@ Possible values: mysite.webex.com#attendee
         params = {}
         if calling_data is not None:
             params['callingData'] = calling_data
-        body = {}
+        body = CreatePersonBody()
         if emails is not None:
-            body['emails'] = emails
+            body.emails = emails
         if phone_numbers is not None:
-            body['phoneNumbers'] = phone_numbers
+            body.phone_numbers = phone_numbers
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if location_id is not None:
-            body['locationId'] = location_id
+            body.location_id = location_id
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if avatar is not None:
-            body['avatar'] = avatar
+            body.avatar = avatar
         if org_id is not None:
-            body['orgId'] = org_id
+            body.org_id = org_id
         if roles is not None:
-            body['roles'] = roles
+            body.roles = roles
         if licenses is not None:
-            body['licenses'] = licenses
+            body.licenses = licenses
         if department is not None:
-            body['department'] = department
+            body.department = department
         if manager is not None:
-            body['manager'] = manager
+            body.manager = manager
         if manager_id is not None:
-            body['managerId'] = manager_id
+            body.manager_id = manager_id
         if title is not None:
-            body['title'] = title
+            body.title = title
         if addresses is not None:
-            body['addresses'] = addresses
+            body.addresses = addresses
         if site_urls is not None:
-            body['siteUrls'] = site_urls
+            body.site_urls = site_urls
         url = self.ep()
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return Person.parse_obj(data)
 
     def details(self, person_id: str, calling_data: bool = None) -> Person:
@@ -1099,47 +1099,47 @@ Possible values: mysite.webex.com#attendee
             params['callingData'] = calling_data
         if show_all_types is not None:
             params['showAllTypes'] = show_all_types
-        body = {}
+        body = UpdatePersonBody()
         if emails is not None:
-            body['emails'] = emails
+            body.emails = emails
         if phone_numbers is not None:
-            body['phoneNumbers'] = phone_numbers
+            body.phone_numbers = phone_numbers
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if location_id is not None:
-            body['locationId'] = location_id
+            body.location_id = location_id
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if avatar is not None:
-            body['avatar'] = avatar
+            body.avatar = avatar
         if org_id is not None:
-            body['orgId'] = org_id
+            body.org_id = org_id
         if roles is not None:
-            body['roles'] = roles
+            body.roles = roles
         if licenses is not None:
-            body['licenses'] = licenses
+            body.licenses = licenses
         if department is not None:
-            body['department'] = department
+            body.department = department
         if manager is not None:
-            body['manager'] = manager
+            body.manager = manager
         if manager_id is not None:
-            body['managerId'] = manager_id
+            body.manager_id = manager_id
         if title is not None:
-            body['title'] = title
+            body.title = title
         if addresses is not None:
-            body['addresses'] = addresses
+            body.addresses = addresses
         if site_urls is not None:
-            body['siteUrls'] = site_urls
+            body.site_urls = site_urls
         if nick_name is not None:
-            body['nickName'] = nick_name
+            body.nick_name = nick_name
         if login_enabled is not None:
-            body['loginEnabled'] = login_enabled
+            body.login_enabled = login_enabled
         url = self.ep(f'{person_id}')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return Person.parse_obj(data)
 
     def delete(self, person_id: str):
@@ -2606,6 +2606,7 @@ class ErrorMessageObject(AccessCodes):
 class ErrorObject(ApiModel):
     #: HTTP error code.
     key: Optional[str]
+    #: Message string with further error information.
     message: Optional[list[ErrorMessageObject]]
 
 
@@ -3109,6 +3110,561 @@ class GetDetailsForCallQueueForcedForwardResponse(ApiModel):
     audio_message_selection: Optional[Greeting]
     #: List of Announcement Audio Files when audioMessageSelection is CUSTOM.
     audio_files: Optional[list[CallQueueAudioFilesObject]]
+
+
+class LineType(ApiModel):
+    #: Indicates a Primary line for the member.
+    primary: Optional[str]
+    #: Indicates a Shared line for the member. Shared line appearance allows users to receive and place calls to and from another user's extension, using their device.
+    shared_call_appearance: Optional[str]
+
+
+class PutMemberObject(ApiModel):
+    #: Person's assigned port number.
+    port: Optional[int]
+    #: Unique identifier for the member.
+    id: Optional[str]
+    #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device requires this option. This will override user level compression options.
+    t38_fax_compression_enabled: Optional[bool]
+    #: Whether the user is the owner of the device or not, and points to a primary Line/Port of device.
+    primary_owner: Optional[bool]
+    #: Line type is used to differentiate Primary and SCA, at which endpoint it is assigned.
+    line_type: Optional[LineType]
+    #: Number of lines that have been configured for the person on the device.
+    line_weight: Optional[int]
+    #: Enable Hotline. Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line can only make calls to the predefined number set in hotlineDestination.
+    hotline_enabled: Optional[bool]
+    #: The preconfigured number for Hotline. Required only if hotlineEnabled is set to true.
+    hotline_destination: Optional[str]
+    #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended to all the endpoints on the device. When set to false, a call decline request only declines the current endpoint.
+    allow_call_decline_enabled: Optional[bool]
+
+
+class MemberObject(PutMemberObject):
+    #: First name of a person or workspace.
+    first_name: Optional[str]
+    #: Last name of a person or workspace.
+    last_name: Optional[str]
+    #: Phone Number of a person or workspace. In some regions phone numbers are not returned in E.164 format. This will be supported in a future update.
+    phone_number: Optional[str]
+    #: Extension of a person or workspace.
+    extension: Optional[str]
+    #: Registration Host IP address for the line port.
+    host_ip: Optional[str]
+    #: Registration Remote IP address for the line port.
+    remote_ip: Optional[str]
+    #: Indicates if the member is of type PEOPLE or PLACE.
+    member_type: Optional[Type8]
+    #: Location object having a unique identifier for the location and its name.
+    location: Optional[GetAvailableRecallHuntGroupsObject]
+
+
+class SearchMemberObject(ApiModel):
+    #: Unique identifier for the member.
+    id: Optional[str]
+    #: First name of a person or workspace.
+    first_name: Optional[str]
+    #: Last name of a person or workspace.
+    last_name: Optional[str]
+    #: Phone Number of a person or workspace.
+    phone_number: Optional[str]
+    #: T.38 Fax Compression setting and available only for ATA Devices. Choose T.38 fax compression if the device requires this option. this will override user level compression options.
+    t38_fax_compression_enabled: Optional[bool]
+    #: Line type is used to differentiate Primary and SCA, at which endpoint it is assigned.
+    line_type: Optional[LineType]
+    #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended to all the endpoints on the device. When set to false, a call decline request only declines the current endpoint.
+    allow_call_decline_enabled: Optional[bool]
+    #: Indicates if member is of type PEOPLE or PLACE.
+    member_type: Optional[Type8]
+    #: Location object having a unique identifier for the location and its name.
+    location: Optional[GetAvailableRecallHuntGroupsObject]
+
+
+class SelectionType(ApiModel):
+    #: Indicates the regional selection type for audio codec priority.
+    regional: Optional[str]
+    #: Indicates the custom selection type for audio codec priority.
+    custom: Optional[str]
+
+
+class AudioCodecPriorityObject(ApiModel):
+    #: Indicates the selection of an Audio Codec Priority Object.
+    selection: Optional[SelectionType]
+    #: Indicates the primary Audio Codec.
+    primary: Optional[str]
+    #: Indicates the secondary Audio Codec.
+    secondary: Optional[str]
+    #: Indicates the tertiary Audio Codec.
+    tertiary: Optional[str]
+
+
+class AtaDtmfModeObject(ApiModel):
+    #: A DTMF digit requires an extra hold time after detection and the DTMF level threshold is raised to -20 dBm.
+    strict: Optional[str]
+    #: Normal threshold mode.
+    normal: Optional[str]
+
+
+class AtaDtmfMethodObject(ApiModel):
+    #: Sends DTMF by using the audio path.
+    inband: Optional[str]
+    #: Audio video transport. Sends DTMF as AVT events.
+    avt: Optional[str]
+    #: Uses InBand or AVT based on the outcome of codec negotiation.
+    auto: Optional[str]
+
+
+class VlanObject(ApiModel):
+    #: Denotes whether the VLAN object of an ATA is enabled.
+    enabled: Optional[bool]
+    #: The value of the VLAN Object of DECT.
+    value: Optional[int]
+
+
+class AtaObject(ApiModel):
+    #: Choose up to three predefined codec priority options available for your region.
+    audio_codec_priority: Optional[AudioCodecPriorityObject]
+    #: DTMF Detection Tx Mode selection for Cisco ATA devices.
+    ata_dtmf_mode: Optional[AtaDtmfModeObject]
+    #: Method for transmitting DTMF signals to the far end.
+    ata_dtmf_method: Optional[AtaDtmfMethodObject]
+    #: Enable/disable Cisco Discovery Protocol for local devices.
+    cdp_enabled: Optional[bool]
+    #: Enable/disable Link Layer Discovery Protocol for local devices.
+    lldp_enabled: Optional[bool]
+    #: Enable/disable quality of service tagging of packets from the local device to the Webex Calling platform.
+    qos_enabled: Optional[bool]
+    #: Specify a numeric Virtual LAN ID for devices.
+    vlan: Optional[VlanObject]
+
+
+class MppAudioCodecPriorityObject(ApiModel):
+    #: Indicates the selection of the Audio Codec Priority Object for an MPP object.
+    selection: Optional[str]
+    #: Indicates the primary Audio Codec for an MPP object.
+    primary: Optional[str]
+    #: Indicates the secondary Audio Codec for an MPP object.
+    secondary: Optional[str]
+    #: Indicates the tertiary Audio Codec for an MPP object.
+    tertiary: Optional[str]
+
+
+class BacklightTimerObject(ApiModel):
+    one_m: Optional[str]
+    five_m: Optional[str]
+    thirty_m: Optional[str]
+    always_on: Optional[str]
+    off: Optional[str]
+    ten_s: Optional[str]
+    twenty_s: Optional[str]
+    thirty_s: Optional[str]
+
+
+class BackgroundImage(ApiModel):
+    #: Indicates that there will be no background image set for the devices.
+    none: Optional[str]
+    #: Indicates that dark blue background image will be set for the devices.
+    dark_blue: Optional[str]
+    #: Indicates that Cisco themed dark blue background image will be set for the devices.
+    cisco_dark_blue: Optional[str]
+    #: Indicates that Cisco Webex dark blue background image will be set for the devices.
+    webex_dark_blue: Optional[str]
+    #: Indicates that a custom background image will be set for the devices.
+    custom_background: Optional[str]
+    #: When this option is selected, a field 'Custom Background URL' needs to be added with the image url. URLs provided must link directly to an image file and be in HTTP, HTTPS, or filepath format.
+    custom_url: Optional[str]
+
+
+class DisplayNameSelection(ApiModel):
+    #: Indicates that devices will display the person's phone number, or if a person doesn't have a phone number, the location number will be displayed.
+    person_number: Optional[str]
+    #: Indicates that devices will display the name in first name then last name format.
+    person_first_then_last_name: Optional[str]
+    #: Indicates that devices will display the name in last name then first name format.
+    person_last_then_first_name: Optional[str]
+
+
+class DefaultLoggingLevelObject(ApiModel):
+    #: Enables standard logging.
+    standard: Optional[str]
+    #: Enables detailed debugging logging.
+    debugging: Optional[str]
+
+
+class DisplayCallqueueAgentSoftkeysObject(ApiModel):
+    front_page: Optional[str]
+    last_page: Optional[str]
+
+
+class AcdObject(ApiModel):
+    #: Indicates whether the ACD object is enabled.
+    enabled: Optional[bool]
+    #: Indicates the call queue agent soft key value of an ACD object.
+    display_callqueue_agent_softkeys: Optional[str]
+
+
+class LineKeyLabelSelection(ApiModel):
+    #: This will display the person extension, or if a person doesn't have an extension, the person's first name will be displayed.
+    person_extension: Optional[str]
+    #: Indicates that devices will display the name in first name then last name format.
+    person_first_then_last_name: Optional[str]
+    #: Indicates that devices will display the name in last name then first name format.
+    person_last_then_first_name: Optional[str]
+
+
+class LineKeyLEDPattern(ApiModel):
+    default: Optional[str]
+    preset_1: Optional[str]
+
+
+class PhoneLanguage(ApiModel):
+    #: Indicates a person's announcement language.
+    person_language: Optional[str]
+    arabic: Optional[str]
+    bulgarian: Optional[str]
+    catalan: Optional[str]
+    chinese_simplified: Optional[str]
+    chinese_traditional: Optional[str]
+    croatian: Optional[str]
+    czech: Optional[str]
+    danish: Optional[str]
+    dutch: Optional[str]
+    english_united_states: Optional[str]
+    english_united_kingdom: Optional[str]
+    finnish: Optional[str]
+    french_canada: Optional[str]
+    french_france: Optional[str]
+    german: Optional[str]
+    greek: Optional[str]
+    hebrew: Optional[str]
+    hungarian: Optional[str]
+    italian: Optional[str]
+    japanese: Optional[str]
+    korean: Optional[str]
+    norwegian: Optional[str]
+    polish: Optional[str]
+    portuguese_portugal: Optional[str]
+    russian: Optional[str]
+    spanish_colombia: Optional[str]
+    spanish_spain: Optional[str]
+    slovak: Optional[str]
+    swedish: Optional[str]
+    slovenian: Optional[str]
+    turkish: Optional[str]
+    ukraine: Optional[str]
+
+
+class MppVlanObject(VlanObject):
+    #: Indicates the PC port value of a VLAN object for an MPP object.
+    pc_port: Optional[int]
+
+
+class WifiNetworkObject(ApiModel):
+    #: Indicates whether the wifi network is enabled.
+    enabled: Optional[bool]
+    #: Authentication method of wifi network.
+    authentication_method: Optional[str]
+    #: SSID name of the wifi network.
+    ssid_name: Optional[str]
+    #: User Id of the wifi network.
+    user_id: Optional[str]
+
+
+class MppObject(ApiModel):
+    #: Indicates whether the PNAC of MPP object is enabled or not.
+    pnac_enabled: Optional[bool]
+    #: Choose up to three predefined codec priority options available for your region.
+    audio_codec_priority: Optional[MppAudioCodecPriorityObject]
+    #: Choose the length of time (in minutes) for the phone's backlight to remain on.
+    backlight_timer: Optional[BacklightTimerObject]
+    #: Holds the background object of MPP Object.
+    background: Optional[BackgroundImage]
+    #: The display name that appears on the phone screen.
+    display_name_format: Optional[DisplayNameSelection]
+    #: Allows you to enable/disable CDP for local devices.
+    cdp_enabled: Optional[bool]
+    #: Choose the desired logging level for an MPP devices.
+    default_logging_level: Optional[DefaultLoggingLevelObject]
+    #: Enable/disable Do-Not-Disturb capabilities for Multi-Platform Phones.
+    dnd_services_enabled: Optional[bool]
+    #: Chooses the location of the Call Queue Agent Login/Logout softkey on Multi-Platform Phones.
+    display_callqueue_agent_softkeys: Optional[DisplayCallqueueAgentSoftkeysObject]
+    #: Choose the duration (in hours) of Hoteling guest login.
+    hoteling_guest_association_timer: Optional[int]
+    #: Holds the Acd object value.
+    acd: Optional[AcdObject]
+    #: Indicates the short inter digit timer value.
+    short_interdigit_timer: Optional[int]
+    #: Indicates the long inter digit timer value..
+    long_interdigit_timer: Optional[int]
+    #: Line key labels define the format of what's shown next to line keys.
+    line_key_label_format: Optional[LineKeyLabelSelection]
+    #: LED patterns define lighting schemes for the line keys on the MPP devices. Note that this parameter is not supported on the MPP 8875
+    line_key_led_pattern: Optional[LineKeyLEDPattern]
+    #: Enable/disable Link Layer Discovery Protocol for local devices.
+    lldp_enabled: Optional[bool]
+    #: Enable/disable user-level access to the web interface of Multi-Platform Phones.
+    mpp_user_web_access_enabled: Optional[bool]
+    #: Select up to 10 Multicast Group URLs (each with a unique Listening Port).
+    multicast: Optional[list[str]]
+    #: Specify the amount of time (in seconds) that a phone can remain off-hook.
+    off_hook_timer: Optional[int]
+    #: Select the language for your MPP phone. Setting this overrides the default language setting in place for your provisioned location.
+    phone_language: Optional[PhoneLanguage]
+    #: Enable/disable the Power-Over-Ethernet mode for Multi-Platform Phones.
+    poe_mode: Optional[str]
+    #: Allows you to enable/disable tagging of packets from the local device to the Webex Calling platform.
+    qos_enabled: Optional[bool]
+    #: Specify the amount of inactive time needed (in seconds) before the phone's screen saver activates.
+    screen_timeout: Optional[VlanObject]
+    #: Enable/disable the use of the USB ports on Multi-Platform phones.
+    usb_ports_enabled: Optional[bool]
+    #: Specify a numeric Virtual LAN ID for devices.
+    vlan: Optional[MppVlanObject]
+    #: Specify the Wi-Fi SSID and password for wireless-enabled MPP phones.
+    wifi_network: Optional[WifiNetworkObject]
+
+
+class CustomizationDeviceLevelObject(ApiModel):
+    #: Applicable device settings for an ATA device.
+    ata: Optional[AtaObject]
+    #: Applicable device settings for an MPP device.
+    mpp: Optional[MppObject]
+
+
+class UpdateDeviceSettingsBody(ApiModel):
+    #: Indicates the customization object of the device settings.
+    customizations: Optional[CustomizationDeviceLevelObject]
+    #: Indicates if customization is allowed at a device level. If true, customized at a device level. If false, not customized; uses customer-level configuration.
+    custom_enabled: Optional[bool]
+
+
+class GetDeviceSettingsResponse(UpdateDeviceSettingsBody):
+    #: Customer devices setting update status. If true, an update is in progress (no further changes are allowed). If false, no update in progress (changes are allowed).
+    update_in_progress: Optional[bool]
+    #: Number of devices that will be updated.
+    device_count: Optional[int]
+    #: Indicates the last updated time.
+    last_update_time: Optional[int]
+
+
+class DeviceOwner(ApiModel):
+    #: Unique identifier of a person or a workspace.
+    id: Optional[str]
+    #: Enumeration that indicates if the member is of type PEOPLE or PLACE.
+    type: Optional[Type8]
+    #: First name of device owner.
+    first_name: Optional[str]
+    #: Last name of device owner.
+    last_name: Optional[str]
+
+
+class ActivationStates(ApiModel):
+    #: Indicates a device is activating.
+    activating: Optional[str]
+    #: Indicates a device is activated.
+    activated: Optional[str]
+    #: Indicates a device is deactivated.
+    deactivated: Optional[str]
+
+
+class Devices(ApiModel):
+    #: Unique identifier for a device.
+    id: Optional[str]
+    #: Comma separated array of tags used to describe device.
+    description: Optional[list[str]]
+    #: Identifier for device model.
+    model: Optional[str]
+    #: MAC address of device.
+    mac: Optional[str]
+    #: IP address of device.
+    ip_address: Optional[str]
+    #: Indicates whether the person or the workspace is the owner of the device, and points to a primary Line/Port of the device.
+    primary_owner: Optional[bool]
+    #: Indicates if the line is acting as a primary line or a shared line for this device.
+    type: Optional[LineType]
+    #: Owner of device.
+    owner: Optional[DeviceOwner]
+    #: Activation state of device.
+    activation_state: Optional[ActivationStates]
+
+
+class Hoteling(ApiModel):
+    #: Enable/Disable hoteling Host. Enabling the device for hoteling means that a guest(end user) can log into this host(workspace device) and use this device
+    #: as if it were their own. This is useful when traveling to a remote office but still needing to place/receive calls with their telephone number and access features normally available to them on their office phone.
+    enabled: Optional[bool]
+    #: Enable limiting the time a guest can use the device. The time limit is configured via guestHoursLimit.
+    limit_guest_use: Optional[bool]
+    #: Time Limit in hours until hoteling is enabled. Mandatory if limitGuestUse is enabled.
+    guest_hours_limit: Optional[int]
+
+
+class PlaceDevices(Devices):
+    #: Indicates Hoteling details of a device.
+    hoteling: Optional[Hoteling]
+
+
+class TypeObject(ApiModel):
+    #: Cisco Multiplatform Phone
+    mpp: Optional[str]
+    #: Analog Telephone Adapters
+    ata: Optional[str]
+    #: GENERIC Session Initiation Protocol
+    generic_sip: Optional[str]
+    #: Esim Supported Webex Go
+    esim: Optional[str]
+
+
+class ManufacturerObject(ApiModel):
+    #: Devices manufactured by Cisco.
+    cisco: Optional[str]
+    #: Devices manufactured by a third-party that are approved by a Cisco account manager to be enabled for provisioning in the control hub.
+    third_party: Optional[str]
+
+
+class ManagedByObject(ApiModel):
+    #: Devices managed by Cisco.
+    cisco: Optional[str]
+    #: Devices managed by a customer that are approved by a Cisco account manager to be enabled for provisioning in the control hub.
+    customer: Optional[str]
+
+
+class OnboardingMethodObject(ApiModel):
+    mac_address: Optional[str]
+    activation_code: Optional[str]
+    none: Optional[str]
+
+
+class KemModuleTypeObject(ApiModel):
+    kem_14_keys: Optional[str]
+    kem_18_keys: Optional[str]
+
+
+class DeviceObject(ApiModel):
+    #: Model name of the device.
+    model: Optional[str]
+    #: Display name of the device.
+    display_name: Optional[str]
+    #: Type of the device.
+    type: Optional[TypeObject]
+    #: Manufacturer of the device.
+    manufacturer: Optional[ManufacturerObject]
+    #: Users who manage the device.
+    managed_by: Optional[ManagedByObject]
+    #: List of places the device is supported for.
+    supported_for: Optional[list[Type8]]
+    #: Onboarding method.
+    onboarding_method: Optional[list[OnboardingMethodObject]]
+    #: Enables / Disables layout configuration for devices.
+    allow_configure_layout_enabled: Optional[bool]
+    #: Number of port lines.
+    number_of_line_ports: Optional[int]
+    #: Indicates whether Kem support is enabled or not.
+    kem_support_enabled: Optional[bool]
+    #: Module count.
+    kem_module_count: Optional[int]
+    #: Key expansion module type of the device.
+    kem_module_type: Optional[list[KemModuleTypeObject]]
+    #: Enables / Disables the upgrade channel.
+    upgrade_channel_enabled: Optional[bool]
+    #: The default upgrade channel.
+    default_upgrade_channel: Optional[str]
+    #: Enables / disables the additional primary line appearances.
+    additional_primary_line_appearances_enabled: Optional[bool]
+    #: Enables / disables Basic emergency nomadic.
+    basic_emergency_nomadic_enabled: Optional[bool]
+    #: Enables / disables customized behavior support on devices.
+    customized_behaviors_enabled: Optional[bool]
+    #: Enables / disables configuring port support on device.
+    allow_configure_ports_enabled: Optional[bool]
+
+
+class DectObject(ApiModel):
+    #: Choose up to three predefined codec priority options available for your region.
+    audio_codec_priority: Optional[AudioCodecPriorityObject]
+    #: Enable/disable Cisco Discovery Protocol for local devices.
+    cdp_enabled: Optional[bool]
+    #: Specify the destination number to be dialled from the DECT Handset top button when pressed.
+    dect6825_handset_emergency_number: Optional[str]
+    #: Enable/disable Link Layer Discovery Protocol for local devices.
+    lldp_enabled: Optional[bool]
+    #: Specify up to 3 multicast group URLs each with a unique listening port.
+    multicast: Optional[str]
+    #: Enable/disable quality of service tagging of packets from the local device to the Webex Calling platform.
+    qos_enabled: Optional[bool]
+    #: Specify a numeric Virtual LAN ID for devices.
+    vlan: Optional[VlanObject]
+
+
+class CustomizationObject(CustomizationDeviceLevelObject):
+    #: Settings that are applicable to DECT devices.
+    dect: Optional[DectObject]
+
+
+class DectDeviceList(ApiModel):
+    #: Model name of the device.
+    model: Optional[str]
+    #: Display name of the device.
+    display_name: Optional[str]
+    #: Indicates number of base stations.
+    number_of_base_stations: Optional[int]
+    #: Indicates number of port lines,
+    number_of_line_ports: Optional[int]
+    #: Indicates number of supported registrations.
+    number_of_registrations_supported: Optional[int]
+
+
+class State3(str, Enum):
+    #: The requested MAC address is available.
+    available = 'AVAILABLE'
+    #: The requested MAC address is unavailable.
+    unavailable = 'UNAVAILABLE'
+    #: The requested MAC address is duplicated.
+    duplicate_in_list = 'DUPLICATE_IN_LIST'
+    #: The requested MAC address is invalid.
+    invalid = 'INVALID'
+
+
+class MacStatusObject(ApiModel):
+    #: MAC address.
+    mac: Optional[str]
+    #: State of the MAC address.
+    state: Optional[State3]
+    #: MAC address validation error code.
+    error_code: Optional[int]
+    #: Provides a status message about the MAC address.
+    message: Optional[str]
+
+
+class GetManageNumbersJobStatusResponse(GetAvailableRecallHuntGroupsObject):
+    #: Job type.
+    job_type: Optional[str]
+    #: Unique identifier to track the flow of HTTP requests.
+    tracking_id: Optional[str]
+    #: Unique identifier to identify which user has run the job.
+    source_user_id: Optional[str]
+    #: Unique identifier to identify the customer who has run the job.
+    source_customer_id: Optional[str]
+    #: Unique identifier to identify the customer for which the job was run.
+    target_customer_id: Optional[str]
+    #: Unique identifier to identify the instance of the job.
+    instance_id: Optional[int]
+    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the execution of the job.
+    job_execution_status: Optional[list[JobExecutionStatusObject]]
+    #: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
+    latest_execution_status: Optional[str]
+    #: Indicates the operation type that was carried out.
+    operation_type: Optional[str]
+    #: Unique location identifier for which the job was run.
+    source_location_id: Optional[str]
+    #: Unique location identifier for which the numbers have been moved.
+    target_location_id: Optional[str]
+    #: The location name for which the job was run.
+    source_location_name: Optional[str]
+    #: The location name for which the numbers have been moved.
+    target_location_name: Optional[str]
+    #: Job statistics.
+    counts: Optional[CountObject]
 
 
 class ChangeAnnouncementLanguageBody(ApiModel):
@@ -3670,37 +4226,6 @@ class InitiateMoveNumberJobsBody(ApiModel):
     number_list: Optional[list[NumberItem]]
 
 
-class GetManageNumbersJobStatusResponse(GetAvailableRecallHuntGroupsObject):
-    #: Job type.
-    job_type: Optional[str]
-    #: Unique identifier to track the flow of HTTP requests.
-    tracking_id: Optional[str]
-    #: Unique identifier to identify which user has run the job.
-    source_user_id: Optional[str]
-    #: Unique identifier to identify the customer who has run the job.
-    source_customer_id: Optional[str]
-    #: Unique identifier to identify the customer for which the job was run.
-    target_customer_id: Optional[str]
-    #: Unique identifier to identify the instance of the job.
-    instance_id: Optional[int]
-    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the execution of the job.
-    job_execution_status: Optional[list[JobExecutionStatusObject]]
-    #: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
-    latest_execution_status: Optional[str]
-    #: Indicates the operation type that was carried out.
-    operation_type: Optional[str]
-    #: Unique location identifier for which the job was run.
-    source_location_id: Optional[str]
-    #: Unique location identifier for which the numbers have been moved.
-    target_location_id: Optional[str]
-    #: The location name for which the job was run.
-    source_location_name: Optional[str]
-    #: The location name for which the numbers have been moved.
-    target_location_name: Optional[str]
-    #: Job statistics.
-    counts: Optional[CountObject]
-
-
 class ListManageNumbersJobErrorsResponse(ApiModel):
     items: Optional[list[ItemObject]]
 
@@ -4244,6 +4769,91 @@ class UpdateCallQueueNightServiceBody(GetDetailsForCallQueueStrandedCallsRespons
     manual_audio_files: Optional[list[CallQueueAudioFilesObject]]
 
 
+class GetDeviceMembersResponse(ApiModel):
+    #: Model type of the device.
+    model: Optional[str]
+    #: List of members that appear on the device.
+    members: Optional[list[MemberObject]]
+    #: Maximum number of lines available for the device.
+    max_line_count: Optional[int]
+
+
+class UpdateMembersOndeviceBody(ApiModel):
+    #: If the member's list is missing then all the users are removed except the primary user.
+    members: Optional[list[PutMemberObject]]
+
+
+class SearchMembersResponse(ApiModel):
+    #: List of members available for the device.
+    members: Optional[list[SearchMemberObject]]
+
+
+class GetUserDevicesResponse(ApiModel):
+    #: Array of devices available to person.
+    devices: Optional[list[Devices]]
+    #: Maximum number of devices a person can be assigned to.
+    max_device_count: Optional[int]
+
+
+class GetWorkspaceDevicesResponse(ApiModel):
+    #: Array of devices associated to a workspace.
+    devices: Optional[list[PlaceDevices]]
+    #: Maximum number of devices a workspace can be assigned to.
+    max_device_count: Optional[int]
+
+
+class ReadListOfSupportedDevicesResponse(ApiModel):
+    #: List of supported devices.
+    devices: Optional[list[DeviceObject]]
+
+
+class ReaddeviceOverrideSettingsFororganizationResponse(ApiModel):
+    #: Customization object of the device settings.
+    customizations: Optional[CustomizationObject]
+    #: Progress of the device update.
+    update_in_progress: Optional[bool]
+    #: Device count.
+    device_count: Optional[int]
+    #: Last updated time.
+    last_update_time: Optional[int]
+
+
+class ReadDECTDeviceTypeListResponse(ApiModel):
+    #: Contains a list of devices.
+    devices: Optional[list[DectDeviceList]]
+
+
+class ValidatelistOfMACAddressBody(ApiModel):
+    #: MAC addresses to be validated.
+    #: Possible values: {["ab125678cdef", "00005E0053B4"]}
+    macs: Optional[list[str]]
+
+
+class ValidatelistOfMACAddressResponse(ApiModel):
+    #: Status of MAC address.
+    status: Optional[Status5]
+    #: Contains an array of all the MAC address provided and their statuses.
+    mac_status: Optional[list[MacStatusObject]]
+
+
+class ChangeDeviceSettingsAcrossOrganizationOrLocationJobBody(ApiModel):
+    #: Location within an organization where changes of device setings will be applied to all the devices within it.
+    location_id: Optional[str]
+    #: Indicates if all the devices within this location will be customized with new requested customizations(if set to true) or will be overridden with the one at organization level (if set to false or any other value). This field has no effect when the job is being triggered at organization level.
+    location_customizations_enabled: Optional[bool]
+    #: Indicates the settings for ATA devices, DECT devices and MPP devices.
+    customizations: Optional[CustomizationObject]
+
+
+class ListChangeDeviceSettingsJobsResponse(ApiModel):
+    #: Lists all jobs for the customer in order of most recent one to oldest one irrespective of its status.
+    items: Optional[list[StartJobResponse]]
+
+
+class ListChangeDeviceSettingsJobErrorsResponse(ApiModel):
+    items: Optional[list[ItemObject]]
+
+
 class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     """
     Not supported for Webex for Government (FedRAMP)
@@ -4273,15 +4883,15 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ChangeAnnouncementLanguageBody()
         if announcement_language_code is not None:
-            body['announcementLanguageCode'] = announcement_language_code
+            body.announcement_language_code = announcement_language_code
         if agent_enabled is not None:
-            body['agentEnabled'] = agent_enabled
+            body.agent_enabled = agent_enabled
         if service_enabled is not None:
-            body['serviceEnabled'] = service_enabled
+            body.service_enabled = service_enabled
         url = self.ep(f'locations/{location_id}/actions/modifyAnnouncementLanguage/invoke')
-        super().post(url=url, params=params, json=body)
+        super().post(url=url, params=params, data=body.json())
         return
 
     def read_list_of_auto_attendants(self, org_id: str = None, location_id: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None) -> List[ListAutoAttendantObject]:
@@ -4382,37 +4992,37 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateAutoAttendantBody()
         if business_schedule is not None:
-            body['businessSchedule'] = business_schedule
+            body.business_schedule = business_schedule
         if business_hours_menu is not None:
-            body['businessHoursMenu'] = business_hours_menu
+            body.business_hours_menu = business_hours_menu
         if after_hours_menu is not None:
-            body['afterHoursMenu'] = after_hours_menu
+            body.after_hours_menu = after_hours_menu
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if name is not None:
-            body['name'] = name
+            body.name = name
         if phone_number is not None:
-            body['phoneNumber'] = phone_number
+            body.phone_number = phone_number
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if alternate_numbers is not None:
-            body['alternateNumbers'] = alternate_numbers
+            body.alternate_numbers = alternate_numbers
         if language_code is not None:
-            body['languageCode'] = language_code
+            body.language_code = language_code
         if holiday_schedule is not None:
-            body['holidaySchedule'] = holiday_schedule
+            body.holiday_schedule = holiday_schedule
         if extension_dialing is not None:
-            body['extensionDialing'] = extension_dialing
+            body.extension_dialing = extension_dialing
         if name_dialing is not None:
-            body['nameDialing'] = name_dialing
+            body.name_dialing = name_dialing
         if time_zone is not None:
-            body['timeZone'] = time_zone
+            body.time_zone = time_zone
         url = self.ep(f'locations/{location_id}/autoAttendants')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def update_auto_attendant(self, location_id: str, auto_attendant_id: str, business_schedule: str, business_hours_menu: HoursMenuObject, after_hours_menu: HoursMenuObject, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, first_name: str = None, last_name: str = None, alternate_numbers: AlternateNumbersObject = None, language_code: str = None, holiday_schedule: str = None, extension_dialing: ExtensionDialing = None, name_dialing: ExtensionDialing = None, time_zone: str = None):
@@ -4459,37 +5069,37 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateAutoAttendantBody()
         if business_schedule is not None:
-            body['businessSchedule'] = business_schedule
+            body.business_schedule = business_schedule
         if business_hours_menu is not None:
-            body['businessHoursMenu'] = business_hours_menu
+            body.business_hours_menu = business_hours_menu
         if after_hours_menu is not None:
-            body['afterHoursMenu'] = after_hours_menu
+            body.after_hours_menu = after_hours_menu
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if name is not None:
-            body['name'] = name
+            body.name = name
         if phone_number is not None:
-            body['phoneNumber'] = phone_number
+            body.phone_number = phone_number
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if alternate_numbers is not None:
-            body['alternateNumbers'] = alternate_numbers
+            body.alternate_numbers = alternate_numbers
         if language_code is not None:
-            body['languageCode'] = language_code
+            body.language_code = language_code
         if holiday_schedule is not None:
-            body['holidaySchedule'] = holiday_schedule
+            body.holiday_schedule = holiday_schedule
         if extension_dialing is not None:
-            body['extensionDialing'] = extension_dialing
+            body.extension_dialing = extension_dialing
         if name_dialing is not None:
-            body['nameDialing'] = name_dialing
+            body.name_dialing = name_dialing
         if time_zone is not None:
-            body['timeZone'] = time_zone
+            body.time_zone = time_zone
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def delete_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None):
@@ -4548,11 +5158,11 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateCallForwardingSettingsForAutoAttendantBody()
         if call_forwarding is not None:
-            body['callForwarding'] = call_forwarding
+            body.call_forwarding = call_forwarding
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def create_selective_forwarding_rule_for_auto_attendant(self, location_id: str, auto_attendant_id: str, name: str, forward_to: CallForwardSelectiveForwardToObject, calls_from: CallForwardSelectiveCallsFromObject, org_id: str = None, enabled: bool = None, business_schedule: str = None, holiday_schedule: str = None, calls_to: CallForwardSelectiveCallsToObject = None) -> str:
@@ -4587,23 +5197,23 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateSelectiveCallForwardingRuleForAutoAttendantBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if forward_to is not None:
-            body['forwardTo'] = forward_to
+            body.forward_to = forward_to
         if calls_from is not None:
-            body['callsFrom'] = calls_from
+            body.calls_from = calls_from
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if business_schedule is not None:
-            body['businessSchedule'] = business_schedule
+            body.business_schedule = business_schedule
         if holiday_schedule is not None:
-            body['holidaySchedule'] = holiday_schedule
+            body.holiday_schedule = holiday_schedule
         if calls_to is not None:
-            body['callsTo'] = calls_to
+            body.calls_to = calls_to
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/selectiveRules')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def selective_forwarding_rule_for_auto_attendant(self, location_id: str, auto_attendant_id: str, rule_id: str, org_id: str = None) -> str:
@@ -4664,23 +5274,23 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateSelectiveCallForwardingRuleForAutoAttendantBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if forward_to is not None:
-            body['forwardTo'] = forward_to
+            body.forward_to = forward_to
         if calls_from is not None:
-            body['callsFrom'] = calls_from
+            body.calls_from = calls_from
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if business_schedule is not None:
-            body['businessSchedule'] = business_schedule
+            body.business_schedule = business_schedule
         if holiday_schedule is not None:
-            body['holidaySchedule'] = holiday_schedule
+            body.holiday_schedule = holiday_schedule
         if calls_to is not None:
-            body['callsTo'] = calls_to
+            body.calls_to = calls_to
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/selectiveRules/{rule_id}')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return data["id"]
 
     def delete_selective_forwarding_rule_for_auto_attendant(self, location_id: str, auto_attendant_id: str, rule_id: str, org_id: str = None):
@@ -4763,15 +5373,15 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateCallParkBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if recall is not None:
-            body['recall'] = recall
+            body.recall = recall
         if agents is not None:
-            body['agents'] = agents
+            body.agents = agents
         url = self.ep(f'locations/{location_id}/callParks')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def delete_park(self, location_id: str, call_park_id: str, org_id: str = None):
@@ -4839,15 +5449,15 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateCallParkBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if recall is not None:
-            body['recall'] = recall
+            body.recall = recall
         if agents is not None:
-            body['agents'] = agents
+            body.agents = agents
         url = self.ep(f'locations/{location_id}/callParks/{call_park_id}')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return data["id"]
 
     def available_agents_from_parks(self, location_id: str, org_id: str = None, call_park_name: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None, order: str = None) -> List[GetPersonPlaceCallParksObject]:
@@ -4962,13 +5572,13 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateCallParkSettingsBody()
         if call_park_recall is not None:
-            body['callParkRecall'] = call_park_recall
+            body.call_park_recall = call_park_recall
         if call_park_settings is not None:
-            body['callParkSettings'] = call_park_settings
+            body.call_park_settings = call_park_settings
         url = self.ep(f'locations/{location_id}/callParks/settings')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def read_list_of_park_extensions(self, org_id: str = None, max: int = None, start: int = None, extension: str = None, name: str = None, location_id: str = None, location_name: str = None, order: str = None) -> List[ListCallParkExtensionObject]:
@@ -5053,13 +5663,13 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateCallParkExtensionBody()
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if name is not None:
-            body['name'] = name
+            body.name = name
         url = self.ep(f'locations/{location_id}/callParkExtensions')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def delete_park_extension(self, location_id: str, call_park_extension_id: str, org_id: str = None):
@@ -5102,13 +5712,13 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateCallParkExtensionBody()
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if name is not None:
-            body['name'] = name
+            body.name = name
         url = self.ep(f'locations/{location_id}/callParkExtensions/{call_park_extension_id}')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def read_list_of_pickups(self, location_id: str, org_id: str = None, max: int = None, start: int = None, order: str = None, name: str = None) -> List[ListCallParkObject]:
@@ -5165,13 +5775,13 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateCallPickupBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if agents is not None:
-            body['agents'] = agents
+            body.agents = agents
         url = self.ep(f'locations/{location_id}/callPickups')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def delete_pickup(self, location_id: str, call_pickup_id: str, org_id: str = None):
@@ -5237,13 +5847,13 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateCallPickupBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if agents is not None:
-            body['agents'] = agents
+            body.agents = agents
         url = self.ep(f'locations/{location_id}/callPickups/{call_pickup_id}')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return data["id"]
 
     def available_agents_from_pickups(self, location_id: str, org_id: str = None, call_pickup_name: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None, order: str = None) -> List[GetPersonPlaceCallParksObject]:
@@ -5374,33 +5984,33 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateCallQueueBody()
         if call_policies is not None:
-            body['callPolicies'] = call_policies
+            body.call_policies = call_policies
         if queue_settings is not None:
-            body['queueSettings'] = queue_settings
+            body.queue_settings = queue_settings
         if agents is not None:
-            body['agents'] = agents
+            body.agents = agents
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if name is not None:
-            body['name'] = name
+            body.name = name
         if phone_number is not None:
-            body['phoneNumber'] = phone_number
+            body.phone_number = phone_number
         if language_code is not None:
-            body['languageCode'] = language_code
+            body.language_code = language_code
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if time_zone is not None:
-            body['timeZone'] = time_zone
+            body.time_zone = time_zone
         if allow_agent_join_enabled is not None:
-            body['allowAgentJoinEnabled'] = allow_agent_join_enabled
+            body.allow_agent_join_enabled = allow_agent_join_enabled
         if phone_number_for_outgoing_calls_enabled is not None:
-            body['phoneNumberForOutgoingCallsEnabled'] = phone_number_for_outgoing_calls_enabled
+            body.phone_number_for_outgoing_calls_enabled = phone_number_for_outgoing_calls_enabled
         url = self.ep(f'locations/{location_id}/queues')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def delete_queue(self, location_id: str, queue_id: str, org_id: str = None):
@@ -5507,39 +6117,39 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateCallQueueBody()
         if queue_settings is not None:
-            body['queueSettings'] = queue_settings
+            body.queue_settings = queue_settings
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if phone_number is not None:
-            body['phoneNumber'] = phone_number
+            body.phone_number = phone_number
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if name is not None:
-            body['name'] = name
+            body.name = name
         if language_code is not None:
-            body['languageCode'] = language_code
+            body.language_code = language_code
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if time_zone is not None:
-            body['timeZone'] = time_zone
+            body.time_zone = time_zone
         if alternate_number_settings is not None:
-            body['alternateNumberSettings'] = alternate_number_settings
+            body.alternate_number_settings = alternate_number_settings
         if call_policies is not None:
-            body['callPolicies'] = call_policies
+            body.call_policies = call_policies
         if allow_call_waiting_for_agents_enabled is not None:
-            body['allowCallWaitingForAgentsEnabled'] = allow_call_waiting_for_agents_enabled
+            body.allow_call_waiting_for_agents_enabled = allow_call_waiting_for_agents_enabled
         if agents is not None:
-            body['agents'] = agents
+            body.agents = agents
         if allow_agent_join_enabled is not None:
-            body['allowAgentJoinEnabled'] = allow_agent_join_enabled
+            body.allow_agent_join_enabled = allow_agent_join_enabled
         if phone_number_for_outgoing_calls_enabled is not None:
-            body['phoneNumberForOutgoingCallsEnabled'] = phone_number_for_outgoing_calls_enabled
+            body.phone_number_for_outgoing_calls_enabled = phone_number_for_outgoing_calls_enabled
         url = self.ep(f'locations/{location_id}/queues/{queue_id}')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def read_list_of_queue_announcement_files(self, location_id: str, queue_id: str, org_id: str = None) -> List[GetAnnouncementFileInfo]:
@@ -5621,11 +6231,11 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateCallForwardingSettingsForCallQueueBody()
         if call_forwarding is not None:
-            body['callForwarding'] = call_forwarding
+            body.call_forwarding = call_forwarding
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def create_selective_forwarding_rule_for_queue(self, location_id: str, queue_id: str, name: str, calls_from: CallsFrom, calls_to: CallsTo, org_id: str = None, enabled: bool = None, holiday_schedule: str = None, business_schedule: str = None, forward_to: CallForwardSelectiveForwardToObject = None) -> str:
@@ -5660,23 +6270,23 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateSelectiveCallForwardingRuleForCallQueueBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if calls_from is not None:
-            body['callsFrom'] = calls_from
+            body.calls_from = calls_from
         if calls_to is not None:
-            body['callsTo'] = calls_to
+            body.calls_to = calls_to
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if holiday_schedule is not None:
-            body['holidaySchedule'] = holiday_schedule
+            body.holiday_schedule = holiday_schedule
         if business_schedule is not None:
-            body['businessSchedule'] = business_schedule
+            body.business_schedule = business_schedule
         if forward_to is not None:
-            body['forwardTo'] = forward_to
+            body.forward_to = forward_to
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/selectiveRules')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def selective_forwarding_rule_for_queue(self, location_id: str, queue_id: str, rule_id: str, org_id: str = None) -> str:
@@ -5737,23 +6347,23 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateSelectiveCallForwardingRuleForCallQueueBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if calls_from is not None:
-            body['callsFrom'] = calls_from
+            body.calls_from = calls_from
         if calls_to is not None:
-            body['callsTo'] = calls_to
+            body.calls_to = calls_to
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if holiday_schedule is not None:
-            body['holidaySchedule'] = holiday_schedule
+            body.holiday_schedule = holiday_schedule
         if business_schedule is not None:
-            body['businessSchedule'] = business_schedule
+            body.business_schedule = business_schedule
         if forward_to is not None:
-            body['forwardTo'] = forward_to
+            body.forward_to = forward_to
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/selectiveRules/{rule_id}')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return data["id"]
 
     def delete_selective_forwarding_rule_for_queue(self, location_id: str, queue_id: str, rule_id: str, org_id: str = None):
@@ -5811,11 +6421,11 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateCallRecordingSettingsBody()
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         url = self.ep('callRecording')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def recording_terms_of_service_settings(self, vendor_id: str, org_id: str = None) -> GetCallRecordingTermsOfServiceSettingsResponse:
@@ -5852,11 +6462,11 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateCallRecordingTermsOfServiceSettingsBody()
         if terms_of_service_enabled is not None:
-            body['termsOfServiceEnabled'] = terms_of_service_enabled
+            body.terms_of_service_enabled = terms_of_service_enabled
         url = self.ep(f'callRecording/vendors/{vendor_id}/termsOfService')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def test_routing(self, originator_id: str, originator_type: OriginatorType, destination: str, org_id: str = None, originator_number: str = None) -> TestCallRoutingResponse:
@@ -5882,17 +6492,17 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = TestCallRoutingBody()
         if originator_id is not None:
-            body['originatorId'] = originator_id
+            body.originator_id = originator_id
         if originator_type is not None:
-            body['originatorType'] = originator_type
+            body.originator_type = originator_type
         if destination is not None:
-            body['destination'] = destination
+            body.destination = destination
         if originator_number is not None:
-            body['originatorNumber'] = originator_number
+            body.originator_number = originator_number
         url = self.ep('actions/testCallRouting/invoke')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return TestCallRoutingResponse.parse_obj(data)
 
     def validate_list_of_extensions(self, org_id: str = None, extensions: List[str] = None):
@@ -5909,11 +6519,11 @@ Possible values: 12345, 3456
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ValidateListOfExtensionsBody()
         if extensions is not None:
-            body['extensions'] = extensions
+            body.extensions = extensions
         url = self.ep('actions/validateExtensions/invoke')
-        super().post(url=url, params=params, json=body)
+        super().post(url=url, params=params, data=body.json())
         return
 
     def validate_extensions(self, location_id: str, extensions: List[str], org_id: str = None) -> ValidateExtensionsResponse:
@@ -5931,11 +6541,11 @@ Possible values: 12345, 3456
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ValidateExtensionsBody()
         if extensions is not None:
-            body['extensions'] = extensions
+            body.extensions = extensions
         url = self.ep(f'locations/{location_id}/actions/validateExtensions/invoke')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return ValidateExtensionsResponse.parse_obj(data)
 
     def read_list_of_hunt_groups(self, org_id: str = None, location_id: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None) -> List[ListCallQueueObject]:
@@ -6008,29 +6618,29 @@ Possible values: 12345, 3456
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateHuntGroupBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if call_policies is not None:
-            body['callPolicies'] = call_policies
+            body.call_policies = call_policies
         if agents is not None:
-            body['agents'] = agents
+            body.agents = agents
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if phone_number is not None:
-            body['phoneNumber'] = phone_number
+            body.phone_number = phone_number
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if language_code is not None:
-            body['languageCode'] = language_code
+            body.language_code = language_code
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if time_zone is not None:
-            body['timeZone'] = time_zone
+            body.time_zone = time_zone
         url = self.ep(f'locations/{location_id}/huntGroups')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def delete_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None):
@@ -6115,35 +6725,35 @@ Possible values: 12345, 3456
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateHuntGroupBody()
         if id is not None:
-            body['id'] = id
+            body.id = id
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if name is not None:
-            body['name'] = name
+            body.name = name
         if phone_number is not None:
-            body['phoneNumber'] = phone_number
+            body.phone_number = phone_number
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if distinctive_ring is not None:
-            body['distinctiveRing'] = distinctive_ring
+            body.distinctive_ring = distinctive_ring
         if alternate_numbers is not None:
-            body['alternateNumbers'] = alternate_numbers
+            body.alternate_numbers = alternate_numbers
         if language_code is not None:
-            body['languageCode'] = language_code
+            body.language_code = language_code
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if time_zone is not None:
-            body['timeZone'] = time_zone
+            body.time_zone = time_zone
         if call_policies is not None:
-            body['callPolicies'] = call_policies
+            body.call_policies = call_policies
         if agents is not None:
-            body['agents'] = agents
+            body.agents = agents
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def forwarding_settings_for_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None) -> object:
@@ -6182,11 +6792,11 @@ Possible values: 12345, 3456
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateCallForwardingSettingsForHuntGroupBody()
         if call_forwarding is not None:
-            body['callForwarding'] = call_forwarding
+            body.call_forwarding = call_forwarding
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def create_selective_forwarding_rule_for_hunt_group(self, location_id: str, hunt_group_id: str, name: str, calls_from: CallsFrom, calls_to: CallsTo, org_id: str = None, enabled: bool = None, holiday_schedule: str = None, business_schedule: str = None, forward_to: CallForwardSelectiveForwardToObject = None) -> str:
@@ -6221,23 +6831,23 @@ Possible values: 12345, 3456
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateSelectiveCallForwardingRuleForHuntGroupBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if calls_from is not None:
-            body['callsFrom'] = calls_from
+            body.calls_from = calls_from
         if calls_to is not None:
-            body['callsTo'] = calls_to
+            body.calls_to = calls_to
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if holiday_schedule is not None:
-            body['holidaySchedule'] = holiday_schedule
+            body.holiday_schedule = holiday_schedule
         if business_schedule is not None:
-            body['businessSchedule'] = business_schedule
+            body.business_schedule = business_schedule
         if forward_to is not None:
-            body['forwardTo'] = forward_to
+            body.forward_to = forward_to
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding/selectiveRules')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def selective_forwarding_rule_for_hunt_group(self, location_id: str, hunt_group_id: str, rule_id: str, org_id: str = None) -> GetSelectiveCallForwardingRuleForCallQueueResponse:
@@ -6298,23 +6908,23 @@ Possible values: 12345, 3456
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateSelectiveCallForwardingRuleForHuntGroupBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if calls_from is not None:
-            body['callsFrom'] = calls_from
+            body.calls_from = calls_from
         if calls_to is not None:
-            body['callsTo'] = calls_to
+            body.calls_to = calls_to
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if holiday_schedule is not None:
-            body['holidaySchedule'] = holiday_schedule
+            body.holiday_schedule = holiday_schedule
         if business_schedule is not None:
-            body['businessSchedule'] = business_schedule
+            body.business_schedule = business_schedule
         if forward_to is not None:
-            body['forwardTo'] = forward_to
+            body.forward_to = forward_to
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding/selectiveRules/{rule_id}')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return data["id"]
 
     def delete_selective_forwarding_rule_for_hunt_group(self, location_id: str, hunt_group_id: str, rule_id: str, org_id: str = None):
@@ -6379,15 +6989,15 @@ Possible values: 12345, 3456
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = PutLocationInterceptBody()
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if incoming is not None:
-            body['incoming'] = incoming
+            body.incoming = incoming
         if outgoing is not None:
-            body['outgoing'] = outgoing
+            body.outgoing = outgoing
         url = self.ep(f'locations/{location_id}/intercept')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def read_internal_dialing_configuration_forlocation(self, location_id: str, org_id: str = None) -> ReadInternalDialingConfigurationForlocationResponse:
@@ -6426,13 +7036,13 @@ Possible values: 12345, 3456
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyInternalDialingConfigurationForlocationBody()
         if enable_unknown_extension_route_policy is not None:
-            body['enableUnknownExtensionRoutePolicy'] = enable_unknown_extension_route_policy
+            body.enable_unknown_extension_route_policy = enable_unknown_extension_route_policy
         if unknown_extension_route_identity is not None:
-            body['unknownExtensionRouteIdentity'] = unknown_extension_route_identity
+            body.unknown_extension_route_identity = unknown_extension_route_identity
         url = self.ep(f'locations/{location_id}/internalDialing')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def location_webexing_details(self, location_id: str, org_id: str = None) -> GetLocationWebexCallingDetailsResponse:
@@ -6482,23 +7092,23 @@ Possible values: 12345, 3456
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateLocationWebexCallingDetailsBody()
         if announcement_language is not None:
-            body['announcementLanguage'] = announcement_language
+            body.announcement_language = announcement_language
         if calling_line_id is not None:
-            body['callingLineId'] = calling_line_id
+            body.calling_line_id = calling_line_id
         if connection is not None:
-            body['connection'] = connection
+            body.connection = connection
         if external_caller_id_name is not None:
-            body['externalCallerIdName'] = external_caller_id_name
+            body.external_caller_id_name = external_caller_id_name
         if p_access_network_info is not None:
-            body['pAccessNetworkInfo'] = p_access_network_info
+            body.p_access_network_info = p_access_network_info
         if outside_dial_digit is not None:
-            body['outsideDialDigit'] = outside_dial_digit
+            body.outside_dial_digit = outside_dial_digit
         if routing_prefix is not None:
-            body['routingPrefix'] = routing_prefix
+            body.routing_prefix = routing_prefix
         url = self.ep(f'locations/{location_id}')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def generate_example_password_for_location(self, location_id: str, org_id: str = None, generate: List[PasswordGenerate] = None) -> str:
@@ -6518,11 +7128,11 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = GenerateExamplePasswordForLocationBody()
         if generate is not None:
-            body['generate'] = generate
+            body.generate = generate
         url = self.ep(f'locations/{location_id}/actions/generatePassword/invoke')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["exampleSipPassword"]
 
     def location_outgoing_permission(self, location_id: str, org_id: str = None) -> List[CallingPermissionObject]:
@@ -6559,11 +7169,11 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateLocationOutgoingPermissionBody()
         if calling_permissions is not None:
-            body['callingPermissions'] = calling_permissions
+            body.calling_permissions = calling_permissions
         url = self.ep(f'locations/{location_id}/outgoingPermission')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def outgoing_permission_auto_transfer_number(self, location_id: str, org_id: str = None) -> GetOutgoingPermissionAutoTransferNumberResponse:
@@ -6604,15 +7214,15 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = PutOutgoingPermissionAutoTransferNumberBody()
         if auto_transfer_number1 is not None:
-            body['autoTransferNumber1'] = auto_transfer_number1
+            body.auto_transfer_number1 = auto_transfer_number1
         if auto_transfer_number2 is not None:
-            body['autoTransferNumber2'] = auto_transfer_number2
+            body.auto_transfer_number2 = auto_transfer_number2
         if auto_transfer_number3 is not None:
-            body['autoTransferNumber3'] = auto_transfer_number3
+            body.auto_transfer_number3 = auto_transfer_number3
         url = self.ep(f'locations/{location_id}/outgoingPermission/autoTransferNumbers')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def outgoing_permission_location_access_code(self, location_id: str, org_id: str = None) -> object:
@@ -6649,11 +7259,11 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateOutgoingPermissionnewAccessCodeForcustomerLocationBody()
         if access_codes is not None:
-            body['accessCodes'] = access_codes
+            body.access_codes = access_codes
         url = self.ep(f'locations/{location_id}/outgoingPermission/accessCodes')
-        super().post(url=url, params=params, json=body)
+        super().post(url=url, params=params, data=body.json())
         return
 
     def delete_outgoing_permission_access_code_location(self, location_id: str, delete_codes: List[str], org_id: str = None):
@@ -6672,11 +7282,11 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = DeleteOutgoingPermissionAccessCodeLocationBody()
         if delete_codes is not None:
-            body['deleteCodes'] = delete_codes
+            body.delete_codes = delete_codes
         url = self.ep(f'locations/{location_id}/outgoingPermission/accessCodes')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def read_list_of_paging_groups(self, org_id: str = None, max: int = None, start: int = None, location_id: str = None, name: str = None, phone_number: str = None) -> List[ListAutoAttendantObject]:
@@ -6749,27 +7359,27 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreatenewPagingGroupBody()
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if name is not None:
-            body['name'] = name
+            body.name = name
         if phone_number is not None:
-            body['phoneNumber'] = phone_number
+            body.phone_number = phone_number
         if language_code is not None:
-            body['languageCode'] = language_code
+            body.language_code = language_code
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if originator_caller_id_enabled is not None:
-            body['originatorCallerIdEnabled'] = originator_caller_id_enabled
+            body.originator_caller_id_enabled = originator_caller_id_enabled
         if originators is not None:
-            body['originators'] = originators
+            body.originators = originators
         if targets is not None:
-            body['targets'] = targets
+            body.targets = targets
         url = self.ep(f'locations/{location_id}/paging')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def delete_paging_group(self, location_id: str, paging_id: str, org_id: str = None):
@@ -6851,29 +7461,29 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdatePagingGroupBody()
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if name is not None:
-            body['name'] = name
+            body.name = name
         if phone_number is not None:
-            body['phoneNumber'] = phone_number
+            body.phone_number = phone_number
         if language_code is not None:
-            body['languageCode'] = language_code
+            body.language_code = language_code
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if originator_caller_id_enabled is not None:
-            body['originatorCallerIdEnabled'] = originator_caller_id_enabled
+            body.originator_caller_id_enabled = originator_caller_id_enabled
         if originators is not None:
-            body['originators'] = originators
+            body.originators = originators
         if targets is not None:
-            body['targets'] = targets
+            body.targets = targets
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         url = self.ep(f'locations/{location_id}/paging/{paging_id}')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def add_phone_numbers_tolocation(self, location_id: str, phone_numbers: List[str], state: State1, org_id: str = None):
@@ -6894,13 +7504,13 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = AddPhoneNumbersTolocationBody()
         if phone_numbers is not None:
-            body['phoneNumbers'] = phone_numbers
+            body.phone_numbers = phone_numbers
         if state is not None:
-            body['state'] = state
+            body.state = state
         url = self.ep(f'locations/{location_id}/numbers')
-        super().post(url=url, params=params, json=body)
+        super().post(url=url, params=params, data=body.json())
         return
 
     def activate_phone_numbers_inlocation(self, location_id: str, phone_numbers: List[str], org_id: str = None):
@@ -6919,11 +7529,11 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ActivatePhoneNumbersInlocationBody()
         if phone_numbers is not None:
-            body['phoneNumbers'] = phone_numbers
+            body.phone_numbers = phone_numbers
         url = self.ep(f'locations/{location_id}/numbers')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def remove_phone_numbers_fromlocation(self, location_id: str, phone_numbers: List[str], state: State1, org_id: str = None):
@@ -6944,13 +7554,13 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = RemovePhoneNumbersFromlocationBody()
         if phone_numbers is not None:
-            body['phoneNumbers'] = phone_numbers
+            body.phone_numbers = phone_numbers
         if state is not None:
-            body['state'] = state
+            body.state = state
         url = self.ep(f'locations/{location_id}/numbers')
-        super().delete(url=url, params=params, json=body)
+        super().delete(url=url, params=params, data=body.json())
         return
 
     def phone_numbers_for_organization_with_given_criterias(self, org_id: str = None, location_id: str = None, max: int = None, start: int = None, phone_number: str = None, available: bool = None, order: str = None, owner_name: str = None, owner_id: str = None, owner_type: enum = None, extension: str = None, number_type: str = None, phone_number_type: str = None, state: str = None, details: bool = None, toll_free_numbers: bool = None) -> NumberListGetObject:
@@ -7059,15 +7669,15 @@ SIP password setting
         :param number_list: Indicates the numbers to be moved from source to target locations.
         :type number_list: NumberItem
         """
-        body = {}
+        body = InitiateMoveNumberJobsBody()
         if operation is not None:
-            body['operation'] = operation
+            body.operation = operation
         if target_location_id is not None:
-            body['targetLocationId'] = target_location_id
+            body.target_location_id = target_location_id
         if number_list is not None:
-            body['numberList'] = number_list
+            body.number_list = number_list
         url = self.ep('jobs/numbers/manageNumbers')
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return StartJobResponse.parse_obj(data)
 
     def manage_numbers_job_status(self, job_id: str = None) -> GetManageNumbersJobStatusResponse:
@@ -7183,11 +7793,11 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdatePrivateNetworkConnectBody()
         if network_connection_type is not None:
-            body['networkConnectionType'] = network_connection_type
+            body.network_connection_type = network_connection_type
         url = self.ep(f'locations/{location_id}/privateNetworkConnect')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def read_list_of_routing_choices(self, org_id: str = None, route_group_name: str = None, trunk_name: str = None, max: int = None, start: int = None, order: str = None) -> List[RouteIdentity]:
@@ -7302,15 +7912,15 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateScheduleBody()
         if type_ is not None:
-            body['type'] = type_
+            body.type_ = type_
         if name is not None:
-            body['name'] = name
+            body.name = name
         if events is not None:
-            body['events'] = events
+            body.events = events
         url = self.ep(f'locations/{location_id}/schedules')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def update_schedule(self, location_id: str, type_: str, schedule_id: str, name: str, org_id: str = None, events: ModifyScheduleEventListObject = None) -> str:
@@ -7336,13 +7946,13 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateScheduleBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if events is not None:
-            body['events'] = events
+            body.events = events
         url = self.ep(f'locations/{location_id}/schedules/{type}/{schedule_id}')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return data["id"]
 
     def delete_schedule(self, location_id: str, type_: str, schedule_id: str, org_id: str = None):
@@ -7423,23 +8033,23 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateScheduleEventBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if start_date is not None:
-            body['startDate'] = start_date
+            body.start_date = start_date
         if end_date is not None:
-            body['endDate'] = end_date
+            body.end_date = end_date
         if start_time is not None:
-            body['startTime'] = start_time
+            body.start_time = start_time
         if end_time is not None:
-            body['endTime'] = end_time
+            body.end_time = end_time
         if all_day_enabled is not None:
-            body['allDayEnabled'] = all_day_enabled
+            body.all_day_enabled = all_day_enabled
         if recurrence is not None:
-            body['recurrence'] = recurrence
+            body.recurrence = recurrence
         url = self.ep(f'locations/{location_id}/schedules/{type}/{schedule_id}/events')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def update_schedule_event(self, location_id: str, type_: str, schedule_id: str, event_id: str, name: str, start_date: str, end_date: str, org_id: str = None, start_time: str = None, end_time: str = None, all_day_enabled: bool = None, recurrence: RecurrenceObject1 = None) -> str:
@@ -7477,23 +8087,23 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateScheduleEventBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if start_date is not None:
-            body['startDate'] = start_date
+            body.start_date = start_date
         if end_date is not None:
-            body['endDate'] = end_date
+            body.end_date = end_date
         if start_time is not None:
-            body['startTime'] = start_time
+            body.start_time = start_time
         if end_time is not None:
-            body['endTime'] = end_time
+            body.end_time = end_time
         if all_day_enabled is not None:
-            body['allDayEnabled'] = all_day_enabled
+            body.all_day_enabled = all_day_enabled
         if recurrence is not None:
-            body['recurrence'] = recurrence
+            body.recurrence = recurrence
         url = self.ep(f'locations/{location_id}/schedules/{type}/{schedule_id}/events/{event_id}')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return data["id"]
 
     def delete_schedule_event(self, location_id: str, type_: str, schedule_id: str, event_id: str, org_id: str = None):
@@ -7556,17 +8166,17 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateVoicemailSettingsBody()
         if message_expiry_enabled is not None:
-            body['messageExpiryEnabled'] = message_expiry_enabled
+            body.message_expiry_enabled = message_expiry_enabled
         if number_of_days_for_message_expiry is not None:
-            body['numberOfDaysForMessageExpiry'] = number_of_days_for_message_expiry
+            body.number_of_days_for_message_expiry = number_of_days_for_message_expiry
         if strict_deletion_enabled is not None:
-            body['strictDeletionEnabled'] = strict_deletion_enabled
+            body.strict_deletion_enabled = strict_deletion_enabled
         if voice_message_forwarding_enabled is not None:
-            body['voiceMessageForwardingEnabled'] = voice_message_forwarding_enabled
+            body.voice_message_forwarding_enabled = voice_message_forwarding_enabled
         url = self.ep('voicemail/settings')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def voicemail_rules(self, org_id: str = None) -> GetVoicemailRulesResponse:
@@ -7608,19 +8218,19 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateVoicemailRulesBody()
         if default_voicemail_pin_enabled is not None:
-            body['defaultVoicemailPinEnabled'] = default_voicemail_pin_enabled
+            body.default_voicemail_pin_enabled = default_voicemail_pin_enabled
         if default_voicemail_pin is not None:
-            body['defaultVoicemailPin'] = default_voicemail_pin
+            body.default_voicemail_pin = default_voicemail_pin
         if expire_passcode is not None:
-            body['expirePasscode'] = expire_passcode
+            body.expire_passcode = expire_passcode
         if change_passcode is not None:
-            body['changePasscode'] = change_passcode
+            body.change_passcode = change_passcode
         if block_previous_passcodes is not None:
-            body['blockPreviousPasscodes'] = block_previous_passcodes
+            body.block_previous_passcodes = block_previous_passcodes
         url = self.ep('voicemail/rules')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def location_voicemail(self, location_id: str, org_id: str = None) -> bool:
@@ -7657,11 +8267,11 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateLocationVoicemailBody()
         if voicemail_transcription_enabled is not None:
-            body['voicemailTranscriptionEnabled'] = voicemail_transcription_enabled
+            body.voicemail_transcription_enabled = voicemail_transcription_enabled
         url = self.ep(f'locations/{location_id}/voicemail')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def voice_portal(self, location_id: str, org_id: str = None) -> GetVoicePortalResponse:
@@ -7712,23 +8322,23 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateVoicePortalBody()
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if name is not None:
-            body['name'] = name
+            body.name = name
         if language_code is not None:
-            body['languageCode'] = language_code
+            body.language_code = language_code
         if phone_number is not None:
-            body['phoneNumber'] = phone_number
+            body.phone_number = phone_number
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if passcode is not None:
-            body['passcode'] = passcode
+            body.passcode = passcode
         url = self.ep(f'locations/{location_id}/voicePortal')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def voice_portal_passcode_rule(self, location_id: str, org_id: str = None) -> GetVoicePortalPasscodeRuleResponse:
@@ -7787,15 +8397,15 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateMusicOnHoldBody()
         if call_hold_enabled is not None:
-            body['callHoldEnabled'] = call_hold_enabled
+            body.call_hold_enabled = call_hold_enabled
         if call_park_enabled is not None:
-            body['callParkEnabled'] = call_park_enabled
+            body.call_park_enabled = call_park_enabled
         if greeting is not None:
-            body['greeting'] = greeting
+            body.greeting = greeting
         url = self.ep(f'locations/{location_id}/musicOnHold')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def list_voicemail_group(self, location_id: str = None, org_id: str = None, name: str = None, phone_number: str = None, **params) -> Generator[GetVoicemailGroupObject, None, None]:
@@ -7891,39 +8501,39 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyLocationVoicemailGroupBody()
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if phone_number is not None:
-            body['phoneNumber'] = phone_number
+            body.phone_number = phone_number
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if name is not None:
-            body['name'] = name
+            body.name = name
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if passcode is not None:
-            body['passcode'] = passcode
+            body.passcode = passcode
         if language_code is not None:
-            body['languageCode'] = language_code
+            body.language_code = language_code
         if greeting is not None:
-            body['greeting'] = greeting
+            body.greeting = greeting
         if greeting_description is not None:
-            body['greetingDescription'] = greeting_description
+            body.greeting_description = greeting_description
         if message_storage is not None:
-            body['messageStorage'] = message_storage
+            body.message_storage = message_storage
         if notifications is not None:
-            body['notifications'] = notifications
+            body.notifications = notifications
         if fax_message is not None:
-            body['faxMessage'] = fax_message
+            body.fax_message = fax_message
         if transfer_to_number is not None:
-            body['transferToNumber'] = transfer_to_number
+            body.transfer_to_number = transfer_to_number
         if email_copy_of_message is not None:
-            body['emailCopyOfMessage'] = email_copy_of_message
+            body.email_copy_of_message = email_copy_of_message
         url = self.ep(f'locations/{location_id}/voicemailGroups/{voicemail_group_id}')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def createnew_voicemail_group_for_location(self, location_id: str, passcode: int, language_code: str, message_storage: MessageStorage, notifications: NewNumber, fax_message: FaxMessage, transfer_to_number: NewNumber, email_copy_of_message: EmailCopyOfMessage, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, first_name: str = None, last_name: str = None) -> str:
@@ -7964,33 +8574,33 @@ SIP password setting
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreatenewVoicemailGroupForLocationBody()
         if passcode is not None:
-            body['passcode'] = passcode
+            body.passcode = passcode
         if language_code is not None:
-            body['languageCode'] = language_code
+            body.language_code = language_code
         if message_storage is not None:
-            body['messageStorage'] = message_storage
+            body.message_storage = message_storage
         if notifications is not None:
-            body['notifications'] = notifications
+            body.notifications = notifications
         if fax_message is not None:
-            body['faxMessage'] = fax_message
+            body.fax_message = fax_message
         if transfer_to_number is not None:
-            body['transferToNumber'] = transfer_to_number
+            body.transfer_to_number = transfer_to_number
         if email_copy_of_message is not None:
-            body['emailCopyOfMessage'] = email_copy_of_message
+            body.email_copy_of_message = email_copy_of_message
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if name is not None:
-            body['name'] = name
+            body.name = name
         if phone_number is not None:
-            body['phoneNumber'] = phone_number
+            body.phone_number = phone_number
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         url = self.ep(f'locations/{location_id}/voicemailGroups')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def delete_voicemail_group_for_location(self, location_id: str, voicemail_group_id: str, org_id: str = None):
@@ -8089,13 +8699,13 @@ The ! wildcard can only occur once at the end and only in an E.164 pattern
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyDialPatternsBody()
         if dial_patterns is not None:
-            body['dialPatterns'] = dial_patterns
+            body.dial_patterns = dial_patterns
         if delete_all_dial_patterns is not None:
-            body['deleteAllDialPatterns'] = delete_all_dial_patterns
+            body.delete_all_dial_patterns = delete_all_dial_patterns
         url = self.ep(f'premisePstn/dialPlans/{dial_plan_id}/dialPatterns')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def validate_dial_pattern(self, dial_patterns: List[str], org_id: str = None) -> ValidateDialPatternResponse:
@@ -8116,11 +8726,11 @@ Possible values: +5555,7777
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ValidateDialPatternBody()
         if dial_patterns is not None:
-            body['dialPatterns'] = dial_patterns
+            body.dial_patterns = dial_patterns
         url = self.ep('premisePstn/actions/validateDialPatterns/invoke')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return ValidateDialPatternResponse.parse_obj(data)
 
     def read_list_of_dial_plans(self, org_id: str = None, dial_plan_name: str = None, route_group_name: str = None, trunk_name: str = None, max: int = None, start: int = None, order: str = None) -> List[DialPlan]:
@@ -8187,17 +8797,17 @@ Possible values: +5555,+5556
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateDialPlanBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if route_id is not None:
-            body['routeId'] = route_id
+            body.route_id = route_id
         if route_type is not None:
-            body['routeType'] = route_type
+            body.route_type = route_type
         if dial_patterns is not None:
-            body['dialPatterns'] = dial_patterns
+            body.dial_patterns = dial_patterns
         url = self.ep('premisePstn/dialPlans')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def dial_plan(self, dial_plan_id: str, org_id: str = None) -> GetAvailableRecallHuntGroupsObject:
@@ -8244,15 +8854,15 @@ Possible values: +5555,+5556
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyDialPlanBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if route_id is not None:
-            body['routeId'] = route_id
+            body.route_id = route_id
         if route_type is not None:
-            body['routeType'] = route_type
+            body.route_type = route_type
         url = self.ep(f'premisePstn/dialPlans/{dial_plan_id}')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def delete_dial_plan(self, dial_plan_id: str, org_id: str = None):
@@ -8295,15 +8905,15 @@ Possible values: +5555,+5556
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ValidateLocalGatewayFQDNAndDomainForTrunkBody()
         if address is not None:
-            body['address'] = address
+            body.address = address
         if domain is not None:
-            body['domain'] = domain
+            body.domain = domain
         if port is not None:
-            body['port'] = port
+            body.port = port
         url = self.ep('premisePstn/trunks/actions/fqdnValidation/invoke')
-        super().post(url=url, params=params, json=body)
+        super().post(url=url, params=params, data=body.json())
         return
 
     def read_list_of_trunks(self, org_id: str = None, name: List[str] = None, location_name: List[str] = None, trunk_type: str = None, max: int = None, start: int = None, order: str = None) -> List[Trunk]:
@@ -8380,29 +8990,29 @@ Possible values: +5555,+5556
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateTrunkBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if password is not None:
-            body['password'] = password
+            body.password = password
         if location_id is not None:
-            body['locationId'] = location_id
+            body.location_id = location_id
         if trunk_type is not None:
-            body['trunkType'] = trunk_type
+            body.trunk_type = trunk_type
         if dual_identity_support_enabled is not None:
-            body['dualIdentitySupportEnabled'] = dual_identity_support_enabled
+            body.dual_identity_support_enabled = dual_identity_support_enabled
         if max_concurrent_calls is not None:
-            body['maxConcurrentCalls'] = max_concurrent_calls
+            body.max_concurrent_calls = max_concurrent_calls
         if device_type is not None:
-            body['deviceType'] = device_type
+            body.device_type = device_type
         if address is not None:
-            body['address'] = address
+            body.address = address
         if domain is not None:
-            body['domain'] = domain
+            body.domain = domain
         if port is not None:
-            body['port'] = port
+            body.port = port
         url = self.ep('premisePstn/trunks')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def trunk(self, trunk_id: str, org_id: str = None) -> GetTrunkResponse:
@@ -8447,17 +9057,17 @@ Possible values: +5555,+5556
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyTrunkBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if password is not None:
-            body['password'] = password
+            body.password = password
         if dual_identity_support_enabled is not None:
-            body['dualIdentitySupportEnabled'] = dual_identity_support_enabled
+            body.dual_identity_support_enabled = dual_identity_support_enabled
         if max_concurrent_calls is not None:
-            body['maxConcurrentCalls'] = max_concurrent_calls
+            body.max_concurrent_calls = max_concurrent_calls
         url = self.ep(f'premisePstn/trunks/{trunk_id}')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def delete_trunk(self, trunk_id: str, org_id: str = None):
@@ -8543,13 +9153,13 @@ Possible values: +5555,+5556
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateRouteGroupForOrganizationBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if local_gateways is not None:
-            body['localGateways'] = local_gateways
+            body.local_gateways = local_gateways
         url = self.ep('premisePstn/routeGroups')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def read_route_group_for_organization(self, route_group_id: str, org_id: str = None) -> GetAvailableRecallHuntGroupsObject:
@@ -8588,13 +9198,13 @@ Possible values: +5555,+5556
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyRouteGroupForOrganizationBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if local_gateways is not None:
-            body['localGateways'] = local_gateways
+            body.local_gateways = local_gateways
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def remove_route_group_from_organization(self, route_group_id: str, org_id: str = None):
@@ -8824,15 +9434,15 @@ Possible values: +5555,+5556
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateRouteListBody()
         if location_id is not None:
-            body['locationId'] = location_id
+            body.location_id = location_id
         if name is not None:
-            body['name'] = name
+            body.name = name
         if route_group_id is not None:
-            body['routeGroupId'] = route_group_id
+            body.route_group_id = route_group_id
         url = self.ep('premisePstn/routeLists')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def delete_route_list(self, route_list_id: str, org_id: str = None):
@@ -8889,13 +9499,13 @@ Possible values: +5555,+5556
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyRouteListBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if route_group_id is not None:
-            body['routeGroupId'] = route_group_id
+            body.route_group_id = route_group_id
         url = self.ep(f'premisePstn/routeLists/{route_list_id}')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def modify_numbers_for_route_list(self, route_list_id: str, org_id: str = None, numbers: RouteListNumberPatch = None, delete_all_numbers: bool = None) -> List[RouteListNumberPatchResponse]:
@@ -8916,13 +9526,13 @@ Possible values: +5555,+5556
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyNumbersForRouteListBody()
         if numbers is not None:
-            body['numbers'] = numbers
+            body.numbers = numbers
         if delete_all_numbers is not None:
-            body['deleteAllNumbers'] = delete_all_numbers
+            body.delete_all_numbers = delete_all_numbers
         url = self.ep(f'premisePstn/routeLists/{route_list_id}/numbers')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return data["numberStatus"]
 
     def numbers_assigned_to_route_list(self, route_list_id: str, org_id: str = None, max: int = None, start: int = None, order: str = None, number: str = None) -> str:
@@ -9138,25 +9748,25 @@ Possible values: +5555,+5556
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateCallQueueHolidayServiceBody()
         if holiday_service_enabled is not None:
-            body['holidayServiceEnabled'] = holiday_service_enabled
+            body.holiday_service_enabled = holiday_service_enabled
         if holiday_schedule_level is not None:
-            body['holidayScheduleLevel'] = holiday_schedule_level
+            body.holiday_schedule_level = holiday_schedule_level
         if play_announcement_before_enabled is not None:
-            body['playAnnouncementBeforeEnabled'] = play_announcement_before_enabled
+            body.play_announcement_before_enabled = play_announcement_before_enabled
         if action is not None:
-            body['action'] = action
+            body.action = action
         if transfer_phone_number is not None:
-            body['transferPhoneNumber'] = transfer_phone_number
+            body.transfer_phone_number = transfer_phone_number
         if audio_message_selection is not None:
-            body['audioMessageSelection'] = audio_message_selection
+            body.audio_message_selection = audio_message_selection
         if audio_files is not None:
-            body['audioFiles'] = audio_files
+            body.audio_files = audio_files
         if holiday_schedule_name is not None:
-            body['holidayScheduleName'] = holiday_schedule_name
+            body.holiday_schedule_name = holiday_schedule_name
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/holidayService')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def details_for_queue_night_service(self, location_id: str, queue_id: str, org_id: str = None) -> GetDetailsForCallQueueNightServiceResponse:
@@ -9221,33 +9831,33 @@ Possible values: +5555,+5556
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateCallQueueNightServiceBody()
         if night_service_enabled is not None:
-            body['nightServiceEnabled'] = night_service_enabled
+            body.night_service_enabled = night_service_enabled
         if play_announcement_before_enabled is not None:
-            body['playAnnouncementBeforeEnabled'] = play_announcement_before_enabled
+            body.play_announcement_before_enabled = play_announcement_before_enabled
         if announcement_mode is not None:
-            body['announcementMode'] = announcement_mode
+            body.announcement_mode = announcement_mode
         if force_night_service_enabled is not None:
-            body['forceNightServiceEnabled'] = force_night_service_enabled
+            body.force_night_service_enabled = force_night_service_enabled
         if manual_audio_message_selection is not None:
-            body['manualAudioMessageSelection'] = manual_audio_message_selection
+            body.manual_audio_message_selection = manual_audio_message_selection
         if action is not None:
-            body['action'] = action
+            body.action = action
         if transfer_phone_number is not None:
-            body['transferPhoneNumber'] = transfer_phone_number
+            body.transfer_phone_number = transfer_phone_number
         if audio_message_selection is not None:
-            body['audioMessageSelection'] = audio_message_selection
+            body.audio_message_selection = audio_message_selection
         if audio_files is not None:
-            body['audioFiles'] = audio_files
+            body.audio_files = audio_files
         if business_hours_name is not None:
-            body['businessHoursName'] = business_hours_name
+            body.business_hours_name = business_hours_name
         if business_hours_level is not None:
-            body['businessHoursLevel'] = business_hours_level
+            body.business_hours_level = business_hours_level
         if manual_audio_files is not None:
-            body['manualAudioFiles'] = manual_audio_files
+            body.manual_audio_files = manual_audio_files
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/nightService')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def details_for_queue_forced_forward(self, location_id: str, queue_id: str, org_id: str = None) -> GetDetailsForCallQueueForcedForwardResponse:
@@ -9297,19 +9907,19 @@ Possible values: +5555,+5556
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateCallQueueForcedForwardServiceBody()
         if forced_forward_enabled is not None:
-            body['forcedForwardEnabled'] = forced_forward_enabled
+            body.forced_forward_enabled = forced_forward_enabled
         if transfer_phone_number is not None:
-            body['transferPhoneNumber'] = transfer_phone_number
+            body.transfer_phone_number = transfer_phone_number
         if play_announcement_before_enabled is not None:
-            body['playAnnouncementBeforeEnabled'] = play_announcement_before_enabled
+            body.play_announcement_before_enabled = play_announcement_before_enabled
         if audio_message_selection is not None:
-            body['audioMessageSelection'] = audio_message_selection
+            body.audio_message_selection = audio_message_selection
         if audio_files is not None:
-            body['audioFiles'] = audio_files
+            body.audio_files = audio_files
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/forcedForward')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def details_for_queue_stranded(self, location_id: str, queue_id: str, org_id: str = None) -> GetDetailsForCallQueueStrandedCallsResponse:
@@ -9357,18 +9967,396 @@ Possible values: +5555,+5556
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateCallQueueStrandedCallsServiceBody()
         if action is not None:
-            body['action'] = action
+            body.action = action
         if transfer_phone_number is not None:
-            body['transferPhoneNumber'] = transfer_phone_number
+            body.transfer_phone_number = transfer_phone_number
         if audio_message_selection is not None:
-            body['audioMessageSelection'] = audio_message_selection
+            body.audio_message_selection = audio_message_selection
         if audio_files is not None:
-            body['audioFiles'] = audio_files
+            body.audio_files = audio_files
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/strandedCalls')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
+
+    def device_members(self, device_id: str, org_id: str = None) -> GetDeviceMembersResponse:
+        """
+        Get the list of all the members of the device including primary and secondary users.
+        A device member can be either a person or a workspace. An admin can access the list of member details, modify member details and 
+        search for available members on a device.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param org_id: Retrieves the list of all members of the device in this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'devices/{device_id}/members')
+        data = super().get(url=url, params=params)
+        return GetDeviceMembersResponse.parse_obj(data)
+
+    def update_members_ondevice(self, device_id: str, org_id: str = None, members: PutMemberObject = None):
+        """
+        Modify member details on the device.
+        A device member can be either a person or a workspace. An admin can access the list of member details, modify member details and
+        search for available members on a device.
+        Modifying members on the device requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param org_id: Modify members on the device in this organization.
+        :type org_id: str
+        :param members: If the member's list is missing then all the users are removed except the primary user.
+        :type members: PutMemberObject
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = UpdateMembersOndeviceBody()
+        if members is not None:
+            body.members = members
+        url = self.ep(f'devices/{device_id}/members')
+        super().put(url=url, params=params, data=body.json())
+        return
+
+    def search_members(self, device_id: str, location_id: str, org_id: str = None, start: int = None, max: int = None, member_name: str = None, phone_number: str = None, extension: str = None) -> List[SearchMemberObject]:
+        """
+        Search members that can be assigned to the device.
+        A device member can be either a person or a workspace. A admin can access the list of member details, modify member details and
+        search for available members on a device.
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param org_id: Retrieves the list of available members on the device in this organization.
+        :type org_id: str
+        :param start: Specifies the offset from the first result that you want to fetch.
+        :type start: int
+        :param max: Specifies the maximum number of records that you want to fetch.
+        :type max: int
+        :param member_name: Search (Contains) numbers based on member name.
+        :type member_name: str
+        :param phone_number: Search (Contains) based on number.
+        :type phone_number: str
+        :param extension: Search (Contains) based on extension.
+        :type extension: str
+        """
+        params = {}
+        if location_id is not None:
+            params['locationId'] = location_id
+        if org_id is not None:
+            params['orgId'] = org_id
+        if start is not None:
+            params['start'] = start
+        if max is not None:
+            params['max'] = max
+        if member_name is not None:
+            params['memberName'] = member_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if extension is not None:
+            params['extension'] = extension
+        url = self.ep(f'devices/{device_id}/availableMembers')
+        data = super().get(url=url, params=params)
+        return data["members"]
+
+    def apply_changes_forspecific_device(self, device_id: str, org_id: str = None):
+        """
+        Issues request to the device to download and apply changes to the configuration.
+        Applying changes for a specific device requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param org_id: Apply changes for a device in this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'devices/{device_id}/actions/applyChanges/invoke')
+        super().post(url=url, params=params)
+        return
+
+    def device_settings(self, device_id: str, device_model: str, org_id: str = None) -> GetDeviceSettingsResponse:
+        """
+        Get override settings for a device.
+        Device settings lists all the applicable settings for an MPP and an ATA devices at the device level. An admin can also modify the settings. DECT devices do not support settings at the device level.
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param device_model: Model type of the device.
+        :type device_model: str
+        :param org_id: Settings on the device in this organization.
+        :type org_id: str
+        """
+        params = {}
+        if device_model is not None:
+            params['deviceModel'] = device_model
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'devices/{device_id}/settings')
+        data = super().get(url=url, params=params)
+        return GetDeviceSettingsResponse.parse_obj(data)
+
+    def update_device_settings(self, device_id: str, customizations: CustomizationDeviceLevelObject, custom_enabled: bool, org_id: str = None, device_model: str = None):
+        """
+        Modify override settings for a device.
+        Device settings list all the applicable settings for an MPP and an ATA devices at the device level. Admins can also modify the settings. NOTE: DECT devices do not support settings at the device level.
+        Updating settings on the device requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param customizations: Indicates the customization object of the device settings.
+        :type customizations: CustomizationDeviceLevelObject
+        :param custom_enabled: Indicates if customization is allowed at a device level. If true, customized at a device level. If false, not customized; uses customer-level configuration.
+        :type custom_enabled: bool
+        :param org_id: Organization in which the device resides..
+        :type org_id: str
+        :param device_model: Device model name.
+        :type device_model: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if device_model is not None:
+            params['deviceModel'] = device_model
+        body = UpdateDeviceSettingsBody()
+        if customizations is not None:
+            body.customizations = customizations
+        if custom_enabled is not None:
+            body.custom_enabled = custom_enabled
+        url = self.ep(f'devices/{device_id}/settings')
+        super().put(url=url, params=params, data=body.json())
+        return
+
+    def location_device_settings(self, location_id: str, org_id: str = None) -> GetDeviceSettingsResponse:
+        """
+        Get device override settings for a location.
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param org_id: Organization in which the device resides.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/devices/settings')
+        data = super().get(url=url, params=params)
+        return GetDeviceSettingsResponse.parse_obj(data)
+
+    def user_devices(self, person_id: str, org_id: str = None) -> GetUserDevicesResponse:
+        """
+        Get all devices for a person.
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param person_id: Person for whom to retrieve devices.
+        :type person_id: str
+        :param org_id: Organization to which the person belongs.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'people/{person_id}/devices')
+        data = super().get(url=url, params=params)
+        return GetUserDevicesResponse.parse_obj(data)
+
+    def workspace_devices(self, workspace_id: str, org_id: str = None) -> GetWorkspaceDevicesResponse:
+        """
+        Get all devices for a workspace.
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param workspace_id: ID of the workspace for which to retrieve devices.
+        :type workspace_id: str
+        :param org_id: Organization to which the workspace belongs.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'workspaces/{workspace_id}/devices')
+        data = super().get(url=url, params=params)
+        return GetWorkspaceDevicesResponse.parse_obj(data)
+
+    def modify_workspace_devices(self, workspace_id: str, org_id: str = None, enabled: bool = None, limit_guest_use: bool = None, guest_hours_limit: int = None):
+        """
+        Modify devices for a workspace.
+        Modifying devices for a workspace requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param workspace_id: ID of the workspace for which to modify devices.
+        :type workspace_id: str
+        :param org_id: Organization to which the workspace belongs.
+        :type org_id: str
+        :param enabled: Enable/Disable hoteling Host. Enabling the device for hoteling means that a guest(end user) can log into this host(workspace device) and use this device
+as if it were their own. This is useful when traveling to a remote office but still needing to place/receive calls with their telephone number and access features normally available to them on their office phone.
+        :type enabled: bool
+        :param limit_guest_use: Enable limiting the time a guest can use the device. The time limit is configured via guestHoursLimit.
+        :type limit_guest_use: bool
+        :param guest_hours_limit: Time Limit in hours until hoteling is enabled. Mandatory if limitGuestUse is enabled.
+        :type guest_hours_limit: int
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = ModifyWorkspaceDevicesBody()
+        if enabled is not None:
+            body.enabled = enabled
+        if limit_guest_use is not None:
+            body.limit_guest_use = limit_guest_use
+        if guest_hours_limit is not None:
+            body.guest_hours_limit = guest_hours_limit
+        url = self.ep(f'workspaces/{workspace_id}/devices')
+        super().put(url=url, params=params, data=body.json())
+        return
+
+    def read_list_of_supported_devices(self, org_id: str = None) -> List[DeviceObject]:
+        """
+        Gets the list of supported devices for an organization.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param org_id: List supported devices for an organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('supportedDevices')
+        data = super().get(url=url, params=params)
+        return data["devices"]
+
+    def readdevice_override_settings_fororganization(self, org_id: str = None) -> ReaddeviceOverrideSettingsFororganizationResponse:
+        """
+        Get device override settings for an organization.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param org_id: List supported devices for an organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('devices/settings')
+        data = super().get(url=url, params=params)
+        return ReaddeviceOverrideSettingsFororganizationResponse.parse_obj(data)
+
+    def read_dect_device_type_list(self, org_id: str = None) -> List[DectDeviceList]:
+        """
+        Get DECT device type list with base stations and line ports supported count. This is a static list.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param org_id: 
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('devices/dects/supportedDevices')
+        data = super().get(url=url, params=params)
+        return data["devices"]
+
+    def validatelist_of_mac_address(self, macs: List[str], org_id: str = None) -> ValidatelistOfMACAddressResponse:
+        """
+        Validate a list of MAC addresses.
+        Validating this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param macs: MAC addresses to be validated.
+Possible values: {["ab125678cdef", "00005E0053B4"]}
+        :type macs: List[str]
+        :param org_id: Validate the mac address(es) for this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = ValidatelistOfMACAddressBody()
+        if macs is not None:
+            body.macs = macs
+        url = self.ep('devices/actions/validateMacs/invoke')
+        data = super().post(url=url, params=params, data=body.json())
+        return ValidatelistOfMACAddressResponse.parse_obj(data)
+
+    def change_device_settings_across_organization_or_location_job(self, org_id: str = None, location_id: str = None, location_customizations_enabled: bool = None, customizations: CustomizationObject = None) -> StartJobResponse:
+        """
+        Change device settings across organization or locations jobs.
+        Performs bulk and asynchronous processing for all types of device settings initiated by organization and system admins in a stateful persistent manner. This job will modify the requested device settings across all the devices. Whenever a location ID is specified in the request, it will modify the requested device settings only for the devices that are part of the provided location within an organization.
+        Returns a unique job ID which can then be utilized further to retrieve status and errors for the same.
+        Only one job per customer can be running at any given time within the same organization. An attempt to run multiple jobs at the same time will result in a 409 error response.
+        Running a job requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param org_id: Apply change device settings for all the devices under this organization.
+        :type org_id: str
+        :param location_id: Location within an organization where changes of device setings will be applied to all the devices within it.
+        :type location_id: str
+        :param location_customizations_enabled: Indicates if all the devices within this location will be customized with new requested customizations(if set to true) or will be overridden with the one at organization level (if set to false or any other value). This field has no effect when the job is being triggered at organization level.
+        :type location_customizations_enabled: bool
+        :param customizations: Indicates the settings for ATA devices, DECT devices and MPP devices.
+        :type customizations: CustomizationObject
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = ChangeDeviceSettingsAcrossOrganizationOrLocationJobBody()
+        if location_id is not None:
+            body.location_id = location_id
+        if location_customizations_enabled is not None:
+            body.location_customizations_enabled = location_customizations_enabled
+        if customizations is not None:
+            body.customizations = customizations
+        url = self.ep('jobs/devices/callDeviceSettings')
+        data = super().post(url=url, params=params, data=body.json())
+        return StartJobResponse.parse_obj(data)
+
+    def list_change_device_settings_jobs(self, org_id: str = None, **params) -> Generator[StartJobResponse, None, None]:
+        """
+        List change device settings jobs.
+        Lists all the jobs for jobType calldevicesettings for the given organization in order of most recent one to oldest one irrespective of its status.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param org_id: Retrieve list of 'calldevicesettings' jobs for this organization.
+        :type org_id: str
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('jobs/devices/callDeviceSettings')
+        return self.session.follow_pagination(url=url, model=StartJobResponse, params=params)
+
+    def change_device_settings_job_status(self, job_id: str) -> GetManageNumbersJobStatusResponse:
+        """
+        Get change device settings job status.
+        Provides details of the job with jobId of jobType calldevicesettings.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param job_id: Retrieve job details for this jobId.
+        :type job_id: str
+        """
+        url = self.ep(f'jobs/devices/callDeviceSettings/{job_id}')
+        data = super().get(url=url)
+        return GetManageNumbersJobStatusResponse.parse_obj(data)
+
+    def list_change_device_settings_job_errors(self, job_id: str, org_id: str = None, **params) -> Generator[ItemObject, None, None]:
+        """
+        List change device settings job errors.
+        Lists all error details of the job with jobId of jobType calldevicesettings.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param job_id: Retrieve job details for this jobId.
+        :type job_id: str
+        :param org_id: Retrieve list of jobs for this organization.
+        :type org_id: str
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'jobs/devices/callDeviceSettings/{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=ItemObject, params=params)
 
 class EffectiveBehaviorType(str, Enum):
     #: Calling in Webex or Hybrid Calling.
@@ -10027,13 +11015,13 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ConfigurepersonsCallingBehaviorBody()
         if behavior_type is not None:
-            body['behaviorType'] = behavior_type
+            body.behavior_type = behavior_type
         if profile_id is not None:
-            body['profileId'] = profile_id
+            body.profile_id = profile_id
         url = self.ep(f'people/{person_id}/features/callingBehavior')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def read_barge_in_for_person(self, person_id: str, org_id: str = None) -> ReadBargeInSettingsForPersonResponse:
@@ -10072,13 +11060,13 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ConfigureBargeInSettingsForPersonBody()
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if tone_enabled is not None:
-            body['toneEnabled'] = tone_enabled
+            body.tone_enabled = tone_enabled
         url = self.ep(f'people/{person_id}/features/bargeIn')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def read_forwarding_for_person(self, person_id: str, org_id: str = None) -> ReadForwardingSettingsForPersonResponse:
@@ -10119,13 +11107,13 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ConfigureCallForwardingSettingsForPersonBody()
         if call_forwarding is not None:
-            body['callForwarding'] = call_forwarding
+            body.call_forwarding = call_forwarding
         if business_continuity is not None:
-            body['businessContinuity'] = business_continuity
+            body.business_continuity = business_continuity
         url = self.ep(f'people/{person_id}/features/callForwarding')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def read_call_intercept_for_person(self, person_id: str, org_id: str = None) -> GetLocationInterceptResponse:
@@ -10166,15 +11154,15 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ConfigureCallInterceptSettingsForPersonBody()
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if incoming is not None:
-            body['incoming'] = incoming
+            body.incoming = incoming
         if outgoing is not None:
-            body['outgoing'] = outgoing
+            body.outgoing = outgoing
         url = self.ep(f'people/{person_id}/features/intercept')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def configure_call_intercept_greeting_for_person(self, person_id: str, org_id: str = None):
@@ -10240,21 +11228,21 @@ true when notification feature is in effect. false indicates notification is dis
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ConfigureCallRecordingSettingsForPersonBody()
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if record is not None:
-            body['record'] = record
+            body.record = record
         if record_voicemail_enabled is not None:
-            body['recordVoicemailEnabled'] = record_voicemail_enabled
+            body.record_voicemail_enabled = record_voicemail_enabled
         if start_stop_announcement_enabled is not None:
-            body['startStopAnnouncementEnabled'] = start_stop_announcement_enabled
+            body.start_stop_announcement_enabled = start_stop_announcement_enabled
         if notification is not None:
-            body['notification'] = notification
+            body.notification = notification
         if repeat is not None:
-            body['repeat'] = repeat
+            body.repeat = repeat
         url = self.ep(f'people/{person_id}/features/callRecording')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def read_caller_id_for_person(self, person_id: str, org_id: str = None) -> ReadCallerIDSettingsForPersonResponse:
@@ -10304,23 +11292,23 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ConfigureCallerIDSettingsForPersonBody()
         if selected is not None:
-            body['selected'] = selected
+            body.selected = selected
         if custom_number is not None:
-            body['customNumber'] = custom_number
+            body.custom_number = custom_number
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if block_in_forward_calls_enabled is not None:
-            body['blockInForwardCallsEnabled'] = block_in_forward_calls_enabled
+            body.block_in_forward_calls_enabled = block_in_forward_calls_enabled
         if external_caller_id_name_policy is not None:
-            body['externalCallerIdNamePolicy'] = external_caller_id_name_policy
+            body.external_caller_id_name_policy = external_caller_id_name_policy
         if custom_external_caller_id_name is not None:
-            body['customExternalCallerIdName'] = custom_external_caller_id_name
+            body.custom_external_caller_id_name = custom_external_caller_id_name
         url = self.ep(f'people/{person_id}/features/callerId')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def read_do_not_disturb_for_person(self, person_id: str, org_id: str = None) -> ReadDoNotDisturbSettingsForPersonResponse:
@@ -10359,13 +11347,13 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ConfigureDoNotDisturbSettingsForPersonBody()
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if ring_splash_enabled is not None:
-            body['ringSplashEnabled'] = ring_splash_enabled
+            body.ring_splash_enabled = ring_splash_enabled
         url = self.ep(f'people/{person_id}/features/doNotDisturb')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def read_voicemail_for_person(self, person_id: str, org_id: str = None) -> ReadVoicemailSettingsForPersonResponse:
@@ -10420,27 +11408,27 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ConfigureVoicemailSettingsForPersonBody()
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if send_all_calls is not None:
-            body['sendAllCalls'] = send_all_calls
+            body.send_all_calls = send_all_calls
         if send_busy_calls is not None:
-            body['sendBusyCalls'] = send_busy_calls
+            body.send_busy_calls = send_busy_calls
         if send_unanswered_calls is not None:
-            body['sendUnansweredCalls'] = send_unanswered_calls
+            body.send_unanswered_calls = send_unanswered_calls
         if notifications is not None:
-            body['notifications'] = notifications
+            body.notifications = notifications
         if transfer_to_number is not None:
-            body['transferToNumber'] = transfer_to_number
+            body.transfer_to_number = transfer_to_number
         if email_copy_of_message is not None:
-            body['emailCopyOfMessage'] = email_copy_of_message
+            body.email_copy_of_message = email_copy_of_message
         if message_storage is not None:
-            body['messageStorage'] = message_storage
+            body.message_storage = message_storage
         if fax_message is not None:
-            body['faxMessage'] = fax_message
+            body.fax_message = fax_message
         url = self.ep(f'people/{person_id}/features/voicemail')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def configure_busy_voicemail_greeting_for_person(self, person_id: str, org_id: str = None):
@@ -10523,15 +11511,15 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateScheduleForPersonBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if type_ is not None:
-            body['type'] = type_
+            body.type_ = type_
         if events is not None:
-            body['events'] = events
+            body.events = events
         url = self.ep(f'people/{person_id}/features/schedules')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def schedule_details(self, person_id: str, schedule_type: Type24, schedule_id: str, org_id: str = None) -> List[EventLongDetails]:
@@ -10582,17 +11570,17 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateScheduleBody1()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if type_ is not None:
-            body['type'] = type_
+            body.type_ = type_
         if new_name is not None:
-            body['newName'] = new_name
+            body.new_name = new_name
         if events is not None:
-            body['events'] = events
+            body.events = events
         url = self.ep(f'people/{person_id}/features/schedules/{schedule_type}/{schedule_id}')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return data["id"]
 
     def delete_schedule(self, person_id: str, schedule_type: Type24, schedule_id: str, org_id: str = None):
@@ -10673,23 +11661,23 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = AddNewEventForPersonsScheduleBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if start_date is not None:
-            body['startDate'] = start_date
+            body.start_date = start_date
         if end_date is not None:
-            body['endDate'] = end_date
+            body.end_date = end_date
         if start_time is not None:
-            body['startTime'] = start_time
+            body.start_time = start_time
         if end_time is not None:
-            body['endTime'] = end_time
+            body.end_time = end_time
         if all_day_enabled is not None:
-            body['allDayEnabled'] = all_day_enabled
+            body.all_day_enabled = all_day_enabled
         if recurrence is not None:
-            body['recurrence'] = recurrence
+            body.recurrence = recurrence
         url = self.ep(f'people/{person_id}/features/schedules/{schedule_type}/{schedule_id}/events')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def update_event_forpersons_schedule(self, person_id: str, schedule_type: Type24, schedule_id: str, event_id: str, name: str, start_date: str, end_date: str, start_time: str, end_time: str, new_name: str, org_id: str = None, all_day_enabled: bool = None, recurrence: Recurrence = None) -> str:
@@ -10728,25 +11716,25 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateEventForpersonsScheduleBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if start_date is not None:
-            body['startDate'] = start_date
+            body.start_date = start_date
         if end_date is not None:
-            body['endDate'] = end_date
+            body.end_date = end_date
         if start_time is not None:
-            body['startTime'] = start_time
+            body.start_time = start_time
         if end_time is not None:
-            body['endTime'] = end_time
+            body.end_time = end_time
         if new_name is not None:
-            body['newName'] = new_name
+            body.new_name = new_name
         if all_day_enabled is not None:
-            body['allDayEnabled'] = all_day_enabled
+            body.all_day_enabled = all_day_enabled
         if recurrence is not None:
-            body['recurrence'] = recurrence
+            body.recurrence = recurrence
         url = self.ep(f'people/{person_id}/features/schedules/{schedule_type}/{schedule_id}/events/{event_id}')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return data["id"]
 
     def delete_event_forpersons_schedule(self, person_id: str, schedule_type: Type24, schedule_id: str, event_id: str, org_id: str = None):
@@ -10807,11 +11795,11 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ConfigureCallWaitingSettingsForPersonBody()
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         url = self.ep(f'people/{person_id}/features/callWaiting')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrievepersons_monitoring(self, person_id: str, org_id: str = None) -> RetrievepersonsMonitoringSettingsResponse:
@@ -10851,13 +11839,13 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifypersonsMonitoringSettingsBody()
         if enable_call_park_notification is not None:
-            body['enableCallParkNotification'] = enable_call_park_notification
+            body.enable_call_park_notification = enable_call_park_notification
         if monitored_elements is not None:
-            body['monitoredElements'] = monitored_elements
+            body.monitored_elements = monitored_elements
         url = self.ep(f'people/{person_id}/features/monitoring')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def list_of_phone_numbers_for_person(self, person_id: str, org_id: str = None) -> GetListOfPhoneNumbersForPersonResponse:
@@ -10920,21 +11908,21 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifypersonsApplicationServicesSettingsBody()
         if ring_devices_for_click_to_dial_calls_enabled is not None:
-            body['ringDevicesForClickToDialCallsEnabled'] = ring_devices_for_click_to_dial_calls_enabled
+            body.ring_devices_for_click_to_dial_calls_enabled = ring_devices_for_click_to_dial_calls_enabled
         if ring_devices_for_group_page_enabled is not None:
-            body['ringDevicesForGroupPageEnabled'] = ring_devices_for_group_page_enabled
+            body.ring_devices_for_group_page_enabled = ring_devices_for_group_page_enabled
         if ring_devices_for_call_park_enabled is not None:
-            body['ringDevicesForCallParkEnabled'] = ring_devices_for_call_park_enabled
+            body.ring_devices_for_call_park_enabled = ring_devices_for_call_park_enabled
         if desktop_client_enabled is not None:
-            body['desktopClientEnabled'] = desktop_client_enabled
+            body.desktop_client_enabled = desktop_client_enabled
         if tablet_client_enabled is not None:
-            body['tabletClientEnabled'] = tablet_client_enabled
+            body.tablet_client_enabled = tablet_client_enabled
         if mobile_client_enabled is not None:
-            body['mobileClientEnabled'] = mobile_client_enabled
+            body.mobile_client_enabled = mobile_client_enabled
         url = self.ep(f'people/{person_id}/features/applications')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def getpersons_privacy(self, person_id: str, org_id: str = None) -> GetpersonsPrivacySettingsResponse:
@@ -10977,17 +11965,17 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ConfigurepersonsPrivacySettingsBody()
         if aa_extension_dialing_enabled is not None:
-            body['aaExtensionDialingEnabled'] = aa_extension_dialing_enabled
+            body.aa_extension_dialing_enabled = aa_extension_dialing_enabled
         if aa_naming_dialing_enabled is not None:
-            body['aaNamingDialingEnabled'] = aa_naming_dialing_enabled
+            body.aa_naming_dialing_enabled = aa_naming_dialing_enabled
         if enable_phone_status_directory_privacy is not None:
-            body['enablePhoneStatusDirectoryPrivacy'] = enable_phone_status_directory_privacy
+            body.enable_phone_status_directory_privacy = enable_phone_status_directory_privacy
         if monitoring_agents is not None:
-            body['monitoringAgents'] = monitoring_agents
+            body.monitoring_agents = monitoring_agents
         url = self.ep(f'people/{person_id}/features/privacy')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_executive_assistant_for_person(self, person_id: str, org_id: str = None) -> enum:
@@ -11024,11 +12012,11 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyExecutiveAssistantSettingsForPersonBody()
         if type_ is not None:
-            body['type'] = type_
+            body.type_ = type_
         url = self.ep(f'people/{person_id}/features/executiveAssistant')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def read_receptionist_client_for_person(self, person_id: str, org_id: str = None) -> ReadReceptionistClientSettingsForPersonResponse:
@@ -11068,13 +12056,13 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ConfigureReceptionistClientSettingsForPersonBody()
         if reception_enabled is not None:
-            body['receptionEnabled'] = reception_enabled
+            body.reception_enabled = reception_enabled
         if monitored_members is not None:
-            body['monitoredMembers'] = monitored_members
+            body.monitored_members = monitored_members
         url = self.ep(f'people/{person_id}/features/reception')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def read_push_to_talk_for_person(self, person_id: str, org_id: str = None) -> ReadPushtoTalkSettingsForPersonResponse:
@@ -11118,17 +12106,17 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ConfigurePushtoTalkSettingsForPersonBody()
         if allow_auto_answer is not None:
-            body['allowAutoAnswer'] = allow_auto_answer
+            body.allow_auto_answer = allow_auto_answer
         if connection_type is not None:
-            body['connectionType'] = connection_type
+            body.connection_type = connection_type
         if access_type is not None:
-            body['accessType'] = access_type
+            body.access_type = access_type
         if members is not None:
-            body['members'] = members
+            body.members = members
         url = self.ep(f'people/{person_id}/features/pushToTalk')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def read_hoteling_for_person(self, person_id: str, org_id: str = None) -> bool:
@@ -11165,11 +12153,11 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ConfigureHotelingSettingsForPersonBody()
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         url = self.ep(f'people/{person_id}/features/hoteling')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def reset_voicemail_pin(self, person_id: str, org_id: str = None):
@@ -11231,17 +12219,17 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ConfigureIncomingPermissionSettingsForPersonBody()
         if use_custom_enabled is not None:
-            body['useCustomEnabled'] = use_custom_enabled
+            body.use_custom_enabled = use_custom_enabled
         if external_transfer is not None:
-            body['externalTransfer'] = external_transfer
+            body.external_transfer = external_transfer
         if internal_calls_enabled is not None:
-            body['internalCallsEnabled'] = internal_calls_enabled
+            body.internal_calls_enabled = internal_calls_enabled
         if collect_calls_enabled is not None:
-            body['collectCallsEnabled'] = collect_calls_enabled
+            body.collect_calls_enabled = collect_calls_enabled
         url = self.ep(f'people/{person_id}/features/incomingPermission')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrievepersons_outgoing_calling_permissions(self, person_id: str, org_id: str = None) -> RetrievepersonsOutgoingCallingPermissionsSettingsResponse:
@@ -11280,13 +12268,13 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifypersonsOutgoingCallingPermissionsSettingsBody()
         if use_custom_enabled is not None:
-            body['useCustomEnabled'] = use_custom_enabled
+            body.use_custom_enabled = use_custom_enabled
         if calling_permissions is not None:
-            body['callingPermissions'] = calling_permissions
+            body.calling_permissions = calling_permissions
         url = self.ep(f'people/{person_id}/features/outgoingPermission')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def assign_or_unassign_numbers_toperson(self, person_id: str, phone_numbers: PhoneNumber, org_id: str = None, enable_distinctive_ring_pattern: bool = None):
@@ -11307,13 +12295,13 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = AssignOrUnassignNumbersTopersonBody()
         if phone_numbers is not None:
-            body['phoneNumbers'] = phone_numbers
+            body.phone_numbers = phone_numbers
         if enable_distinctive_ring_pattern is not None:
-            body['enableDistinctiveRingPattern'] = enable_distinctive_ring_pattern
+            body.enable_distinctive_ring_pattern = enable_distinctive_ring_pattern
         url = self.ep(f'telephony/config/people/{person_id}/numbers')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_list_of_call_queue_caller_id_information(self, person_id: str) -> List[CallQueueObject]:
@@ -11355,13 +12343,13 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
         :param selected_queue: Indicates agent's choice of using this queue's Caller ID for outgoing calls. It is empty object when queueCallerIdEnabled is false. When queueCallerIdEnabled is true this data must be populated.
         :type selected_queue: GetAvailableRecallHuntGroupsObject
         """
-        body = {}
+        body = ModifyCallQueueAgentsCallerIDInformationBody()
         if queue_caller_id_enabled is not None:
-            body['queueCallerIdEnabled'] = queue_caller_id_enabled
+            body.queue_caller_id_enabled = queue_caller_id_enabled
         if selected_queue is not None:
-            body['selectedQueue'] = selected_queue
+            body.selected_queue = selected_queue
         url = self.ep(f'telephony/config/people/{person_id}/queues/callerId')
-        super().put(url=url, json=body)
+        super().put(url=url, data=body.json())
         return
 
 class VoiceMessageDetails(ApiModel):
@@ -11447,11 +12435,11 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
         :param message_id: The voicemail message identifier of the message to mark as read.  If the messageId is not provided, then all voicemail messages for the user are marked as read.
         :type message_id: str
         """
-        body = {}
+        body = MarkAsReadBody()
         if message_id is not None:
-            body['messageId'] = message_id
+            body.message_id = message_id
         url = self.ep('markAsRead')
-        super().post(url=url, json=body)
+        super().post(url=url, data=body.json())
         return
 
     def mark_as_unread(self, message_id: str = None):
@@ -11462,11 +12450,11 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
         :param message_id: The voicemail message identifier of the message to mark as unread.  If the messageId is not provided, then all voicemail messages for the user are marked as unread.
         :type message_id: str
         """
-        body = {}
+        body = MarkAsUnreadBody()
         if message_id is not None:
-            body['messageId'] = message_id
+            body.message_id = message_id
         url = self.ep('markAsUnread')
-        super().post(url=url, json=body)
+        super().post(url=url, data=body.json())
         return
 
 class CallForwardingPlaceSettingGet(ApiModel):
@@ -11705,11 +12693,11 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyCallForwardingSettingsForWorkspaceBody()
         if call_forwarding is not None:
-            body['callForwarding'] = call_forwarding
+            body.call_forwarding = call_forwarding
         url = self.ep(f'callForwarding')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_call_waiting_settings_workspace(self, workspace_id: str, org_id: str = None) -> bool:
@@ -11746,11 +12734,11 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyCallWaitingSettingsForWorkspaceBody()
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         url = self.ep(f'callWaiting')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_caller_id_settings_workspace(self, workspace_id: str, org_id: str = None) -> RetrieveCallerIDSettingsForWorkspaceResponse:
@@ -11802,25 +12790,25 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyCallerIDSettingsForWorkspaceBody()
         if selected is not None:
-            body['selected'] = selected
+            body.selected = selected
         if custom_number is not None:
-            body['customNumber'] = custom_number
+            body.custom_number = custom_number
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         if display_detail is not None:
-            body['displayDetail'] = display_detail
+            body.display_detail = display_detail
         if block_in_forward_calls_enabled is not None:
-            body['blockInForwardCallsEnabled'] = block_in_forward_calls_enabled
+            body.block_in_forward_calls_enabled = block_in_forward_calls_enabled
         if external_caller_id_name_policy is not None:
-            body['externalCallerIdNamePolicy'] = external_caller_id_name_policy
+            body.external_caller_id_name_policy = external_caller_id_name_policy
         if custom_external_caller_id_name is not None:
-            body['customExternalCallerIdName'] = custom_external_caller_id_name
+            body.custom_external_caller_id_name = custom_external_caller_id_name
         if location_external_caller_id_name is not None:
-            body['locationExternalCallerIdName'] = location_external_caller_id_name
+            body.location_external_caller_id_name = location_external_caller_id_name
         url = self.ep(f'callerId')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_monitoring_settings_workspace(self, workspace_id: str, org_id: str = None) -> RetrieveMonitoringSettingsForWorkspaceResponse:
@@ -11860,13 +12848,13 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyMonitoringSettingsForWorkspaceBody()
         if enable_call_park_notification is not None:
-            body['enableCallParkNotification'] = enable_call_park_notification
+            body.enable_call_park_notification = enable_call_park_notification
         if monitored_elements is not None:
-            body['monitoredElements'] = monitored_elements
+            body.monitored_elements = monitored_elements
         url = self.ep(f'monitoring')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_incoming_permission_settings_workspace(self, workspace_id: str, org_id: str = None) -> ReadIncomingPermissionSettingsForPersonResponse:
@@ -11909,17 +12897,17 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyIncomingPermissionSettingsForWorkspaceBody()
         if use_custom_enabled is not None:
-            body['useCustomEnabled'] = use_custom_enabled
+            body.use_custom_enabled = use_custom_enabled
         if external_transfer is not None:
-            body['externalTransfer'] = external_transfer
+            body.external_transfer = external_transfer
         if internal_calls_enabled is not None:
-            body['internalCallsEnabled'] = internal_calls_enabled
+            body.internal_calls_enabled = internal_calls_enabled
         if collect_calls_enabled is not None:
-            body['collectCallsEnabled'] = collect_calls_enabled
+            body.collect_calls_enabled = collect_calls_enabled
         url = self.ep(f'incomingPermission')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_outgoing_permission_settings_workspace(self, workspace_id: str, org_id: str = None) -> RetrieveOutgoingPermissionSettingsForWorkspaceResponse:
@@ -11958,13 +12946,13 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyOutgoingPermissionSettingsForWorkspaceBody()
         if use_custom_enabled is not None:
-            body['useCustomEnabled'] = use_custom_enabled
+            body.use_custom_enabled = use_custom_enabled
         if calling_permissions is not None:
-            body['callingPermissions'] = calling_permissions
+            body.calling_permissions = calling_permissions
         url = self.ep(f'outgoingPermission')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_access_codes_workspace(self, workspace_id: str, org_id: str = None) -> List[AccessCodes]:
@@ -12001,11 +12989,11 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyAccessCodesForWorkspaceBody()
         if delete_codes is not None:
-            body['deleteCodes'] = delete_codes
+            body.delete_codes = delete_codes
         url = self.ep(f'outgoingPermission/accessCodes')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def create_access_codes_workspace(self, workspace_id: str, org_id: str = None, code: str = None, description: str = None):
@@ -12026,13 +13014,13 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateAccessCodesForWorkspaceBody()
         if code is not None:
-            body['code'] = code
+            body.code = code
         if description is not None:
-            body['description'] = description
+            body.description = description
         url = self.ep(f'outgoingPermission/accessCodes')
-        super().post(url=url, params=params, json=body)
+        super().post(url=url, params=params, data=body.json())
         return
 
     def read_call_intercept_settings_workspace(self, workspace_id: str, org_id: str = None) -> ReadCallInterceptSettingsForWorkspaceResponse:
@@ -12073,15 +13061,15 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ConfigureCallInterceptSettingsForWorkspaceBody()
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if incoming is not None:
-            body['incoming'] = incoming
+            body.incoming = incoming
         if outgoing is not None:
-            body['outgoing'] = outgoing
+            body.outgoing = outgoing
         url = self.ep(f'intercept')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_transfer_numbers_settings_workspace(self, workspace_id: str, org_id: str = None) -> GetOutgoingPermissionAutoTransferNumberResponse:
@@ -12122,13 +13110,13 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyTransferNumbersSettingsForWorkspaceBody()
         if auto_transfer_number1 is not None:
-            body['autoTransferNumber1'] = auto_transfer_number1
+            body.auto_transfer_number1 = auto_transfer_number1
         if auto_transfer_number2 is not None:
-            body['autoTransferNumber2'] = auto_transfer_number2
+            body.auto_transfer_number2 = auto_transfer_number2
         if auto_transfer_number3 is not None:
-            body['autoTransferNumber3'] = auto_transfer_number3
+            body.auto_transfer_number3 = auto_transfer_number3
         url = self.ep(f'outgoingPermission/autoTransferNumbers')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return

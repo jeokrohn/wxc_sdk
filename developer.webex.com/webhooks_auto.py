@@ -137,23 +137,23 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :param owned_by: Specified when creating an org/admin level webhook. Supported for meetings, recordings, meetingParticipants, and meetingTranscripts resources.
         :type owned_by: str
         """
-        body = {}
+        body = CreateWebhookBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if target_url is not None:
-            body['targetUrl'] = target_url
+            body.target_url = target_url
         if resource is not None:
-            body['resource'] = resource
+            body.resource = resource
         if event is not None:
-            body['event'] = event
+            body.event = event
         if filter is not None:
-            body['filter'] = filter
+            body.filter = filter
         if secret is not None:
-            body['secret'] = secret
+            body.secret = secret
         if owned_by is not None:
-            body['ownedBy'] = owned_by
+            body.owned_by = owned_by
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return Webhook.parse_obj(data)
 
     def details(self, webhook_id: str) -> Webhook:
@@ -187,19 +187,19 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :param status: The status of the webhook. Use "active" to reactivate a disabled webhook.
         :type status: Status
         """
-        body = {}
+        body = UpdateWebhookBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if target_url is not None:
-            body['targetUrl'] = target_url
+            body.target_url = target_url
         if secret is not None:
-            body['secret'] = secret
+            body.secret = secret
         if owned_by is not None:
-            body['ownedBy'] = owned_by
+            body.owned_by = owned_by
         if status is not None:
-            body['status'] = status
+            body.status = status
         url = self.ep(f'{webhook_id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return Webhook.parse_obj(data)
 
     def delete(self, webhook_id: str):

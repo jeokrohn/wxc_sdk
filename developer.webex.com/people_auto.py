@@ -230,43 +230,43 @@ Possible values: mysite.webex.com#attendee
         params = {}
         if calling_data is not None:
             params['callingData'] = calling_data
-        body = {}
+        body = CreatePersonBody()
         if emails is not None:
-            body['emails'] = emails
+            body.emails = emails
         if phone_numbers is not None:
-            body['phoneNumbers'] = phone_numbers
+            body.phone_numbers = phone_numbers
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if location_id is not None:
-            body['locationId'] = location_id
+            body.location_id = location_id
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if avatar is not None:
-            body['avatar'] = avatar
+            body.avatar = avatar
         if org_id is not None:
-            body['orgId'] = org_id
+            body.org_id = org_id
         if roles is not None:
-            body['roles'] = roles
+            body.roles = roles
         if licenses is not None:
-            body['licenses'] = licenses
+            body.licenses = licenses
         if department is not None:
-            body['department'] = department
+            body.department = department
         if manager is not None:
-            body['manager'] = manager
+            body.manager = manager
         if manager_id is not None:
-            body['managerId'] = manager_id
+            body.manager_id = manager_id
         if title is not None:
-            body['title'] = title
+            body.title = title
         if addresses is not None:
-            body['addresses'] = addresses
+            body.addresses = addresses
         if site_urls is not None:
-            body['siteUrls'] = site_urls
+            body.site_urls = site_urls
         url = self.ep()
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return Person.parse_obj(data)
 
     def details(self, person_id: str, calling_data: bool = None) -> Person:
@@ -354,47 +354,47 @@ Possible values: mysite.webex.com#attendee
             params['callingData'] = calling_data
         if show_all_types is not None:
             params['showAllTypes'] = show_all_types
-        body = {}
+        body = UpdatePersonBody()
         if emails is not None:
-            body['emails'] = emails
+            body.emails = emails
         if phone_numbers is not None:
-            body['phoneNumbers'] = phone_numbers
+            body.phone_numbers = phone_numbers
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if location_id is not None:
-            body['locationId'] = location_id
+            body.location_id = location_id
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if avatar is not None:
-            body['avatar'] = avatar
+            body.avatar = avatar
         if org_id is not None:
-            body['orgId'] = org_id
+            body.org_id = org_id
         if roles is not None:
-            body['roles'] = roles
+            body.roles = roles
         if licenses is not None:
-            body['licenses'] = licenses
+            body.licenses = licenses
         if department is not None:
-            body['department'] = department
+            body.department = department
         if manager is not None:
-            body['manager'] = manager
+            body.manager = manager
         if manager_id is not None:
-            body['managerId'] = manager_id
+            body.manager_id = manager_id
         if title is not None:
-            body['title'] = title
+            body.title = title
         if addresses is not None:
-            body['addresses'] = addresses
+            body.addresses = addresses
         if site_urls is not None:
-            body['siteUrls'] = site_urls
+            body.site_urls = site_urls
         if nick_name is not None:
-            body['nickName'] = nick_name
+            body.nick_name = nick_name
         if login_enabled is not None:
-            body['loginEnabled'] = login_enabled
+            body.login_enabled = login_enabled
         url = self.ep(f'{person_id}')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return Person.parse_obj(data)
 
     def delete(self, person_id: str):

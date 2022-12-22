@@ -101,17 +101,17 @@ class MembershipsApi(ApiChild, base='memberships'):
         :param is_moderator: Whether or not the participant is a room moderator.
         :type is_moderator: bool
         """
-        body = {}
+        body = CreateMembershipBody()
         if room_id is not None:
-            body['roomId'] = room_id
+            body.room_id = room_id
         if person_id is not None:
-            body['personId'] = person_id
+            body.person_id = person_id
         if person_email is not None:
-            body['personEmail'] = person_email
+            body.person_email = person_email
         if is_moderator is not None:
-            body['isModerator'] = is_moderator
+            body.is_moderator = is_moderator
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return Membership.parse_obj(data)
 
     def details(self, membership_id: str) -> Membership:
@@ -138,13 +138,13 @@ class MembershipsApi(ApiChild, base='memberships'):
         :param is_room_hidden: When set to true, hides direct spaces in the teams client. Any new message will make the room visible again.
         :type is_room_hidden: bool
         """
-        body = {}
+        body = UpdateMembershipBody()
         if is_moderator is not None:
-            body['isModerator'] = is_moderator
+            body.is_moderator = is_moderator
         if is_room_hidden is not None:
-            body['isRoomHidden'] = is_room_hidden
+            body.is_room_hidden = is_room_hidden
         url = self.ep(f'{membership_id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return Membership.parse_obj(data)
 
     def delete(self, membership_id: str):

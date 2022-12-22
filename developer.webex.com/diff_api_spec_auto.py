@@ -164,11 +164,11 @@ class BroadWorksEnterprisesWithDeleteOrgImprovementsApi(ApiChild, base='broadwor
         :param enable_dir_sync: The toggle to enable/disable directory sync.
         :type enable_dir_sync: bool
         """
-        body = {}
+        body = UpdateDirectorySyncForBroadWorksEnterpriseBody()
         if enable_dir_sync is not None:
-            body['enableDirSync'] = enable_dir_sync
+            body.enable_dir_sync = enable_dir_sync
         url = self.ep(f'{id}/broadworksDirectorySync')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return BroadworksDirectorySync.parse_obj(data)
 
     def trigger_sync_for_enterprise(self, id: str, sync_status: str) -> BroadworksDirectorySync:
@@ -180,11 +180,11 @@ class BroadWorksEnterprisesWithDeleteOrgImprovementsApi(ApiChild, base='broadwor
         :param sync_status: At this time, the only option allowed for this attribute is SYNC_NOW which will trigger the directory sync for the BroadWorks enterprise.
         :type sync_status: str
         """
-        body = {}
+        body = TriggerDirectorySyncForEnterpriseBody()
         if sync_status is not None:
-            body['syncStatus'] = sync_status
+            body.sync_status = sync_status
         url = self.ep(f'{id}/broadworksDirectorySync')
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return BroadworksDirectorySync.parse_obj(data)
 
     def sync_status_for_enterprise(self, id: str) -> BroadworksDirectorySync:
@@ -207,11 +207,11 @@ class BroadWorksEnterprisesWithDeleteOrgImprovementsApi(ApiChild, base='broadwor
         :param user_id: The user ID of the Broadworks user to be synced (A non-webex user).
         :type user_id: str
         """
-        body = {}
+        body = TriggerDirectorySyncForUserBody()
         if user_id is not None:
-            body['userId'] = user_id
+            body.user_id = user_id
         url = self.ep(f'{id}/broadworksDirectorySync/externalUser')
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return TriggerDirectorySyncForUserResponse.parse_obj(data)
 
 class UpdateBroadworksWorkspaceBody(ApiModel):
@@ -262,21 +262,21 @@ class BroadWorksWorkspacesApi(ApiChild, base='broadworks/workspaces'):
         :param extension: The extension number configured against the workspace on BroadWorks.
         :type extension: str
         """
-        body = {}
+        body = ProvisionBroadWorksWorkspaceBody()
         if provisioning_id is not None:
-            body['provisioningId'] = provisioning_id
+            body.provisioning_id = provisioning_id
         if sp_enterprise_id is not None:
-            body['spEnterpriseId'] = sp_enterprise_id
+            body.sp_enterprise_id = sp_enterprise_id
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         if user_id is not None:
-            body['userId'] = user_id
+            body.user_id = user_id
         if primary_phone_number is not None:
-            body['primaryPhoneNumber'] = primary_phone_number
+            body.primary_phone_number = primary_phone_number
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return ProvisionBroadWorksWorkspaceResponse.parse_obj(data)
 
     def update_broadworks(self, workspace_id: str, user_id: str = None, primary_phone_number: str = None, extension: str = None) -> ProvisionBroadWorksWorkspaceResponse:
@@ -292,15 +292,15 @@ class BroadWorksWorkspacesApi(ApiChild, base='broadworks/workspaces'):
         :param extension: The extension number configured against the workspace on BroadWorks.
         :type extension: str
         """
-        body = {}
+        body = UpdateBroadworksWorkspaceBody()
         if user_id is not None:
-            body['userId'] = user_id
+            body.user_id = user_id
         if primary_phone_number is not None:
-            body['primaryPhoneNumber'] = primary_phone_number
+            body.primary_phone_number = primary_phone_number
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         url = self.ep(f'{workspace_id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return ProvisionBroadWorksWorkspaceResponse.parse_obj(data)
 
     def remove_broad_works(self, workspace_id: str):
@@ -487,31 +487,31 @@ Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTI
         params = {}
         if calling_data is not None:
             params['callingData'] = calling_data
-        body = {}
+        body = CreatePersonBody()
         if emails is not None:
-            body['emails'] = emails
+            body.emails = emails
         if phone_numbers is not None:
-            body['phoneNumbers'] = phone_numbers
+            body.phone_numbers = phone_numbers
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if location_id is not None:
-            body['locationId'] = location_id
+            body.location_id = location_id
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if avatar is not None:
-            body['avatar'] = avatar
+            body.avatar = avatar
         if org_id is not None:
-            body['orgId'] = org_id
+            body.org_id = org_id
         if roles is not None:
-            body['roles'] = roles
+            body.roles = roles
         if licenses is not None:
-            body['licenses'] = licenses
+            body.licenses = licenses
         url = self.ep()
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return Person.parse_obj(data)
 
     def details(self, person_id: str, calling_data: bool = None) -> Person:
@@ -573,31 +573,31 @@ Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTI
         params = {}
         if calling_data is not None:
             params['callingData'] = calling_data
-        body = {}
+        body = UpdatePersonBody()
         if emails is not None:
-            body['emails'] = emails
+            body.emails = emails
         if phone_numbers is not None:
-            body['phoneNumbers'] = phone_numbers
+            body.phone_numbers = phone_numbers
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if location_id is not None:
-            body['locationId'] = location_id
+            body.location_id = location_id
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if avatar is not None:
-            body['avatar'] = avatar
+            body.avatar = avatar
         if org_id is not None:
-            body['orgId'] = org_id
+            body.org_id = org_id
         if roles is not None:
-            body['roles'] = roles
+            body.roles = roles
         if licenses is not None:
-            body['licenses'] = licenses
+            body.licenses = licenses
         url = self.ep(f'{person_id}')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return Person.parse_obj(data)
 
     def delete(self, person_id: str):
@@ -1171,31 +1171,31 @@ class WebexCallingOrganizationSettingsWithAgentJoinUnjoinAndAnnouncementFeatures
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateCallQueueBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if call_policies is not None:
-            body['callPolicies'] = call_policies
+            body.call_policies = call_policies
         if queue_settings is not None:
-            body['queueSettings'] = queue_settings
+            body.queue_settings = queue_settings
         if agents is not None:
-            body['agents'] = agents
+            body.agents = agents
         if phone_number is not None:
-            body['phoneNumber'] = phone_number
+            body.phone_number = phone_number
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if language_code is not None:
-            body['languageCode'] = language_code
+            body.language_code = language_code
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if time_zone is not None:
-            body['timeZone'] = time_zone
+            body.time_zone = time_zone
         if allow_agent_join_enabled is not None:
-            body['allowAgentJoinEnabled'] = allow_agent_join_enabled
+            body.allow_agent_join_enabled = allow_agent_join_enabled
         url = self.ep(f'')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
     def delete_queue(self, location_id: str, queue_id: str, org_id: str = None):
@@ -1300,37 +1300,37 @@ class WebexCallingOrganizationSettingsWithAgentJoinUnjoinAndAnnouncementFeatures
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateCallQueueBody()
         if queue_settings is not None:
-            body['queueSettings'] = queue_settings
+            body.queue_settings = queue_settings
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if name is not None:
-            body['name'] = name
+            body.name = name
         if language_code is not None:
-            body['languageCode'] = language_code
+            body.language_code = language_code
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if time_zone is not None:
-            body['timeZone'] = time_zone
+            body.time_zone = time_zone
         if phone_number is not None:
-            body['phoneNumber'] = phone_number
+            body.phone_number = phone_number
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if alternate_number_settings is not None:
-            body['alternateNumberSettings'] = alternate_number_settings
+            body.alternate_number_settings = alternate_number_settings
         if call_policies is not None:
-            body['callPolicies'] = call_policies
+            body.call_policies = call_policies
         if allow_call_waiting_for_agents_enabled is not None:
-            body['allowCallWaitingForAgentsEnabled'] = allow_call_waiting_for_agents_enabled
+            body.allow_call_waiting_for_agents_enabled = allow_call_waiting_for_agents_enabled
         if agents is not None:
-            body['agents'] = agents
+            body.agents = agents
         if allow_agent_join_enabled is not None:
-            body['allowAgentJoinEnabled'] = allow_agent_join_enabled
+            body.allow_agent_join_enabled = allow_agent_join_enabled
         url = self.ep(f'{queue_id}')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def read_list_of_queue_announcement_files(self, location_id: str, queue_id: str, org_id: str = None) -> List[GetAnnouncementFileInfo]:
@@ -2166,11 +2166,11 @@ class WebexCallingOrganizationSettingswithDevicesFeaturesApi(ApiChild, base='tel
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = UpdateMembersOndeviceBody()
         if members is not None:
-            body['members'] = members
+            body.members = members
         url = self.ep(f'devices/{device_id}/members')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def search_members(self, device_id: str, location_id: str, org_id: str = None, start: int = None, max: int = None, member_name: str = None, phone_number: str = None, extension: str = None) -> List[SearchMemberObject]:
@@ -2277,13 +2277,13 @@ class WebexCallingOrganizationSettingswithDevicesFeaturesApi(ApiChild, base='tel
             params['orgId'] = org_id
         if device_model is not None:
             params['deviceModel'] = device_model
-        body = {}
+        body = UpdateDeviceSettingsBody()
         if customizations is not None:
-            body['customizations'] = customizations
+            body.customizations = customizations
         if custom_enabled is not None:
-            body['customEnabled'] = custom_enabled
+            body.custom_enabled = custom_enabled
         url = self.ep(f'devices/{device_id}/settings')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def location_settings(self, location_id: str, org_id: str = None) -> GetDeviceSettingsResponse:
@@ -2357,15 +2357,15 @@ as if it were their own. This is useful when traveling to a remote office but st
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyWorkspaceDevicesBody()
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if limit_guest_use is not None:
-            body['limitGuestUse'] = limit_guest_use
+            body.limit_guest_use = limit_guest_use
         if guest_hours_limit is not None:
-            body['guestHoursLimit'] = guest_hours_limit
+            body.guest_hours_limit = guest_hours_limit
         url = self.ep(f'workspaces/{workspace_id}/devices')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def read_list_of_supported(self, org_id: str = None) -> List[DeviceObject]:
@@ -2427,11 +2427,11 @@ Possible values: {["ab125678cdef", "00005E0053B4"]}
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ValidatelistOfMACAddressBody()
         if macs is not None:
-            body['macs'] = macs
+            body.macs = macs
         url = self.ep('devices/actions/validateMacs/invoke')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return ValidatelistOfMACAddressResponse.parse_obj(data)
 
     def change_settings_across_organization_or_location_job(self, org_id: str = None, location_id: str = None, location_customizations_enabled: bool = None, customizations: CustomizationObject = None) -> ChangeDeviceSettingsAcrossOrganizationOrLocationJobResponse:
@@ -2454,15 +2454,15 @@ Possible values: {["ab125678cdef", "00005E0053B4"]}
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ChangeDeviceSettingsAcrossOrganizationOrLocationJobBody()
         if location_id is not None:
-            body['locationId'] = location_id
+            body.location_id = location_id
         if location_customizations_enabled is not None:
-            body['locationCustomizationsEnabled'] = location_customizations_enabled
+            body.location_customizations_enabled = location_customizations_enabled
         if customizations is not None:
-            body['customizations'] = customizations
+            body.customizations = customizations
         url = self.ep('jobs/devices/callDeviceSettings')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return ChangeDeviceSettingsAcrossOrganizationOrLocationJobResponse.parse_obj(data)
 
     def list_change_settings_jobs(self, org_id: str = None, **params) -> Generator[ListJobResponse, None, None]:
@@ -2624,23 +2624,23 @@ class WebexCallingPersonSettingsWithSharedLineApi(ApiChild, base='telephony/conf
         :param extension: Search users with extensions that match the query.
         :type extension: str
         """
-        body = {}
+        body = SearchSharedLineAppearanceMembersBody()
         if max is not None:
-            body['max'] = max
+            body.max = max
         if start is not None:
-            body['start'] = start
+            body.start = start
         if location is not None:
-            body['location'] = location
+            body.location = location
         if name is not None:
-            body['name'] = name
+            body.name = name
         if number is not None:
-            body['number'] = number
+            body.number = number
         if order is not None:
-            body['order'] = order
+            body.order = order
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         url = self.ep(f'availableMembers')
-        data = super().get(url=url, json=body)
+        data = super().get(url=url, data=body.json())
         return data["members"]
 
     def line_appearance_members(self, person_id: str, application_id: str) -> GetSharedLineAppearanceMembersResponse:
@@ -2669,11 +2669,11 @@ class WebexCallingPersonSettingsWithSharedLineApi(ApiChild, base='telephony/conf
         :param members: 
         :type members: PutSharedLineMemberItem
         """
-        body = {}
+        body = PutSharedLineAppearanceMembersBody()
         if members is not None:
-            body['members'] = members
+            body.members = members
         url = self.ep(f'members')
-        super().put(url=url, json=body)
+        super().put(url=url, data=body.json())
         return
 
 class InterceptNumberGet(ApiModel):
@@ -3082,11 +3082,11 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyCallForwardingSettingsForWorkspaceBody()
         if call_forwarding is not None:
-            body['callForwarding'] = call_forwarding
+            body.call_forwarding = call_forwarding
         url = self.ep(f'callForwarding')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_call_waiting_settings_workspace(self, workspace_id: str, org_id: str = None) -> bool:
@@ -3123,11 +3123,11 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyCallWaitingSettingsForWorkspaceBody()
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         url = self.ep(f'callWaiting')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_caller_id_settings_workspace(self, workspace_id: str, org_id: str = None) -> RetrieveCallerIDSettingsForWorkspaceResponse:
@@ -3179,25 +3179,25 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyCallerIDSettingsForWorkspaceBody()
         if selected is not None:
-            body['selected'] = selected
+            body.selected = selected
         if custom_number is not None:
-            body['customNumber'] = custom_number
+            body.custom_number = custom_number
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         if display_detail is not None:
-            body['displayDetail'] = display_detail
+            body.display_detail = display_detail
         if block_in_forward_calls_enabled is not None:
-            body['blockInForwardCallsEnabled'] = block_in_forward_calls_enabled
+            body.block_in_forward_calls_enabled = block_in_forward_calls_enabled
         if external_caller_id_name_policy is not None:
-            body['externalCallerIdNamePolicy'] = external_caller_id_name_policy
+            body.external_caller_id_name_policy = external_caller_id_name_policy
         if custom_external_caller_id_name is not None:
-            body['customExternalCallerIdName'] = custom_external_caller_id_name
+            body.custom_external_caller_id_name = custom_external_caller_id_name
         if location_external_caller_id_name is not None:
-            body['locationExternalCallerIdName'] = location_external_caller_id_name
+            body.location_external_caller_id_name = location_external_caller_id_name
         url = self.ep(f'callerId')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_monitoring_settings_workspace(self, workspace_id: str, org_id: str = None) -> RetrieveMonitoringSettingsForWorkspaceResponse:
@@ -3236,13 +3236,13 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyMonitoringSettingsForWorkspaceBody()
         if enable_call_park_notification is not None:
-            body['enableCallParkNotification'] = enable_call_park_notification
+            body.enable_call_park_notification = enable_call_park_notification
         if monitored_elements is not None:
-            body['monitoredElements'] = monitored_elements
+            body.monitored_elements = monitored_elements
         url = self.ep(f'monitoring')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_incoming_permission_settings_workspace(self, workspace_id: str, org_id: str = None) -> RetrieveIncomingPermissionSettingsForWorkspaceResponse:
@@ -3285,17 +3285,17 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyIncomingPermissionSettingsForWorkspaceBody()
         if use_custom_enabled is not None:
-            body['useCustomEnabled'] = use_custom_enabled
+            body.use_custom_enabled = use_custom_enabled
         if external_transfer is not None:
-            body['externalTransfer'] = external_transfer
+            body.external_transfer = external_transfer
         if internal_calls_enabled is not None:
-            body['internalCallsEnabled'] = internal_calls_enabled
+            body.internal_calls_enabled = internal_calls_enabled
         if collect_calls_enabled is not None:
-            body['collectCallsEnabled'] = collect_calls_enabled
+            body.collect_calls_enabled = collect_calls_enabled
         url = self.ep(f'incomingPermission')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_outgoing_permission_settings_workspace(self, workspace_id: str, org_id: str = None) -> RetrieveOutgoingPermissionSettingsForWorkspaceResponse:
@@ -3334,13 +3334,13 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyOutgoingPermissionSettingsForWorkspaceBody()
         if use_custom_enabled is not None:
-            body['useCustomEnabled'] = use_custom_enabled
+            body.use_custom_enabled = use_custom_enabled
         if calling_permissions is not None:
-            body['callingPermissions'] = calling_permissions
+            body.calling_permissions = calling_permissions
         url = self.ep(f'outgoingPermission')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_access_codes_workspace(self, workspace_id: str, org_id: str = None) -> List[AuthorizationCode]:
@@ -3377,11 +3377,11 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyAccessCodesForWorkspaceBody()
         if delete_codes is not None:
-            body['deleteCodes'] = delete_codes
+            body.delete_codes = delete_codes
         url = self.ep(f'outgoingPermission/accessCodes')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def create_access_codes_workspace(self, workspace_id: str, org_id: str = None, code: str = None, description: str = None):
@@ -3402,13 +3402,13 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateAccessCodesForWorkspaceBody()
         if code is not None:
-            body['code'] = code
+            body.code = code
         if description is not None:
-            body['description'] = description
+            body.description = description
         url = self.ep(f'outgoingPermission/accessCodes')
-        super().post(url=url, params=params, json=body)
+        super().post(url=url, params=params, data=body.json())
         return
 
     def read_call_intercept_settings_workspace(self, workspace_id: str, org_id: str = None) -> ReadCallInterceptSettingsForWorkspaceResponse:
@@ -3449,15 +3449,15 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ConfigureCallInterceptSettingsForWorkspaceBody()
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if incoming is not None:
-            body['incoming'] = incoming
+            body.incoming = incoming
         if outgoing is not None:
-            body['outgoing'] = outgoing
+            body.outgoing = outgoing
         url = self.ep(f'intercept')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_transfer_numbers_settings_workspace(self, workspace_id: str, org_id: str = None) -> RetrieveTransferNumbersSettingsForWorkspaceResponse:
@@ -3498,15 +3498,15 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyTransferNumbersSettingsForWorkspaceBody()
         if auto_transfer_number1 is not None:
-            body['autoTransferNumber1'] = auto_transfer_number1
+            body.auto_transfer_number1 = auto_transfer_number1
         if auto_transfer_number2 is not None:
-            body['autoTransferNumber2'] = auto_transfer_number2
+            body.auto_transfer_number2 = auto_transfer_number2
         if auto_transfer_number3 is not None:
-            body['autoTransferNumber3'] = auto_transfer_number3
+            body.auto_transfer_number3 = auto_transfer_number3
         url = self.ep(f'outgoingPermission/autoTransferNumbers')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
 class UpdateDirectorySyncForBroadWorksEnterpriseBody1(ApiModel):
@@ -3549,11 +3549,11 @@ class WebexforBroadworksphonelistsyncApi(ApiChild, base='broadworks/enterprises'
         :param enable_dir_sync: The toggle to enable/disable directory sync.
         :type enable_dir_sync: bool
         """
-        body = {}
+        body = UpdateDirectorySyncForBroadWorksEnterpriseBody1()
         if enable_dir_sync is not None:
-            body['enableDirSync'] = enable_dir_sync
+            body.enable_dir_sync = enable_dir_sync
         url = self.ep(f'{id}/broadworksDirectorySync')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return BroadworksDirectorySync.parse_obj(data)
 
     def trigger_sync_for_enterprise(self, id: str, sync_status: str) -> BroadworksDirectorySync:
@@ -3565,11 +3565,11 @@ class WebexforBroadworksphonelistsyncApi(ApiChild, base='broadworks/enterprises'
         :param sync_status: At this time, the only option allowed for this attribute is SYNC_NOW which will trigger the directory sync for the BroadWorks enterprise.
         :type sync_status: str
         """
-        body = {}
+        body = TriggerDirectorySyncForEnterpriseBody1()
         if sync_status is not None:
-            body['syncStatus'] = sync_status
+            body.sync_status = sync_status
         url = self.ep(f'{id}/broadworksDirectorySync')
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return BroadworksDirectorySync.parse_obj(data)
 
     def sync_status_for_enterprise(self, id: str) -> BroadworksDirectorySync:

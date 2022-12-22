@@ -54,15 +54,15 @@ class AttachmentActionsApi(ApiChild, base='attachment/actions'):
         :param inputs: The attachment action's inputs.
         :type inputs: Inputs
         """
-        body = {}
+        body = CreateAttachmentActionBody()
         if type_ is not None:
-            body['type'] = type_
+            body.type_ = type_
         if message_id is not None:
-            body['messageId'] = message_id
+            body.message_id = message_id
         if inputs is not None:
-            body['inputs'] = inputs
+            body.inputs = inputs
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return CreateAttachmentActionResponse.parse_obj(data)
 
     def action_details(self, id: str) -> CreateAttachmentActionResponse:
@@ -297,17 +297,17 @@ class MembershipsApi(ApiChild, base='memberships'):
         :param is_moderator: Whether or not the participant is a room moderator.
         :type is_moderator: bool
         """
-        body = {}
+        body = CreateMembershipBody()
         if room_id is not None:
-            body['roomId'] = room_id
+            body.room_id = room_id
         if person_id is not None:
-            body['personId'] = person_id
+            body.person_id = person_id
         if person_email is not None:
-            body['personEmail'] = person_email
+            body.person_email = person_email
         if is_moderator is not None:
-            body['isModerator'] = is_moderator
+            body.is_moderator = is_moderator
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return Membership.parse_obj(data)
 
     def details(self, membership_id: str) -> Membership:
@@ -334,13 +334,13 @@ class MembershipsApi(ApiChild, base='memberships'):
         :param is_room_hidden: When set to true, hides direct spaces in the teams client. Any new message will make the room visible again.
         :type is_room_hidden: bool
         """
-        body = {}
+        body = UpdateMembershipBody()
         if is_moderator is not None:
-            body['isModerator'] = is_moderator
+            body.is_moderator = is_moderator
         if is_room_hidden is not None:
-            body['isRoomHidden'] = is_room_hidden
+            body.is_room_hidden = is_room_hidden
         url = self.ep(f'{membership_id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return Membership.parse_obj(data)
 
     def delete(self, membership_id: str):
@@ -409,15 +409,15 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         :param display_name: User-friendly name for the room tab.
         :type display_name: str
         """
-        body = {}
+        body = CreateRoomTabBody()
         if room_id is not None:
-            body['roomId'] = room_id
+            body.room_id = room_id
         if content_url is not None:
-            body['contentUrl'] = content_url
+            body.content_url = content_url
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return RoomTab.parse_obj(data)
 
     def tab_details(self, id: str) -> RoomTab:
@@ -444,15 +444,15 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         :param display_name: User-friendly name for the room tab.
         :type display_name: str
         """
-        body = {}
+        body = UpdateRoomTabBody()
         if room_id is not None:
-            body['roomId'] = room_id
+            body.room_id = room_id
         if content_url is not None:
-            body['contentUrl'] = content_url
+            body.content_url = content_url
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         url = self.ep(f'{id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return RoomTab.parse_obj(data)
 
     def delete_tab(self, id: str):
@@ -597,23 +597,23 @@ Possible values: id, lastactivity, created
         :param is_announcement_only: Sets the space into announcement Mode.
         :type is_announcement_only: bool
         """
-        body = {}
+        body = CreateRoomBody()
         if title is not None:
-            body['title'] = title
+            body.title = title
         if team_id is not None:
-            body['teamId'] = team_id
+            body.team_id = team_id
         if classification_id is not None:
-            body['classificationId'] = classification_id
+            body.classification_id = classification_id
         if is_locked is not None:
-            body['isLocked'] = is_locked
+            body.is_locked = is_locked
         if is_public is not None:
-            body['isPublic'] = is_public
+            body.is_public = is_public
         if description is not None:
-            body['description'] = description
+            body.description = description
         if is_announcement_only is not None:
-            body['isAnnouncementOnly'] = is_announcement_only
+            body.is_announcement_only = is_announcement_only
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return Room.parse_obj(data)
 
     def details(self, room_id: str) -> Room:
@@ -667,25 +667,25 @@ Possible values: id, lastactivity, created
         :param is_read_only: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in this space, while maintaing historical data.
         :type is_read_only: bool
         """
-        body = {}
+        body = UpdateRoomBody()
         if title is not None:
-            body['title'] = title
+            body.title = title
         if team_id is not None:
-            body['teamId'] = team_id
+            body.team_id = team_id
         if classification_id is not None:
-            body['classificationId'] = classification_id
+            body.classification_id = classification_id
         if is_locked is not None:
-            body['isLocked'] = is_locked
+            body.is_locked = is_locked
         if is_public is not None:
-            body['isPublic'] = is_public
+            body.is_public = is_public
         if description is not None:
-            body['description'] = description
+            body.description = description
         if is_announcement_only is not None:
-            body['isAnnouncementOnly'] = is_announcement_only
+            body.is_announcement_only = is_announcement_only
         if is_read_only is not None:
-            body['isReadOnly'] = is_read_only
+            body.is_read_only = is_read_only
         url = self.ep(f'{room_id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return Room.parse_obj(data)
 
     def delete(self, room_id: str):
@@ -765,17 +765,17 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         :param is_moderator: Whether or not the participant is a team moderator.
         :type is_moderator: bool
         """
-        body = {}
+        body = CreateTeamMembershipBody()
         if team_id is not None:
-            body['teamId'] = team_id
+            body.team_id = team_id
         if person_id is not None:
-            body['personId'] = person_id
+            body.person_id = person_id
         if person_email is not None:
-            body['personEmail'] = person_email
+            body.person_email = person_email
         if is_moderator is not None:
-            body['isModerator'] = is_moderator
+            body.is_moderator = is_moderator
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return TeamMembership.parse_obj(data)
 
     def membership_details(self, membership_id: str) -> TeamMembership:
@@ -800,11 +800,11 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         :param is_moderator: Whether or not the participant is a team moderator.
         :type is_moderator: bool
         """
-        body = {}
+        body = UpdateTeamMembershipBody()
         if is_moderator is not None:
-            body['isModerator'] = is_moderator
+            body.is_moderator = is_moderator
         url = self.ep(f'{membership_id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return TeamMembership.parse_obj(data)
 
     def delete_membership(self, membership_id: str):
@@ -862,13 +862,13 @@ class TeamsApi(ApiChild, base='teams'):
         :param description: The teams description.
         :type description: str
         """
-        body = {}
+        body = CreateTeamBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if description is not None:
-            body['description'] = description
+            body.description = description
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return Team.parse_obj(data)
 
     def details(self, team_id: str, description: str = None) -> Team:
@@ -900,13 +900,13 @@ class TeamsApi(ApiChild, base='teams'):
         :param description: The teams description.
         :type description: str
         """
-        body = {}
+        body = UpdateTeamBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if description is not None:
-            body['description'] = description
+            body.description = description
         url = self.ep(f'{team_id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return Team.parse_obj(data)
 
     def delete(self, team_id: str):
@@ -1040,23 +1040,23 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :param owned_by: Specified when creating an org/admin level webhook. Supported for meetings, recordings, meetingParticipants, and meetingTranscripts resources.
         :type owned_by: str
         """
-        body = {}
+        body = CreateWebhookBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if target_url is not None:
-            body['targetUrl'] = target_url
+            body.target_url = target_url
         if resource is not None:
-            body['resource'] = resource
+            body.resource = resource
         if event is not None:
-            body['event'] = event
+            body.event = event
         if filter is not None:
-            body['filter'] = filter
+            body.filter = filter
         if secret is not None:
-            body['secret'] = secret
+            body.secret = secret
         if owned_by is not None:
-            body['ownedBy'] = owned_by
+            body.owned_by = owned_by
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return Webhook.parse_obj(data)
 
     def details(self, webhook_id: str) -> Webhook:
@@ -1090,19 +1090,19 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :param status: The status of the webhook. Use "active" to reactivate a disabled webhook.
         :type status: Status
         """
-        body = {}
+        body = UpdateWebhookBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if target_url is not None:
-            body['targetUrl'] = target_url
+            body.target_url = target_url
         if secret is not None:
-            body['secret'] = secret
+            body.secret = secret
         if owned_by is not None:
-            body['ownedBy'] = owned_by
+            body.owned_by = owned_by
         if status is not None:
-            body['status'] = status
+            body.status = status
         url = self.ep(f'{webhook_id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return Webhook.parse_obj(data)
 
     def delete(self, webhook_id: str):

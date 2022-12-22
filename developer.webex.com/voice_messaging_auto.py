@@ -106,11 +106,11 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
         :param message_id: The voicemail message identifier of the message to mark as read.  If the messageId is not provided, then all voicemail messages for the user are marked as read.
         :type message_id: str
         """
-        body = {}
+        body = MarkAsReadBody()
         if message_id is not None:
-            body['messageId'] = message_id
+            body.message_id = message_id
         url = self.ep('markAsRead')
-        super().post(url=url, json=body)
+        super().post(url=url, data=body.json())
         return
 
     def mark_as_unread(self, message_id: str = None):
@@ -121,9 +121,9 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
         :param message_id: The voicemail message identifier of the message to mark as unread.  If the messageId is not provided, then all voicemail messages for the user are marked as unread.
         :type message_id: str
         """
-        body = {}
+        body = MarkAsUnreadBody()
         if message_id is not None:
-            body['messageId'] = message_id
+            body.message_id = message_id
         url = self.ep('markAsUnread')
-        super().post(url=url, json=body)
+        super().post(url=url, data=body.json())
         return

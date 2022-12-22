@@ -148,23 +148,23 @@ Possible values: id, lastactivity, created
         :param is_announcement_only: Sets the space into announcement Mode.
         :type is_announcement_only: bool
         """
-        body = {}
+        body = CreateRoomBody()
         if title is not None:
-            body['title'] = title
+            body.title = title
         if team_id is not None:
-            body['teamId'] = team_id
+            body.team_id = team_id
         if classification_id is not None:
-            body['classificationId'] = classification_id
+            body.classification_id = classification_id
         if is_locked is not None:
-            body['isLocked'] = is_locked
+            body.is_locked = is_locked
         if is_public is not None:
-            body['isPublic'] = is_public
+            body.is_public = is_public
         if description is not None:
-            body['description'] = description
+            body.description = description
         if is_announcement_only is not None:
-            body['isAnnouncementOnly'] = is_announcement_only
+            body.is_announcement_only = is_announcement_only
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return Room.parse_obj(data)
 
     def details(self, room_id: str) -> Room:
@@ -218,25 +218,25 @@ Possible values: id, lastactivity, created
         :param is_read_only: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in this space, while maintaing historical data.
         :type is_read_only: bool
         """
-        body = {}
+        body = UpdateRoomBody()
         if title is not None:
-            body['title'] = title
+            body.title = title
         if team_id is not None:
-            body['teamId'] = team_id
+            body.team_id = team_id
         if classification_id is not None:
-            body['classificationId'] = classification_id
+            body.classification_id = classification_id
         if is_locked is not None:
-            body['isLocked'] = is_locked
+            body.is_locked = is_locked
         if is_public is not None:
-            body['isPublic'] = is_public
+            body.is_public = is_public
         if description is not None:
-            body['description'] = description
+            body.description = description
         if is_announcement_only is not None:
-            body['isAnnouncementOnly'] = is_announcement_only
+            body.is_announcement_only = is_announcement_only
         if is_read_only is not None:
-            body['isReadOnly'] = is_read_only
+            body.is_read_only = is_read_only
         url = self.ep(f'{room_id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return Room.parse_obj(data)
 
     def delete(self, room_id: str):

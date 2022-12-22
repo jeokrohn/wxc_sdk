@@ -155,17 +155,17 @@ class ReportsApi(ApiChild, base='reports'):
         :param site_list: Sites belonging to user's organization. This attribute is needed for site-based templates.
         :type site_list: str
         """
-        body = {}
+        body = CreateReportBody()
         if template_id is not None:
-            body['templateId'] = template_id
+            body.template_id = template_id
         if start_date is not None:
-            body['startDate'] = start_date
+            body.start_date = start_date
         if end_date is not None:
-            body['endDate'] = end_date
+            body.end_date = end_date
         if site_list is not None:
-            body['siteList'] = site_list
+            body.site_list = site_list
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return data["id"]
 
     def details(self, report_id: str) -> Report:

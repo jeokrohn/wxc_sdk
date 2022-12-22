@@ -304,23 +304,23 @@ Possible values: John Andersen
         :param panelist: If true, the invitee is a designated panelist for the event meeting.
         :type panelist: bool
         """
-        body = {}
+        body = CreateMeetingInviteeBody()
         if meeting_id is not None:
-            body['meetingId'] = meeting_id
+            body.meeting_id = meeting_id
         if email is not None:
-            body['email'] = email
+            body.email = email
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         if co_host is not None:
-            body['coHost'] = co_host
+            body.co_host = co_host
         if host_email is not None:
-            body['hostEmail'] = host_email
+            body.host_email = host_email
         if send_email is not None:
-            body['sendEmail'] = send_email
+            body.send_email = send_email
         if panelist is not None:
-            body['panelist'] = panelist
+            body.panelist = panelist
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return GetInviteeObject.parse_obj(data)
 
     def create_invitees(self, meeting_id: str, host_email: str = None, items: CreateInviteesItemObject = None) -> List[GetInviteeObject]:
@@ -337,15 +337,15 @@ Possible values: John Andersen
         :param items: Meeting invitees to be inserted.
         :type items: CreateInviteesItemObject
         """
-        body = {}
+        body = CreateMeetingInviteesBody()
         if meeting_id is not None:
-            body['meetingId'] = meeting_id
+            body.meeting_id = meeting_id
         if host_email is not None:
-            body['hostEmail'] = host_email
+            body.host_email = host_email
         if items is not None:
-            body['items'] = items
+            body.items = items
         url = self.ep('bulkInsert')
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return data["items"]
 
     def invitee(self, meeting_invitee_id: str, host_email: str = None) -> GetInviteeObject:
@@ -385,21 +385,21 @@ Possible values: John Andersen
         :param host_email: Email address for the meeting host. This attribute should only be set if the user or application calling the API has the admin on-behalf-of scopes. When used, the admin may specify the email of a user in a site they manage to be the meeting host.
         :type host_email: str
         """
-        body = {}
+        body = UpdateMeetingInviteeBody()
         if email is not None:
-            body['email'] = email
+            body.email = email
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         if co_host is not None:
-            body['coHost'] = co_host
+            body.co_host = co_host
         if send_email is not None:
-            body['sendEmail'] = send_email
+            body.send_email = send_email
         if panelist is not None:
-            body['panelist'] = panelist
+            body.panelist = panelist
         if host_email is not None:
-            body['hostEmail'] = host_email
+            body.host_email = host_email
         url = self.ep(f'{meeting_invitee_id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return GetInviteeObject.parse_obj(data)
 
     def delete_invitee(self, meeting_invitee_id: str, host_email: str = None, send_email: bool = None):
@@ -631,11 +631,11 @@ Possible values: a@example.com
             params['joinTimeFrom'] = join_time_from
         if join_time_to is not None:
             params['joinTimeTo'] = join_time_to
-        body = {}
+        body = QueryMeetingParticipantsWithEmailBody()
         if emails is not None:
-            body['emails'] = emails
+            body.emails = emails
         url = self.ep('query')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["items"]
 
     def participant_details(self, participant_id: str, host_email: str = None) -> Participant:
@@ -669,15 +669,15 @@ Possible values: a@example.com
         :param expel: The attribute is exclusive and its value can be true or false. The value of true means that the participant will be expelled from the meeting, the value of false means No-Op.
         :type expel: bool
         """
-        body = {}
+        body = UpdateParticipantBody()
         if muted is not None:
-            body['muted'] = muted
+            body.muted = muted
         if admit is not None:
-            body['admit'] = admit
+            body.admit = admit
         if expel is not None:
-            body['expel'] = expel
+            body.expel = expel
         url = self.ep(f'{participant_id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return UpdateParticipantResponse.parse_obj(data)
 
     def admit_participants(self, items: List[ParticipantID] = None):
@@ -690,11 +690,11 @@ Possible values: a@example.com
 The unique identifier for the meeting participant.
         :type items: List[ParticipantID]
         """
-        body = {}
+        body = AdmitParticipantsBody()
         if items is not None:
-            body['items'] = items
+            body.items = items
         url = self.ep('admit')
-        super().post(url=url, json=body)
+        super().post(url=url, data=body.json())
         return
 
 class Type(str, Enum):
@@ -1162,29 +1162,29 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             params['userEmail'] = user_email
         if site_url is not None:
             params['siteUrl'] = site_url
-        body = {}
+        body = UpdatePersonalMeetingRoomOptionsBody()
         if topic is not None:
-            body['topic'] = topic
+            body.topic = topic
         if host_pin is not None:
-            body['hostPin'] = host_pin
+            body.host_pin = host_pin
         if enabled_auto_lock is not None:
-            body['enabledAutoLock'] = enabled_auto_lock
+            body.enabled_auto_lock = enabled_auto_lock
         if auto_lock_minutes is not None:
-            body['autoLockMinutes'] = auto_lock_minutes
+            body.auto_lock_minutes = auto_lock_minutes
         if enabled_notify_host is not None:
-            body['enabledNotifyHost'] = enabled_notify_host
+            body.enabled_notify_host = enabled_notify_host
         if support_co_host is not None:
-            body['supportCoHost'] = support_co_host
+            body.support_co_host = support_co_host
         if co_hosts is not None:
-            body['coHosts'] = co_hosts
+            body.co_hosts = co_hosts
         if support_anyone_as_co_host is not None:
-            body['supportAnyoneAsCoHost'] = support_anyone_as_co_host
+            body.support_anyone_as_co_host = support_anyone_as_co_host
         if allow_first_user_to_be_co_host is not None:
-            body['allowFirstUserToBeCoHost'] = allow_first_user_to_be_co_host
+            body.allow_first_user_to_be_co_host = allow_first_user_to_be_co_host
         if allow_authenticated_devices is not None:
-            body['allowAuthenticatedDevices'] = allow_authenticated_devices
+            body.allow_authenticated_devices = allow_authenticated_devices
         url = self.ep('personalMeetingRoom')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return GetPersonalMeetingRoomOptionsResponse.parse_obj(data)
 
     def audio(self, user_email: str = None, site_url: str = None) -> Audio:
@@ -1235,25 +1235,25 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             params['userEmail'] = user_email
         if site_url is not None:
             params['siteUrl'] = site_url
-        body = {}
+        body = UpdateAudioOptionsBody()
         if default_audio_type is not None:
-            body['defaultAudioType'] = default_audio_type
+            body.default_audio_type = default_audio_type
         if other_teleconference_description is not None:
-            body['otherTeleconferenceDescription'] = other_teleconference_description
+            body.other_teleconference_description = other_teleconference_description
         if enabled_global_call_in is not None:
-            body['enabledGlobalCallIn'] = enabled_global_call_in
+            body.enabled_global_call_in = enabled_global_call_in
         if enabled_toll_free is not None:
-            body['enabledTollFree'] = enabled_toll_free
+            body.enabled_toll_free = enabled_toll_free
         if enabled_auto_connection is not None:
-            body['enabledAutoConnection'] = enabled_auto_connection
+            body.enabled_auto_connection = enabled_auto_connection
         if audio_pin is not None:
-            body['audioPin'] = audio_pin
+            body.audio_pin = audio_pin
         if office_number is not None:
-            body['officeNumber'] = office_number
+            body.office_number = office_number
         if mobile_number is not None:
-            body['mobileNumber'] = mobile_number
+            body.mobile_number = mobile_number
         url = self.ep('audio')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return Audio.parse_obj(data)
 
     def video(self, user_email: str = None, site_url: str = None) -> List[object]:
@@ -1290,11 +1290,11 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             params['userEmail'] = user_email
         if site_url is not None:
             params['siteUrl'] = site_url
-        body = {}
+        body = UpdateVideoOptionsBody()
         if video_devices is not None:
-            body['videoDevices'] = video_devices
+            body.video_devices = video_devices
         url = self.ep('video')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return data["videoDevices"]
 
     def scheduling(self, user_email: str = None, site_url: str = None) -> SchedulingOptionsObject:
@@ -1337,17 +1337,17 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             params['userEmail'] = user_email
         if site_url is not None:
             params['siteUrl'] = site_url
-        body = {}
+        body = UpdateSchedulingOptionsBody()
         if enabled_join_before_host is not None:
-            body['enabledJoinBeforeHost'] = enabled_join_before_host
+            body.enabled_join_before_host = enabled_join_before_host
         if join_before_host_minutes is not None:
-            body['joinBeforeHostMinutes'] = join_before_host_minutes
+            body.join_before_host_minutes = join_before_host_minutes
         if enabled_auto_share_recording is not None:
-            body['enabledAutoShareRecording'] = enabled_auto_share_recording
+            body.enabled_auto_share_recording = enabled_auto_share_recording
         if enabled_webex_assistant_by_default is not None:
-            body['enabledWebexAssistantByDefault'] = enabled_webex_assistant_by_default
+            body.enabled_webex_assistant_by_default = enabled_webex_assistant_by_default
         url = self.ep('schedulingOptions')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return SchedulingOptionsObject.parse_obj(data)
 
     def site_list(self, user_email: str = None) -> List[object]:
@@ -1380,11 +1380,11 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             params['defaultSite'] = default_site
         if user_email is not None:
             params['userEmail'] = user_email
-        body = {}
+        body = UpdateDefaultSiteBody()
         if site_url is not None:
-            body['siteUrl'] = site_url
+            body.site_url = site_url
         url = self.ep('sites')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return Sites.parse_obj(data)
 
 class AnswerObject(CoHosts):
@@ -1790,13 +1790,13 @@ Possible values: vtt, txt
         :param reason: Reason for snippet update; only required for Compliance Officers.
         :type reason: str
         """
-        body = {}
+        body = UpdateTranscriptSnippetBody()
         if text is not None:
-            body['text'] = text
+            body.text = text
         if reason is not None:
-            body['reason'] = reason
+            body.reason = reason
         url = self.ep(f'meetingTranscripts/{transcript_id}/snippets/{snippet_id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return SnippetObject1.parse_obj(data)
 
     def delete(self, transcript_id: str, reason: str = None, comment: str = None):
@@ -1810,13 +1810,13 @@ Possible values: vtt, txt
         :param comment: Explanation for deleting a transcript. The comment can be a maximum of 255 characters long.
         :type comment: str
         """
-        body = {}
+        body = DeleteTranscriptBody()
         if reason is not None:
-            body['reason'] = reason
+            body.reason = reason
         if comment is not None:
-            body['comment'] = comment
+            body.comment = comment
         url = self.ep(f'meetingTranscripts/{transcript_id}')
-        super().delete(url=url, json=body)
+        super().delete(url=url, data=body.json())
         return
 
 class TemplateType(str, Enum):
@@ -3095,93 +3095,93 @@ class MeetingsApi(ApiChild, base='meetings'):
         :param breakout_sessions: Breakout sessions are smaller groups that are split off from the main meeting or webinar. They allow a subset of participants to collaborate and share ideas over audio and video. Use breakout sessions for workshops, classrooms, or for when you need a moment to talk privately with a few participants outside of the main session. Please note that maximum number of breakout sessions in a meeting or webinar is 100. In webinars, if hosts preassign attendees to breakout sessions, the role of attendee will be changed to panelist. Breakout session is not supported for a meeting with simultaneous interpretation.
         :type breakout_sessions: BreakoutSessionObject
         """
-        body = {}
+        body = CreateMeetingBody()
         if title is not None:
-            body['title'] = title
+            body.title = title
         if password is not None:
-            body['password'] = password
+            body.password = password
         if start is not None:
-            body['start'] = start
+            body.start = start
         if end is not None:
-            body['end'] = end
+            body.end = end
         if enabled_breakout_sessions is not None:
-            body['enabledBreakoutSessions'] = enabled_breakout_sessions
+            body.enabled_breakout_sessions = enabled_breakout_sessions
         if agenda is not None:
-            body['agenda'] = agenda
+            body.agenda = agenda
         if timezone is not None:
-            body['timezone'] = timezone
+            body.timezone = timezone
         if recurrence is not None:
-            body['recurrence'] = recurrence
+            body.recurrence = recurrence
         if enabled_auto_record_meeting is not None:
-            body['enabledAutoRecordMeeting'] = enabled_auto_record_meeting
+            body.enabled_auto_record_meeting = enabled_auto_record_meeting
         if allow_any_user_to_be_co_host is not None:
-            body['allowAnyUserToBeCoHost'] = allow_any_user_to_be_co_host
+            body.allow_any_user_to_be_co_host = allow_any_user_to_be_co_host
         if enabled_join_before_host is not None:
-            body['enabledJoinBeforeHost'] = enabled_join_before_host
+            body.enabled_join_before_host = enabled_join_before_host
         if enable_connect_audio_before_host is not None:
-            body['enableConnectAudioBeforeHost'] = enable_connect_audio_before_host
+            body.enable_connect_audio_before_host = enable_connect_audio_before_host
         if join_before_host_minutes is not None:
-            body['joinBeforeHostMinutes'] = join_before_host_minutes
+            body.join_before_host_minutes = join_before_host_minutes
         if exclude_password is not None:
-            body['excludePassword'] = exclude_password
+            body.exclude_password = exclude_password
         if public_meeting is not None:
-            body['publicMeeting'] = public_meeting
+            body.public_meeting = public_meeting
         if reminder_time is not None:
-            body['reminderTime'] = reminder_time
+            body.reminder_time = reminder_time
         if unlocked_meeting_join_security is not None:
-            body['unlockedMeetingJoinSecurity'] = unlocked_meeting_join_security
+            body.unlocked_meeting_join_security = unlocked_meeting_join_security
         if session_type_id is not None:
-            body['sessionTypeId'] = session_type_id
+            body.session_type_id = session_type_id
         if enabled_webcast_view is not None:
-            body['enabledWebcastView'] = enabled_webcast_view
+            body.enabled_webcast_view = enabled_webcast_view
         if panelist_password is not None:
-            body['panelistPassword'] = panelist_password
+            body.panelist_password = panelist_password
         if enable_automatic_lock is not None:
-            body['enableAutomaticLock'] = enable_automatic_lock
+            body.enable_automatic_lock = enable_automatic_lock
         if automatic_lock_minutes is not None:
-            body['automaticLockMinutes'] = automatic_lock_minutes
+            body.automatic_lock_minutes = automatic_lock_minutes
         if allow_first_user_to_be_co_host is not None:
-            body['allowFirstUserToBeCoHost'] = allow_first_user_to_be_co_host
+            body.allow_first_user_to_be_co_host = allow_first_user_to_be_co_host
         if allow_authenticated_devices is not None:
-            body['allowAuthenticatedDevices'] = allow_authenticated_devices
+            body.allow_authenticated_devices = allow_authenticated_devices
         if send_email is not None:
-            body['sendEmail'] = send_email
+            body.send_email = send_email
         if host_email is not None:
-            body['hostEmail'] = host_email
+            body.host_email = host_email
         if site_url is not None:
-            body['siteUrl'] = site_url
+            body.site_url = site_url
         if meeting_options is not None:
-            body['meetingOptions'] = meeting_options
+            body.meeting_options = meeting_options
         if attendee_privileges is not None:
-            body['attendeePrivileges'] = attendee_privileges
+            body.attendee_privileges = attendee_privileges
         if integration_tags is not None:
-            body['integrationTags'] = integration_tags
+            body.integration_tags = integration_tags
         if tracking_codes is not None:
-            body['trackingCodes'] = tracking_codes
+            body.tracking_codes = tracking_codes
         if allow_attendee_to_unmute_self is not None:
-            body['allowAttendeeToUnmuteSelf'] = allow_attendee_to_unmute_self
+            body.allow_attendee_to_unmute_self = allow_attendee_to_unmute_self
         if mute_attendee_upon_entry is not None:
-            body['muteAttendeeUponEntry'] = mute_attendee_upon_entry
+            body.mute_attendee_upon_entry = mute_attendee_upon_entry
         if allow_host_to_unmute_participants is not None:
-            body['allowHostToUnmuteParticipants'] = allow_host_to_unmute_participants
+            body.allow_host_to_unmute_participants = allow_host_to_unmute_participants
         if adhoc is not None:
-            body['adhoc'] = adhoc
+            body.adhoc = adhoc
         if room_id is not None:
-            body['roomId'] = room_id
+            body.room_id = room_id
         if template_id is not None:
-            body['templateId'] = template_id
+            body.template_id = template_id
         if scheduled_type is not None:
-            body['scheduledType'] = scheduled_type
+            body.scheduled_type = scheduled_type
         if invitees is not None:
-            body['invitees'] = invitees
+            body.invitees = invitees
         if registration is not None:
-            body['registration'] = registration
+            body.registration = registration
         if simultaneous_interpretation is not None:
-            body['simultaneousInterpretation'] = simultaneous_interpretation
+            body.simultaneous_interpretation = simultaneous_interpretation
         if breakout_sessions is not None:
-            body['breakoutSessions'] = breakout_sessions
+            body.breakout_sessions = breakout_sessions
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return CreateMeetingResponse.parse_obj(data)
 
     def get(self, meeting_id: str, current: bool = None, host_email: str = None) -> CreateMeetingResponse:
@@ -3384,77 +3384,77 @@ Possible values: scheduled, ready, lobby, inProgress, ended, missed
         :param allow_host_to_unmute_participants: Whether or not to allow the host to unmute participants
         :type allow_host_to_unmute_participants: bool
         """
-        body = {}
+        body = UpdateMeetingBody()
         if title is not None:
-            body['title'] = title
+            body.title = title
         if password is not None:
-            body['password'] = password
+            body.password = password
         if start is not None:
-            body['start'] = start
+            body.start = start
         if end is not None:
-            body['end'] = end
+            body.end = end
         if enabled_breakout_sessions is not None:
-            body['enabledBreakoutSessions'] = enabled_breakout_sessions
+            body.enabled_breakout_sessions = enabled_breakout_sessions
         if agenda is not None:
-            body['agenda'] = agenda
+            body.agenda = agenda
         if timezone is not None:
-            body['timezone'] = timezone
+            body.timezone = timezone
         if recurrence is not None:
-            body['recurrence'] = recurrence
+            body.recurrence = recurrence
         if enabled_auto_record_meeting is not None:
-            body['enabledAutoRecordMeeting'] = enabled_auto_record_meeting
+            body.enabled_auto_record_meeting = enabled_auto_record_meeting
         if allow_any_user_to_be_co_host is not None:
-            body['allowAnyUserToBeCoHost'] = allow_any_user_to_be_co_host
+            body.allow_any_user_to_be_co_host = allow_any_user_to_be_co_host
         if enabled_join_before_host is not None:
-            body['enabledJoinBeforeHost'] = enabled_join_before_host
+            body.enabled_join_before_host = enabled_join_before_host
         if enable_connect_audio_before_host is not None:
-            body['enableConnectAudioBeforeHost'] = enable_connect_audio_before_host
+            body.enable_connect_audio_before_host = enable_connect_audio_before_host
         if join_before_host_minutes is not None:
-            body['joinBeforeHostMinutes'] = join_before_host_minutes
+            body.join_before_host_minutes = join_before_host_minutes
         if exclude_password is not None:
-            body['excludePassword'] = exclude_password
+            body.exclude_password = exclude_password
         if public_meeting is not None:
-            body['publicMeeting'] = public_meeting
+            body.public_meeting = public_meeting
         if reminder_time is not None:
-            body['reminderTime'] = reminder_time
+            body.reminder_time = reminder_time
         if unlocked_meeting_join_security is not None:
-            body['unlockedMeetingJoinSecurity'] = unlocked_meeting_join_security
+            body.unlocked_meeting_join_security = unlocked_meeting_join_security
         if session_type_id is not None:
-            body['sessionTypeId'] = session_type_id
+            body.session_type_id = session_type_id
         if enabled_webcast_view is not None:
-            body['enabledWebcastView'] = enabled_webcast_view
+            body.enabled_webcast_view = enabled_webcast_view
         if panelist_password is not None:
-            body['panelistPassword'] = panelist_password
+            body.panelist_password = panelist_password
         if enable_automatic_lock is not None:
-            body['enableAutomaticLock'] = enable_automatic_lock
+            body.enable_automatic_lock = enable_automatic_lock
         if automatic_lock_minutes is not None:
-            body['automaticLockMinutes'] = automatic_lock_minutes
+            body.automatic_lock_minutes = automatic_lock_minutes
         if allow_first_user_to_be_co_host is not None:
-            body['allowFirstUserToBeCoHost'] = allow_first_user_to_be_co_host
+            body.allow_first_user_to_be_co_host = allow_first_user_to_be_co_host
         if allow_authenticated_devices is not None:
-            body['allowAuthenticatedDevices'] = allow_authenticated_devices
+            body.allow_authenticated_devices = allow_authenticated_devices
         if send_email is not None:
-            body['sendEmail'] = send_email
+            body.send_email = send_email
         if host_email is not None:
-            body['hostEmail'] = host_email
+            body.host_email = host_email
         if site_url is not None:
-            body['siteUrl'] = site_url
+            body.site_url = site_url
         if meeting_options is not None:
-            body['meetingOptions'] = meeting_options
+            body.meeting_options = meeting_options
         if attendee_privileges is not None:
-            body['attendeePrivileges'] = attendee_privileges
+            body.attendee_privileges = attendee_privileges
         if integration_tags is not None:
-            body['integrationTags'] = integration_tags
+            body.integration_tags = integration_tags
         if tracking_codes is not None:
-            body['trackingCodes'] = tracking_codes
+            body.tracking_codes = tracking_codes
         if allow_attendee_to_unmute_self is not None:
-            body['allowAttendeeToUnmuteSelf'] = allow_attendee_to_unmute_self
+            body.allow_attendee_to_unmute_self = allow_attendee_to_unmute_self
         if mute_attendee_upon_entry is not None:
-            body['muteAttendeeUponEntry'] = mute_attendee_upon_entry
+            body.mute_attendee_upon_entry = mute_attendee_upon_entry
         if allow_host_to_unmute_participants is not None:
-            body['allowHostToUnmuteParticipants'] = allow_host_to_unmute_participants
+            body.allow_host_to_unmute_participants = allow_host_to_unmute_participants
         url = self.ep(f'{meeting_id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return UpdateMeetingResponse.parse_obj(data)
 
     def delete(self, meeting_id: str, host_email: str = None, send_email: bool = None):
@@ -3498,23 +3498,23 @@ Possible values: John Andersen
         :param password: It's required when the meeting is protected by a password and the current user is not privileged to view it if they are not a host, cohost or invitee of the meeting.
         :type password: str
         """
-        body = {}
+        body = JoinMeetingBody()
         if email is not None:
-            body['email'] = email
+            body.email = email
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         if meeting_id is not None:
-            body['meetingId'] = meeting_id
+            body.meeting_id = meeting_id
         if meeting_number is not None:
-            body['meetingNumber'] = meeting_number
+            body.meeting_number = meeting_number
         if web_link is not None:
-            body['webLink'] = web_link
+            body.web_link = web_link
         if join_directly is not None:
-            body['joinDirectly'] = join_directly
+            body.join_directly = join_directly
         if password is not None:
-            body['password'] = password
+            body.password = password
         url = self.ep('join')
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return JoinMeetingResponse.parse_obj(data)
 
     def list_templates(self, template_type: str = None, locale: str = None, is_default: bool = None, is_standard: bool = None, host_email: str = None, site_url: str = None, **params) -> Generator[TemplateObject, None, None]:
@@ -3597,15 +3597,15 @@ Possible values: meeting, webinar
         params = {}
         if meeting_id is not None:
             params['meetingId'] = meeting_id
-        body = {}
+        body = UpdateMeetingControlStatusBody()
         if locked is not None:
-            body['locked'] = locked
+            body.locked = locked
         if recording_started is not None:
-            body['recordingStarted'] = recording_started
+            body.recording_started = recording_started
         if recording_paused is not None:
-            body['recordingPaused'] = recording_paused
+            body.recording_paused = recording_paused
         url = self.ep('controls')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return GetMeetingControlStatusResponse.parse_obj(data)
 
     def list_session_types(self, host_email: str = None, site_url: str = None, **params) -> Generator[MeetingSessionTypeObject, None, None]:
@@ -3696,43 +3696,43 @@ Possible values: meeting, webinar
         :param rules: The approval rule for standard questions.
         :type rules: StandardRegistrationApproveRule
         """
-        body = {}
+        body = UpdateMeetingRegistrationFormBody()
         if host_email is not None:
-            body['hostEmail'] = host_email
+            body.host_email = host_email
         if require_first_name is not None:
-            body['requireFirstName'] = require_first_name
+            body.require_first_name = require_first_name
         if require_last_name is not None:
-            body['requireLastName'] = require_last_name
+            body.require_last_name = require_last_name
         if require_email is not None:
-            body['requireEmail'] = require_email
+            body.require_email = require_email
         if require_job_title is not None:
-            body['requireJobTitle'] = require_job_title
+            body.require_job_title = require_job_title
         if require_company_name is not None:
-            body['requireCompanyName'] = require_company_name
+            body.require_company_name = require_company_name
         if require_address1 is not None:
-            body['requireAddress1'] = require_address1
+            body.require_address1 = require_address1
         if require_address2 is not None:
-            body['requireAddress2'] = require_address2
+            body.require_address2 = require_address2
         if require_city is not None:
-            body['requireCity'] = require_city
+            body.require_city = require_city
         if require_state is not None:
-            body['requireState'] = require_state
+            body.require_state = require_state
         if require_zip_code is not None:
-            body['requireZipCode'] = require_zip_code
+            body.require_zip_code = require_zip_code
         if require_country_region is not None:
-            body['requireCountryRegion'] = require_country_region
+            body.require_country_region = require_country_region
         if require_work_phone is not None:
-            body['requireWorkPhone'] = require_work_phone
+            body.require_work_phone = require_work_phone
         if require_fax is not None:
-            body['requireFax'] = require_fax
+            body.require_fax = require_fax
         if max_register_num is not None:
-            body['maxRegisterNum'] = max_register_num
+            body.max_register_num = max_register_num
         if customized_questions is not None:
-            body['customizedQuestions'] = customized_questions
+            body.customized_questions = customized_questions
         if rules is not None:
-            body['rules'] = rules
+            body.rules = rules
         url = self.ep(f'{meeting_id}/registration')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return GetRegistrationFormFormeetingResponse.parse_obj(data)
 
     def delete_registration_form(self, meeting_id: str):
@@ -3781,37 +3781,37 @@ Possible values: meeting, webinar
         :param customized_questions: The registrant's answers for customized questions. Registration options define whether or not this is required.
         :type customized_questions: CustomizedRegistrant
         """
-        body = {}
+        body = RegisterMeetingRegistrantBody()
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if email is not None:
-            body['email'] = email
+            body.email = email
         if job_title is not None:
-            body['jobTitle'] = job_title
+            body.job_title = job_title
         if company_name is not None:
-            body['companyName'] = company_name
+            body.company_name = company_name
         if address1 is not None:
-            body['address1'] = address1
+            body.address1 = address1
         if address2 is not None:
-            body['address2'] = address2
+            body.address2 = address2
         if city is not None:
-            body['city'] = city
+            body.city = city
         if state is not None:
-            body['state'] = state
+            body.state = state
         if zip_code is not None:
-            body['zipCode'] = zip_code
+            body.zip_code = zip_code
         if country_region is not None:
-            body['countryRegion'] = country_region
+            body.country_region = country_region
         if work_phone is not None:
-            body['workPhone'] = work_phone
+            body.work_phone = work_phone
         if fax is not None:
-            body['fax'] = fax
+            body.fax = fax
         if customized_questions is not None:
-            body['customizedQuestions'] = customized_questions
+            body.customized_questions = customized_questions
         url = self.ep(f'{meeting_id}/registrants')
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return RegisterMeetingRegistrantResponse.parse_obj(data)
 
     def batch_register_registrants(self, meeting_id: str, items: RegisterMeetingRegistrantBody = None) -> List[RegisterMeetingRegistrantResponse]:
@@ -3823,11 +3823,11 @@ Possible values: meeting, webinar
         :param items: Registrants array.
         :type items: RegisterMeetingRegistrantBody
         """
-        body = {}
+        body = BatchRegisterMeetingRegistrantsBody()
         if items is not None:
-            body['items'] = items
+            body.items = items
         url = self.ep(f'{meeting_id}/registrants/bulkInsert')
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return data["items"]
 
     def getmeeting_registrants_detail_information(self, meeting_id: str, registrant_id: str) -> str:
@@ -3886,17 +3886,17 @@ Possible values: bob@example.com
         params = {}
         if max is not None:
             params['max'] = max
-        body = {}
+        body = QueryMeetingRegistrantsBody()
         if emails is not None:
-            body['emails'] = emails
+            body.emails = emails
         if status is not None:
-            body['status'] = status
+            body.status = status
         if order_type is not None:
-            body['orderType'] = order_type
+            body.order_type = order_type
         if order_by is not None:
-            body['orderBy'] = order_by
+            body.order_by = order_by
         url = self.ep(f'{meeting_id}/registrants/query')
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return data["items"]
 
     def batch_update_registrants_status(self, meeting_id: str, status_op_type: str, registrants: List[Registrants] = None):
@@ -3912,11 +3912,11 @@ Possible values: approve, reject, cancel, bulkDelete
 Registrant ID.
         :type registrants: List[Registrants]
         """
-        body = {}
+        body = BatchUpdateMeetingRegistrantsStatusBody()
         if registrants is not None:
-            body['registrants'] = registrants
+            body.registrants = registrants
         url = self.ep(f'{meeting_id}/registrants/{status_op_type}')
-        super().post(url=url, json=body)
+        super().post(url=url, data=body.json())
         return
 
     def delete_registrant(self, meeting_id: str, registrant_id: str):
@@ -3943,13 +3943,13 @@ Registrant ID.
         :param interpreters: Interpreters for meeting.
         :type interpreters: InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting
         """
-        body = {}
+        body = UpdateMeetingSimultaneousInterpretationBody()
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if interpreters is not None:
-            body['interpreters'] = interpreters
+            body.interpreters = interpreters
         url = self.ep(f'{meeting_id}/simultaneousInterpretation')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return SimultaneousInterpretation1.parse_obj(data)
 
     def create_interpreter(self, meeting_id: str, language_code1: str, language_code2: str, email: str = None, display_name: str = None, host_email: str = None, send_email: bool = None) -> InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting:
@@ -3973,21 +3973,21 @@ Possible values: John Andersen
         :param send_email: If true, send email to the interpreter.
         :type send_email: bool
         """
-        body = {}
+        body = CreateMeetingInterpreterBody()
         if language_code1 is not None:
-            body['languageCode1'] = language_code1
+            body.language_code1 = language_code1
         if language_code2 is not None:
-            body['languageCode2'] = language_code2
+            body.language_code2 = language_code2
         if email is not None:
-            body['email'] = email
+            body.email = email
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         if host_email is not None:
-            body['hostEmail'] = host_email
+            body.host_email = host_email
         if send_email is not None:
-            body['sendEmail'] = send_email
+            body.send_email = send_email
         url = self.ep(f'{meeting_id}/interpreters')
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting.parse_obj(data)
 
     def interpreter(self, meeting_id: str, interpreter_id: str, host_email: str = None) -> InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting:
@@ -4047,21 +4047,21 @@ Possible values: John Andersen
         :param send_email: If true, send email to the interpreter.
         :type send_email: bool
         """
-        body = {}
+        body = UpdateMeetingInterpreterBody()
         if language_code1 is not None:
-            body['languageCode1'] = language_code1
+            body.language_code1 = language_code1
         if language_code2 is not None:
-            body['languageCode2'] = language_code2
+            body.language_code2 = language_code2
         if email is not None:
-            body['email'] = email
+            body.email = email
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         if host_email is not None:
-            body['hostEmail'] = host_email
+            body.host_email = host_email
         if send_email is not None:
-            body['sendEmail'] = send_email
+            body.send_email = send_email
         url = self.ep(f'{meeting_id}/interpreters/{interpreter_id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting.parse_obj(data)
 
     def delete_interpreter(self, meeting_id: str, interpreter_id: str, host_email: str = None, send_email: bool = None):
@@ -4099,15 +4099,15 @@ Possible values: John Andersen
         :param items: Breakout sessions are smaller groups that are split off from the main meeting or webinar. They allow a subset of participants to collaborate and share ideas over audio and video. Use breakout sessions for workshops, classrooms, or for when you need a moment to talk privately with a few participants outside of the main session. Please note that maximum number of breakout sessions in a meeting or webinar is 100. In webinars, if hosts preassign attendees to breakout sessions, the role of attendee will be changed to panelist. Breakout session is not supported for a meeting with simultaneous interpretation.
         :type items: BreakoutSessionObject
         """
-        body = {}
+        body = UpdateMeetingBreakoutSessionsBody()
         if host_email is not None:
-            body['hostEmail'] = host_email
+            body.host_email = host_email
         if send_email is not None:
-            body['sendEmail'] = send_email
+            body.send_email = send_email
         if items is not None:
-            body['items'] = items
+            body.items = items
         url = self.ep(f'{meeting_id}/breakoutSessions')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return data["items"]
 
     def list_breakout_sessions(self, meeting_id: str, **params) -> Generator[GetBreakoutSessionObject, None, None]:
@@ -4182,15 +4182,15 @@ When meetingId is not the unique identifier for the specific meeting instance, i
         :param items: 
         :type items: InvitationSourceCreateObject
         """
-        body = {}
+        body = CreateInvitationSourcesBody()
         if host_email is not None:
-            body['hostEmail'] = host_email
+            body.host_email = host_email
         if person_id is not None:
-            body['personId'] = person_id
+            body.person_id = person_id
         if items is not None:
-            body['items'] = items
+            body.items = items
         url = self.ep(f'{meeting_id}/invitationSources')
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return data["items"]
 
     def list_invitation_sources(self, meeting_id: str, **params) -> Generator[InvitationSourceObject, None, None]:
@@ -4446,43 +4446,43 @@ Possible values: mysite.webex.com#attendee
         params = {}
         if calling_data is not None:
             params['callingData'] = calling_data
-        body = {}
+        body = CreatePersonBody()
         if emails is not None:
-            body['emails'] = emails
+            body.emails = emails
         if phone_numbers is not None:
-            body['phoneNumbers'] = phone_numbers
+            body.phone_numbers = phone_numbers
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if location_id is not None:
-            body['locationId'] = location_id
+            body.location_id = location_id
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if avatar is not None:
-            body['avatar'] = avatar
+            body.avatar = avatar
         if org_id is not None:
-            body['orgId'] = org_id
+            body.org_id = org_id
         if roles is not None:
-            body['roles'] = roles
+            body.roles = roles
         if licenses is not None:
-            body['licenses'] = licenses
+            body.licenses = licenses
         if department is not None:
-            body['department'] = department
+            body.department = department
         if manager is not None:
-            body['manager'] = manager
+            body.manager = manager
         if manager_id is not None:
-            body['managerId'] = manager_id
+            body.manager_id = manager_id
         if title is not None:
-            body['title'] = title
+            body.title = title
         if addresses is not None:
-            body['addresses'] = addresses
+            body.addresses = addresses
         if site_urls is not None:
-            body['siteUrls'] = site_urls
+            body.site_urls = site_urls
         url = self.ep()
-        data = super().post(url=url, params=params, json=body)
+        data = super().post(url=url, params=params, data=body.json())
         return Person.parse_obj(data)
 
     def details(self, person_id: str, calling_data: bool = None) -> Person:
@@ -4570,47 +4570,47 @@ Possible values: mysite.webex.com#attendee
             params['callingData'] = calling_data
         if show_all_types is not None:
             params['showAllTypes'] = show_all_types
-        body = {}
+        body = UpdatePersonBody()
         if emails is not None:
-            body['emails'] = emails
+            body.emails = emails
         if phone_numbers is not None:
-            body['phoneNumbers'] = phone_numbers
+            body.phone_numbers = phone_numbers
         if extension is not None:
-            body['extension'] = extension
+            body.extension = extension
         if location_id is not None:
-            body['locationId'] = location_id
+            body.location_id = location_id
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         if first_name is not None:
-            body['firstName'] = first_name
+            body.first_name = first_name
         if last_name is not None:
-            body['lastName'] = last_name
+            body.last_name = last_name
         if avatar is not None:
-            body['avatar'] = avatar
+            body.avatar = avatar
         if org_id is not None:
-            body['orgId'] = org_id
+            body.org_id = org_id
         if roles is not None:
-            body['roles'] = roles
+            body.roles = roles
         if licenses is not None:
-            body['licenses'] = licenses
+            body.licenses = licenses
         if department is not None:
-            body['department'] = department
+            body.department = department
         if manager is not None:
-            body['manager'] = manager
+            body.manager = manager
         if manager_id is not None:
-            body['managerId'] = manager_id
+            body.manager_id = manager_id
         if title is not None:
-            body['title'] = title
+            body.title = title
         if addresses is not None:
-            body['addresses'] = addresses
+            body.addresses = addresses
         if site_urls is not None:
-            body['siteUrls'] = site_urls
+            body.site_urls = site_urls
         if nick_name is not None:
-            body['nickName'] = nick_name
+            body.nick_name = nick_name
         if login_enabled is not None:
-            body['loginEnabled'] = login_enabled
+            body.login_enabled = login_enabled
         url = self.ep(f'{person_id}')
-        data = super().put(url=url, params=params, json=body)
+        data = super().put(url=url, params=params, data=body.json())
         return Person.parse_obj(data)
 
     def delete(self, person_id: str):
@@ -4867,13 +4867,13 @@ Possible values: available, deleted
         params = {}
         if host_email is not None:
             params['hostEmail'] = host_email
-        body = {}
+        body = DeleteRecordingBody()
         if reason is not None:
-            body['reason'] = reason
+            body.reason = reason
         if comment is not None:
-            body['comment'] = comment
+            body.comment = comment
         url = self.ep(f'recordings/{recording_id}')
-        super().delete(url=url, params=params, json=body)
+        super().delete(url=url, params=params, data=body.json())
         return
 
     def move_into_recycle_bin(self, recording_ids: List[str], host_email: str = None, site_url: str = None):
@@ -4891,13 +4891,13 @@ Possible values: available, deleted
         params = {}
         if host_email is not None:
             params['hostEmail'] = host_email
-        body = {}
+        body = MoveRecordingsIntoRecycleBinBody()
         if recording_ids is not None:
-            body['recordingIds'] = recording_ids
+            body.recording_ids = recording_ids
         if site_url is not None:
-            body['siteUrl'] = site_url
+            body.site_url = site_url
         url = self.ep('recordings/softDelete')
-        super().post(url=url, params=params, json=body)
+        super().post(url=url, params=params, data=body.json())
         return
 
     def restore_from_recycle_bin(self, recording_ids: List[str], host_email: str = None, site_url: str = None, restore_all: bool = None):
@@ -4916,15 +4916,15 @@ Possible values: available, deleted
         params = {}
         if host_email is not None:
             params['hostEmail'] = host_email
-        body = {}
+        body = RestoreRecordingsFromRecycleBinBody()
         if recording_ids is not None:
-            body['recordingIds'] = recording_ids
+            body.recording_ids = recording_ids
         if site_url is not None:
-            body['siteUrl'] = site_url
+            body.site_url = site_url
         if restore_all is not None:
-            body['restoreAll'] = restore_all
+            body.restore_all = restore_all
         url = self.ep('recordings/restore')
-        super().post(url=url, params=params, json=body)
+        super().post(url=url, params=params, data=body.json())
         return
 
     def purge_from_recycle_bin(self, recording_ids: List[str], host_email: str = None, site_url: str = None, purge_all: bool = None):
@@ -4944,15 +4944,15 @@ Possible values: available, deleted
         params = {}
         if host_email is not None:
             params['hostEmail'] = host_email
-        body = {}
+        body = PurgeRecordingsFromRecycleBinBody()
         if recording_ids is not None:
-            body['recordingIds'] = recording_ids
+            body.recording_ids = recording_ids
         if site_url is not None:
-            body['siteUrl'] = site_url
+            body.site_url = site_url
         if purge_all is not None:
-            body['purgeAll'] = purge_all
+            body.purge_all = purge_all
         url = self.ep('recordings/purge')
-        super().post(url=url, params=params, json=body)
+        super().post(url=url, params=params, data=body.json())
         return
 
 class SiteSessionType(ApiModel):
@@ -5062,17 +5062,17 @@ Possible values: 3, 9
         :param email: The email of the user.
         :type email: str
         """
-        body = {}
+        body = UpdateUserSessionTypesBody()
         if site_url is not None:
-            body['siteUrl'] = site_url
+            body.site_url = site_url
         if session_type_ids is not None:
-            body['sessionTypeIds'] = session_type_ids
+            body.session_type_ids = session_type_ids
         if person_id is not None:
-            body['personId'] = person_id
+            body.person_id = person_id
         if email is not None:
-            body['email'] = email
+            body.email = email
         url = self.ep('userconfig/sessionTypes')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return UserSessionTypes.parse_obj(data)
 
 class GetTrackingCodeObject(ApiModel):
@@ -5189,21 +5189,21 @@ class TrackingCodesApi(ApiChild, base=''):
         :param schedule_start_codes: Specify how tracking codes are used for each service on the meeting scheduler or meeting start pages. The maximum size of scheduleStartCodes is 5.
         :type schedule_start_codes: ScheduleStartCodeObject
         """
-        body = {}
+        body = CreateTrackingCodeBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if site_url is not None:
-            body['siteUrl'] = site_url
+            body.site_url = site_url
         if options is not None:
-            body['options'] = options
+            body.options = options
         if input_mode is not None:
-            body['inputMode'] = input_mode
+            body.input_mode = input_mode
         if host_profile_code is not None:
-            body['hostProfileCode'] = host_profile_code
+            body.host_profile_code = host_profile_code
         if schedule_start_codes is not None:
-            body['scheduleStartCodes'] = schedule_start_codes
+            body.schedule_start_codes = schedule_start_codes
         url = self.ep('https: //webexapis.com/v1/admin/meeting/config/trackingCodes')
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return GetTrackingCodeObject.parse_obj(data)
 
     def update_code(self, name: str, site_url: str, options: OptionsForTrackingCodeObject, input_mode: InputMode, host_profile_code: HostProfileCode, schedule_start_codes: ScheduleStartCodeObject) -> GetTrackingCodeObject:
@@ -5223,21 +5223,21 @@ class TrackingCodesApi(ApiChild, base=''):
         :param schedule_start_codes: Specify how tracking codes are used for each service on the meeting scheduler or meeting start pages. The maximum size of scheduleStartCodes is 5.
         :type schedule_start_codes: ScheduleStartCodeObject
         """
-        body = {}
+        body = UpdateTrackingCodeBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if site_url is not None:
-            body['siteUrl'] = site_url
+            body.site_url = site_url
         if options is not None:
-            body['options'] = options
+            body.options = options
         if input_mode is not None:
-            body['inputMode'] = input_mode
+            body.input_mode = input_mode
         if host_profile_code is not None:
-            body['hostProfileCode'] = host_profile_code
+            body.host_profile_code = host_profile_code
         if schedule_start_codes is not None:
-            body['scheduleStartCodes'] = schedule_start_codes
+            body.schedule_start_codes = schedule_start_codes
         url = self.ep('https: //webexapis.com/v1/admin/meeting/config/trackingCodes/{trackingCodeId}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return GetTrackingCodeObject.parse_obj(data)
 
     def delete_code(self, tracking_code_id: str, site_url: str):
@@ -5287,17 +5287,17 @@ class TrackingCodesApi(ApiChild, base=''):
         :param tracking_codes: Tracking code information for updates.
         :type tracking_codes: TrackingCodeItemForCreateMeetingObject
         """
-        body = {}
+        body = UpdateUsersTrackingCodesBody()
         if site_url is not None:
-            body['siteUrl'] = site_url
+            body.site_url = site_url
         if person_id is not None:
-            body['personId'] = person_id
+            body.person_id = person_id
         if email is not None:
-            body['email'] = email
+            body.email = email
         if tracking_codes is not None:
-            body['trackingCodes'] = tracking_codes
+            body.tracking_codes = tracking_codes
         url = self.ep('https: //webexapis.com/v1/admin/meeting/userconfig/trackingCodes')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return GetUsersTrackingCodesResponse.parse_obj(data)
 
 class Resource(str, Enum):
@@ -5420,23 +5420,23 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :param owned_by: Specified when creating an org/admin level webhook. Supported for meetings, recordings, meetingParticipants, and meetingTranscripts resources.
         :type owned_by: str
         """
-        body = {}
+        body = CreateWebhookBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if target_url is not None:
-            body['targetUrl'] = target_url
+            body.target_url = target_url
         if resource is not None:
-            body['resource'] = resource
+            body.resource = resource
         if event is not None:
-            body['event'] = event
+            body.event = event
         if filter is not None:
-            body['filter'] = filter
+            body.filter = filter
         if secret is not None:
-            body['secret'] = secret
+            body.secret = secret
         if owned_by is not None:
-            body['ownedBy'] = owned_by
+            body.owned_by = owned_by
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return Webhook.parse_obj(data)
 
     def details(self, webhook_id: str) -> Webhook:
@@ -5470,19 +5470,19 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :param status: The status of the webhook. Use "active" to reactivate a disabled webhook.
         :type status: Status16
         """
-        body = {}
+        body = UpdateWebhookBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if target_url is not None:
-            body['targetUrl'] = target_url
+            body.target_url = target_url
         if secret is not None:
-            body['secret'] = secret
+            body.secret = secret
         if owned_by is not None:
-            body['ownedBy'] = owned_by
+            body.owned_by = owned_by
         if status is not None:
-            body['status'] = status
+            body.status = status
         url = self.ep(f'{webhook_id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return Webhook.parse_obj(data)
 
     def delete(self, webhook_id: str):

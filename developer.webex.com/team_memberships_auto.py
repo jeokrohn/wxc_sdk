@@ -73,17 +73,17 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         :param is_moderator: Whether or not the participant is a team moderator.
         :type is_moderator: bool
         """
-        body = {}
+        body = CreateTeamMembershipBody()
         if team_id is not None:
-            body['teamId'] = team_id
+            body.team_id = team_id
         if person_id is not None:
-            body['personId'] = person_id
+            body.person_id = person_id
         if person_email is not None:
-            body['personEmail'] = person_email
+            body.person_email = person_email
         if is_moderator is not None:
-            body['isModerator'] = is_moderator
+            body.is_moderator = is_moderator
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return TeamMembership.parse_obj(data)
 
     def membership_details(self, membership_id: str) -> TeamMembership:
@@ -108,11 +108,11 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         :param is_moderator: Whether or not the participant is a team moderator.
         :type is_moderator: bool
         """
-        body = {}
+        body = UpdateTeamMembershipBody()
         if is_moderator is not None:
-            body['isModerator'] = is_moderator
+            body.is_moderator = is_moderator
         url = self.ep(f'{membership_id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return TeamMembership.parse_obj(data)
 
     def delete_membership(self, membership_id: str):

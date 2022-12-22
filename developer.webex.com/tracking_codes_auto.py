@@ -185,21 +185,21 @@ class TrackingCodesApi(ApiChild, base=''):
         :param schedule_start_codes: Specify how tracking codes are used for each service on the meeting scheduler or meeting start pages. The maximum size of scheduleStartCodes is 5.
         :type schedule_start_codes: ScheduleStartCodeObject
         """
-        body = {}
+        body = CreateTrackingCodeBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if site_url is not None:
-            body['siteUrl'] = site_url
+            body.site_url = site_url
         if options is not None:
-            body['options'] = options
+            body.options = options
         if input_mode is not None:
-            body['inputMode'] = input_mode
+            body.input_mode = input_mode
         if host_profile_code is not None:
-            body['hostProfileCode'] = host_profile_code
+            body.host_profile_code = host_profile_code
         if schedule_start_codes is not None:
-            body['scheduleStartCodes'] = schedule_start_codes
+            body.schedule_start_codes = schedule_start_codes
         url = self.ep('https: //webexapis.com/v1/admin/meeting/config/trackingCodes')
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return GetTrackingCodeObject.parse_obj(data)
 
     def update_code(self, name: str, site_url: str, options: OptionsForTrackingCodeObject, input_mode: InputMode, host_profile_code: HostProfileCode, schedule_start_codes: ScheduleStartCodeObject) -> GetTrackingCodeObject:
@@ -219,21 +219,21 @@ class TrackingCodesApi(ApiChild, base=''):
         :param schedule_start_codes: Specify how tracking codes are used for each service on the meeting scheduler or meeting start pages. The maximum size of scheduleStartCodes is 5.
         :type schedule_start_codes: ScheduleStartCodeObject
         """
-        body = {}
+        body = UpdateTrackingCodeBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if site_url is not None:
-            body['siteUrl'] = site_url
+            body.site_url = site_url
         if options is not None:
-            body['options'] = options
+            body.options = options
         if input_mode is not None:
-            body['inputMode'] = input_mode
+            body.input_mode = input_mode
         if host_profile_code is not None:
-            body['hostProfileCode'] = host_profile_code
+            body.host_profile_code = host_profile_code
         if schedule_start_codes is not None:
-            body['scheduleStartCodes'] = schedule_start_codes
+            body.schedule_start_codes = schedule_start_codes
         url = self.ep('https: //webexapis.com/v1/admin/meeting/config/trackingCodes/{trackingCodeId}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return GetTrackingCodeObject.parse_obj(data)
 
     def delete_code(self, tracking_code_id: str, site_url: str):
@@ -283,15 +283,15 @@ class TrackingCodesApi(ApiChild, base=''):
         :param tracking_codes: Tracking code information for updates.
         :type tracking_codes: UpdateTrackingCodeItemForUserObject
         """
-        body = {}
+        body = UpdateUsersTrackingCodesBody()
         if site_url is not None:
-            body['siteUrl'] = site_url
+            body.site_url = site_url
         if person_id is not None:
-            body['personId'] = person_id
+            body.person_id = person_id
         if email is not None:
-            body['email'] = email
+            body.email = email
         if tracking_codes is not None:
-            body['trackingCodes'] = tracking_codes
+            body.tracking_codes = tracking_codes
         url = self.ep('https: //webexapis.com/v1/admin/meeting/userconfig/trackingCodes')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return GetUsersTrackingCodesResponse.parse_obj(data)

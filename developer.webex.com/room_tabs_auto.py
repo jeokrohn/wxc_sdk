@@ -70,15 +70,15 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         :param display_name: User-friendly name for the room tab.
         :type display_name: str
         """
-        body = {}
+        body = CreateRoomTabBody()
         if room_id is not None:
-            body['roomId'] = room_id
+            body.room_id = room_id
         if content_url is not None:
-            body['contentUrl'] = content_url
+            body.content_url = content_url
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return RoomTab.parse_obj(data)
 
     def tab_details(self, id: str) -> RoomTab:
@@ -105,15 +105,15 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         :param display_name: User-friendly name for the room tab.
         :type display_name: str
         """
-        body = {}
+        body = UpdateRoomTabBody()
         if room_id is not None:
-            body['roomId'] = room_id
+            body.room_id = room_id
         if content_url is not None:
-            body['contentUrl'] = content_url
+            body.content_url = content_url
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         url = self.ep(f'{id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return RoomTab.parse_obj(data)
 
     def delete_tab(self, id: str):

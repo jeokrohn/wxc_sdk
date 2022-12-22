@@ -52,13 +52,13 @@ class TeamsApi(ApiChild, base='teams'):
         :param description: The teams description.
         :type description: str
         """
-        body = {}
+        body = CreateTeamBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if description is not None:
-            body['description'] = description
+            body.description = description
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, data=body.json())
         return Team.parse_obj(data)
 
     def details(self, team_id: str, description: str = None) -> Team:
@@ -90,13 +90,13 @@ class TeamsApi(ApiChild, base='teams'):
         :param description: The teams description.
         :type description: str
         """
-        body = {}
+        body = UpdateTeamBody()
         if name is not None:
-            body['name'] = name
+            body.name = name
         if description is not None:
-            body['description'] = description
+            body.description = description
         url = self.ep(f'{team_id}')
-        data = super().put(url=url, json=body)
+        data = super().put(url=url, data=body.json())
         return Team.parse_obj(data)
 
     def delete(self, team_id: str):

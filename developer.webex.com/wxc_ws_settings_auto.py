@@ -438,11 +438,11 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyCallForwardingSettingsForWorkspaceBody()
         if call_forwarding is not None:
-            body['callForwarding'] = call_forwarding
+            body.call_forwarding = call_forwarding
         url = self.ep(f'callForwarding')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_call_waiting_settings_workspace(self, workspace_id: str, org_id: str = None) -> bool:
@@ -479,11 +479,11 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyCallWaitingSettingsForWorkspaceBody()
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         url = self.ep(f'callWaiting')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_caller_id_settings_workspace(self, workspace_id: str, org_id: str = None) -> RetrieveCallerIDSettingsForWorkspaceResponse:
@@ -535,25 +535,25 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyCallerIDSettingsForWorkspaceBody()
         if selected is not None:
-            body['selected'] = selected
+            body.selected = selected
         if custom_number is not None:
-            body['customNumber'] = custom_number
+            body.custom_number = custom_number
         if display_name is not None:
-            body['displayName'] = display_name
+            body.display_name = display_name
         if display_detail is not None:
-            body['displayDetail'] = display_detail
+            body.display_detail = display_detail
         if block_in_forward_calls_enabled is not None:
-            body['blockInForwardCallsEnabled'] = block_in_forward_calls_enabled
+            body.block_in_forward_calls_enabled = block_in_forward_calls_enabled
         if external_caller_id_name_policy is not None:
-            body['externalCallerIdNamePolicy'] = external_caller_id_name_policy
+            body.external_caller_id_name_policy = external_caller_id_name_policy
         if custom_external_caller_id_name is not None:
-            body['customExternalCallerIdName'] = custom_external_caller_id_name
+            body.custom_external_caller_id_name = custom_external_caller_id_name
         if location_external_caller_id_name is not None:
-            body['locationExternalCallerIdName'] = location_external_caller_id_name
+            body.location_external_caller_id_name = location_external_caller_id_name
         url = self.ep(f'callerId')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_monitoring_settings_workspace(self, workspace_id: str, org_id: str = None) -> RetrieveMonitoringSettingsForWorkspaceResponse:
@@ -592,13 +592,13 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyMonitoringSettingsForWorkspaceBody()
         if enable_call_park_notification is not None:
-            body['enableCallParkNotification'] = enable_call_park_notification
+            body.enable_call_park_notification = enable_call_park_notification
         if monitored_elements is not None:
-            body['monitoredElements'] = monitored_elements
+            body.monitored_elements = monitored_elements
         url = self.ep(f'monitoring')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_incoming_permission_settings_workspace(self, workspace_id: str, org_id: str = None) -> RetrieveIncomingPermissionSettingsForWorkspaceResponse:
@@ -641,17 +641,17 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyIncomingPermissionSettingsForWorkspaceBody()
         if use_custom_enabled is not None:
-            body['useCustomEnabled'] = use_custom_enabled
+            body.use_custom_enabled = use_custom_enabled
         if external_transfer is not None:
-            body['externalTransfer'] = external_transfer
+            body.external_transfer = external_transfer
         if internal_calls_enabled is not None:
-            body['internalCallsEnabled'] = internal_calls_enabled
+            body.internal_calls_enabled = internal_calls_enabled
         if collect_calls_enabled is not None:
-            body['collectCallsEnabled'] = collect_calls_enabled
+            body.collect_calls_enabled = collect_calls_enabled
         url = self.ep(f'incomingPermission')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_outgoing_permission_settings_workspace(self, workspace_id: str, org_id: str = None) -> RetrieveOutgoingPermissionSettingsForWorkspaceResponse:
@@ -690,13 +690,13 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyOutgoingPermissionSettingsForWorkspaceBody()
         if use_custom_enabled is not None:
-            body['useCustomEnabled'] = use_custom_enabled
+            body.use_custom_enabled = use_custom_enabled
         if calling_permissions is not None:
-            body['callingPermissions'] = calling_permissions
+            body.calling_permissions = calling_permissions
         url = self.ep(f'outgoingPermission')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_access_codes_workspace(self, workspace_id: str, org_id: str = None) -> List[AuthorizationCode]:
@@ -733,11 +733,11 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyAccessCodesForWorkspaceBody()
         if delete_codes is not None:
-            body['deleteCodes'] = delete_codes
+            body.delete_codes = delete_codes
         url = self.ep(f'outgoingPermission/accessCodes')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def create_access_codes_workspace(self, workspace_id: str, org_id: str = None, code: str = None, description: str = None):
@@ -758,13 +758,13 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = CreateAccessCodesForWorkspaceBody()
         if code is not None:
-            body['code'] = code
+            body.code = code
         if description is not None:
-            body['description'] = description
+            body.description = description
         url = self.ep(f'outgoingPermission/accessCodes')
-        super().post(url=url, params=params, json=body)
+        super().post(url=url, params=params, data=body.json())
         return
 
     def read_call_intercept_settings_workspace(self, workspace_id: str, org_id: str = None) -> ReadCallInterceptSettingsForWorkspaceResponse:
@@ -805,15 +805,15 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ConfigureCallInterceptSettingsForWorkspaceBody()
         if enabled is not None:
-            body['enabled'] = enabled
+            body.enabled = enabled
         if incoming is not None:
-            body['incoming'] = incoming
+            body.incoming = incoming
         if outgoing is not None:
-            body['outgoing'] = outgoing
+            body.outgoing = outgoing
         url = self.ep(f'intercept')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
 
     def retrieve_transfer_numbers_settings_workspace(self, workspace_id: str, org_id: str = None) -> RetrieveTransferNumbersSettingsForWorkspaceResponse:
@@ -854,13 +854,13 @@ Possible values: DIRECT_LINE
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = {}
+        body = ModifyTransferNumbersSettingsForWorkspaceBody()
         if auto_transfer_number1 is not None:
-            body['autoTransferNumber1'] = auto_transfer_number1
+            body.auto_transfer_number1 = auto_transfer_number1
         if auto_transfer_number2 is not None:
-            body['autoTransferNumber2'] = auto_transfer_number2
+            body.auto_transfer_number2 = auto_transfer_number2
         if auto_transfer_number3 is not None:
-            body['autoTransferNumber3'] = auto_transfer_number3
+            body.auto_transfer_number3 = auto_transfer_number3
         url = self.ep(f'outgoingPermission/autoTransferNumbers')
-        super().put(url=url, params=params, json=body)
+        super().put(url=url, params=params, data=body.json())
         return
