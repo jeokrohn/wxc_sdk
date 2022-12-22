@@ -56,7 +56,7 @@ __all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsApi
            'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi', 'AsHotelingApi', 'AsHuntGroupApi',
            'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationInterceptApi',
            'AsLocationMoHApi', 'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi',
-           'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi', 'AsNumbersApi',
+           'AsManageNumbersJobsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi', 'AsNumbersApi',
            'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi',
            'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
            'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsReceptionistApi',
@@ -6938,16 +6938,186 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
         await self.put(url, data=data, params=params)
 
 
+class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
+    """
+    API for jobs to manage numbers
+    """
+
+    def list_jobs_gen(self, org_id: str = None, **params) -> AsyncGenerator[NumberJob, None, None]:
+        """
+        Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one
+        irrespective of its status.
+        The public API only supports initiating jobs which move numbers between locations.
+        Via Control Hub they can initiate both the move and delete, so this listing can show both.
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+
+        :param org_id: Retrieve list of Manage Number jobs for this organization.
+        :type org_id: str
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('manageNumbers')
+        return self.session.follow_pagination(url=url, model=NumberJob, params=params)
+
+    async def list_jobs(self, org_id: str = None, **params) -> List[NumberJob]:
+        """
+        Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one
+        irrespective of its status.
+        The public API only supports initiating jobs which move numbers between locations.
+        Via Control Hub they can initiate both the move and delete, so this listing can show both.
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+
+        :param org_id: Retrieve list of Manage Number jobs for this organization.
+        :type org_id: str
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('manageNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=NumberJob, params=params)]
+
+    async def initiate_job(self, operation: str, target_location_id: str,
+                     number_list: list[NumberItem]) -> NumberJob:
+        """
+        Starts the numbers move from one location to another location. Although jobs can do both MOVE and DELETE
+        actions internally, only MOVE is supported publicly.
+        In order to move a number,
+        For example, you can move from Cisco PSTN to Cisco PSTN, but you cannot move from Cisco PSTN to a location
+        with Cloud Connected PSTN.
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param operation: Indicates the kind of operation to be carried out. 
+        :type operation: str
+        :param target_location_id: The target location within organization where the unassigned numbers will be moved
+            from the source location.
+        :type target_location_id: str
+        :param number_list: Indicates the numbers to be moved from source to target locations.
+        :type number_list: list[NumberItem]
+        """
+        body = InitiateMoveNumberJobsBody(operation=operation,
+                                          target_location_id=target_location_id,
+                                          number_list=number_list)
+        url = self.ep('manageNumbers')
+        data = await super().post(url=url, data=body.json())
+        return NumberJob.parse_obj(data)
+
+    async def job_status(self, job_id: str = None) -> NumberJob:
+        """
+        Returns the status and other details of the job.
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+
+        :param job_id: Retrieve job details for this jobId.
+        :type job_id: str
+        """
+        url = self.ep(f'manageNumbers/{job_id}')
+        data = await super().get(url=url)
+        return NumberJob.parse_obj(data)
+
+    async def pause_job(self, job_id: str = None, org_id: str = None):
+        """
+        Pause the running Manage Numbers Job. A paused job can be resumed or abandoned.
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param job_id: Pause the Manage Numbers job for this jobId.
+        :type job_id: str
+        :param org_id: Pause the Manage Numbers job for this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'manageNumbers/{job_id}/actions/pause/invoke')
+        await super().post(url=url, params=params)
+        return
+
+    async def resume_job(self, job_id: str = None, org_id: str = None):
+        """
+        Resume the paused Manage Numbers Job. A paused job can be resumed or abandoned.
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param job_id: Resume the Manage Numbers job for this jobId.
+        :type job_id: str
+        :param org_id: Resume the Manage Numbers job for this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'manageNumbers/{job_id}/actions/resume/invoke')
+        await super().post(url=url, params=params)
+        return
+
+    async def abandon_job(self, job_id: str = None, org_id: str = None):
+        """
+        Abandon the Manage Numbers Job.
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param job_id: Abandon the Manage Numbers job for this jobId.
+        :type job_id: str
+        :param org_id: Abandon the Manage Numbers job for this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'manageNumbers/{job_id}/actions/abandon/invoke')
+        await super().post(url=url, params=params)
+        return
+
+    def list_job_errors_gen(self, job_id: str = None, org_id: str = None,
+                        **params) -> AsyncGenerator[ManageNumberErrorItem, None, None]:
+        """
+        Lists all error details of Manage Numbers job. This will not list any errors if exitCode is COMPLETED. If the
+        status is COMPLETED_WITH_ERRORS then this lists the cause of failures.
+        List of possible Errors:
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+
+        :param job_id: Retrieve the error details for this jobId.
+        :type job_id: str
+        :param org_id: Retrieve list of jobs for this organization.
+        :type org_id: str
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'manageNumbers/{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=ManageNumberErrorItem, params=params)
+
+    async def list_job_errors(self, job_id: str = None, org_id: str = None,
+                        **params) -> List[ManageNumberErrorItem]:
+        """
+        Lists all error details of Manage Numbers job. This will not list any errors if exitCode is COMPLETED. If the
+        status is COMPLETED_WITH_ERRORS then this lists the cause of failures.
+        List of possible Errors:
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+
+        :param job_id: Retrieve the error details for this jobId.
+        :type job_id: str
+        :param org_id: Retrieve list of jobs for this organization.
+        :type org_id: str
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'manageNumbers/{job_id}/errors')
+        return [o async for o in self.session.follow_pagination(url=url, model=ManageNumberErrorItem, params=params)]
+
+
 class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
     """
     Jobs API
     """
     #: API for device settings jobs
     device_settings: AsDeviceSettingsJobsApi
+    #: API for manage numbers jobs
+    manage_numbers: AsManageNumbersJobsApi
 
     def __init__(self, *, session: AsRestSession):
         super().__init__(session=session)
         self.device_settings = AsDeviceSettingsJobsApi(session=session)
+        self.manage_numbers = AsManageNumbersJobsApi(session=session)
 
 
 class AsLocationInterceptApi(AsApiChild, base='telephony/config/locations'):

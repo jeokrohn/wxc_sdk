@@ -15,7 +15,7 @@ from ...rest import RestSession
 from ...api_child import ApiChild
 
 __all__ = ['StepExecutionStatus', 'JobExecutionStatus', 'StartJobResponse', 'JobErrorMessage', 'JobError',
-           'JobErrorItem', 'JobsApi', 'DeviceSettingsJobsApi', 'NumberItem', 'MoveNumberCounts', 'MoveNumberJob',
+           'JobErrorItem', 'JobsApi', 'DeviceSettingsJobsApi', 'NumberItem', 'MoveNumberCounts', 'NumberJob',
            'ErrorMessageObject', 'ErrorObject', 'ManageNumberErrorItem', 'ManageNumbersJobsApi']
 
 
@@ -245,8 +245,10 @@ class MoveNumberCounts(ApiModel):
     numbers_failed: Optional[int]
 
 
-class MoveNumberJob(ApiModel):
+class NumberJob(ApiModel):
+    #: Unique identifier of the job.
     id: Optional[str]
+    #: job name
     name: Optional[str]
     #: Job type.
     job_type: Optional[str]
@@ -303,12 +305,21 @@ class ManageNumberErrorItem(ApiModel):
     error: Optional[ErrorObject]
 
 
-class ManageNumbersJobsApi(ApiChild, base='telephony/config'):
+class InitiateMoveNumberJobsBody(ApiModel):
+    #: Indicates the kind of operation to be carried out.
+    operation: Optional[str]
+    #: The target location within organization where the unassigned numbers will be moved from the source location.
+    target_location_id: Optional[str]
+    #: Indicates the numbers to be moved from source to target locations.
+    number_list: Optional[list[NumberItem]]
+
+
+class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
     """
     API for jobs to manage numbers
     """
 
-    def list_manage_numbers_jobs(self, org_id: str = None, **params) -> Generator[StartJobResponse, None, None]:
+    def list_jobs(self, org_id: str = None, **params) -> Generator[NumberJob, None, None]:
         """
         Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one
         irrespective of its status.
@@ -322,11 +333,11 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config'):
         """
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep('jobs/numbers/manageNumbers')
-        return self.session.follow_pagination(url=url, model=StartJobResponse, params=params)
+        url = self.ep('manageNumbers')
+        return self.session.follow_pagination(url=url, model=NumberJob, params=params)
 
-    def initiate_move_number_jobs(self, operation: str, target_location_id: str,
-                                  number_list: list[NumberItem]) -> MoveNumberJob:
+    def initiate_job(self, operation: str, target_location_id: str,
+                     number_list: list[NumberItem]) -> NumberJob:
         """
         Starts the numbers move from one location to another location. Although jobs can do both MOVE and DELETE
         actions internally, only MOVE is supported publicly.
@@ -335,7 +346,7 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config'):
         with Cloud Connected PSTN.
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
-        :param operation: Indicates the kind of operation to be carried out.
+        :param operation: Indicates the kind of operation to be carried out. 
         :type operation: str
         :param target_location_id: The target location within organization where the unassigned numbers will be moved
             from the source location.
@@ -343,18 +354,14 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config'):
         :param number_list: Indicates the numbers to be moved from source to target locations.
         :type number_list: list[NumberItem]
         """
-        body = {}
-        if operation is not None:
-            body['operation'] = operation
-        if target_location_id is not None:
-            body['targetLocationId'] = target_location_id
-        if number_list is not None:
-            body['numberList'] = number_list
-        url = self.ep('jobs/numbers/manageNumbers')
-        data = super().post(url=url, json=body)
-        return MoveNumberJob.parse_obj(data)
+        body = InitiateMoveNumberJobsBody(operation=operation,
+                                          target_location_id=target_location_id,
+                                          number_list=number_list)
+        url = self.ep('manageNumbers')
+        data = super().post(url=url, data=body.json())
+        return NumberJob.parse_obj(data)
 
-    def manage_numbers_job_status(self, job_id: str = None) -> MoveNumberJob:
+    def job_status(self, job_id: str = None) -> NumberJob:
         """
         Returns the status and other details of the job.
         This API requires a full or read-only administrator auth token with a scope of
@@ -363,11 +370,11 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config'):
         :param job_id: Retrieve job details for this jobId.
         :type job_id: str
         """
-        url = self.ep(f'jobs/numbers/manageNumbers/{job_id}')
+        url = self.ep(f'manageNumbers/{job_id}')
         data = super().get(url=url)
-        return MoveNumberJob.parse_obj(data)
+        return NumberJob.parse_obj(data)
 
-    def pause_manage_numbers_job(self, job_id: str = None, org_id: str = None):
+    def pause_job(self, job_id: str = None, org_id: str = None):
         """
         Pause the running Manage Numbers Job. A paused job can be resumed or abandoned.
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
@@ -380,11 +387,11 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'jobs/numbers/manageNumbers/{job_id}/actions/pause/invoke')
+        url = self.ep(f'manageNumbers/{job_id}/actions/pause/invoke')
         super().post(url=url, params=params)
         return
 
-    def resume_manage_numbers_job(self, job_id: str = None, org_id: str = None):
+    def resume_job(self, job_id: str = None, org_id: str = None):
         """
         Resume the paused Manage Numbers Job. A paused job can be resumed or abandoned.
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
@@ -397,11 +404,11 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'jobs/numbers/manageNumbers/{job_id}/actions/resume/invoke')
+        url = self.ep(f'manageNumbers/{job_id}/actions/resume/invoke')
         super().post(url=url, params=params)
         return
 
-    def abandon_manage_numbers_job(self, job_id: str = None, org_id: str = None):
+    def abandon_job(self, job_id: str = None, org_id: str = None):
         """
         Abandon the Manage Numbers Job.
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
@@ -414,12 +421,12 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'jobs/numbers/manageNumbers/{job_id}/actions/abandon/invoke')
+        url = self.ep(f'manageNumbers/{job_id}/actions/abandon/invoke')
         super().post(url=url, params=params)
         return
 
-    def list_manage_numbers_job_errors(self, job_id: str = None, org_id: str = None,
-                                       **params) -> Generator[ManageNumberErrorItem, None, None]:
+    def list_job_errors(self, job_id: str = None, org_id: str = None,
+                        **params) -> Generator[ManageNumberErrorItem, None, None]:
         """
         Lists all error details of Manage Numbers job. This will not list any errors if exitCode is COMPLETED. If the
         status is COMPLETED_WITH_ERRORS then this lists the cause of failures.
@@ -434,7 +441,7 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config'):
         """
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'jobs/numbers/manageNumbers/{job_id}/errors')
+        url = self.ep(f'manageNumbers/{job_id}/errors')
         return self.session.follow_pagination(url=url, model=ManageNumberErrorItem, params=params)
 
 
