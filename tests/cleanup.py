@@ -19,6 +19,7 @@ from tests.base import get_tokens
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.common import NumberState
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
+from wxc_sdk.telephony.callqueue import CallQueue
 
 TO_DELETE = re.compile(r'^(?:(?:\w{2}_|many_|test_|test_user_|workspace test )\d{3})|National Holidays$')
 DRY_RUN = False
@@ -63,6 +64,26 @@ def main():
     rest_logger.setLevel(logging.DEBUG)
 
     with ThreadPoolExecutor() as pool:
+
+        # remove Dustin Harris from Call Queues
+        if False:
+            dustins = list(api.people.list(display_name='Dustin Harris'))
+            if dustins:
+                dustin = dustins[0]
+                call_queues = list(api.telephony.callqueue.list())
+                details = list(pool.map(lambda cq: api.telephony.callqueue.details(location_id=cq.location_id, queue_id=cq.id),
+                                        call_queues))
+                remove_from = [cq for cq in details
+                               if next((agent for agent in cq.agents
+                                        if agent.agent_id==dustin.person_id), None) is not None]
+                def queue_wo_dustin(cq: CallQueue)->CallQueue:
+                    wo_dustin = cq.copy(deep=True)
+                    wo_dustin.agents = [agent for agent in cq.agents if agent.agent_id!=dustin.person_id]
+                    return wo_dustin
+                if remove_from:
+                    list(pool.map(lambda cq: api.telephony.callqueue.update(location_id=cq.location_id,queue_id=cq.id,
+                                                                            update=queue_wo_dustin(cq)), remove_from))
+
         # auto attendants
         ata = api.telephony.auto_attendant
         aa_list = list(filtered(ata.list()))
