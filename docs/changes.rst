@@ -7,6 +7,8 @@ Release history
 - feat: manage numbers jobs api :attr:`wxc_sdk.telephony.jobs.JobsApi.manage_numbers`
 - fix: attribute 'browser_client_enabled' instead of 'browser_client_id' in :class:`wxc_sdk.person_settings.appservices.AppServicesSettings`
 - fix: :class:`wxc_sdk.telephony.jobs.ManageNumbersJobsApi`, updated method names, fixed type issues in list method
+- fix: set location_id in response from :meth:`wxc_sdk.telephony.callqueue.CallQueueApi.details`
+- fix: check presence of location_id and queue_id in :meth:`wxc_sdk.telephony.callqueue.CallQueueApi.update`
 
 1.10.1
 ------

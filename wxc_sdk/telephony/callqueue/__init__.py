@@ -566,6 +566,7 @@ class CallQueueApi:
         params = {'orgId': org_id} if org_id is not None else {}
         data = self._session.rest_get(url, params=params)
         result = CallQueue.parse_obj(data)
+        result.location_id = location_id
         # noinspection PyTypeChecker
         return result
 
@@ -635,6 +636,8 @@ class CallQueueApi:
 
         """
         params = org_id and {'orgId': org_id} or None
+        if location_id is None or queue_id is None:
+            raise ValueError('location_id and queue_id cannot be None')
         cq_data = update.create_or_update()
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
         self._session.rest_put(url=url, data=cq_data, params=params)
