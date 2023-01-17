@@ -106,10 +106,10 @@ class MessagesData(WebhookEventData):
     resource = 'messages'
     id: str
     room_id: str
-    room_type: RoomType
-    person_id: str
-    person_email: str
-    created: datetime
+    room_type: Optional[RoomType]
+    person_id: Optional[str]
+    person_email: Optional[str]
+    created: Optional[datetime]
 
 
 class MessagesApi(ApiChild, base='messages'):
