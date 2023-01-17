@@ -7,10 +7,10 @@ from typing import Optional
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
-
-__all__ = ['Membership', 'MembershipApi']
-
 from wxc_sdk.common import RoomType
+from wxc_sdk.webhook import WebhookEventData
+
+__all__ = ['Membership', 'MembershipsData', 'MembershipApi']
 
 
 class Membership(ApiModel):
@@ -36,6 +36,13 @@ class Membership(ApiModel):
     is_monitor: Optional[bool]
     #: The date and time when the membership was created.
     created: Optional[datetime]
+
+
+class MembershipsData(WebhookEventData, Membership):
+    """
+    Data in a webhook "memberships" event
+    """
+    resource = 'memberships'
 
 
 class MembershipApi(ApiChild, base='memberships'):

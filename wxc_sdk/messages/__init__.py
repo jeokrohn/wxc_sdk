@@ -14,7 +14,9 @@ from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.common import RoomType
 
 __all__ = ['AdaptiveCardAction', 'AdaptiveCard', 'MessageAttachment', 'AdaptiveCardBody',
-           'Message', 'MessagesApi']
+           'Message', 'MessagesData', 'MessagesApi']
+
+from wxc_sdk.webhook import WebhookEventData
 
 
 class AdaptiveCardBody(ApiModel):
@@ -95,6 +97,19 @@ class Message(ApiModel):
     #: true if the audio file is a voice clip recorded by the client; false if the audio file is a standard audio
     #: file not posted using the voice clip feature.
     is_voice_clip: Optional[bool]
+
+
+class MessagesData(WebhookEventData):
+    """
+    Data in a webhook "messages" event
+    """
+    resource = 'messages'
+    id: str
+    room_id: str
+    room_type: RoomType
+    person_id: str
+    person_email: str
+    created: datetime
 
 
 class MessagesApi(ApiChild, base='messages'):

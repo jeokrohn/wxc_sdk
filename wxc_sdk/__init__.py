@@ -5,6 +5,7 @@ import logging
 import os
 from typing import Union
 
+from .attachment_actions import AttachmentActionsApi
 from .cdr import DetailedCDRApi
 from .devices import DevicesApi
 from .events import EventsApi
@@ -44,6 +45,8 @@ class WebexSimpleApi:
     The main API object
     """
 
+    #: Attachment actions API :class:`attachment_actions.AttachmentActionsApi`
+    attachment_actions: AttachmentActionsApi
     #: CDR API :class:`cdr.DetailedCDRApi`
     cdr: DetailedCDRApi
     #: devices API :class:`devices.DevicesApi`
@@ -107,6 +110,7 @@ class WebexSimpleApi:
             tokens = Tokens(access_token=tokens)
 
         session = RestSession(tokens=tokens, concurrent_requests=concurrent_requests)
+        self.attachment_actions = AttachmentActionsApi(session=session)
         self.cdr = DetailedCDRApi(session=session)
         self.devices = DevicesApi(session=session)
         self.events = EventsApi(session=session)

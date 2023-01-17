@@ -206,7 +206,7 @@ class CDR(ApiModel):
     #: Local: Used when the local user has released the call first.
     #: Remote: Used when the far end party releases the call first.
     #: Unknown: Used when the call has partial information or is unable to gather enough information about the party
-    #:   who released the call. It could be because of situations like force lock or because of a session audit failure.
+    #: who released the call. It could be because of situations like force lock or because of a session audit failure.
     releasing_party: Optional[str] = Field(alias='Releasing party')
     #: When the call has been redirected one or more times, this field reports the last redirecting number.
     #: Identifies who last redirected the call. Only applies to call scenarios such as transfer, call forwarded calls,

@@ -14,6 +14,9 @@ The second column of the table has a link to the documentation of the method.
    * - api.close
         
      - :meth:`~wxc_sdk.WebexSimpleApi.close`
+   * - api.attachment_actions.action_details
+        Shows details for a attachment action, by ID
+     - :meth:`~wxc_sdk.attachment_actions.AttachmentActionsApi.action_details`
    * - api.cdr.get_cdr_history
         Provides Webex Calling Detailed Call History data for your organization
      - :meth:`~wxc_sdk.cdr.DetailedCDRApi.get_cdr_history`
@@ -620,6 +623,27 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.jobs.device_settings.list
         List change device settings jobs
      - :meth:`~wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.list`
+   * - api.telephony.jobs.manage_numbers.abandon_job
+        Abandon the Manage Numbers Job
+     - :meth:`~wxc_sdk.telephony.jobs.ManageNumbersJobsApi.abandon_job`
+   * - api.telephony.jobs.manage_numbers.initiate_job
+        Starts the numbers move from one location to another location
+     - :meth:`~wxc_sdk.telephony.jobs.ManageNumbersJobsApi.initiate_job`
+   * - api.telephony.jobs.manage_numbers.job_status
+        Returns the status and other details of the job
+     - :meth:`~wxc_sdk.telephony.jobs.ManageNumbersJobsApi.job_status`
+   * - api.telephony.jobs.manage_numbers.list_job_errors
+        Lists all error details of Manage Numbers job
+     - :meth:`~wxc_sdk.telephony.jobs.ManageNumbersJobsApi.list_job_errors`
+   * - api.telephony.jobs.manage_numbers.list_jobs
+        Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one
+     - :meth:`~wxc_sdk.telephony.jobs.ManageNumbersJobsApi.list_jobs`
+   * - api.telephony.jobs.manage_numbers.pause_job
+        Pause the running Manage Numbers Job
+     - :meth:`~wxc_sdk.telephony.jobs.ManageNumbersJobsApi.pause_job`
+   * - api.telephony.jobs.manage_numbers.resume_job
+        Resume the paused Manage Numbers Job
+     - :meth:`~wxc_sdk.telephony.jobs.ManageNumbersJobsApi.resume_job`
    * - api.telephony.location.change_announcement_language
         Change Announcement Language
      - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.change_announcement_language`

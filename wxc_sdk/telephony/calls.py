@@ -10,13 +10,11 @@ from pydantic import Field
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
 from ..base import SafeEnum as Enum
-from ..webhook import WebHook
+from ..webhook import WebhookEvent, WebhookEventData
 
 __all__ = ['CallType', 'TelephonyParty', 'RedirectReason', 'Redirection', 'Recall', 'RecordingState',
            'Personality', 'CallState', 'TelephonyCall', 'TelephonyEventData', 'TelephonyEvent', 'DialResponse',
-           'RejectAction',
-           'HistoryType', 'CallHistoryRecord', 'ParkedAgainst', 'CallInfo',
-           'CallsApi']
+           'RejectAction', 'HistoryType', 'CallHistoryRecord', 'ParkedAgainst', 'CallInfo', 'CallsApi']
 
 
 class CallType(str, Enum):
@@ -166,18 +164,16 @@ class TelephonyCall(ApiModel):
     disconnected: Optional[datetime.datetime]
 
 
-class TelephonyEventData(TelephonyCall):
+class TelephonyEventData(WebhookEventData, TelephonyCall):
+    """
+    data in a webhook 'telephony_calls' event
+    """
+    resource = 'telephony_calls'
     event_type: str
     event_timestamp: datetime.datetime
 
 
-class TelephonyEvent(WebHook):
-    """
-    A telephony event on the webhook
-    """
-    resource: Literal['telephony_calls']
-    actor_id: str
-    data: TelephonyEventData
+TelephonyEvent = WebhookEvent
 
 
 class DialResponse(ApiModel):
