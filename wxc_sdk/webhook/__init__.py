@@ -4,18 +4,19 @@ Webhook types and API
 import datetime
 import json
 from collections.abc import Generator
-from typing import Optional
+from typing import Optional, Union, Any, ClassVar
 
-from pydantic import Field
+from pydantic import Field, root_validator, Extra
 
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel, webex_id_to_uuid
 from ..base import SafeEnum as Enum
 
-__all__ = ['WebHookEvent', 'WebHookResource', 'WebHookCreate', 'WebHookStatus', 'WebHook', 'WebhookApi']
+__all__ = ['WebHookEventType', 'WebHookResource', 'WebHookCreate', 'WebHookStatus', 'WebHook', 'WebhookEventData',
+           'WebhookEvent', 'WebhookApi']
 
 
-class WebHookEvent(str, Enum):
+class WebHookEventType(str, Enum):
     """
     The event type for the webhook.
     """
@@ -50,13 +51,17 @@ class WebHookResource(str, Enum):
     recordings = 'recordings'
     meeting_participants = 'meetingParticipants'
     meeting_transcripts = 'meetingTranscripts'
+    all = 'all'
 
 
 class WebHookCreate(ApiModel):
+    """
+    Body for a webhook create call
+    """
     name: str
     target_url: str
     resource: WebHookResource
-    event: WebHookEvent
+    event: WebHookEventType
     filter: Optional[str]
     secret: Optional[str]
     owned_by: Optional[str]
@@ -77,7 +82,7 @@ class WebHook(ApiModel):
     #: The resource type for the webhook. Creating a webhook requires 'read' scope on the resource the webhook is for.
     resource: Optional[WebHookResource]
     #: The event type for the webhook.
-    event: Optional[WebHookEvent]
+    event: Optional[WebHookEventType]
     #: The filter that defines the webhook scope.
     filter: Optional[str]
     #: The secret used to generate payload signature.
@@ -108,6 +113,68 @@ class WebHook(ApiModel):
         return webex_id_to_uuid(self.created_by)
 
 
+class WebHookEventDataForbid(ApiModel):
+    resource: ClassVar = None
+    registry: ClassVar = dict()
+
+    class Config:
+        extra = Extra.forbid
+
+    def __init_subclass__(cls: 'WebHookEventDataForbid', **kwargs):
+        if cls.resource is None and cls.__name__ != 'WebhookEventData':
+            raise KeyError(f'{cls.__name__}: resource needs to be defined')
+        WebHookEventDataForbid.registry[cls.resource] = cls
+
+
+class WebhookEventData(WebHookEventDataForbid):
+    """
+    base class for data components of a webhook event.
+    Subclasses of this base implement the actual data models
+
+    Examples:
+        .. list-table::
+           :header-rows: 1
+
+           * - resource
+             - class
+           * - telephony_calls
+             - :class:`wxc_sdk.telephony.calls.TelephonyEventData`
+           * - messages
+             - :class:`wxc_sdk.messages.MessagesData`
+           * - memberships
+             - :class:`wxc_sdk.memberships.MembershipsData`
+           * - attachmentActions
+             - :class:`wxc_sdk.attachment_actions.AttachmentActionsApi`
+    """
+
+    class Config:
+        extra = Extra.allow
+
+
+class WebhookEvent(WebHook):
+    """
+    A webhook event. Can be used in to parse data posted to a webhook handler
+    """
+    actor_id: Optional[str]
+    #: resource specific event data; for registered subclasses of :class:`wwx_sdk.webhook.WebhookEventData` an
+    #: instance of this subclass is returned. If no class is registered for the given resource, then data is returned as
+    #: generic WebhookEventData instance
+    data: Union[WebHookEventDataForbid, dict]
+
+    @root_validator(pre=True)
+    def parse_data(cls, values):
+        """
+        Parse 'data' component with the correct registered Subclass
+
+        :meta private:
+        """
+        if (v_data := values.get('data')) and ((v_resource := values.get('resource'))):
+            if target_class := WebHookEventDataForbid.registry.get(v_resource):
+                parsed = target_class.parse_obj(v_data)
+                values['data'] = parsed
+        return values
+
+
 class WebhookApi(ApiChild, base='webhooks'):
     """
     API for webhook management
@@ -123,7 +190,7 @@ class WebhookApi(ApiChild, base='webhooks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=ep, model=WebHook)
 
-    def create(self, name: str, target_url: str, resource: WebHookResource, event: WebHookEvent, filter: str = None,
+    def create(self, name: str, target_url: str, resource: WebHookResource, event: WebHookEventType, filter: str = None,
                secret: str = None,
                owned_by: str = None) -> WebHook:
         """

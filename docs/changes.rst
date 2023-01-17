@@ -9,6 +9,9 @@ Release history
 - fix: :class:`wxc_sdk.telephony.jobs.ManageNumbersJobsApi`, updated method names, fixed type issues in list method
 - fix: set location_id in response from :meth:`wxc_sdk.telephony.callqueue.CallQueueApi.details`
 - fix: check presence of location_id and queue_id in :meth:`wxc_sdk.telephony.callqueue.CallQueueApi.update`
+- feat: class to parse webhook event data :class:`wxc_sdk.webhook.WebhookEvent`, :class:`wxc_sdk.webhook.WebhookEventData`
+- feat: new API :attr:`wxc_sdk.attachment_actions`
+- feat: new example: firehose.py, create a "firehose" webhook (using ngrok) to dump webhook events to console
 
 1.10.1
 ------

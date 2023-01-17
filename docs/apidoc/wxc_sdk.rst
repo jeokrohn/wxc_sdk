@@ -12,6 +12,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   wxc_sdk.attachment_actions
    wxc_sdk.cdr
    wxc_sdk.common
    wxc_sdk.devices

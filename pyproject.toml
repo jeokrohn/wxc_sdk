@@ -34,6 +34,8 @@ selenium = "^4.5.0"
 inflection = "^0.5.1"
 test_helper = { git = "https://github.com/jeokrohn/test_helper.git" }
 geopy = "^2.2.0"
+backoff = "^2.2.1"
+webexteamsbot = "^0.1.4"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -49,10 +49,10 @@ MAX_USERS_WITH_CALLING_DATA = 10
 
 
 __all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsApiChild', 'AsAppServicesApi',
-           'AsAuthCodesApi', 'AsAutoAttendantApi', 'AsBargeApi', 'AsCQPolicyApi', 'AsCallInterceptApi',
-           'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi', 'AsCallRecordingApi', 'AsCallWaitingApi',
-           'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsDetailedCDRApi',
-           'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi', 'AsDndApi', 'AsEventsApi',
+           'AsAttachmentActionsApi', 'AsAuthCodesApi', 'AsAutoAttendantApi', 'AsBargeApi', 'AsCQPolicyApi',
+           'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi', 'AsCallRecordingApi',
+           'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi',
+           'AsDetailedCDRApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi', 'AsDndApi', 'AsEventsApi',
            'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi', 'AsHotelingApi', 'AsHuntGroupApi',
            'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationInterceptApi',
            'AsLocationMoHApi', 'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi',
@@ -153,6 +153,25 @@ class AsApiChild:
         :param kwargs:
         """
         return await self.session.rest_patch(*args, **kwargs)
+
+
+class AsAttachmentActionsApi(AsApiChild, base='attachment/actions'):
+    """
+    Users create attachment actions by interacting with message attachments such as clicking on a submit button in a
+    card.
+    """
+
+    async def action_details(self, id: str) -> AttachmentAction:
+        """
+        Shows details for a attachment action, by ID.
+        Specify the attachment action ID in the id URI parameter.
+
+        :param id: A unique identifier for the attachment action.
+        :type id: str
+        """
+        url = self.ep(f'{id}')
+        data = await super().get(url=url)
+        return AttachmentAction.parse_obj(data)
 
 
 class AsDetailedCDRApi(AsApiChild, base='devices'):
@@ -6097,6 +6116,7 @@ class AsCallQueueApi:
         params = {'orgId': org_id} if org_id is not None else {}
         data = await self._session.rest_get(url, params=params)
         result = CallQueue.parse_obj(data)
+        result.location_id = location_id
         # noinspection PyTypeChecker
         return result
 
@@ -6166,6 +6186,8 @@ class AsCallQueueApi:
 
         """
         params = org_id and {'orgId': org_id} or None
+        if location_id is None or queue_id is None:
+            raise ValueError('location_id and queue_id cannot be None')
         cq_data = update.create_or_update()
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
         await self._session.rest_put(url=url, data=cq_data, params=params)
@@ -10335,7 +10357,7 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=ep, model=WebHook)]
 
-    async def create(self, name: str, target_url: str, resource: WebHookResource, event: WebHookEvent, filter: str = None,
+    async def create(self, name: str, target_url: str, resource: WebHookResource, event: WebHookEventType, filter: str = None,
                secret: str = None,
                owned_by: str = None) -> WebHook:
         """
@@ -10893,6 +10915,8 @@ class AsWebexSimpleApi:
     The main API object
     """
 
+    #: Attachment actions API :class:`AsAttachmentActionsApi`
+    attachment_actions: AsAttachmentActionsApi
     #: CDR API :class:`AsDetailedCDRApi`
     cdr: AsDetailedCDRApi
     #: devices API :class:`AsDevicesApi`
@@ -10956,6 +10980,7 @@ class AsWebexSimpleApi:
             tokens = Tokens(access_token=tokens)
 
         session = AsRestSession(tokens=tokens, concurrent_requests=concurrent_requests)
+        self.attachment_actions = AsAttachmentActionsApi(session=session)
         self.cdr = AsDetailedCDRApi(session=session)
         self.devices = AsDevicesApi(session=session)
         self.events = AsEventsApi(session=session)
