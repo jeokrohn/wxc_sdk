@@ -458,7 +458,7 @@ class TestDeleteAllTestDialPlans(TestCaseWithLog):
     def test_delete_all(self):
         api = self.api.telephony.prem_pstn.dial_plan
         dps = [dp for dp in api.list()
-               if dp.name.startswith('TEST_')]
+               if dp.name.upper().startswith('TEST_')]
         if not dps:
             self.skipTest('No Test dial plans to delete')
             return
