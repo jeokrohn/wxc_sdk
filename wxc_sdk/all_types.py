@@ -107,8 +107,8 @@ from wxc_sdk.telephony.voice_messaging import MessageSummary, VoiceMailPartyInfo
 from wxc_sdk.telephony.voicemail_groups import VoicemailGroup, VoicemailGroupDetail
 from wxc_sdk.telephony.voiceportal import ExpirePasscode, FailedAttempts, PasscodeRules, VoicePortalSettings
 from wxc_sdk.tokens import Tokens
-from wxc_sdk.webhook import WebHook, WebHookCreate, WebHookEventType, WebHookResource, WebHookStatus,\
-    WebhookEvent, WebhookEventData
+from wxc_sdk.webhook import Webhook, WebhookEvent, WebhookEventData, WebhookEventType, WebhookResource,\
+    WebhookStatus
 from wxc_sdk.workspace_locations import WorkspaceLocation, WorkspaceLocationFloor
 from wxc_sdk.workspace_settings.numbers import WorkSpaceNumbers
 from wxc_sdk.workspaces import Calendar, CalendarType, CallingType, WorkSpaceType, Workspace, WorkspaceEmail
@@ -181,8 +181,8 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'VoiceMailPartyInformation', 'VoiceMailRules', 'VoiceMessageDetails', 'VoicePortalSettings',
            'VoicemailCopyOfMessage', 'VoicemailEnabled', 'VoicemailEnabledWithGreeting', 'VoicemailFax',
            'VoicemailGroup', 'VoicemailGroupDetail', 'VoicemailMessageStorage', 'VoicemailNotifications',
-           'VoicemailSettings', 'VoicemailTransferToNumber', 'WaitMessageSetting', 'WaitMode', 'WebHook',
-           'WebHookCreate', 'WebHookEventType', 'WebHookResource', 'WebHookStatus', 'WebhookEvent',
-           'WebhookEventData', 'WelcomeMessageSetting', 'WifiCustomization', 'WifiNetwork', 'WorkSpaceNumbers',
-           'WorkSpaceType', 'Workspace', 'WorkspaceEmail', 'WorkspaceLocation', 'WorkspaceLocationFloor', '_Helper',
-           'dt_iso_str', 'plus1', 'to_camel', 'webex_id_to_uuid']
+           'VoicemailSettings', 'VoicemailTransferToNumber', 'WaitMessageSetting', 'WaitMode', 'Webhook',
+           'WebhookEvent', 'WebhookEventData', 'WebhookEventType', 'WebhookResource', 'WebhookStatus',
+           'WelcomeMessageSetting', 'WifiCustomization', 'WifiNetwork', 'WorkSpaceNumbers', 'WorkSpaceType',
+           'Workspace', 'WorkspaceEmail', 'WorkspaceLocation', 'WorkspaceLocationFloor', '_Helper', 'dt_iso_str',
+           'plus1', 'to_camel', 'webex_id_to_uuid']

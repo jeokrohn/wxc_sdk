@@ -161,15 +161,15 @@ class AsAttachmentActionsApi(AsApiChild, base='attachment/actions'):
     card.
     """
 
-    async def action_details(self, id: str) -> AttachmentAction:
+    async def details(self, action_id: str) -> AttachmentAction:
         """
         Shows details for a attachment action, by ID.
         Specify the attachment action ID in the id URI parameter.
 
-        :param id: A unique identifier for the attachment action.
-        :type id: str
+        :param action_id: A unique identifier for the attachment action.
+        :type action_id: str
         """
-        url = self.ep(f'{id}')
+        url = self.ep(f'{action_id}')
         data = await super().get(url=url)
         return AttachmentAction.parse_obj(data)
 
@@ -10337,7 +10337,7 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
     API for webhook management
     """
 
-    def list_gen(self) -> AsyncGenerator[WebHook, None, None]:
+    def list_gen(self) -> AsyncGenerator[Webhook, None, None]:
         """
         List all of your webhooks.
 
@@ -10345,9 +10345,9 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
         """
         ep = self.ep()
         # noinspection PyTypeChecker
-        return self.session.follow_pagination(url=ep, model=WebHook)
+        return self.session.follow_pagination(url=ep, model=Webhook)
 
-    async def list(self) -> List[WebHook]:
+    async def list(self) -> List[Webhook]:
         """
         List all of your webhooks.
 
@@ -10355,11 +10355,11 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
         """
         ep = self.ep()
         # noinspection PyTypeChecker
-        return [o async for o in self.session.follow_pagination(url=ep, model=WebHook)]
+        return [o async for o in self.session.follow_pagination(url=ep, model=Webhook)]
 
-    async def create(self, name: str, target_url: str, resource: WebHookResource, event: WebHookEventType, filter: str = None,
+    async def create(self, name: str, target_url: str, resource: WebhookResource, event: WebhookEventType, filter: str = None,
                secret: str = None,
-               owned_by: str = None) -> WebHook:
+               owned_by: str = None) -> Webhook:
         """
         Creates a webhook.
 
@@ -10377,13 +10377,13 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
         """
         params = {to_camel(param): value for i, (param, value) in enumerate(locals().items())
                   if i and value is not None}
-        body = json.loads(WebHookCreate(**params).json())
+        body = json.loads(WebhookCreate(**params).json())
         ep = self.ep()
         data = await self.post(ep, json=body)
-        result = WebHook.parse_obj(data)
+        result = Webhook.parse_obj(data)
         return result
 
-    async def details(self, webhook_id: str) -> WebHook:
+    async def details(self, webhook_id: str) -> Webhook:
         """
         Get Webhook Details
         Shows details for a webhook, by ID.
@@ -10393,9 +10393,9 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
         :return: Webhook details
         """
         url = self.ep(webhook_id)
-        return WebHook.parse_obj(await self.get(url))
+        return Webhook.parse_obj(await self.get(url))
 
-    async def update(self, webhook_id: str, update: WebHook) -> WebHook:
+    async def update(self, webhook_id: str, update: Webhook) -> Webhook:
         """
         Updates a webhook, by ID. You cannot use this call to deactivate a webhook, only to activate a webhook that
         was auto deactivated. The fields that can be updated are name, targetURL, secret and status. All other fields,
@@ -10404,12 +10404,12 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
         :param webhook_id: The unique identifier for the webhook.
         :type webhook_id: str
         :param update: The webhook update
-        :type update: WebHook
-        :return: updated :class:`WebHook` object
+        :type update: Webhook
+        :return: updated :class:`Webhook` object
         """
         url = self.ep(webhook_id)
         webhook_data = update.json(include={'name', 'target_url', 'secret', 'owned_by', 'status'})
-        return WebHook.parse_obj(await self.put(url, data=webhook_data))
+        return Webhook.parse_obj(await self.put(url, data=webhook_data))
 
     async def webhook_delete(self, webhook_id: str):
         """

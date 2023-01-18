@@ -12,6 +12,8 @@ Release history
 - feat: class to parse webhook event data :class:`wxc_sdk.webhook.WebhookEvent`, :class:`wxc_sdk.webhook.WebhookEventData`
 - feat: new API :attr:`wxc_sdk.attachment_actions`
 - feat: new example: firehose.py, create a "firehose" webhook (using ngrok) to dump webhook events to console
+- fix: consistent non-camelcase "Webhook" instead of mixed "Webhook" and "WebHook" usage
+  BREAKING CHANGE: renamed classes WebHook, WebHookEvent, WebHookEventType, WebHookResource, WebHookStatus
 
 1.10.1
 ------

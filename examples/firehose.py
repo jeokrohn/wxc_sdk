@@ -5,6 +5,7 @@ Create a firehose webhook and dump events to stdout
 import logging
 import os
 import sys
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from json import dumps
@@ -16,10 +17,14 @@ from flask import Flask, request
 
 from examples import ngrokhelper
 from wxc_sdk import WebexSimpleApi
+from wxc_sdk.common import RoomType
+from wxc_sdk.memberships import MembershipsData
+from wxc_sdk.messages import MessagesData
+from wxc_sdk.rest import RestError
 from wxc_sdk.tokens import Tokens
 from wxc_sdk.integration import Integration
 from wxc_sdk.scopes import parse_scopes
-from wxc_sdk.webhook import WebhookEvent
+from wxc_sdk.webhook import WebhookEvent, WebhookEventType
 
 LOCAL_APP_PORT = 6001
 
@@ -92,6 +97,7 @@ class FireHose(Flask):
     A Firehose webhook listener
     """
     api: WebexSimpleApi
+    handler: dict[str, Callable[[WebhookEvent], str]]
 
     def __init__(self,
                  *,
@@ -105,20 +111,27 @@ class FireHose(Flask):
 
         # register URL for messages to webhook
         self.add_url_rule(
-            f'/', "index", self.process_incoming_message, methods=["POST"]
+            f'/', "index", self.handle_webhook_event, methods=["POST"]
         )
 
-        # get list of webhooks and delete all existing webhooks
+        # delete all existing webhooks which smell like leftovers
         wh_list = list(api.webhook.list())
         wh_name = self.__class__.__name__
-        # delete all webhooks which smell like leftovers
+
         with ThreadPoolExecutor() as pool:
             list(pool.map(lambda wh: api.webhook.webhook_delete(webhook_id=wh.webhook_id),
                           (wh for wh in wh_list if wh.name.startswith(wh_name))))
-        wh = api.webhook.create(name=wh_name, resource='all', event='all', target_url=base_url)
+
+        # create a new firehose webhook
+        api.webhook.create(name=wh_name, resource='all', event='all', target_url=base_url)
+
+        # register some resource specifc handlers
+        self.handler = {'messages': self.handle_messages_event,
+                        'memberships': self.handle_memberships_event}
+
         return
 
-    def process_incoming_message(self):
+    def handle_webhook_event(self):
         """
         Process an incoming message, determine the command and action,
         and determine reply.
@@ -135,7 +148,44 @@ class FireHose(Flask):
             log.debug(f'{wh_event.resource} parsed as {wh_event.data.__class__.__name__}')
         except Exception as e:
             log.error(f'Failed to parse: {e}')
+        else:
+            event_handler = self.handler.get(wh_event.resource)
+            if event_handler:
+                event_handler(wh_event)
         return ''
+
+    def handle_messages_event(self, event: WebhookEvent):
+        """
+        Handle a 'messages' webhook event
+        """
+        data: MessagesData = event.data
+        space = self.api.rooms.details(room_id=data.room_id)
+        person = self.api.people.details(person_id=data.person_id)
+        space_title = f'{space.title if space.type == RoomType.group else "1:1 space"}'
+        if event.event == WebhookEventType.created:
+            log.info(f'{person.display_name} posted to {space_title}')
+        elif event.event == WebhookEventType.deleted:
+            log.info(f'{person.display_name} deleted a message from {space_title}')
+        elif event.event == WebhookEventType.updated:
+            log.info(f'{person.display_name} edited a message in {space_title}')
+        return ''
+
+    def handle_memberships_event(self, event: WebhookEvent):
+        """
+        Handle a 'memberships' webhook event
+        """
+        data: MembershipsData = event.data
+        try:
+            space = self.api.rooms.details(room_id=data.room_id)
+        except RestError:
+            space_title = 'unknown'
+        else:
+            space_title = f'{space.title if space.type == RoomType.group else "1:1 space"}'
+        person = self.api.people.details(person_id=data.person_id)
+        if event.event == WebhookEventType.created:
+            log.info(f'{person.display_name} joined {space_title}')
+        elif event.event == WebhookEventType.deleted:
+            log.info(f'{person.display_name} left {space_title}')
 
 
 def create_app() -> Optional[FireHose]:

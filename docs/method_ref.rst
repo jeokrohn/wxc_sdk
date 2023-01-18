@@ -14,9 +14,9 @@ The second column of the table has a link to the documentation of the method.
    * - api.close
         
      - :meth:`~wxc_sdk.WebexSimpleApi.close`
-   * - api.attachment_actions.action_details
+   * - api.attachment_actions.details
         Shows details for a attachment action, by ID
-     - :meth:`~wxc_sdk.attachment_actions.AttachmentActionsApi.action_details`
+     - :meth:`~wxc_sdk.attachment_actions.AttachmentActionsApi.details`
    * - api.cdr.get_cdr_history
         Provides Webex Calling Detailed Call History data for your organization
      - :meth:`~wxc_sdk.cdr.DetailedCDRApi.get_cdr_history`

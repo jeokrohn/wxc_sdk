@@ -12,11 +12,11 @@ from ..api_child import ApiChild
 from ..base import ApiModel, to_camel, webex_id_to_uuid
 from ..base import SafeEnum as Enum
 
-__all__ = ['WebHookEventType', 'WebHookResource', 'WebHookCreate', 'WebHookStatus', 'WebHook', 'WebhookEventData',
+__all__ = ['WebhookEventType', 'WebhookResource', 'WebhookStatus', 'Webhook', 'WebhookEventData',
            'WebhookEvent', 'WebhookApi']
 
 
-class WebHookEventType(str, Enum):
+class WebhookEventType(str, Enum):
     """
     The event type for the webhook.
     """
@@ -37,7 +37,7 @@ class WebHookEventType(str, Enum):
     all = 'all'
 
 
-class WebHookResource(str, Enum):
+class WebhookResource(str, Enum):
     """
     The resource type for the webhook. Creating a webhook requires 'read' scope on the resource the webhook is for.
     """
@@ -54,25 +54,25 @@ class WebHookResource(str, Enum):
     all = 'all'
 
 
-class WebHookCreate(ApiModel):
+class WebhookCreate(ApiModel):
     """
     Body for a webhook create call
     """
     name: str
     target_url: str
-    resource: WebHookResource
-    event: WebHookEventType
+    resource: WebhookResource
+    event: WebhookEventType
     filter: Optional[str]
     secret: Optional[str]
     owned_by: Optional[str]
 
 
-class WebHookStatus(str, Enum):
+class WebhookStatus(str, Enum):
     active = 'active'
     inactive = 'inactive'
 
 
-class WebHook(ApiModel):
+class Webhook(ApiModel):
     #: The unique identifier for the webhook.
     webhook_id: Optional[str] = Field(alias='id')
     #: A user-friendly name for the webhook.
@@ -80,15 +80,15 @@ class WebHook(ApiModel):
     #: The URL that receives POST requests for each event.
     target_url: str
     #: The resource type for the webhook. Creating a webhook requires 'read' scope on the resource the webhook is for.
-    resource: Optional[WebHookResource]
-    #: The event type for the webhook.
-    event: Optional[WebHookEventType]
+    resource: Optional[WebhookResource]
+    #: The event type for the Webhook.
+    event: Optional[WebhookEventType]
     #: The filter that defines the webhook scope.
     filter: Optional[str]
     #: The secret used to generate payload signature.
     secret: Optional[str]
     #: The status of the webhook. Use active to reactivate a disabled webhook.
-    status: WebHookStatus
+    status: WebhookStatus
     #: The date and time the webhook was created.
     created: datetime.datetime
     org_id: Optional[str]
@@ -113,20 +113,30 @@ class WebHook(ApiModel):
         return webex_id_to_uuid(self.created_by)
 
 
-class WebHookEventDataForbid(ApiModel):
+class WebhookEventDataForbid(ApiModel):
     resource: ClassVar = None
-    registry: ClassVar = dict()
+    _registry: ClassVar = dict()
 
     class Config:
         extra = Extra.forbid
 
-    def __init_subclass__(cls: 'WebHookEventDataForbid', **kwargs):
+    def __init_subclass__(cls: 'WebhookEventDataForbid', **kwargs):
+        """
+        :meta private:
+        """
         if cls.resource is None and cls.__name__ != 'WebhookEventData':
             raise KeyError(f'{cls.__name__}: resource needs to be defined')
-        WebHookEventDataForbid.registry[cls.resource] = cls
+        WebhookEventDataForbid._registry[cls.resource] = cls
+
+    @classmethod
+    def registered_subclass(cls, resource:str):
+        """
+        :meta private:
+        """
+        return cls._registry.get(resource)
 
 
-class WebhookEventData(WebHookEventDataForbid):
+class WebhookEventData(WebhookEventDataForbid):
     """
     base class for data components of a webhook event.
     Subclasses of this base implement the actual data models
@@ -151,7 +161,7 @@ class WebhookEventData(WebHookEventDataForbid):
         extra = Extra.allow
 
 
-class WebhookEvent(WebHook):
+class WebhookEvent(Webhook):
     """
     A webhook event. Can be used in to parse data posted to a webhook handler
     """
@@ -159,7 +169,7 @@ class WebhookEvent(WebHook):
     #: resource specific event data; for registered subclasses of :class:`wwx_sdk.webhook.WebhookEventData` an
     #: instance of this subclass is returned. If no class is registered for the given resource, then data is returned as
     #: generic WebhookEventData instance
-    data: Union[WebHookEventDataForbid, dict]
+    data: Union[WebhookEventDataForbid, dict]
 
     @root_validator(pre=True)
     def parse_data(cls, values):
@@ -168,8 +178,8 @@ class WebhookEvent(WebHook):
 
         :meta private:
         """
-        if (v_data := values.get('data')) and ((v_resource := values.get('resource'))):
-            if target_class := WebHookEventDataForbid.registry.get(v_resource):
+        if (v_data := values.get('data')) and (v_resource := values.get('resource')):
+            if target_class := WebhookEventDataForbid.registered_subclass(v_resource):
                 parsed = target_class.parse_obj(v_data)
                 values['data'] = parsed
         return values
@@ -180,7 +190,7 @@ class WebhookApi(ApiChild, base='webhooks'):
     API for webhook management
     """
 
-    def list(self) -> Generator[WebHook, None, None]:
+    def list(self) -> Generator[Webhook, None, None]:
         """
         List all of your webhooks.
 
@@ -188,11 +198,11 @@ class WebhookApi(ApiChild, base='webhooks'):
         """
         ep = self.ep()
         # noinspection PyTypeChecker
-        return self.session.follow_pagination(url=ep, model=WebHook)
+        return self.session.follow_pagination(url=ep, model=Webhook)
 
-    def create(self, name: str, target_url: str, resource: WebHookResource, event: WebHookEventType, filter: str = None,
+    def create(self, name: str, target_url: str, resource: WebhookResource, event: WebhookEventType, filter: str = None,
                secret: str = None,
-               owned_by: str = None) -> WebHook:
+               owned_by: str = None) -> Webhook:
         """
         Creates a webhook.
 
@@ -210,13 +220,13 @@ class WebhookApi(ApiChild, base='webhooks'):
         """
         params = {to_camel(param): value for i, (param, value) in enumerate(locals().items())
                   if i and value is not None}
-        body = json.loads(WebHookCreate(**params).json())
+        body = json.loads(WebhookCreate(**params).json())
         ep = self.ep()
         data = self.post(ep, json=body)
-        result = WebHook.parse_obj(data)
+        result = Webhook.parse_obj(data)
         return result
 
-    def details(self, webhook_id: str) -> WebHook:
+    def details(self, webhook_id: str) -> Webhook:
         """
         Get Webhook Details
         Shows details for a webhook, by ID.
@@ -226,9 +236,9 @@ class WebhookApi(ApiChild, base='webhooks'):
         :return: Webhook details
         """
         url = self.ep(webhook_id)
-        return WebHook.parse_obj(self.get(url))
+        return Webhook.parse_obj(self.get(url))
 
-    def update(self, webhook_id: str, update: WebHook) -> WebHook:
+    def update(self, webhook_id: str, update: Webhook) -> Webhook:
         """
         Updates a webhook, by ID. You cannot use this call to deactivate a webhook, only to activate a webhook that
         was auto deactivated. The fields that can be updated are name, targetURL, secret and status. All other fields,
@@ -237,12 +247,12 @@ class WebhookApi(ApiChild, base='webhooks'):
         :param webhook_id: The unique identifier for the webhook.
         :type webhook_id: str
         :param update: The webhook update
-        :type update: WebHook
-        :return: updated :class:`WebHook` object
+        :type update: Webhook
+        :return: updated :class:`Webhook` object
         """
         url = self.ep(webhook_id)
         webhook_data = update.json(include={'name', 'target_url', 'secret', 'owned_by', 'status'})
-        return WebHook.parse_obj(self.put(url, data=webhook_data))
+        return Webhook.parse_obj(self.put(url, data=webhook_data))
 
     def webhook_delete(self, webhook_id: str):
         """
