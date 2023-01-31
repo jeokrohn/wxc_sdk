@@ -2,6 +2,7 @@
 """
 Clean up test objects created by test cases
 """
+import asyncio
 import logging
 import os
 import re
@@ -17,11 +18,12 @@ from typing import Union
 
 from tests.base import get_tokens
 from wxc_sdk import WebexSimpleApi
+from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.common import NumberState
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 from wxc_sdk.telephony.callqueue import CallQueue
 
-TO_DELETE = re.compile(r'^(?:(?:\w{2}_|many_|test_|test_user_|workspace test )\d{3})|National Holidays$')
+TO_DELETE = re.compile(r'^(?:(?:\w{2}_|many_|test_|test_user_|workspace test |CPE )\d{3})|National Holidays$')
 DRY_RUN = False
 
 
@@ -42,7 +44,7 @@ def filtered(targets, name_getter=None, alternate_matches: Union[Pattern, str] =
             print(f'Keeping {t.__class__.__name__}({name})')
 
 
-def main():
+async def main():
     tokens = get_tokens()
     if not tokens:
         print('Failed to get tokens', file=sys.stderr)
@@ -63,6 +65,10 @@ def main():
     rest_logger.addHandler(fh)
     rest_logger.setLevel(logging.DEBUG)
 
+    rest_logger = logging.getLogger('wxc_sdk.as_rest')
+    rest_logger.addHandler(fh)
+    rest_logger.setLevel(logging.DEBUG)
+
     with ThreadPoolExecutor() as pool:
 
         # remove Dustin Harris from Call Queues
@@ -71,17 +77,20 @@ def main():
             if dustins:
                 dustin = dustins[0]
                 call_queues = list(api.telephony.callqueue.list())
-                details = list(pool.map(lambda cq: api.telephony.callqueue.details(location_id=cq.location_id, queue_id=cq.id),
-                                        call_queues))
+                details = list(
+                    pool.map(lambda cq: api.telephony.callqueue.details(location_id=cq.location_id, queue_id=cq.id),
+                             call_queues))
                 remove_from = [cq for cq in details
                                if next((agent for agent in cq.agents
-                                        if agent.agent_id==dustin.person_id), None) is not None]
-                def queue_wo_dustin(cq: CallQueue)->CallQueue:
+                                        if agent.agent_id == dustin.person_id), None) is not None]
+
+                def queue_wo_dustin(cq: CallQueue) -> CallQueue:
                     wo_dustin = cq.copy(deep=True)
-                    wo_dustin.agents = [agent for agent in cq.agents if agent.agent_id!=dustin.person_id]
+                    wo_dustin.agents = [agent for agent in cq.agents if agent.agent_id != dustin.person_id]
                     return wo_dustin
+
                 if remove_from:
-                    list(pool.map(lambda cq: api.telephony.callqueue.update(location_id=cq.location_id,queue_id=cq.id,
+                    list(pool.map(lambda cq: api.telephony.callqueue.update(location_id=cq.location_id, queue_id=cq.id,
                                                                             update=queue_wo_dustin(cq)), remove_from))
 
         # auto attendants
@@ -244,6 +253,23 @@ def main():
                                                                               cpe_id=cpe.cpe_id),
                           cpe_list))
 
+        # teams
+        teams = list(filtered(api.teams.list(),
+                              alternate_matches=r'Team Test \d{3}'))
+        print(f'Deleting {len(teams)} teams')
+        if not DRY_RUN:
+            list(pool.map(lambda team: api.teams.delete(team_id=team.id), teams))
+
+    # spaces
+    async with AsWebexSimpleApi(tokens=tokens) as as_api:
+        spaces = list(filtered(api.rooms.list(),
+                               alternate_matches=r'(Test Space \d{3})||(public \w{8}-\w{4}-\w{4}-\w{4}-\w{12})',
+                               name_getter=lambda i: i.title))
+        print(f'Deleting {len(spaces)} spaces')
+        if not DRY_RUN:
+            await asyncio.gather(*[as_api.rooms.delete(room_id=space.id) for space in spaces],
+                                 return_exceptions=True)
+
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())
