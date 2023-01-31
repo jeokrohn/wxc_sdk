@@ -602,7 +602,7 @@ class TestCaseWithUsersAndSpaces(TestCaseWithLog):
         me = cls.api.people.me()
         cls.users = [u for u in cls.api.people.list() if u.person_id != me.person_id]
         cls.spaces = [r for r in cls.api.rooms.list()
-                      if re.match('Test Space \d{3}', r.title)]
+                      if re.match(r'Test Space \d{3}', r.title)]
 
     def setUp(self) -> None:
         super().setUp()

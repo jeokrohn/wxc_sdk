@@ -1,11 +1,13 @@
 Release history
 ===============
 
+1.11.0
+------
 - feat: new example queue_helper.py
 - feat: new attributes in :class:`wxc_sdk.cdr.CDR`
 - fix: additional_primary_line_appearances_enabled and basic_emergency_nomadic_enabled optional in :class:`wxc_sdk.telephony.SupportedDevice`
 - feat: manage numbers jobs api :attr:`wxc_sdk.telephony.jobs.JobsApi.manage_numbers`
-- fix: attribute 'browser_client_enabled' instead of 'browser_client_id' in :class:`wxc_sdk.person_settings.appservices.AppServicesSettings`
+- fix: new attribute 'browser_client_id' in :class:`wxc_sdk.person_settings.appservices.AppServicesSettings`
 - fix: :class:`wxc_sdk.telephony.jobs.ManageNumbersJobsApi`, updated method names, fixed type issues in list method
 - fix: set location_id in response from :meth:`wxc_sdk.telephony.callqueue.CallQueueApi.details`
 - fix: check presence of location_id and queue_id in :meth:`wxc_sdk.telephony.callqueue.CallQueueApi.update`
@@ -15,7 +17,6 @@ Release history
 - fix: consistent non-camelcase "Webhook" instead of mixed "Webhook" and "WebHook" usage
   BREAKING CHANGE: renamed classes WebHook, WebHookEvent, WebHookEventType, WebHookResource, WebHookStatus
 - feat: new enums :class:`wxc_sdk.telephony.OwnerType`: CALL_QUEUE, VIRTUAL_LINE
-- feat: new attribute browser_client_id in :class:`wxc_sdk.person_settings.appservices.AppServicesSettings`
 
 1.10.1
 ------

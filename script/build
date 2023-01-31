@@ -96,12 +96,12 @@ if [ ${all} ] || [ ${package} ]; then
     poetry build
 fi
 
-if [ ${all} ] || [ ${apispec} ]; then
+if [ ${apispec} ]; then
     echo "==> reading API spec from developer.webex.com"
     ./developer.webex.com/read_api_spec.py -f ./developer.webex.com/read_api_spec.yml
 fi
 
-if [ ${all} ] || [ ${apisum} ]; then
+if [ ${apisum} ]; then
     echo "==> Building API summaries"
     ./developer.webex.com/type_summary.py ./developer.webex.com/read_api_spec.yml -o ./developer.webex.com/type_summary.txt
     ./developer.webex.com/endpoint_summary.py ./developer.webex.com/read_api_spec.yml -o ./developer.webex.com/endpoint_summary.txt
