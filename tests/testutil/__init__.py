@@ -27,7 +27,7 @@ from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 
 __all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'LocationInfo', 'us_location_info',
            'calling_users', 'available_numbers', 'available_extensions_gen', 'get_or_create_holiday_schedule',
-           'get_or_create_business_schedule', 'random_users']
+           'get_or_create_business_schedule', 'random_users', 'create_call_park_extension']
 
 
 def available_numbers(numbers: Iterable[str], seed: str = None) -> Generator[str, None, None]:
@@ -115,13 +115,14 @@ def available_tns(*, api: WebexSimpleApi, tn_prefix: str, tns_requested: int = 1
     return asyncio.run(as_run())
 
 
-def available_extensions_gen(*, api: WebexSimpleApi, location_id) -> Generator[str, None, None]:
+def available_extensions_gen(*, api: WebexSimpleApi, location_id:str) -> Generator[str, None, None]:
     extensions = [pn.extension for pn in api.telephony.phone_numbers(location_id=location_id)
                   if pn.extension]
+    extensions.extend(cpe.extension for cpe in api.telephony.callpark_extension.list(location_id=location_id))
     return available_numbers(numbers=extensions)
 
 
-def available_extensions(*, api: WebexSimpleApi, location_id, ext_requested: int = 1) -> list[str]:
+def available_extensions(*, api: WebexSimpleApi, location_id:str, ext_requested: int = 1) -> list[str]:
     """
     Get some available extensions in given location
     :param api:
@@ -251,3 +252,25 @@ async def random_users(api: AsWebexSimpleApi, user_count: int = 1) -> list[User]
     util = RandomUserUtil(api=api, gmail_address=email)
     new_users = await util.get_new_users(number_of_users=user_count)
     return new_users
+
+
+def create_call_park_extension(*, api: WebexSimpleApi, location_id: str) -> str:
+    """
+    Create a new call park extension in given location
+    :param api:
+    :param location_id:
+    :return: if of call park extension
+    """
+    cp = api.telephony.callpark_extension
+
+    # get name for new CPE
+    cpes = list(cp.list(location_id=location_id))
+    new_names = (name for i in range(1000)
+                 if (name := f'CPE {i:03d}') not in set(cpe.name for cpe in cpes))
+    new_name = next(new_names)
+
+    # we need an available extension in that location
+    extension = next(available_extensions_gen(api=api, location_id=location_id))
+
+    cpe_id = cp.create(location_id=location_id, name=new_name, extension=extension)
+    return cpe_id
