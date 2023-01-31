@@ -14,6 +14,7 @@ Release history
 - feat: new example: firehose.py, create a "firehose" webhook (using ngrok) to dump webhook events to console
 - fix: consistent non-camelcase "Webhook" instead of mixed "Webhook" and "WebHook" usage
   BREAKING CHANGE: renamed classes WebHook, WebHookEvent, WebHookEventType, WebHookResource, WebHookStatus
+- feat: new enums :class:`wxc_sdk.telephony.OwnerType`: CALL_QUEUE, VIRTUAL_LINE
 
 1.10.1
 ------
