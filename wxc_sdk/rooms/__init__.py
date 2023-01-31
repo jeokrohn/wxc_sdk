@@ -129,10 +129,12 @@ class RoomsApi(ApiChild, base='rooms'):
         """
         Creates a room. The authenticated user is automatically added as a member of the room. See the Memberships
         API to learn how to add more people to the room.
+
         To create a 1:1 room, use the Create Messages endpoint to send a message directly to another person by using
         the toPersonId or toPersonEmail parameters.
-        Bots are not able to create and classify a room. A bot may update a space classification after a person of
-        the same owning organization joined the space as the first human user.
+        Bots are not able to create and simultaneously classify a room. A bot may update a space classification after
+        a person of the same owning organization joined the space as the first human user.
+
         A space can only be put into announcement mode when it is locked.
 
         :param title: A user-friendly name for the room.
@@ -197,8 +199,17 @@ class RoomsApi(ApiChild, base='rooms'):
 
     def update(self, update: Room) -> Room:
         """
-        Updates details for a room
+        Updates details for a room, by ID.
+
+        Specify the room ID in the roomId parameter in the URI.
+
         A space can only be put into announcement mode when it is locked.
+
+        Any space participant or compliance officer can convert a space from public to private. Only a compliance
+        officer can convert a space from private to public and only if the space is classified with the lowest
+        category (usually public), and the space has a description.
+
+        To remove a description please use a space character   by itself.
 
         :update: update to apply. ID and title have to be set. Only can update:
 
