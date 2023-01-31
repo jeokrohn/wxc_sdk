@@ -996,6 +996,39 @@ docs:
           param_object: []
           type: string
           type_spec: required
+  Meeting Messages:
+    doc: 'Meeting Messages are how we communicate through text within an active unified
+      meeting
+
+      Meeting Messages are also how we communicate through text within a space bound
+      meeting.
+
+      In a Webex meeting, each meeting message is displayed on its own line along
+      with a timestamp and sender information.
+
+      Message can contain plain text and rich text'
+    header: Meeting Messages
+    methods:
+    - doc: 'Deletes a Meeting Message from the In Meeting Chat, using its ID.
+
+        This ID can be retrieved by a Compliance Officer using the events API filtering
+        on the meetingMessages resource type.
+
+        Specify the meetingMessage ID in the meetingMessageId parameter in the URI.'
+      documentation:
+        doc: Delete a Meeting Message
+        doc_link: https://developer.webex.com/docs/api/v1/meeting-messages/delete-a-meeting-message
+        endpoint: https://webexapis.com/v1/meeting/messages/{meetingMessageId}
+        http_method: DELETE
+      header: Delete a Meeting Message
+      parameters_and_response:
+        URI Parameters:
+        - doc: The unique identifier for the message.
+          name: meetingMessageId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
   Meeting Participants:
     doc: 'This API manages meeting participants.
 
@@ -6287,7 +6320,10 @@ docs:
         - doc: Meeting series recurrence rule (conforming with RFC 2445), applying
             only to meeting series. It doesn't apply to a scheduled meeting or an
             ended or ongoing meeting instance. This parameter is ignored for an ad-hoc
-            meeting.
+            meeting. Multiple days or dates for monthly or yearly recurrence rule
+            are not supported, only the first day or date specified is taken. For
+            example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not
+            supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
           name: recurrence
           param_attrs: []
           param_object: []
@@ -7494,7 +7530,10 @@ docs:
         - doc: Meeting series recurrence rule (conforming with RFC 2445). Applies
             only to a recurring meeting series, not to a meeting series with only
             one scheduled meeting. Can be modified for a meeting series using the  Update
-            a Meeting API.
+            a Meeting API. Multiple days or dates for monthly or yearly recurrence
+            rule are not supported, only the first day or date specified is taken.
+            For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is
+            not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
           name: recurrence
           param_attrs: []
           param_object: []
@@ -8399,7 +8438,10 @@ docs:
         - doc: Meeting series recurrence rule (conforming with RFC 2445). Applies
             only to a recurring meeting series, not to a meeting series with only
             one scheduled meeting. Can be modified for a meeting series using the  Update
-            a Meeting API.
+            a Meeting API. Multiple days or dates for monthly or yearly recurrence
+            rule are not supported, only the first day or date specified is taken.
+            For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is
+            not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
           name: recurrence
           param_attrs: []
           param_object: []
@@ -9419,7 +9461,10 @@ docs:
           - doc: Meeting series recurrence rule (conforming with RFC 2445). Applies
               only to a recurring meeting series, not to a meeting series with only
               one scheduled meeting. Can be modified for a meeting series using the  Update
-              a Meeting API.
+              a Meeting API. Multiple days or dates for monthly or yearly recurrence
+              rule are not supported, only the first day or date specified is taken.
+              For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12"
+              is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
             name: recurrence
             param_attrs: []
             param_object: []
@@ -11206,7 +11251,10 @@ docs:
           type_spec: null
         - doc: Meeting series recurrence rule (conforming with RFC 2445). Applies
             only to a recurring meeting series, not to a meeting series with only
-            one scheduled meeting.
+            one scheduled meeting. Multiple days or dates for monthly or yearly recurrence
+            rule are not supported, only the first day or date specified is taken.
+            For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is
+            not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
           name: recurrence
           param_attrs: []
           param_object: []
@@ -11799,7 +11847,10 @@ docs:
         - doc: Meeting series recurrence rule (conforming with RFC 2445). Applies
             only to a recurring meeting series, not to a meeting series with only
             one scheduled meeting. Can be modified for a meeting series using the  Update
-            a Meeting API.
+            a Meeting API. Multiple days or dates for monthly or yearly recurrence
+            rule are not supported, only the first day or date specified is taken.
+            For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is
+            not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
           name: recurrence
           param_attrs: []
           param_object: []
@@ -13280,7 +13331,10 @@ docs:
           - doc: Meeting series recurrence rule (conforming with RFC 2445), applying
               only to meeting series. It doesn't apply to a scheduled meeting or an
               ended or ongoing meeting instance. This parameter is ignored for an
-              ad-hoc meeting.
+              ad-hoc meeting. Multiple days or dates for monthly or yearly recurrence
+              rule are not supported, only the first day or date specified is taken.
+              For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12"
+              is not supported and it will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
             name: recurrence
             param_attrs: []
             param_object: []
@@ -15966,7 +16020,7 @@ docs:
           type_spec: null
         Response Properties:
         - doc: New registrant's ID.
-          name: registrantId
+          name: id
           param_attrs: []
           param_object: []
           type: string
@@ -16249,7 +16303,7 @@ docs:
           name: items
           param_attrs:
           - doc: New registrant's ID.
-            name: registrantId
+            name: id
             param_attrs: []
             param_object: []
             type: string
@@ -21975,9 +22029,12 @@ docs:
           type: array[SessionType]
           type_spec: null
   Tracking Codes:
-    doc: Tracking codes are alphanumeric codes that identify categories of users on
-      a Webex site. With tracking codes, you can analyze usage by various groups within
-      an organization.
+    doc: 'Tracking codes are alphanumeric codes that identify categories of users
+      on a Webex site. With tracking codes, you can analyze usage by various groups
+      within an organization.
+
+      The authenticated user calling this API must have an Administrator role with
+      the meeting:admin_schedule_write and meeting:admin_schedule_read scopes.'
     header: Tracking Codes
     methods:
     - doc: Lists tracking codes on a site by an admin user.
@@ -23155,11 +23212,11 @@ docs:
           type_spec: required
     - doc: Lists user's tracking codes by an admin user.
       documentation:
-        doc: Get User's Tracking Codes
-        doc_link: https://developer.webex.com/docs/api/v1/tracking-codes/get-user's-tracking-codes
+        doc: Get User Tracking Codes
+        doc_link: https://developer.webex.com/docs/api/v1/tracking-codes/get-user-tracking-codes
         endpoint: 'https: //webexapis.com/v1/admin/meeting/userconfig/trackingCodes'
         http_method: GET
-      header: Get User's Tracking Codes
+      header: Get User Tracking Codes
       parameters_and_response:
         Query Parameters:
         - doc: URL of the Webex site from which the API retrieves the tracking code.
@@ -23225,11 +23282,11 @@ docs:
           type_spec: null
     - doc: Updates tracking codes for a specified user by an admin user.
       documentation:
-        doc: Update User's Tracking Codes
-        doc_link: https://developer.webex.com/docs/api/v1/tracking-codes/update-user's-tracking-codes
+        doc: Update User Tracking Codes
+        doc_link: https://developer.webex.com/docs/api/v1/tracking-codes/update-user-tracking-codes
         endpoint: 'https: //webexapis.com/v1/admin/meeting/userconfig/trackingCodes'
         http_method: PUT
-      header: Update User's Tracking Codes
+      header: Update User Tracking Codes
       parameters_and_response:
         Body Parameters:
         - doc: Site URL for the tracking code.
