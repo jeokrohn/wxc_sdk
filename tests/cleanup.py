@@ -105,7 +105,7 @@ async def main():
         atc = api.telephony.callpark
         cp_list = list(filtered(chain.from_iterable(
             pool.map(lambda l: atc.list(location_id=l.location_id),
-                     locations)), alternate_matches='CPG\d'))
+                     locations)), alternate_matches=r'CPG\d'))
         print(f'deleting {len(cp_list)} call parks: {", ".join(cp.name for cp in cp_list)}')
         if not DRY_RUN:
             list(pool.map(lambda cp: atc.delete_callpark(location_id=cp.location_id, callpark_id=cp.callpark_id),
@@ -153,7 +153,7 @@ async def main():
         ats = api.telephony.schedules
         schedule_list = list(filtered(chain.from_iterable(
             pool.map(lambda l: ats.list(obj_id=l.location_id),
-                     locations)), alternate_matches='\w+ \d{2}'))
+                     locations)), alternate_matches=r'\w+ \d{2}'))
         print(f'deleting {len(schedule_list)} schedules: {", ".join(schedule.name for schedule in schedule_list)}')
         if not DRY_RUN:
             list(pool.map(lambda schedule: ats.delete_schedule(obj_id=schedule.location_id,
@@ -246,7 +246,7 @@ async def main():
                           dial_plans))
 
         # call park extensions
-        cpe_list = list(filtered(api.telephony.callpark_extension.list(), alternate_matches='\w\d{4}'))
+        cpe_list = list(filtered(api.telephony.callpark_extension.list(), alternate_matches=r'\w\d{4}'))
         print(f'Deleting {len(cpe_list)} call park extensions')
         if not DRY_RUN:
             list(pool.map(lambda cpe: api.telephony.callpark_extension.delete(location_id=cpe.location_id,

@@ -115,14 +115,14 @@ def available_tns(*, api: WebexSimpleApi, tn_prefix: str, tns_requested: int = 1
     return asyncio.run(as_run())
 
 
-def available_extensions_gen(*, api: WebexSimpleApi, location_id:str) -> Generator[str, None, None]:
+def available_extensions_gen(*, api: WebexSimpleApi, location_id: str) -> Generator[str, None, None]:
     extensions = [pn.extension for pn in api.telephony.phone_numbers(location_id=location_id)
                   if pn.extension]
     extensions.extend(cpe.extension for cpe in api.telephony.callpark_extension.list(location_id=location_id))
     return available_numbers(numbers=extensions)
 
 
-def available_extensions(*, api: WebexSimpleApi, location_id:str, ext_requested: int = 1) -> list[str]:
+def available_extensions(*, api: WebexSimpleApi, location_id: str, ext_requested: int = 1) -> list[str]:
     """
     Get some available extensions in given location
     :param api:

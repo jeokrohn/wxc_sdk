@@ -9,6 +9,8 @@
     # the user gets a WSN work number
 # TODO: validate workspace operations
 # TODO: missing: API for agent/supervisor management
+# TODO: call parks now have list of call park extensions, validate call park creation with CPEs, updating list of CPEs,
+    # ...
 
 
 
