@@ -12,6 +12,7 @@ from unittest import skip
 
 from wxc_sdk.all_types import *
 from .base import TestWithLocations, async_test
+from .testutil import create_call_park_extension
 
 # Number of call parks to create by create many test
 CP_MANY = 100
@@ -22,26 +23,25 @@ class TestRead(TestWithLocations):
     Test cases for list(), details()
     """
 
-    def test_001_list_all_locations(self):
+    @async_test
+    async def test_001_list_all_locations(self):
         """
         List call parks in all locations
         """
-        with ThreadPoolExecutor() as pool:
-            lists = list(pool.map(
-                lambda location: list(self.api.telephony.callpark.list(location_id=location.location_id)),
-                self.locations))
-            call_parks = list(chain.from_iterable(lists))
+        lists = await asyncio.gather(*[self.async_api.telephony.callpark.list(location_id=location.location_id)
+                                       for location in self.locations])
+        call_parks: list[CallPark] = list(chain.from_iterable(lists))
         print(f'Got {len(call_parks)} call parks.')
 
-    def test_002_list_by_name(self):
+    @async_test
+    async def test_002_list_by_name(self):
         """
         List call parks by name
         """
-        with ThreadPoolExecutor() as pool:
-            lists = list(pool.map(
-                lambda location: list(self.api.telephony.callpark.list(location_id=location.location_id)),
-                self.locations))
-            call_parks = list(chain.from_iterable(lists))
+        lists = await asyncio.gather(*[self.async_api.telephony.callpark.list(location_id=location.location_id)
+                                       for location in self.locations])
+        call_parks: list[CallPark] = list(chain.from_iterable(lists))
+
         # find a location with multiple call parks and then check that list by name only returns a subset
         by_location = {location_id: callparks
                        for location_id, cpi in groupby(sorted(call_parks, key=lambda cp: cp.location_id),
@@ -58,21 +58,20 @@ class TestRead(TestWithLocations):
                           if cp.name.startswith(parks[0].name)]
         self.assertEqual(len(matching_parks), len(cq_list))
 
-    def test_003_all_details(self):
+    @async_test
+    async def test_003_all_details(self):
         """
         Get details for all call parks
         """
-        with ThreadPoolExecutor() as pool:
-            lists = list(pool.map(
-                lambda location: list(self.api.telephony.callpark.list(location_id=location.location_id)),
-                self.locations))
-            call_parks = list(chain.from_iterable(lists))
-            if not call_parks:
-                self.skipTest('No existing call parks.')
-            details = list(pool.map(
-                lambda cp: self.api.telephony.callpark.details(location_id=cp.location_id,
-                                                               callpark_id=cp.callpark_id),
-                call_parks))
+        lists = await asyncio.gather(*[self.async_api.telephony.callpark.list(location_id=location.location_id)
+                                       for location in self.locations])
+        call_parks: list[CallPark] = list(chain.from_iterable(lists))
+
+        if not call_parks:
+            self.skipTest('No existing call parks.')
+        details = await asyncio.gather(*[self.async_api.telephony.callpark.details(location_id=cp.location_id,
+                                                                                   callpark_id=cp.callpark_id)
+                                         for cp in call_parks])
         print(f'Got details for {len(details)} call parks.')
 
 
@@ -168,6 +167,41 @@ class TestCreate(TestWithLocations):
                 if link_match['link'].startswith('https,'):
                     pagination_link_error = True
         self.assertFalse(pagination_link_error)
+
+    def test_003_with_call_park_extension(self):
+        """
+        Create a call park with a call park extension
+        """
+        # pick random location
+        target_location: Location = random.choice(self.locations)
+        print(f'Target location: {target_location.name}')
+
+        # new name for call park
+        cpa = self.api.telephony.callpark
+        call_parks = list(cpa.list(location_id=target_location.location_id, name='cp_'))
+        names = set(cp.name for cp in call_parks)
+        new_names = (name for i in range(1000) if (name := f'cp_{i:03}') not in names)
+        new_name = next(new_names)
+
+        # we need a call park extension in that location
+        cpes = list(self.api.telephony.callpark_extension.list(location_id=target_location.location_id))
+        if cpes:
+            cpe: CallParkExtension = random.choice(cpes)
+            cpe_id = cpe.cpe_id
+        else:
+            cpe_id = create_call_park_extension(api=self.api, location_id=target_location.location_id)
+
+        # create call park
+        settings = CallPark.default(name=new_name)
+        settings.agents = []
+        settings.park_on_agents_enabled = False
+        settings.call_park_extensions = [CallParkExtension(cpe_id=cpe_id)]
+        new_id = cpa.create(location_id=target_location.location_id, settings=settings)
+        print(f'new call park id: {new_id}')
+
+        details = cpa.details(location_id=target_location.location_id, callpark_id=new_id)
+        print('New call park')
+        print(json.dumps(json.loads(details.json()), indent=2))
 
 
 @dataclass(init=False)

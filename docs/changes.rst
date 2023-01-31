@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- feat: new attribute call_park_extension in :class:`wxc_sdk.telephony.callpark.CallPark`
+
 1.11.0
 ------
 - feat: new example queue_helper.py

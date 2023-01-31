@@ -7,7 +7,7 @@ from pydantic import Field
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
 from ..base import SafeEnum as Enum
-from ..common import RingPattern, PersonPlaceAgent
+from ..common import RingPattern, PersonPlaceAgent, CallParkExtension
 
 __all__ = ['CallParkRecall', 'RecallHuntGroup', 'AvailableRecallHuntGroup',
            'CallPark', 'CallParkSettings', 'LocationCallParkSettings', 'CallParkApi']
@@ -71,6 +71,7 @@ class CallPark(ApiModel):
     #: People, including workspaces, that are eligible to receive calls.
     agents: Optional[list[PersonPlaceAgent]]
     park_on_agents_enabled: Optional[bool]
+    call_park_extensions: Optional[list[CallParkExtension]]
 
     @staticmethod
     def default(*, name: str) -> 'CallPark':
@@ -100,6 +101,10 @@ class CallPark(ApiModel):
         # agents need to be passed as list of IDs only
         if data.get('agents'):
             data['agents'] = [a['id'] for a in data['agents']]
+        # callParkExtensions need to be passed as list of IDs only
+        if data.get('callParkExtensions'):
+            data['callParkExtensions'] = [a['id'] for a in data['callParkExtensions']]
+
         return json.dumps(data)
 
 
