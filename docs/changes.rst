@@ -2,6 +2,7 @@ Release history
 ===============
 
 - feat: new attribute call_park_extension in :class:`wxc_sdk.telephony.callpark.CallPark`
+- feat: new parameters details, restricted_non_geo_numbers for :meth:`wxc_sdk.telephony.TelephonyApi.phone_numbers`
 
 1.11.0
 ------

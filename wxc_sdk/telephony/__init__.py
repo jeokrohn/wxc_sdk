@@ -482,7 +482,8 @@ class TelephonyApi(ApiChild, base='telephony/config'):
                       owner_name: str = None, owner_id: str = None, owner_type: OwnerType = None,
                       extension: str = None, number_type: NumberType = None,
                       phone_number_type: NumberListPhoneNumberType = None,
-                      state: NumberState = None, toll_free_numbers: bool = None,
+                      state: NumberState = None, details: bool = None, toll_free_numbers: bool = None,
+                      restricted_non_geo_numbers: bool = None,
                       org_id: str = None, **params) -> Generator[NumberListPhoneNumber, None, None]:
         """
         Get Phone Numbers for an Organization with given criteria.
@@ -491,9 +492,8 @@ class TelephonyApi(ApiChild, base='telephony/config'):
 
         PSTN phone numbers are associated with a specific location and can be active/inactive and assigned/unassigned.
         The owner is the person, workspace, or feature to which the number is assigned.
-
-        Retrieving this list requires a full or read-only administrator auth token with a scope of
-        spark-admin:telephony_config_read.
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
 
         :param location_id: Return the list of phone numbers for this location within the given organization.
         :type location_id: str
@@ -521,8 +521,13 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         :type phone_number_type: NumberListPhoneNumberType
         :param state: Returns the list of PSTN phone numbers with matching state.
         :type state: NumberState
+        :param details: Returns the overall count of the PSTN phone numbers along with other details for given
+            organization.
+        :type details: bool
         :param toll_free_numbers: Returns the list of toll free phone numbers.
         :type toll_free_numbers: bool
+        :param restricted_non_geo_numbers: Returns the list of restricted non geographical numbers.
+        :type restricted_non_geo_numbers: bool
         :param org_id: List numbers for this organization.
         :type org_id: str
         :return: yields :class:`NumberListPhoneNumber` instances
