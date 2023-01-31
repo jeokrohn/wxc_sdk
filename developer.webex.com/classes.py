@@ -234,10 +234,14 @@ class APIMethod:
             rest_call = f'data = {rest_call}'
 
         if name.startswith('list'):
-            assert self.response_class is not None
-            result_type = python_type(self.response_class.name, for_list=True)
-            return_type = f' -> Generator[{result_type}, None, None]'
-            result = f'return self.session.follow_pagination(url=url, model={result_type}, params=params{json_param})'
+            if self.response_class is None:
+                # create some syntax error
+                result = f'return !$!!$!$       # documentation at {self.methods_details.documentation.doc_link} is missing return type'
+                return_type = ''
+            else:
+                result_type = python_type(self.response_class.name, for_list=True)
+                return_type = f' -> Generator[{result_type}, None, None]'
+                result = f'return self.session.follow_pagination(url=url, model={result_type}, params=params{json_param})'
             rest_call = ''
         elif self.response_class:
             if len(self.response_class.attributes) == 1:
