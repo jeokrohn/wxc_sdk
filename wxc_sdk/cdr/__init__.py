@@ -72,8 +72,8 @@ class CDRRedirectReason(str, Enum):
 class CDRRelatedReason(str, Enum):
     consultative_transfer = 'ConsultativeTransfer'
     call_forward_selective = 'CallForwardSelective'
-    call_park = 'CallPark'  # TODO: missing in documentation on developer.webex.com
-    call_park_retrieve = 'CallParkRetrieve'  # TODO: missing in documentation on developer.webex.com
+    call_park = 'CallPark'
+    call_park_retrieve = 'CallParkRetrieve'
     call_queue = 'CallQueue'
     unrecognised = 'Unrecognised'
     call_pickup = 'CallPickup'
@@ -134,9 +134,9 @@ class CDR(ApiModel):
     #: This is the start time of the call, the answer time may be slightly after this. Time is in UTC.
     start_time: Optional[datetime] = Field(alias='Start time')
     #: Type of call. For example:
-    call_type: Optional[Union[CDRCallType, str]] = Field(alias='Call type')
+    call_type: Optional[CDRCallType] = Field(alias='Call type')
     #: The type of client that the user (creating this record) is using to make or receive the call. For example:
-    client_type: Optional[Union[CDRClientType, str]] = Field(alias='Client type')
+    client_type: Optional[CDRClientType] = Field(alias='Client type')
     #: The version of the client that the user (creating this record) is using to make or receive the call.
     client_version: Optional[str] = Field(alias='Client version')
     #: Correlation ID to tie together multiple call legs of the same call session.
@@ -152,15 +152,15 @@ class CDR(ApiModel):
     #: A unique identifier for the organization that made the call. This is a unique identifier across Cisco.
     org_uuid: Optional[str] = Field(alias='Org UUID')
     #: Populated for calls that transfer, hold, wait, and so on. For example:
-    original_reason: Optional[Union[CDROriginalReason, str]] = Field(alias='Original reason')
+    original_reason: Optional[CDROriginalReason] = Field(alias='Original reason')
     #: The operating system that the app was running on, if available.
     os_type: Optional[str] = Field(alias='OS type')
     #: Outbound trunk may be presented in Originating and Terminating records.
     outbound_trunk: Optional[str] = Field(alias='Outbound trunk')
     #: Populated for calls that transfer, hold, wait, and so on. For example:
-    redirect_reason: Optional[Union[CDRRedirectReason, str]] = Field(alias='Redirect reason')
+    redirect_reason: Optional[CDRRedirectReason] = Field(alias='Redirect reason')
     #: Populated for calls that transfer, hold, wait, and so on. For example:
-    related_reason: Optional[Union[CDRRelatedReason, str]] = Field(alias='Related reason')
+    related_reason: Optional[CDRRelatedReason] = Field(alias='Related reason')
     #: A unique ID for this particular record. This can be used when processing records to aid in deduplication.
     report_id: Optional[str] = Field(alias='Report ID')
     #: The time this report was created. Time is in UTC.
@@ -179,7 +179,7 @@ class CDR(ApiModel):
     #: A unique identifier for the user associated with the call. This is a unique identifier across Cisco products.
     user_uuid: Optional[str] = Field(alias='User UUID')
     #: The type of user (user or workspace) that made or received the call. For example:
-    user_type: Optional[Union[CDRUserType, str]] = Field(alias='User type')
+    user_type: Optional[CDRUserType] = Field(alias='User type')
     #: For incoming calls, the telephone number of the user. For outgoing calls, it's the telephone number of the
     #: called party.
     called_number: Optional[str] = Field(alias='Called number')
