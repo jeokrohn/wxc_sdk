@@ -47,6 +47,8 @@ class WorkspaceNumbersApi(ApiChild, base='workspaces'):
         :return: Workspace numbers
         :rtype: WorkSpaceNumbers
         """
+        # TODO: need to be updated in line with https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace
+        #  currently the documentation is incomplete. Tracked by WXCAPIBULK-296
         params = org_id and {'org_id': org_id} or None
         url = self.ep(workspace_id=workspace_id)
         data = self.get(url=url, params=params)
