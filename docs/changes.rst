@@ -15,6 +15,7 @@ Release history
 - fix: consistent non-camelcase "Webhook" instead of mixed "Webhook" and "WebHook" usage
   BREAKING CHANGE: renamed classes WebHook, WebHookEvent, WebHookEventType, WebHookResource, WebHookStatus
 - feat: new enums :class:`wxc_sdk.telephony.OwnerType`: CALL_QUEUE, VIRTUAL_LINE
+- feat: new attribute browser_client_id in :class:`wxc_sdk.person_settings.appservices.AppServicesSettings`
 
 1.10.1
 ------

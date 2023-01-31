@@ -31,6 +31,7 @@ class AppServicesSettings(ApiModel):
     #: this value cannot be updated
     available_line_count: Optional[int]
     browser_client_enabled: Optional[bool]
+    browser_client_id: Optional[str]
 
 
 class AppServicesApi(PersonSettingsApiChild):
