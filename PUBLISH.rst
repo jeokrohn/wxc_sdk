@@ -1,5 +1,6 @@
 # Steps to publish a new release
 
+* create branch for new release
 * review pyproject.toml for outdated packages
     * update constraints as needed
 * poetry update
@@ -15,6 +16,7 @@
 * review TODOs: did we miss anything
 * run "script/build"
 * commit changes, don't push
+* merge branch
 * tag commit with version number: e.g. "1.5.0"
 * push to GitHub: MAKE SURE TO PUSH TAGS!
 
