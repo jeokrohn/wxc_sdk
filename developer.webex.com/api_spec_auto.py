@@ -7,7 +7,7 @@ from typing import List, Optional
 from pydantic import Field
 
 
-__all__ = ['AccessCodes', 'AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 'ActivationStates', 'AddNewEventForPersonsScheduleResponse', 'AddPhoneNumbersTolocationBody', 'Address', 'AlternateNumberSettings', 'AlternateNumbersObject', 'AlternateNumbersWithPattern', 'AlternateNumbersWithPattern1', 'Always', 'AnnouncementMode', 'Announcements', 'Announcements3', 'AtaDtmfMethodObject', 'AtaDtmfModeObject', 'AtaObject', 'AudioCodecPriorityObject', 'AutoAttendantCallForwardSettingsDetailsObject', 'AutoAttendantCallForwardSettingsModifyDetailsObject', 'BackgroundImage', 'BacklightTimerObject', 'BehaviorType', 'BlockContiguousSequences', 'BlockPreviousPasscodes', 'BlockRepeatedDigits', 'BusinessContinuity', 'CDR', 'CLIDPolicySelection', 'Call', 'CallBounce', 'CallControlsApi', 'CallForwardRulesGet', 'CallForwardRulesModifyObject', 'CallForwardRulesObject', 'CallForwardSelectiveCallsFromCustomNumbersObject', 'CallForwardSelectiveCallsFromObject', 'CallForwardSelectiveCallsToNumbersObject', 'CallForwardSelectiveCallsToObject', 'CallForwardSelectiveForwardToObject', 'CallForwarding', 'CallForwarding1', 'CallForwarding4', 'CallForwardingPlaceSettingGet', 'CallForwardingPlaceSettingPatch', 'CallHistoryRecord', 'CallHistoryRecordTypeEnum', 'CallParkSettingsObject', 'CallPersonalityEnum', 'CallQueueAudioFilesObject', 'CallQueueHolidaySchedulesObject', 'CallQueueObject', 'CallQueueQueueSettingsObject', 'CallSourceInfo', 'CallSourceType', 'CallStateEnum', 'CallType', 'CallType1', 'CallTypeEnum', 'CallerIdSelectedType', 'CallingLineId', 'CallingPermissionObject', 'CallingPermissions', 'Callparkextension', 'CallsFrom', 'CallsTo', 'ClientType', 'ComfortMessage', 'ComfortMessageBypass', 'ConfigureCallRecordingSettingsForPersonBody', 'ConfigureCallerIDSettingsForPersonBody', 'ConfigurepersonsCallingBehaviorBody', 'CountObject', 'CreateAutoAttendantBody', 'CreateAutoAttendantResponse', 'CreateCallParkBody', 'CreateCallParkExtensionResponse', 'CreateCallParkResponse', 'CreateCallPickupBody', 'CreateCallPickupResponse', 'CreateCallQueueBody', 'CreateCallQueueResponse', 'CreateDialPlanResponse', 'CreateHuntGroupResponse', 'CreateLocationResponse', 'CreatePersonBody', 'CreateRouteGroupForOrganizationBody', 'CreateRouteGroupForOrganizationResponse', 'CreateRouteListResponse', 'CreateScheduleEventResponse', 'CreateScheduleForPersonBody', 'CreateScheduleForPersonResponse', 'CreateScheduleResponse', 'CreateSelectiveCallForwardingRuleForAutoAttendantBody', 'CreateSelectiveCallForwardingRuleForAutoAttendantResponse', 'CreateSelectiveCallForwardingRuleForCallQueueBody', 'CreateSelectiveCallForwardingRuleForCallQueueResponse', 'CreateSelectiveCallForwardingRuleForHuntGroupResponse', 'CreateTrunkResponse', 'CreatenewPagingGroupBody', 'CreatenewPagingGroupResponse', 'CreatenewVoicemailGroupForLocationResponse', 'CustomizationDeviceLevelObject', 'CustomizationObject', 'Day', 'DectDeviceList', 'DectObject', 'DefaultLoggingLevelObject', 'DefaultVoicemailPinRules', 'DestinationType', 'DeviceObject', 'DeviceOwner', 'DeviceStatus', 'DeviceType', 'Devices', 'DialPattern', 'DialPatternAction', 'DialPatternStatus', 'DialPatternValidate', 'DialPlan', 'DialResponse', 'Direction', 'DisplayCallqueueAgentSoftkeysObject', 'DisplayNameSelection', 'DistinctiveRing', 'EffectiveBehaviorType', 'EmailCopyOfMessage', 'Emergency', 'ErrorMessageObject', 'ErrorObject', 'EventLongDetails', 'ExpirePasscode', 'ExtensionDialing', 'ExtensionStatusObject', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts', 'FaxMessage', 'FeatureAccessCode', 'FetchEventForpersonsScheduleResponse', 'GenerateExamplePasswordForLocationResponse', 'GetAnnouncementFileInfo', 'GetAvailableAgentsFromCallParksResponse', 'GetAvailableAgentsFromCallPickupsResponse', 'GetAvailableRecallHuntGroupsFromCallParksResponse', 'GetAvailableRecallHuntGroupsObject', 'GetCallForwardAlwaysSettingObject', 'GetCallForwardingSettingsForAutoAttendantResponse', 'GetCallForwardingSettingsForCallQueueResponse', 'GetCallForwardingSettingsForHuntGroupResponse', 'GetCallParkSettingsResponse', 'GetCallRecordingSettingsResponse', 'GetCallRecordingTermsOfServiceSettingsResponse', 'GetDetailedCallHistoryResponse', 'GetDetailsForAutoAttendantResponse', 'GetDetailsForCallParkExtensionResponse', 'GetDetailsForCallParkResponse', 'GetDetailsForCallPickupResponse', 'GetDetailsForCallQueueForcedForwardResponse', 'GetDetailsForCallQueueHolidayServiceResponse', 'GetDetailsForCallQueueNightServiceResponse', 'GetDetailsForCallQueueResponse', 'GetDetailsForCallQueueStrandedCallsResponse', 'GetDetailsForHuntGroupResponse', 'GetDetailsForPagingGroupResponse', 'GetDetailsForScheduleResponse', 'GetDeviceMembersResponse', 'GetDeviceSettingsResponse', 'GetDialPlanResponse', 'GetListOfPhoneNumbersForPersonResponse', 'GetLocalGatewayCallToOnPremisesExtensionUsageForTrunkResponse', 'GetLocalGatewayDialPlanUsageForTrunkResponse', 'GetLocalGatewayUsageCountResponse', 'GetLocationInterceptResponse', 'GetLocationOutgoingPermissionResponse', 'GetLocationVoicemailGroupResponse', 'GetLocationVoicemailResponse', 'GetLocationWebexCallingDetailsResponse', 'GetLocationsUsingLocalGatewayAsPSTNConnectionRoutingResponse', 'GetManageNumbersJobStatusResponse', 'GetMessageSummaryResponse', 'GetMonitoredElementsObject', 'GetMusicOnHoldResponse', 'GetNumbersAssignedToRouteListResponse', 'GetOutgoingPermissionAutoTransferNumberResponse', 'GetOutgoingPermissionLocationAccessCodeResponse', 'GetPagingGroupAgentObject', 'GetPersonPlaceCallParksObject', 'GetPersonPlaceCallQueueObject', 'GetPersonPlaceObject', 'GetPhoneNumbersForOrganizationWithGivenCriteriasResponse', 'GetPrivateNetworkConnectResponse', 'GetRecallHuntGroupObject', 'GetRouteGroupsUsingLocalGatewayResponse', 'GetRouteListResponse', 'GetScheduleDetailsResponse', 'GetScheduleEventObject', 'GetSelectiveCallForwardingRuleForAutoAttendantResponse', 'GetSelectiveCallForwardingRuleForCallQueueResponse', 'GetTrunkResponse', 'GetUserDevicesResponse', 'GetUserNumberItemObject', 'GetVoicePortalPasscodeRuleResponse', 'GetVoicePortalResponse', 'GetVoicemailGroupObject', 'GetVoicemailRulesResponse', 'GetVoicemailSettingsResponse', 'GetWorkspaceDevicesResponse', 'GetpersonsPrivacySettingsResponse', 'Greeting', 'Greeting29', 'HolidayScheduleLevel', 'HostedAgent', 'HostedFeature', 'Hoteling', 'HoursMenuObject', 'HuntPolicySelection', 'HuntRoutingTypeSelection', 'Incoming', 'InterceptAnnouncementsGet', 'InterceptIncomingGet', 'InterceptIncomingPatch', 'ItemObject', 'JobExecutionStatusObject', 'JobExecutionStatusObject1', 'KemModuleTypeObject', 'Key', 'KeyConfigurationsObject', 'Length', 'LineKeyLEDPattern', 'LineKeyLabelSelection', 'LineType', 'ListAutoAttendantObject', 'ListCallHistoryResponse', 'ListCallParkExtensionObject', 'ListCallParkObject', 'ListCallQueueObject', 'ListCallsResponse', 'ListChangeDeviceSettingsJobErrorsResponse', 'ListChangeDeviceSettingsJobsResponse', 'ListLocationsResponse', 'ListManageNumbersJobErrorsResponse', 'ListManageNumbersJobsResponse', 'ListMessagesResponse', 'ListOfSchedulesForPersonResponse', 'ListPeopleResponse', 'ListScheduleObject', 'ListVoicemailGroupResponse', 'LocalGateways', 'Location', 'LocationsApi', 'MacStatusObject', 'ManagedByObject', 'ManufacturerObject', 'MediaFileType', 'Member', 'MemberObject', 'MessageStorage', 'MessageStorage3', 'ModifyDialPlanBody', 'ModifyNumbersForRouteListResponse', 'ModifyPersonPlaceCallQueueObject', 'ModifyRouteListBody', 'ModifyScheduleEventListObject', 'ModifyTrunkBody', 'ModifypersonsApplicationServicesSettingsBody', 'ModifypersonsMonitoringSettingsBody', 'MohMessage', 'MonitoredElementItem', 'MonitoredElementUser', 'MonitoredMemberObject', 'MonitoredPersonObject', 'Month', 'MppAudioCodecPriorityObject', 'MppObject', 'MppVlanObject', 'NetworkConnectionType', 'NewNumber', 'NoAnswer', 'NoAnswer3', 'NormalSource', 'NumberItem', 'NumberListGetObject', 'NumberStatus', 'OnboardingMethodObject', 'Option', 'OriginalReason', 'OriginatorType', 'Outgoing', 'Overflow', 'Owner', 'ParkResponse', 'PartyInformation', 'Passcode', 'PbxUser', 'PeopleApi', 'Person', 'PhoneLanguage', 'PhoneNumber', 'PhoneNumbers', 'PhoneNumbers7', 'PlaceDevices', 'PostCallQueueCallPolicyObject', 'PostHuntGroupCallPolicyObject', 'PostPersonPlaceCallQueueObject', 'PostPersonPlaceObject', 'PstnNumber', 'PushToTalkAccessType', 'PushToTalkConnectionType', 'PutMemberObject', 'PutRecallHuntGroupObject', 'ReadBargeInSettingsForPersonResponse', 'ReadCallInterceptSettingsForWorkspaceResponse', 'ReadCallRecordingSettingsForPersonResponse', 'ReadCallToExtensionLocationsOfRoutingGroupResponse', 'ReadCallWaitingSettingsForPersonResponse', 'ReadCallerIDSettingsForPersonResponse', 'ReadDECTDeviceTypeListResponse', 'ReadDialPlanLocationsOfRoutingGroupResponse', 'ReadDoNotDisturbSettingsForPersonResponse', 'ReadForwardingSettingsForPersonResponse', 'ReadHotelingSettingsForPersonResponse', 'ReadIncomingPermissionSettingsForPersonResponse', 'ReadInternalDialingConfigurationForlocationResponse', 'ReadListOfAutoAttendantsResponse', 'ReadListOfCallParkExtensionsResponse', 'ReadListOfCallParksResponse', 'ReadListOfCallPickupsResponse', 'ReadListOfCallQueueAnnouncementFilesResponse', 'ReadListOfCallQueuesResponse', 'ReadListOfDialPatternsResponse', 'ReadListOfDialPlansResponse', 'ReadListOfHuntGroupsResponse', 'ReadListOfPagingGroupsResponse', 'ReadListOfRouteListsResponse', 'ReadListOfRoutingChoicesResponse', 'ReadListOfRoutingGroupsResponse', 'ReadListOfSchedulesResponse', 'ReadListOfSupportedDevicesResponse', 'ReadListOfTrunkTypesResponse', 'ReadListOfTrunksResponse', 'ReadListOfUCManagerProfilesResponse', 'ReadPSTNConnectionLocationsOfRoutingGroupResponse', 'ReadPersonsCallingBehaviorResponse', 'ReadPushtoTalkSettingsForPersonResponse', 'ReadReceptionistClientSettingsForPersonResponse', 'ReadRouteGroupForOrganizationResponse', 'ReadRouteListsOfRoutingGroupResponse', 'ReadUsageOfRoutingGroupResponse', 'ReadVoicemailSettingsForPersonResponse', 'ReaddeviceOverrideSettingsFororganizationResponse', 'RecallInformation', 'RecallTypeEnum', 'Record', 'RecordingStateEnum', 'RecurWeekly2', 'RecurWeeklyObject', 'RecurYearlyByDateObject', 'RecurYearlyByDayObject', 'Recurrence', 'RecurrenceObject1', 'RedirectReason', 'RedirectionInformation', 'RedirectionReasonEnum', 'RejectActionEnum', 'RelatedReason', 'Repeat', 'ResponseStatus', 'ResponseStatusType', 'RetrieveAccessCodesForWorkspaceResponse', 'RetrieveCallForwardingSettingsForWorkspaceResponse', 'RetrieveCallQueueAgentsCallerIDInformationResponse', 'RetrieveCallWaitingSettingsForWorkspaceResponse', 'RetrieveCallerIDSettingsForWorkspaceResponse', 'RetrieveExecutiveAssistantSettingsForPersonResponse', 'RetrieveListOfCallQueueCallerIDInformationResponse', 'RetrieveMonitoringSettingsForWorkspaceResponse', 'RetrieveOutgoingPermissionSettingsForWorkspaceResponse', 'RetrievepersonsApplicationServicesSettingsResponse', 'RetrievepersonsMonitoringSettingsResponse', 'RetrievepersonsOutgoingCallingPermissionsSettingsResponse', 'RingPattern', 'RouteGroup', 'RouteGroupUsageRouteListGet', 'RouteIdentity', 'RouteList', 'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteType', 'ScheduleEventObject', 'ScheduleShortDetails', 'SearchMemberObject', 'SearchMembersResponse', 'Selection', 'Selection1', 'SelectionType', 'SendAllCalls', 'SendBusyCalls', 'SendBusyCalls1', 'SendUnansweredCalls', 'ServiceType', 'SipAddressesType', 'StartJobResponse', 'State', 'State1', 'State3', 'Status', 'Status5', 'StepExecutionStatusesObject', 'StorageType', 'TestCallRoutingResponse', 'Trunk', 'TrunkType', 'TrunkTypeWithDeviceType', 'Type', 'Type18', 'Type19', 'Type24', 'Type31', 'Type5', 'Type8', 'TypeObject', 'UnknownExtensionRouteIdentity', 'UpdateCallParkResponse', 'UpdateCallPickupResponse', 'UpdateDeviceSettingsBody', 'UpdateEventForpersonsScheduleResponse', 'UpdateLocationBody', 'UpdateLocationWebexCallingDetailsBody', 'UpdateScheduleEventResponse', 'UpdateScheduleResponse', 'UpdateScheduleResponse1', 'UpdateSelectiveCallForwardingRuleForAutoAttendantResponse', 'UpdateSelectiveCallForwardingRuleForCallQueueResponse', 'UpdateSelectiveCallForwardingRuleForHuntGroupResponse', 'UserNumberItem', 'UserType', 'ValidateDialPatternResponse', 'ValidateExtensionsResponse', 'ValidateLocalGatewayFQDNAndDomainForTrunkBody', 'ValidatelistOfMACAddressResponse', 'VirtualExtension', 'VlanObject', 'VoiceMailPartyInformation', 'VoiceMessageDetails', 'WaitMessage', 'WaitMode', 'WebexCallingDetailedCallHistoryApi', 'WebexCallingOrganizationSettingsApi', 'WebexCallingPersonSettingsApi', 'WebexCallingVoiceMessagingApi', 'WebexCallingWorkspaceSettingsApi', 'Week', 'WelcomeMessage', 'WifiNetworkObject']
+__all__ = ['AccessCodes', 'AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 'ActivationStates', 'AddNewEventForPersonsScheduleResponse', 'AddPhoneNumbersTolocationBody', 'Address', 'AlternateNumberSettings', 'AlternateNumbersObject', 'AlternateNumbersWithPattern', 'AlternateNumbersWithPattern1', 'Always', 'AnnouncementMode', 'Announcements', 'Announcements3', 'AtaDtmfMethodObject', 'AtaDtmfModeObject', 'AtaObject', 'AudioCodecPriorityObject', 'AutoAttendantCallForwardSettingsDetailsObject', 'AutoAttendantCallForwardSettingsModifyDetailsObject', 'BackgroundImage', 'BacklightTimerObject', 'BehaviorType', 'BlockContiguousSequences', 'BlockPreviousPasscodes', 'BlockRepeatedDigits', 'BusinessContinuity', 'CDR', 'CLIDPolicySelection', 'Call', 'CallBounce', 'CallControlsApi', 'CallForwardRulesGet', 'CallForwardRulesModifyObject', 'CallForwardRulesObject', 'CallForwardSelectiveCallsFromCustomNumbersObject', 'CallForwardSelectiveCallsFromObject', 'CallForwardSelectiveCallsToNumbersObject', 'CallForwardSelectiveCallsToObject', 'CallForwardSelectiveForwardToObject', 'CallForwarding', 'CallForwarding1', 'CallForwarding4', 'CallForwardingPlaceSettingGet', 'CallForwardingPlaceSettingPatch', 'CallHistoryRecord', 'CallHistoryRecordTypeEnum', 'CallParkSettingsObject', 'CallPersonalityEnum', 'CallQueueAudioFilesObject', 'CallQueueHolidaySchedulesObject', 'CallQueueObject', 'CallQueueQueueSettingsObject', 'CallSourceInfo', 'CallSourceType', 'CallStateEnum', 'CallType', 'CallTypeEnum', 'CallerIdSelectedType', 'CallingLineId', 'CallingPermissionObject', 'CallingPermissions', 'Callparkextension', 'CallsFrom', 'CallsTo', 'ComfortMessage', 'ComfortMessageBypass', 'ConfigureCallRecordingSettingsForPersonBody', 'ConfigureCallerIDSettingsForPersonBody', 'ConfigurepersonsCallingBehaviorBody', 'CountObject', 'CreateAutoAttendantBody', 'CreateAutoAttendantResponse', 'CreateCallParkBody', 'CreateCallParkExtensionResponse', 'CreateCallParkResponse', 'CreateCallPickupBody', 'CreateCallPickupResponse', 'CreateCallQueueBody', 'CreateCallQueueResponse', 'CreateDialPlanResponse', 'CreateHuntGroupResponse', 'CreateLocationResponse', 'CreatePersonBody', 'CreateRouteGroupForOrganizationBody', 'CreateRouteGroupForOrganizationResponse', 'CreateRouteListResponse', 'CreateScheduleEventResponse', 'CreateScheduleForPersonBody', 'CreateScheduleForPersonResponse', 'CreateScheduleResponse', 'CreateSelectiveCallForwardingRuleForAutoAttendantBody', 'CreateSelectiveCallForwardingRuleForAutoAttendantResponse', 'CreateSelectiveCallForwardingRuleForCallQueueBody', 'CreateSelectiveCallForwardingRuleForCallQueueResponse', 'CreateSelectiveCallForwardingRuleForHuntGroupResponse', 'CreateTrunkResponse', 'CreatenewPagingGroupBody', 'CreatenewPagingGroupResponse', 'CreatenewVoicemailGroupForLocationResponse', 'CustomizationDeviceLevelObject', 'CustomizationObject', 'Day', 'DectDeviceList', 'DectObject', 'DefaultLoggingLevelObject', 'DefaultVoicemailPinRules', 'DestinationType', 'DeviceObject', 'DeviceOwner', 'DeviceStatus', 'DeviceType', 'Devices', 'DialPattern', 'DialPatternAction', 'DialPatternStatus', 'DialPatternValidate', 'DialPlan', 'DialResponse', 'DisplayCallqueueAgentSoftkeysObject', 'DisplayNameSelection', 'DistinctiveRing', 'EffectiveBehaviorType', 'EmailCopyOfMessage', 'Emergency', 'ErrorMessageObject', 'ErrorObject', 'EventLongDetails', 'ExpirePasscode', 'ExtensionDialing', 'ExtensionStatusObject', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts', 'FaxMessage', 'FeatureAccessCode', 'FetchEventForpersonsScheduleResponse', 'GenerateExamplePasswordForLocationResponse', 'GetAnnouncementFileInfo', 'GetAvailableAgentsFromCallParksResponse', 'GetAvailableAgentsFromCallPickupsResponse', 'GetAvailableRecallHuntGroupsFromCallParksResponse', 'GetAvailableRecallHuntGroupsObject', 'GetCallForwardAlwaysSettingObject', 'GetCallForwardingSettingsForAutoAttendantResponse', 'GetCallForwardingSettingsForCallQueueResponse', 'GetCallForwardingSettingsForHuntGroupResponse', 'GetCallParkSettingsResponse', 'GetCallRecordingSettingsResponse', 'GetCallRecordingTermsOfServiceSettingsResponse', 'GetDetailedCallHistoryResponse', 'GetDetailsForAutoAttendantResponse', 'GetDetailsForCallParkExtensionResponse', 'GetDetailsForCallParkResponse', 'GetDetailsForCallPickupResponse', 'GetDetailsForCallQueueForcedForwardResponse', 'GetDetailsForCallQueueHolidayServiceResponse', 'GetDetailsForCallQueueNightServiceResponse', 'GetDetailsForCallQueueResponse', 'GetDetailsForCallQueueStrandedCallsResponse', 'GetDetailsForHuntGroupResponse', 'GetDetailsForPagingGroupResponse', 'GetDetailsForScheduleResponse', 'GetDeviceMembersResponse', 'GetDeviceSettingsResponse', 'GetDialPlanResponse', 'GetListOfPhoneNumbersForPersonResponse', 'GetLocalGatewayCallToOnPremisesExtensionUsageForTrunkResponse', 'GetLocalGatewayDialPlanUsageForTrunkResponse', 'GetLocalGatewayUsageCountResponse', 'GetLocationInterceptResponse', 'GetLocationOutgoingPermissionResponse', 'GetLocationVoicemailGroupResponse', 'GetLocationVoicemailResponse', 'GetLocationWebexCallingDetailsResponse', 'GetLocationsUsingLocalGatewayAsPSTNConnectionRoutingResponse', 'GetManageNumbersJobStatusResponse', 'GetMessageSummaryResponse', 'GetMonitoredElementsObject', 'GetMusicOnHoldResponse', 'GetNumbersAssignedToRouteListResponse', 'GetOutgoingPermissionAutoTransferNumberResponse', 'GetOutgoingPermissionLocationAccessCodeResponse', 'GetPagingGroupAgentObject', 'GetPersonPlaceCallParksObject', 'GetPersonPlaceCallQueueObject', 'GetPersonPlaceObject', 'GetPhoneNumbersForOrganizationWithGivenCriteriasResponse', 'GetPrivateNetworkConnectResponse', 'GetRecallHuntGroupObject', 'GetRouteGroupsUsingLocalGatewayResponse', 'GetRouteListResponse', 'GetScheduleDetailsResponse', 'GetScheduleEventObject', 'GetSelectiveCallForwardingRuleForAutoAttendantResponse', 'GetSelectiveCallForwardingRuleForCallQueueResponse', 'GetTrunkResponse', 'GetUserDevicesResponse', 'GetUserNumberItemObject', 'GetVoicePortalPasscodeRuleResponse', 'GetVoicePortalResponse', 'GetVoicemailGroupObject', 'GetVoicemailRulesResponse', 'GetVoicemailSettingsResponse', 'GetWorkspaceDevicesResponse', 'GetpersonsPrivacySettingsResponse', 'Greeting', 'Greeting29', 'HolidayScheduleLevel', 'HostedAgent', 'HostedFeature', 'Hoteling', 'HoursMenuObject', 'HuntPolicySelection', 'HuntRoutingTypeSelection', 'Incoming', 'InterceptAnnouncementsGet', 'InterceptIncomingGet', 'InterceptIncomingPatch', 'ItemObject', 'JobExecutionStatusObject', 'JobExecutionStatusObject1', 'KemModuleTypeObject', 'Key', 'KeyConfigurationsObject', 'Length', 'LineKeyLEDPattern', 'LineKeyLabelSelection', 'LineType', 'ListAutoAttendantObject', 'ListCallHistoryResponse', 'ListCallParkExtensionObject', 'ListCallParkObject', 'ListCallQueueObject', 'ListCallsResponse', 'ListChangeDeviceSettingsJobErrorsResponse', 'ListChangeDeviceSettingsJobsResponse', 'ListLocationsResponse', 'ListManageNumbersJobErrorsResponse', 'ListManageNumbersJobsResponse', 'ListMessagesResponse', 'ListOfSchedulesForPersonResponse', 'ListPeopleResponse', 'ListScheduleObject', 'ListVoicemailGroupResponse', 'LocalGateways', 'Location', 'LocationsApi', 'MacStatusObject', 'ManagedByObject', 'ManufacturerObject', 'MediaFileType', 'Member', 'MemberObject', 'MessageStorage', 'MessageStorage3', 'ModifyDialPlanBody', 'ModifyNumbersForRouteListResponse', 'ModifyPersonPlaceCallQueueObject', 'ModifyRouteListBody', 'ModifyScheduleEventListObject', 'ModifyTrunkBody', 'ModifypersonsApplicationServicesSettingsBody', 'ModifypersonsMonitoringSettingsBody', 'MohMessage', 'MonitoredElementItem', 'MonitoredElementUser', 'MonitoredMemberObject', 'MonitoredPersonObject', 'Month', 'MppAudioCodecPriorityObject', 'MppObject', 'MppVlanObject', 'NetworkConnectionType', 'NewNumber', 'NoAnswer', 'NoAnswer3', 'NormalSource', 'NumberItem', 'NumberListGetObject', 'NumberStatus', 'OnboardingMethodObject', 'Option', 'OriginatorType', 'Outgoing', 'Overflow', 'Owner', 'ParkResponse', 'PartyInformation', 'Passcode', 'PbxUser', 'PeopleApi', 'Person', 'PhoneLanguage', 'PhoneNumber', 'PhoneNumbers', 'PhoneNumbers7', 'PlaceDevices', 'PostCallQueueCallPolicyObject', 'PostHuntGroupCallPolicyObject', 'PostPersonPlaceCallQueueObject', 'PostPersonPlaceObject', 'PstnNumber', 'PushToTalkAccessType', 'PushToTalkConnectionType', 'PutMemberObject', 'PutRecallHuntGroupObject', 'ReadBargeInSettingsForPersonResponse', 'ReadCallInterceptSettingsForWorkspaceResponse', 'ReadCallRecordingSettingsForPersonResponse', 'ReadCallToExtensionLocationsOfRoutingGroupResponse', 'ReadCallWaitingSettingsForPersonResponse', 'ReadCallerIDSettingsForPersonResponse', 'ReadDECTDeviceTypeListResponse', 'ReadDialPlanLocationsOfRoutingGroupResponse', 'ReadDoNotDisturbSettingsForPersonResponse', 'ReadForwardingSettingsForPersonResponse', 'ReadHotelingSettingsForPersonResponse', 'ReadIncomingPermissionSettingsForPersonResponse', 'ReadInternalDialingConfigurationForlocationResponse', 'ReadListOfAutoAttendantsResponse', 'ReadListOfCallParkExtensionsResponse', 'ReadListOfCallParksResponse', 'ReadListOfCallPickupsResponse', 'ReadListOfCallQueueAnnouncementFilesResponse', 'ReadListOfCallQueuesResponse', 'ReadListOfDialPatternsResponse', 'ReadListOfDialPlansResponse', 'ReadListOfHuntGroupsResponse', 'ReadListOfPagingGroupsResponse', 'ReadListOfRouteListsResponse', 'ReadListOfRoutingChoicesResponse', 'ReadListOfRoutingGroupsResponse', 'ReadListOfSchedulesResponse', 'ReadListOfSupportedDevicesResponse', 'ReadListOfTrunkTypesResponse', 'ReadListOfTrunksResponse', 'ReadListOfUCManagerProfilesResponse', 'ReadPSTNConnectionLocationsOfRoutingGroupResponse', 'ReadPersonsCallingBehaviorResponse', 'ReadPushtoTalkSettingsForPersonResponse', 'ReadReceptionistClientSettingsForPersonResponse', 'ReadRouteGroupForOrganizationResponse', 'ReadRouteListsOfRoutingGroupResponse', 'ReadUsageOfRoutingGroupResponse', 'ReadVoicemailSettingsForPersonResponse', 'ReaddeviceOverrideSettingsFororganizationResponse', 'RecallInformation', 'RecallTypeEnum', 'Record', 'RecordingStateEnum', 'RecurWeekly2', 'RecurWeeklyObject', 'RecurYearlyByDateObject', 'RecurYearlyByDayObject', 'Recurrence', 'RecurrenceObject1', 'RedirectionInformation', 'RedirectionReasonEnum', 'RejectActionEnum', 'Repeat', 'ResponseStatus', 'ResponseStatusType', 'RetrieveAccessCodesForWorkspaceResponse', 'RetrieveCallForwardingSettingsForWorkspaceResponse', 'RetrieveCallQueueAgentsCallerIDInformationResponse', 'RetrieveCallWaitingSettingsForWorkspaceResponse', 'RetrieveCallerIDSettingsForWorkspaceResponse', 'RetrieveExecutiveAssistantSettingsForPersonResponse', 'RetrieveListOfCallQueueCallerIDInformationResponse', 'RetrieveMonitoringSettingsForWorkspaceResponse', 'RetrieveOutgoingPermissionSettingsForWorkspaceResponse', 'RetrievepersonsApplicationServicesSettingsResponse', 'RetrievepersonsMonitoringSettingsResponse', 'RetrievepersonsOutgoingCallingPermissionsSettingsResponse', 'RingPattern', 'RouteGroup', 'RouteGroupUsageRouteListGet', 'RouteIdentity', 'RouteList', 'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteType', 'ScheduleEventObject', 'ScheduleShortDetails', 'SearchMemberObject', 'SearchMembersResponse', 'Selection', 'Selection1', 'SelectionType', 'SendAllCalls', 'SendBusyCalls', 'SendBusyCalls1', 'SendUnansweredCalls', 'ServiceType', 'SipAddressesType', 'StartJobResponse', 'State', 'State1', 'State3', 'Status', 'Status5', 'StepExecutionStatusesObject', 'StorageType', 'TestCallRoutingResponse', 'Trunk', 'TrunkType', 'TrunkTypeWithDeviceType', 'Type', 'Type18', 'Type19', 'Type24', 'Type31', 'Type5', 'Type8', 'TypeObject', 'UnknownExtensionRouteIdentity', 'UpdateCallParkResponse', 'UpdateCallPickupResponse', 'UpdateDeviceSettingsBody', 'UpdateEventForpersonsScheduleResponse', 'UpdateLocationBody', 'UpdateLocationWebexCallingDetailsBody', 'UpdateScheduleEventResponse', 'UpdateScheduleResponse', 'UpdateScheduleResponse1', 'UpdateSelectiveCallForwardingRuleForAutoAttendantResponse', 'UpdateSelectiveCallForwardingRuleForCallQueueResponse', 'UpdateSelectiveCallForwardingRuleForHuntGroupResponse', 'UserNumberItem', 'ValidateDialPatternResponse', 'ValidateExtensionsResponse', 'ValidateLocalGatewayFQDNAndDomainForTrunkBody', 'ValidatelistOfMACAddressResponse', 'VirtualExtension', 'VlanObject', 'VoiceMailPartyInformation', 'VoiceMessageDetails', 'WaitMessage', 'WaitMode', 'WebexCallingDetailedCallHistoryApi', 'WebexCallingOrganizationSettingsApi', 'WebexCallingPersonSettingsApi', 'WebexCallingVoiceMessagingApi', 'WebexCallingWorkspaceSettingsApi', 'Week', 'WelcomeMessage', 'WifiNetworkObject']
 
 
 class RejectActionEnum(str, Enum):
@@ -1169,88 +1169,6 @@ Possible values: mysite.webex.com#attendee
         data = super().get(url=url, params=params)
         return Person.parse_obj(data)
 
-class CallType(str, Enum):
-    sip_meeting = 'SIP_MEETING'
-    sip_international = 'SIP_INTERNATIONAL'
-    sip_shortcode = 'SIP_SHORTCODE'
-    sip_inbound = 'SIP_INBOUND'
-    unknown = 'UNKNOWN'
-    sip_emergency = 'SIP_EMERGENCY'
-    sip_premium = 'SIP_PREMIUM'
-    sip_enterprise = 'SIP_ENTERPRISE'
-    sip_tollfree = 'SIP_TOLLFREE'
-    sip_national = 'SIP_NATIONAL'
-    sip_mobile = 'SIP_MOBILE'
-
-
-class ClientType(str, Enum):
-    sip = 'SIP'
-    wxc_client = 'WXC_CLIENT'
-    wxc_third_party = 'WXC_THIRD_PARTY'
-    teams_wxc_client = 'TEAMS_WXC_CLIENT'
-    wxc_device = 'WXC_DEVICE'
-    wxc_sip_gw = 'WXC_SIP_GW'
-
-
-class Direction(str, Enum):
-    originating = 'ORIGINATING'
-    terminating = 'TERMINATING'
-
-
-class OriginalReason(str, Enum):
-    unconditional = 'Unconditional'
-    no_answer = 'NoAnswer'
-    call_queue = 'CallQueue'
-    time_of_day = 'TimeOfDay'
-    user_busy = 'UserBusy'
-    follow_me = 'FollowMe'
-    unrecognised = 'Unrecognised'
-    unknown = 'Unknown'
-
-
-class RedirectReason(str, Enum):
-    unconditional = 'Unconditional'
-    no_answer = 'NoAnswer'
-    call_queue = 'CallQueue'
-    time_of_day = 'TimeOfDay'
-    user_busy = 'UserBusy'
-    follow_me = 'FollowMe'
-    hunt_group = 'HuntGroup'
-    deflection = 'Deflection'
-    unknown = 'Unknown'
-    unavailable = 'Unavailable'
-
-
-class RelatedReason(str, Enum):
-    consultative_transfer = 'ConsultativeTransfer'
-    call_forward_selective = 'CallForwardSelective'
-    call_queue = 'CallQueue'
-    unrecognised = 'Unrecognised'
-    call_pickup = 'CallPickup'
-    call_forward_always = 'CallForwardAlways'
-    fax_deposit = 'FaxDeposit'
-    hunt_group = 'HuntGroup'
-    push_notification_retrieval = 'PushNotificationRetrieval'
-    voice_xml_script_termination = 'VoiceXMLScriptTermination'
-    call_forward_no_answer = 'CallForwardNoAnswer'
-    anywhere_location = 'AnywhereLocation'
-
-
-class UserType(str, Enum):
-    automated_attendant_video = 'AutomatedAttendantVideo'
-    anchor = 'Anchor'
-    broadworks_anywhere = 'BroadworksAnywhere'
-    voice_mail_retrieval = 'VoiceMailRetrieval'
-    local_gateway = 'LocalGateway'
-    hunt_group = 'HuntGroup'
-    group_paging = 'GroupPaging'
-    user = 'User'
-    voice_mail_group = 'VoiceMailGroup'
-    call_center_standard = 'CallCenterStandard'
-    voice_xml = 'VoiceXML'
-    route_point = 'RoutePoint'
-
-
 class CDR(ApiModel):
     #: The time the call was answered. Time is in UTC.
     answer_time: Optional[str] = Field(alias='Answer time')
@@ -1261,7 +1179,7 @@ class CDR(ApiModel):
     #: SIP Call ID used to identify the call. You can share the Call ID with Cisco TAC to help them pinpoint a call if necessary.
     call_id: Optional[str] = Field(alias='Call ID')
     #: Type of call. For example:
-    call_type: Optional[CallType] = Field(alias='Call type')
+    call_type: Optional[str] = Field(alias='Call type')
     #: For incoming calls, the calling line ID of the user. For outgoing calls, it's the calling line ID of the called party.
     called_line_id: Optional[str] = Field(alias='Called line ID')
     #: For incoming calls, the telephone number of the user. For outgoing calls, it's the telephone number of the called party.
@@ -1271,7 +1189,7 @@ class CDR(ApiModel):
     #: For incoming calls, the telephone number of the calling party. For outgoing calls, it's the telephone number of the user.
     calling_number: Optional[str] = Field(alias='Calling number')
     #: The type of client that the user (creating this record) is using to make or receive the call. For example:
-    client_type: Optional[ClientType] = Field(alias='Client type')
+    client_type: Optional[str] = Field(alias='Client type')
     #: The version of the client that the user (creating this record) is using to make or receive the call.
     client_version: Optional[str] = Field(alias='Client version')
     #: Correlation ID to tie together multiple call legs of the same call session.
@@ -1284,7 +1202,7 @@ class CDR(ApiModel):
     #: This field reports multiple call dial possibilities:
     dialed_digits: Optional[str] = Field(alias='Dialed digits')
     #: Whether the call was inbound or outbound. The possible values are:
-    direction: Optional[Direction]
+    direction: Optional[str]
     #: The length of the call in seconds.
     duration: Optional[int]
     #: Inbound trunk may be presented in Originating and Terminating records.
@@ -1297,18 +1215,18 @@ class CDR(ApiModel):
     model: Optional[str]
     #: A unique identifier for the organization that made the call. This is a unique identifier across Cisco.
     org_uuid: Optional[str] = Field(alias='Org UUID')
-    #: Populated for calls that transfer, hold, wait, and so on. For example:
-    original_reason: Optional[OriginalReason] = Field(alias='Original reason')
+    #: Call redirection reason for the original called number. For example:
+    original_reason: Optional[str] = Field(alias='Original reason')
     #: The operating system that the app was running on, if available.
     os_type: Optional[str] = Field(alias='OS type')
     #: Outbound trunk may be presented in Originating and Terminating records.
     outbound_trunk: Optional[str] = Field(alias='Outbound trunk')
-    #: Populated for calls that transfer, hold, wait, and so on. For example:
-    redirect_reason: Optional[RedirectReason] = Field(alias='Redirect reason')
+    #: Call Redirection Reason for the redirecting number. For example:
+    redirect_reason: Optional[str] = Field(alias='Redirect reason')
     #: When the call has been redirected one or more times, this field reports the last redirecting number. Identifies who last redirected the call. Only applies to call scenarios such as transfer, call forwarded calls, simultaneous rings, etc.
     redirecting_number: Optional[str] = Field(alias='Redirecting number')
-    #: Populated for calls that transfer, hold, wait, and so on. For example:
-    related_reason: Optional[RelatedReason] = Field(alias='Related reason')
+    #: Indicates a trigger that led to a change in the call presence. The trigger could be for this particular call or redirected via a different call. For example:
+    related_reason: Optional[str] = Field(alias='Related reason')
     #: Indicates which party released the call first. The possible values are:
     releasing_party: Optional[str] = Field(alias='Releasing party')
     #: A unique ID for this particular record. This can be used when processing records to aid in deduplication.
@@ -1330,7 +1248,7 @@ class CDR(ApiModel):
     #: Transfer related call ID is used as a call identifier of the other call involved in the transfer. You can share this ID with Cisco TAC to help them pinpoint parties who are involved during a call transfer.
     transfer_related_call_id: Optional[str] = Field(alias='Transfer related call ID')
     #: The type of user (user or workspace) that made or received the call. For example:
-    user_type: Optional[UserType] = Field(alias='User type')
+    user_type: Optional[str] = Field(alias='User type')
     #: A unique identifier for the user associated with the call. This is a unique identifier across Cisco products.
     user_uuid: Optional[str] = Field(alias='User UUID')
 
@@ -1345,7 +1263,7 @@ class WebexCallingDetailedCallHistoryApi(ApiChild, base=''):
     To retrieve Detailed Call History information, you must use a token with the spark-admin:calling_cdr_read scope. The authenticating user must be a read-only-admin or full-admin of the organization and have the administrator role "Webex Calling Detailed Call History API access" enabled.
     Detailed Call History information is available 5 minutes after a call has ended and may be retrieved for up to 48 hours. For example, if a call ends at 9:46 am, the record for that call can be collected using the API from 9:51 am, and is available until 9:46 am two days later.
     This API is rate-limited to one call every 5 minutes for a given organization ID.
-    Details on the fields returned from this API and their potential values are available at https://help.webex.com/en-us/article/nmug598/Reports-for-Your-Cloud-Collaboration-Portfolio under the section Detailed Call History.
+    Details on the fields returned from this API and their potential values are available at https://help.webex.com/en-us/article/nmug598/Reports-for-Your-Cloud-Collaboration-Portfolio. Select the Report templates tab, and then in the Webex Calling reports section see Calling Detailed Call History Report.
     """
 
     def detailed_call_history(self, start_time: str, end_time: str, locations: str = None, max: int = None) -> List[CDR]:
@@ -2387,7 +2305,7 @@ class UpdateLocationWebexCallingDetailsBody(ApiModel):
     routing_prefix: Optional[str]
 
 
-class CallType1(str, Enum):
+class CallType(str, Enum):
     #: Controls calls within your own company.
     internal_call = 'INTERNAL_CALL'
     #: Controls calls to a telephone number that is billed for all arriving calls instead of incurring charges to the originating caller, usually free of charge from a landline.
@@ -2427,7 +2345,7 @@ class Action9(str, Enum):
 
 class CallingPermissionObject(ApiModel):
     #: Below are the call type values.
-    call_type: Optional[CallType1]
+    call_type: Optional[CallType]
     #: Allows to configure settings for each call type.
     action: Optional[Action9]
     #: If enabled, allow the person to transfer or forward internal calls.
@@ -7563,7 +7481,7 @@ SIP password setting
         super().delete(url=url, params=params, data=body.json())
         return
 
-    def phone_numbers_for_organization_with_given_criterias(self, org_id: str = None, location_id: str = None, max: int = None, start: int = None, phone_number: str = None, available: bool = None, order: str = None, owner_name: str = None, owner_id: str = None, owner_type: enum = None, extension: str = None, number_type: str = None, phone_number_type: str = None, state: str = None, details: bool = None, toll_free_numbers: bool = None) -> NumberListGetObject:
+    def phone_numbers_for_organization_with_given_criterias(self, org_id: str = None, location_id: str = None, max: int = None, start: int = None, phone_number: str = None, available: bool = None, order: str = None, owner_name: str = None, owner_id: str = None, owner_type: enum = None, extension: str = None, number_type: str = None, phone_number_type: str = None, state: str = None, details: bool = None, toll_free_numbers: bool = None, restricted_non_geo_numbers: bool = None) -> NumberListGetObject:
         """
         List all the phone numbers for the given organization along with the status and owner (if any).
         PSTN phone numbers are associated with a specific location and can be active/inactive and assigned/unassigned.
@@ -7602,6 +7520,8 @@ SIP password setting
         :type details: bool
         :param toll_free_numbers: Returns the list of toll free phone numbers.
         :type toll_free_numbers: bool
+        :param restricted_non_geo_numbers: Returns the list of restricted non geographical numbers.
+        :type restricted_non_geo_numbers: bool
         """
         params = {}
         if org_id is not None:
@@ -7636,6 +7556,8 @@ SIP password setting
             params['details'] = details
         if toll_free_numbers is not None:
             params['tollFreeNumbers'] = toll_free_numbers
+        if restricted_non_geo_numbers is not None:
+            params['restrictedNonGeoNumbers'] = restricted_non_geo_numbers
         url = self.ep('numbers')
         data = super().get(url=url, params=params)
         return data["phoneNumbers"]
@@ -12659,7 +12581,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
     A partner administrator can retrieve or change settings in a customer's organization using the optional OrgId query parameter.
     """
 
-    def retrieve_callwarding_settings_workspace(self, workspace_id: str, org_id: str = None) -> CallForwardingPlaceSettingGet:
+    def retrieve_call_forwarding_settings_for(self, workspace_id: str, org_id: str = None) -> CallForwardingPlaceSettingGet:
         """
         Retrieve Call Forwarding Settings for a Workspace.
         Two types of call forwarding are supported:
@@ -12677,7 +12599,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         data = super().get(url=url, params=params)
         return data["callForwarding"]
 
-    def modify_callwarding_settings_workspace(self, workspace_id: str, call_forwarding: CallForwardingPlaceSettingPatch, org_id: str = None):
+    def modify_call_forwarding_settings_for(self, workspace_id: str, call_forwarding: CallForwardingPlaceSettingPatch, org_id: str = None):
         """
         Modify call forwarding settings for a Workspace.
         Two types of call forwarding are supported:
@@ -12700,7 +12622,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         super().put(url=url, params=params, data=body.json())
         return
 
-    def retrieve_call_waiting_settings_workspace(self, workspace_id: str, org_id: str = None) -> bool:
+    def retrieve_call_waiting_settings_for(self, workspace_id: str, org_id: str = None) -> bool:
         """
         Retrieve Call Waiting Settings for a Workspace.
         Call Waiting allows workspaces to handle multiple simultaneous calls. Workspaces with Call Waiting enabled can place a call on hold to answer or initiate another call.
@@ -12718,7 +12640,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         data = super().get(url=url, params=params)
         return data["enabled"]
 
-    def modify_call_waiting_settings_workspace(self, workspace_id: str, org_id: str = None, enabled: bool = None):
+    def modify_call_waiting_settings_for(self, workspace_id: str, org_id: str = None, enabled: bool = None):
         """
         Modify Call Waiting Settings for a Workspace.
         Call Waiting allows workspaces to handle multiple simultaneous calls. Workspaces with Call Waiting enabled can place a call on hold to answer or initiate another call.
@@ -12741,7 +12663,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         super().put(url=url, params=params, data=body.json())
         return
 
-    def retrieve_caller_id_settings_workspace(self, workspace_id: str, org_id: str = None) -> RetrieveCallerIDSettingsForWorkspaceResponse:
+    def retrieve_caller_id_settings_for(self, workspace_id: str, org_id: str = None) -> RetrieveCallerIDSettingsForWorkspaceResponse:
         """
         Retrieve Caller ID Settings for a Workspace.
         Caller ID settings control how a workspace's information is displayed when making outgoing calls.
@@ -12759,7 +12681,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         data = super().get(url=url, params=params)
         return RetrieveCallerIDSettingsForWorkspaceResponse.parse_obj(data)
 
-    def modify_caller_id_settings_workspace(self, workspace_id: str, selected: CLIDPolicySelection, org_id: str = None, custom_number: str = None, display_name: str = None, display_detail: str = None, block_in_forward_calls_enabled: bool = None, external_caller_id_name_policy: ExternalCallerIdNamePolicy = None, custom_external_caller_id_name: str = None, location_external_caller_id_name: str = None):
+    def modify_caller_id_settings_for(self, workspace_id: str, selected: CLIDPolicySelection, org_id: str = None, custom_number: str = None, display_name: str = None, display_detail: str = None, block_in_forward_calls_enabled: bool = None, external_caller_id_name_policy: ExternalCallerIdNamePolicy = None, custom_external_caller_id_name: str = None, location_external_caller_id_name: str = None):
         """
         Modify Caller ID settings for a Workspace.
         Caller ID settings control how a workspace's information is displayed when making outgoing calls.
@@ -12811,7 +12733,7 @@ Possible values: DIRECT_LINE
         super().put(url=url, params=params, data=body.json())
         return
 
-    def retrieve_monitoring_settings_workspace(self, workspace_id: str, org_id: str = None) -> RetrieveMonitoringSettingsForWorkspaceResponse:
+    def retrieve_monitoring_settings_for(self, workspace_id: str, org_id: str = None) -> RetrieveMonitoringSettingsForWorkspaceResponse:
         """
         Retrieves Monitoring settings for a Workspace.
         Allow workspaces to monitor the line status of specified agents, workspaces, or call park extensions. The line status indicates if a monitored agent or a workspace is on a call, or if a call has been parked on the monitored call park extension.
@@ -12829,7 +12751,7 @@ Possible values: DIRECT_LINE
         data = super().get(url=url, params=params)
         return RetrieveMonitoringSettingsForWorkspaceResponse.parse_obj(data)
 
-    def modify_monitoring_settings_workspace(self, workspace_id: str, enable_call_park_notification: bool, monitored_elements: List[str], org_id: str = None):
+    def modify_monitoring_settings_for(self, workspace_id: str, enable_call_park_notification: bool, monitored_elements: List[str], org_id: str = None):
         """
         Modify Monitoring settings for a Workspace.
         Allow workspaces to monitor the line status of specified agents, workspaces, or call park extensions. The line status indicates if a monitored agent or a workspace is on a call, or if a call has been parked on the monitored call park extension.
@@ -12857,7 +12779,54 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         super().put(url=url, params=params, data=body.json())
         return
 
-    def retrieve_incoming_permission_settings_workspace(self, workspace_id: str, org_id: str = None) -> ReadIncomingPermissionSettingsForPersonResponse:
+    def list_numbers_associated_withspecific(self, workspace_id: str, attributes: , body: , org_id: str = None, **params):
+        """
+        List the PSTN phone numbers associated with a specific workspace, by ID, within the organization. Also shows the location and organization associated with the workspace.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read.
+
+        :param workspace_id: List numbers for this workspace.
+        :type workspace_id: str
+        :param attributes: 
+        :type attributes: 
+        :param body: {
+        "phoneNumbers": [
+            {
+                "external": "+12055550001",
+                "extension": "12211",
+                "primary": true
+            },
+             {
+                "external": "+12055550002",
+                "extension": "122",
+                "primary": false
+            }
+        ],
+        "workspace": {
+            "id": "Y2lzY29zcGFyazovL3VzL1BMQUNFLzg0MjkzOGQ1LTkyNzMtNGJjNi1hYTNhLTA1Njc3MmRiMzE2NQ"
+        },
+        "location": {
+            "name": "MainOffice",
+            "id": "Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4Mjg5NzIyLTFiODAtNDFiNy05Njc4LTBlNzdhZThjMTA5OA"
+        },
+        "organization": {
+            "id": "Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi9hNDVkNmNkYS1hZTVhLTQwYzMtYTdhZC01NjUwZmRkZGQ1M2M",
+            "name": "Atlas_Test_CALL-1237"
+        }
+    }
+        :type body: 
+        :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners) can use this parameter as the default is the same organization as the token used to access API.
+        :type org_id: str
+        """
+        if attributes is not None:
+            params['Attributes'] = attributes
+        if body is not None:
+            params['Body'] = body
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'numbers')
+        return !$!!$!$       # documentation at https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace is missing return type
+
+    def retrieve_incoming_permission_settings_for(self, workspace_id: str, org_id: str = None) -> ReadIncomingPermissionSettingsForPersonResponse:
         """
         Retrieve Incoming Permission settings for a Workspace.
         Incoming permission settings allow modifying permissions for a workspace that can be different from the organization's default to manage different call types.
@@ -12875,7 +12844,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         data = super().get(url=url, params=params)
         return ReadIncomingPermissionSettingsForPersonResponse.parse_obj(data)
 
-    def modify_incoming_permission_settings_workspace(self, workspace_id: str, org_id: str = None, use_custom_enabled: bool = None, external_transfer: ExternalTransfer = None, internal_calls_enabled: bool = None, collect_calls_enabled: bool = None):
+    def modify_incoming_permission_settings_for(self, workspace_id: str, org_id: str = None, use_custom_enabled: bool = None, external_transfer: ExternalTransfer = None, internal_calls_enabled: bool = None, collect_calls_enabled: bool = None):
         """
         Modify Incoming Permission settings for a Workspace.
         Incoming permission settings allow modifying permissions for a workspace that can be different from the organization's default to manage different call types.
@@ -12910,7 +12879,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         super().put(url=url, params=params, data=body.json())
         return
 
-    def retrieve_outgoing_permission_settings_workspace(self, workspace_id: str, org_id: str = None) -> RetrieveOutgoingPermissionSettingsForWorkspaceResponse:
+    def retrieve_outgoing_permission_settings_for(self, workspace_id: str, org_id: str = None) -> RetrieveOutgoingPermissionSettingsForWorkspaceResponse:
         """
         Retrieve Outgoing Permission settings for a Workspace.
         Turn on outgoing call settings for this workspace to override the calling settings from the location that are used by default.
@@ -12928,7 +12897,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         data = super().get(url=url, params=params)
         return RetrieveOutgoingPermissionSettingsForWorkspaceResponse.parse_obj(data)
 
-    def modify_outgoing_permission_settings_workspace(self, workspace_id: str, org_id: str = None, use_custom_enabled: bool = None, calling_permissions: CallingPermissionObject = None):
+    def modify_outgoing_permission_settings_for(self, workspace_id: str, org_id: str = None, use_custom_enabled: bool = None, calling_permissions: CallingPermissionObject = None):
         """
         Modify Outgoing Permission settings for a Place.
         Turn on outgoing call settings for this workspace to override the calling settings from the location that are used by default.
@@ -12955,7 +12924,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         super().put(url=url, params=params, data=body.json())
         return
 
-    def retrieve_access_codes_workspace(self, workspace_id: str, org_id: str = None) -> List[AccessCodes]:
+    def retrieve_access_codes_for(self, workspace_id: str, org_id: str = None) -> List[AccessCodes]:
         """
         Retrieve Access codes for a Workspace.
         Access codes are used to bypass permissions.
@@ -12973,7 +12942,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         data = super().get(url=url, params=params)
         return data["accessCodes"]
 
-    def modify_access_codes_workspace(self, workspace_id: str, org_id: str = None, delete_codes: List[str] = None):
+    def modify_access_codes_for(self, workspace_id: str, org_id: str = None, delete_codes: List[str] = None):
         """
         Modify Access codes for a workspace.
         Access codes are used to bypass permissions.
@@ -12996,7 +12965,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         super().put(url=url, params=params, data=body.json())
         return
 
-    def create_access_codes_workspace(self, workspace_id: str, org_id: str = None, code: str = None, description: str = None):
+    def create_access_codes_for(self, workspace_id: str, org_id: str = None, code: str = None, description: str = None):
         """
         Create new Access codes for the given workspace.
         Access codes are used to bypass permissions.
@@ -13023,7 +12992,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         super().post(url=url, params=params, data=body.json())
         return
 
-    def read_call_intercept_settings_workspace(self, workspace_id: str, org_id: str = None) -> ReadCallInterceptSettingsForWorkspaceResponse:
+    def read_call_intercept_settings_for(self, workspace_id: str, org_id: str = None) -> ReadCallInterceptSettingsForWorkspaceResponse:
         """
         Retrieves Workspace's Call Intercept Settings
         The intercept feature gracefully takes a workspace's phone out of service, while providing callers with informative announcements and alternative routing options. Depending on the service configuration, none, some, or all incoming calls to the specified workspace are intercepted. Also depending on the service configuration, outgoing calls are intercepted or rerouted to another location.
@@ -13041,7 +13010,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         data = super().get(url=url, params=params)
         return ReadCallInterceptSettingsForWorkspaceResponse.parse_obj(data)
 
-    def configure_call_intercept_settings_workspace(self, workspace_id: str, org_id: str = None, enabled: bool = None, incoming: InterceptIncomingPatch = None, outgoing: Outgoing = None):
+    def configure_call_intercept_settings_for(self, workspace_id: str, org_id: str = None, enabled: bool = None, incoming: InterceptIncomingPatch = None, outgoing: Outgoing = None):
         """
         Configures a Workspace's Call Intercept Settings
         The intercept feature gracefully takes a workspace's phone out of service, while providing callers with informative announcements and alternative routing options. Depending on the service configuration, none, some, or all incoming calls to the specified person are intercepted. Also depending on the service configuration, outgoing calls are intercepted or rerouted to another location.
@@ -13072,7 +13041,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         super().put(url=url, params=params, data=body.json())
         return
 
-    def retrieve_transfer_numbers_settings_workspace(self, workspace_id: str, org_id: str = None) -> GetOutgoingPermissionAutoTransferNumberResponse:
+    def retrieve_transfer_numbers_settings_for(self, workspace_id: str, org_id: str = None) -> GetOutgoingPermissionAutoTransferNumberResponse:
         """
         Retrieve Transfer Numbers Settings for a Workspace.
         When calling a specific call type, this workspace will be automatically transferred to another number. The person assigned the Auto Transfer Number can then approve the call and send it through or reject the call type. You can add up to 3 numbers.
@@ -13090,7 +13059,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         data = super().get(url=url, params=params)
         return GetOutgoingPermissionAutoTransferNumberResponse.parse_obj(data)
 
-    def modify_transfer_numbers_settings_workspace(self, workspace_id: str, org_id: str = None, auto_transfer_number1: str = None, auto_transfer_number2: str = None, auto_transfer_number3: str = None):
+    def modify_transfer_numbers_settings_for(self, workspace_id: str, org_id: str = None, auto_transfer_number1: str = None, auto_transfer_number2: str = None, auto_transfer_number3: str = None):
         """
         Modify Transfer Numbers Settings for a place.
         When calling a specific call type, this workspace will be automatically transferred to another number. The person assigned the Auto Transfer Number can then approve the call and send it through or reject the call type. You can add up to 3 numbers.

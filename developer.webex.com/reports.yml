@@ -112,6 +112,10 @@ docs:
     doc: null
     header: null
     methods: []
+  Meetings Summary Report:
+    doc: null
+    header: null
+    methods: []
   Memberships:
     doc: null
     header: null

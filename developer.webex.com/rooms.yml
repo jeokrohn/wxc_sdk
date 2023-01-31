@@ -237,9 +237,9 @@ docs:
         To create a 1:1 room, use the Create Messages endpoint to send a message directly
         to another person by using the toPersonId or toPersonEmail parameters.
 
-        Bots are not able to create and classify a room. A bot may update a space
-        classification after a person of the same owning organization joined the space
-        as the first human user.
+        Bots are not able to create and simultaneously classify a room. A bot may
+        update a space classification after a person of the same owning organization
+        joined the space as the first human user.
 
         A space can only be put into announcement mode when it is locked.'
       documentation:
@@ -602,7 +602,10 @@ docs:
         A space can only be put into announcement mode when it is locked.
 
         Any space participant or compliance officer can convert a space from public
-        to private. Conversion from private to public is currently not supported.
+        to private. Only a compliance officer can convert a space from private to
+        public and only if the space is classified with the lowest category (usually
+        public), and the space has a description.
+
         To remove a description please use a space character   by itself.'
       documentation:
         doc: Update a Room

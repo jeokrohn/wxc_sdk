@@ -846,6 +846,56 @@ docs:
           param_object: []
           type: string
           type_spec: required
+    - doc: 'List the PSTN phone numbers associated with a specific workspace, by ID,
+        within the organization. Also shows the location and organization associated
+        with the workspace.
+
+        Retrieving this list requires a full or read-only administrator auth token
+        with a scope of spark-admin:workspaces_read.'
+      documentation:
+        doc: List numbers associated with a specific workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/numbers
+        http_method: GET
+      header: List numbers associated with a specific workspace
+      parameters_and_response:
+        Query Parameters:
+        - doc: Workspace is in this organization. Only admin users of another organization
+            (such as partners) can use this parameter as the default is the same organization
+            as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: ''
+          name: Attributes
+          param_attrs: []
+          param_object: []
+          type: ''
+          type_spec: required
+        - doc: "{\n        \"phoneNumbers\": [\n            {\n                \"\
+            external\": \"+12055550001\",\n                \"extension\": \"12211\"\
+            ,\n                \"primary\": true\n            },\n             {\n\
+            \                \"external\": \"+12055550002\",\n                \"extension\"\
+            : \"122\",\n                \"primary\": false\n            }\n      \
+            \  ],\n        \"workspace\": {\n            \"id\": \"Y2lzY29zcGFyazovL3VzL1BMQUNFLzg0MjkzOGQ1LTkyNzMtNGJjNi1hYTNhLTA1Njc3MmRiMzE2NQ\"\
+            \n        },\n        \"location\": {\n            \"name\": \"MainOffice\"\
+            ,\n            \"id\": \"Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4Mjg5NzIyLTFiODAtNDFiNy05Njc4LTBlNzdhZThjMTA5OA\"\
+            \n        },\n        \"organization\": {\n            \"id\": \"Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi9hNDVkNmNkYS1hZTVhLTQwYzMtYTdhZC01NjUwZmRkZGQ1M2M\"\
+            ,\n            \"name\": \"Atlas_Test_CALL-1237\"\n        }\n    }"
+          name: Body
+          param_attrs: []
+          param_object: []
+          type: ''
+          type_spec: required
+        URI Parameters:
+        - doc: List numbers for this workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
     - doc: 'Retrieve Incoming Permission settings for a Workspace.
 
         Incoming permission settings allow modifying permissions for a workspace that

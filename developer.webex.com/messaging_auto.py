@@ -7,7 +7,7 @@ from typing import List, Optional
 from pydantic import Field
 
 
-__all__ = ['AttachmentActionsApi', 'CreateAttachmentActionBody', 'CreateAttachmentActionResponse', 'CreateMembershipBody', 'CreateRoomBody', 'CreateRoomTabBody', 'CreateTeamBody', 'CreateTeamMembershipBody', 'CreateWebhookBody', 'Data', 'Event', 'Event1', 'EventResourceEnum', 'EventTypeEnum', 'EventsApi', 'GetRoomMeetingDetailsResponse', 'Inputs', 'ListEventsResponse', 'ListMembershipsResponse', 'ListRoomTabsResponse', 'ListRoomsResponse', 'ListTeamMembershipsResponse', 'ListTeamsResponse', 'ListWebhooksResponse', 'Membership', 'MembershipsApi', 'Resource', 'Room', 'RoomTab', 'RoomTabsApi', 'RoomType', 'RoomsApi', 'Status', 'Team', 'TeamMembership', 'TeamMembershipsApi', 'TeamsApi', 'Webhook', 'WebhooksApi']
+__all__ = ['Actions', 'AdaptiveCard', 'Attachment', 'AttachmentActionsApi', 'Body', 'CreateAttachmentActionBody', 'CreateAttachmentActionResponse', 'CreateMembershipBody', 'CreateMessageResponse', 'CreatePersonBody', 'CreateRoomBody', 'CreateRoomTabBody', 'CreateTeamBody', 'CreateTeamMembershipBody', 'CreateWebhookBody', 'Data', 'DirectMessage', 'EditMessageBody', 'Event', 'Event1', 'EventResourceEnum', 'EventTypeEnum', 'EventsApi', 'GetRoomMeetingDetailsResponse', 'Inputs', 'ListDirectMessagesResponse', 'ListEventsResponse', 'ListMembershipsResponse', 'ListMessage', 'ListMessagesResponse', 'ListPeopleResponse', 'ListRoomTabsResponse', 'ListRoomsResponse', 'ListTeamMembershipsResponse', 'ListTeamsResponse', 'ListWebhooksResponse', 'Membership', 'MembershipsApi', 'MessagesApi', 'PeopleApi', 'Person', 'PhoneNumbers', 'Resource', 'Room', 'RoomTab', 'RoomTabsApi', 'RoomType', 'RoomsApi', 'SipAddressesType', 'Status', 'Status5', 'Team', 'TeamMembership', 'TeamMembershipsApi', 'TeamsApi', 'Type', 'Webhook', 'WebhooksApi']
 
 
 class Inputs(ApiModel):
@@ -356,6 +356,708 @@ class MembershipsApi(ApiChild, base='memberships'):
         super().delete(url=url)
         return
 
+class Body(ApiModel):
+    #: Possible values: TextBlock
+    type: Optional[str]
+    #: Possible values: Adaptive Cards
+    text: Optional[str]
+    #: Possible values: large
+    size: Optional[str]
+
+
+class Actions(ApiModel):
+    #: Possible values: Action.OpenUrl
+    type: Optional[str]
+    #: Possible values: http://adaptivecards.io
+    url: Optional[str]
+    #: Possible values: Learn More
+    title: Optional[str]
+
+
+class AdaptiveCard(ApiModel):
+    #: Must be AdaptiveCard.
+    type: Optional[str]
+    #: Adaptive Card schema version.
+    version: Optional[str]
+    #: The card's elements.
+    body: Optional[list[Body]]
+    #: The card's actions.
+    actions: Optional[list[Actions]]
+
+
+class Attachment(ApiModel):
+    #: The content type of the attachment.
+    content_type: Optional[str]
+    #: Adaptive Card content.
+    content: Optional[AdaptiveCard]
+
+
+class EditMessageBody(ApiModel):
+    #: The room ID of the message.
+    room_id: Optional[str]
+    #: The message, in plain text. If markdown is specified this parameter may be optionally used to provide alternate text for UI clients that do not support rich text. The maximum message length is 7439 bytes.
+    text: Optional[str]
+    #: The message, in Markdown format. If this attribute is set ensure that the request does NOT contain an html attribute.
+    markdown: Optional[str]
+
+
+class ListMessage(EditMessageBody):
+    #: The unique identifier for the message.
+    id: Optional[str]
+    #: The unique identifier for the parent message.
+    parent_id: Optional[str]
+    #: The type of room.
+    room_type: Optional[RoomType]
+    #: The text content of the message, in HTML format. This read-only property is used by the Webex clients.
+    html: Optional[str]
+    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads, see Message Attachments.
+    files: Optional[list[str]]
+    #: The person ID of the message author.
+    person_id: Optional[str]
+    #: The email address of the message author.
+    person_email: Optional[str]
+    #: People IDs for anyone mentioned in the message.
+    mentioned_people: Optional[list[str]]
+    #: Group names for the groups mentioned in the message.
+    mentioned_groups: Optional[list[str]]
+    #: Message content attachments attached to the message. See the Cards Guide for more information.
+    attachments: Optional[list[Attachment]]
+    #: The date and time the message was created.
+    created: Optional[str]
+    #: The date and time that the message was last edited by the author. This field is only present when the message contents have changed.
+    updated: Optional[str]
+    #: true if the audio file is a voice clip recorded by the client; false if the audio file is a standard audio file not posted using the voice clip feature.
+    is_voice_clip: Optional[bool]
+
+
+class DirectMessage(EditMessageBody):
+    #: The unique identifier for the message.
+    id: Optional[str]
+    #: The unique identifier for the parent message.
+    parent_id: Optional[str]
+    #: The type of room. Will always be direct.
+    room_type: Optional[str]
+    #: The text content of the message, in HTML format. This read-only property is used by the Webex clients.
+    html: Optional[str]
+    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads, see Message Attachments.
+    files: Optional[list[str]]
+    #: The person ID of the message author.
+    person_id: Optional[str]
+    #: The email address of the message author.
+    person_email: Optional[str]
+    #: Message content attachments attached to the message. See the Cards Guide for more information.
+    attachments: Optional[list[Attachment]]
+    #: The date and time the message was created.
+    created: Optional[str]
+    #: The date and time that the message was last edited by the author. This field is only present when the message contents have changed.
+    updated: Optional[str]
+    #: True if the audio file is a voice clip recorded by the client; false if the audio file is a standard audio file not posted using the voice clip feature.
+    is_voice_clip: Optional[bool]
+
+
+class ListMessagesResponse(ApiModel):
+    items: Optional[list[ListMessage]]
+
+
+class ListDirectMessagesResponse(ApiModel):
+    items: Optional[list[DirectMessage]]
+
+
+class CreateMessageBody(EditMessageBody):
+    #: The parent message to reply to.
+    parent_id: Optional[str]
+    #: The person ID of the recipient when sending a private 1:1 message.
+    to_person_id: Optional[str]
+    #: The email address of the recipient when sending a private 1:1 message.
+    to_person_email: Optional[str]
+    #: The public URL to a binary file to be posted into the room. Only one file is allowed per message. Uploaded files are automatically converted into a format that all Webex clients can render. For the supported media types and the behavior of uploads, see the Message Attachments Guide.
+    #: Possible values: http://www.example.com/images/media.png
+    files: Optional[list[str]]
+    #: Content attachments to attach to the message. Only one card per message is supported. See the Cards Guide for more information.
+    attachments: Optional[list[Attachment]]
+
+
+class CreateMessageResponse(ListMessage):
+    #: The person ID of the recipient when sending a private 1:1 message.
+    to_person_id: Optional[str]
+    #: The email address of the recipient when sending a private 1:1 message.
+    to_person_email: Optional[str]
+
+
+class MessagesApi(ApiChild, base='messages'):
+    """
+    Messages are how you communicate in a room. In Webex, each message is displayed on its own line along with a timestamp and sender information. Use this API to list, create, update, and delete messages.
+    Message can contain plain text, rich text, and a file attachment.
+    Just like in the Webex app, you must be a member of the room in order to target it with this API.
+    """
+
+    def list(self, room_id: str, parent_id: str = None, mentioned_people: List[str] = None, before: str = None, before_message: str = None, **params) -> Generator[ListMessagesResponse, None, None]:
+        """
+        Lists all messages in a room.  Each message will include content attachments if present.
+        The list sorts the messages in descending order by creation date.
+        Long result sets will be split into pages.
+
+        :param room_id: List messages in a room, by ID.
+        :type room_id: str
+        :param parent_id: List messages with a parent, by ID.
+        :type parent_id: str
+        :param mentioned_people: List messages with these people mentioned, by ID. Use me as a shorthand for the current API user. Only me or the person ID of the current user may be specified. Bots must include this parameter to list messages in group rooms (spaces).
+        :type mentioned_people: List[str]
+        :param before: List messages sent before a date and time.
+        :type before: str
+        :param before_message: List messages sent before a message, by ID.
+        :type before_message: str
+        """
+        if room_id is not None:
+            params['roomId'] = room_id
+        if parent_id is not None:
+            params['parentId'] = parent_id
+        if mentioned_people is not None:
+            params['mentionedPeople'] = mentioned_people
+        if before is not None:
+            params['before'] = before
+        if before_message is not None:
+            params['beforeMessage'] = before_message
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=ListMessagesResponse, params=params)
+
+    def list_direct(self, parent_id: str = None, person_id: str = None, person_email: str = None, **params) -> Generator[ListDirectMessagesResponse, None, None]:
+        """
+        List all messages in a 1:1 (direct) room. Use the personId or personEmail query parameter to specify the room. Each message will include content attachments if present.
+        The list sorts the messages in descending order by creation date.
+
+        :param parent_id: List messages with a parent, by ID.
+        :type parent_id: str
+        :param person_id: List messages in a 1:1 room, by person ID.
+        :type person_id: str
+        :param person_email: List messages in a 1:1 room, by person email.
+        :type person_email: str
+        """
+        if parent_id is not None:
+            params['parentId'] = parent_id
+        if person_id is not None:
+            params['personId'] = person_id
+        if person_email is not None:
+            params['personEmail'] = person_email
+        url = self.ep('direct')
+        return self.session.follow_pagination(url=url, model=ListDirectMessagesResponse, params=params)
+
+    def create(self, room_id: str = None, text: str = None, markdown: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None, files: List[str] = None, attachments: Attachment = None) -> CreateMessageResponse:
+        """
+        Post a plain text or rich text message, and optionally, a file attachment attachment, to a room.
+        The files parameter is an array, which accepts multiple values to allow for future expansion, but currently only one file may be included with the message. File previews are only rendered for attachments of 1MB or less.
+
+        :param room_id: The room ID of the message.
+        :type room_id: str
+        :param text: The message, in plain text. If markdown is specified this parameter may be optionally used to provide alternate text for UI clients that do not support rich text. The maximum message length is 7439 bytes.
+        :type text: str
+        :param markdown: The message, in Markdown format. If this attribute is set ensure that the request does NOT contain an html attribute.
+        :type markdown: str
+        :param parent_id: The parent message to reply to.
+        :type parent_id: str
+        :param to_person_id: The person ID of the recipient when sending a private 1:1 message.
+        :type to_person_id: str
+        :param to_person_email: The email address of the recipient when sending a private 1:1 message.
+        :type to_person_email: str
+        :param files: The public URL to a binary file to be posted into the room. Only one file is allowed per message. Uploaded files are automatically converted into a format that all Webex clients can render. For the supported media types and the behavior of uploads, see the Message Attachments Guide.
+Possible values: http://www.example.com/images/media.png
+        :type files: List[str]
+        :param attachments: Content attachments to attach to the message. Only one card per message is supported. See the Cards Guide for more information.
+        :type attachments: Attachment
+        """
+        body = CreateMessageBody()
+        if room_id is not None:
+            body.room_id = room_id
+        if text is not None:
+            body.text = text
+        if markdown is not None:
+            body.markdown = markdown
+        if parent_id is not None:
+            body.parent_id = parent_id
+        if to_person_id is not None:
+            body.to_person_id = to_person_id
+        if to_person_email is not None:
+            body.to_person_email = to_person_email
+        if files is not None:
+            body.files = files
+        if attachments is not None:
+            body.attachments = attachments
+        url = self.ep()
+        data = super().post(url=url, data=body.json())
+        return CreateMessageResponse.parse_obj(data)
+
+    def edit(self, message_id: str, room_id: str = None, text: str = None, markdown: str = None) -> ListMessage:
+        """
+        Update a message you have posted not more than 10 times.
+        Specify the messageId of the message you want to edit.
+        Edits of messages containing files or attachments are not currently supported.
+        If a user attempts to edit a message containing files or attachments a 400 Bad Request will be returned by the API with a message stating that the feature is currently unsupported.
+        There is also a maximum number of times a user can edit a message. The maximum currently supported is 10 edits per message.
+            If a user attempts to edit a message greater that the maximum times allowed the API will return 400 Bad Request with a message stating the edit limit has been reached.
+        While only the roomId and text or markdown attributes are required in the request body, a common pattern for editing message is to first call GET /messages/{id} for the message you wish to edit and to then update the text or markdown attribute accordingly, passing the updated message object in the request body of the PUT /messages/{id} request.
+        When this pattern is used on a message that included markdown, the html attribute must be deleted prior to making the PUT request.
+
+        :param message_id: The unique identifier for the message.
+        :type message_id: str
+        :param room_id: The room ID of the message.
+        :type room_id: str
+        :param text: The message, in plain text. If markdown is specified this parameter may be optionally used to provide alternate text for UI clients that do not support rich text. The maximum message length is 7439 bytes.
+        :type text: str
+        :param markdown: The message, in Markdown format. If this attribute is set ensure that the request does NOT contain an html attribute.
+        :type markdown: str
+        """
+        body = EditMessageBody()
+        if room_id is not None:
+            body.room_id = room_id
+        if text is not None:
+            body.text = text
+        if markdown is not None:
+            body.markdown = markdown
+        url = self.ep(f'{message_id}')
+        data = super().put(url=url, data=body.json())
+        return ListMessage.parse_obj(data)
+
+    def details(self, message_id: str) -> ListMessage:
+        """
+        Show details for a message, by message ID.
+        Specify the message ID in the messageId parameter in the URI.
+
+        :param message_id: The unique identifier for the message.
+        :type message_id: str
+        """
+        url = self.ep(f'{message_id}')
+        data = super().get(url=url)
+        return ListMessage.parse_obj(data)
+
+    def delete(self, message_id: str):
+        """
+        Delete a message, by message ID.
+        Specify the message ID in the messageId parameter in the URI.
+
+        :param message_id: The unique identifier for the message.
+        :type message_id: str
+        """
+        url = self.ep(f'{message_id}')
+        super().delete(url=url)
+        return
+
+class PhoneNumbers(ApiModel):
+    #: The type of phone number.
+    #: Possible values: work, mobile, fax
+    type: Optional[str]
+    #: The phone number.
+    #: Possible values: +1 408 526 7209
+    value: Optional[str]
+
+
+class SipAddressesType(PhoneNumbers):
+    primary: Optional[bool]
+
+
+class Status5(str, Enum):
+    #: The webhook is active.
+    active = 'active'
+    #: The webhook is inactive.
+    inactive = 'inactive'
+
+
+class Status(Status5):
+    #: The user is in a call
+    call = 'call'
+    #: The user has manually set their status to "Do Not Disturb"
+    do_not_disturb = 'DoNotDisturb'
+    #: The user is in a meeting
+    meeting = 'meeting'
+    #: The user or a Hybrid Calendar service has indicated that they are "Out of Office"
+    out_of_office = 'OutOfOffice'
+    #: The user has never logged in; a status cannot be determined
+    pending = 'pending'
+    #: The user is sharing content
+    presenting = 'presenting'
+    #: The user’s status could not be determined
+    unknown = 'unknown'
+
+
+class Type(str, Enum):
+    #: Account belongs to a person
+    person = 'person'
+    #: Account is a bot user
+    bot = 'bot'
+    #: Account is a guest user
+    appuser = 'appuser'
+
+
+class CreatePersonBody(ApiModel):
+    #: The email addresses of the person. Only one email address is allowed per person.
+    #: Possible values: john.andersen@example.com
+    emails: Optional[list[str]]
+    #: Phone numbers for the person. Only settable for Webex Calling. Requires a Webex Calling license.
+    phone_numbers: Optional[list[PhoneNumbers]]
+    #: Webex Calling extension of the person. This is only settable for a person with a Webex Calling license.
+    extension: Optional[str]
+    #: The ID of the location for this person.
+    location_id: Optional[str]
+    #: The full name of the person.
+    display_name: Optional[str]
+    #: The first name of the person.
+    first_name: Optional[str]
+    #: The last name of the person.
+    last_name: Optional[str]
+    #: The URL to the person's avatar in PNG format.
+    avatar: Optional[str]
+    #: The ID of the organization to which this person belongs.
+    org_id: Optional[str]
+    #: An array of role strings representing the roles to which this admin user belongs.
+    #: Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh, Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
+    roles: Optional[list[str]]
+    #: An array of license strings allocated to this person.
+    #: Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh, Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
+    licenses: Optional[list[str]]
+    #: The business department the user belongs to.
+    department: Optional[str]
+    #: A manager identifier.
+    manager: Optional[str]
+    #: Person Id of the manager
+    manager_id: Optional[str]
+    #: the person's title
+    title: Optional[str]
+    #: Person's address
+    #: Possible values: , country: `US`, locality: `Charlotte`, region: `North Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode: `99212`
+    addresses: Optional[list[object]]
+    #: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg: mysite.webex.com#attendee)
+    #: Possible values: mysite.webex.com#attendee
+    site_urls: Optional[list[str]]
+
+
+class Person(CreatePersonBody):
+    #: A unique identifier for the person.
+    id: Optional[str]
+    #: The nickname of the person if configured. If no nickname is configured for the person, this field will not be present.
+    nick_name: Optional[str]
+    #: The date and time the person was created.
+    created: Optional[str]
+    #: The date and time the person was last changed.
+    last_modified: Optional[str]
+    #: The time zone of the person if configured. If no timezone is configured on the account, this field will not be present
+    timezone: Optional[str]
+    #: The date and time of the person's last activity within Webex. This will only be returned for people within your organization or an organization you manage. Presence information will not be shown if the authenticated user has disabled status sharing.
+    last_activity: Optional[str]
+    #: The users sip addresses
+    sip_addresses: Optional[list[SipAddressesType]]
+    #: The current presence status of the person. This will only be returned for people within your organization or an organization you manage. Presence information will not be shown if the authenticated user has disabled status sharing.
+    status: Optional[Status]
+    #: Whether or not an invite is pending for the user to complete account activation. This property is only returned if the authenticated user is an admin user for the person's organization.
+    invite_pending: Optional[bool]
+    #: Whether or not the user is allowed to use Webex. This property is only returned if the authenticated user is an admin user for the person's organization.
+    login_enabled: Optional[bool]
+    #: The type of person account, such as person or bot.
+    type: Optional[Type]
+
+
+class ListPeopleResponse(ApiModel):
+    #: An array of person objects.
+    items: Optional[list[Person]]
+    #: An array of person IDs that could not be found.
+    not_found_ids: Optional[list[str]]
+
+
+class UpdatePersonBody(CreatePersonBody):
+    #: The nickname of the person if configured. Set to the firstName automatically in update request.
+    nick_name: Optional[str]
+    #: Whether or not the user is allowed to use Webex. This property is only accessible if the authenticated user is an admin user for the person's organization.
+    login_enabled: Optional[bool]
+
+
+class PeopleApi(ApiChild, base='people'):
+    """
+    People are registered users of Webex. Searching and viewing People requires an auth token with a scope of spark:people_read. Viewing the list of all People in your Organization requires an administrator auth token with spark-admin:people_read scope. Adding, updating, and removing People requires an administrator auth token with the spark-admin:people_write and spark-admin:people_read scope.
+    A person's call settings are for Webex Calling and necessitate Webex Calling licenses.
+    To learn more about managing people in a room see the Memberships API. For information about how to allocate Hybrid Services licenses to people, see the Managing Hybrid Services guide.
+    """
+
+    def list_people(self, email: str = None, display_name: str = None, id: str = None, org_id: str = None, calling_data: bool = None, location_id: str = None, **params) -> Generator[Person, None, None]:
+        """
+        List people in your organization. For most users, either the email or displayName parameter is required. Admin users can omit these fields and list all users in their organization.
+        Response properties associated with a user's presence status, such as status or lastActivity, will only be returned for people within your organization or an organization you manage. Presence information will not be returned if the authenticated user has disabled status sharing.
+        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData parameter as true. Admin users can list all users in a location or with a specific phone number. Admin users will receive an enriched payload with additional administrative fields like liceneses,roles etc. These fields are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=
+        Lookup by email is only supported for people within the same org or where a partner admin relationship is in place.
+        Long result sets will be split into pages.
+
+        :param email: List people with this email address. For non-admin requests, either this or displayName are required. With the exception of partner admins and a managed org relationship, people lookup by email is only available for users in the same org.
+        :type email: str
+        :param display_name: List people whose name starts with this string. For non-admin requests, either this or email are required.
+        :type display_name: str
+        :param id: List people by ID. Accepts up to 85 person IDs separated by commas. If this parameter is provided then presence information (such as the lastActivity or status properties) will not be included in the response.
+        :type id: str
+        :param org_id: List people in this organization. Only admin users of another organization (such as partners) may use this parameter.
+        :type org_id: str
+        :param calling_data: Include Webex Calling user details in the response.
+        :type calling_data: bool
+        :param location_id: List people present in this location.
+        :type location_id: str
+        """
+        if email is not None:
+            params['email'] = email
+        if display_name is not None:
+            params['displayName'] = display_name
+        if id is not None:
+            params['id'] = id
+        if org_id is not None:
+            params['orgId'] = org_id
+        if calling_data is not None:
+            params['callingData'] = calling_data
+        if location_id is not None:
+            params['locationId'] = location_id
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=Person, params=params)
+
+    def create(self, emails: List[str], calling_data: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: List[object] = None, site_urls: List[str] = None) -> Person:
+        """
+        Create a new user account for a given organization. Only an admin can create a new user account.
+        At least one of the following body parameters is required to create a new user: displayName, firstName, lastName.
+        Currently, users may have only one email address associated with their account. The emails parameter is an array, which accepts multiple values to allow for future expansion, but currently only one email address will be used for the new user.
+        Admin users can include Webex calling (BroadCloud) user details in the response by specifying callingData parameter as true.
+        When doing attendee management, append #attendee to the siteUrl parameter (e.g. mysite.webex.com#attendee) to make the new user an attendee for a site.
+
+        :param emails: The email addresses of the person. Only one email address is allowed per person.
+Possible values: john.andersen@example.com
+        :type emails: List[str]
+        :param calling_data: Include Webex Calling user details in the response.
+        :type calling_data: bool
+        :param phone_numbers: Phone numbers for the person. Only settable for Webex Calling. Requires a Webex Calling license.
+        :type phone_numbers: PhoneNumbers
+        :param extension: Webex Calling extension of the person. This is only settable for a person with a Webex Calling license.
+        :type extension: str
+        :param location_id: The ID of the location for this person.
+        :type location_id: str
+        :param display_name: The full name of the person.
+        :type display_name: str
+        :param first_name: The first name of the person.
+        :type first_name: str
+        :param last_name: The last name of the person.
+        :type last_name: str
+        :param avatar: The URL to the person's avatar in PNG format.
+        :type avatar: str
+        :param org_id: The ID of the organization to which this person belongs.
+        :type org_id: str
+        :param roles: An array of role strings representing the roles to which this admin user belongs.
+Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh, Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
+        :type roles: List[str]
+        :param licenses: An array of license strings allocated to this person.
+Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh, Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
+        :type licenses: List[str]
+        :param department: The business department the user belongs to.
+        :type department: str
+        :param manager: A manager identifier.
+        :type manager: str
+        :param manager_id: Person Id of the manager
+        :type manager_id: str
+        :param title: the person's title
+        :type title: str
+        :param addresses: Person's address
+Possible values: , country: `US`, locality: `Charlotte`, region: `North Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode: `99212`
+        :type addresses: List[object]
+        :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg: mysite.webex.com#attendee)
+Possible values: mysite.webex.com#attendee
+        :type site_urls: List[str]
+        """
+        params = {}
+        if calling_data is not None:
+            params['callingData'] = calling_data
+        body = CreatePersonBody()
+        if emails is not None:
+            body.emails = emails
+        if phone_numbers is not None:
+            body.phone_numbers = phone_numbers
+        if extension is not None:
+            body.extension = extension
+        if location_id is not None:
+            body.location_id = location_id
+        if display_name is not None:
+            body.display_name = display_name
+        if first_name is not None:
+            body.first_name = first_name
+        if last_name is not None:
+            body.last_name = last_name
+        if avatar is not None:
+            body.avatar = avatar
+        if org_id is not None:
+            body.org_id = org_id
+        if roles is not None:
+            body.roles = roles
+        if licenses is not None:
+            body.licenses = licenses
+        if department is not None:
+            body.department = department
+        if manager is not None:
+            body.manager = manager
+        if manager_id is not None:
+            body.manager_id = manager_id
+        if title is not None:
+            body.title = title
+        if addresses is not None:
+            body.addresses = addresses
+        if site_urls is not None:
+            body.site_urls = site_urls
+        url = self.ep()
+        data = super().post(url=url, params=params, data=body.json())
+        return Person.parse_obj(data)
+
+    def details(self, person_id: str, calling_data: bool = None) -> Person:
+        """
+        Shows details for a person, by ID.
+        Response properties associated with a user's presence status, such as status or lastActivity, will only be displayed for people within your organization or an organization you manage. Presence information will not be shown if the authenticated user has disabled status sharing.
+        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData parameter as true.
+        Specify the person ID in the personId parameter in the URI.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param calling_data: Include Webex Calling user details in the response.
+        :type calling_data: bool
+        """
+        params = {}
+        if calling_data is not None:
+            params['callingData'] = calling_data
+        url = self.ep(f'{person_id}')
+        data = super().get(url=url, params=params)
+        return Person.parse_obj(data)
+
+    def update(self, person_id: str, emails: List[str], calling_data: bool = None, show_all_types: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: List[object] = None, site_urls: List[str] = None, nick_name: str = None, login_enabled: bool = None) -> Person:
+        """
+        Update details for a person, by ID.
+        Specify the person ID in the personId parameter in the URI. Only an admin can update a person details.
+        Include all details for the person. This action expects all user details to be present in the request. A common approach is to first GET the person's details, make changes, then PUT both the changed and unchanged values.
+        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData parameter as true.
+        Note: The locationId can only be set when adding a calling license to a user. It cannot be changed if a user is already an existing calling user.
+        When doing attendee management, to update a user from host role to an attendee for a site append #attendee to the respective siteUrl and remove the meeting host license for this site from the license array.
+        To update a person from an attendee role to a host for a site, add the meeting license for this site in the meeting array, and remove that site from the siteurl parameter.
+        To remove the attendee privilege for a user on a meeting site, remove the sitename#attendee from the siteUrls array. The showAllTypes parameter must be set to true.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param emails: The email addresses of the person. Only one email address is allowed per person.
+Possible values: john.andersen@example.com
+        :type emails: List[str]
+        :param calling_data: Include Webex Calling user details in the response.
+        :type calling_data: bool
+        :param show_all_types: Include additional user data like #attendee role
+        :type show_all_types: bool
+        :param phone_numbers: Phone numbers for the person. Only settable for Webex Calling. Requires a Webex Calling license.
+        :type phone_numbers: PhoneNumbers
+        :param extension: Webex Calling extension of the person. This is only settable for a person with a Webex Calling license.
+        :type extension: str
+        :param location_id: The ID of the location for this person.
+        :type location_id: str
+        :param display_name: The full name of the person.
+        :type display_name: str
+        :param first_name: The first name of the person.
+        :type first_name: str
+        :param last_name: The last name of the person.
+        :type last_name: str
+        :param avatar: The URL to the person's avatar in PNG format.
+        :type avatar: str
+        :param org_id: The ID of the organization to which this person belongs.
+        :type org_id: str
+        :param roles: An array of role strings representing the roles to which this admin user belongs.
+Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh, Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
+        :type roles: List[str]
+        :param licenses: An array of license strings allocated to this person.
+Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh, Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
+        :type licenses: List[str]
+        :param department: The business department the user belongs to.
+        :type department: str
+        :param manager: A manager identifier.
+        :type manager: str
+        :param manager_id: Person Id of the manager
+        :type manager_id: str
+        :param title: the person's title
+        :type title: str
+        :param addresses: Person's address
+Possible values: , country: `US`, locality: `Charlotte`, region: `North Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode: `99212`
+        :type addresses: List[object]
+        :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg: mysite.webex.com#attendee)
+Possible values: mysite.webex.com#attendee
+        :type site_urls: List[str]
+        :param nick_name: The nickname of the person if configured. Set to the firstName automatically in update request.
+        :type nick_name: str
+        :param login_enabled: Whether or not the user is allowed to use Webex. This property is only accessible if the authenticated user is an admin user for the person's organization.
+        :type login_enabled: bool
+        """
+        params = {}
+        if calling_data is not None:
+            params['callingData'] = calling_data
+        if show_all_types is not None:
+            params['showAllTypes'] = show_all_types
+        body = UpdatePersonBody()
+        if emails is not None:
+            body.emails = emails
+        if phone_numbers is not None:
+            body.phone_numbers = phone_numbers
+        if extension is not None:
+            body.extension = extension
+        if location_id is not None:
+            body.location_id = location_id
+        if display_name is not None:
+            body.display_name = display_name
+        if first_name is not None:
+            body.first_name = first_name
+        if last_name is not None:
+            body.last_name = last_name
+        if avatar is not None:
+            body.avatar = avatar
+        if org_id is not None:
+            body.org_id = org_id
+        if roles is not None:
+            body.roles = roles
+        if licenses is not None:
+            body.licenses = licenses
+        if department is not None:
+            body.department = department
+        if manager is not None:
+            body.manager = manager
+        if manager_id is not None:
+            body.manager_id = manager_id
+        if title is not None:
+            body.title = title
+        if addresses is not None:
+            body.addresses = addresses
+        if site_urls is not None:
+            body.site_urls = site_urls
+        if nick_name is not None:
+            body.nick_name = nick_name
+        if login_enabled is not None:
+            body.login_enabled = login_enabled
+        url = self.ep(f'{person_id}')
+        data = super().put(url=url, params=params, data=body.json())
+        return Person.parse_obj(data)
+
+    def delete(self, person_id: str):
+        """
+        Remove a person from the system. Only an admin can remove a person.
+        Specify the person ID in the personId parameter in the URI.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        """
+        url = self.ep(f'{person_id}')
+        super().delete(url=url)
+        return
+
+    def my_own_details(self, calling_data: bool = None) -> Person:
+        """
+        Get profile details for the authenticated user. This is the same as GET /people/{personId} using the Person ID associated with your Auth token.
+        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData parameter as true.
+
+        :param calling_data: Include Webex Calling user details in the response.
+        :type calling_data: bool
+        """
+        params = {}
+        if calling_data is not None:
+            params['callingData'] = calling_data
+        url = self.ep('me')
+        data = super().get(url=url, params=params)
+        return Person.parse_obj(data)
+
 class CreateRoomTabBody(ApiModel):
     #: A unique identifier for the room.
     room_id: Optional[str]
@@ -579,7 +1281,7 @@ Possible values: id, lastactivity, created
         """
         Creates a room. The authenticated user is automatically added as a member of the room. See the Memberships API to learn how to add more people to the room.
         To create a 1:1 room, use the Create Messages endpoint to send a message directly to another person by using the toPersonId or toPersonEmail parameters.
-        Bots are not able to create and classify a room. A bot may update a space classification after a person of the same owning organization joined the space as the first human user.
+        Bots are not able to create and simultaneously classify a room. A bot may update a space classification after a person of the same owning organization joined the space as the first human user.
         A space can only be put into announcement mode when it is locked.
 
         :param title: A user-friendly name for the room.
@@ -646,7 +1348,8 @@ Possible values: id, lastactivity, created
         Updates details for a room, by ID.
         Specify the room ID in the roomId parameter in the URI.
         A space can only be put into announcement mode when it is locked.
-        Any space participant or compliance officer can convert a space from public to private. Conversion from private to public is currently not supported. To remove a description please use a space character   by itself.
+        Any space participant or compliance officer can convert a space from public to private. Only a compliance officer can convert a space from private to public and only if the space is classified with the lowest category (usually public), and the space has a description.
+        To remove a description please use a space character   by itself.
 
         :param room_id: The unique identifier for the room.
         :type room_id: str
@@ -921,13 +1624,6 @@ class TeamsApi(ApiChild, base='teams'):
         super().delete(url=url)
         return
 
-class Status(str, Enum):
-    #: The webhook is active.
-    active = 'active'
-    #: The webhook is inactive.
-    inactive = 'inactive'
-
-
 class Resource(str, Enum):
     #: The Attachment Actions resource.
     attachment_actions = 'attachmentActions'
@@ -977,7 +1673,7 @@ class Webhook(CreateWebhookBody):
     #: A unique identifier for the webhook.
     id: Optional[str]
     #: The status of the webhook. Use active to reactivate a disabled webhook.
-    status: Optional[Status]
+    status: Optional[Status5]
     #: The date and time the webhook was created.
     created: Optional[str]
 
@@ -996,7 +1692,7 @@ class UpdateWebhookBody(ApiModel):
     #: Specified when creating an org/admin level webhook. Supported for meetings, recordings, meetingParticipants and meetingTranscripts resources.
     owned_by: Optional[str]
     #: The status of the webhook. Use "active" to reactivate a disabled webhook.
-    status: Optional[Status]
+    status: Optional[Status5]
 
 
 class WebhooksApi(ApiChild, base='webhooks'):
@@ -1071,7 +1767,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
         data = super().get(url=url)
         return Webhook.parse_obj(data)
 
-    def update(self, webhook_id: str, name: str, target_url: str, secret: str = None, owned_by: str = None, status: Status = None) -> Webhook:
+    def update(self, webhook_id: str, name: str, target_url: str, secret: str = None, owned_by: str = None, status: Status5 = None) -> Webhook:
         """
         Updates a webhook, by ID. You cannot use this call to deactivate a webhook, only to activate a webhook that was auto deactivated. 
         The fields that can be updated are name, targetURL, secret and status. All other fields, if supplied, are ignored.
@@ -1088,7 +1784,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :param owned_by: Specified when creating an org/admin level webhook. Supported for meetings, recordings, meetingParticipants and meetingTranscripts resources.
         :type owned_by: str
         :param status: The status of the webhook. Use "active" to reactivate a disabled webhook.
-        :type status: Status
+        :type status: Status5
         """
         body = UpdateWebhookBody()
         if name is not None:

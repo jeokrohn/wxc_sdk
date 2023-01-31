@@ -7,7 +7,7 @@ from typing import List, Optional
 from pydantic import Field
 
 
-__all__ = ['CreateTrackingCodeBody', 'GetTrackingCodeItemForUserObject', 'GetTrackingCodeObject', 'GetUsersTrackingCodesResponse', 'HostProfileCode', 'InputMode', 'ListTrackingCodesResponse', 'OptionsForTrackingCodeObject', 'ScheduleStartCodeObject', 'Service', 'TrackingCodesApi', 'Type', 'UpdateTrackingCodeItemForUserObject']
+__all__ = ['CreateTrackingCodeBody', 'GetTrackingCodeItemForUserObject', 'GetTrackingCodeObject', 'GetUserTrackingCodesResponse', 'HostProfileCode', 'InputMode', 'ListTrackingCodesResponse', 'OptionsForTrackingCodeObject', 'ScheduleStartCodeObject', 'Service', 'TrackingCodesApi', 'Type', 'UpdateTrackingCodeItemForUserObject']
 
 
 class OptionsForTrackingCodeObject(ApiModel):
@@ -108,7 +108,7 @@ class GetTrackingCodeItemForUserObject(UpdateTrackingCodeItemForUserObject):
     id: Optional[str]
 
 
-class GetUsersTrackingCodesResponse(ApiModel):
+class GetUserTrackingCodesResponse(ApiModel):
     #: Site URL for the tracking code.
     site_url: Optional[str]
     #: Unique identifier for the user.
@@ -124,7 +124,7 @@ class ListTrackingCodesResponse(ApiModel):
     items: Optional[list[GetTrackingCodeObject]]
 
 
-class UpdateUsersTrackingCodesBody(ApiModel):
+class UpdateUserTrackingCodesBody(ApiModel):
     #: Site URL for the tracking code.
     site_url: Optional[str]
     #: Unique identifier for the user. At least one parameter of personId or email is required. personId must precede email if both are specified.
@@ -138,6 +138,7 @@ class UpdateUsersTrackingCodesBody(ApiModel):
 class TrackingCodesApi(ApiChild, base=''):
     """
     Tracking codes are alphanumeric codes that identify categories of users on a Webex site. With tracking codes, you can analyze usage by various groups within an organization.
+    The authenticated user calling this API must have an Administrator role with the meeting:admin_schedule_write and meeting:admin_schedule_read scopes.
     """
 
     def list_codes(self, site_url: str = None, **params) -> Generator[GetTrackingCodeObject, None, None]:
@@ -252,7 +253,7 @@ class TrackingCodesApi(ApiChild, base=''):
         super().delete(url=url, params=params)
         return
 
-    def users_codes(self, site_url: str = None, person_id: str = None) -> GetUsersTrackingCodesResponse:
+    def user_codes(self, site_url: str = None, person_id: str = None) -> GetUserTrackingCodesResponse:
         """
         Lists user's tracking codes by an admin user.
 
@@ -268,9 +269,9 @@ class TrackingCodesApi(ApiChild, base=''):
             params['personId'] = person_id
         url = self.ep('https: //webexapis.com/v1/admin/meeting/userconfig/trackingCodes')
         data = super().get(url=url, params=params)
-        return GetUsersTrackingCodesResponse.parse_obj(data)
+        return GetUserTrackingCodesResponse.parse_obj(data)
 
-    def update_users_codes(self, site_url: str, person_id: str = None, email: str = None, tracking_codes: UpdateTrackingCodeItemForUserObject = None) -> GetUsersTrackingCodesResponse:
+    def update_user_codes(self, site_url: str, person_id: str = None, email: str = None, tracking_codes: UpdateTrackingCodeItemForUserObject = None) -> GetUserTrackingCodesResponse:
         """
         Updates tracking codes for a specified user by an admin user.
 
@@ -283,7 +284,7 @@ class TrackingCodesApi(ApiChild, base=''):
         :param tracking_codes: Tracking code information for updates.
         :type tracking_codes: UpdateTrackingCodeItemForUserObject
         """
-        body = UpdateUsersTrackingCodesBody()
+        body = UpdateUserTrackingCodesBody()
         if site_url is not None:
             body.site_url = site_url
         if person_id is not None:
@@ -294,4 +295,4 @@ class TrackingCodesApi(ApiChild, base=''):
             body.tracking_codes = tracking_codes
         url = self.ep('https: //webexapis.com/v1/admin/meeting/userconfig/trackingCodes')
         data = super().put(url=url, data=body.json())
-        return GetUsersTrackingCodesResponse.parse_obj(data)
+        return GetUserTrackingCodesResponse.parse_obj(data)

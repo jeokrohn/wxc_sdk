@@ -4348,8 +4348,9 @@ docs:
       ID.
 
       Details on the fields returned from this API and their potential values are
-      available at https://help.webex.com/en-us/article/nmug598/Reports-for-Your-Cloud-Collaboration-Portfolio
-      under the section Detailed Call History.'
+      available at https://help.webex.com/en-us/article/nmug598/Reports-for-Your-Cloud-Collaboration-Portfolio.
+      Select the Report templates tab, and then in the Webex Calling reports section
+      see Calling Detailed Call History Report.'
     header: Webex Calling Detailed Call History
     methods:
     - doc: 'Provides Webex Calling Detailed Call History data for your organization.
@@ -4438,75 +4439,9 @@ docs:
             type_spec: null
           - doc: 'Type of call. For example:'
             name: Call type
-            param_attrs:
-            - doc: ''
-              name: SIP_MEETING
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: SIP_INTERNATIONAL
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: SIP_SHORTCODE
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: SIP_INBOUND
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: UNKNOWN
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: SIP_EMERGENCY
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: SIP_PREMIUM
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: SIP_ENTERPRISE
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: SIP_TOLLFREE
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: SIP_NATIONAL
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: SIP_MOBILE
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
-            type: enum
+            type: string
             type_spec: null
           - doc: For incoming calls, the calling line ID of the user. For outgoing
               calls, it's the calling line ID of the called party.
@@ -4539,45 +4474,9 @@ docs:
           - doc: 'The type of client that the user (creating this record) is using
               to make or receive the call. For example:'
             name: Client type
-            param_attrs:
-            - doc: ''
-              name: SIP
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: WXC_CLIENT
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: WXC_THIRD_PARTY
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: TEAMS_WXC_CLIENT
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: WXC_DEVICE
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: WXC_SIP_GW
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
-            type: enum
+            type: string
             type_spec: null
           - doc: The version of the client that the user (creating this record) is
               using to make or receive the call.
@@ -4614,21 +4513,9 @@ docs:
             type_spec: null
           - doc: 'Whether the call was inbound or outbound. The possible values are:'
             name: Direction
-            param_attrs:
-            - doc: ''
-              name: ORIGINATING
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: TERMINATING
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
-            type: enum
+            type: string
             type_spec: null
           - doc: The length of the call in seconds.
             name: Duration
@@ -4668,59 +4555,11 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: 'Populated for calls that transfer, hold, wait, and so on. For example:'
+          - doc: 'Call redirection reason for the original called number. For example:'
             name: Original reason
-            param_attrs:
-            - doc: ''
-              name: Unconditional
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: NoAnswer
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: CallQueue
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: TimeOfDay
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: UserBusy
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: FollowMe
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: Unrecognised
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: Unknown
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
-            type: enum
+            type: string
             type_spec: null
           - doc: The operating system that the app was running on, if available.
             name: OS type
@@ -4734,71 +4573,11 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: 'Populated for calls that transfer, hold, wait, and so on. For example:'
+          - doc: 'Call Redirection Reason for the redirecting number. For example:'
             name: Redirect reason
-            param_attrs:
-            - doc: ''
-              name: Unconditional
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: NoAnswer
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: CallQueue
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: TimeOfDay
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: UserBusy
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: FollowMe
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: HuntGroup
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: Deflection
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: Unknown
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: Unavailable
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
-            type: enum
+            type: string
             type_spec: null
           - doc: When the call has been redirected one or more times, this field reports
               the last redirecting number. Identifies who last redirected the call.
@@ -4809,83 +4588,13 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: 'Populated for calls that transfer, hold, wait, and so on. For example:'
+          - doc: 'Indicates a trigger that led to a change in the call presence. The
+              trigger could be for this particular call or redirected via a different
+              call. For example:'
             name: Related reason
-            param_attrs:
-            - doc: ''
-              name: ConsultativeTransfer
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: CallForwardSelective
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: CallQueue
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: Unrecognised
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: CallPickup
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: CallForwardAlways
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: FaxDeposit
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: HuntGroup
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: PushNotificationRetrieval
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: VoiceXMLScriptTermination
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: CallForwardNoAnswer
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: AnywhereLocation
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
-            type: enum
+            type: string
             type_spec: null
           - doc: 'Indicates which party released the call first. The possible values
               are:'
@@ -4961,81 +4670,9 @@ docs:
           - doc: 'The type of user (user or workspace) that made or received the call.
               For example:'
             name: User type
-            param_attrs:
-            - doc: ''
-              name: AutomatedAttendantVideo
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: Anchor
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: BroadworksAnywhere
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: VoiceMailRetrieval
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: LocalGateway
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: HuntGroup
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: GroupPaging
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: User
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: VoiceMailGroup
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: CallCenterStandard
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: VoiceXML
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ''
-              name: RoutePoint
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
+            param_attrs: []
             param_object: []
-            type: enum
+            type: string
             type_spec: null
           - doc: A unique identifier for the user associated with the call. This is
               a unique identifier across Cisco products.
@@ -18695,7 +18332,7 @@ docs:
             type: string
             type_spec: null
           - doc: ''
-            name: CALL_CENTER
+            name: CALL_QUEUE
             param_attrs: []
             param_object: []
             type: string
@@ -18780,6 +18417,12 @@ docs:
           type_spec: null
         - doc: Returns the list of toll free phone numbers.
           name: tollFreeNumbers
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Returns the list of restricted non geographical numbers.
+          name: restrictedNonGeoNumbers
           param_attrs: []
           param_object: []
           type: boolean
@@ -41276,6 +40919,56 @@ docs:
           type_spec: null
         URI Parameters:
         - doc: Unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'List the PSTN phone numbers associated with a specific workspace, by ID,
+        within the organization. Also shows the location and organization associated
+        with the workspace.
+
+        Retrieving this list requires a full or read-only administrator auth token
+        with a scope of spark-admin:workspaces_read.'
+      documentation:
+        doc: List numbers associated with a specific workspace
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/features/numbers
+        http_method: GET
+      header: List numbers associated with a specific workspace
+      parameters_and_response:
+        Query Parameters:
+        - doc: Workspace is in this organization. Only admin users of another organization
+            (such as partners) can use this parameter as the default is the same organization
+            as the token used to access API.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: ''
+          name: Attributes
+          param_attrs: []
+          param_object: []
+          type: ''
+          type_spec: required
+        - doc: "{\n        \"phoneNumbers\": [\n            {\n                \"\
+            external\": \"+12055550001\",\n                \"extension\": \"12211\"\
+            ,\n                \"primary\": true\n            },\n             {\n\
+            \                \"external\": \"+12055550002\",\n                \"extension\"\
+            : \"122\",\n                \"primary\": false\n            }\n      \
+            \  ],\n        \"workspace\": {\n            \"id\": \"Y2lzY29zcGFyazovL3VzL1BMQUNFLzg0MjkzOGQ1LTkyNzMtNGJjNi1hYTNhLTA1Njc3MmRiMzE2NQ\"\
+            \n        },\n        \"location\": {\n            \"name\": \"MainOffice\"\
+            ,\n            \"id\": \"Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4Mjg5NzIyLTFiODAtNDFiNy05Njc4LTBlNzdhZThjMTA5OA\"\
+            \n        },\n        \"organization\": {\n            \"id\": \"Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi9hNDVkNmNkYS1hZTVhLTQwYzMtYTdhZC01NjUwZmRkZGQ1M2M\"\
+            ,\n            \"name\": \"Atlas_Test_CALL-1237\"\n        }\n    }"
+          name: Body
+          param_attrs: []
+          param_object: []
+          type: ''
+          type_spec: required
+        URI Parameters:
+        - doc: List numbers for this workspace.
           name: workspaceId
           param_attrs: []
           param_object: []
