@@ -40,9 +40,12 @@ class TestLocation(TestCaseWithLog):
         # get location details and telephony details for each location
         details, telephony_details = await asyncio.gather(
             asyncio.gather(*[self.async_api.locations.details(location_id=location.location_id)
-                             for location in locations]),
+                             for location in locations], return_exceptions=True),
             asyncio.gather(*[self.async_api.telephony.location.details(location_id=loc.location_id)
-                             for loc in locations]))
+                             for loc in locations], return_exceptions=True))
+        exception = next((e for e in chain(details, telephony_details) if isinstance(e, Exception)), None)
+        if exception:
+            raise exception
         print(f'Got details for {len(locations)} locations')
 
     @async_test

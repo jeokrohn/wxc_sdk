@@ -398,7 +398,9 @@ class TestModifyPatterns(TestCaseWithLog):
         dp_api = self.api.telephony.prem_pstn.dial_plan
         dp_name = next(self.new_dp_names)
         route_choice = random.choice(self.route_choices)
-        initial_patterns = random.sample(self.existing_patterns, 10)
+        if not self.existing_patterns:
+            self.skipTest('Need existing dial plan patterns to run this test')
+        initial_patterns = random.sample(self.existing_patterns, min(10, len(self.existing_patterns)))
         random.shuffle(initial_patterns)
         result = dp_api.create(name=dp_name, route_id=route_choice.route_id, route_type=route_choice.route_type,
                                dial_patterns=initial_patterns)

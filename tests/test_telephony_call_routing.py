@@ -108,6 +108,8 @@ class DpContext:
         """
         trunks_in_location = list(self.test.api.telephony.prem_pstn.trunk.list(location_name=location_name))
         trunk_names = set(t.name for t in trunks_in_location)
+        # valid trunk names can be up to 24 characters long
+        location_name = location_name[:21]
         trunk_name = next(name for i in range(1, 100)
                           if (name := f'{location_name} {i:02}') not in trunk_names)
         return trunk_name

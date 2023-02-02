@@ -15,7 +15,7 @@ from unittest import skip
 
 from pydantic import parse_obj_as
 
-from tests.base import TestCaseWithUsersAndSpaces, TestCaseWithLog
+from tests.base import TestCaseWithUsersAndSpaces, TestCaseWithLog, async_test
 from wxc_sdk.common import RoomType
 from wxc_sdk.messages import MessageAttachment
 from wxc_sdk.people import Person
@@ -166,11 +166,13 @@ class TestRooms(TestCaseWithLog):
             details = list(pool.map(lambda r: self.api.rooms.details(room_id=r.id), rooms))
         print(f'got details for {len(details)} rooms')
 
-    def test_004_details(self):
+    def test_004_meeting_details(self):
         """
         meeting details for all spaces
         """
-        rooms = list(self.api.rooms.list())
+        # there are no meeting details for announcement only spaces
+        rooms = [room for room in self.api.rooms.list()
+                 if not room.is_announcement_only]
         with ThreadPoolExecutor() as pool:
             details = list(pool.map(lambda r: self.api.rooms.meeting_details(room_id=r.id), rooms))
         print(f'got meeting details for {len(details)} rooms')

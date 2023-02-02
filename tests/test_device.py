@@ -75,4 +75,5 @@ class TestDevice(TestCaseWithLog):
             self.skipTest('No workspaces')
         target = choice(workspaces)
         ac_result = self.api.devices.activation_code(workspace_id=target.workspace_id)
-        print(f'Activation code "{ac_result.code}" valid until {ac_result.expiry_time}')
+        print(f'Workspace "{target.display_name}", new activation code "{ac_result.code}" '
+              f'valid until {ac_result.expiry_time}')

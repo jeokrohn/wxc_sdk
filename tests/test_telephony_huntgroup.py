@@ -6,15 +6,10 @@ from typing import ClassVar
 
 from wxc_sdk.all_types import *
 from .base import TestCaseWithLog, TestCaseWithUsers
+from .testutil import available_extensions_gen
 
 # number of huntgroups to create my create many test
 HG_MANY = 100
-
-
-def available_extensions(*, hg_list: list[HuntGroup]):
-    extensions = set(hg.extension for hg in hg_list)
-    return (extension for i in range(1000)
-            if (extension := f'{6000 + i}') not in extensions)
 
 
 class TestList(TestCaseWithLog):
@@ -68,7 +63,7 @@ class TestCreate(TestCaseWithUsers):
         hg_names = set(hg.name for hg in hg_list)
         new_name = next(name for i in range(1000)
                         if (name := f'hg_{i:03}') not in hg_names)
-        extension = next(available_extensions(hg_list=hg_list))
+        extension = next(available_extensions_gen(api=self.api, location_id=target_location.location_id, seed='6000'))
 
         # pick two calling users
         members = random.sample(self.users, 2)
@@ -105,7 +100,7 @@ class TestCreate(TestCaseWithUsers):
         hg_names = set(hg.name for hg in hg_list)
         new_name = next(name for i in range(1000)
                         if (name := f'hg_{i:03}') not in hg_names)
-        extension = next(available_extensions(hg_list=hg_list))
+        extension = next(available_extensions_gen(api=self.api, location_id=target_hg.location_id, seed='6000'))
 
         # prepare settings for new hg
         print(f'Creating copy of hunt group "{target_hg.name}" in location "{target_hg.location_name}" '
@@ -147,7 +142,7 @@ class TestCreate(TestCaseWithUsers):
                      if (name := f'many_{i:03}') not in hg_names)
         names = [name for name, _ in zip(new_names, range(to_create))]
         print(f'got {len(names)} new names')
-        extensions = available_extensions(hg_list=hg_list)
+        extensions = available_extensions_gen(api=self.api, location_id=target_location.location_id, seed='6000')
 
         def new_hg(*, hg_name: str, extension: str):
             """
@@ -229,9 +224,8 @@ class TestUpdate(TestCaseWithUsers):
         with self.random_hg() as target:
             target: HuntGroup
             # get new extension based on extensions already assigned to HGs in location
-            hgs_in_location = [hg for hg in self.hg_list
-                               if hg.location_id == target.location_id]
-            new_extension = next(available_extensions(hg_list=hgs_in_location))
+            new_extension = next(available_extensions_gen(api=self.api,
+                                                          location_id=target.location_id, seed='6000'))
 
             print(f'changing extension to {new_extension}...')
             update = HuntGroup(extension=new_extension)
