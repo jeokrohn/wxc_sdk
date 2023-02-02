@@ -33,6 +33,7 @@ class RoomType(str, Enum):
 class UserType(str, Enum):
     people = 'PEOPLE'
     place = 'PLACE'
+    virtual_line = 'VIRTUAL_LINE'
 
 
 class UserBase(ApiModel):

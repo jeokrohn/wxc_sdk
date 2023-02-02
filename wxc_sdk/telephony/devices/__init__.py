@@ -14,7 +14,7 @@ from ...base import SafeEnum as Enum
 __all__ = ['DectDevice', 'MemberCommon', 'DeviceMember', 'DeviceMembersResponse', 'AvailableMember', 'MACState',
            'MACStatus', 'MACValidationResponse', 'TelephonyDevicesApi']
 
-from ...common import PrimaryOrShared, UserType, ValidationStatus, DeviceCustomization
+from ...common import PrimaryOrShared, UserType, ValidationStatus, DeviceCustomization, IdAndName
 
 
 class DectDevice(ApiModel):
@@ -51,6 +51,7 @@ class MemberCommon(ApiModel):
     #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended
     #: to all the endpoints on the device. When set to false, a call decline request only declines the current endpoint.
     allow_call_decline_enabled: Optional[bool] = Field(default=True)
+    location: Optional[IdAndName]
 
     @validator('phone_number', pre=True)
     def e164(cls, v):
@@ -66,6 +67,7 @@ class DeviceMember(MemberCommon):
     #: Number of lines that have been configured for the person on the device. Can only be larger than one for primary
     #: owner
     line_weight: int = Field(default=1)
+    line_label: Optional[str]
     #: Registration Host IP address for the line port.
     host_ip: Optional[str] = Field(alias='hostIP')
     #: Registration Remote IP address for the line port.

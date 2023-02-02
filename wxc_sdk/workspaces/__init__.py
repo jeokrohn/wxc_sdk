@@ -81,6 +81,11 @@ class Calendar(WorkspaceEmail):
     calendar_type: Optional[CalendarType] = Field(alias='type')
 
 
+class WorkspaceSupportedDevices(str, Enum):
+    collaboration_devices = 'collaborationDevices'
+    phones = 'phones'
+
+
 class Workspace(ApiModel):
     """
     Workspace details
@@ -111,7 +116,10 @@ class Workspace(ApiModel):
     calendar: Optional[Calendar]
     #: Notes associated to the workspace.
     notes: Optional[str]
+    #: Hot desking status of the workspace.
     hotdesking_status: Optional[bool]
+    #: The supported devices for the workspace.
+    supported_devices: Optional[WorkspaceSupportedDevices]
 
     @validator('calling', pre=True)
     def validate_calling(cls, value):
