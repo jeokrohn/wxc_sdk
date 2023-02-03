@@ -30,6 +30,7 @@ class AppServicesSettings(ApiModel):
     #: Number of available device licenses for assigning devices/apps.
     #: this value cannot be updated
     available_line_count: Optional[int]
+    #: Indicates that the browser Webex Calling application is enabled for use.
     browser_client_enabled: Optional[bool]
     browser_client_id: Optional[str]
 
@@ -82,5 +83,11 @@ class AppServicesApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = settings.json(exclude={'available_line_count': True})
+        data = settings.json(include={'ring_devices_for_click_to_dial_calls_enabled': True,
+                                      'ring_devices_for_group_page_enabled': True,
+                                      'ring_devices_for_call_park_enabled': True,
+                                      'desktop_client_enabled': True,
+                                      'tablet_client_enabled': True,
+                                      'mobile_client_enabled': True,
+                                      'browser_client_enabled': True})
         self.put(ep, params=params, data=data)
