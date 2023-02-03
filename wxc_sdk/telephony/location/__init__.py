@@ -7,6 +7,7 @@ from .intercept import LocationInterceptApi
 from .internal_dialing import InternalDialingApi
 from .moh import LocationMoHApi
 from .numbers import LocationNumbersApi
+from .receptionist_contacts import ReceptionistContactsDirectoryApi
 from .vm import LocationVoicemailSettingsApi
 from ...api_child import ApiChild
 from ...base import ApiModel
@@ -76,6 +77,8 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
     number: LocationNumbersApi
     #: Location VM settings (only enable/disable transcription for now)
     voicemail: LocationVoicemailSettingsApi
+    #: Receptionist contacts directories
+    receptionist_contacts_directory: ReceptionistContactsDirectoryApi
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
@@ -84,6 +87,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         self.moh = LocationMoHApi(session=session)
         self.number = LocationNumbersApi(session=session)
         self.voicemail = LocationVoicemailSettingsApi(session=session)
+        self.receptionist_contacts_directory = ReceptionistContactsDirectoryApi(session=session)
 
     def generate_password(self, location_id: str, generate: list[str] = None, org_id: str = None):
         """

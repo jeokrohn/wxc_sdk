@@ -60,12 +60,12 @@ __all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsApi
            'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi',
            'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
            'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsReceptionistApi',
-           'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi',
-           'AsScheduleApi', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi',
-           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi',
-           'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi',
-           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi', 'AsWorkspaceSettingsApi',
-           'AsWorkspacesApi']
+           'AsReceptionistContactsDirectoryApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi',
+           'AsRouteGroupApi', 'AsRouteListApi', 'AsScheduleApi', 'AsTeamMembershipsApi', 'AsTeamsApi',
+           'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi',
+           'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi',
+           'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi',
+           'AsWorkspaceNumbersApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
 
 @dataclass(init=False)
@@ -1956,7 +1956,13 @@ class AsAppServicesApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = settings.json(exclude={'available_line_count': True})
+        data = settings.json(include={'ring_devices_for_click_to_dial_calls_enabled': True,
+                                      'ring_devices_for_group_page_enabled': True,
+                                      'ring_devices_for_call_park_enabled': True,
+                                      'desktop_client_enabled': True,
+                                      'tablet_client_enabled': True,
+                                      'mobile_client_enabled': True,
+                                      'browser_client_enabled': True})
         await self.put(ep, params=params, data=data)
 
 
@@ -4249,10 +4255,12 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         """
         Creates a room. The authenticated user is automatically added as a member of the room. See the Memberships
         API to learn how to add more people to the room.
+
         To create a 1:1 room, use the Create Messages endpoint to send a message directly to another person by using
         the toPersonId or toPersonEmail parameters.
-        Bots are not able to create and classify a room. A bot may update a space classification after a person of
-        the same owning organization joined the space as the first human user.
+        Bots are not able to create and simultaneously classify a room. A bot may update a space classification after
+        a person of the same owning organization joined the space as the first human user.
+
         A space can only be put into announcement mode when it is locked.
 
         :param title: A user-friendly name for the room.
@@ -4317,8 +4325,17 @@ class AsRoomsApi(AsApiChild, base='rooms'):
 
     async def update(self, update: Room) -> Room:
         """
-        Updates details for a room
+        Updates details for a room, by ID.
+
+        Specify the room ID in the roomId parameter in the URI.
+
         A space can only be put into announcement mode when it is locked.
+
+        Any space participant or compliance officer can convert a space from public to private. Only a compliance
+        officer can convert a space from private to public and only if the space is classified with the lowest
+        category (usually public), and the space has a description.
+
+        To remove a description please use a space character   by itself.
 
         :update: update to apply. ID and title have to be set. Only can update:
 
@@ -9390,6 +9407,94 @@ class AsLocationVoicemailSettingsApi(AsApiChild, base='telephony/config/location
         await self.put(url, params=params, data=body)
 
 
+class AsReceptionistContactsDirectoryApi(AsApiChild, base='telephony/config/locations'):
+    # TODO: create test cases
+    # TODO: really not details call and no way to update a directory?
+
+    def _url(self, location_id: str):
+        return self.ep(f'{location_id}/receptionistContacts/directories')
+
+    async def create(self, location_id: str, name: str, contacts: list[str], org_id: str = None):
+        """
+        Creates a new Receptionist Contact Directory for a location.
+
+        Receptionist Contact Directories can be used to create named directories of users.
+
+        Adding a directory requires a full or write-only administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Add a Receptionist Contact Directory to this location.
+        :type location_id: str
+        :param name: Receptionist Contact Directory name.
+        :type name: str
+        :param contacts: Array of user or workspace ids assigned to this Receptionist Contact Directory
+        :type contacts: list[str]
+        :param org_id: Add a Receptionist Contact Directory to this organization.
+        :type org_id: str
+        """
+        url = self._url(location_id)
+        params = org_id and {'orgId': org_id} or None
+        body = {'name': name,
+                'contacts': [{'personId': contact} for contact in contacts]}
+        await self.post(url=url, params=params, json=body)
+        # TODO: does create() really not return an id?
+
+    def list_gen(self, location_id: str, org_id: str = None)-> AsyncGenerator[IdAndName, None, None]:
+        """
+        List all Receptionist Contact Directories for a location.
+
+        Receptionist Contact Directories can be used to create named directories of users.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param location_id: List Receptionist Contact Directories for this location.
+        :type location_id: str
+        :param org_id: List Receptionist Contact Directories for this organization.
+        :type org_id: str
+        :return: Yields IdAndName instances
+        """
+        url = self._url(location_id)
+        params = org_id and {'orgId': org_id} or None
+        return self.session.follow_pagination(url=url, model=IdAndName, params=params, item_key='directories')
+
+    async def list(self, location_id: str, org_id: str = None)-> List[IdAndName]:
+        """
+        List all Receptionist Contact Directories for a location.
+
+        Receptionist Contact Directories can be used to create named directories of users.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param location_id: List Receptionist Contact Directories for this location.
+        :type location_id: str
+        :param org_id: List Receptionist Contact Directories for this organization.
+        :type org_id: str
+        :return: Yields IdAndName instances
+        """
+        url = self._url(location_id)
+        params = org_id and {'orgId': org_id} or None
+        return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params, item_key='directories')]
+
+    async def delete(self,location_id: str, directory_id: str, org_id: str = None):
+        """
+        Delete a Receptionist Contact Directory from a location.
+
+        Receptionist Contact Directories can be used to create named directories of users.
+
+        Deleting a directory requires a full or write-only administrator auth token with a scope
+        of spark-admin:telephony_config_write.
+
+        :param location_id: Delete a Receptionist Contact Directory from this location.
+        :param directory_id: ID of directory to delete.
+        :param org_id: Delete a Receptionist Contact Directory from this organization.
+        """
+        url = f'{self._url(location_id)}/{directory_id}'
+        params = org_id and {'orgId': org_id} or None
+        await super().delete(url=url, params=params)
+
+
 class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
     #: call intercept settings
     intercept: AsLocationInterceptApi
@@ -9401,6 +9506,8 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
     number: AsLocationNumbersApi
     #: Location VM settings (only enable/disable transcription for now)
     voicemail: AsLocationVoicemailSettingsApi
+    #: Receptionist contacts directories
+    receptionist_contacts_directory: AsReceptionistContactsDirectoryApi
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
@@ -9409,6 +9516,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         self.moh = AsLocationMoHApi(session=session)
         self.number = AsLocationNumbersApi(session=session)
         self.voicemail = AsLocationVoicemailSettingsApi(session=session)
+        self.receptionist_contacts_directory = AsReceptionistContactsDirectoryApi(session=session)
 
     async def generate_password(self, location_id: str, generate: list[str] = None, org_id: str = None):
         """
@@ -10009,7 +10117,8 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
                       owner_name: str = None, owner_id: str = None, owner_type: OwnerType = None,
                       extension: str = None, number_type: NumberType = None,
                       phone_number_type: NumberListPhoneNumberType = None,
-                      state: NumberState = None, toll_free_numbers: bool = None,
+                      state: NumberState = None, details: bool = None, toll_free_numbers: bool = None,
+                      restricted_non_geo_numbers: bool = None,
                       org_id: str = None, **params) -> AsyncGenerator[NumberListPhoneNumber, None, None]:
         """
         Get Phone Numbers for an Organization with given criteria.
@@ -10018,9 +10127,8 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
 
         PSTN phone numbers are associated with a specific location and can be active/inactive and assigned/unassigned.
         The owner is the person, workspace, or feature to which the number is assigned.
-
-        Retrieving this list requires a full or read-only administrator auth token with a scope of
-        spark-admin:telephony_config_read.
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
 
         :param location_id: Return the list of phone numbers for this location within the given organization.
         :type location_id: str
@@ -10048,8 +10156,13 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         :type phone_number_type: NumberListPhoneNumberType
         :param state: Returns the list of PSTN phone numbers with matching state.
         :type state: NumberState
+        :param details: Returns the overall count of the PSTN phone numbers along with other details for given
+            organization.
+        :type details: bool
         :param toll_free_numbers: Returns the list of toll free phone numbers.
         :type toll_free_numbers: bool
+        :param restricted_non_geo_numbers: Returns the list of restricted non geographical numbers.
+        :type restricted_non_geo_numbers: bool
         :param org_id: List numbers for this organization.
         :type org_id: str
         :return: yields :class:`NumberListPhoneNumber` instances
@@ -10073,7 +10186,8 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
                       owner_name: str = None, owner_id: str = None, owner_type: OwnerType = None,
                       extension: str = None, number_type: NumberType = None,
                       phone_number_type: NumberListPhoneNumberType = None,
-                      state: NumberState = None, toll_free_numbers: bool = None,
+                      state: NumberState = None, details: bool = None, toll_free_numbers: bool = None,
+                      restricted_non_geo_numbers: bool = None,
                       org_id: str = None, **params) -> List[NumberListPhoneNumber]:
         """
         Get Phone Numbers for an Organization with given criteria.
@@ -10082,9 +10196,8 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
 
         PSTN phone numbers are associated with a specific location and can be active/inactive and assigned/unassigned.
         The owner is the person, workspace, or feature to which the number is assigned.
-
-        Retrieving this list requires a full or read-only administrator auth token with a scope of
-        spark-admin:telephony_config_read.
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
 
         :param location_id: Return the list of phone numbers for this location within the given organization.
         :type location_id: str
@@ -10112,8 +10225,13 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         :type phone_number_type: NumberListPhoneNumberType
         :param state: Returns the list of PSTN phone numbers with matching state.
         :type state: NumberState
+        :param details: Returns the overall count of the PSTN phone numbers along with other details for given
+            organization.
+        :type details: bool
         :param toll_free_numbers: Returns the list of toll free phone numbers.
         :type toll_free_numbers: bool
+        :param restricted_non_geo_numbers: Returns the list of restricted non geographical numbers.
+        :type restricted_non_geo_numbers: bool
         :param org_id: List numbers for this organization.
         :type org_id: str
         :return: yields :class:`NumberListPhoneNumber` instances
@@ -10694,6 +10812,8 @@ class AsWorkspaceNumbersApi(AsApiChild, base='workspaces'):
         :return: Workspace numbers
         :rtype: WorkSpaceNumbers
         """
+        # TODO: need to be updated in line with https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace
+        #  currently the documentation is incomplete. Tracked by WXCAPIBULK-296
         params = org_id and {'org_id': org_id} or None
         url = self.ep(workspace_id=workspace_id)
         data = await self.get(url=url, params=params)

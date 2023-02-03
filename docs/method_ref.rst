@@ -372,7 +372,7 @@ The second column of the table has a link to the documentation of the method.
         Shows Webex meeting details for a room such as the SIP address, meeting URL, toll-free and toll dial-in numbers
      - :meth:`~wxc_sdk.rooms.RoomsApi.meeting_details`
    * - api.rooms.update
-        Updates details for a room
+        Updates details for a room, by ID
      - :meth:`~wxc_sdk.rooms.RoomsApi.update`
    * - api.team_memberships.create
         Add someone to a team by Person ID or email address, optionally making them a moderator
@@ -698,6 +698,15 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.location.number.remove
         Remove the specified set of phone numbers from a location for an organization
      - :meth:`~wxc_sdk.telephony.location.numbers.LocationNumbersApi.remove`
+   * - api.telephony.location.receptionist_contacts_directory.create
+        Creates a new Receptionist Contact Directory for a location
+     - :meth:`~wxc_sdk.telephony.location.receptionist_contacts.ReceptionistContactsDirectoryApi.create`
+   * - api.telephony.location.receptionist_contacts_directory.delete
+        Delete a Receptionist Contact Directory from a location
+     - :meth:`~wxc_sdk.telephony.location.receptionist_contacts.ReceptionistContactsDirectoryApi.delete`
+   * - api.telephony.location.receptionist_contacts_directory.list
+        List all Receptionist Contact Directories for a location
+     - :meth:`~wxc_sdk.telephony.location.receptionist_contacts.ReceptionistContactsDirectoryApi.list`
    * - api.telephony.location.voicemail.read
         Get Location Voicemail
      - :meth:`~wxc_sdk.telephony.location.vm.LocationVoicemailSettingsApi.read`

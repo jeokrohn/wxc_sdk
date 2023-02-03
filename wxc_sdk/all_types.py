@@ -72,7 +72,7 @@ from wxc_sdk.telephony.callqueue import AudioSource, CQRoutingType, CallBounce, 
     OverflowSetting, QueueSettings, WaitMessageSetting, WaitMode, WelcomeMessageSetting
 from wxc_sdk.telephony.callqueue.announcement import Announcement
 from wxc_sdk.telephony.callqueue.policies import AnnouncementMode, CPActionType, CQHolidaySchedule, ForcedForward,\
-    HolidayService, NightService, ScheduleLevel, StrandedCalls
+    HolidayService, NightService, ScheduleLevel, StrandedCalls, StrandedCallsAction
 from wxc_sdk.telephony.calls import CallHistoryRecord, CallInfo, CallState, CallType, DialResponse, HistoryType,\
     ParkedAgainst, Personality, Recall, RecordingState, RedirectReason, Redirection, RejectAction, TelephonyCall,\
     TelephonyEvent, TelephonyEventData, TelephonyParty
@@ -170,19 +170,19 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'RouteType', 'SafeEnum', 'Schedule', 'ScheduleApiBase', 'ScheduleDay', 'ScheduleLevel', 'ScheduleMonth',
            'ScheduleType', 'ScheduleTypeOrStr', 'ScheduleWeek', 'ScreenTimeout', 'ServiceType', 'SipAddress',
            'SipType', 'SiteType', 'StartJobResponse', 'StepExecutionStatus', 'StorageType', 'StrOrDict',
-           'StrandedCalls', 'SupportedDevice', 'TagOp', 'Team', 'TeamMembership', 'TelephonyCall', 'TelephonyDevice',
-           'TelephonyEvent', 'TelephonyEventData', 'TelephonyLocation', 'TelephonyParty', 'TestCallRoutingResult',
-           'Tokens', 'Trunk', 'TrunkDestination', 'TrunkDetail', 'TrunkDeviceType', 'TrunkLocation', 'TrunkType',
-           'TrunkTypeWithDeviceType', 'TrunkUsage', 'UCMProfile', 'UnansweredCalls', 'UpdateNumbersResponse',
-           'UpdatePersonNumbers', 'UpdatePersonPhoneNumber', 'UsageRouteLists', 'UserBase', 'UserNumber', 'UserType',
-           'ValidateExtensionStatus', 'ValidateExtensionStatusState', 'ValidateExtensionsResponse',
-           'ValidatePhoneNumberStatus', 'ValidatePhoneNumberStatusState', 'ValidatePhoneNumbersResponse',
-           'ValidationRules', 'ValidationStatus', 'VirtualExtensionDestination', 'VlanSetting',
-           'VoiceMailPartyInformation', 'VoiceMailRules', 'VoiceMessageDetails', 'VoicePortalSettings',
-           'VoicemailCopyOfMessage', 'VoicemailEnabled', 'VoicemailEnabledWithGreeting', 'VoicemailFax',
-           'VoicemailGroup', 'VoicemailGroupDetail', 'VoicemailMessageStorage', 'VoicemailNotifications',
-           'VoicemailSettings', 'VoicemailTransferToNumber', 'WaitMessageSetting', 'WaitMode', 'Webhook',
-           'WebhookEvent', 'WebhookEventData', 'WebhookEventType', 'WebhookResource', 'WebhookStatus',
-           'WelcomeMessageSetting', 'WifiCustomization', 'WifiNetwork', 'WorkSpaceNumbers', 'WorkSpaceType',
-           'Workspace', 'WorkspaceEmail', 'WorkspaceLocation', 'WorkspaceLocationFloor', '_Helper', 'dt_iso_str',
-           'plus1', 'to_camel', 'webex_id_to_uuid']
+           'StrandedCalls', 'StrandedCallsAction', 'SupportedDevice', 'TagOp', 'Team', 'TeamMembership',
+           'TelephonyCall', 'TelephonyDevice', 'TelephonyEvent', 'TelephonyEventData', 'TelephonyLocation',
+           'TelephonyParty', 'TestCallRoutingResult', 'Tokens', 'Trunk', 'TrunkDestination', 'TrunkDetail',
+           'TrunkDeviceType', 'TrunkLocation', 'TrunkType', 'TrunkTypeWithDeviceType', 'TrunkUsage', 'UCMProfile',
+           'UnansweredCalls', 'UpdateNumbersResponse', 'UpdatePersonNumbers', 'UpdatePersonPhoneNumber',
+           'UsageRouteLists', 'UserBase', 'UserNumber', 'UserType', 'ValidateExtensionStatus',
+           'ValidateExtensionStatusState', 'ValidateExtensionsResponse', 'ValidatePhoneNumberStatus',
+           'ValidatePhoneNumberStatusState', 'ValidatePhoneNumbersResponse', 'ValidationRules', 'ValidationStatus',
+           'VirtualExtensionDestination', 'VlanSetting', 'VoiceMailPartyInformation', 'VoiceMailRules',
+           'VoiceMessageDetails', 'VoicePortalSettings', 'VoicemailCopyOfMessage', 'VoicemailEnabled',
+           'VoicemailEnabledWithGreeting', 'VoicemailFax', 'VoicemailGroup', 'VoicemailGroupDetail',
+           'VoicemailMessageStorage', 'VoicemailNotifications', 'VoicemailSettings', 'VoicemailTransferToNumber',
+           'WaitMessageSetting', 'WaitMode', 'Webhook', 'WebhookEvent', 'WebhookEventData', 'WebhookEventType',
+           'WebhookResource', 'WebhookStatus', 'WelcomeMessageSetting', 'WifiCustomization', 'WifiNetwork',
+           'WorkSpaceNumbers', 'WorkSpaceType', 'Workspace', 'WorkspaceEmail', 'WorkspaceLocation',
+           'WorkspaceLocationFloor', '_Helper', 'dt_iso_str', 'plus1', 'to_camel', 'webex_id_to_uuid']
