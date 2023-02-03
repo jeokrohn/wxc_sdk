@@ -12,7 +12,7 @@ from ...common import Greeting, AnnAudioFile
 from ...rest import RestSession
 
 __all__ = ['CPActionType', 'ScheduleLevel', 'CQHolidaySchedule', 'HolidayService', 'AnnouncementMode', 'NightService',
-           'StrandedCalls', 'ForcedForward', 'CQPolicyApi']
+           'StrandedCalls', 'StrandedCallsAction', 'ForcedForward', 'CQPolicyApi']
 
 
 class CPActionType(str, Enum):
