@@ -1,6 +1,7 @@
 """
 Test for app services settings
 """
+import asyncio
 import random
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
@@ -8,20 +9,22 @@ from dataclasses import dataclass
 from unittest import skip
 
 from wxc_sdk.all_types import Person, AppServicesSettings
-from .base import TestCaseWithUsers
+from .base import TestCaseWithUsers, async_test
 
 
 class TestRead(TestCaseWithUsers):
 
-    def test_001_read_all(self):
+    @async_test
+    async def test_001_read_all(self):
         """
         Read app services settings of all users
         """
-        asa = self.api.person_settings.appservices
-
-        with ThreadPoolExecutor() as pool:
-            settings = list(pool.map(lambda user: asa.read(person_id=user.person_id),
-                                     self.users))
+        asa = self.async_api.person_settings.appservices
+        settings = await asyncio.gather(*[asa.read(person_id=user.person_id)
+                                          for user in self.users], return_exceptions=True)
+        err = next((setting for setting in settings if isinstance(setting, Exception)), None)
+        if err:
+            raise err
         print(f'Got app services settings for {len(self.users)} users')
         print('\n'.join(s.json() for s in settings))
 
