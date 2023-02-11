@@ -220,6 +220,7 @@ Source: |queue_helper.py|_
 .. _get_tokens.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/get_tokens.py
 .. _calling_users.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/calling_users.py
 .. _calling_users_async.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/calling_users_async.py
+.. _users_wo_devices.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/users_wo_devices.py
 .. _us_holidays.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/us_holidays.py
 .. _us_holidays_async.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/us_holidays_async.py
 .. _calendarific.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/calendarific.py
