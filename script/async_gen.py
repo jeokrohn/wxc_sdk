@@ -65,6 +65,7 @@ class MultipartEncoder(FormData):
 # there seems to be a problem with getting too many users with calling data at the same time
 # this is the maximum number the SDK enforces
 MAX_USERS_WITH_CALLING_DATA = 10
+CALLING_DATA_TIMEOUT_PROTECTION = False
 
 
 """

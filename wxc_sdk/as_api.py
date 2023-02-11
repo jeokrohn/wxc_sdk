@@ -46,6 +46,7 @@ class MultipartEncoder(FormData):
 # there seems to be a problem with getting too many users with calling data at the same time
 # this is the maximum number the SDK enforces
 MAX_USERS_WITH_CALLING_DATA = 10
+CALLING_DATA_TIMEOUT_PROTECTION = False
 
 
 __all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsApiChild', 'AsAppServicesApi',
@@ -1550,7 +1551,8 @@ class AsPeopleApi(AsApiChild, base='people'):
         if calling_data:
             params['callingData'] = 'true'
             # apparently there is a performance problem with getting too many users w/ calling data at the same time
-            params['max'] = params.get('max', MAX_USERS_WITH_CALLING_DATA)
+            if CALLING_DATA_TIMEOUT_PROTECTION:
+                params['max'] = params.get('max', MAX_USERS_WITH_CALLING_DATA)
         id_list = params.pop('idList', None)
         if id_list:
             params['id'] = ','.join(id_list)
@@ -1600,7 +1602,8 @@ class AsPeopleApi(AsApiChild, base='people'):
         if calling_data:
             params['callingData'] = 'true'
             # apparently there is a performance problem with getting too many users w/ calling data at the same time
-            params['max'] = params.get('max', MAX_USERS_WITH_CALLING_DATA)
+            if CALLING_DATA_TIMEOUT_PROTECTION:
+                params['max'] = params.get('max', MAX_USERS_WITH_CALLING_DATA)
         id_list = params.pop('idList', None)
         if id_list:
             params['id'] = ','.join(id_list)
