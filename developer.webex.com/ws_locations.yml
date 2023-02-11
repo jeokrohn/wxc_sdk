@@ -1,0 +1,908 @@
+# command: developer.webex.com/read_api_spec.py -s "Full API Reference" -t "Workspace Locations" -f developer.webex.com/ws_locations.yml
+docs:
+  Admin Audit Events:
+    doc: null
+    header: null
+    methods: []
+  Attachment Actions:
+    doc: null
+    header: null
+    methods: []
+  Authorizations:
+    doc: null
+    header: null
+    methods: []
+  BroadWorks Billing Reports:
+    doc: null
+    header: null
+    methods: []
+  BroadWorks Device Provisioning:
+    doc: null
+    header: null
+    methods: []
+  BroadWorks Enterprises:
+    doc: null
+    header: null
+    methods: []
+  BroadWorks Subscribers:
+    doc: null
+    header: null
+    methods: []
+  Call Controls:
+    doc: null
+    header: null
+    methods: []
+  Device Configurations:
+    doc: null
+    header: null
+    methods: []
+  Devices:
+    doc: null
+    header: null
+    methods: []
+  Events:
+    doc: null
+    header: null
+    methods: []
+  Groups:
+    doc: null
+    header: null
+    methods: []
+  Historical Analytics:
+    doc: null
+    header: null
+    methods: []
+  Hybrid Clusters:
+    doc: null
+    header: null
+    methods: []
+  Hybrid Connectors:
+    doc: null
+    header: null
+    methods: []
+  Licenses:
+    doc: null
+    header: null
+    methods: []
+  Locations:
+    doc: null
+    header: null
+    methods: []
+  Meeting Chats:
+    doc: null
+    header: null
+    methods: []
+  Meeting Closed Captions:
+    doc: null
+    header: null
+    methods: []
+  Meeting Invitees:
+    doc: null
+    header: null
+    methods: []
+  Meeting Messages:
+    doc: null
+    header: null
+    methods: []
+  Meeting Participants:
+    doc: null
+    header: null
+    methods: []
+  Meeting Polls:
+    doc: null
+    header: null
+    methods: []
+  Meeting Preferences:
+    doc: null
+    header: null
+    methods: []
+  Meeting Q and A:
+    doc: null
+    header: null
+    methods: []
+  Meeting Qualities:
+    doc: null
+    header: null
+    methods: []
+  Meeting Transcripts:
+    doc: null
+    header: null
+    methods: []
+  Meetings:
+    doc: null
+    header: null
+    methods: []
+  Meetings Summary Report:
+    doc: null
+    header: null
+    methods: []
+  Memberships:
+    doc: null
+    header: null
+    methods: []
+  Messages:
+    doc: null
+    header: null
+    methods: []
+  Organizations:
+    doc: null
+    header: null
+    methods: []
+  People:
+    doc: null
+    header: null
+    methods: []
+  Recording Report:
+    doc: null
+    header: null
+    methods: []
+  Recordings:
+    doc: null
+    header: null
+    methods: []
+  Report Templates:
+    doc: null
+    header: null
+    methods: []
+  Reports:
+    doc: null
+    header: null
+    methods: []
+  Resource Group Memberships:
+    doc: null
+    header: null
+    methods: []
+  Resource Groups:
+    doc: null
+    header: null
+    methods: []
+  Roles:
+    doc: null
+    header: null
+    methods: []
+  Room Tabs:
+    doc: null
+    header: null
+    methods: []
+  Rooms:
+    doc: null
+    header: null
+    methods: []
+  Session Types:
+    doc: null
+    header: null
+    methods: []
+  Site:
+    doc: null
+    header: null
+    methods: []
+  Space Classifications:
+    doc: null
+    header: null
+    methods: []
+  Team Memberships:
+    doc: null
+    header: null
+    methods: []
+  Teams:
+    doc: null
+    header: null
+    methods: []
+  Tracking Codes:
+    doc: null
+    header: null
+    methods: []
+  Video Mesh:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Detailed Call History:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Organization Settings:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Person Settings:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Voice Messaging:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Workspace Settings:
+    doc: null
+    header: null
+    methods: []
+  Webhooks:
+    doc: null
+    header: null
+    methods: []
+  Wholesale Billing Reports:
+    doc: null
+    header: null
+    methods: []
+  Wholesale Customers:
+    doc: null
+    header: null
+    methods: []
+  Wholesale Subscribers:
+    doc: null
+    header: null
+    methods: []
+  Workspace Locations:
+    doc: 'A Workspace Location is a physical location with a name, address, country,
+      city, latitude and longitude.
+
+      Viewing the list of locations in an organization requires an administrator auth
+      token with the spark-admin:workspace_locations_read scope. Adding, updating,
+      or deleting workspace locations in an organization requires an administrator
+      auth token with the spark-admin:workspace_locations_write scope.
+
+      The Workspace Locations API can also be used by partner administrators acting
+      as administrators of a different organization than their own. In those cases
+      an orgId value must be supplied, as indicated in the reference documentation
+      for the relevant endpoints.'
+    header: Workspace Locations
+    methods:
+    - doc: List workspace locations.
+      documentation:
+        doc: List Workspace Locations
+        doc_link: https://developer.webex.com/docs/api/v1/workspace-locations/list-workspace-locations
+        endpoint: https://webexapis.com/v1/workspaceLocations
+        http_method: GET
+      header: List Workspace Locations
+      parameters_and_response:
+        Query Parameters:
+        - doc: Location display name.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Location address.
+          name: address
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Location country code (ISO 3166-1).
+          name: countryCode
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Location city name.
+          name: cityName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: An array of location objects.
+          name: items
+          param_attrs:
+          - doc: Unique identifier for the location.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unique identifier for the location org ID.
+            name: orgId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A friendly name for the location.
+            name: displayName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The location address.
+            name: address
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The location country code (ISO 3166-1).
+            name: countryCode
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The location city name.
+            name: cityName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The location latitude.
+            name: latitude
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: The location longitude.
+            name: longitude
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: Notes associated with the location.
+            name: notes
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[Location]
+          type_spec: null
+    - doc: Create a location. The cityName and notes parameters are optional, and
+        omitting them will result in the creation of a location without values for
+        those attributes.
+      documentation:
+        doc: Create a Workspace Location
+        doc_link: https://developer.webex.com/docs/api/v1/workspace-locations/create-a-workspace-location
+        endpoint: https://webexapis.com/v1/workspaceLocations
+        http_method: POST
+      header: Create a Workspace Location
+      parameters_and_response:
+        Body Parameters:
+        - doc: A friendly name for the location.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: The location address.
+          name: address
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: The location country code (ISO 3166-1).
+          name: countryCode
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: The location city name.
+          name: cityName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The location latitude.
+          name: latitude
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: required
+        - doc: The location longitude.
+          name: longitude
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: required
+        - doc: Notes associated with the location.
+          name: notes
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Unique identifier for the location.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier for the location org ID.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A friendly name for the location.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The location address.
+          name: address
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The location country code (ISO 3166-1).
+          name: countryCode
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The location city name.
+          name: cityName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The location latitude.
+          name: latitude
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: The location longitude.
+          name: longitude
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Notes associated with the location.
+          name: notes
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+    - doc: Shows details for a location, by ID. Specify the location ID in the locationId
+        parameter in the URI.
+      documentation:
+        doc: Get a Workspace Location Details
+        doc_link: https://developer.webex.com/docs/api/v1/workspace-locations/get-a-workspace-location-details
+        endpoint: https://webexapis.com/v1/workspaceLocations/{locationId}
+        http_method: GET
+      header: Get a Workspace Location Details
+      parameters_and_response:
+        Response Properties:
+        - doc: Unique identifier for the location.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier for the location org ID.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A friendly name for the location.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The location address.
+          name: address
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The location country code (ISO 3166-1).
+          name: countryCode
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The location city name.
+          name: cityName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The location latitude.
+          name: latitude
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: The location longitude.
+          name: longitude
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Notes associated with the location.
+          name: notes
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: A unique identifier for the location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: Updates details for a location, by ID. Specify the location ID in the locationId
+        parameter in the URI. The request should include all details for the location
+        returned in a previous call to Get Workspace Location Details. Omitting the
+        optional cityName or notes fields will result in those fields no longer being
+        defined for the location.
+      documentation:
+        doc: Update a Workspace Location
+        doc_link: https://developer.webex.com/docs/api/v1/workspace-locations/update-a-workspace-location
+        endpoint: https://webexapis.com/v1/workspaceLocations/{locationId}
+        http_method: PUT
+      header: Update a Workspace Location
+      parameters_and_response:
+        Body Parameters:
+        - doc: Unique identifier for the location.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A friendly name for the location.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: The location address.
+          name: address
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: The location country code (ISO 3166-1).
+          name: countryCode
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: The location city name.
+          name: cityName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The location latitude.
+          name: latitude
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: required
+        - doc: The location longitude.
+          name: longitude
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: required
+        - doc: Notes associated with the location.
+          name: notes
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Unique identifier for the location.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier for the location org ID.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A friendly name for the location.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The location address.
+          name: address
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The location country code (ISO 3166-1).
+          name: countryCode
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The location city name.
+          name: cityName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The location latitude.
+          name: latitude
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: The location longitude.
+          name: longitude
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Notes associated with the location.
+          name: notes
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: A unique identifier for the location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: Deletes a location, by ID. The workspaces associated to that location will
+        no longer have a location, but a new location can be reassigned to them.
+      documentation:
+        doc: Delete a Workspace Location
+        doc_link: https://developer.webex.com/docs/api/v1/workspace-locations/delete-a-workspace-location
+        endpoint: https://webexapis.com/v1/workspaceLocations/{locationId}
+        http_method: DELETE
+      header: Delete a Workspace Location
+      parameters_and_response:
+        URI Parameters:
+        - doc: A unique identifier for the location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: List workspace location floors.
+      documentation:
+        doc: List Workspace Location Floors
+        doc_link: https://developer.webex.com/docs/api/v1/workspace-locations/list-workspace-location-floors
+        endpoint: https://webexapis.com/v1/workspaceLocations/{locationId}/floors
+        http_method: GET
+      header: List Workspace Location Floors
+      parameters_and_response:
+        Response Properties:
+        - doc: An array of floor objects.
+          name: items
+          param_attrs:
+          - doc: Unique identifier for the location.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unique identifier for the location org ID.
+            name: locationId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The floor number.
+            name: floorNumber
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: The floor display name.
+            name: displayName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[Floor]
+          type_spec: null
+        URI Parameters:
+        - doc: A unique identifier for the location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: Create a new floor in the given location. The displayName parameter is
+        optional, and omitting it will result in the creation of a floor without that
+        value set.
+      documentation:
+        doc: Create a Workspace Location Floor
+        doc_link: https://developer.webex.com/docs/api/v1/workspace-locations/create-a-workspace-location-floor
+        endpoint: https://webexapis.com/v1/workspaceLocations/{locationId}/floors
+        http_method: POST
+      header: Create a Workspace Location Floor
+      parameters_and_response:
+        Body Parameters:
+        - doc: The floor number.
+          name: floorNumber
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: required
+        - doc: The floor display name.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Unique identifier for the location.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier for the location org ID.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The floor number.
+          name: floorNumber
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: The floor display name.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: A unique identifier for the location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: Shows details for a floor, by ID. Specify the floor ID in the floorId parameter
+        in the URI.
+      documentation:
+        doc: Get a Workspace Location Floor Details
+        doc_link: https://developer.webex.com/docs/api/v1/workspace-locations/get-a-workspace-location-floor-details
+        endpoint: https://webexapis.com/v1/workspaceLocations/{locationId}/floors/{floorId}
+        http_method: GET
+      header: Get a Workspace Location Floor Details
+      parameters_and_response:
+        Response Properties:
+        - doc: Unique identifier for the location.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier for the location org ID.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The floor number.
+          name: floorNumber
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: The floor display name.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: A unique identifier for the location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: A unique identifier for the floor.
+          name: floorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: Updates details for a floor, by ID. Specify the floor ID in the floorId
+        parameter in the URI. Include all details for the floor returned by a previous
+        call to Get Workspace Location Floor Details. Omitting the optional displayName
+        field will result in that field no longer being defined for the floor.
+      documentation:
+        doc: Update a Workspace Location Floor
+        doc_link: https://developer.webex.com/docs/api/v1/workspace-locations/update-a-workspace-location-floor
+        endpoint: https://webexapis.com/v1/workspaceLocations/{locationId}/floors/{floorId}
+        http_method: PUT
+      header: Update a Workspace Location Floor
+      parameters_and_response:
+        Body Parameters:
+        - doc: The floor number.
+          name: floorNumber
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: required
+        - doc: The floor display name.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Unique identifier for the location.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier for the location org ID.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The floor number.
+          name: floorNumber
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: The floor display name.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: A unique identifier for the location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: A unique identifier for the floor.
+          name: floorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: Deletes a floor, by ID.
+      documentation:
+        doc: Delete a Workspace Location Floor
+        doc_link: https://developer.webex.com/docs/api/v1/workspace-locations/delete-a-workspace-location-floor
+        endpoint: https://webexapis.com/v1/workspaceLocations/{locationId}/floors/{floorId}
+        http_method: DELETE
+      header: Delete a Workspace Location Floor
+      parameters_and_response:
+        URI Parameters:
+        - doc: A unique identifier for the location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: A unique identifier for the floor.
+          name: floorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+  Workspace Metrics:
+    doc: null
+    header: null
+    methods: []
+  Workspace Personalization:
+    doc: null
+    header: null
+    methods: []
+  Workspaces:
+    doc: null
+    header: null
+    methods: []
+  xAPI:
+    doc: null
+    header: null
+    methods: []

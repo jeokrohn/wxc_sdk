@@ -1,0 +1,1817 @@
+# command: developer.webex.com/read_api_spec.py -s "Full API Reference" -t Workspaces -f developer.webex.com/workspaces.yml
+docs:
+  Admin Audit Events:
+    doc: null
+    header: null
+    methods: []
+  Attachment Actions:
+    doc: null
+    header: null
+    methods: []
+  Authorizations:
+    doc: null
+    header: null
+    methods: []
+  BroadWorks Billing Reports:
+    doc: null
+    header: null
+    methods: []
+  BroadWorks Device Provisioning:
+    doc: null
+    header: null
+    methods: []
+  BroadWorks Enterprises:
+    doc: null
+    header: null
+    methods: []
+  BroadWorks Subscribers:
+    doc: null
+    header: null
+    methods: []
+  Call Controls:
+    doc: null
+    header: null
+    methods: []
+  Device Configurations:
+    doc: null
+    header: null
+    methods: []
+  Devices:
+    doc: null
+    header: null
+    methods: []
+  Events:
+    doc: null
+    header: null
+    methods: []
+  Groups:
+    doc: null
+    header: null
+    methods: []
+  Historical Analytics:
+    doc: null
+    header: null
+    methods: []
+  Hybrid Clusters:
+    doc: null
+    header: null
+    methods: []
+  Hybrid Connectors:
+    doc: null
+    header: null
+    methods: []
+  Licenses:
+    doc: null
+    header: null
+    methods: []
+  Locations:
+    doc: null
+    header: null
+    methods: []
+  Meeting Chats:
+    doc: null
+    header: null
+    methods: []
+  Meeting Closed Captions:
+    doc: null
+    header: null
+    methods: []
+  Meeting Invitees:
+    doc: null
+    header: null
+    methods: []
+  Meeting Messages:
+    doc: null
+    header: null
+    methods: []
+  Meeting Participants:
+    doc: null
+    header: null
+    methods: []
+  Meeting Polls:
+    doc: null
+    header: null
+    methods: []
+  Meeting Preferences:
+    doc: null
+    header: null
+    methods: []
+  Meeting Q and A:
+    doc: null
+    header: null
+    methods: []
+  Meeting Qualities:
+    doc: null
+    header: null
+    methods: []
+  Meeting Transcripts:
+    doc: null
+    header: null
+    methods: []
+  Meetings:
+    doc: null
+    header: null
+    methods: []
+  Meetings Summary Report:
+    doc: null
+    header: null
+    methods: []
+  Memberships:
+    doc: null
+    header: null
+    methods: []
+  Messages:
+    doc: null
+    header: null
+    methods: []
+  Organizations:
+    doc: null
+    header: null
+    methods: []
+  People:
+    doc: null
+    header: null
+    methods: []
+  Recording Report:
+    doc: null
+    header: null
+    methods: []
+  Recordings:
+    doc: null
+    header: null
+    methods: []
+  Report Templates:
+    doc: null
+    header: null
+    methods: []
+  Reports:
+    doc: null
+    header: null
+    methods: []
+  Resource Group Memberships:
+    doc: null
+    header: null
+    methods: []
+  Resource Groups:
+    doc: null
+    header: null
+    methods: []
+  Roles:
+    doc: null
+    header: null
+    methods: []
+  Room Tabs:
+    doc: null
+    header: null
+    methods: []
+  Rooms:
+    doc: null
+    header: null
+    methods: []
+  Session Types:
+    doc: null
+    header: null
+    methods: []
+  Site:
+    doc: null
+    header: null
+    methods: []
+  Space Classifications:
+    doc: null
+    header: null
+    methods: []
+  Team Memberships:
+    doc: null
+    header: null
+    methods: []
+  Teams:
+    doc: null
+    header: null
+    methods: []
+  Tracking Codes:
+    doc: null
+    header: null
+    methods: []
+  Video Mesh:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Detailed Call History:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Organization Settings:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Person Settings:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Voice Messaging:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Workspace Settings:
+    doc: null
+    header: null
+    methods: []
+  Webhooks:
+    doc: null
+    header: null
+    methods: []
+  Wholesale Billing Reports:
+    doc: null
+    header: null
+    methods: []
+  Wholesale Customers:
+    doc: null
+    header: null
+    methods: []
+  Wholesale Subscribers:
+    doc: null
+    header: null
+    methods: []
+  Workspace Locations:
+    doc: null
+    header: null
+    methods: []
+  Workspace Metrics:
+    doc: null
+    header: null
+    methods: []
+  Workspace Personalization:
+    doc: null
+    header: null
+    methods: []
+  Workspaces:
+    doc: 'Workspaces represent where people work, such as conference rooms, meeting
+      spaces, lobbies, and lunch rooms. Devices may be associated with workspaces.
+
+      Viewing the list of workspaces in an organization requires an administrator
+      auth token with the spark-admin:workspaces_read scope. Adding, updating, or
+      deleting workspaces in an organization requires an administrator auth token
+      with the spark-admin:workspaces_write scope.
+
+      The Workspaces API can also be used by partner administrators acting as administrators
+      of a different organization than their own. In those cases an orgId value must
+      be supplied, as indicated in the reference documentation for the relevant endpoints.'
+    header: Workspaces
+    methods:
+    - doc: 'List workspaces.
+
+        Use query parameters to filter the response. The orgId parameter can only
+        be used by admin users of another organization (such as partners). The workspaceLocationId,
+        floorId, capacity and type fields will only be present for workspaces that
+        have a value set for them. The special values notSet (for filtering on category)
+        and -1 (for filtering on capacity) can be used to filter for workspaces without
+        a type and/or capacity.'
+      documentation:
+        doc: List Workspaces
+        doc_link: https://developer.webex.com/docs/api/v1/workspaces/list-workspaces
+        endpoint: https://webexapis.com/v1/workspaces
+        http_method: GET
+      header: List Workspaces
+      parameters_and_response:
+        Query Parameters:
+        - doc: List workspaces in this organization. Only admin users of another organization
+            (such as partners) may use this parameter.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Location associated with the workspace.
+          name: workspaceLocationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Floor associated with the workspace.
+          name: floorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: List workspaces by display name.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: List workspaces with the given capacity. Must be -1 or higher. A value
+            of -1 lists workspaces with no capacity set.
+          name: capacity
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: 'List workspaces by type.
+
+            Possible values: notSet, focus, huddle, meetingRoom, open, desk, other'
+          name: type
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Offset. Default is 0.
+          name: start
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Limit the maximum number of workspaces in the response.
+          name: max
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: 'List workspaces by calling type.
+
+            Possible values: freeCalling, hybridCalling, webexCalling, webexEdgeForDevices,
+            thirdPartySipCalling, none'
+          name: calling
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'List workspaces by calendar type.
+
+            Possible values: none, google, microsoft'
+          name: calendar
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: An array of workspace objects.
+          name: items
+          param_attrs:
+          - doc: Unique identifier for the Workspace.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: OrgId associate with the workspace.
+            name: orgId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Location associated with the workspace.
+            name: workspaceLocationId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Floor associated with the workspace.
+            name: floorId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A friendly name for the workspace.
+            name: displayName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: How many people the workspace is suitable for.
+            name: capacity
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: The workspace type.
+            name: type
+            param_attrs:
+            - doc: No workspace type set.
+              name: notSet
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: High concentration.
+              name: focus
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Brainstorm/collaboration.
+              name: huddle
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Dedicated meeting space.
+              name: meetingRoom
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Unstructured agile.
+              name: open
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Individual.
+              name: desk
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Unspecified.
+              name: other
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: SipUrl to call all the devices associated with the workspace.
+            name: sipAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The date and time that the workspace was registered, in ISO8601 format.
+            name: created
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Calling type.
+            name: calling
+            param_attrs: []
+            param_object:
+            - doc: Calling.
+              name: type
+              param_attrs:
+              - doc: Free Calling.
+                name: freeCalling
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Hybrid Calling.
+                name: hybridCalling
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Webex Calling.
+                name: webexCalling
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Webex Edge For Devices.
+                name: webexEdgeForDevices
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Third-party SIP URI.
+                name: thirdPartySipCalling
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: No Calling.
+                name: none
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            - doc: The hybridCalling object only applies when calling type is hybridCalling.
+              name: hybridCalling
+              param_attrs: []
+              param_object:
+              - doc: End user email address in Cisco Unified CM.
+                name: emailAddress
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              type: object
+              type_spec: null
+            type: object
+            type_spec: null
+          - doc: Calendar type. Calendar of type none does not include an emailAddress
+              field.
+            name: calendar
+            param_attrs: []
+            param_object:
+            - doc: ''
+              name: type
+              param_attrs:
+              - doc: No calendar.
+                name: none
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Google Calendar.
+                name: google
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Microsoft Exchange or Office 365.
+                name: microsoft
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            - doc: Workspace email address. Will not be set when the calendar type
+                is none.
+              name: emailAddress
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            type: object
+            type_spec: null
+          - doc: Notes associated to the workspace.
+            name: notes
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Hot desking status of the workspace.
+            name: hotdeskingStatus
+            param_attrs:
+            - doc: Workspace supports hotdesking.
+              name: 'on'
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Workspace does not support hotdesking.
+              name: 'off'
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: The supported devices for the workspace.
+            name: supportedDevices
+            param_attrs:
+            - doc: Workspace supports collaborationDevices.
+              name: collaborationDevices
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Workspace supports phones.
+              name: phones
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          param_object: []
+          type: array[Workspace]
+          type_spec: null
+    - doc: 'Create a workspace.
+
+        The workspaceLocationId, floorId, capacity, type, notes and hotdeskingStatus  parameters
+        are optional, and omitting them will result in the creation of a workspace
+        without these values set, or set to their default. A workspaceLocationId must
+        be provided when the floorId is set. Calendar and calling can also be set
+        for a new workspace. Omitting them will default to free calling and no calendaring.
+        The orgId parameter can only be used by admin users of another organization
+        (such as partners).'
+      documentation:
+        doc: Create a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/workspaces/create-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces
+        http_method: POST
+      header: Create a Workspace
+      parameters_and_response:
+        Body Parameters:
+        - doc: A friendly name for the workspace.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: OrgId associated with the workspace. Only admin users of another organization
+            (such as partners) may use this parameter.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Location associated with the workspace. Must be provided when the floorId
+            is set.
+          name: workspaceLocationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Floor associated with the workspace.
+          name: floorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: How many people the workspace is suitable for. If set, must be 0 or
+            higher.
+          name: capacity
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: The type that best describes the workspace.
+          name: type
+          param_attrs:
+          - doc: No workspace type set.
+            name: notSet
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: High concentration.
+            name: focus
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Brainstorm/collaboration.
+            name: huddle
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Dedicated meeting space.
+            name: meetingRoom
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unstructured agile.
+            name: open
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Individual.
+            name: desk
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unspecified.
+            name: other
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The sipAddress field can only be provided when calling type is thirdPartySipCalling
+          name: sipAddress
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'Calling types supported on create are freeCalling, webexEdgeForDevices,
+            thirdPartySipCalling and none. Default is freeCalling.
+
+            Calling.'
+          name: calling
+          param_attrs: []
+          param_object: []
+          type: object
+          type_spec: null
+        - doc: Workspace calendar configuration. Provide a type (microsoft, google
+            or none) and an emailAddress. Default is none.
+          name: calendar
+          param_attrs:
+          - doc: ''
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Workspace email address. Will not be set when the calendar type is
+              none.
+            name: emailAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: object
+          type_spec: null
+        - doc: Notes associated to the workspace.
+          name: notes
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Hot desking status of the workspace.
+          name: hotdeskingStatus
+          param_attrs:
+          - doc: Workspace supports hotdesking.
+            name: 'on'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Workspace does not support hotdesking.
+            name: 'off'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        Response Properties:
+        - doc: Unique identifier for the Workspace.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: OrgId associate with the workspace.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Location associated with the workspace.
+          name: workspaceLocationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Floor associated with the workspace.
+          name: floorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A friendly name for the workspace.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: How many people the workspace is suitable for.
+          name: capacity
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: The workspace type.
+          name: type
+          param_attrs:
+          - doc: No workspace type set.
+            name: notSet
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: High concentration.
+            name: focus
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Brainstorm/collaboration.
+            name: huddle
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Dedicated meeting space.
+            name: meetingRoom
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unstructured agile.
+            name: open
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Individual.
+            name: desk
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unspecified.
+            name: other
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: SipUrl to call all the devices associated with the workspace.
+          name: sipAddress
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time that the workspace was registered, in ISO8601 format.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Calling type.
+          name: calling
+          param_attrs: []
+          param_object:
+          - doc: Calling.
+            name: type
+            param_attrs:
+            - doc: Free Calling.
+              name: freeCalling
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Hybrid Calling.
+              name: hybridCalling
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Webex Calling.
+              name: webexCalling
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Webex Edge For Devices.
+              name: webexEdgeForDevices
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Third-party SIP URI.
+              name: thirdPartySipCalling
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: No Calling.
+              name: none
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: The hybridCalling object only applies when calling type is hybridCalling.
+            name: hybridCalling
+            param_attrs: []
+            param_object:
+            - doc: End user email address in Cisco Unified CM.
+              name: emailAddress
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            type: object
+            type_spec: null
+          type: object
+          type_spec: null
+        - doc: Calendar type. Calendar of type none does not include an emailAddress
+            field.
+          name: calendar
+          param_attrs: []
+          param_object:
+          - doc: ''
+            name: type
+            param_attrs:
+            - doc: No calendar.
+              name: none
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Google Calendar.
+              name: google
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Microsoft Exchange or Office 365.
+              name: microsoft
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Workspace email address. Will not be set when the calendar type is
+              none.
+            name: emailAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          type: object
+          type_spec: null
+        - doc: Notes associated to the workspace.
+          name: notes
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Hot desking status of the workspace.
+          name: hotdeskingStatus
+          param_attrs:
+          - doc: Workspace supports hotdesking.
+            name: 'on'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Workspace does not support hotdesking.
+            name: 'off'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The supported devices for the workspace.
+          name: supportedDevices
+          param_attrs:
+          - doc: Workspace supports collaborationDevices.
+            name: collaborationDevices
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Workspace supports phones.
+            name: phones
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+    - doc: 'Shows details for a workspace, by ID.
+
+        The workspaceLocationId, floorId, capacity, type and notes fields will only
+        be present if they have been set for the workspace. Specify the workspace
+        ID in the workspaceId parameter in the URI.'
+      documentation:
+        doc: Get Workspace Details
+        doc_link: https://developer.webex.com/docs/api/v1/workspaces/get-workspace-details
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}
+        http_method: GET
+      header: Get Workspace Details
+      parameters_and_response:
+        Response Properties:
+        - doc: Unique identifier for the Workspace.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: OrgId associate with the workspace.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Location associated with the workspace.
+          name: workspaceLocationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Floor associated with the workspace.
+          name: floorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A friendly name for the workspace.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: How many people the workspace is suitable for.
+          name: capacity
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: The workspace type.
+          name: type
+          param_attrs:
+          - doc: No workspace type set.
+            name: notSet
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: High concentration.
+            name: focus
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Brainstorm/collaboration.
+            name: huddle
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Dedicated meeting space.
+            name: meetingRoom
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unstructured agile.
+            name: open
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Individual.
+            name: desk
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unspecified.
+            name: other
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: SipUrl to call all the devices associated with the workspace.
+          name: sipAddress
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time that the workspace was registered, in ISO8601 format.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Calling type.
+          name: calling
+          param_attrs: []
+          param_object:
+          - doc: Calling.
+            name: type
+            param_attrs:
+            - doc: Free Calling.
+              name: freeCalling
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Hybrid Calling.
+              name: hybridCalling
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Webex Calling.
+              name: webexCalling
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Webex Edge For Devices.
+              name: webexEdgeForDevices
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Third-party SIP URI.
+              name: thirdPartySipCalling
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: No Calling.
+              name: none
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: The hybridCalling object only applies when calling type is hybridCalling.
+            name: hybridCalling
+            param_attrs: []
+            param_object:
+            - doc: End user email address in Cisco Unified CM.
+              name: emailAddress
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            type: object
+            type_spec: null
+          type: object
+          type_spec: null
+        - doc: Calendar type. Calendar of type none does not include an emailAddress
+            field.
+          name: calendar
+          param_attrs: []
+          param_object:
+          - doc: ''
+            name: type
+            param_attrs:
+            - doc: No calendar.
+              name: none
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Google Calendar.
+              name: google
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Microsoft Exchange or Office 365.
+              name: microsoft
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Workspace email address. Will not be set when the calendar type is
+              none.
+            name: emailAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          type: object
+          type_spec: null
+        - doc: Notes associated to the workspace.
+          name: notes
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Hot desking status of the workspace.
+          name: hotdeskingStatus
+          param_attrs:
+          - doc: Workspace supports hotdesking.
+            name: 'on'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Workspace does not support hotdesking.
+            name: 'off'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The supported devices for the workspace.
+          name: supportedDevices
+          param_attrs:
+          - doc: Workspace supports collaborationDevices.
+            name: collaborationDevices
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Workspace supports phones.
+            name: phones
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        URI Parameters:
+        - doc: A unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Updates details for a workspace by ID.
+
+        Specify the workspace ID in the workspaceId parameter in the URI. Include
+        all details for the workspace that are present in a GET request for the workspace
+        details. Not including the optional capacity, type or notes fields will result
+        in the fields no longer being defined for the workspace. A workspaceLocationId
+        must be provided when the floorId is set. The workspaceLocationId, floorId,
+        calendar and calling fields do not change when omitted from the update request.
+
+        Updating the calling parameter is only supported if the existing calling type
+        is freeCalling, none or thirdPartySipCalling.
+
+        Updating the calling parameter to none or thirdPartySipCalling is not supported
+        if the workspace contains any devices.'
+      documentation:
+        doc: Update a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/workspaces/update-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}
+        http_method: PUT
+      header: Update a Workspace
+      parameters_and_response:
+        Body Parameters:
+        - doc: A friendly name for the workspace.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Location associated with the workspace. Must be provided when the floorId
+            is set.
+          name: workspaceLocationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Floor associated with the workspace.
+          name: floorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: How many people the workspace is suitable for. If set, must be 0 or
+            higher.
+          name: capacity
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: The type that best describes the workspace.
+          name: type
+          param_attrs:
+          - doc: No workspace type set.
+            name: notSet
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: High concentration.
+            name: focus
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Brainstorm/collaboration.
+            name: huddle
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Dedicated meeting space.
+            name: meetingRoom
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unstructured agile.
+            name: open
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Individual.
+            name: desk
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unspecified.
+            name: other
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: An empty/null calendar field will not cause any changes. Provide a
+            type (microsoft, google or none) and an emailAddress. Removing calendar
+            is done by setting the none type, and setting none type does not require
+            an emailAddress.
+          name: calendar
+          param_attrs:
+          - doc: ''
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Workspace email address. Will not be set when the calendar type is
+              none.
+            name: emailAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: object
+          type_spec: null
+        - doc: The sipAddress field can only be provided when calling type is thirdPartySipCalling
+          name: sipAddress
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'Calling types supported on update are freeCalling, thirdPartySipCalling
+            and none.
+
+            Calling type.'
+          name: calling
+          param_attrs: []
+          param_object: []
+          type: object
+          type_spec: null
+        - doc: Notes associated to the workspace.
+          name: notes
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Hot desking status of the workspace.
+          name: hotdeskingStatus
+          param_attrs:
+          - doc: Workspace supports hotdesking.
+            name: 'on'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Workspace does not support hotdesking.
+            name: 'off'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        Response Properties:
+        - doc: Unique identifier for the Workspace.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: OrgId associate with the workspace.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Location associated with the workspace.
+          name: workspaceLocationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Floor associated with the workspace.
+          name: floorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A friendly name for the workspace.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: How many people the workspace is suitable for.
+          name: capacity
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: The workspace type.
+          name: type
+          param_attrs:
+          - doc: No workspace type set.
+            name: notSet
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: High concentration.
+            name: focus
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Brainstorm/collaboration.
+            name: huddle
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Dedicated meeting space.
+            name: meetingRoom
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unstructured agile.
+            name: open
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Individual.
+            name: desk
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unspecified.
+            name: other
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: SipUrl to call all the devices associated with the workspace.
+          name: sipAddress
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time that the workspace was registered, in ISO8601 format.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Calling type.
+          name: calling
+          param_attrs: []
+          param_object:
+          - doc: Calling.
+            name: type
+            param_attrs:
+            - doc: Free Calling.
+              name: freeCalling
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Hybrid Calling.
+              name: hybridCalling
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Webex Calling.
+              name: webexCalling
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Webex Edge For Devices.
+              name: webexEdgeForDevices
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Third-party SIP URI.
+              name: thirdPartySipCalling
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: No Calling.
+              name: none
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: The hybridCalling object only applies when calling type is hybridCalling.
+            name: hybridCalling
+            param_attrs: []
+            param_object:
+            - doc: End user email address in Cisco Unified CM.
+              name: emailAddress
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            type: object
+            type_spec: null
+          type: object
+          type_spec: null
+        - doc: Calendar type. Calendar of type none does not include an emailAddress
+            field.
+          name: calendar
+          param_attrs: []
+          param_object:
+          - doc: ''
+            name: type
+            param_attrs:
+            - doc: No calendar.
+              name: none
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Google Calendar.
+              name: google
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Microsoft Exchange or Office 365.
+              name: microsoft
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Workspace email address. Will not be set when the calendar type is
+              none.
+            name: emailAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          type: object
+          type_spec: null
+        - doc: Notes associated to the workspace.
+          name: notes
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Hot desking status of the workspace.
+          name: hotdeskingStatus
+          param_attrs:
+          - doc: Workspace supports hotdesking.
+            name: 'on'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Workspace does not support hotdesking.
+            name: 'off'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The supported devices for the workspace.
+          name: supportedDevices
+          param_attrs:
+          - doc: Workspace supports collaborationDevices.
+            name: collaborationDevices
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Workspace supports phones.
+            name: phones
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        URI Parameters:
+        - doc: A unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Deletes a workspace by ID.
+
+        Also deletes all devices associated with the workspace. Any deleted devices
+        will need to be reactivated. Specify the workspace ID in the workspaceId parameter
+        in the URI.'
+      documentation:
+        doc: Delete a Workspace
+        doc_link: https://developer.webex.com/docs/api/v1/workspaces/delete-a-workspace
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}
+        http_method: DELETE
+      header: Delete a Workspace
+      parameters_and_response:
+        URI Parameters:
+        - doc: A unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Shows the capabilities for a workspace by ID.
+
+        Returns a set of capabilities, including whether or not the capability is
+        supported by any device in the workspace, and if the capability is configured
+        (enabled). For example for a specific capability like occupancyDetection,
+        the API will return if the capability is supported and/or configured such
+        that occupancy detection data will flow from the workspace (device) to the
+        cloud. Specify the workspace ID in the workspaceId parameter in the URI.'
+      documentation:
+        doc: Get Workspace Capabilities
+        doc_link: https://developer.webex.com/docs/api/v1/workspaces/get-workspace-capabilities
+        endpoint: https://webexapis.com/v1/workspaces/{workspaceId}/capabilities
+        http_method: GET
+      header: Get Workspace Capabilities
+      parameters_and_response:
+        Response Properties:
+        - doc: The map of workspace capabilities.
+          name: capabilities
+          param_attrs:
+          - doc: Occupancy detection.
+            name: occupancyDetection
+            param_attrs:
+            - doc: Is the workspace capability supported or not.
+              name: supported
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Is the workspace capability configured or not.
+              name: configured
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            param_object: []
+            type: SupportAndConfiguredInfo
+            type_spec: null
+          - doc: Presence detection.
+            name: presenceDetection
+            param_attrs:
+            - doc: Is the workspace capability supported or not.
+              name: supported
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Is the workspace capability configured or not.
+              name: configured
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            param_object: []
+            type: SupportAndConfiguredInfo
+            type_spec: null
+          - doc: Ambient noise.
+            name: ambientNoise
+            param_attrs:
+            - doc: Is the workspace capability supported or not.
+              name: supported
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Is the workspace capability configured or not.
+              name: configured
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            param_object: []
+            type: SupportAndConfiguredInfo
+            type_spec: null
+          - doc: Sound level.
+            name: soundLevel
+            param_attrs:
+            - doc: Is the workspace capability supported or not.
+              name: supported
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Is the workspace capability configured or not.
+              name: configured
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            param_object: []
+            type: SupportAndConfiguredInfo
+            type_spec: null
+          - doc: Temperature.
+            name: temperature
+            param_attrs:
+            - doc: Is the workspace capability supported or not.
+              name: supported
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Is the workspace capability configured or not.
+              name: configured
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            param_object: []
+            type: SupportAndConfiguredInfo
+            type_spec: null
+          - doc: Air quality.
+            name: airQuality
+            param_attrs:
+            - doc: Is the workspace capability supported or not.
+              name: supported
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Is the workspace capability configured or not.
+              name: configured
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            param_object: []
+            type: SupportAndConfiguredInfo
+            type_spec: null
+          - doc: Relative humidity.
+            name: relativeHumidity
+            param_attrs:
+            - doc: Is the workspace capability supported or not.
+              name: supported
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Is the workspace capability configured or not.
+              name: configured
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            param_object: []
+            type: SupportAndConfiguredInfo
+            type_spec: null
+          param_object: []
+          type: CapabilityMap
+          type_spec: null
+        URI Parameters:
+        - doc: A unique identifier for the workspace.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+  xAPI:
+    doc: null
+    header: null
+    methods: []
