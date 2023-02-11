@@ -29,6 +29,17 @@ Source: |calling_users_async.py|_
     :linenos:
 
 
+Get all users without phones
+----------------------------
+
+Source: |users_wo_devices.py|_
+
+.. |users_wo_devices.py| replace:: ``users_wo_devices.py``
+
+
+.. literalinclude:: ../examples/users_wo_devices.py
+    :linenos:
+
 Default call forwarding settings for all users
 ----------------------------------------------
 
