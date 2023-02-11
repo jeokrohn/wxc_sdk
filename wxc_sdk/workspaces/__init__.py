@@ -227,9 +227,15 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type org_id: str
         :return: generator of :class:`Workspace` instances
         """
-        params.update((to_camel(k), v)
-                      for i, (k, v) in enumerate(locals().items())
-                      if i and k != 'params' and v is not None)
+        def enum_str(p:Enum)->str:
+            try:
+                return p.value
+            except:
+                pass
+            return p
+        params.update((to_camel(k), enum_str(v))
+                      for k, v in locals().items()
+                      if k not in {'self', 'params', 'enum_str'} and v is not None)
         if workspace_type is not None:
             params.pop('workspaceType')
             params['type'] = workspace_type

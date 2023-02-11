@@ -4,6 +4,7 @@ Release history
 - feat: new attribute call_park_extension in :class:`wxc_sdk.telephony.callpark.CallPark`
 - feat: new parameters details, restricted_non_geo_numbers for :meth:`wxc_sdk.telephony.TelephonyApi.phone_numbers`
 - feat: new Api :class:`wxc_sdk.telephony.location.receptionist_contacts.ReceptionistContactsDirectoryApi`
+- fix: correct support for enum URL params in :method:`wxc_sdk.workspaces.WorkspacesApi.list`
 
 1.11.0
 ------
