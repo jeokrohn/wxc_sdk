@@ -76,8 +76,8 @@ async def main():
                          if user.location_id]
 
         # get device info for all users
-        user_device_infos = await asyncio.gather(*[api.person_settings.devices(person_id=user.person_id) for user in
-                                                   calling_users])
+        user_device_infos = await asyncio.gather(*[api.person_settings.devices(person_id=user.person_id)
+                                                   for user in calling_users])
         user_device_infos: list[PersonDevicesResponse]
         users_wo_devices = [user for user, device_info in zip(calling_users, user_device_infos)
                             if not device_info.devices]
