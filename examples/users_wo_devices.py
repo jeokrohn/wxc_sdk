@@ -5,12 +5,14 @@ Get calling users without devices
 import asyncio
 import logging
 import os
+from itertools import chain
 from typing import Optional
 
 from dotenv import load_dotenv
 
 from wxc_sdk import Tokens
 from wxc_sdk.as_api import AsWebexSimpleApi
+from wxc_sdk.common import UserType
 from wxc_sdk.integration import Integration
 from wxc_sdk.person_settings import PersonDevicesResponse
 from wxc_sdk.scopes import parse_scopes
@@ -80,12 +82,26 @@ async def main():
         users_wo_devices = [user for user, device_info in zip(calling_users, user_device_infos)
                             if not device_info.devices]
 
+        # alternatively we can collect all device owners
+        device_owner_ids = set(owner.owner_id
+                               for device in chain.from_iterable(udi.devices for udi in user_device_infos)
+                               if (owner := device.owner) and owner.owner_type == UserType.people)
+
+        # ... and collect all other users (the ones not owning a device)
+        users_not_owning_a_device = [user for user in calling_users
+                                     if user.person_id not in device_owner_ids]
+
     # sort users by display name
     users_wo_devices.sort(key=lambda u: u.display_name)
 
     print(f'{len(users_wo_devices)} users w/o devices:')
     print('\n'.join(f'{user.display_name} ({user.emails[0]})'
                     for user in users_wo_devices))
+
+    print()
+    print(f'{len(users_not_owning_a_device)} users not owning a device:')
+    print('\n'.join(f'{user.display_name} ({user.emails[0]})'
+                    for user in users_not_owning_a_device))
 
 
 if __name__ == '__main__':
