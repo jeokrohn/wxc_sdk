@@ -91,14 +91,13 @@ async def main():
         users_not_owning_a_device = [user for user in calling_users
                                      if user.person_id not in device_owner_ids]
 
-    # sort users by display name
     users_wo_devices.sort(key=lambda u: u.display_name)
-
     print(f'{len(users_wo_devices)} users w/o devices:')
     print('\n'.join(f'{user.display_name} ({user.emails[0]})'
                     for user in users_wo_devices))
 
     print()
+    users_not_owning_a_device.sort(key=lambda u: u.display_name)
     print(f'{len(users_not_owning_a_device)} users not owning a device:')
     print('\n'.join(f'{user.display_name} ({user.emails[0]})'
                     for user in users_not_owning_a_device))
