@@ -16,4 +16,5 @@ Submodules
    wxc_sdk.telephony.location.internal_dialing
    wxc_sdk.telephony.location.moh
    wxc_sdk.telephony.location.numbers
+   wxc_sdk.telephony.location.receptionist_contacts
    wxc_sdk.telephony.location.vm

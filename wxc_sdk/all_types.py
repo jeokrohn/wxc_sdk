@@ -62,8 +62,8 @@ from wxc_sdk.telephony import CallSourceInfo, CallSourceType, DestinationType, D
     NumberLocation, NumberOwner, NumberType, OnboardingMethod, OriginatorType, OwnerType, PbxUserDestination,\
     PstnNumberDestination, RouteListDestination, ServiceType, SupportedDevice, TestCallRoutingResult,\
     TrunkDestination, UCMProfile, VirtualExtensionDestination
-from wxc_sdk.telephony.autoattendant import AutoAttendant, AutoAttendantAction, AutoAttendantKeyConfiguration,\
-    AutoAttendantMenu, Dialing, MenuKey
+from wxc_sdk.telephony.autoattendant import AutoAttendant, AutoAttendantAction, AutoAttendantAudioFile,\
+    AutoAttendantKeyConfiguration, AutoAttendantMenu, Dialing, MenuKey
 from wxc_sdk.telephony.callpark import AvailableRecallHuntGroup, CallPark, CallParkRecall, CallParkSettings,\
     LocationCallParkSettings, RecallHuntGroup
 from wxc_sdk.telephony.callpickup import CallPickup
@@ -118,26 +118,26 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'Announcement', 'AnnouncementMode', 'ApiModel', 'ApiModelWithErrors', 'AppServicesSettings',
            'AtaCustomization', 'AtaDtmfMethod', 'AtaDtmfMode', 'AttachmentAction', 'AttachmentActionData',
            'AudioCodecPriority', 'AudioSource', 'AuthCode', 'AutoAttendant', 'AutoAttendantAction',
-           'AutoAttendantKeyConfiguration', 'AutoAttendantMenu', 'AutoTransferNumbers', 'AvailableMember',
-           'AvailableRecallHuntGroup', 'Background', 'BackgroundSelection', 'BacklightTimer', 'BargeSettings',
-           'BehaviorType', 'BlockContiguousSequences', 'BlockPreviousPasscodes', 'BlockRepeatedDigits',
-           'BusinessContinuity', 'CDR', 'CDRCallType', 'CDRClientType', 'CDRDirection', 'CDROriginalReason',
-           'CDRRedirectReason', 'CDRRelatedReason', 'CDRUserType', 'CPActionType', 'CQHolidaySchedule',
-           'CQRoutingType', 'Calendar', 'CalendarType', 'CallBounce', 'CallForwarding', 'CallForwardingAlways',
-           'CallForwardingCommon', 'CallForwardingNoAnswer', 'CallForwardingNumber', 'CallForwardingNumberType',
-           'CallForwardingPerson', 'CallHistoryRecord', 'CallInfo', 'CallPark', 'CallParkExtension', 'CallParkRecall',
-           'CallParkSettings', 'CallPickup', 'CallQueue', 'CallQueueCallPolicies', 'CallRecordingSetting',
-           'CallSourceInfo', 'CallSourceType', 'CallState', 'CallType', 'CallTypePermission', 'CallerId',
-           'CallerIdSelectedType', 'CallingBehavior', 'CallingCDR', 'CallingLineId', 'CallingPermissions',
-           'CallingType', 'CallsFrom', 'CnameRecord', 'CodeAndReason', 'ComfortMessageBypass',
-           'ComfortMessageSetting', 'CommonDeviceCustomization', 'ComplianceEvent', 'CreateResponse', 'CustomNumbers',
-           'Customer', 'DND', 'DectDevice', 'DefaultVoicemailPinRules', 'DestinationType', 'Device',
-           'DeviceActivationState', 'DeviceCustomization', 'DeviceCustomizations', 'DeviceManagedBy',
-           'DeviceManufacturer', 'DeviceMember', 'DeviceMembersResponse', 'DeviceOwner', 'DeviceStatus', 'DeviceType',
-           'DialPatternStatus', 'DialPatternValidate', 'DialPatternValidationResult', 'DialPlan', 'DialResponse',
-           'Dialing', 'DisplayCallqueueAgentSoftkey', 'DisplayNameSelection', 'DistinctiveRing',
-           'EmergencyDestination', 'EnabledAndNumberOfDays', 'ErrorMessageObject', 'ErrorObject', 'Event',
-           'EventData', 'EventResource', 'EventType', 'ExecAssistantType', 'ExpirePasscode',
+           'AutoAttendantAudioFile', 'AutoAttendantKeyConfiguration', 'AutoAttendantMenu', 'AutoTransferNumbers',
+           'AvailableMember', 'AvailableRecallHuntGroup', 'Background', 'BackgroundSelection', 'BacklightTimer',
+           'BargeSettings', 'BehaviorType', 'BlockContiguousSequences', 'BlockPreviousPasscodes',
+           'BlockRepeatedDigits', 'BusinessContinuity', 'CDR', 'CDRCallType', 'CDRClientType', 'CDRDirection',
+           'CDROriginalReason', 'CDRRedirectReason', 'CDRRelatedReason', 'CDRUserType', 'CPActionType',
+           'CQHolidaySchedule', 'CQRoutingType', 'Calendar', 'CalendarType', 'CallBounce', 'CallForwarding',
+           'CallForwardingAlways', 'CallForwardingCommon', 'CallForwardingNoAnswer', 'CallForwardingNumber',
+           'CallForwardingNumberType', 'CallForwardingPerson', 'CallHistoryRecord', 'CallInfo', 'CallPark',
+           'CallParkExtension', 'CallParkRecall', 'CallParkSettings', 'CallPickup', 'CallQueue',
+           'CallQueueCallPolicies', 'CallRecordingSetting', 'CallSourceInfo', 'CallSourceType', 'CallState',
+           'CallType', 'CallTypePermission', 'CallerId', 'CallerIdSelectedType', 'CallingBehavior', 'CallingCDR',
+           'CallingLineId', 'CallingPermissions', 'CallingType', 'CallsFrom', 'CnameRecord', 'CodeAndReason',
+           'ComfortMessageBypass', 'ComfortMessageSetting', 'CommonDeviceCustomization', 'ComplianceEvent',
+           'CreateResponse', 'CustomNumbers', 'Customer', 'DND', 'DectDevice', 'DefaultVoicemailPinRules',
+           'DestinationType', 'Device', 'DeviceActivationState', 'DeviceCustomization', 'DeviceCustomizations',
+           'DeviceManagedBy', 'DeviceManufacturer', 'DeviceMember', 'DeviceMembersResponse', 'DeviceOwner',
+           'DeviceStatus', 'DeviceType', 'DialPatternStatus', 'DialPatternValidate', 'DialPatternValidationResult',
+           'DialPlan', 'DialResponse', 'Dialing', 'DisplayCallqueueAgentSoftkey', 'DisplayNameSelection',
+           'DistinctiveRing', 'EmergencyDestination', 'EnabledAndNumberOfDays', 'ErrorMessageObject', 'ErrorObject',
+           'Event', 'EventData', 'EventResource', 'EventType', 'ExecAssistantType', 'ExpirePasscode',
            'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts', 'FeatureAccessCodeDestination',
            'FeatureSelector', 'ForcedForward', 'ForwardCallsTo', 'ForwardToSelection', 'ForwardingRule',
            'ForwardingRuleDetails', 'ForwardingSetting', 'GetRoomMeetingDetailsResponse', 'Greeting', 'Group',

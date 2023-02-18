@@ -346,7 +346,7 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         with Cloud Connected PSTN.
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
-        :param operation: Indicates the kind of operation to be carried out. 
+        :param operation: Indicates the kind of operation to be carried out.
         :type operation: str
         :param target_location_id: The target location within organization where the unassigned numbers will be moved
             from the source location.

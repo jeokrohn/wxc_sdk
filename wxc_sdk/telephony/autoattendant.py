@@ -7,16 +7,15 @@ from typing import Optional
 
 from pydantic import Field
 
-from wxc_sdk.common import AlternateNumber
 from .forwarding import ForwardingApi, FeatureSelector
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
 from ..base import SafeEnum as Enum
-from ..common import Greeting
+from ..common import Greeting, AlternateNumber, MediaFileType
 from ..rest import RestSession
 
-__all__ = ['Dialing', 'MenuKey', 'AutoAttendantAction', 'AutoAttendantKeyConfiguration', 'AutoAttendantMenu',
-           'AutoAttendant', 'AutoAttendantApi']
+__all__ = ['Dialing', 'MenuKey', 'AutoAttendantAction', 'AutoAttendantKeyConfiguration', 'AutoAttendantAudioFile',
+           'AutoAttendantMenu', 'AutoAttendant', 'AutoAttendantApi']
 
 
 class Dialing(str, Enum):
@@ -81,6 +80,11 @@ class AutoAttendantKeyConfiguration(ApiModel):
         return AutoAttendantKeyConfiguration(key=MenuKey.zero, action=AutoAttendantAction.exit)
 
 
+class AutoAttendantAudioFile(ApiModel):
+    name: str
+    media_type: MediaFileType
+
+
 class AutoAttendantMenu(ApiModel):
     """
     Menu defined for Auto Attendant
@@ -91,6 +95,7 @@ class AutoAttendantMenu(ApiModel):
     extension_enabled: bool
     #: Key configurations defined for the auto attendant.
     key_configurations: list[AutoAttendantKeyConfiguration]
+    audio_file: Optional[AutoAttendantAudioFile]
 
     @staticmethod
     def default() -> 'AutoAttendantMenu':

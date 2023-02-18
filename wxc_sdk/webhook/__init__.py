@@ -4,7 +4,7 @@ Webhook types and API
 import datetime
 import json
 from collections.abc import Generator
-from typing import Optional, Union, Any, ClassVar
+from typing import Optional, Union, ClassVar
 
 from pydantic import Field, root_validator, Extra
 
@@ -129,7 +129,7 @@ class WebhookEventDataForbid(ApiModel):
         WebhookEventDataForbid._registry[cls.resource] = cls
 
     @classmethod
-    def registered_subclass(cls, resource:str):
+    def registered_subclass(cls, resource: str):
         """
         :meta private:
         """

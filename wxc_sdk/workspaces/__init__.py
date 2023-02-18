@@ -227,7 +227,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type org_id: str
         :return: generator of :class:`Workspace` instances
         """
-        def enum_str(p:Enum)->str:
+        def enum_str(p: Enum) -> str:
             try:
                 return p.value
             except:

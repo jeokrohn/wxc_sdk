@@ -40,7 +40,7 @@ class ReceptionistContactsDirectoryApi(ApiChild, base='telephony/config/location
         self.post(url=url, params=params, json=body)
         # TODO: does create() really not return an id?
 
-    def list(self, location_id: str, org_id: str = None)->Generator[IdAndName, None, None]:
+    def list(self, location_id: str, org_id: str = None) -> Generator[IdAndName, None, None]:
         """
         List all Receptionist Contact Directories for a location.
 
@@ -59,7 +59,7 @@ class ReceptionistContactsDirectoryApi(ApiChild, base='telephony/config/location
         params = org_id and {'orgId': org_id} or None
         return self.session.follow_pagination(url=url, model=IdAndName, params=params, item_key='directories')
 
-    def delete(self,location_id: str, directory_id: str, org_id: str = None):
+    def delete(self, location_id: str, directory_id: str, org_id: str = None):
         """
         Delete a Receptionist Contact Directory from a location.
 

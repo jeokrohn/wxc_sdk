@@ -7,7 +7,7 @@ import os
 import sys
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from json import dumps
 from typing import Optional
 from uuid import uuid4
@@ -18,12 +18,12 @@ from flask import Flask, request
 from examples import ngrokhelper
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.common import RoomType
+from wxc_sdk.integration import Integration
 from wxc_sdk.memberships import MembershipsData
 from wxc_sdk.messages import MessagesData
 from wxc_sdk.rest import RestError
-from wxc_sdk.tokens import Tokens
-from wxc_sdk.integration import Integration
 from wxc_sdk.scopes import parse_scopes
+from wxc_sdk.tokens import Tokens
 from wxc_sdk.webhook import WebhookEvent, WebhookEventType
 
 LOCAL_APP_PORT = 6001
@@ -111,7 +111,7 @@ class FireHose(Flask):
 
         # register URL for messages to webhook
         self.add_url_rule(
-            f'/', "index", self.handle_webhook_event, methods=["POST"]
+            '/', "index", self.handle_webhook_event, methods=["POST"]
         )
 
         # delete all existing webhooks which smell like leftovers
@@ -135,9 +135,7 @@ class FireHose(Flask):
         """
         Process an incoming message, determine the command and action,
         and determine reply.
-        :return:
         """
-        reply = None
 
         # Get the webhook data
         post_data = request.json

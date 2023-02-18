@@ -25,3 +25,5 @@
 * build docs for last tag on readthedocs; under "Versions"
 * review pypi
 * review GitHub
+
+* unshelve changes that were not part of the build

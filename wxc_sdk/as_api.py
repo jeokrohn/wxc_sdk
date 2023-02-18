@@ -7029,7 +7029,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         with Cloud Connected PSTN.
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
-        :param operation: Indicates the kind of operation to be carried out. 
+        :param operation: Indicates the kind of operation to be carried out.
         :type operation: str
         :param target_location_id: The target location within organization where the unassigned numbers will be moved
             from the source location.
@@ -9442,7 +9442,7 @@ class AsReceptionistContactsDirectoryApi(AsApiChild, base='telephony/config/loca
         await self.post(url=url, params=params, json=body)
         # TODO: does create() really not return an id?
 
-    def list_gen(self, location_id: str, org_id: str = None)-> AsyncGenerator[IdAndName, None, None]:
+    def list_gen(self, location_id: str, org_id: str = None) -> AsyncGenerator[IdAndName, None, None]:
         """
         List all Receptionist Contact Directories for a location.
 
@@ -9461,7 +9461,7 @@ class AsReceptionistContactsDirectoryApi(AsApiChild, base='telephony/config/loca
         params = org_id and {'orgId': org_id} or None
         return self.session.follow_pagination(url=url, model=IdAndName, params=params, item_key='directories')
 
-    async def list(self, location_id: str, org_id: str = None)-> List[IdAndName]:
+    async def list(self, location_id: str, org_id: str = None) -> List[IdAndName]:
         """
         List all Receptionist Contact Directories for a location.
 
@@ -9480,7 +9480,7 @@ class AsReceptionistContactsDirectoryApi(AsApiChild, base='telephony/config/loca
         params = org_id and {'orgId': org_id} or None
         return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params, item_key='directories')]
 
-    async def delete(self,location_id: str, directory_id: str, org_id: str = None):
+    async def delete(self, location_id: str, directory_id: str, org_id: str = None):
         """
         Delete a Receptionist Contact Directory from a location.
 
@@ -10902,7 +10902,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         :type org_id: str
         :return: generator of :class:`Workspace` instances
         """
-        def enum_str(p:Enum)->str:
+        def enum_str(p: Enum) -> str:
             try:
                 return p.value
             except:
@@ -10951,7 +10951,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         :type org_id: str
         :return: generator of :class:`Workspace` instances
         """
-        def enum_str(p:Enum)->str:
+        def enum_str(p: Enum) -> str:
             try:
                 return p.value
             except:
