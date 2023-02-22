@@ -72,7 +72,11 @@ class TestRead(TestWithLocations):
         details = await asyncio.gather(*[self.async_api.telephony.callpark.details(location_id=cp.location_id,
                                                                                    callpark_id=cp.callpark_id)
                                          for cp in call_parks])
+        details: list[CallPark]
+        with_cpe = [d for d in details
+                    if d.call_park_extensions]
         print(f'Got details for {len(details)} call parks.')
+        print(f'{len(with_cpe)} call parks with call park extension(s)')
 
 
 class TestCreate(TestWithLocations):
