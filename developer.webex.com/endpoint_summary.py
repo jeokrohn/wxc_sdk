@@ -44,7 +44,7 @@ class EndPointGrouper:
 def main():
     parser = argparse.ArgumentParser()
     default_output = f'{os.path.splitext(os.path.basename(__file__))[0]}.txt'
-    default_input = 'read_api_spec.yml'
+    default_input = 'api_spec.yml'
 
     # specify file a file to write the endpoint summary to
     parser.add_argument('-o', '--output', dest='output_path', action='store', required=False, type=str, nargs='?',
@@ -66,19 +66,35 @@ def main():
     # read API documentation details from file
     doc_details = DocMethodDetails.from_yml(args.input)
 
+    csv_output = args.output_path.lower().endswith('.csv')
     # group endpoints by key (common start of endpoint URL)
     epg = EndPointGrouper(doc_details.methods())
     summary: dict[str, list[MethodDetails]]
-    summary = reduce(lambda s, el: s[epg.key(el.method_details.documentation.endpoint)].append(el.method_details) or s,
-                     doc_details.methods(),
-                     defaultdict(list))
+
+    if csv_output:
+        # for csv output simply group by section
+        summary = reduce(lambda s, el: s[el.section].append(el.method_details) or s,
+                         doc_details.methods(), defaultdict(list))
+    else:
+        summary = reduce(lambda s, el: s[epg.key(el.method_details.documentation.endpoint)].append(el.method_details) or s,
+                         doc_details.methods(),
+                         defaultdict(list))
 
     with output_file() as output:
+        if csv_output:
+            print('section,method,url,doc,doc_url', file=output)
         for prefix in sorted(summary):
-            print(f'{prefix.strip("/")}', file=output)
-            print('\n'.join(f'  {m.documentation.http_method:6} {m.documentation.endpoint} --- {m.documentation.doc}'
-                            for m in sorted(summary[prefix], key=lambda m: m.documentation.endpoint)),
-                  file=output)
+            if csv_output:
+                methods_detail_list = summary[prefix]
+                for md in methods_detail_list:
+                    print(f'{prefix},{md.documentation.http_method},{md.documentation.endpoint},{md.documentation.doc},'
+                          f'{md.documentation.doc_link}',
+                          file=output)
+            else:
+                print(f'{prefix.strip("/")}', file=output)
+                print('\n'.join(f'  {m.documentation.http_method:6} {m.documentation.endpoint} --- {m.documentation.doc}'
+                                for m in sorted(summary[prefix], key=lambda m: m.documentation.endpoint)),
+                      file=output)
 
     rl_delete = next((m for m in doc_details.methods()
                       if m.section == 'Delete a Route List'), None)
