@@ -18,6 +18,7 @@ import argparse
 import json
 import logging
 import re
+import sys
 from collections import Counter
 from collections.abc import Generator, Callable
 from contextlib import contextmanager
@@ -101,6 +102,8 @@ class APIMethod:
     PARAM_INIT = '''
         if {p_name} is not None:
             params['{p_name_camel}'] = {p_name}'''
+    PARAM_INIT_REQUIRED = '''
+        params['{p_name_camel}'] = {p_name}'''
 
     BODY_INIT = '''
         if {p_name} is not None:
@@ -133,7 +136,10 @@ class APIMethod:
                                                         p_type=p_type,
                                                         p_doc=param.doc).strip('\n'))
                 if is_query:
-                    param_code.append(self.PARAM_INIT.format(p_name=p_name, p_name_camel=param.name))
+                    if param.required:
+                        param_code.append(self.PARAM_INIT_REQUIRED.format(p_name=p_name, p_name_camel=param.name))
+                    else:
+                        param_code.append(self.PARAM_INIT.format(p_name=p_name, p_name_camel=param.name))
             if is_body:
                 body_params.append(self.BODY_INIT.format(p_name=p_name))
 
@@ -531,9 +537,9 @@ class ClassGenerator:
             f'create class: {new_class.name} - {", ".join(f"{attr.name}({attr.type})" for attr in attributes)}')
         return new_class
 
-    def from_doc_method_details(self, api_spec: DocMethodDetails):
+    def from_doc_method_details(self, api_spec: DocMethodDetails, only_section: str = None):
         """
-        Read API spec and identify classes for objects in the API spec
+        Read API spec and identify classes for objects in the API spec. Optionally limited to only one section
 
         :param api_spec:
         :return:
@@ -551,6 +557,8 @@ class ClassGenerator:
         # * param_attrs only for enums
         # * param_object is a class
         for section in api_spec.docs:
+            if only_section and only_section != section:
+                continue
             section_details = api_spec.docs[section]
             methods = section_details.methods
             if not methods:
@@ -625,6 +633,10 @@ def main():
     parser.add_argument('-l', '--logfile', dest='log_path', action='store', required=False, type=str,
                         help='Write detailed logs to this file.')
 
+    # limit output to a single section
+    parser.add_argument('--section', type=str,
+                        help='Limit output to a single section. Example --section "Meeting chats"')
+
     args = parser.parse_args()
 
     setup_logging(console_level=logging.DEBUG if args.debug else logging.INFO,
@@ -644,7 +656,7 @@ def main():
         api_spec = DocMethodDetails.from_yml(args.api_spec)
 
         class_generator = ClassGenerator(output=output)
-        class_generator.from_doc_method_details(api_spec)
+        class_generator.from_doc_method_details(api_spec, only_section=args.section)
         print(PY_HEADER.strip('\n'), file=output)
         print('\n', file=output)
         print(class_generator.dunder_all(), file=output)
