@@ -169,8 +169,7 @@ class MessagesApi(ApiChild, base='messages'):
         :param before_message: List messages sent before a message, by ID.
         :type before_message: str
         """
-        if room_id is not None:
-            params['roomId'] = room_id
+        params['roomId'] = room_id
         if parent_id is not None:
             params['parentId'] = parent_id
         if mentioned_people is not None:

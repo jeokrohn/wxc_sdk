@@ -639,10 +639,8 @@ Possible values: DIRECT_LINE
         :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners) can use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        if attributes is not None:
-            params['Attributes'] = attributes
-        if body is not None:
-            params['Body'] = body
+        params['Attributes'] = attributes
+        params['Body'] = body
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'numbers')

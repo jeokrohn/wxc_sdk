@@ -70,7 +70,9 @@ class CallPark(ApiModel):
     recall: Optional[RecallHuntGroup]
     #: People, including workspaces, that are eligible to receive calls.
     agents: Optional[list[PersonPlaceAgent]]
+    #: Whether or not the calls will be parked on agents as a destination.
     park_on_agents_enabled: Optional[bool]
+    #: Array of call park extensions assigned to a call park.
     call_park_extensions: Optional[list[CallParkExtension]]
 
     @staticmethod

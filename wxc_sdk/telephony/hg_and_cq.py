@@ -30,15 +30,15 @@ class AlternateNumberSettings(ApiModel):
 
 
 class Agent(UserBase):
-    #: ID of person or workspace.
+    #: ID of person, workspace or virtual line.
     agent_id: str = Field(alias='id')
     #: Extension of person or workspace.
     extension: Optional[str]
     #: Phone number of person or workspace.
     phone_number: Optional[str]
-    #: Weight of person or workspace. Only applied when call policy is WEIGHTED.
-    weight: Optional[int]
-    #: Skill Level of person or workspace. Only applies when call routing type is SKILL_BASED. Only for call queues
+    #: Weight of person, workspace or virtual line. Only applied when call policy is WEIGHTED.
+    weight: Optional[str]
+    #: Skill level of person, workspace or virtual line. Only applied when the call routingType is SKILL_BASED.
     skill_level: Optional[int]
     #: Indicates the join status of the agent for this queue. Only for call queues
     join_enabled: Optional[bool]
@@ -89,7 +89,7 @@ class HGandCQ(ApiModel):
     last_name: Optional[str]
     #: Time zone for the call queue.
     time_zone: Optional[str]
-    #: People, including workspaces, that are eligible to receive calls.
+    #: People, workspaces and virtual lines that are eligible to receive calls.
     agents: Optional[list[Agent]]
 
     @property

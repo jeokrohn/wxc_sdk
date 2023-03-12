@@ -19,7 +19,7 @@ class CallPickup(ApiModel):
     location_name: Optional[str]
     #: ID of location for call pickup.
     location_id: Optional[str]
-    #: People, including workspaces, that are eligible to receive calls.
+    #: An Array of ID strings of people, workspaces and virtual lines that are eligible to receive calls.
     agents: Optional[list[PersonPlaceAgent]]
 
     def create_or_update(self) -> str:

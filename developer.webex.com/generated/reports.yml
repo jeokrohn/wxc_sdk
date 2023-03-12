@@ -541,6 +541,10 @@ docs:
     doc: null
     header: null
     methods: []
+  Security Audit Events:
+    doc: null
+    header: null
+    methods: []
   Session Types:
     doc: null
     header: null

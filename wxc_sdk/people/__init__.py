@@ -22,8 +22,8 @@ from ..api_child import ApiChild
 from ..base import ApiModel, to_camel, webex_id_to_uuid, ApiModelWithErrors
 from ..base import SafeEnum as Enum
 
-__all__ = ['PhoneNumberType', 'PhoneNumber', 'SipType', 'SipAddress', 'PeopleStatus', 'PersonType', 'Person',
-           'PeopleApi']
+__all__ = ['PhoneNumberType', 'PhoneNumber', 'SipType', 'SipAddress', 'PeopleStatus', 'PersonType', 'PersonAddress',
+           'Person', 'PeopleApi']
 
 # there seems to be a problem with getting too many users with calling data at the same time
 # this is the maximum number the SDK enforces
@@ -81,9 +81,33 @@ class PeopleStatus(str, Enum):
 
 
 class PersonType(str, Enum):
-    person = 'person'  #: account belongs to a person
-    bot = 'bot'  #: account is a bot user
-    app_user = 'appuser'  #: account is a guest user
+    #: account belongs to a person
+    person = 'person'
+    #: account is a bot user
+    bot = 'bot'
+    #: account is a guest user
+    app_user = 'appuser'
+
+
+class PersonAddress(ApiModel):
+    #: The type of address
+    #: Possible values: work
+    type: Optional[str]
+    #: The user's country
+    #: Possible values: US
+    country: Optional[str]
+    #: the user's locality, often city
+    #: Possible values: Milpitas
+    locality: Optional[str]
+    #: the user's region, often state
+    #: Possible values: California
+    region: Optional[str]
+    #: the user's street
+    #: Possible values: 1099 Bird Ave.
+    street_address: Optional[str]
+    #: the user's postal or zip code
+    #: Possible values: 99212
+    postal_code: Optional[str]
 
 
 class Person(ApiModelWithErrors):
@@ -117,6 +141,20 @@ class Person(ApiModelWithErrors):
     roles: Optional[list[str]]
     #: An array of license strings allocated to this person.
     licenses: Optional[list[str]]
+    #: The business department the user belongs to.
+    department: Optional[str]
+    #: A manager identifier.
+    manager: Optional[str]
+    #: Person Id of the manager
+    manager_id: Optional[str]
+    #: the person's title
+    title: Optional[str]
+    #: Person's address
+    addresses: Optional[list[PersonAddress]]
+    #: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg:
+    # mysite.webex.com#attendee)
+    #: Possible values: mysite.webex.com#attendee
+    site_urls: Optional[list[str]]
     #: The date and time the person was created.
     created: Optional[datetime.datetime]
     #: The date and time the person was last changed.
@@ -128,8 +166,6 @@ class Person(ApiModelWithErrors):
     #: your organization or an organization you manage. Presence information will not be shown if the authenticated
     #: user has disabled status sharing.
     last_activity: Optional[str]
-    #: One or several site names where this user has a role (host or attendee)
-    site_urls: Optional[list[str]]
     #: The users sip addresses
     sip_addresses: Optional[list[SipAddress]]
     #: The current presence status of the person. This will only be returned for people within your organization or
@@ -185,7 +221,8 @@ class PeopleApi(ApiChild, base='people'):
     """
 
     def list(self, email: str = None, display_name: str = None, id_list: list[str] = None, org_id: str = None,
-             calling_data: bool = None, location_id: str = None, **params) -> Generator[Person, None, None]:
+             roles: str = None, calling_data: bool = None, location_id: str = None,
+             **params) -> Generator[Person, None, None]:
         """
         List people in your organization. For most users, either the email or displayName parameter is required. Admin
         users can omit these fields and list all users in their organization.
@@ -202,6 +239,8 @@ class PeopleApi(ApiChild, base='people'):
         Lookup by email is only supported for people within the same org or where a partner admin relationship is in
         place.
 
+        Lookup by roles is only supported for Admin users for the people within the same org.
+
         :param email: List people with this email address. For non-admin requests, either this or displayName are
             required.
         :type email: str
@@ -214,6 +253,8 @@ class PeopleApi(ApiChild, base='people'):
         :param org_id: List people in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
         :type org_id: str
+        :param roles: List of roleIds separated by commas.
+        :type roles: str
         :param calling_data: Include Webex Calling user details in the response. Default: False
         :type calling_data: bool
         :param location_id: List people present in this location.

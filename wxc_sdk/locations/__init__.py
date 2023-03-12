@@ -74,12 +74,10 @@ class LocationsApi(ApiChild, base='locations'):
     """
     Location API
 
-    Locations are used to organize Webex Calling (BroadCloud) features within physical locations. Webex Control Hub
-    may be used to define new locations.
+    Locations allow you to organize users and workspaces based on a physical location. You can configure both calling
+    and workspace management functions into the same location. You can also create and inspect locations in Webex
+    Control Hub. See Locations on Control Hub for more information.
 
-    Searching and viewing locations in your organization requires an administrator auth token with the
-    spark-admin:people_read and spark-admin:people_write or spark-admin:device_read AND spark-admin:device_write
-    scope combinations.
     """
 
     def list(self, name: str = None, location_id: str = None, org_id: str = None,
@@ -121,33 +119,35 @@ class LocationsApi(ApiChild, base='locations'):
         return next((location for location in self.list(name=name, org_id=org_id)
                      if location.name == name), None)
 
-    def details(self, location_id) -> Location:
+    def details(self, location_id:str, org_id:str = None) -> Location:
         """
         Shows details for a location, by ID.
 
-        This API only works for Customer administrators and for Partner administrators to query their own organization.
-        Partner administrators looking to query customer organizations should use the List Locations endpoint to
-        retrieve information about locations.
-
         :param location_id: A unique identifier for the location.
         :type location_id: str
+        :param org_id: Get location common attributes for this organization.
+        :type org_id: str
+
         :return: location details
         :rtype: :class:`Location`
         """
+        params = org_id and {'oorgId': org_id} or None
         ep = self.ep(location_id)
-        return Location.parse_obj(self.get(ep))
+        return Location.parse_obj(self.get(ep, params=params))
 
     def create(self, name: str, time_zone: str, preferred_language: str, announcement_language: str, address1: str,
                city: str, state: str, postal_code: str, country: str, address2: str = None, org_id: str = None) -> str:
         """
-        Create a new Location for a given organization. Only an admin in a Webex Calling licensed organization can
-        create a new Location.
+        Create a new Location for a given organization. Only an admin in the organization can create a new Location.
+
+        Creating a location in your organization requires an administrator auth token with
+        the spark-admin:locations_write.
+
+        Partners may specify orgId query parameter to create location in managed organization.
 
         The following body parameters are required to create a new location: name, timeZone, preferredLanguage,
         address, announcementLanguage.
 
-        Creating a location in your organization requires an administrator auth token with
-        the spark-admin:locations_write.
 
         :param name: The name of the location.
         :type name: str

@@ -69,7 +69,7 @@ class Paging(ApiModel):
     originator_caller_id_enabled: Optional[bool]
     #: An array of people and/or workspaces, who may originate pages to this paging group.
     originators: Optional[list[PagingAgent]]
-    #: People, including workspaces, that are added to paging group as paging call targets.
+    #: An array of people, workspaces and virtual lines IDs will add to a paging group as paging call targets.
     targets: Optional[list[PagingAgent]]
     #: Name of location for paging group. Only present in list() response.
     #: When creating a paging group then this is a list of agent IDs. The details() call returns detailed agent

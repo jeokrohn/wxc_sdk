@@ -55,8 +55,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         :param team_id: List memberships for a team, by ID.
         :type team_id: str
         """
-        if team_id is not None:
-            params['teamId'] = team_id
+        params['teamId'] = team_id
         url = self.ep()
         return self.session.follow_pagination(url=url, model=ListTeamMembershipsResponse, params=params)
 

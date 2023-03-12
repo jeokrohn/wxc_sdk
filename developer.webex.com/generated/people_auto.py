@@ -7,7 +7,7 @@ from typing import List, Optional
 from pydantic import Field
 
 
-__all__ = ['CreatePersonBody', 'ListPeopleResponse', 'PeopleApi', 'Person', 'PhoneNumbers', 'SipAddressesType', 'Status', 'Type']
+__all__ = ['Addresses', 'CreatePersonBody', 'ListPeopleResponse', 'PeopleApi', 'Person', 'PhoneNumbers', 'SipAddressesType', 'Status', 'Type']
 
 
 class PhoneNumbers(ApiModel):
@@ -53,6 +53,27 @@ class Type(str, Enum):
     appuser = 'appuser'
 
 
+class Addresses(ApiModel):
+    #: The type of address
+    #: Possible values: work
+    type: Optional[str]
+    #: The user's country
+    #: Possible values: US
+    country: Optional[str]
+    #: the user's locality, often city
+    #: Possible values: Milpitas
+    locality: Optional[str]
+    #: the user's region, often state
+    #: Possible values: California
+    region: Optional[str]
+    #: the user's street
+    #: Possible values: 1099 Bird Ave.
+    street_address: Optional[str]
+    #: the user's postal or zip code
+    #: Possible values: 99212
+    postal_code: Optional[str]
+
+
 class CreatePersonBody(ApiModel):
     #: The email addresses of the person. Only one email address is allowed per person.
     #: Possible values: john.andersen@example.com
@@ -88,8 +109,7 @@ class CreatePersonBody(ApiModel):
     #: the person's title
     title: Optional[str]
     #: Person's address
-    #: Possible values: , country: `US`, locality: `Charlotte`, region: `North Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode: `99212`
-    addresses: Optional[list[object]]
+    addresses: Optional[list[Addresses]]
     #: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg: mysite.webex.com#attendee)
     #: Possible values: mysite.webex.com#attendee
     site_urls: Optional[list[str]]
@@ -141,12 +161,13 @@ class PeopleApi(ApiChild, base='people'):
     To learn more about managing people in a room see the Memberships API. For information about how to allocate Hybrid Services licenses to people, see the Managing Hybrid Services guide.
     """
 
-    def list_people(self, email: str = None, display_name: str = None, id: str = None, org_id: str = None, calling_data: bool = None, location_id: str = None, **params) -> Generator[Person, None, None]:
+    def list_people(self, email: str = None, display_name: str = None, id: str = None, org_id: str = None, roles: str = None, calling_data: bool = None, location_id: str = None, **params) -> Generator[Person, None, None]:
         """
         List people in your organization. For most users, either the email or displayName parameter is required. Admin users can omit these fields and list all users in their organization.
         Response properties associated with a user's presence status, such as status or lastActivity, will only be returned for people within your organization or an organization you manage. Presence information will not be returned if the authenticated user has disabled status sharing.
         Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData parameter as true. Admin users can list all users in a location or with a specific phone number. Admin users will receive an enriched payload with additional administrative fields like liceneses,roles etc. These fields are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=
         Lookup by email is only supported for people within the same org or where a partner admin relationship is in place.
+        Lookup by roles is only supported for Admin users for the people within the same org.
         Long result sets will be split into pages.
 
         :param email: List people with this email address. For non-admin requests, either this or displayName are required. With the exception of partner admins and a managed org relationship, people lookup by email is only available for users in the same org.
@@ -157,6 +178,8 @@ class PeopleApi(ApiChild, base='people'):
         :type id: str
         :param org_id: List people in this organization. Only admin users of another organization (such as partners) may use this parameter.
         :type org_id: str
+        :param roles: List of roleIds separated by commas.
+        :type roles: str
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
         :param location_id: List people present in this location.
@@ -170,6 +193,8 @@ class PeopleApi(ApiChild, base='people'):
             params['id'] = id
         if org_id is not None:
             params['orgId'] = org_id
+        if roles is not None:
+            params['roles'] = roles
         if calling_data is not None:
             params['callingData'] = calling_data
         if location_id is not None:
@@ -177,7 +202,7 @@ class PeopleApi(ApiChild, base='people'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Person, params=params)
 
-    def create(self, emails: List[str], calling_data: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: List[object] = None, site_urls: List[str] = None) -> Person:
+    def create(self, emails: List[str], calling_data: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: Addresses = None, site_urls: List[str] = None) -> Person:
         """
         Create a new user account for a given organization. Only an admin can create a new user account.
         At least one of the following body parameters is required to create a new user: displayName, firstName, lastName.
@@ -221,8 +246,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTI
         :param title: the person's title
         :type title: str
         :param addresses: Person's address
-Possible values: , country: `US`, locality: `Charlotte`, region: `North Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode: `99212`
-        :type addresses: List[object]
+        :type addresses: Addresses
         :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg: mysite.webex.com#attendee)
 Possible values: mysite.webex.com#attendee
         :type site_urls: List[str]
@@ -288,7 +312,7 @@ Possible values: mysite.webex.com#attendee
         data = super().get(url=url, params=params)
         return Person.parse_obj(data)
 
-    def update(self, person_id: str, emails: List[str], calling_data: bool = None, show_all_types: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: List[object] = None, site_urls: List[str] = None, nick_name: str = None, login_enabled: bool = None) -> Person:
+    def update(self, person_id: str, emails: List[str], calling_data: bool = None, show_all_types: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: Addresses = None, site_urls: List[str] = None, nick_name: str = None, login_enabled: bool = None) -> Person:
         """
         Update details for a person, by ID.
         Specify the person ID in the personId parameter in the URI. Only an admin can update a person details.
@@ -339,8 +363,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTI
         :param title: the person's title
         :type title: str
         :param addresses: Person's address
-Possible values: , country: `US`, locality: `Charlotte`, region: `North Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode: `99212`
-        :type addresses: List[object]
+        :type addresses: Addresses
         :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg: mysite.webex.com#attendee)
 Possible values: mysite.webex.com#attendee
         :type site_urls: List[str]

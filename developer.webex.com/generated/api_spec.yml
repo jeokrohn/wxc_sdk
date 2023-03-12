@@ -1,4 +1,4 @@
-# command: developer.webex.com/read_api_spec.py -a developer.webex.com/.env -f developer.webex.com/auth_api_spec.yml
+# command: developer.webex.com/read_api_spec.py -f developer.webex.com/api_spec.yml
 docs:
   BroadWorks Billing Reports:
     doc: null
@@ -509,6 +509,43 @@ docs:
         Body Parameters:
         - doc: The call identifier of the call to push.
           name: callId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+    - doc: Picks up an incoming call to another user. A new call is initiated to perform
+        the pickup in a similar manner to the dial command. When target is not present,
+        the API pickups up a call from the user's call pickup group. When target is
+        present, the API pickups an incoming call from the specified target user.
+      documentation:
+        doc: Pickup
+        doc_link: https://developer.webex.com/docs/api/v1/call-controls/pickup
+        endpoint: https://webexapis.com/v1/telephony/calls/pickup
+        http_method: POST
+      header: Pickup
+      parameters_and_response:
+        Body Parameters:
+        - doc: 'Identifies the user to pickup an incoming call from. If not provided,
+            an incoming call to the user''s call pickup group is picked up. The target
+            can be digits or a URI. Some examples for target include: 1234, 2223334444,
+            +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain'
+          name: target
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: A unique identifier for the call which is used in all subsequent commands
+            for this call.
+          name: callId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A unqiue identifier for the call session the call belongs to. This
+            can be used to correlate multiple calls that are part of the same call
+            session.
+          name: callSessionId
           param_attrs: []
           param_object: []
           type: string
@@ -1645,9 +1682,10 @@ docs:
           type: array[Call History Record]
           type_spec: null
   Locations:
-    doc: Locations are used to organize Webex Calling (BroadCloud) features within
-      physical locations. You can also create and inspect locations in Webex Control
-      Hub. See Workspace Locations on Control Hub for more information.
+    doc: Locations allow you to organize users and workspaces based on a physical
+      location. You can configure both calling and workspace management functions
+      into the same location. You can also create and inspect locations in Webex Control
+      Hub. See Locations on Control Hub for more information.
     header: Locations
     methods:
     - doc: List locations for an organization.
@@ -1765,6 +1803,13 @@ docs:
         http_method: GET
       header: Get Location Details
       parameters_and_response:
+        Query Parameters:
+        - doc: Get location common attributes for this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
         Response Properties:
         - doc: A unique identifier for the location.
           name: id
@@ -1839,8 +1884,8 @@ docs:
           param_object: []
           type: string
           type_spec: required
-    - doc: Create a new Location for a given organization. Only an admin in a Webex
-        Calling licensed organization can create a new Location.
+    - doc: Create a new Location for a given organization. Only an admin in the organization
+        can create a new Location.
       documentation:
         doc: Create a Location
         doc_link: https://developer.webex.com/docs/api/v1/locations/create-a-location
@@ -2048,6 +2093,9 @@ docs:
         Lookup by email is only supported for people within the same org or where
         a partner admin relationship is in place.
 
+        Lookup by roles is only supported for Admin users for the people within the
+        same org.
+
         Long result sets will be split into pages.'
       documentation:
         doc: List People
@@ -2084,6 +2132,12 @@ docs:
         - doc: List people in this organization. Only admin users of another organization
             (such as partners) may use this parameter.
           name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: List of roleIds separated by commas.
+          name: roles
           param_attrs: []
           param_object: []
           type: string
@@ -2235,39 +2289,7 @@ docs:
           - doc: Person's address
             name: addresses
             param_attrs:
-            - doc: '
-
-                Possible values: US'
-              name: country
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: '
-
-                Possible values: Charlotte'
-              name: locality
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: '
-
-                Possible values: North Carolina'
-              name: region
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: '
-
-                Possible values: 1099 Bird Ave.'
-              name: streetAddress
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: '
+            - doc: 'The type of address
 
                 Possible values: work'
               name: type
@@ -2275,7 +2297,39 @@ docs:
               param_object: []
               type: string
               type_spec: null
-            - doc: '
+            - doc: 'The user''s country
+
+                Possible values: US'
+              name: country
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: 'the user''s locality, often city
+
+                Possible values: Milpitas'
+              name: locality
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: 'the user''s region, often state
+
+                Possible values: California'
+              name: region
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: 'the user''s street
+
+                Possible values: 1099 Bird Ave.'
+              name: streetAddress
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: 'the user''s postal or zip code
 
                 Possible values: 99212'
               name: postalCode
@@ -2606,13 +2660,57 @@ docs:
           param_object: []
           type: string
           type_spec: null
-        - doc: 'Person''s address
-
-            Possible values: , country: `US`, locality: `Charlotte`, region: `North
-            Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode:
-            `99212`'
+        - doc: Person's address
           name: addresses
-          param_attrs: []
+          param_attrs:
+          - doc: 'The type of address
+
+              Possible values: work'
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'The user''s country
+
+              Possible values: US'
+            name: country
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s locality, often city
+
+              Possible values: Milpitas'
+            name: locality
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s region, often state
+
+              Possible values: California'
+            name: region
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s street
+
+              Possible values: 1099 Bird Ave.'
+            name: streetAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s postal or zip code
+
+              Possible values: 99212'
+            name: postalCode
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
           param_object: []
           type: array[object]
           type_spec: null
@@ -2757,39 +2855,7 @@ docs:
         - doc: Person's address
           name: addresses
           param_attrs:
-          - doc: '
-
-              Possible values: US'
-            name: country
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: Charlotte'
-            name: locality
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: North Carolina'
-            name: region
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: 1099 Bird Ave.'
-            name: streetAddress
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
+          - doc: 'The type of address
 
               Possible values: work'
             name: type
@@ -2797,7 +2863,39 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: '
+          - doc: 'The user''s country
+
+              Possible values: US'
+            name: country
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s locality, often city
+
+              Possible values: Milpitas'
+            name: locality
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s region, often state
+
+              Possible values: California'
+            name: region
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s street
+
+              Possible values: 1099 Bird Ave.'
+            name: streetAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s postal or zip code
 
               Possible values: 99212'
             name: postalCode
@@ -3126,39 +3224,7 @@ docs:
         - doc: Person's address
           name: addresses
           param_attrs:
-          - doc: '
-
-              Possible values: US'
-            name: country
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: Charlotte'
-            name: locality
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: North Carolina'
-            name: region
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: 1099 Bird Ave.'
-            name: streetAddress
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
+          - doc: 'The type of address
 
               Possible values: work'
             name: type
@@ -3166,7 +3232,39 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: '
+          - doc: 'The user''s country
+
+              Possible values: US'
+            name: country
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s locality, often city
+
+              Possible values: Milpitas'
+            name: locality
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s region, often state
+
+              Possible values: California'
+            name: region
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s street
+
+              Possible values: 1099 Bird Ave.'
+            name: streetAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s postal or zip code
 
               Possible values: 99212'
             name: postalCode
@@ -3511,13 +3609,57 @@ docs:
           param_object: []
           type: string
           type_spec: null
-        - doc: 'Person''s address
-
-            Possible values: , country: `US`, locality: `Charlotte`, region: `North
-            Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode:
-            `99212`'
+        - doc: Person's address
           name: addresses
-          param_attrs: []
+          param_attrs:
+          - doc: 'The type of address
+
+              Possible values: work'
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'The user''s country
+
+              Possible values: US'
+            name: country
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s locality, often city
+
+              Possible values: Milpitas'
+            name: locality
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s region, often state
+
+              Possible values: California'
+            name: region
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s street
+
+              Possible values: 1099 Bird Ave.'
+            name: streetAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s postal or zip code
+
+              Possible values: 99212'
+            name: postalCode
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
           param_object: []
           type: array[object]
           type_spec: null
@@ -3677,39 +3819,7 @@ docs:
         - doc: Person's address
           name: addresses
           param_attrs:
-          - doc: '
-
-              Possible values: US'
-            name: country
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: Charlotte'
-            name: locality
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: North Carolina'
-            name: region
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: 1099 Bird Ave.'
-            name: streetAddress
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
+          - doc: 'The type of address
 
               Possible values: work'
             name: type
@@ -3717,7 +3827,39 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: '
+          - doc: 'The user''s country
+
+              Possible values: US'
+            name: country
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s locality, often city
+
+              Possible values: Milpitas'
+            name: locality
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s region, often state
+
+              Possible values: California'
+            name: region
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s street
+
+              Possible values: 1099 Bird Ave.'
+            name: streetAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s postal or zip code
 
               Possible values: 99212'
             name: postalCode
@@ -3920,6 +4062,369 @@ docs:
           param_object: []
           type: string
           type_spec: required
+    - doc: 'Get profile details for the authenticated user. This is the same as GET
+        /people/{personId} using the Person ID associated with your Auth token.
+
+        Admin users can include Webex Calling (BroadCloud) user details in the response
+        by specifying callingData parameter as true.'
+      documentation:
+        doc: Get My Own Details
+        doc_link: https://developer.webex.com/docs/api/v1/people/get-my-own-details
+        endpoint: https://webexapis.com/v1/people/me
+        http_method: GET
+      header: Get My Own Details
+      parameters_and_response:
+        Query Parameters:
+        - doc: Include Webex Calling user details in the response.
+          name: callingData
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        Response Properties:
+        - doc: A unique identifier for the person.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The email addresses of the person.
+          name: emails
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: Phone numbers for the person.
+          name: phoneNumbers
+          param_attrs:
+          - doc: 'The type of phone number.
+
+              Possible values: work, mobile, fax'
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'The phone number.
+
+              Possible values: +1 408 526 7209'
+            name: value
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[object]
+          type_spec: null
+        - doc: The Webex Calling extension for the person. Only applies to a person
+            with a Webex Calling license
+          name: extension
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the location for this person retrieved from BroadCloud.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The full name of the person.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The nickname of the person if configured. If no nickname is configured
+            for the person, this field will not be present.
+          name: nickName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The first name of the person.
+          name: firstName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The last name of the person.
+          name: lastName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The URL to the person's avatar in PNG format.
+          name: avatar
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID of the organization to which this person belongs.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: An array of role strings representing the roles to which this admin
+            user belongs.
+          name: roles
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: An array of license strings allocated to this person.
+          name: licenses
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: The business department the user belongs to.
+          name: department
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A manager identifier
+          name: manager
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Person Id of the manager
+          name: managerId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: the person's title
+          name: title
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Person's address
+          name: addresses
+          param_attrs:
+          - doc: 'The type of address
+
+              Possible values: work'
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'The user''s country
+
+              Possible values: US'
+            name: country
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s locality, often city
+
+              Possible values: Milpitas'
+            name: locality
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s region, often state
+
+              Possible values: California'
+            name: region
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s street
+
+              Possible values: 1099 Bird Ave.'
+            name: streetAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s postal or zip code
+
+              Possible values: 99212'
+            name: postalCode
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[object]
+          type_spec: null
+        - doc: The date and time the person was created.
+          name: created
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time the person was last changed.
+          name: lastModified
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The time zone of the person if configured. If no timezone is configured
+            on the account, this field will not be present
+          name: timezone
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The date and time of the person's last activity within Webex. This
+            will only be returned for people within your organization or an organization
+            you manage. Presence information will not be shown if the authenticated
+            user has disabled status sharing.
+          name: lastActivity
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: One or several site names where this user has a role (host or attendee)
+          name: siteUrls
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        - doc: The users sip addresses
+          name: sipAddresses
+          param_attrs: []
+          param_object: []
+          type: 'array[{"type": "personal-room","value": "testuser5@mycompany.webex.com","primary":
+            false}]'
+          type_spec: null
+        - doc: The current presence status of the person. This will only be returned
+            for people within your organization or an organization you manage. Presence
+            information will not be shown if the authenticated user has disabled status
+            sharing.
+          name: status
+          param_attrs:
+          - doc: Active within the last 10 minutes
+            name: active
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user is in a call
+            name: call
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user has manually set their status to "Do Not Disturb"
+            name: DoNotDisturb
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Last activity occurred more than 10 minutes ago
+            name: inactive
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user is in a meeting
+            name: meeting
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user or a Hybrid Calendar service has indicated that they are
+              "Out of Office"
+            name: OutOfOffice
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user has never logged in; a status cannot be determined
+            name: pending
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The user is sharing content
+            name: presenting
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: "The user\u2019s status could not be determined"
+            name: unknown
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Whether or not an invite is pending for the user to complete account
+            activation. This property is only returned if the authenticated user is
+            an admin user for the person's organization.
+          name: invitePending
+          param_attrs:
+          - doc: The person has been invited to Webex but has not created an account
+            name: 'true'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: An invite is not pending for this person
+            name: 'false'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Whether or not the user is allowed to use Webex. This property is only
+            returned if the authenticated user is an admin user for the person's organization.
+          name: loginEnabled
+          param_attrs:
+          - doc: the person can log into Webex
+            name: 'true'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: the person cannot log into Webex
+            name: 'false'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The type of person account, such as person or bot.
+          name: type
+          param_attrs:
+          - doc: Account belongs to a person
+            name: person
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Account is a bot user
+            name: bot
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Account is a guest user
+            name: appuser
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
   Recording Report:
     doc: null
     header: null
@@ -4267,6 +4772,12 @@ docs:
             param_object: []
             type: string
             type_spec: null
+          - doc: The user who made or received the call.
+            name: User
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
           - doc: 'The type of user (user or workspace) that made or received the call.
               For example:'
             name: User type
@@ -4452,6 +4963,1101 @@ docs:
           param_object: []
           type: array[ListAutoAttendantObject]
           type_spec: null
+    - doc: 'Retrieve an Auto Attendant details.
+
+        Auto attendants play customized prompts and provide callers with menu options
+        for routing their calls through your system.
+
+        Retrieving an auto attendant details requires a full or read-only administrator
+        auth token with a scope of spark-admin:telephony_config_read.'
+      documentation:
+        doc: Get Details for an Auto Attendant
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-an-auto-attendant
+        endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId}
+        http_method: GET
+      header: Get Details for an Auto Attendant
+      parameters_and_response:
+        Query Parameters:
+        - doc: Retrieve auto attendant details from this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: A unique identifier for the auto attendant.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique name for the auto attendant.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Flag to indicate if auto attendant number is enabled or not.
+          name: enabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Auto attendant phone number.  Either phoneNumber or extension is mandatory.
+          name: phoneNumber
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Auto attendant extension.  Either phoneNumber or extension is mandatory.
+          name: extension
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Flag to indicate if auto attendant number is toll-free number.
+          name: tollFreeNumber
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: First name defined for an auto attendant.
+          name: firstName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Last name defined for an auto attendant.
+          name: lastName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Alternate numbers defined for the auto attendant.
+          name: alternateNumbers
+          param_attrs:
+          - doc: Phone number defined as alternate number.
+            name: phoneNumber
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Flag to indicate if auto attendant number is toll-free number.
+            name: tollFreeNumber
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Ring pattern that will be used for the alternate number.
+            name: ringPattern
+            param_attrs:
+            - doc: ''
+              name: NORMAL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: LONG_LONG
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: SHORT_SHORT_LONG
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: SHORT_LONG_SHORT
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          param_object: []
+          type: array[AlternateNumbersObject]
+          type_spec: null
+        - doc: Language for the auto attendant.
+          name: language
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Language code for the auto attendant.
+          name: languageCode
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Business hours defined for the auto attendant.
+          name: businessSchedule
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Holiday defined for the auto attendant.
+          name: holidaySchedule
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Extension dialing setting. If the values are not set default will be
+            set as ENTERPRISE.
+          name: extensionDialing
+          param_attrs:
+          - doc: ''
+            name: ENTERPRISE
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: GROUP
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Name dialing setting. If the values are not set default will be set
+            as ENTERPRISE.
+          name: nameDialing
+          param_attrs:
+          - doc: ''
+            name: ENTERPRISE
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: GROUP
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Time zone defined for the auto attendant.
+          name: timeZone
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Business hours menu defined for the auto attendant.
+          name: businessHoursMenu
+          param_attrs:
+          - doc: Greeting type defined for the auto attendant.
+            name: greeting
+            param_attrs:
+            - doc: ''
+              name: DEFAULT
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: CUSTOM
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Flag to indicate if auto attendant extension is enabled or not.
+            name: extensionEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Key configurations defined for the auto attendant.
+            name: keyConfigurations
+            param_attrs:
+            - doc: Key assigned to specific menu configuration.
+              name: key
+              param_attrs:
+              - doc: ''
+                name: digit_0
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_1
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_2
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_3
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_4
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_5
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_6
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_7
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_8
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_9
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: hash
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            - doc: Action assigned to specific menu key configuration.
+              name: action
+              param_attrs:
+              - doc: ''
+                name: TRANSFER_WITHOUT_PROMPT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: TRANSFER_WITH_PROMPT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: TRANSFER_TO_OPERATOR
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: NAME_DIALING
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: EXTENSION_DIALING
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: REPEAT_MENU
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: EXIT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: TRANSFER_TO_MAILBOX
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: RETURN_TO_PREVIOUS_MENU
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            - doc: The description of each menu key.
+              name: description
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Value based on actions.
+              name: value
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: KeyConfigurationsObject
+            type_spec: null
+          param_object: []
+          type: HoursMenuObject
+          type_spec: null
+        - doc: After hours menu defined for the auto attendant.
+          name: afterHoursMenu
+          param_attrs:
+          - doc: Greeting type defined for the auto attendant.
+            name: greeting
+            param_attrs:
+            - doc: ''
+              name: DEFAULT
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: CUSTOM
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: Flag to indicate if auto attendant extension is enabled or not.
+            name: extensionEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Key configurations defined for the auto attendant.
+            name: keyConfigurations
+            param_attrs:
+            - doc: Key assigned to specific menu configuration.
+              name: key
+              param_attrs:
+              - doc: ''
+                name: digit_0
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_1
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_2
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_3
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_4
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_5
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_6
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_7
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_8
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_9
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: hash
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            - doc: Action assigned to specific menu key configuration.
+              name: action
+              param_attrs:
+              - doc: ''
+                name: TRANSFER_WITHOUT_PROMPT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: TRANSFER_WITH_PROMPT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: TRANSFER_TO_OPERATOR
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: NAME_DIALING
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: EXTENSION_DIALING
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: REPEAT_MENU
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: EXIT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: TRANSFER_TO_MAILBOX
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: RETURN_TO_PREVIOUS_MENU
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            - doc: The description of each menu key.
+              name: description
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Value based on actions.
+              name: value
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: KeyConfigurationsObject
+            type_spec: null
+          param_object: []
+          type: HoursMenuObject
+          type_spec: null
+        URI Parameters:
+        - doc: Retrieve an auto attendant details in this location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Retrieve the auto attendant with the matching ID.
+          name: autoAttendantId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Create new Auto Attendant for the given location.
+
+        Auto attendants play customized prompts and provide callers with menu options
+        for routing their calls through your system.
+
+        Creating an auto attendant requires a full administrator auth token with a
+        scope of spark-admin:telephony_config_write.'
+      documentation:
+        doc: Create an Auto Attendant
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-an-auto-attendant
+        endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/autoAttendants
+        http_method: POST
+      header: Create an Auto Attendant
+      parameters_and_response:
+        Body Parameters:
+        - doc: Unique name for the auto attendant.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Auto attendant phone number.  Either phoneNumber or extension is mandatory.
+          name: phoneNumber
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Auto attendant extension.  Either phoneNumber or extension is mandatory.
+          name: extension
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: First name defined for an auto attendant.
+          name: firstName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Last name defined for an auto attendant.
+          name: lastName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Alternate numbers defined for the auto attendant.
+          name: alternateNumbers
+          param_attrs:
+          - doc: Phone number defined as alternate number.
+            name: phoneNumber
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: required
+          - doc: Flag to indicate if auto attendant number is toll-free number.
+            name: tollFreeNumber
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Ring pattern that will be used for the alternate number.
+            name: ringPattern
+            param_attrs:
+            - doc: ''
+              name: NORMAL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: LONG_LONG
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: SHORT_SHORT_LONG
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: SHORT_LONG_SHORT
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: required
+          param_object: []
+          type: array[AlternateNumbersObject]
+          type_spec: null
+        - doc: Language code for the auto attendant.
+          name: languageCode
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Business hours defined for the auto attendant.
+          name: businessSchedule
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Holiday defined for the auto attendant.
+          name: holidaySchedule
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Extension dialing setting. If the values are not set default will be
+            set as ENTERPRISE.
+          name: extensionDialing
+          param_attrs:
+          - doc: ''
+            name: ENTERPRISE
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: GROUP
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Name dialing setting. If the values are not set default will be set
+            as ENTERPRISE.
+          name: nameDialing
+          param_attrs:
+          - doc: ''
+            name: ENTERPRISE
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: GROUP
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Time zone defined for the auto attendant.
+          name: timeZone
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Business hours menu defined for the auto attendant.
+          name: businessHoursMenu
+          param_attrs:
+          - doc: Greeting type defined for the auto attendant.
+            name: greeting
+            param_attrs:
+            - doc: ''
+              name: DEFAULT
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: CUSTOM
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: required
+          - doc: Flag to indicate if auto attendant extension is enabled or not.
+            name: extensionEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: required
+          - doc: Key configurations defined for the auto attendant.
+            name: keyConfigurations
+            param_attrs:
+            - doc: Key assigned to specific menu configuration.
+              name: key
+              param_attrs:
+              - doc: ''
+                name: digit_0
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_1
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_2
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_3
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_4
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_5
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_6
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_7
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_8
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_9
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: hash
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: required
+            - doc: Action assigned to specific menu key configuration.
+              name: action
+              param_attrs:
+              - doc: ''
+                name: TRANSFER_WITHOUT_PROMPT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: TRANSFER_WITH_PROMPT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: TRANSFER_TO_OPERATOR
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: NAME_DIALING
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: EXTENSION_DIALING
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: REPEAT_MENU
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: EXIT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: TRANSFER_TO_MAILBOX
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: RETURN_TO_PREVIOUS_MENU
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: required
+            - doc: The description of each menu key.
+              name: description
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Value based on actions.
+              name: value
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: KeyConfigurationsObject
+            type_spec: required
+          param_object: []
+          type: HoursMenuObject
+          type_spec: required
+        - doc: After hours menu defined for the auto attendant.
+          name: afterHoursMenu
+          param_attrs:
+          - doc: Greeting type defined for the auto attendant.
+            name: greeting
+            param_attrs:
+            - doc: ''
+              name: DEFAULT
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: ''
+              name: CUSTOM
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: required
+          - doc: Flag to indicate if auto attendant extension is enabled or not.
+            name: extensionEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: required
+          - doc: Key configurations defined for the auto attendant.
+            name: keyConfigurations
+            param_attrs:
+            - doc: Key assigned to specific menu configuration.
+              name: key
+              param_attrs:
+              - doc: ''
+                name: digit_0
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_1
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_2
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_3
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_4
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_5
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_6
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_7
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_8
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: digit_9
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: hash
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: required
+            - doc: Action assigned to specific menu key configuration.
+              name: action
+              param_attrs:
+              - doc: ''
+                name: TRANSFER_WITHOUT_PROMPT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: TRANSFER_WITH_PROMPT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: TRANSFER_TO_OPERATOR
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: NAME_DIALING
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: EXTENSION_DIALING
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: REPEAT_MENU
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: EXIT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: TRANSFER_TO_MAILBOX
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: RETURN_TO_PREVIOUS_MENU
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: required
+            - doc: The description of each menu key.
+              name: description
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Value based on actions.
+              name: value
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: KeyConfigurationsObject
+            type_spec: required
+          param_object: []
+          type: HoursMenuObject
+          type_spec: required
+        Query Parameters:
+        - doc: Create the auto attendant for this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: ID of the newly created auto attendant.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Create the auto attendant for this location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
     - doc: 'Update the designated Auto Attendant.
 
         Auto attendants play customized prompts and provide callers with menu options
@@ -6143,8 +7749,8 @@ docs:
           param_object: []
           type: PutRecallHuntGroupObject
           type_spec: required
-        - doc: Array of ID strings of people, including workspaces, that are added
-            to the call park.
+        - doc: Array of ID strings of people, workspaces and virtual lines that are
+            added to the call park.
           name: agents
           param_attrs: []
           param_object: []
@@ -6286,34 +7892,34 @@ docs:
           param_object: []
           type: GetRecallHuntGroupObject
           type_spec: null
-        - doc: People, including workspaces, that are eligible to receive calls.
+        - doc: People, workspaces and virtual lines that are eligible to receive calls.
           name: agents
           param_attrs:
-          - doc: ID of a person or workspace.
+          - doc: ID of a person, workspace or virtual line.
             name: id
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: First name of a person or workspace.
+          - doc: First name of a person, workspace or virtual line.
             name: firstName
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Last name of a person or workspace.
+          - doc: Last name of a person, workspace or virtual line.
             name: lastName
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Display name of a person or workspace.
+          - doc: Display name of a person, workspace or virtual line.
             name: displayName
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Type of the person or workspace.
+          - doc: Type of the person, workspace or virtual line.
             name: type
             param_attrs:
             - doc: Indicates that this object is a user.
@@ -6328,6 +7934,12 @@ docs:
               param_object: []
               type: string
               type_spec: null
+            - doc: Indicates that this object is a virtual line.
+              name: VIRTUAL_LINE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
             param_object: []
             type: enum
             type_spec: null
@@ -6337,7 +7949,7 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: List of phone numbers of a person or workspace.
+          - doc: List of phone numbers of a person, workspace or virtual line.
             name: numbers
             param_attrs:
             - doc: Phone number of a person or workspace.
@@ -6362,7 +7974,37 @@ docs:
             type: array[GetUserNumberItemObject]
             type_spec: null
           param_object: []
-          type: array[GetPersonPlaceCallParksObject]
+          type: array[GetPersonPlaceVirtualLineCallParksObject]
+          type_spec: null
+        - doc: Whether or not the calls will be parked on agents as a destination.
+          name: parkOnAgentsEnabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Array of call park extensions assigned to a call park.
+          name: callParkExtensions
+          param_attrs:
+          - doc: Unique identifier for the call park extension.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The extension for the call park.
+            name: extension
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A unique name for the call park extension.
+            name: name
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[ListCPCallParkExtensionObject]
           type_spec: null
         URI Parameters:
         - doc: Retrieve settings for a call park in this location.
@@ -6437,8 +8079,8 @@ docs:
           param_object: []
           type: PutRecallHuntGroupObject
           type_spec: null
-        - doc: Array of ID strings of people, including workspaces, that are added
-            to call park.
+        - doc: Array of ID strings of people, workspaces and virtual lines that are
+            added to call park.
           name: agents
           param_attrs: []
           param_object: []
@@ -6535,31 +8177,31 @@ docs:
         - doc: Array of agents.
           name: agents
           param_attrs:
-          - doc: ID of a person or workspace.
+          - doc: ID of a person, workspace or virtual line.
             name: id
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: First name of a person or workspace.
+          - doc: First name of a person, workspace or virtual line.
             name: firstName
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Last name of a person or workspace.
+          - doc: Last name of a person, workspace or virtual line.
             name: lastName
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Display name of a person or workspace.
+          - doc: Display name of a person, workspace or virtual line.
             name: displayName
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Type of the person or workspace.
+          - doc: Type of the person, workspace or virtual line.
             name: type
             param_attrs:
             - doc: Indicates that this object is a user.
@@ -6574,6 +8216,12 @@ docs:
               param_object: []
               type: string
               type_spec: null
+            - doc: Indicates that this object is a virtual line.
+              name: VIRTUAL_LINE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
             param_object: []
             type: enum
             type_spec: null
@@ -6583,7 +8231,7 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: List of phone numbers of a person or workspace.
+          - doc: List of phone numbers of a person, workspace or virtual line.
             name: numbers
             param_attrs:
             - doc: Phone number of a person or workspace.
@@ -6608,7 +8256,7 @@ docs:
             type: array[GetUserNumberItemObject]
             type_spec: null
           param_object: []
-          type: array[GetPersonPlaceCallParksObject]
+          type: array[GetPersonPlaceVirtualLineCallParksObject]
           type_spec: null
         URI Parameters:
         - doc: Return the available agents for this location.
@@ -7341,8 +8989,8 @@ docs:
           param_object: []
           type: string
           type_spec: required
-        - doc: Array of ID strings of people, including workspaces, that are added
-            to call pickup.
+        - doc: An Array of ID strings of people, workspaces and virtual lines that
+            are added to call pickup.
           name: agents
           param_attrs: []
           param_object: []
@@ -7443,34 +9091,34 @@ docs:
           param_object: []
           type: string
           type_spec: null
-        - doc: People, including workspaces, that are eligible to receive calls.
+        - doc: People, workspaces and virtual lines that are eligible to receive calls.
           name: agents
           param_attrs:
-          - doc: ID of a person or workspace.
+          - doc: ID of a person, workspace or virtual line.
             name: id
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: First name of a person or workspace.
+          - doc: First name of a person, workspace or virtual line.
             name: firstName
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Last name of a person or workspace.
+          - doc: Last name of a person, workspace or virtual line.
             name: lastName
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Display name of a person or workspace.
+          - doc: Display name of a person, workspace or virtual line.
             name: displayName
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Type of the person or workspace.
+          - doc: Type of the person, workspace or virtual line.
             name: type
             param_attrs:
             - doc: Indicates that this object is a user.
@@ -7485,17 +9133,23 @@ docs:
               param_object: []
               type: string
               type_spec: null
+            - doc: Indicates that this object is a virtual line.
+              name: VIRTUAL_LINE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
             param_object: []
             type: enum
             type_spec: null
-          - doc: Email of a person or workspace.
+          - doc: Email of a person, workspace or virtual line.
             name: email
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: List of phone numbers of a person or workspace.
-            name: numbers
+          - doc: List of phone numbers of a person, workspace or virtual line.
+            name: phoneNumber
             param_attrs:
             - doc: Phone number of a person or workspace.
               name: external
@@ -7519,7 +9173,7 @@ docs:
             type: array[GetUserNumberItemObject]
             type_spec: null
           param_object: []
-          type: array[GetPersonPlaceCallPickupObject]
+          type: array[GetPersonPlaceVirtualLineCallPickupObject]
           type_spec: null
         URI Parameters:
         - doc: Retrieve settings for a call pickup in this location.
@@ -7558,7 +9212,7 @@ docs:
           param_object: []
           type: string
           type_spec: null
-        - doc: Array of ID strings of people, including workspaces, that are added
+        - doc: An array of people, workspace, and virtual lines IDs, that are added
             to call pickup.
           name: agents
           param_attrs: []
@@ -7655,31 +9309,31 @@ docs:
         - doc: Array of agents.
           name: agents
           param_attrs:
-          - doc: ID of a person or workspace.
+          - doc: ID of a person, workspace or virtual line.
             name: id
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: First name of a person or workspace.
+          - doc: First name of a person, workspace or virtual line.
             name: firstName
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Last name of a person or workspace.
+          - doc: Last name of a person, workspace or virtual line.
             name: lastName
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Display name of a person or workspace.
+          - doc: Display name of a person, workspace or virtual line.
             name: displayName
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Type of the person or workspace.
+          - doc: Type of the person, workspace or virtual line.
             name: type
             param_attrs:
             - doc: Indicates that this object is a user.
@@ -7694,17 +9348,23 @@ docs:
               param_object: []
               type: string
               type_spec: null
+            - doc: Indicates that this object is a virtual line.
+              name: VIRTUAL_LINE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
             param_object: []
             type: enum
             type_spec: null
-          - doc: Email of a person or workspace.
+          - doc: Email of a person, workspace or virtual line.
             name: email
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: List of phone numbers of a person or workspace.
-            name: numbers
+          - doc: List of phone numbers of a person, workspace or virtual line.
+            name: phoneNumber
             param_attrs:
             - doc: Phone number of a person or workspace.
               name: external
@@ -7728,7 +9388,7 @@ docs:
             type: array[GetUserNumberItemObject]
             type_spec: null
           param_object: []
-          type: array[GetPersonPlaceCallPickupObject]
+          type: array[GetPersonPlaceVirtualLineCallPickupObject]
           type_spec: null
         URI Parameters:
         - doc: Return the available agents for this location.
@@ -8586,30 +10246,31 @@ docs:
           param_object: []
           type: CallQueueQueueSettingsObject
           type_spec: required
-        - doc: People, including workspaces, that are eligible to receive calls.
+        - doc: People, workspaces and virtual lines that are eligible to receive calls.
           name: agents
           param_attrs:
-          - doc: ID of person or workspace.
+          - doc: ID of person, workspace or virtual line.
             name: id
             param_attrs: []
             param_object: []
             type: string
             type_spec: required
-          - doc: Weight of person or workspace. Only applied when call policy is WEIGHTED.
+          - doc: Weight of person, workspace or virtual line. Only applied when call
+              policy is WEIGHTED.
             name: weight
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Skill level of person or workspace. Only applied when call routing
-              type is SKILL_BASED.
+          - doc: Skill level of person, workspace or virtual line. Only applied when
+              call routing type is SKILL_BASED.
             name: skillLevel
             param_attrs: []
             param_object: []
             type: number
             type_spec: null
           param_object: []
-          type: array[PostPersonPlaceCallQueueObject]
+          type: array[PostPersonPlaceVirtualLineCallQueueObject]
           type_spec: required
         - doc: Whether or not to allow agents to join or unjoin a queue.
           name: allowAgentJoinEnabled
@@ -9522,47 +11183,72 @@ docs:
           param_object: []
           type: boolean
           type_spec: null
-        - doc: People, including workspaces, that are eligible to receive calls.
+        - doc: People, workspaces and virtual lines that are eligible to receive calls.
           name: agents
           param_attrs:
-          - doc: ID of person or workspace.
+          - doc: ID of person, workspace or virtual line.
             name: id
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: First name of person or workspace.
+          - doc: Type of the person, workspace or virtual line.
+            name: type
+            param_attrs:
+            - doc: Indicates that this object is a user.
+              name: PEOPLE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates that this object is a place.
+              name: PLACE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates that this object is a virtual line.
+              name: VIRTUAL_LINE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: First name of person, workspace or virtual line.
             name: firstName
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: First name of person or workspace.
+          - doc: First name of person, workspace or virtual line.
             name: lastName
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Phone number of person or workspace.
+          - doc: Phone number of person, workspace or virtual line.
             name: phoneNumber
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Extension of person or workspace.
+          - doc: Extension of person, workspace or virtual line.
             name: extension
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Weight of person or workspace. Only applied when call policy is WEIGHTED.
+          - doc: Weight of person, workspace or virtual line. Only applied when call
+              policy is WEIGHTED.
             name: weight
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Skill level of person or workspace. Only applied when the call routingType
-              is SKILL_BASED.
+          - doc: Skill level of person, workspace or virtual line. Only applied when
+              the call routingType is SKILL_BASED.
             name: skillLevel
             param_attrs: []
             param_object: []
@@ -9576,7 +11262,7 @@ docs:
             type: boolean
             type_spec: null
           param_object: []
-          type: array[GetPersonPlaceCallQueueObject]
+          type: array[GetPersonPlaceVirtualLineCallQueueObject]
           type_spec: null
         - doc: Whether or not to allow agents to join or unjoin a queue.
           name: allowAgentJoinEnabled
@@ -10413,23 +12099,24 @@ docs:
           param_object: []
           type: boolean
           type_spec: null
-        - doc: People, including workspaces, that are eligible to receive calls.
+        - doc: People, workspaces and virtual lines that are eligible to receive calls.
           name: agents
           param_attrs:
-          - doc: ID of person or workspace.
+          - doc: ID of person, workspace or virtual line.
             name: id
             param_attrs: []
             param_object: []
             type: string
             type_spec: required
-          - doc: Weight of person or workspace. Only applied when call policy is WEIGHTED.
+          - doc: Weight of person, workspace or virtual line. Only applied when call
+              policy is WEIGHTED.
             name: weight
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Skill level of person or workspace. Only applied when call routing
-              type is SKILL_BASED.
+          - doc: Skill level of person, workspace or virtual line. Only applied when
+              call routing type is SKILL_BASED.
             name: skillLevel
             param_attrs: []
             param_object: []
@@ -10443,7 +12130,7 @@ docs:
             type: boolean
             type_spec: null
           param_object: []
-          type: array[ModifyPersonPlaceCallQueueObject]
+          type: array[ModifyPersonPlaceVirtualLineCallQueueObject]
           type_spec: null
         - doc: Whether or not to allow agents to join or unjoin a queue.
           name: allowAgentJoinEnabled
@@ -12185,7 +13872,7 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: Location id of the trunk; required if trunkName is returned.
+          - doc: Location ID of the trunk; required if trunkName is returned.
             name: trunkLocationId
             param_attrs: []
             param_object: []
@@ -12796,8 +14483,8 @@ docs:
           type_spec: null
     - doc: 'Create new Hunt Groups for the given location.
 
-        Hunt groups can route incoming calls to a group of people or workspaces. You
-        can even configure a pattern to route to a whole group.
+        Hunt groups can route incoming calls to a group of people, workspaces or virtual
+        lines. You can even configure a pattern to route to a whole group.
 
         Creating a hunt group requires a full administrator auth token with a scope
         of spark-admin:telephony_config_write.'
@@ -12996,23 +14683,25 @@ docs:
           param_object: []
           type: PostHuntGroupCallPolicyObject
           type_spec: required
-        - doc: People, including workspaces, that are eligible to  receive calls.
+        - doc: People, workspaces and virtual lines that are eligible to  receive
+            calls.
           name: agents
           param_attrs:
-          - doc: ID of person or workspace.
+          - doc: ID of person, workspace or virtual line.
             name: id
             param_attrs: []
             param_object: []
             type: string
             type_spec: required
-          - doc: Weight of person or workspace. Only applied when call policy is WEIGHTED.
+          - doc: Weight of person, workspace or virtual line. Only applied when call
+              policy is WEIGHTED.
             name: weight
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
           param_object: []
-          type: array[PostPersonPlaceObject]
+          type: array[PostPersonPlaceVirtualLineHuntGroupObject]
           type_spec: required
         - doc: Whether or not the hunt group is enabled.
           name: enabled
@@ -13077,8 +14766,8 @@ docs:
           type_spec: required
     - doc: 'Retrieve Hunt Group details.
 
-        Hunt groups can route incoming calls to a group of people or workspaces. You
-        can even configure a pattern to route to a whole group.
+        Hunt groups can route incoming calls to a group of people, workspaces or virtual
+        lines. You can even configure a pattern to route to a whole group.
 
         Retrieving hunt group details requires a full or read-only administrator auth
         token with a scope of spark-admin:telephony_config_read.'
@@ -13359,47 +15048,49 @@ docs:
           param_object: []
           type: GetHuntGroupCallPolicyObject
           type_spec: null
-        - doc: People, including workspaces, that are eligible to  receive calls.
+        - doc: People, workspaces and virtual lines that are eligible to  receive
+            calls.
           name: agents
           param_attrs:
-          - doc: ID of person or workspace.
+          - doc: ID of person, workspace or virtual line.
             name: id
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: First name of person or workspace.
+          - doc: First name of person, workspace or virtual line.
             name: firstName
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Last name of person or workspace.
+          - doc: Last name of person, workspace or virtual line.
             name: lastName
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Phone number of person or workspace.
+          - doc: Phone number of person, workspace or virtual line.
             name: phoneNumber
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Extension of person or workspace.
+          - doc: Extension of person, workspace or virtual line.
             name: extension
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Weight of person or workspace. Only applied when call policy is WEIGHTED.
+          - doc: Weight of person, workspace or virtual line. Only applied when call
+              policy is WEIGHTED.
             name: weight
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
           param_object: []
-          type: array[GetPersonPlaceObject]
+          type: array[GetPersonPlaceVirtualLineHuntGroupObject]
           type_spec: null
         - doc: Whether or not the hunt group is enabled.
           name: enabled
@@ -13422,8 +15113,8 @@ docs:
           type_spec: required
     - doc: 'Update the designated Hunt Group.
 
-        Hunt groups can route incoming calls to a group of people or workspaces. You
-        can even configure a pattern to route to a whole group.
+        Hunt groups can route incoming calls to a group of people, workspaces or virtual
+        lines. You can even configure a pattern to route to a whole group.
 
         Updating a hunt group requires a full administrator auth token with a scope
         of spark-admin:telephony_config_write.'
@@ -13680,23 +15371,25 @@ docs:
           param_object: []
           type: PostHuntGroupCallPolicyObject
           type_spec: null
-        - doc: People, including workspaces, that are eligible to  receive calls.
+        - doc: People, workspaces and virtual lines that are eligible to  receive
+            calls.
           name: agents
           param_attrs:
-          - doc: ID of person or workspace.
+          - doc: ID of person, workspace or virtual line.
             name: id
             param_attrs: []
             param_object: []
             type: string
             type_spec: required
-          - doc: Weight of person or workspace. Only applied when call policy is WEIGHTED.
+          - doc: Weight of person, workspace or virtual line. Only applied when call
+              policy is WEIGHTED.
             name: weight
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
           param_object: []
-          type: array[PostPersonPlaceObject]
+          type: array[PostPersonPlaceVirtualLineHuntGroupObject]
           type_spec: null
         - doc: Whether or not the hunt group is enabled.
           name: enabled
@@ -16125,8 +17818,8 @@ docs:
           type_spec: null
     - doc: 'Create a new Paging Group for the given location.
 
-        Group Paging allows a person to place a one-way call or group page to up to
-        75 people and/or workspaces by
+        Group Paging allows a one-way call or group page to up to 75 people, workspaces
+        and virtual lines by
 
         dialing a number or extension assigned to a specific paging group. The Group
         Paging service makes a simultaneous call to all the assigned targets.
@@ -16189,15 +17882,15 @@ docs:
           param_object: []
           type: boolean
           type_spec: null
-        - doc: An array of people and/or workspaces, who may originate pages to this
-            paging group.
+        - doc: An array of people, workspace, and virtual lines IDs who can originate
+            pages to this paging group.
           name: originators
           param_attrs: []
           param_object: []
           type: array[string]
           type_spec: null
-        - doc: People, including workspaces, that are added to paging group as paging
-            call targets.
+        - doc: An array of people, workspaces and virtual lines IDs will add to a
+            paging group as paging call targets.
           name: targets
           param_attrs: []
           param_object: []
@@ -16263,8 +17956,8 @@ docs:
           type_spec: required
     - doc: 'Retrieve Paging Group details.
 
-        Group Paging allows a person to place a one-way call or group page to up to
-        75 people and/or workspaces by
+        Group Paging allows a person, place or virtual line a one-way call or group
+        page to up to 75 people and/or workspaces and/or virtual line by
 
         dialing a number or extension assigned to a specific paging group. The Group
         Paging service makes a simultaneous call to all the assigned targets.
@@ -16319,6 +18012,12 @@ docs:
           param_object: []
           type: string
           type_spec: null
+        - doc: Flag to indicate toll free number.
+          name: tollFreeNumber
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
         - doc: Paging language. Minimum length is 1. Maximum length is 40.
           name: language
           param_attrs: []
@@ -16352,8 +18051,8 @@ docs:
           param_object: []
           type: boolean
           type_spec: null
-        - doc: An array of people and/or workspaces, who may originate pages to this
-            paging group.
+        - doc: An array of people, workspaces and virtual lines ID's who may originate
+            pages to this paging group.
           name: originators
           param_attrs:
           - doc: Agents ID.
@@ -16374,7 +18073,7 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: Type of the person or workspace.
+          - doc: Type of the person, workspace or virtual line.
             name: type
             param_attrs:
             - doc: Indicates that this object is a person.
@@ -16386,6 +18085,12 @@ docs:
             - doc: Indicates that this object is a workspace, formerly known as a
                 place.
               name: PLACE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates that this object is a virtual line.
+              name: VIRTUAL_LINE
               param_attrs: []
               param_object: []
               type: string
@@ -16410,8 +18115,8 @@ docs:
           param_object: []
           type: array[GetPagingGroupAgentObject]
           type_spec: null
-        - doc: People, including workspaces, that are added to paging group as paging
-            call targets.
+        - doc: An array of people, workspaces and virtual lines ID's that are added
+            to paging group as paging call targets.
           name: targets
           param_attrs:
           - doc: Agents ID.
@@ -16432,7 +18137,7 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: Type of the person or workspace.
+          - doc: Type of the person, workspace or virtual line.
             name: type
             param_attrs:
             - doc: Indicates that this object is a person.
@@ -16444,6 +18149,12 @@ docs:
             - doc: Indicates that this object is a workspace, formerly known as a
                 place.
               name: PLACE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates that this object is a virtual line.
+              name: VIRTUAL_LINE
               param_attrs: []
               param_object: []
               type: string
@@ -16484,7 +18195,7 @@ docs:
     - doc: 'Update the designated Paging Group.
 
         Group Paging allows a person to place a one-way call or group page to up to
-        75 people and/or workspaces by
+        75 people, workspaces and virtual lines by
 
         dialing a number or extension assigned to a specific paging group. The Group
         Paging service makes a simultaneous call to all the assigned targets.
@@ -20741,6 +22452,233 @@ docs:
           param_object: []
           type: string
           type_spec: required
+    - doc: 'List all Virtual Lines for the organization.
+
+        Virtual line is a capability in Webex Calling that allows administrators to
+        configure multiple lines to Webex Calling users.
+
+        Retrieving this list requires a full or read-only administrator auth token
+        with a scope of spark-admin:telephony_config_read.'
+      documentation:
+        doc: Read the List of Virtual Lines
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-virtual-lines
+        endpoint: https://webexapis.com/v1/telephony/config/virtualLines
+        http_method: GET
+      header: Read the List of Virtual Lines
+      parameters_and_response:
+        Query Parameters:
+        - doc: List virtual lines for this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Return the list of virtual lines matching these location ids. Example
+            for multiple values - ?locationId=locId1&locationId=locId2.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string array
+          type_spec: null
+        - doc: Limit the number of objects returned to this maximum count.
+          name: max
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Start at the zero-based offset in the list of matching objects.
+          name: start
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Return the list of virtual lines matching these virtualLineIds. Example
+            for multiple values - ?id=id1&id=id2.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string array
+          type_spec: null
+        - doc: Return the list of virtual lines matching these owner names. Example
+            for multiple values - ?ownerName=name1&ownerName=name2.
+          name: ownerName
+          param_attrs: []
+          param_object: []
+          type: string array
+          type_spec: null
+        - doc: Return the list of virtual lines matching these phone numbers. Example
+            for multiple values - ?phoneNumber=number1&phoneNumber=number2.
+          name: phoneNumber
+          param_attrs: []
+          param_object: []
+          type: string array
+          type_spec: null
+        - doc: Return the list of virtual lines matching the location names. Example
+            for multiple values - ?locationName=loc1&locationName=loc2.
+          name: locationName
+          param_attrs: []
+          param_object: []
+          type: string array
+          type_spec: null
+        - doc: Return the list of virtual lines based on the order. Default sort will
+            be in an Ascending order. Maximum 3 orders allowed at a time. Example
+            for multiple values - ?order=order1&order=order2.
+          name: order
+          param_attrs: []
+          param_object: []
+          type: string array
+          type_spec: null
+        - doc: If true, includes only virtual lines with devices assigned. When not
+            explicitly specified, the default includes both virtual lines with devices
+            assigned and not assigned.
+          name: hasDeviceAssigned
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: If true, includes only virtual lines with an extension assigned. When
+            not explicitly specified, the default includes both virtual lines with
+            extension assigned and not assigned.
+          name: hasExtensionAssigned
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: If true, includes only virtual lines with an assigned directory number,
+            also known as a Dn. When not explicitly specified, the default includes
+            both virtual lines with a Dn assigned and not assigned.
+          name: hasDnAssigned
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        Response Properties:
+        - doc: Array of virtual lines.
+          name: virtualLines
+          param_attrs:
+          - doc: A unique identifier for the virtual line.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Last name for virtual line.
+            name: lastName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: First name for virtual line.
+            name: firstName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: callerIdLastName for virtual line.
+            name: callerIdLastName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: callerIdFirstName for virtual line.
+            name: callerIdFirstName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: callerIdNumber for virtual line.
+            name: callerIdNumber
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: externalCallerIdNamePolicy for the virtual line.
+            name: externalCallerIdNamePolicy
+            param_attrs:
+            - doc: Shows virtual lines Caller ID name.
+              name: DIRECT_LINE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Shows virtual lines location name.
+              name: LOCATION
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Allow virtual lines first/last name to be configured.
+              name: OTHER
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: customExternalCallerIdName for virtual line.
+            name: customExternalCallerIdName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Calling details of virtual line.
+            name: number
+            param_attrs: []
+            param_object:
+            - doc: Virtual Line external.  Either external or extension is mandatory.
+              name: external
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Virtual Line extension.  Either external or extension is mandatory.
+              name: extension
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Number is Primary or Alternative Number.
+              name: primary
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            type: object
+            type_spec: null
+          - doc: Location details of virtual line.
+            name: location
+            param_attrs: []
+            param_object:
+            - doc: ID of location associated with virtual line.
+              name: id
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Name of location associated with virtual line.
+              name: name
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            type: object
+            type_spec: null
+          - doc: Number of devices assigned to a virtual line.
+            name: numberOfDevicesAssigned
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: Type of billing plan.
+            name: billingPlan
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[ListVirtualLineObject]
+          type_spec: null
     - doc: 'Retrieve the organization''s voicemail settings.
 
         Organizational voicemail settings determines what voicemail features a person
@@ -23812,7 +25750,7 @@ docs:
         - doc: Array of route groups.
           name: routeGroups
           param_attrs:
-          - doc: Route group UUID the Route list is associated with.
+          - doc: Route group ID the Route list is associated with.
             name: id
             param_attrs: []
             param_object: []
@@ -24418,7 +26356,7 @@ docs:
           - doc: List of route lists for this route group.
             name: routeLists
             param_attrs:
-            - doc: Route list UUID.
+            - doc: Route list ID.
               name: id
               param_attrs: []
               param_object: []
@@ -24512,7 +26450,7 @@ docs:
         - doc: Array of route lists.
           name: routeLists
           param_attrs:
-          - doc: UUID of the Route List.
+          - doc: ID of the Route List.
             name: id
             param_attrs: []
             param_object: []
@@ -24536,7 +26474,7 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: UUID of the route group associated with Route List.
+          - doc: ID of the route group associated with Route List.
             name: routeGroupId
             param_attrs: []
             param_object: []
@@ -24579,12 +26517,12 @@ docs:
           param_object: []
           type: string
           type_spec: required
-        - doc: UUID of the route group associated with Route List.
+        - doc: ID of the route group associated with Route List.
           name: routeGroupId
           param_attrs: []
           param_object: []
           type: string
-          type_spec: null
+          type_spec: required
         Query Parameters:
         - doc: Organization to which the Route List belongs.
           name: orgId
@@ -24610,7 +26548,7 @@ docs:
       documentation:
         doc: Delete a Route List
         doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-a-route-list
-        endpoint: https://webexapis.com/v1/telephony/config/premisePstn/trunks/{routeListId}
+        endpoint: https://webexapis.com/v1/telephony/config/premisePstn/routeLists/{routeListId}
         http_method: DELETE
       header: Delete a Route List
       parameters_and_response:
@@ -24678,7 +26616,7 @@ docs:
         - doc: Route group associated with the Route list.
           name: routeGroup
           param_attrs:
-          - doc: Route group UUID the Route list is associated with.
+          - doc: Route group ID the Route list is associated with.
             name: id
             param_attrs: []
             param_object: []
@@ -26734,6 +28672,12 @@ docs:
             param_object: []
             type: boolean
             type_spec: null
+          - doc: Device line label.
+            name: lineLabel
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
           - doc: Indicates if the member is of type PEOPLE or PLACE.
             name: memberType
             param_attrs:
@@ -26886,6 +28830,12 @@ docs:
             param_object: []
             type: boolean
             type_spec: required
+          - doc: Device line label.
+            name: lineLabel
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
           param_object: []
           type: array[PutMemberObject]
           type_spec: null
@@ -30197,6 +32147,12 @@ docs:
             param_object: []
             type: boolean
             type_spec: null
+          - doc: Enables / disables customizable line label.
+            name: customizableLineLabelEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
           param_object: []
           type: array[DeviceObject]
           type_spec: null
@@ -32871,6 +34827,467 @@ docs:
       with spark:people_write scope can be used by a person to update their own settings.'
     header: Webex Calling Person Settings
     methods:
+    - doc: 'Get members available for shared-line assignment to a Webex Calling Apps
+        Desktop device.
+
+        This API requires a full or user administrator auth token with the spark-admin:people_read
+        scope.'
+      documentation:
+        doc: Search Shared-Line Appearance Members
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/search-shared-line-appearance-members
+        endpoint: https://webexapis.com/v1/telephony/config/people/{personId}/applications/{applicationId}/availableMembers
+        http_method: GET
+      header: Search Shared-Line Appearance Members
+      parameters_and_response:
+        Body Parameters:
+        - doc: Number of records per page.
+          name: max
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Page number.
+          name: start
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Location ID for the user.
+          name: location
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Search for users with names that match the query.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Search for users with numbers that match the query.
+          name: number
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Sort by first name (fname) or last name (lname).
+          name: order
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Search for users with extensions that match the query.
+          name: extension
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: ''
+          name: members
+          param_attrs:
+          - doc: A unique member identifier.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: First name of member.
+            name: firstName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Last name of member.
+            name: lastName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Phone number of member. Currently, E.164 format is not supported.
+            name: phoneNumber
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Phone extension of member.
+            name: extension
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Indicates if the line is acting as a primary line or a shared line
+              for this device.
+            name: lineType
+            param_attrs:
+            - doc: Primary line for the member.
+              name: PRIMARY
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Shared line for the member. A shared line allows users to receive
+                and place calls to and from another user's extension, using their
+                own device.
+              name: SHARED_CALL_APPEARANCE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: LineType
+            type_spec: null
+          - doc: Location object having a unique identifier for the location and its
+              name.
+            name: location
+            param_attrs:
+            - doc: Location identifier associated with the members.
+              name: id
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Location name associated with the member.
+              name: name
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: location
+            type_spec: null
+          param_object: []
+          type: array[Available Shared Line Member Item]
+          type_spec: null
+        URI Parameters:
+        - doc: A unique identifier for the person.
+          name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: A unique identifier for the application.
+          name: applicationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Get primary and secondary members assigned to a shared line on a Webex
+        Calling Apps Desktop device.
+
+        This API requires a full or user administrator auth token with the spark-admin:people_read
+        scope.'
+      documentation:
+        doc: Get Shared-Line Appearance Members
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/get-shared-line-appearance-members
+        endpoint: https://webexapis.com/v1/telephony/config/people/{personId}/applications/{applicationId}/members
+        http_method: GET
+      header: Get Shared-Line Appearance Members
+      parameters_and_response:
+        Response Properties:
+        - doc: Model name of device.
+          name: model
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: List of members.
+          name: members
+          param_attrs:
+          - doc: Unique identifier for the member.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: First name of person or workspace.
+            name: firstName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Last name of person or workspace.
+            name: lastName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Phone number of a person or workspace. Currently, E.164 format is
+              not supported. This will be supported in the future update.
+            name: phoneNumber
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Phone extension of a person or workspace.
+            name: extension
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Device port number assigned to a person or workspace.
+            name: port
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: T.38 Fax Compression setting. Valid only for ATA Devices. Overrides
+              user level compression options.
+            name: t38FaxCompressionEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: If true the person or the workspace is the owner of the device. Points
+              to primary line/port of the device.
+            name: primaryOwner
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Indicates if the line is acting as a primary line or a shared line
+              for this device.
+            name: lineType
+            param_attrs:
+            - doc: Primary line for the member.
+              name: PRIMARY
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Shared line for the member. A shared line allows users to receive
+                and place calls to and from another user's extension, using their
+                own device.
+              name: SHARED_CALL_APPEARANCE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: LineType
+            type_spec: null
+          - doc: Number of lines that have been configured for the person on the device.
+            name: lineWeight
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: Registration home IP for the line port.
+            name: hostIP
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Registration remote IP for the line port.
+            name: remoteIP
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Configure this line to automatically call a predefined number whenever
+              taken off-hook. Once enabled, the line can only make calls to the predefined
+              number set in hotlineDestination.
+            name: hotlineEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Preconfigured number for the hotline. Required only if hotlineEnabled
+              is set to true.
+            name: hotlineDestination
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Set how a device behaves when a call is declined. When set to true,
+              a call decline request is extended to all the endpoints on the device.
+              When set to false, a call decline request is only declined at the current
+              endpoint.
+            name: allowCallDeclineEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Device line label.
+            name: lineLabel
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Indicates if the member is of type PEOPLE or PLACE.
+            name: memberType
+            param_attrs:
+            - doc: The associated member is a person.
+              name: PEOPLE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The associated member is a workspace.
+              name: PLACE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: UserType
+            type_spec: null
+          - doc: Location object having a unique identifier for the location and its
+              name.
+            name: location
+            param_attrs:
+            - doc: Location identifier associated with the members.
+              name: id
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Location name associated with the member.
+              name: name
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: location
+            type_spec: null
+          param_object: []
+          type: array[Get Shared Line Member Item]
+          type_spec: null
+        - doc: Maximum number of device ports.
+          name: maxLineCount
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        URI Parameters:
+        - doc: A unique identifier for the person.
+          name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: A unique identifier for the application.
+          name: applicationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Add or modify primary and secondary users assigned to shared-lines on
+        a Webex Calling Apps Desktop device.
+
+        This API requires a full or user administrator auth token with the spark-admin:people_write
+        scope.'
+      documentation:
+        doc: Put Shared-Line Appearance Members
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/put-shared-line-appearance-members
+        endpoint: https://webexapis.com/v1/telephony/config/people/{personId}/applications/{applicationId}/members
+        http_method: PUT
+      header: Put Shared-Line Appearance Members
+      parameters_and_response:
+        Body Parameters:
+        - doc: ''
+          name: members
+          param_attrs:
+          - doc: Unique identifier for the person or workspace.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: required
+          - doc: Device port number assigned to person or workspace.
+            name: port
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: required
+          - doc: T.38 Fax Compression setting. Valid only for ATA Devices. Overrides
+              user level compression options.
+            name: t38FaxCompressionEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: If true the person or the workspace is the owner of the device. Points
+              to primary line/port of the device.
+            name: primaryOwner
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: required
+          - doc: Indicates if the line is acting as a primary line or a shared line
+              for this device.
+            name: lineType
+            param_attrs:
+            - doc: Primary line for the member.
+              name: PRIMARY
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Shared line for the member. A shared line allows users to receive
+                and place calls to and from another user's extension, using their
+                own device.
+              name: SHARED_CALL_APPEARANCE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: LineType
+            type_spec: required
+          - doc: Number of lines that have been configured for the person on the device.
+            name: lineWeight
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: required
+          - doc: Configure this line to automatically call a predefined number whenever
+              taken off-hook. Once enabled, the line can only make calls to the predefined
+              number set in hotlineDestination.
+            name: hotlineEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: required
+          - doc: Preconfigured number for the hotline. Required only if hotlineEnabled
+              is set to true.
+            name: hotlineDestination
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: required
+          - doc: Set how a device behaves when a call is declined. When set to true,
+              a call decline request is extended to all the endpoints on the device.
+              When set to false, a call decline request is only declined at the current
+              endpoint.
+            name: allowCallDeclineEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: required
+          - doc: Device line label.
+            name: lineLabel
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[Put Shared Line Member Item]
+          type_spec: null
+        URI Parameters:
+        - doc: A unique identifier for the person.
+          name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: A unique identifier for the application.
+          name: applicationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
     - doc: 'Retrieves the calling behavior and UC Manager Profile settings for the
         person which includes overall calling behavior and calling UC Manager Profile
         ID.
@@ -36602,10 +39019,10 @@ docs:
           type: string
           type_spec: required
     - doc: 'Retrieves the monitoring settings of the person, which shows specified
-        people, places or, call park extenions that are being monitoring.
+        people, places, virtual lines or call park extenions that are being monitored.
 
-        Monitors the line status which indicates if a person or place is on a call
-        and if a call has been parked on that extension.
+        Monitors the line status which indicates if a person, place or virtual line
+        is on a call and if a call has been parked on that extension.
 
         This API requires a full, user, or read-only administrator auth token with
         a scope of spark-admin:people_read.'
@@ -36632,8 +39049,8 @@ docs:
           param_object: []
           type: boolean
           type_spec: null
-        - doc: Settings of monitored elements which can be person, place, or call
-            park extension.
+        - doc: Settings of monitored elements which can be person, place, virtual
+            line or call park extension.
           name: monitoredElements
           param_attrs:
           - doc: ''
@@ -36646,25 +39063,25 @@ docs:
               param_object: []
               type: string
               type_spec: null
-            - doc: The last name of the monitored person or place.
+            - doc: The last name of the monitored person, place or virtual line.
               name: lastName
               param_attrs: []
               param_object: []
               type: string
               type_spec: null
-            - doc: The first name of the monitored person or place.
+            - doc: The first name of the monitored person, place or virtual line.
               name: firstName
               param_attrs: []
               param_object: []
               type: string
               type_spec: null
-            - doc: The display name of the monitored person or place.
+            - doc: The display name of the monitored person, place or virtual line.
               name: displayName
               param_attrs: []
               param_object: []
               type: string
               type_spec: null
-            - doc: Indicates whether the type is PEOPLE or PLACE.
+            - doc: Indicates whether the type is PEOPLE, PLACE or VIRTUAL_LINE.
               name: type
               param_attrs:
               - doc: Indicates a person or list of people.
@@ -36680,25 +39097,34 @@ docs:
                 param_object: []
                 type: string
                 type_spec: null
+              - doc: Indicates a virtual line or list of virtual lines.
+                name: VIRTUAL_LINE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
               param_object: []
-              type: PeopleOrPlaceType
+              type: PeopleOrPlaceOrVirtualLineType
               type_spec: null
-            - doc: The email address of the monitored person or place.
+            - doc: The email address of the monitored person, place or virtual line.
               name: email
               param_attrs: []
               param_object: []
               type: string
               type_spec: null
-            - doc: The list of phone numbers of the monitored person or place.
+            - doc: The list of phone numbers of the monitored person, place or virtual
+                line.
               name: numbers
               param_attrs:
-              - doc: External phone number of the monitored person or workspace.
+              - doc: External phone number of the monitored person, workspace or virtual
+                  line.
                 name: external
                 param_attrs: []
                 param_object: []
                 type: string
                 type_spec: null
-              - doc: Extension number of the monitored person or workspace.
+              - doc: Extension number of the monitored person, workspace or virtual
+                  line.
                 name: extension
                 param_attrs: []
                 param_object: []
@@ -36775,9 +39201,9 @@ docs:
           type_spec: required
     - doc: 'Modifies the monitoring settings of the person.
 
-        Monitors the line status of specified people, places or, call park extension.
-        The line status indicates if a person or place is on a call and if a call
-        has been parked on that extension.
+        Monitors the line status of specified people, places, virtual lines or call
+        park extension. The line status indicates if a person, place or virtual line
+        is on a call and if a call has been parked on that extension.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write
         scope.'
@@ -36937,6 +39363,13 @@ docs:
           param_object: []
           type: boolean
           type_spec: null
+        - doc: Indicates that the browser Webex Calling application is enabled for
+            use.
+          name: browserClientEnabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
         - doc: Indicates that the desktop Webex Calling application is enabled for
             use.
           name: desktopClientEnabled
@@ -36999,6 +39432,13 @@ docs:
           type_spec: null
         - doc: When true, indicates to ring devices for Call Park recalled.
           name: ringDevicesForCallParkEnabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Indicates that the browser Webex Calling application is enabled for
+            use.
+          name: browserClientEnabled
           param_attrs: []
           param_object: []
           type: boolean
@@ -37109,8 +39549,8 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: Type usually indicates PEOPLE or PLACE. Push-to-Talk and Privacy
-              features only supports PEOPLE.
+          - doc: Type usually indicates PEOPLE, PLACE or VIRTUAL_LINE. Push-to-Talk
+              and Privacy features only supports PEOPLE.
             name: type
             param_attrs:
             - doc: Indicates a person or list of people.
@@ -37126,8 +39566,14 @@ docs:
               param_object: []
               type: string
               type_spec: null
+            - doc: Indicates a virtual line or list of virtual lines.
+              name: VIRTUAL_LINE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
             param_object: []
-            type: PeopleOrPlaceType
+            type: PeopleOrPlaceOrVirtualLineType
             type_spec: null
           - doc: Email address of the person.
             name: email
@@ -37340,9 +39786,9 @@ docs:
           type_spec: required
     - doc: 'Retrieve a person''s Receptionist Client settings.
 
-        To help support the needs of your front-office personnel, you can set up people
-        or workspaces as telephone attendants so that they can screen all incoming
-        calls to certain numbers within your organization.
+        To help support the needs of your front-office personnel, you can set up people,
+        workspaces or virtual lines as telephone attendants so that they can screen
+        all incoming calls to certain numbers within your organization.
 
         This API requires a full, user, or read-only administrator auth token with
         a scope of spark-admin:people_read.'
@@ -37369,34 +39815,35 @@ docs:
           param_object: []
           type: boolean
           type_spec: null
-        - doc: List of people and/or workspaces to monitor.
+        - doc: List of people, workspaces or virtual lines to monitor.
           name: monitoredMembers
           param_attrs:
-          - doc: Unique identifier of the person or workspace to be monitored.
+          - doc: Unique identifier of the person, workspace or virtual line to be
+              monitored.
             name: id
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Last name of the monitored person or workspace.
+          - doc: Last name of the monitored person, workspace or virtual line.
             name: lastName
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: First name of the monitored person or workspace.
+          - doc: First name of the monitored person, workspace or virtual line.
             name: firstName
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Display name of the monitored person or workspace.
+          - doc: Display name of the monitored person, workspace or virtual line.
             name: displayName
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: Indicates whether type is person or workspace.
+          - doc: Indicates whether type is person, workspace or virtual line.
             name: type
             param_attrs:
             - doc: Indicates a person or list of people.
@@ -37412,25 +39859,34 @@ docs:
               param_object: []
               type: string
               type_spec: null
+            - doc: Indicates a virtual line or list of virtual lines.
+              name: VIRTUAL_LINE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
             param_object: []
-            type: PeopleOrPlaceType
+            type: PeopleOrPlaceOrVirtualLineType
             type_spec: null
-          - doc: Email address of the monitored person or workspace.
+          - doc: Email address of the monitored person, workspace or virtual line.
             name: email
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: List of phone numbers of the monitored person or workspace.
+          - doc: List of phone numbers of the monitored person, workspace or virtual
+              line.
             name: numbers
             param_attrs:
-            - doc: External phone number of the monitored person or workspace.
+            - doc: External phone number of the monitored person, workspace or virtual
+                line.
               name: external
               param_attrs: []
               param_object: []
               type: string
               type_spec: null
-            - doc: Extension number of the monitored person or workspace.
+            - doc: Extension number of the monitored person, workspace or virtual
+                line.
               name: extension
               param_attrs: []
               param_object: []
@@ -37457,9 +39913,9 @@ docs:
           type_spec: required
     - doc: 'Configure a person''s Receptionist Client settings.
 
-        To help support the needs of your front-office personnel, you can set up people
-        or workspaces as telephone attendants so that they can screen all incoming
-        calls to certain numbers within your organization.
+        To help support the needs of your front-office personnel, you can set up people,
+        workspaces or virtual lines as telephone attendants so that they can screen
+        all incoming calls to certain numbers within your organization.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write
         scope.'
@@ -37601,8 +40057,8 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: Type usually indicates PEOPLE or PLACE. Push-to-Talk and Privacy
-              features only supports PEOPLE.
+          - doc: Type usually indicates PEOPLE, PLACE or VIRTUAL_LINE. Push-to-Talk
+              and Privacy features only supports PEOPLE.
             name: type
             param_attrs:
             - doc: Indicates a person or list of people.
@@ -37618,8 +40074,14 @@ docs:
               param_object: []
               type: string
               type_spec: null
+            - doc: Indicates a virtual line or list of virtual lines.
+              name: VIRTUAL_LINE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
             param_object: []
-            type: PeopleOrPlaceType
+            type: PeopleOrPlaceOrVirtualLineType
             type_spec: null
           - doc: Email address of the person.
             name: email

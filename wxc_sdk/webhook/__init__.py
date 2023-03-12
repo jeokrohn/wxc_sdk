@@ -13,7 +13,7 @@ from ..base import ApiModel, to_camel, webex_id_to_uuid
 from ..base import SafeEnum as Enum
 
 __all__ = ['WebhookEventType', 'WebhookResource', 'WebhookStatus', 'Webhook', 'WebhookEventData',
-           'WebhookEvent', 'WebhookApi']
+           'WebhookEvent', 'WebhookApi', 'WebhookCreate']
 
 
 class WebhookEventType(str, Enum):

@@ -411,11 +411,12 @@ class SupportedDevice(ApiModel):
     #: Enables / disables Basic emergency nomadic.
     basic_emergency_nomadic_enabled: Optional[bool]
     #: Enables / disables customized behavior support on devices
-    customized_behaviors_enabled: bool
+    customized_behaviors_enabled: Optional[bool]
     #: Enables / disables configuring port support on device.
-    allow_configure_ports_enabled: bool
-    customizable_line_label_enabled: bool
-    supports_line_port_reordering_enabled: bool
+    allow_configure_ports_enabled: Optional[bool]
+    #: Enables / disables customizable line label.
+    customizable_line_label_enabled: Optional[bool]
+    supports_line_port_reordering_enabled: Optional[bool]
 
 
 @dataclass(init=False)

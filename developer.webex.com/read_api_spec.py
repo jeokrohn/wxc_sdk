@@ -20,6 +20,14 @@ optional arguments:
   -a AUTH, --auth AUTH  filename of file with credentials in .env file format
 
 """
+# TODO: Webex Calling Detailed Call History, Get Detailed Call History
+#   https://developer.webex.com/docs/api/v1/webex-calling-detailed-call-history/get-detailed-call-history
+#   * make sure that full description is captured, also the enumeration
+# TODO: Webex Calling Detailed Call History, Get Detailed Call History
+#   https://developer.webex.com/docs/api/v1/webex-calling-detailed-call-history/get-detailed-call-history
+#   * that should actually be a follow-pagination
+# TODO: Call Pickups
+#   generated HostedAgentType is actually an enum
 import argparse
 import logging
 import os

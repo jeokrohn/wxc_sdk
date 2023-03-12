@@ -7,89 +7,7 @@ from typing import List, Optional
 from pydantic import Field
 
 
-__all__ = ['CDR', 'CallType', 'ClientType', 'Direction', 'GetDetailedCallHistoryResponse', 'OriginalReason', 'RedirectReason', 'RelatedReason', 'UserType', 'WebexCallingDetailedCallHistoryApi']
-
-
-class CallType(str, Enum):
-    sip_meeting = 'SIP_MEETING'
-    sip_international = 'SIP_INTERNATIONAL'
-    sip_shortcode = 'SIP_SHORTCODE'
-    sip_inbound = 'SIP_INBOUND'
-    unknown = 'UNKNOWN'
-    sip_emergency = 'SIP_EMERGENCY'
-    sip_premium = 'SIP_PREMIUM'
-    sip_enterprise = 'SIP_ENTERPRISE'
-    sip_tollfree = 'SIP_TOLLFREE'
-    sip_national = 'SIP_NATIONAL'
-    sip_mobile = 'SIP_MOBILE'
-
-
-class ClientType(str, Enum):
-    sip = 'SIP'
-    wxc_client = 'WXC_CLIENT'
-    wxc_third_party = 'WXC_THIRD_PARTY'
-    teams_wxc_client = 'TEAMS_WXC_CLIENT'
-    wxc_device = 'WXC_DEVICE'
-    wxc_sip_gw = 'WXC_SIP_GW'
-
-
-class Direction(str, Enum):
-    originating = 'ORIGINATING'
-    terminating = 'TERMINATING'
-
-
-class OriginalReason(str, Enum):
-    unconditional = 'Unconditional'
-    no_answer = 'NoAnswer'
-    call_queue = 'CallQueue'
-    time_of_day = 'TimeOfDay'
-    user_busy = 'UserBusy'
-    follow_me = 'FollowMe'
-    unrecognised = 'Unrecognised'
-    unknown = 'Unknown'
-
-
-class RedirectReason(str, Enum):
-    unconditional = 'Unconditional'
-    no_answer = 'NoAnswer'
-    call_queue = 'CallQueue'
-    time_of_day = 'TimeOfDay'
-    user_busy = 'UserBusy'
-    follow_me = 'FollowMe'
-    hunt_group = 'HuntGroup'
-    deflection = 'Deflection'
-    unknown = 'Unknown'
-    unavailable = 'Unavailable'
-
-
-class RelatedReason(str, Enum):
-    consultative_transfer = 'ConsultativeTransfer'
-    call_forward_selective = 'CallForwardSelective'
-    call_queue = 'CallQueue'
-    unrecognised = 'Unrecognised'
-    call_pickup = 'CallPickup'
-    call_forward_always = 'CallForwardAlways'
-    fax_deposit = 'FaxDeposit'
-    hunt_group = 'HuntGroup'
-    push_notification_retrieval = 'PushNotificationRetrieval'
-    voice_xml_script_termination = 'VoiceXMLScriptTermination'
-    call_forward_no_answer = 'CallForwardNoAnswer'
-    anywhere_location = 'AnywhereLocation'
-
-
-class UserType(str, Enum):
-    automated_attendant_video = 'AutomatedAttendantVideo'
-    anchor = 'Anchor'
-    broadworks_anywhere = 'BroadworksAnywhere'
-    voice_mail_retrieval = 'VoiceMailRetrieval'
-    local_gateway = 'LocalGateway'
-    hunt_group = 'HuntGroup'
-    group_paging = 'GroupPaging'
-    user = 'User'
-    voice_mail_group = 'VoiceMailGroup'
-    call_center_standard = 'CallCenterStandard'
-    voice_xml = 'VoiceXML'
-    route_point = 'RoutePoint'
+__all__ = ['CDR', 'GetDetailedCallHistoryResponse', 'WebexCallingDetailedCallHistoryApi']
 
 
 class CDR(ApiModel):
@@ -102,7 +20,7 @@ class CDR(ApiModel):
     #: SIP Call ID used to identify the call. You can share the Call ID with Cisco TAC to help them pinpoint a call if necessary.
     call_id: Optional[str] = Field(alias='Call ID')
     #: Type of call. For example:
-    call_type: Optional[CallType] = Field(alias='Call type')
+    call_type: Optional[str] = Field(alias='Call type')
     #: For incoming calls, the calling line ID of the user. For outgoing calls, it's the calling line ID of the called party.
     called_line_id: Optional[str] = Field(alias='Called line ID')
     #: For incoming calls, the telephone number of the user. For outgoing calls, it's the telephone number of the called party.
@@ -112,7 +30,7 @@ class CDR(ApiModel):
     #: For incoming calls, the telephone number of the calling party. For outgoing calls, it's the telephone number of the user.
     calling_number: Optional[str] = Field(alias='Calling number')
     #: The type of client that the user (creating this record) is using to make or receive the call. For example:
-    client_type: Optional[ClientType] = Field(alias='Client type')
+    client_type: Optional[str] = Field(alias='Client type')
     #: The version of the client that the user (creating this record) is using to make or receive the call.
     client_version: Optional[str] = Field(alias='Client version')
     #: Correlation ID to tie together multiple call legs of the same call session.
@@ -125,7 +43,7 @@ class CDR(ApiModel):
     #: This field reports multiple call dial possibilities:
     dialed_digits: Optional[str] = Field(alias='Dialed digits')
     #: Whether the call was inbound or outbound. The possible values are:
-    direction: Optional[Direction]
+    direction: Optional[str]
     #: The length of the call in seconds.
     duration: Optional[int]
     #: Inbound trunk may be presented in Originating and Terminating records.
@@ -138,18 +56,18 @@ class CDR(ApiModel):
     model: Optional[str]
     #: A unique identifier for the organization that made the call. This is a unique identifier across Cisco.
     org_uuid: Optional[str] = Field(alias='Org UUID')
-    #: Populated for calls that transfer, hold, wait, and so on. For example:
-    original_reason: Optional[OriginalReason] = Field(alias='Original reason')
+    #: Call redirection reason for the original called number. For example:
+    original_reason: Optional[str] = Field(alias='Original reason')
     #: The operating system that the app was running on, if available.
     os_type: Optional[str] = Field(alias='OS type')
     #: Outbound trunk may be presented in Originating and Terminating records.
     outbound_trunk: Optional[str] = Field(alias='Outbound trunk')
-    #: Populated for calls that transfer, hold, wait, and so on. For example:
-    redirect_reason: Optional[RedirectReason] = Field(alias='Redirect reason')
+    #: Call Redirection Reason for the redirecting number. For example:
+    redirect_reason: Optional[str] = Field(alias='Redirect reason')
     #: When the call has been redirected one or more times, this field reports the last redirecting number. Identifies who last redirected the call. Only applies to call scenarios such as transfer, call forwarded calls, simultaneous rings, etc.
     redirecting_number: Optional[str] = Field(alias='Redirecting number')
-    #: Populated for calls that transfer, hold, wait, and so on. For example:
-    related_reason: Optional[RelatedReason] = Field(alias='Related reason')
+    #: Indicates a trigger that led to a change in the call presence. The trigger could be for this particular call or redirected via a different call. For example:
+    related_reason: Optional[str] = Field(alias='Related reason')
     #: Indicates which party released the call first. The possible values are:
     releasing_party: Optional[str] = Field(alias='Releasing party')
     #: A unique ID for this particular record. This can be used when processing records to aid in deduplication.
@@ -170,8 +88,10 @@ class CDR(ApiModel):
     sub_client_type: Optional[str] = Field(alias='Sub client type')
     #: Transfer related call ID is used as a call identifier of the other call involved in the transfer. You can share this ID with Cisco TAC to help them pinpoint parties who are involved during a call transfer.
     transfer_related_call_id: Optional[str] = Field(alias='Transfer related call ID')
+    #: The user who made or received the call.
+    user: Optional[str]
     #: The type of user (user or workspace) that made or received the call. For example:
-    user_type: Optional[UserType] = Field(alias='User type')
+    user_type: Optional[str] = Field(alias='User type')
     #: A unique identifier for the user associated with the call. This is a unique identifier across Cisco products.
     user_uuid: Optional[str] = Field(alias='User UUID')
 
@@ -186,7 +106,7 @@ class WebexCallingDetailedCallHistoryApi(ApiChild, base=''):
     To retrieve Detailed Call History information, you must use a token with the spark-admin:calling_cdr_read scope. The authenticating user must be a read-only-admin or full-admin of the organization and have the administrator role "Webex Calling Detailed Call History API access" enabled.
     Detailed Call History information is available 5 minutes after a call has ended and may be retrieved for up to 48 hours. For example, if a call ends at 9:46 am, the record for that call can be collected using the API from 9:51 am, and is available until 9:46 am two days later.
     This API is rate-limited to one call every 5 minutes for a given organization ID.
-    Details on the fields returned from this API and their potential values are available at https://help.webex.com/en-us/article/nmug598/Reports-for-Your-Cloud-Collaboration-Portfolio under the section Detailed Call History.
+    Details on the fields returned from this API and their potential values are available at https://help.webex.com/en-us/article/nmug598/Reports-for-Your-Cloud-Collaboration-Portfolio. Select the Report templates tab, and then in the Webex Calling reports section see Calling Detailed Call History Report.
     """
 
     def detailed_call_history(self, start_time: str, end_time: str, locations: str = None, max: int = None) -> List[CDR]:
@@ -207,10 +127,8 @@ class WebexCallingDetailedCallHistoryApi(ApiChild, base=''):
         :type max: int
         """
         params = {}
-        if start_time is not None:
-            params['startTime'] = start_time
-        if end_time is not None:
-            params['endTime'] = end_time
+        params['startTime'] = start_time
+        params['endTime'] = end_time
         if locations is not None:
             params['locations'] = locations
         if max is not None:

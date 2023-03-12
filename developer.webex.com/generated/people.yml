@@ -50,6 +50,9 @@ docs:
         Lookup by email is only supported for people within the same org or where
         a partner admin relationship is in place.
 
+        Lookup by roles is only supported for Admin users for the people within the
+        same org.
+
         Long result sets will be split into pages.'
       documentation:
         doc: List People
@@ -86,6 +89,12 @@ docs:
         - doc: List people in this organization. Only admin users of another organization
             (such as partners) may use this parameter.
           name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: List of roleIds separated by commas.
+          name: roles
           param_attrs: []
           param_object: []
           type: string
@@ -237,39 +246,7 @@ docs:
           - doc: Person's address
             name: addresses
             param_attrs:
-            - doc: '
-
-                Possible values: US'
-              name: country
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: '
-
-                Possible values: Charlotte'
-              name: locality
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: '
-
-                Possible values: North Carolina'
-              name: region
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: '
-
-                Possible values: 1099 Bird Ave.'
-              name: streetAddress
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: '
+            - doc: 'The type of address
 
                 Possible values: work'
               name: type
@@ -277,7 +254,39 @@ docs:
               param_object: []
               type: string
               type_spec: null
-            - doc: '
+            - doc: 'The user''s country
+
+                Possible values: US'
+              name: country
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: 'the user''s locality, often city
+
+                Possible values: Milpitas'
+              name: locality
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: 'the user''s region, often state
+
+                Possible values: California'
+              name: region
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: 'the user''s street
+
+                Possible values: 1099 Bird Ave.'
+              name: streetAddress
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: 'the user''s postal or zip code
 
                 Possible values: 99212'
               name: postalCode
@@ -608,13 +617,57 @@ docs:
           param_object: []
           type: string
           type_spec: null
-        - doc: 'Person''s address
-
-            Possible values: , country: `US`, locality: `Charlotte`, region: `North
-            Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode:
-            `99212`'
+        - doc: Person's address
           name: addresses
-          param_attrs: []
+          param_attrs:
+          - doc: 'The type of address
+
+              Possible values: work'
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'The user''s country
+
+              Possible values: US'
+            name: country
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s locality, often city
+
+              Possible values: Milpitas'
+            name: locality
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s region, often state
+
+              Possible values: California'
+            name: region
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s street
+
+              Possible values: 1099 Bird Ave.'
+            name: streetAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s postal or zip code
+
+              Possible values: 99212'
+            name: postalCode
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
           param_object: []
           type: array[object]
           type_spec: null
@@ -759,39 +812,7 @@ docs:
         - doc: Person's address
           name: addresses
           param_attrs:
-          - doc: '
-
-              Possible values: US'
-            name: country
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: Charlotte'
-            name: locality
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: North Carolina'
-            name: region
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: 1099 Bird Ave.'
-            name: streetAddress
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
+          - doc: 'The type of address
 
               Possible values: work'
             name: type
@@ -799,7 +820,39 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: '
+          - doc: 'The user''s country
+
+              Possible values: US'
+            name: country
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s locality, often city
+
+              Possible values: Milpitas'
+            name: locality
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s region, often state
+
+              Possible values: California'
+            name: region
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s street
+
+              Possible values: 1099 Bird Ave.'
+            name: streetAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s postal or zip code
 
               Possible values: 99212'
             name: postalCode
@@ -1128,39 +1181,7 @@ docs:
         - doc: Person's address
           name: addresses
           param_attrs:
-          - doc: '
-
-              Possible values: US'
-            name: country
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: Charlotte'
-            name: locality
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: North Carolina'
-            name: region
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: 1099 Bird Ave.'
-            name: streetAddress
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
+          - doc: 'The type of address
 
               Possible values: work'
             name: type
@@ -1168,7 +1189,39 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: '
+          - doc: 'The user''s country
+
+              Possible values: US'
+            name: country
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s locality, often city
+
+              Possible values: Milpitas'
+            name: locality
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s region, often state
+
+              Possible values: California'
+            name: region
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s street
+
+              Possible values: 1099 Bird Ave.'
+            name: streetAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s postal or zip code
 
               Possible values: 99212'
             name: postalCode
@@ -1513,13 +1566,57 @@ docs:
           param_object: []
           type: string
           type_spec: null
-        - doc: 'Person''s address
-
-            Possible values: , country: `US`, locality: `Charlotte`, region: `North
-            Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode:
-            `99212`'
+        - doc: Person's address
           name: addresses
-          param_attrs: []
+          param_attrs:
+          - doc: 'The type of address
+
+              Possible values: work'
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'The user''s country
+
+              Possible values: US'
+            name: country
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s locality, often city
+
+              Possible values: Milpitas'
+            name: locality
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s region, often state
+
+              Possible values: California'
+            name: region
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s street
+
+              Possible values: 1099 Bird Ave.'
+            name: streetAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s postal or zip code
+
+              Possible values: 99212'
+            name: postalCode
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
           param_object: []
           type: array[object]
           type_spec: null
@@ -1679,39 +1776,7 @@ docs:
         - doc: Person's address
           name: addresses
           param_attrs:
-          - doc: '
-
-              Possible values: US'
-            name: country
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: Charlotte'
-            name: locality
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: North Carolina'
-            name: region
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: 1099 Bird Ave.'
-            name: streetAddress
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
+          - doc: 'The type of address
 
               Possible values: work'
             name: type
@@ -1719,7 +1784,39 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: '
+          - doc: 'The user''s country
+
+              Possible values: US'
+            name: country
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s locality, often city
+
+              Possible values: Milpitas'
+            name: locality
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s region, often state
+
+              Possible values: California'
+            name: region
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s street
+
+              Possible values: 1099 Bird Ave.'
+            name: streetAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s postal or zip code
 
               Possible values: 99212'
             name: postalCode
@@ -2066,39 +2163,7 @@ docs:
         - doc: Person's address
           name: addresses
           param_attrs:
-          - doc: '
-
-              Possible values: US'
-            name: country
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: Charlotte'
-            name: locality
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: North Carolina'
-            name: region
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
-
-              Possible values: 1099 Bird Ave.'
-            name: streetAddress
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: '
+          - doc: 'The type of address
 
               Possible values: work'
             name: type
@@ -2106,7 +2171,39 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: '
+          - doc: 'The user''s country
+
+              Possible values: US'
+            name: country
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s locality, often city
+
+              Possible values: Milpitas'
+            name: locality
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s region, often state
+
+              Possible values: California'
+            name: region
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s street
+
+              Possible values: 1099 Bird Ave.'
+            name: streetAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'the user''s postal or zip code
 
               Possible values: 99212'
             name: postalCode

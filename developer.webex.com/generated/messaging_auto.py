@@ -508,8 +508,7 @@ class MessagesApi(ApiChild, base='messages'):
         :param before_message: List messages sent before a message, by ID.
         :type before_message: str
         """
-        if room_id is not None:
-            params['roomId'] = room_id
+        params['roomId'] = room_id
         if parent_id is not None:
             params['parentId'] = parent_id
         if mentioned_people is not None:
@@ -775,12 +774,13 @@ class PeopleApi(ApiChild, base='people'):
     To learn more about managing people in a room see the Memberships API. For information about how to allocate Hybrid Services licenses to people, see the Managing Hybrid Services guide.
     """
 
-    def list_people(self, email: str = None, display_name: str = None, id: str = None, org_id: str = None, calling_data: bool = None, location_id: str = None, **params) -> Generator[Person, None, None]:
+    def list_people(self, email: str = None, display_name: str = None, id: str = None, org_id: str = None, roles: str = None, calling_data: bool = None, location_id: str = None, **params) -> Generator[Person, None, None]:
         """
         List people in your organization. For most users, either the email or displayName parameter is required. Admin users can omit these fields and list all users in their organization.
         Response properties associated with a user's presence status, such as status or lastActivity, will only be returned for people within your organization or an organization you manage. Presence information will not be returned if the authenticated user has disabled status sharing.
         Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData parameter as true. Admin users can list all users in a location or with a specific phone number. Admin users will receive an enriched payload with additional administrative fields like liceneses,roles etc. These fields are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=
         Lookup by email is only supported for people within the same org or where a partner admin relationship is in place.
+        Lookup by roles is only supported for Admin users for the people within the same org.
         Long result sets will be split into pages.
 
         :param email: List people with this email address. For non-admin requests, either this or displayName are required. With the exception of partner admins and a managed org relationship, people lookup by email is only available for users in the same org.
@@ -791,6 +791,8 @@ class PeopleApi(ApiChild, base='people'):
         :type id: str
         :param org_id: List people in this organization. Only admin users of another organization (such as partners) may use this parameter.
         :type org_id: str
+        :param roles: List of roleIds separated by commas.
+        :type roles: str
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
         :param location_id: List people present in this location.
@@ -804,6 +806,8 @@ class PeopleApi(ApiChild, base='people'):
             params['id'] = id
         if org_id is not None:
             params['orgId'] = org_id
+        if roles is not None:
+            params['roles'] = roles
         if calling_data is not None:
             params['callingData'] = calling_data
         if location_id is not None:
@@ -1095,8 +1099,7 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         :param room_id: ID of the room for which to list room tabs.
         :type room_id: str
         """
-        if room_id is not None:
-            params['roomId'] = room_id
+        params['roomId'] = room_id
         url = self.ep()
         return self.session.follow_pagination(url=url, model=ListRoomTabsResponse, params=params)
 
@@ -1450,8 +1453,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         :param team_id: List memberships for a team, by ID.
         :type team_id: str
         """
-        if team_id is not None:
-            params['teamId'] = team_id
+        params['teamId'] = team_id
         url = self.ep()
         return self.session.follow_pagination(url=url, model=ListTeamMembershipsResponse, params=params)
 

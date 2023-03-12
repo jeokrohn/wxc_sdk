@@ -67,6 +67,7 @@ class DeviceMember(MemberCommon):
     #: Number of lines that have been configured for the person on the device. Can only be larger than one for primary
     #: owner
     line_weight: int = Field(default=1)
+    #: Device line label.
     line_label: Optional[str]
     #: Registration Host IP address for the line port.
     host_ip: Optional[str] = Field(alias='hostIP')

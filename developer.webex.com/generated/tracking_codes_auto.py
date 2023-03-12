@@ -247,8 +247,7 @@ class TrackingCodesApi(ApiChild, base=''):
         :type site_url: str
         """
         params = {}
-        if site_url is not None:
-            params['siteUrl'] = site_url
+        params['siteUrl'] = site_url
         url = self.ep(f'https: //webexapis.com/v1/admin/meeting/config/trackingCodes/{tracking_code_id}')
         super().delete(url=url, params=params)
         return

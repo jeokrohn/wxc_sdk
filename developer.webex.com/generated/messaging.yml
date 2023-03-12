@@ -2615,6 +2615,9 @@ docs:
         Lookup by email is only supported for people within the same org or where
         a partner admin relationship is in place.
 
+        Lookup by roles is only supported for Admin users for the people within the
+        same org.
+
         Long result sets will be split into pages.'
       documentation:
         doc: List People
@@ -2651,6 +2654,12 @@ docs:
         - doc: List people in this organization. Only admin users of another organization
             (such as partners) may use this parameter.
           name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: List of roleIds separated by commas.
+          name: roles
           param_attrs: []
           param_object: []
           type: string

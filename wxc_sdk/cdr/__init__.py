@@ -178,6 +178,8 @@ class CDR(ApiModel):
     sub_client_type: Optional[str] = Field(alias='Sub client type')
     #: A unique identifier for the user associated with the call. This is a unique identifier across Cisco products.
     user_uuid: Optional[str] = Field(alias='User UUID')
+    #: The user who made or received the call.
+    user: Optional[str]
     #: The type of user (user or workspace) that made or received the call. For example:
     user_type: Optional[CDRUserType] = Field(alias='User type')
     #: For incoming calls, the telephone number of the user. For outgoing calls, it's the telephone number of the

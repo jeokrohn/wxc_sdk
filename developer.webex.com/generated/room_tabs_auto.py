@@ -54,8 +54,7 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         :param room_id: ID of the room for which to list room tabs.
         :type room_id: str
         """
-        if room_id is not None:
-            params['roomId'] = room_id
+        params['roomId'] = room_id
         url = self.ep()
         return self.session.follow_pagination(url=url, model=ListRoomTabsResponse, params=params)
 

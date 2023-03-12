@@ -11,6 +11,11 @@
 # TODO: missing: API for agent/supervisor management
 # TODO: call parks now have list of call park extensions, validate call park creation with CPEs, updating list of CPEs,
     # ...
+# TODO: file defect: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-call-pickup
+#   attribute phoneNumber actually is 'numbers'
+# TODO: implement: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-virtual-lines
+# TODO: implement shared line appearance members for WxC apps: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/search-shared-line-appearance-members
+
 
 
 

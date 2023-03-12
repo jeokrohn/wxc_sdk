@@ -7,7 +7,7 @@ from typing import List, Optional
 from pydantic import Field
 
 
-__all__ = ['AccessCodes', 'AcdObject', 'Action', 'Action11', 'Action2', 'Action5', 'Action7', 'ActivationStates', 'AddNewEventForPersonsScheduleResponse', 'AddPhoneNumbersTolocationBody', 'Address', 'AlternateNumberSettings', 'AlternateNumbersObject', 'AlternateNumbersWithPattern', 'AlternateNumbersWithPattern1', 'Always', 'AnnouncementMode', 'Announcements', 'Announcements3', 'AtaDtmfMethodObject', 'AtaDtmfModeObject', 'AtaObject', 'AudioCodecPriorityObject', 'AutoAttendantCallForwardSettingsDetailsObject', 'AutoAttendantCallForwardSettingsModifyDetailsObject', 'BackgroundImage', 'BacklightTimerObject', 'BehaviorType', 'BlockContiguousSequences', 'BlockPreviousPasscodes', 'BlockRepeatedDigits', 'BusinessContinuity', 'CDR', 'CLIDPolicySelection', 'Call', 'CallBounce', 'CallControlsApi', 'CallForwardRulesGet', 'CallForwardRulesModifyObject', 'CallForwardRulesObject', 'CallForwardSelectiveCallsFromCustomNumbersObject', 'CallForwardSelectiveCallsFromObject', 'CallForwardSelectiveCallsToNumbersObject', 'CallForwardSelectiveCallsToObject', 'CallForwardSelectiveForwardToObject', 'CallForwarding', 'CallForwarding1', 'CallForwarding4', 'CallForwardingPlaceSettingGet', 'CallForwardingPlaceSettingPatch', 'CallHistoryRecord', 'CallHistoryRecordTypeEnum', 'CallParkSettingsObject', 'CallPersonalityEnum', 'CallQueueAudioFilesObject', 'CallQueueHolidaySchedulesObject', 'CallQueueObject', 'CallQueueQueueSettingsObject', 'CallSourceInfo', 'CallSourceType', 'CallStateEnum', 'CallType', 'CallTypeEnum', 'CallerIdSelectedType', 'CallingLineId', 'CallingPermissionObject', 'CallingPermissions', 'Callparkextension', 'CallsFrom', 'CallsTo', 'ComfortMessage', 'ComfortMessageBypass', 'ConfigureCallRecordingSettingsForPersonBody', 'ConfigureCallerIDSettingsForPersonBody', 'ConfigurepersonsCallingBehaviorBody', 'CountObject', 'CreateCallParkBody', 'CreateCallParkExtensionResponse', 'CreateCallParkResponse', 'CreateCallPickupBody', 'CreateCallPickupResponse', 'CreateCallQueueBody', 'CreateCallQueueResponse', 'CreateDialPlanResponse', 'CreateHuntGroupResponse', 'CreateLocationResponse', 'CreatePersonBody', 'CreateRouteGroupForOrganizationBody', 'CreateRouteGroupForOrganizationResponse', 'CreateRouteListResponse', 'CreateScheduleEventResponse', 'CreateScheduleForPersonBody', 'CreateScheduleForPersonResponse', 'CreateScheduleResponse', 'CreateSelectiveCallForwardingRuleForAutoAttendantBody', 'CreateSelectiveCallForwardingRuleForAutoAttendantResponse', 'CreateSelectiveCallForwardingRuleForCallQueueBody', 'CreateSelectiveCallForwardingRuleForCallQueueResponse', 'CreateSelectiveCallForwardingRuleForHuntGroupResponse', 'CreateTrunkResponse', 'CreatenewPagingGroupBody', 'CreatenewPagingGroupResponse', 'CreatenewVoicemailGroupForLocationResponse', 'CustomizationDeviceLevelObject', 'CustomizationObject', 'Day', 'DectDeviceList', 'DectObject', 'DefaultLoggingLevelObject', 'DefaultVoicemailPinRules', 'DestinationType', 'DeviceObject', 'DeviceOwner', 'DeviceStatus', 'DeviceType', 'Devices', 'DialPattern', 'DialPatternAction', 'DialPatternStatus', 'DialPatternValidate', 'DialPlan', 'DialResponse', 'DisplayCallqueueAgentSoftkeysObject', 'DisplayNameSelection', 'DistinctiveRing', 'EffectiveBehaviorType', 'EmailCopyOfMessage', 'Emergency', 'ErrorMessageObject', 'ErrorObject', 'EventLongDetails', 'ExpirePasscode', 'ExtensionDialing', 'ExtensionStatusObject', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts', 'FaxMessage', 'FeatureAccessCode', 'FetchEventForpersonsScheduleResponse', 'GenerateExamplePasswordForLocationResponse', 'GetAnnouncementFileInfo', 'GetAvailableAgentsFromCallParksResponse', 'GetAvailableAgentsFromCallPickupsResponse', 'GetAvailableRecallHuntGroupsFromCallParksResponse', 'GetAvailableRecallHuntGroupsObject', 'GetCallForwardAlwaysSettingObject', 'GetCallForwardingSettingsForAutoAttendantResponse', 'GetCallForwardingSettingsForCallQueueResponse', 'GetCallForwardingSettingsForHuntGroupResponse', 'GetCallParkSettingsResponse', 'GetCallRecordingSettingsResponse', 'GetCallRecordingTermsOfServiceSettingsResponse', 'GetDetailedCallHistoryResponse', 'GetDetailsForCallParkExtensionResponse', 'GetDetailsForCallParkResponse', 'GetDetailsForCallPickupResponse', 'GetDetailsForCallQueueForcedForwardResponse', 'GetDetailsForCallQueueHolidayServiceResponse', 'GetDetailsForCallQueueNightServiceResponse', 'GetDetailsForCallQueueResponse', 'GetDetailsForCallQueueStrandedCallsResponse', 'GetDetailsForHuntGroupResponse', 'GetDetailsForPagingGroupResponse', 'GetDetailsForScheduleResponse', 'GetDeviceMembersResponse', 'GetDeviceSettingsResponse', 'GetDialPlanResponse', 'GetListOfPhoneNumbersForPersonResponse', 'GetLocalGatewayCallToOnPremisesExtensionUsageForTrunkResponse', 'GetLocalGatewayDialPlanUsageForTrunkResponse', 'GetLocalGatewayUsageCountResponse', 'GetLocationInterceptResponse', 'GetLocationOutgoingPermissionResponse', 'GetLocationVoicemailGroupResponse', 'GetLocationVoicemailResponse', 'GetLocationWebexCallingDetailsResponse', 'GetLocationsUsingLocalGatewayAsPSTNConnectionRoutingResponse', 'GetManageNumbersJobStatusResponse', 'GetMessageSummaryResponse', 'GetMonitoredElementsObject', 'GetMusicOnHoldResponse', 'GetNumbersAssignedToRouteListResponse', 'GetOutgoingPermissionAutoTransferNumberResponse', 'GetOutgoingPermissionLocationAccessCodeResponse', 'GetPagingGroupAgentObject', 'GetPersonPlaceCallParksObject', 'GetPersonPlaceCallQueueObject', 'GetPersonPlaceObject', 'GetPhoneNumbersForOrganizationWithGivenCriteriasResponse', 'GetPrivateNetworkConnectResponse', 'GetRecallHuntGroupObject', 'GetRouteGroupsUsingLocalGatewayResponse', 'GetRouteListResponse', 'GetScheduleDetailsResponse', 'GetScheduleEventObject', 'GetSelectiveCallForwardingRuleForAutoAttendantResponse', 'GetSelectiveCallForwardingRuleForCallQueueResponse', 'GetTrunkResponse', 'GetUserDevicesResponse', 'GetUserNumberItemObject', 'GetVoicePortalPasscodeRuleResponse', 'GetVoicePortalResponse', 'GetVoicemailGroupObject', 'GetVoicemailRulesResponse', 'GetVoicemailSettingsResponse', 'GetWorkspaceDevicesResponse', 'GetpersonsPrivacySettingsResponse', 'Greeting', 'Greeting25', 'HolidayScheduleLevel', 'HostedAgent', 'HostedFeature', 'Hoteling', 'HoursMenuObject', 'HuntPolicySelection', 'HuntRoutingTypeSelection', 'Incoming', 'InterceptAnnouncementsGet', 'InterceptIncomingGet', 'InterceptIncomingPatch', 'ItemObject', 'JobExecutionStatusObject', 'JobExecutionStatusObject1', 'KemModuleTypeObject', 'Key', 'KeyConfigurationsObject', 'Length', 'LineKeyLEDPattern', 'LineKeyLabelSelection', 'LineType', 'ListAutoAttendantObject', 'ListCallHistoryResponse', 'ListCallParkExtensionObject', 'ListCallParkObject', 'ListCallQueueObject', 'ListCallsResponse', 'ListChangeDeviceSettingsJobErrorsResponse', 'ListChangeDeviceSettingsJobsResponse', 'ListLocationsResponse', 'ListManageNumbersJobErrorsResponse', 'ListManageNumbersJobsResponse', 'ListMessagesResponse', 'ListOfSchedulesForPersonResponse', 'ListPeopleResponse', 'ListScheduleObject', 'ListVoicemailGroupResponse', 'LocalGateways', 'Location', 'LocationsApi', 'MacStatusObject', 'ManagedByObject', 'ManufacturerObject', 'MediaFileType', 'Member', 'MemberObject', 'MessageStorage', 'MessageStorage3', 'ModifyDialPlanBody', 'ModifyNumbersForRouteListResponse', 'ModifyPersonPlaceCallQueueObject', 'ModifyRouteListBody', 'ModifyScheduleEventListObject', 'ModifyTrunkBody', 'ModifypersonsApplicationServicesSettingsBody', 'ModifypersonsMonitoringSettingsBody', 'MohMessage', 'MonitoredElementItem', 'MonitoredElementUser', 'MonitoredMemberObject', 'MonitoredPersonObject', 'Month', 'MppAudioCodecPriorityObject', 'MppObject', 'MppVlanObject', 'NetworkConnectionType', 'NewNumber', 'NoAnswer', 'NoAnswer3', 'NormalSource', 'NumberItem', 'NumberListGetObject', 'NumberStatus', 'OnboardingMethodObject', 'Option', 'OriginatorType', 'Outgoing', 'Overflow', 'Owner', 'ParkResponse', 'PartyInformation', 'Passcode', 'PbxUser', 'PeopleApi', 'Person', 'PhoneLanguage', 'PhoneNumber', 'PhoneNumbers', 'PhoneNumbers6', 'PlaceDevices', 'PostCallQueueCallPolicyObject', 'PostHuntGroupCallPolicyObject', 'PostPersonPlaceCallQueueObject', 'PostPersonPlaceObject', 'PstnNumber', 'PushToTalkAccessType', 'PushToTalkConnectionType', 'PutMemberObject', 'PutRecallHuntGroupObject', 'ReadBargeInSettingsForPersonResponse', 'ReadCallInterceptSettingsForWorkspaceResponse', 'ReadCallRecordingSettingsForPersonResponse', 'ReadCallToExtensionLocationsOfRoutingGroupResponse', 'ReadCallWaitingSettingsForPersonResponse', 'ReadCallerIDSettingsForPersonResponse', 'ReadDECTDeviceTypeListResponse', 'ReadDialPlanLocationsOfRoutingGroupResponse', 'ReadDoNotDisturbSettingsForPersonResponse', 'ReadForwardingSettingsForPersonResponse', 'ReadHotelingSettingsForPersonResponse', 'ReadIncomingPermissionSettingsForPersonResponse', 'ReadInternalDialingConfigurationForlocationResponse', 'ReadListOfAutoAttendantsResponse', 'ReadListOfCallParkExtensionsResponse', 'ReadListOfCallParksResponse', 'ReadListOfCallPickupsResponse', 'ReadListOfCallQueueAnnouncementFilesResponse', 'ReadListOfCallQueuesResponse', 'ReadListOfDialPatternsResponse', 'ReadListOfDialPlansResponse', 'ReadListOfHuntGroupsResponse', 'ReadListOfPagingGroupsResponse', 'ReadListOfRouteListsResponse', 'ReadListOfRoutingChoicesResponse', 'ReadListOfRoutingGroupsResponse', 'ReadListOfSchedulesResponse', 'ReadListOfSupportedDevicesResponse', 'ReadListOfTrunkTypesResponse', 'ReadListOfTrunksResponse', 'ReadListOfUCManagerProfilesResponse', 'ReadPSTNConnectionLocationsOfRoutingGroupResponse', 'ReadPersonsCallingBehaviorResponse', 'ReadPushtoTalkSettingsForPersonResponse', 'ReadReceptionistClientSettingsForPersonResponse', 'ReadRouteGroupForOrganizationResponse', 'ReadRouteListsOfRoutingGroupResponse', 'ReadUsageOfRoutingGroupResponse', 'ReadVoicemailSettingsForPersonResponse', 'ReaddeviceOverrideSettingsFororganizationResponse', 'RecallInformation', 'RecallTypeEnum', 'Record', 'RecordingStateEnum', 'RecurWeekly2', 'RecurWeeklyObject', 'RecurYearlyByDateObject', 'RecurYearlyByDayObject', 'Recurrence', 'RecurrenceObject1', 'RedirectionInformation', 'RedirectionReasonEnum', 'RejectActionEnum', 'Repeat', 'ResponseStatus', 'ResponseStatusType', 'RetrieveAccessCodesForWorkspaceResponse', 'RetrieveCallForwardingSettingsForWorkspaceResponse', 'RetrieveCallQueueAgentsCallerIDInformationResponse', 'RetrieveCallWaitingSettingsForWorkspaceResponse', 'RetrieveCallerIDSettingsForWorkspaceResponse', 'RetrieveExecutiveAssistantSettingsForPersonResponse', 'RetrieveListOfCallQueueCallerIDInformationResponse', 'RetrieveMonitoringSettingsForWorkspaceResponse', 'RetrieveOutgoingPermissionSettingsForWorkspaceResponse', 'RetrievepersonsApplicationServicesSettingsResponse', 'RetrievepersonsMonitoringSettingsResponse', 'RetrievepersonsOutgoingCallingPermissionsSettingsResponse', 'RingPattern', 'RouteGroup', 'RouteGroupUsageRouteListGet', 'RouteIdentity', 'RouteList', 'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteType', 'ScheduleEventObject', 'ScheduleShortDetails', 'SearchMemberObject', 'SearchMembersResponse', 'Selection', 'Selection1', 'SelectionType', 'SendAllCalls', 'SendBusyCalls', 'SendBusyCalls1', 'SendUnansweredCalls', 'ServiceType', 'SipAddressesType', 'StartJobResponse', 'State', 'State1', 'State3', 'Status', 'Status4', 'StepExecutionStatusesObject', 'StorageType', 'TestCallRoutingResponse', 'Trunk', 'TrunkType', 'TrunkTypeWithDeviceType', 'Type', 'Type17', 'Type18', 'Type23', 'Type30', 'Type4', 'Type7', 'TypeObject', 'UnknownExtensionRouteIdentity', 'UpdateCallParkResponse', 'UpdateCallPickupResponse', 'UpdateDeviceSettingsBody', 'UpdateEventForpersonsScheduleResponse', 'UpdateLocationBody', 'UpdateLocationWebexCallingDetailsBody', 'UpdateScheduleEventResponse', 'UpdateScheduleResponse', 'UpdateScheduleResponse1', 'UpdateSelectiveCallForwardingRuleForAutoAttendantResponse', 'UpdateSelectiveCallForwardingRuleForCallQueueResponse', 'UpdateSelectiveCallForwardingRuleForHuntGroupResponse', 'UserNumberItem', 'ValidateDialPatternResponse', 'ValidateExtensionsResponse', 'ValidateLocalGatewayFQDNAndDomainForTrunkBody', 'ValidatelistOfMACAddressResponse', 'VirtualExtension', 'VlanObject', 'VoiceMailPartyInformation', 'VoiceMessageDetails', 'WaitMessage', 'WaitMode', 'WebexCallingDetailedCallHistoryApi', 'WebexCallingOrganizationSettingsApi', 'WebexCallingPersonSettingsApi', 'WebexCallingVoiceMessagingApi', 'WebexCallingWorkspaceSettingsApi', 'Week', 'WelcomeMessage', 'WifiNetworkObject']
+__all__ = ['AccessCodes', 'AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 'ActivationStates', 'AddNewEventForPersonsScheduleResponse', 'AddPhoneNumbersTolocationBody', 'Address', 'Addresses', 'AlternateNumberSettings', 'AlternateNumbersObject', 'AlternateNumbersWithPattern', 'AlternateNumbersWithPattern1', 'Always', 'AnnouncementMode', 'Announcements', 'Announcements3', 'AtaDtmfMethodObject', 'AtaDtmfModeObject', 'AtaObject', 'AudioCodecPriorityObject', 'AutoAttendantCallForwardSettingsDetailsObject', 'AutoAttendantCallForwardSettingsModifyDetailsObject', 'AvailableSharedLineMemberItem', 'BackgroundImage', 'BacklightTimerObject', 'BehaviorType', 'BlockContiguousSequences', 'BlockPreviousPasscodes', 'BlockRepeatedDigits', 'BusinessContinuity', 'CDR', 'CLIDPolicySelection', 'Call', 'CallBounce', 'CallControlsApi', 'CallForwardRulesGet', 'CallForwardRulesModifyObject', 'CallForwardRulesObject', 'CallForwardSelectiveCallsFromCustomNumbersObject', 'CallForwardSelectiveCallsFromObject', 'CallForwardSelectiveCallsToNumbersObject', 'CallForwardSelectiveCallsToObject', 'CallForwardSelectiveForwardToObject', 'CallForwarding', 'CallForwarding1', 'CallForwarding4', 'CallForwardingPlaceSettingGet', 'CallForwardingPlaceSettingPatch', 'CallHistoryRecord', 'CallHistoryRecordTypeEnum', 'CallParkSettingsObject', 'CallPersonalityEnum', 'CallQueueAudioFilesObject', 'CallQueueHolidaySchedulesObject', 'CallQueueObject', 'CallQueueQueueSettingsObject', 'CallSourceInfo', 'CallSourceType', 'CallStateEnum', 'CallType', 'CallTypeEnum', 'CallerIdSelectedType', 'CallingLineId', 'CallingPermissionObject', 'CallingPermissions', 'Callparkextension', 'CallsFrom', 'CallsTo', 'ComfortMessage', 'ComfortMessageBypass', 'ConfigureCallRecordingSettingsForPersonBody', 'ConfigureCallerIDSettingsForPersonBody', 'ConfigurepersonsCallingBehaviorBody', 'CountObject', 'CreateAutoAttendantBody', 'CreateAutoAttendantResponse', 'CreateCallParkBody', 'CreateCallParkExtensionResponse', 'CreateCallParkResponse', 'CreateCallPickupBody', 'CreateCallPickupResponse', 'CreateCallQueueBody', 'CreateCallQueueResponse', 'CreateDialPlanResponse', 'CreateHuntGroupResponse', 'CreateLocationResponse', 'CreatePersonBody', 'CreateRouteGroupForOrganizationBody', 'CreateRouteGroupForOrganizationResponse', 'CreateRouteListResponse', 'CreateScheduleEventResponse', 'CreateScheduleForPersonBody', 'CreateScheduleForPersonResponse', 'CreateScheduleResponse', 'CreateSelectiveCallForwardingRuleForAutoAttendantBody', 'CreateSelectiveCallForwardingRuleForAutoAttendantResponse', 'CreateSelectiveCallForwardingRuleForCallQueueBody', 'CreateSelectiveCallForwardingRuleForCallQueueResponse', 'CreateSelectiveCallForwardingRuleForHuntGroupResponse', 'CreateTrunkResponse', 'CreatenewPagingGroupBody', 'CreatenewPagingGroupResponse', 'CreatenewVoicemailGroupForLocationResponse', 'CustomizationDeviceLevelObject', 'CustomizationObject', 'Day', 'DectDeviceList', 'DectObject', 'DefaultLoggingLevelObject', 'DefaultVoicemailPinRules', 'DestinationType', 'DeviceObject', 'DeviceOwner', 'DeviceStatus', 'DeviceType', 'Devices', 'DialPattern', 'DialPatternAction', 'DialPatternStatus', 'DialPatternValidate', 'DialPlan', 'DialResponse', 'DisplayCallqueueAgentSoftkeysObject', 'DisplayNameSelection', 'DistinctiveRing', 'EffectiveBehaviorType', 'EmailCopyOfMessage', 'Emergency', 'ErrorMessageObject', 'ErrorObject', 'EventLongDetails', 'ExpirePasscode', 'ExtensionDialing', 'ExtensionStatusObject', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts', 'FaxMessage', 'FeatureAccessCode', 'FetchEventForpersonsScheduleResponse', 'GenerateExamplePasswordForLocationResponse', 'GetAnnouncementFileInfo', 'GetAvailableAgentsFromCallParksResponse', 'GetAvailableAgentsFromCallPickupsResponse', 'GetAvailableRecallHuntGroupsFromCallParksResponse', 'GetAvailableRecallHuntGroupsObject', 'GetCallForwardAlwaysSettingObject', 'GetCallForwardingSettingsForAutoAttendantResponse', 'GetCallForwardingSettingsForCallQueueResponse', 'GetCallForwardingSettingsForHuntGroupResponse', 'GetCallParkSettingsResponse', 'GetCallRecordingSettingsResponse', 'GetCallRecordingTermsOfServiceSettingsResponse', 'GetDetailedCallHistoryResponse', 'GetDetailsForAutoAttendantResponse', 'GetDetailsForCallParkExtensionResponse', 'GetDetailsForCallParkResponse', 'GetDetailsForCallPickupResponse', 'GetDetailsForCallQueueForcedForwardResponse', 'GetDetailsForCallQueueHolidayServiceResponse', 'GetDetailsForCallQueueNightServiceResponse', 'GetDetailsForCallQueueResponse', 'GetDetailsForCallQueueStrandedCallsResponse', 'GetDetailsForHuntGroupResponse', 'GetDetailsForPagingGroupResponse', 'GetDetailsForScheduleResponse', 'GetDeviceMembersResponse', 'GetDeviceSettingsResponse', 'GetDialPlanResponse', 'GetListOfPhoneNumbersForPersonResponse', 'GetLocalGatewayCallToOnPremisesExtensionUsageForTrunkResponse', 'GetLocalGatewayDialPlanUsageForTrunkResponse', 'GetLocalGatewayUsageCountResponse', 'GetLocationInterceptResponse', 'GetLocationOutgoingPermissionResponse', 'GetLocationVoicemailGroupResponse', 'GetLocationVoicemailResponse', 'GetLocationWebexCallingDetailsResponse', 'GetLocationsUsingLocalGatewayAsPSTNConnectionRoutingResponse', 'GetManageNumbersJobStatusResponse', 'GetMessageSummaryResponse', 'GetMonitoredElementsObject', 'GetMusicOnHoldResponse', 'GetNumbersAssignedToRouteListResponse', 'GetOutgoingPermissionAutoTransferNumberResponse', 'GetOutgoingPermissionLocationAccessCodeResponse', 'GetPagingGroupAgentObject', 'GetPersonPlaceVirtualLineCallParksObject', 'GetPersonPlaceVirtualLineCallPickupObject', 'GetPersonPlaceVirtualLineCallQueueObject', 'GetPersonPlaceVirtualLineHuntGroupObject', 'GetPhoneNumbersForOrganizationWithGivenCriteriasResponse', 'GetPrivateNetworkConnectResponse', 'GetRecallHuntGroupObject', 'GetRouteGroupsUsingLocalGatewayResponse', 'GetRouteListResponse', 'GetScheduleDetailsResponse', 'GetScheduleEventObject', 'GetSelectiveCallForwardingRuleForAutoAttendantResponse', 'GetSelectiveCallForwardingRuleForCallQueueResponse', 'GetSharedLineAppearanceMembersResponse', 'GetSharedLineMemberItem', 'GetTrunkResponse', 'GetUserDevicesResponse', 'GetUserNumberItemObject', 'GetVoicePortalPasscodeRuleResponse', 'GetVoicePortalResponse', 'GetVoicemailGroupObject', 'GetVoicemailRulesResponse', 'GetVoicemailSettingsResponse', 'GetWorkspaceDevicesResponse', 'GetpersonsPrivacySettingsResponse', 'Greeting', 'Greeting29', 'HolidayScheduleLevel', 'HostedAgent', 'HostedAgentType', 'HostedFeature', 'Hoteling', 'HoursMenuObject', 'HuntPolicySelection', 'HuntRoutingTypeSelection', 'Incoming', 'InterceptAnnouncementsGet', 'InterceptIncomingGet', 'InterceptIncomingPatch', 'ItemObject', 'JobExecutionStatusObject', 'JobExecutionStatusObject1', 'KemModuleTypeObject', 'Key', 'KeyConfigurationsObject', 'Length', 'LineKeyLEDPattern', 'LineKeyLabelSelection', 'LineType', 'ListAutoAttendantObject', 'ListCPCallParkExtensionObject', 'ListCallHistoryResponse', 'ListCallParkExtensionObject', 'ListCallParkObject', 'ListCallQueueObject', 'ListCallsResponse', 'ListChangeDeviceSettingsJobErrorsResponse', 'ListChangeDeviceSettingsJobsResponse', 'ListLocationsResponse', 'ListManageNumbersJobErrorsResponse', 'ListManageNumbersJobsResponse', 'ListMessagesResponse', 'ListOfSchedulesForPersonResponse', 'ListPeopleResponse', 'ListScheduleObject', 'ListVirtualLineObject', 'ListVoicemailGroupResponse', 'LocalGateways', 'Location', 'LocationsApi', 'MacStatusObject', 'ManagedByObject', 'ManufacturerObject', 'MediaFileType', 'Member', 'MemberObject', 'MessageStorage', 'MessageStorage3', 'ModifyDialPlanBody', 'ModifyNumbersForRouteListResponse', 'ModifyPersonPlaceVirtualLineCallQueueObject', 'ModifyRouteListBody', 'ModifyScheduleEventListObject', 'ModifyTrunkBody', 'ModifypersonsApplicationServicesSettingsBody', 'ModifypersonsMonitoringSettingsBody', 'MohMessage', 'MonitoredElementItem', 'MonitoredElementUser', 'MonitoredMemberObject', 'MonitoredPersonObject', 'Month', 'MppAudioCodecPriorityObject', 'MppObject', 'MppVlanObject', 'NetworkConnectionType', 'NewNumber', 'NoAnswer', 'NoAnswer3', 'NormalSource', 'NumberItem', 'NumberListGetObject', 'NumberStatus', 'OnboardingMethodObject', 'Option', 'OriginatorType', 'Outgoing', 'Overflow', 'Owner', 'ParkResponse', 'PartyInformation', 'Passcode', 'PbxUser', 'PeopleApi', 'Person', 'PhoneLanguage', 'PhoneNumber', 'PhoneNumbers', 'PhoneNumbers7', 'PlaceDevices', 'PostCallQueueCallPolicyObject', 'PostHuntGroupCallPolicyObject', 'PostPersonPlaceVirtualLineCallQueueObject', 'PostPersonPlaceVirtualLineHuntGroupObject', 'PstnNumber', 'PushToTalkAccessType', 'PushToTalkConnectionType', 'PutMemberObject', 'PutRecallHuntGroupObject', 'PutSharedLineMemberItem', 'ReadBargeInSettingsForPersonResponse', 'ReadCallInterceptSettingsForWorkspaceResponse', 'ReadCallRecordingSettingsForPersonResponse', 'ReadCallToExtensionLocationsOfRoutingGroupResponse', 'ReadCallWaitingSettingsForPersonResponse', 'ReadCallerIDSettingsForPersonResponse', 'ReadDECTDeviceTypeListResponse', 'ReadDialPlanLocationsOfRoutingGroupResponse', 'ReadDoNotDisturbSettingsForPersonResponse', 'ReadForwardingSettingsForPersonResponse', 'ReadHotelingSettingsForPersonResponse', 'ReadIncomingPermissionSettingsForPersonResponse', 'ReadInternalDialingConfigurationForlocationResponse', 'ReadListOfAutoAttendantsResponse', 'ReadListOfCallParkExtensionsResponse', 'ReadListOfCallParksResponse', 'ReadListOfCallPickupsResponse', 'ReadListOfCallQueueAnnouncementFilesResponse', 'ReadListOfCallQueuesResponse', 'ReadListOfDialPatternsResponse', 'ReadListOfDialPlansResponse', 'ReadListOfHuntGroupsResponse', 'ReadListOfPagingGroupsResponse', 'ReadListOfRouteListsResponse', 'ReadListOfRoutingChoicesResponse', 'ReadListOfRoutingGroupsResponse', 'ReadListOfSchedulesResponse', 'ReadListOfSupportedDevicesResponse', 'ReadListOfTrunkTypesResponse', 'ReadListOfTrunksResponse', 'ReadListOfUCManagerProfilesResponse', 'ReadListOfVirtualLinesResponse', 'ReadPSTNConnectionLocationsOfRoutingGroupResponse', 'ReadPersonsCallingBehaviorResponse', 'ReadPushtoTalkSettingsForPersonResponse', 'ReadReceptionistClientSettingsForPersonResponse', 'ReadRouteGroupForOrganizationResponse', 'ReadRouteListsOfRoutingGroupResponse', 'ReadUsageOfRoutingGroupResponse', 'ReadVoicemailSettingsForPersonResponse', 'ReaddeviceOverrideSettingsFororganizationResponse', 'RecallInformation', 'RecallTypeEnum', 'Record', 'RecordingStateEnum', 'RecurWeekly2', 'RecurWeeklyObject', 'RecurYearlyByDateObject', 'RecurYearlyByDayObject', 'Recurrence', 'RecurrenceObject1', 'RedirectionInformation', 'RedirectionReasonEnum', 'RejectActionEnum', 'Repeat', 'ResponseStatus', 'ResponseStatusType', 'RetrieveAccessCodesForWorkspaceResponse', 'RetrieveCallForwardingSettingsForWorkspaceResponse', 'RetrieveCallQueueAgentsCallerIDInformationResponse', 'RetrieveCallWaitingSettingsForWorkspaceResponse', 'RetrieveCallerIDSettingsForWorkspaceResponse', 'RetrieveExecutiveAssistantSettingsForPersonResponse', 'RetrieveListOfCallQueueCallerIDInformationResponse', 'RetrieveMonitoringSettingsForWorkspaceResponse', 'RetrieveOutgoingPermissionSettingsForWorkspaceResponse', 'RetrievepersonsApplicationServicesSettingsResponse', 'RetrievepersonsMonitoringSettingsResponse', 'RetrievepersonsOutgoingCallingPermissionsSettingsResponse', 'RingPattern', 'RouteGroup', 'RouteGroupUsageRouteListGet', 'RouteIdentity', 'RouteList', 'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteType', 'ScheduleEventObject', 'ScheduleShortDetails', 'SearchMemberObject', 'SearchMembersResponse', 'SearchSharedLineAppearanceMembersResponse', 'Selection', 'Selection1', 'SelectionType', 'SendAllCalls', 'SendBusyCalls', 'SendBusyCalls1', 'SendUnansweredCalls', 'ServiceType', 'SipAddressesType', 'StartJobResponse', 'State', 'State1', 'State3', 'Status', 'Status5', 'StepExecutionStatusesObject', 'StorageType', 'TestCallRoutingResponse', 'Trunk', 'TrunkType', 'TrunkTypeWithDeviceType', 'Type', 'Type19', 'Type20', 'Type25', 'Type32', 'Type5', 'Type8', 'TypeObject', 'UnknownExtensionRouteIdentity', 'UpdateCallParkResponse', 'UpdateCallPickupResponse', 'UpdateDeviceSettingsBody', 'UpdateEventForpersonsScheduleResponse', 'UpdateLocationBody', 'UpdateLocationWebexCallingDetailsBody', 'UpdateScheduleEventResponse', 'UpdateScheduleResponse', 'UpdateScheduleResponse1', 'UpdateSelectiveCallForwardingRuleForAutoAttendantResponse', 'UpdateSelectiveCallForwardingRuleForCallQueueResponse', 'UpdateSelectiveCallForwardingRuleForHuntGroupResponse', 'UserNumberItem', 'ValidateDialPatternResponse', 'ValidateExtensionsResponse', 'ValidateLocalGatewayFQDNAndDomainForTrunkBody', 'ValidatelistOfMACAddressResponse', 'VirtualExtension', 'VlanObject', 'VoiceMailPartyInformation', 'VoiceMessageDetails', 'WaitMessage', 'WaitMode', 'WebexCallingDetailedCallHistoryApi', 'WebexCallingOrganizationSettingsApi', 'WebexCallingPersonSettingsApi', 'WebexCallingVoiceMessagingApi', 'WebexCallingWorkspaceSettingsApi', 'Week', 'WelcomeMessage', 'WifiNetworkObject']
 
 
 class RejectActionEnum(str, Enum):
@@ -247,6 +247,11 @@ class TransmitDTMFBody(ApiModel):
 class PushBody(ApiModel):
     #: The call identifier of the call to push.
     call_id: Optional[str]
+
+
+class PickupBody(ApiModel):
+    #: Identifies the user to pickup an incoming call from. If not provided, an incoming call to the user's call pickup group is picked up. The target can be digits or a URI. Some examples for target include: 1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain
+    target: Optional[str]
 
 
 class BargeInBody(ApiModel):
@@ -531,6 +536,20 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         super().post(url=url, data=body.json())
         return
 
+    def pickup(self, target: str = None) -> DialResponse:
+        """
+        Picks up an incoming call to another user. A new call is initiated to perform the pickup in a similar manner to the dial command. When target is not present, the API pickups up a call from the user's call pickup group. When target is present, the API pickups an incoming call from the specified target user.
+
+        :param target: Identifies the user to pickup an incoming call from. If not provided, an incoming call to the user's call pickup group is picked up. The target can be digits or a URI. Some examples for target include: 1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain
+        :type target: str
+        """
+        body = PickupBody()
+        if target is not None:
+            body.target = target
+        url = self.ep('pickup')
+        data = super().post(url=url, data=body.json())
+        return DialResponse.parse_obj(data)
+
     def barge_in(self, target: str) -> DialResponse:
         """
         Barge-in on another user's answered call. A new call is initiated to perform the barge-in in a similar manner to the dial command.
@@ -634,7 +653,7 @@ class CreateLocationResponse(ApiModel):
 
 class LocationsApi(ApiChild, base='locations'):
     """
-    Locations are used to organize Webex Calling (BroadCloud) features within physical locations. You can also create and inspect locations in Webex Control Hub. See Workspace Locations on Control Hub for more information.
+    Locations allow you to organize users and workspaces based on a physical location. You can configure both calling and workspace management functions into the same location. You can also create and inspect locations in Webex Control Hub. See Locations on Control Hub for more information.
     """
 
     def list(self, name: str = None, id: str = None, org_id: str = None, **params) -> Generator[Location, None, None]:
@@ -657,20 +676,25 @@ class LocationsApi(ApiChild, base='locations'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Location, params=params)
 
-    def details(self, location_id: str) -> Location:
+    def details(self, location_id: str, org_id: str = None) -> Location:
         """
         Shows details for a location, by ID.
 
         :param location_id: A unique identifier for the location.
         :type location_id: str
+        :param org_id: Get location common attributes for this organization.
+        :type org_id: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
         url = self.ep(f'{location_id}')
-        data = super().get(url=url)
+        data = super().get(url=url, params=params)
         return Location.parse_obj(data)
 
     def create(self, announcement_language: str, org_id: str = None, name: str = None, time_zone: str = None, preferred_language: str = None, address: Address = None) -> str:
         """
-        Create a new Location for a given organization. Only an admin in a Webex Calling licensed organization can create a new Location.
+        Create a new Location for a given organization. Only an admin in the organization can create a new Location.
 
         :param announcement_language: Location's phone announcement language.
         :type announcement_language: str
@@ -779,6 +803,27 @@ class Type(str, Enum):
     appuser = 'appuser'
 
 
+class Addresses(ApiModel):
+    #: The type of address
+    #: Possible values: work
+    type: Optional[str]
+    #: The user's country
+    #: Possible values: US
+    country: Optional[str]
+    #: the user's locality, often city
+    #: Possible values: Milpitas
+    locality: Optional[str]
+    #: the user's region, often state
+    #: Possible values: California
+    region: Optional[str]
+    #: the user's street
+    #: Possible values: 1099 Bird Ave.
+    street_address: Optional[str]
+    #: the user's postal or zip code
+    #: Possible values: 99212
+    postal_code: Optional[str]
+
+
 class CreatePersonBody(ApiModel):
     #: The email addresses of the person. Only one email address is allowed per person.
     #: Possible values: john.andersen@example.com
@@ -814,8 +859,7 @@ class CreatePersonBody(ApiModel):
     #: the person's title
     title: Optional[str]
     #: Person's address
-    #: Possible values: , country: `US`, locality: `Charlotte`, region: `North Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode: `99212`
-    addresses: Optional[list[object]]
+    addresses: Optional[list[Addresses]]
     #: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg: mysite.webex.com#attendee)
     #: Possible values: mysite.webex.com#attendee
     site_urls: Optional[list[str]]
@@ -867,12 +911,13 @@ class PeopleApi(ApiChild, base='people'):
     To learn more about managing people in a room see the Memberships API. For information about how to allocate Hybrid Services licenses to people, see the Managing Hybrid Services guide.
     """
 
-    def list_people(self, email: str = None, display_name: str = None, id: str = None, org_id: str = None, calling_data: bool = None, location_id: str = None, **params) -> Generator[Person, None, None]:
+    def list_people(self, email: str = None, display_name: str = None, id: str = None, org_id: str = None, roles: str = None, calling_data: bool = None, location_id: str = None, **params) -> Generator[Person, None, None]:
         """
         List people in your organization. For most users, either the email or displayName parameter is required. Admin users can omit these fields and list all users in their organization.
         Response properties associated with a user's presence status, such as status or lastActivity, will only be returned for people within your organization or an organization you manage. Presence information will not be returned if the authenticated user has disabled status sharing.
         Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData parameter as true. Admin users can list all users in a location or with a specific phone number. Admin users will receive an enriched payload with additional administrative fields like liceneses,roles etc. These fields are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=
         Lookup by email is only supported for people within the same org or where a partner admin relationship is in place.
+        Lookup by roles is only supported for Admin users for the people within the same org.
         Long result sets will be split into pages.
 
         :param email: List people with this email address. For non-admin requests, either this or displayName are required. With the exception of partner admins and a managed org relationship, people lookup by email is only available for users in the same org.
@@ -883,6 +928,8 @@ class PeopleApi(ApiChild, base='people'):
         :type id: str
         :param org_id: List people in this organization. Only admin users of another organization (such as partners) may use this parameter.
         :type org_id: str
+        :param roles: List of roleIds separated by commas.
+        :type roles: str
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
         :param location_id: List people present in this location.
@@ -896,6 +943,8 @@ class PeopleApi(ApiChild, base='people'):
             params['id'] = id
         if org_id is not None:
             params['orgId'] = org_id
+        if roles is not None:
+            params['roles'] = roles
         if calling_data is not None:
             params['callingData'] = calling_data
         if location_id is not None:
@@ -903,7 +952,7 @@ class PeopleApi(ApiChild, base='people'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Person, params=params)
 
-    def create(self, emails: List[str], calling_data: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: List[object] = None, site_urls: List[str] = None) -> Person:
+    def create(self, emails: List[str], calling_data: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: Addresses = None, site_urls: List[str] = None) -> Person:
         """
         Create a new user account for a given organization. Only an admin can create a new user account.
         At least one of the following body parameters is required to create a new user: displayName, firstName, lastName.
@@ -947,8 +996,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTI
         :param title: the person's title
         :type title: str
         :param addresses: Person's address
-Possible values: , country: `US`, locality: `Charlotte`, region: `North Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode: `99212`
-        :type addresses: List[object]
+        :type addresses: Addresses
         :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg: mysite.webex.com#attendee)
 Possible values: mysite.webex.com#attendee
         :type site_urls: List[str]
@@ -1014,7 +1062,7 @@ Possible values: mysite.webex.com#attendee
         data = super().get(url=url, params=params)
         return Person.parse_obj(data)
 
-    def update(self, person_id: str, emails: List[str], calling_data: bool = None, show_all_types: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: List[object] = None, site_urls: List[str] = None, nick_name: str = None, login_enabled: bool = None) -> Person:
+    def update(self, person_id: str, emails: List[str], calling_data: bool = None, show_all_types: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: Addresses = None, site_urls: List[str] = None, nick_name: str = None, login_enabled: bool = None) -> Person:
         """
         Update details for a person, by ID.
         Specify the person ID in the personId parameter in the URI. Only an admin can update a person details.
@@ -1065,8 +1113,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTI
         :param title: the person's title
         :type title: str
         :param addresses: Person's address
-Possible values: , country: `US`, locality: `Charlotte`, region: `North Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode: `99212`
-        :type addresses: List[object]
+        :type addresses: Addresses
         :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg: mysite.webex.com#attendee)
 Possible values: mysite.webex.com#attendee
         :type site_urls: List[str]
@@ -1134,6 +1181,21 @@ Possible values: mysite.webex.com#attendee
         url = self.ep(f'{person_id}')
         super().delete(url=url)
         return
+
+    def my_own_details(self, calling_data: bool = None) -> Person:
+        """
+        Get profile details for the authenticated user. This is the same as GET /people/{personId} using the Person ID associated with your Auth token.
+        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData parameter as true.
+
+        :param calling_data: Include Webex Calling user details in the response.
+        :type calling_data: bool
+        """
+        params = {}
+        if calling_data is not None:
+            params['callingData'] = calling_data
+        url = self.ep('me')
+        data = super().get(url=url, params=params)
+        return Person.parse_obj(data)
 
 class CDR(ApiModel):
     #: The time the call was answered. Time is in UTC.
@@ -1213,6 +1275,8 @@ class CDR(ApiModel):
     sub_client_type: Optional[str] = Field(alias='Sub client type')
     #: Transfer related call ID is used as a call identifier of the other call involved in the transfer. You can share this ID with Cisco TAC to help them pinpoint parties who are involved during a call transfer.
     transfer_related_call_id: Optional[str] = Field(alias='Transfer related call ID')
+    #: The user who made or received the call.
+    user: Optional[str]
     #: The type of user (user or workspace) that made or received the call. For example:
     user_type: Optional[str] = Field(alias='User type')
     #: A unique identifier for the user associated with the call. This is a unique identifier across Cisco products.
@@ -1250,10 +1314,8 @@ class WebexCallingDetailedCallHistoryApi(ApiChild, base=''):
         :type max: int
         """
         params = {}
-        if start_time is not None:
-            params['startTime'] = start_time
-        if end_time is not None:
-            params['endTime'] = end_time
+        params['startTime'] = start_time
+        params['endTime'] = end_time
         if locations is not None:
             params['locations'] = locations
         if max is not None:
@@ -1350,11 +1412,47 @@ class HoursMenuObject(ApiModel):
     key_configurations: Optional[KeyConfigurationsObject]
 
 
+class FaxMessage(ApiModel):
+    #: Enable/disable fax messaging.
+    enabled: Optional[bool]
+    #: Phone number to receive fax messages.
+    phone_number: Optional[str]
+    #: Extension to receive fax messages.
+    extension: Optional[int]
+
+
 class GetDetailsForCallParkExtensionResponse(ApiModel):
     #: The extension for the call park extension.
     extension: Optional[str]
     #: Unique name for the call park extension.
     name: Optional[str]
+
+
+class CreateAutoAttendantBody(GetDetailsForCallParkExtensionResponse):
+    #: Auto attendant phone number.  Either phoneNumber or extension is mandatory.
+    phone_number: Optional[str]
+    #: First name defined for an auto attendant.
+    first_name: Optional[str]
+    #: Last name defined for an auto attendant.
+    last_name: Optional[str]
+    #: Alternate numbers defined for the auto attendant.
+    alternate_numbers: Optional[list[AlternateNumbersObject]]
+    #: Language code for the auto attendant.
+    language_code: Optional[str]
+    #: Business hours defined for the auto attendant.
+    business_schedule: Optional[str]
+    #: Holiday defined for the auto attendant.
+    holiday_schedule: Optional[str]
+    #: Extension dialing setting. If the values are not set default will be set as ENTERPRISE.
+    extension_dialing: Optional[ExtensionDialing]
+    #: Name dialing setting. If the values are not set default will be set as ENTERPRISE.
+    name_dialing: Optional[ExtensionDialing]
+    #: Time zone defined for the auto attendant.
+    time_zone: Optional[str]
+    #: Business hours menu defined for the auto attendant.
+    business_hours_menu: Optional[HoursMenuObject]
+    #: After hours menu defined for the auto attendant.
+    after_hours_menu: Optional[HoursMenuObject]
 
 
 class NewNumber(ApiModel):
@@ -1446,7 +1544,7 @@ class CallForwardSelectiveCallsFromObject(ApiModel):
     custom_numbers: Optional[CallForwardSelectiveCallsFromCustomNumbersObject]
 
 
-class Type4(str, Enum):
+class Type5(str, Enum):
     #: Indicates that the given phoneNumber or extension associated with this rule's containing object is a primary number or extension.
     primary = 'PRIMARY'
     #: Indicates that the given phoneNumber or extension associated with this rule's containing object is an alternate number or extension.
@@ -1459,7 +1557,7 @@ class CallForwardSelectiveCallsToNumbersObject(ApiModel):
     #: Calls To extension.  Either phoneNumber or extension is mandatory.
     extension: Optional[str]
     #: Calls to type options.
-    type: Optional[Type4]
+    type: Optional[Type5]
 
 
 class CallForwardSelectiveCallsToObject(ApiModel):
@@ -1510,7 +1608,7 @@ class PutRecallHuntGroupObject(ApiModel):
 class CreateCallPickupBody(ApiModel):
     #: Unique name for the call pickup. The maximum length is 80.
     name: Optional[str]
-    #: Array of ID strings of people, including workspaces, that are added to call pickup.
+    #: An Array of ID strings of people, workspaces and virtual lines that are added to call pickup.
     agents: Optional[list[str]]
 
 
@@ -1519,11 +1617,16 @@ class GetRecallHuntGroupObject(PutRecallHuntGroupObject):
     hunt_group_name: Optional[str]
 
 
-class Type7(str, Enum):
-    #: Indicates that this object is a user.
-    people = 'PEOPLE'
-    #: Indicates that this object is a place.
-    place = 'PLACE'
+class HostedAgentType(ApiModel):
+    #: Indicates that this object is a person.
+    people: Optional[str]
+    #: Indicates a workspace that is not assigned to a specific person such as for a shared device in a common area.
+    place: Optional[str]
+
+
+class Type8(HostedAgentType):
+    #: Indicates that this object is a virtual line.
+    virtual_line = 'VIRTUAL_LINE'
 
 
 class GetUserNumberItemObject(ApiModel):
@@ -1535,21 +1638,26 @@ class GetUserNumberItemObject(ApiModel):
     primary: Optional[bool]
 
 
-class GetPersonPlaceCallParksObject(ApiModel):
-    #: ID of a person or workspace.
+class GetPersonPlaceVirtualLineCallParksObject(ApiModel):
+    #: ID of a person, workspace or virtual line.
     id: Optional[str]
-    #: First name of a person or workspace.
+    #: First name of a person, workspace or virtual line.
     first_name: Optional[str]
-    #: Last name of a person or workspace.
+    #: Last name of a person, workspace or virtual line.
     last_name: Optional[str]
-    #: Display name of a person or workspace.
+    #: Display name of a person, workspace or virtual line.
     display_name: Optional[str]
-    #: Type of the person or workspace.
-    type: Optional[Type7]
+    #: Type of the person, workspace or virtual line.
+    type: Optional[Type8]
     #: Email of a person or workspace.
     email: Optional[str]
-    #: List of phone numbers of a person or workspace.
+    #: List of phone numbers of a person, workspace or virtual line.
     numbers: Optional[list[GetUserNumberItemObject]]
+
+
+class ListCPCallParkExtensionObject(GetAvailableRecallHuntGroupsObject):
+    #: The extension for the call park.
+    extension: Optional[str]
 
 
 class CreateCallParkBody(CreateCallPickupBody):
@@ -1569,6 +1677,23 @@ class CallParkSettingsObject(ApiModel):
 class ListCallParkExtensionObject(ListCallParkObject):
     #: The extension for the call park extension.
     extension: Optional[str]
+
+
+class GetPersonPlaceVirtualLineCallPickupObject(ApiModel):
+    #: ID of a person, workspace or virtual line.
+    id: Optional[str]
+    #: First name of a person, workspace or virtual line.
+    first_name: Optional[str]
+    #: Last name of a person, workspace or virtual line.
+    last_name: Optional[str]
+    #: Display name of a person, workspace or virtual line.
+    display_name: Optional[str]
+    #: Type of the person, workspace or virtual line.
+    type: Optional[Type8]
+    #: Email of a person, workspace or virtual line.
+    email: Optional[str]
+    #: List of phone numbers of a person, workspace or virtual line.
+    phone_number: Optional[list[GetUserNumberItemObject]]
 
 
 class ListCallQueueObject(ListCallParkExtensionObject):
@@ -1633,7 +1758,7 @@ class PostCallQueueCallPolicyObject(ApiModel):
     distinctive_ring: Optional[DistinctiveRing]
 
 
-class Action2(str, Enum):
+class Action6(str, Enum):
     #: The caller hears a fast-busy tone.
     perform_busy_treatment = 'PERFORM_BUSY_TREATMENT'
     #: The caller hears ringing until they disconnect.
@@ -1644,7 +1769,7 @@ class Action2(str, Enum):
 
 class Overflow(ApiModel):
     #: Indicates how to handle new calls when the queue is full.
-    action: Optional[Action2]
+    action: Optional[Action6]
     #: When true, forwards all calls to a voicemail service of an internal number. This option is ignored when an external transferNumber is entered.
     send_to_voicemail: Optional[bool]
     #: Destination number for overflow calls when action is set to TRANSFER_TO_PHONE_NUMBER.
@@ -1754,15 +1879,15 @@ class CallQueueQueueSettingsObject(ApiModel):
     whisper_message: Optional[NormalSource]
 
 
-class PostPersonPlaceObject(ApiModel):
-    #: ID of person or workspace.
+class PostPersonPlaceVirtualLineHuntGroupObject(ApiModel):
+    #: ID of person, workspace or virtual line.
     id: Optional[str]
-    #: Weight of person or workspace. Only applied when call policy is WEIGHTED.
+    #: Weight of person, workspace or virtual line. Only applied when call policy is WEIGHTED.
     weight: Optional[str]
 
 
-class PostPersonPlaceCallQueueObject(PostPersonPlaceObject):
-    #: Skill level of person or workspace. Only applied when call routing type is SKILL_BASED.
+class PostPersonPlaceVirtualLineCallQueueObject(PostPersonPlaceVirtualLineHuntGroupObject):
+    #: Skill level of person, workspace or virtual line. Only applied when call routing type is SKILL_BASED.
     skill_level: Optional[int]
 
 
@@ -1780,15 +1905,17 @@ class AlternateNumberSettings(ApiModel):
     alternate_numbers: Optional[list[AlternateNumbersWithPattern]]
 
 
-class GetPersonPlaceCallQueueObject(PostPersonPlaceCallQueueObject):
-    #: First name of person or workspace.
+class GetPersonPlaceVirtualLineCallQueueObject(CallForwardSelectiveCallsToNumbersObject):
+    #: ID of person, workspace or virtual line.
+    id: Optional[str]
+    #: First name of person, workspace or virtual line.
     first_name: Optional[str]
-    #: First name of person or workspace.
+    #: First name of person, workspace or virtual line.
     last_name: Optional[str]
-    #: Phone number of person or workspace.
-    phone_number: Optional[str]
-    #: Extension of person or workspace.
-    extension: Optional[str]
+    #: Weight of person, workspace or virtual line. Only applied when call policy is WEIGHTED.
+    weight: Optional[str]
+    #: Skill level of person, workspace or virtual line. Only applied when the call routingType is SKILL_BASED.
+    skill_level: Optional[int]
     #: Indicates the join status of the agent for this queue. The default value while creating call queue is true.
     join_enabled: Optional[bool]
 
@@ -1808,26 +1935,17 @@ class CreateCallQueueBody(GetDetailsForCallParkExtensionResponse):
     call_policies: Optional[PostCallQueueCallPolicyObject]
     #: Overall call queue settings.
     queue_settings: Optional[CallQueueQueueSettingsObject]
-    #: People, including workspaces, that are eligible to receive calls.
-    agents: Optional[list[PostPersonPlaceCallQueueObject]]
+    #: People, workspaces and virtual lines that are eligible to receive calls.
+    agents: Optional[list[PostPersonPlaceVirtualLineCallQueueObject]]
     #: Whether or not to allow agents to join or unjoin a queue.
     allow_agent_join_enabled: Optional[bool]
     #: When true, indicates that the agent's configuration allows them to use the queue's Caller ID for outgoing calls.
     phone_number_for_outgoing_calls_enabled: Optional[bool]
 
 
-class ModifyPersonPlaceCallQueueObject(PostPersonPlaceCallQueueObject):
+class ModifyPersonPlaceVirtualLineCallQueueObject(PostPersonPlaceVirtualLineCallQueueObject):
     #: Indicates the join status of the agent for this queue. The default value for newly added agents is true.
     join_enabled: Optional[bool]
-
-
-class FaxMessage(ApiModel):
-    #: Enable/disable fax messaging.
-    enabled: Optional[bool]
-    #: Phone number to receive fax messages.
-    phone_number: Optional[str]
-    #: Extension to receive fax messages.
-    extension: Optional[int]
 
 
 class GetAnnouncementFileInfo(ApiModel):
@@ -1964,7 +2082,7 @@ class HostedAgent(ApiModel):
     #: Person or workspace's ID.
     id: Optional[str]
     #: Type of agent for call destination.
-    type: Optional[Type7]
+    type: Optional[HostedAgentType]
     #: Person or workspace's first name.
     first_name: Optional[str]
     #: Person or workspace's last name.
@@ -2067,7 +2185,7 @@ class Emergency(PstnNumber):
     is_red_sky: Optional[bool]
 
 
-class Status4(str, Enum):
+class Status5(str, Enum):
     #: Indicates that all extensions were validated.
     ok = 'OK'
     #: Indicates that not all extensions were validated.
@@ -2130,14 +2248,14 @@ class PostHuntGroupCallPolicyObject(ApiModel):
     business_continuity: Optional[BusinessContinuity]
 
 
-class GetPersonPlaceObject(PostPersonPlaceObject):
-    #: First name of person or workspace.
+class GetPersonPlaceVirtualLineHuntGroupObject(PostPersonPlaceVirtualLineHuntGroupObject):
+    #: First name of person, workspace or virtual line.
     first_name: Optional[str]
-    #: Last name of person or workspace.
+    #: Last name of person, workspace or virtual line.
     last_name: Optional[str]
-    #: Phone number of person or workspace.
+    #: Phone number of person, workspace or virtual line.
     phone_number: Optional[str]
-    #: Extension of person or workspace.
+    #: Extension of person, workspace or virtual line.
     extension: Optional[str]
 
 
@@ -2146,7 +2264,7 @@ class GetSelectiveCallForwardingRuleForCallQueueResponse(CreateSelectiveCallForw
     id: Optional[str]
 
 
-class Type17(str, Enum):
+class Type19(str, Enum):
     #: Intercept all inbound calls.
     intercept_all = 'INTERCEPT_ALL'
     #: Allow all inbound calls.
@@ -2169,14 +2287,14 @@ class Announcements(Announcements3):
 
 class Incoming(ApiModel):
     #: Select inbound call options.
-    type: Optional[Type17]
+    type: Optional[Type19]
     #: Enable/disable to route voice mail.
     voicemail_enabled: Optional[bool]
     #: Announcements details.
     announcements: Optional[Announcements]
 
 
-class Type18(str, Enum):
+class Type20(str, Enum):
     #: Intercept all outbound calls.
     intercept_all = 'INTERCEPT_ALL'
     #: Allow local outbound calls.
@@ -2185,7 +2303,7 @@ class Type18(str, Enum):
 
 class Outgoing(ApiModel):
     #: Outbound call modes
-    type: Optional[Type18]
+    type: Optional[Type20]
     #: Enable/disable to route all outbound calls to phone number.
     transfer_enabled: Optional[bool]
     #: If enabled, set outgoing destination phone number.
@@ -2267,7 +2385,7 @@ class CallType(str, Enum):
     national = 'NATIONAL'
 
 
-class Action5(str, Enum):
+class Action9(str, Enum):
     #: Callers at this location can make these types of calls.
     allow = 'ALLOW'
     #: Callers at this location can't make these types of calls.
@@ -2286,7 +2404,7 @@ class CallingPermissionObject(ApiModel):
     #: Below are the call type values.
     call_type: Optional[CallType]
     #: Allows to configure settings for each call type.
-    action: Optional[Action5]
+    action: Optional[Action9]
     #: If enabled, allow the person to transfer or forward internal calls.
     transfer_enabled: Optional[bool]
 
@@ -2327,9 +2445,9 @@ class CreatenewPagingGroupBody(GetDetailsForCallParkExtensionResponse):
     last_name: Optional[str]
     #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator ID.
     originator_caller_id_enabled: Optional[bool]
-    #: An array of people and/or workspaces, who may originate pages to this paging group.
+    #: An array of people, workspace, and virtual lines IDs who can originate pages to this paging group.
     originators: Optional[list[str]]
-    #: People, including workspaces, that are added to paging group as paging call targets.
+    #: An array of people, workspaces and virtual lines IDs will add to a paging group as paging call targets.
     targets: Optional[list[str]]
 
 
@@ -2484,7 +2602,7 @@ class NetworkConnectionType(str, Enum):
     private_network = 'PRIVATE_NETWORK'
 
 
-class Type23(str, Enum):
+class Type25(str, Enum):
     #: Business hours schedule type.
     business_hours = 'businessHours'
     #: Holidays schedule type.
@@ -2493,7 +2611,7 @@ class Type23(str, Enum):
 
 class ListScheduleObject(ListCallParkObject):
     #: Type of the schedule.
-    type: Optional[Type23]
+    type: Optional[Type25]
 
 
 class RecurWeeklyObject(ApiModel):
@@ -2602,6 +2720,42 @@ class ModifyScheduleEventListObject(ScheduleEventObject):
     new_name: Optional[str]
 
 
+class ExternalCallerIdNamePolicy(str, Enum):
+    #: Shows virtual lines Caller ID name.
+    direct_line = 'DIRECT_LINE'
+    #: Shows virtual lines location name.
+    location = 'LOCATION'
+    #: Allow virtual lines first/last name to be configured.
+    other = 'OTHER'
+
+
+class ListVirtualLineObject(ApiModel):
+    #: A unique identifier for the virtual line.
+    id: Optional[str]
+    #: Last name for virtual line.
+    last_name: Optional[str]
+    #: First name for virtual line.
+    first_name: Optional[str]
+    #: callerIdLastName for virtual line.
+    caller_id_last_name: Optional[str]
+    #: callerIdFirstName for virtual line.
+    caller_id_first_name: Optional[str]
+    #: callerIdNumber for virtual line.
+    caller_id_number: Optional[str]
+    #: externalCallerIdNamePolicy for the virtual line.
+    external_caller_id_name_policy: Optional[ExternalCallerIdNamePolicy]
+    #: customExternalCallerIdName for virtual line.
+    custom_external_caller_id_name: Optional[str]
+    #: Calling details of virtual line.
+    number: Optional[GetUserNumberItemObject]
+    #: Location details of virtual line.
+    location: Optional[GetAvailableRecallHuntGroupsObject]
+    #: Number of devices assigned to a virtual line.
+    number_of_devices_assigned: Optional[int]
+    #: Type of billing plan.
+    billing_plan: Optional[str]
+
+
 class GetVoicemailSettingsResponse(ApiModel):
     #: When enabled, you can set the deletion conditions for expired messages.
     message_expiry_enabled: Optional[bool]
@@ -2677,7 +2831,7 @@ class FailedAttempts(ApiModel):
     attempts: Optional[int]
 
 
-class Greeting25(str, Enum):
+class Greeting29(str, Enum):
     #: Play default music when call is placed on hold or parked. The system plays music to fill the silence and lets the customer know they are still connected.
     system = 'SYSTEM'
     #: Play previously uploaded custom music when call is placed on hold or parked.
@@ -2690,7 +2844,7 @@ class GetMusicOnHoldResponse(ApiModel):
     #: If enabled, music will be played when call is parked.
     call_park_enabled: Optional[bool]
     #: Greeting type for the location.
-    greeting: Optional[Greeting25]
+    greeting: Optional[Greeting29]
 
 
 class GetVoicemailGroupObject(ListAutoAttendantObject):
@@ -2904,14 +3058,14 @@ class CallQueueHolidaySchedulesObject(ApiModel):
     schedule_level: Optional[HolidayScheduleLevel]
 
 
-class Action7(str, Enum):
+class Action11(str, Enum):
     #: The caller hears a fast-busy tone.
     busy = 'BUSY'
     #: Transfers the call to number specified in transferPhoneNumber.
     transfer = 'TRANSFER'
 
 
-class Action11(Action7):
+class Action15(Action11):
     #: Call remains in the queue.
     none = 'NONE'
     #: Calls are handled according to the Night Service configuration. If the Night Service action is set to none, then this is equivalent to this policy being set to none (that is, calls remain in the queue).
@@ -2940,7 +3094,7 @@ class CallQueueAudioFilesObject(ApiModel):
 
 class GetDetailsForCallQueueStrandedCallsResponse(ApiModel):
     #: Specifies call processing action type.
-    action: Optional[Action11]
+    action: Optional[Action15]
     #: Call gets transferred to this number when action is set to TRANSFER. This can also be an extension.
     transfer_phone_number: Optional[str]
     #: Specifies what type of announcement to be played.
@@ -2995,6 +3149,8 @@ class PutMemberObject(ApiModel):
     hotline_destination: Optional[str]
     #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended to all the endpoints on the device. When set to false, a call decline request only declines the current endpoint.
     allow_call_decline_enabled: Optional[bool]
+    #: Device line label.
+    line_label: Optional[str]
 
 
 class MemberObject(PutMemberObject):
@@ -3011,7 +3167,7 @@ class MemberObject(PutMemberObject):
     #: Registration Remote IP address for the line port.
     remote_ip: Optional[str]
     #: Indicates if the member is of type PEOPLE or PLACE.
-    member_type: Optional[Type7]
+    member_type: Optional[HostedAgentType]
     #: Location object having a unique identifier for the location and its name.
     location: Optional[GetAvailableRecallHuntGroupsObject]
 
@@ -3032,7 +3188,7 @@ class SearchMemberObject(ApiModel):
     #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended to all the endpoints on the device. When set to false, a call decline request only declines the current endpoint.
     allow_call_decline_enabled: Optional[bool]
     #: Indicates if member is of type PEOPLE or PLACE.
-    member_type: Optional[Type7]
+    member_type: Optional[HostedAgentType]
     #: Location object having a unique identifier for the location and its name.
     location: Optional[GetAvailableRecallHuntGroupsObject]
 
@@ -3309,7 +3465,7 @@ class DeviceOwner(ApiModel):
     #: Unique identifier of a person or a workspace.
     id: Optional[str]
     #: Enumeration that indicates if the member is of type PEOPLE or PLACE.
-    type: Optional[Type7]
+    type: Optional[HostedAgentType]
     #: First name of device owner.
     first_name: Optional[str]
     #: Last name of device owner.
@@ -3409,7 +3565,7 @@ class DeviceObject(ApiModel):
     #: Users who manage the device.
     managed_by: Optional[ManagedByObject]
     #: List of places the device is supported for.
-    supported_for: Optional[list[Type7]]
+    supported_for: Optional[list[HostedAgentType]]
     #: Onboarding method.
     onboarding_method: Optional[list[OnboardingMethodObject]]
     #: Enables / Disables layout configuration for devices.
@@ -3434,6 +3590,8 @@ class DeviceObject(ApiModel):
     customized_behaviors_enabled: Optional[bool]
     #: Enables / disables configuring port support on device.
     allow_configure_ports_enabled: Optional[bool]
+    #: Enables / disables customizable line label.
+    customizable_line_label_enabled: Optional[bool]
 
 
 class DectObject(ApiModel):
@@ -3538,15 +3696,21 @@ class ReadListOfAutoAttendantsResponse(ApiModel):
     auto_attendants: Optional[list[ListAutoAttendantObject]]
 
 
-class UpdateAutoAttendantBody(GetDetailsForCallParkExtensionResponse):
-    #: Auto attendant phone number.  Either phoneNumber or extension is mandatory.
-    phone_number: Optional[str]
+class GetDetailsForAutoAttendantResponse(FaxMessage):
+    #: A unique identifier for the auto attendant.
+    id: Optional[str]
+    #: Unique name for the auto attendant.
+    name: Optional[str]
+    #: Flag to indicate if auto attendant number is toll-free number.
+    toll_free_number: Optional[bool]
     #: First name defined for an auto attendant.
     first_name: Optional[str]
     #: Last name defined for an auto attendant.
     last_name: Optional[str]
     #: Alternate numbers defined for the auto attendant.
     alternate_numbers: Optional[list[AlternateNumbersObject]]
+    #: Language for the auto attendant.
+    language: Optional[str]
     #: Language code for the auto attendant.
     language_code: Optional[str]
     #: Business hours defined for the auto attendant.
@@ -3563,6 +3727,11 @@ class UpdateAutoAttendantBody(GetDetailsForCallParkExtensionResponse):
     business_hours_menu: Optional[HoursMenuObject]
     #: After hours menu defined for the auto attendant.
     after_hours_menu: Optional[HoursMenuObject]
+
+
+class CreateAutoAttendantResponse(ApiModel):
+    #: ID of the newly created auto attendant.
+    id: Optional[str]
 
 
 class GetCallForwardingSettingsForAutoAttendantResponse(ApiModel):
@@ -3603,8 +3772,12 @@ class CreateCallParkResponse(ApiModel):
 class GetDetailsForCallParkResponse(GetAvailableRecallHuntGroupsObject):
     #: Recall options that are added to call park.
     recall: Optional[GetRecallHuntGroupObject]
-    #: People, including workspaces, that are eligible to receive calls.
-    agents: Optional[list[GetPersonPlaceCallParksObject]]
+    #: People, workspaces and virtual lines that are eligible to receive calls.
+    agents: Optional[list[GetPersonPlaceVirtualLineCallParksObject]]
+    #: Whether or not the calls will be parked on agents as a destination.
+    park_on_agents_enabled: Optional[bool]
+    #: Array of call park extensions assigned to a call park.
+    call_park_extensions: Optional[list[ListCPCallParkExtensionObject]]
 
 
 class UpdateCallParkResponse(ApiModel):
@@ -3614,7 +3787,7 @@ class UpdateCallParkResponse(ApiModel):
 
 class GetAvailableAgentsFromCallParksResponse(ApiModel):
     #: Array of agents.
-    agents: Optional[list[GetPersonPlaceCallParksObject]]
+    agents: Optional[list[GetPersonPlaceVirtualLineCallParksObject]]
 
 
 class GetAvailableRecallHuntGroupsFromCallParksResponse(ApiModel):
@@ -3657,8 +3830,8 @@ class CreateCallPickupResponse(ApiModel):
 
 
 class GetDetailsForCallPickupResponse(GetAvailableRecallHuntGroupsObject):
-    #: People, including workspaces, that are eligible to receive calls.
-    agents: Optional[list[GetPersonPlaceCallParksObject]]
+    #: People, workspaces and virtual lines that are eligible to receive calls.
+    agents: Optional[list[GetPersonPlaceVirtualLineCallPickupObject]]
 
 
 class UpdateCallPickupResponse(ApiModel):
@@ -3668,7 +3841,7 @@ class UpdateCallPickupResponse(ApiModel):
 
 class GetAvailableAgentsFromCallPickupsResponse(ApiModel):
     #: Array of agents.
-    agents: Optional[list[GetPersonPlaceCallParksObject]]
+    agents: Optional[list[GetPersonPlaceVirtualLineCallPickupObject]]
 
 
 class ReadListOfCallQueuesResponse(ApiModel):
@@ -3696,8 +3869,8 @@ class GetDetailsForCallQueueResponse(CreateCallQueueBody):
     call_policies: Optional[PostCallQueueCallPolicyObject]
     #: Flag to indicate whether call waiting is enabled for agents.
     allow_call_waiting_for_agents_enabled: Optional[bool]
-    #: People, including workspaces, that are eligible to receive calls.
-    agents: Optional[list[GetPersonPlaceCallQueueObject]]
+    #: People, workspaces and virtual lines that are eligible to receive calls.
+    agents: Optional[list[GetPersonPlaceVirtualLineCallQueueObject]]
 
 
 class UpdateCallQueueBody(FaxMessage):
@@ -3719,8 +3892,8 @@ class UpdateCallQueueBody(FaxMessage):
     queue_settings: Optional[CallQueueQueueSettingsObject]
     #: Flag to indicate whether call waiting is enabled for agents.
     allow_call_waiting_for_agents_enabled: Optional[bool]
-    #: People, including workspaces, that are eligible to receive calls.
-    agents: Optional[list[ModifyPersonPlaceCallQueueObject]]
+    #: People, workspaces and virtual lines that are eligible to receive calls.
+    agents: Optional[list[ModifyPersonPlaceVirtualLineCallQueueObject]]
     #: Whether or not to allow agents to join or unjoin a queue.
     allow_agent_join_enabled: Optional[bool]
     #: When true, indicates that the agent's configuration allows them to use the queue's Caller ID for outgoing calls.
@@ -3845,7 +4018,7 @@ class ValidateExtensionsBody(ApiModel):
 
 class ValidateExtensionsResponse(ApiModel):
     #: Status of the validated array of extensions
-    status: Optional[Status4]
+    status: Optional[Status5]
     #: Array of extensions statuses.
     extension_status: Optional[list[ExtensionStatusObject]]
 
@@ -3868,8 +4041,8 @@ class CreateHuntGroupBody(FaxMessage):
     time_zone: Optional[str]
     #: Policy controlling how calls are routed to agents.
     call_policies: Optional[PostHuntGroupCallPolicyObject]
-    #: People, including workspaces, that are eligible to  receive calls.
-    agents: Optional[list[PostPersonPlaceObject]]
+    #: People, workspaces and virtual lines that are eligible to  receive calls.
+    agents: Optional[list[PostPersonPlaceVirtualLineHuntGroupObject]]
 
 
 class CreateHuntGroupResponse(ApiModel):
@@ -3877,13 +4050,11 @@ class CreateHuntGroupResponse(ApiModel):
     id: Optional[str]
 
 
-class GetDetailsForHuntGroupResponse(GetAvailableRecallHuntGroupsObject):
+class GetDetailsForHuntGroupResponse(ListCPCallParkExtensionObject):
     #: Whether or not the hunt group is enabled.
     enabled: Optional[bool]
     #: Primary phone number of the hunt group.
     phone_number: Optional[str]
-    #: Extension of the hunt group.
-    extension: Optional[str]
     #: Whether or not the hunt group has the distinctive ring option enabled.
     distinctive_ring: Optional[bool]
     #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
@@ -3900,8 +4071,8 @@ class GetDetailsForHuntGroupResponse(GetAvailableRecallHuntGroupsObject):
     time_zone: Optional[str]
     #: Policy controlling how calls are routed to agents.
     call_policies: Optional[PostHuntGroupCallPolicyObject]
-    #: People, including workspaces, that are eligible to  receive calls.
-    agents: Optional[list[GetPersonPlaceObject]]
+    #: People, workspaces and virtual lines that are eligible to  receive calls.
+    agents: Optional[list[GetPersonPlaceVirtualLineHuntGroupObject]]
     #: Whether or not the hunt group is enabled.
     enabled: Optional[bool]
 
@@ -3927,8 +4098,8 @@ class UpdateHuntGroupBody(CallForwardRulesModifyObject):
     time_zone: Optional[str]
     #: Policy controlling how calls are routed to agents.
     call_policies: Optional[PostHuntGroupCallPolicyObject]
-    #: People, including workspaces, that are eligible to  receive calls.
-    agents: Optional[list[PostPersonPlaceObject]]
+    #: People, workspaces and virtual lines that are eligible to  receive calls.
+    agents: Optional[list[PostPersonPlaceVirtualLineHuntGroupObject]]
 
 
 class GetCallForwardingSettingsForHuntGroupResponse(ApiModel):
@@ -4022,11 +4193,13 @@ class CreatenewPagingGroupResponse(ApiModel):
     id: Optional[str]
 
 
-class GetDetailsForPagingGroupResponse(FaxMessage):
-    #: A unique identifier for the paging group.
-    id: Optional[str]
-    #: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
-    name: Optional[str]
+class GetDetailsForPagingGroupResponse(ListCPCallParkExtensionObject):
+    #: Whether or not the paging group is enabled.
+    enabled: Optional[bool]
+    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is mandatory.
+    phone_number: Optional[str]
+    #: Flag to indicate toll free number.
+    toll_free_number: Optional[bool]
     #: Paging language. Minimum length is 1. Maximum length is 40.
     language: Optional[str]
     #: Language code.
@@ -4037,9 +4210,9 @@ class GetDetailsForPagingGroupResponse(FaxMessage):
     last_name: Optional[str]
     #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator ID.
     originator_caller_id_enabled: Optional[bool]
-    #: An array of people and/or workspaces, who may originate pages to this paging group.
+    #: An array of people, workspaces and virtual lines ID's who may originate pages to this paging group.
     originators: Optional[list[GetPagingGroupAgentObject]]
-    #: People, including workspaces, that are added to paging group as paging call targets.
+    #: An array of people, workspaces and virtual lines ID's that are added to paging group as paging call targets.
     targets: Optional[list[GetPagingGroupAgentObject]]
 
 
@@ -4098,14 +4271,14 @@ class ReadListOfSchedulesResponse(ApiModel):
 
 class GetDetailsForScheduleResponse(GetAvailableRecallHuntGroupsObject):
     #: Type of the schedule.
-    type: Optional[Type23]
+    type: Optional[Type25]
     #: List of schedule events.
     events: Optional[list[GetScheduleEventObject]]
 
 
 class CreateScheduleBody(ApiModel):
     #: Type of the schedule.
-    type: Optional[Type23]
+    type: Optional[Type25]
     #: Unique name for the schedule.
     name: Optional[str]
     #: List of schedule events.
@@ -4137,6 +4310,11 @@ class CreateScheduleEventResponse(ApiModel):
 class UpdateScheduleEventResponse(ApiModel):
     #: ID of the target schedule event.
     id: Optional[str]
+
+
+class ReadListOfVirtualLinesResponse(ApiModel):
+    #: Array of virtual lines.
+    virtual_lines: Optional[list[ListVirtualLineObject]]
 
 
 class GetVoicemailRulesResponse(ApiModel):
@@ -4173,13 +4351,11 @@ class UpdateLocationVoicemailBody(ApiModel):
     voicemail_transcription_enabled: Optional[bool]
 
 
-class GetVoicePortalResponse(GetAvailableRecallHuntGroupsObject):
+class GetVoicePortalResponse(ListCPCallParkExtensionObject):
     #: Language for audio announcements.
     language: Optional[str]
     #: Language code for voicemail group audio announcement.
     language_code: Optional[str]
-    #: Extension of incoming call.
-    extension: Optional[str]
     #: Phone Number of incoming call.
     phone_number: Optional[str]
     #: Caller ID First Name.
@@ -4229,17 +4405,17 @@ class ListVoicemailGroupResponse(ApiModel):
     voicemail_groups: Optional[list[GetVoicemailGroupObject]]
 
 
-class GetLocationVoicemailGroupResponse(FaxMessage):
-    #: UUID of voicemail group of a particular location.
-    id: Optional[str]
-    #: Name of the voicemail group.
-    name: Optional[str]
+class GetLocationVoicemailGroupResponse(ListCPCallParkExtensionObject):
+    #: Voicemail group phone number.
+    phone_number: Optional[str]
     #: Voicemail group toll free number.
     toll_free_number: Optional[bool]
     #: Voicemail group caller ID first name.
     first_name: Optional[str]
     #: Voicemail group called ID last name.
     last_name: Optional[str]
+    #: Enable/disable voicemail group.
+    enabled: Optional[bool]
     #: Language for voicemail group audio announcement.
     language_code: Optional[str]
     #: Set voicemail group greeting type.
@@ -4342,7 +4518,7 @@ class ValidateDialPatternBody(ApiModel):
 
 class ValidateDialPatternResponse(ApiModel):
     #: Overall validation result status.
-    status: Optional[Status4]
+    status: Optional[Status5]
     #: Patterns validation result.
     dial_pattern_status: Optional[list[DialPatternValidate]]
 
@@ -4677,7 +4853,7 @@ class ValidatelistOfMACAddressBody(ApiModel):
 
 class ValidatelistOfMACAddressResponse(ApiModel):
     #: Status of MAC address.
-    status: Optional[Status4]
+    status: Optional[Status5]
     #: Contains an array of all the MAC address provided and their statuses.
     mac_status: Optional[list[MacStatusObject]]
 
@@ -4776,7 +4952,102 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().get(url=url, params=params)
         return data["autoAttendants"]
 
-    def update_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, first_name: str = None, last_name: str = None, alternate_numbers: AlternateNumbersObject = None, language_code: str = None, business_schedule: str = None, holiday_schedule: str = None, extension_dialing: ExtensionDialing = None, name_dialing: ExtensionDialing = None, time_zone: str = None, business_hours_menu: HoursMenuObject = None, after_hours_menu: HoursMenuObject = None):
+    def details_for_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None) -> GetDetailsForAutoAttendantResponse:
+        """
+        Retrieve an Auto Attendant details.
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.
+        Retrieving an auto attendant details requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param location_id: Retrieve an auto attendant details in this location.
+        :type location_id: str
+        :param auto_attendant_id: Retrieve the auto attendant with the matching ID.
+        :type auto_attendant_id: str
+        :param org_id: Retrieve auto attendant details from this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
+        data = super().get(url=url, params=params)
+        return GetDetailsForAutoAttendantResponse.parse_obj(data)
+
+    def create_auto_attendant(self, location_id: str, business_schedule: str, business_hours_menu: HoursMenuObject, after_hours_menu: HoursMenuObject, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, first_name: str = None, last_name: str = None, alternate_numbers: AlternateNumbersObject = None, language_code: str = None, holiday_schedule: str = None, extension_dialing: ExtensionDialing = None, name_dialing: ExtensionDialing = None, time_zone: str = None) -> str:
+        """
+        Create new Auto Attendant for the given location.
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.
+        Creating an auto attendant requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param location_id: Create the auto attendant for this location.
+        :type location_id: str
+        :param business_schedule: Business hours defined for the auto attendant.
+        :type business_schedule: str
+        :param business_hours_menu: Business hours menu defined for the auto attendant.
+        :type business_hours_menu: HoursMenuObject
+        :param after_hours_menu: After hours menu defined for the auto attendant.
+        :type after_hours_menu: HoursMenuObject
+        :param org_id: Create the auto attendant for this organization.
+        :type org_id: str
+        :param extension: The extension for the call park extension.
+        :type extension: str
+        :param name: Unique name for the call park extension.
+        :type name: str
+        :param phone_number: Auto attendant phone number.  Either phoneNumber or extension is mandatory.
+        :type phone_number: str
+        :param first_name: First name defined for an auto attendant.
+        :type first_name: str
+        :param last_name: Last name defined for an auto attendant.
+        :type last_name: str
+        :param alternate_numbers: Alternate numbers defined for the auto attendant.
+        :type alternate_numbers: AlternateNumbersObject
+        :param language_code: Language code for the auto attendant.
+        :type language_code: str
+        :param holiday_schedule: Holiday defined for the auto attendant.
+        :type holiday_schedule: str
+        :param extension_dialing: Extension dialing setting. If the values are not set default will be set as ENTERPRISE.
+        :type extension_dialing: ExtensionDialing
+        :param name_dialing: Name dialing setting. If the values are not set default will be set as ENTERPRISE.
+        :type name_dialing: ExtensionDialing
+        :param time_zone: Time zone defined for the auto attendant.
+        :type time_zone: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = CreateAutoAttendantBody()
+        if business_schedule is not None:
+            body.business_schedule = business_schedule
+        if business_hours_menu is not None:
+            body.business_hours_menu = business_hours_menu
+        if after_hours_menu is not None:
+            body.after_hours_menu = after_hours_menu
+        if extension is not None:
+            body.extension = extension
+        if name is not None:
+            body.name = name
+        if phone_number is not None:
+            body.phone_number = phone_number
+        if first_name is not None:
+            body.first_name = first_name
+        if last_name is not None:
+            body.last_name = last_name
+        if alternate_numbers is not None:
+            body.alternate_numbers = alternate_numbers
+        if language_code is not None:
+            body.language_code = language_code
+        if holiday_schedule is not None:
+            body.holiday_schedule = holiday_schedule
+        if extension_dialing is not None:
+            body.extension_dialing = extension_dialing
+        if name_dialing is not None:
+            body.name_dialing = name_dialing
+        if time_zone is not None:
+            body.time_zone = time_zone
+        url = self.ep(f'locations/{location_id}/autoAttendants')
+        data = super().post(url=url, params=params, data=body.json())
+        return data["id"]
+
+    def update_auto_attendant(self, location_id: str, auto_attendant_id: str, business_schedule: str, business_hours_menu: HoursMenuObject, after_hours_menu: HoursMenuObject, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, first_name: str = None, last_name: str = None, alternate_numbers: AlternateNumbersObject = None, language_code: str = None, holiday_schedule: str = None, extension_dialing: ExtensionDialing = None, name_dialing: ExtensionDialing = None, time_zone: str = None):
         """
         Update the designated Auto Attendant.
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.
@@ -4786,6 +5057,12 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param auto_attendant_id: Update an auto attendant with the matching ID.
         :type auto_attendant_id: str
+        :param business_schedule: Business hours defined for the auto attendant.
+        :type business_schedule: str
+        :param business_hours_menu: Business hours menu defined for the auto attendant.
+        :type business_hours_menu: HoursMenuObject
+        :param after_hours_menu: After hours menu defined for the auto attendant.
+        :type after_hours_menu: HoursMenuObject
         :param org_id: Update an auto attendant from this organization.
         :type org_id: str
         :param extension: The extension for the call park extension.
@@ -4802,8 +5079,6 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type alternate_numbers: AlternateNumbersObject
         :param language_code: Language code for the auto attendant.
         :type language_code: str
-        :param business_schedule: Business hours defined for the auto attendant.
-        :type business_schedule: str
         :param holiday_schedule: Holiday defined for the auto attendant.
         :type holiday_schedule: str
         :param extension_dialing: Extension dialing setting. If the values are not set default will be set as ENTERPRISE.
@@ -4812,15 +5087,17 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type name_dialing: ExtensionDialing
         :param time_zone: Time zone defined for the auto attendant.
         :type time_zone: str
-        :param business_hours_menu: Business hours menu defined for the auto attendant.
-        :type business_hours_menu: HoursMenuObject
-        :param after_hours_menu: After hours menu defined for the auto attendant.
-        :type after_hours_menu: HoursMenuObject
         """
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = UpdateAutoAttendantBody()
+        body = CreateAutoAttendantBody()
+        if business_schedule is not None:
+            body.business_schedule = business_schedule
+        if business_hours_menu is not None:
+            body.business_hours_menu = business_hours_menu
+        if after_hours_menu is not None:
+            body.after_hours_menu = after_hours_menu
         if extension is not None:
             body.extension = extension
         if name is not None:
@@ -4835,8 +5112,6 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             body.alternate_numbers = alternate_numbers
         if language_code is not None:
             body.language_code = language_code
-        if business_schedule is not None:
-            body.business_schedule = business_schedule
         if holiday_schedule is not None:
             body.holiday_schedule = holiday_schedule
         if extension_dialing is not None:
@@ -4845,10 +5120,6 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             body.name_dialing = name_dialing
         if time_zone is not None:
             body.time_zone = time_zone
-        if business_hours_menu is not None:
-            body.business_hours_menu = business_hours_menu
-        if after_hours_menu is not None:
-            body.after_hours_menu = after_hours_menu
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
         super().put(url=url, params=params, data=body.json())
         return
@@ -5118,7 +5389,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type recall: PutRecallHuntGroupObject
         :param org_id: Create the call park for this organization.
         :type org_id: str
-        :param agents: Array of ID strings of people, including workspaces, that are added to call pickup.
+        :param agents: An Array of ID strings of people, workspaces and virtual lines that are added to call pickup.
         :type agents: List[str]
         """
         params = {}
@@ -5194,7 +5465,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type recall: PutRecallHuntGroupObject
         :param org_id: Update call park settings from this organization.
         :type org_id: str
-        :param agents: Array of ID strings of people, including workspaces, that are added to call pickup.
+        :param agents: An Array of ID strings of people, workspaces and virtual lines that are added to call pickup.
         :type agents: List[str]
         """
         params = {}
@@ -5211,7 +5482,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().put(url=url, params=params, data=body.json())
         return data["id"]
 
-    def available_agents_from_parks(self, location_id: str, org_id: str = None, call_park_name: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None, order: str = None) -> List[GetPersonPlaceCallParksObject]:
+    def available_agents_from_parks(self, location_id: str, org_id: str = None, call_park_name: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None, order: str = None) -> List[GetPersonPlaceVirtualLineCallParksObject]:
         """
         Retrieve available agents from call parks for a given location.
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
@@ -5520,7 +5791,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type name: str
         :param org_id: Create the call pickup for this organization.
         :type org_id: str
-        :param agents: Array of ID strings of people, including workspaces, that are added to call pickup.
+        :param agents: An Array of ID strings of people, workspaces and virtual lines that are added to call pickup.
         :type agents: List[str]
         """
         params = {}
@@ -5556,7 +5827,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().delete(url=url, params=params)
         return
 
-    def details_for_pickup(self, location_id: str, call_pickup_id: str, org_id: str = None) -> List[GetPersonPlaceCallParksObject]:
+    def details_for_pickup(self, location_id: str, call_pickup_id: str, org_id: str = None) -> List[GetPersonPlaceVirtualLineCallPickupObject]:
         """
         Retrieve Call Pickup details.
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
@@ -5592,7 +5863,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type name: str
         :param org_id: Update call pickup settings from this organization.
         :type org_id: str
-        :param agents: Array of ID strings of people, including workspaces, that are added to call pickup.
+        :param agents: An Array of ID strings of people, workspaces and virtual lines that are added to call pickup.
         :type agents: List[str]
         """
         params = {}
@@ -5607,7 +5878,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().put(url=url, params=params, data=body.json())
         return data["id"]
 
-    def available_agents_from_pickups(self, location_id: str, org_id: str = None, call_pickup_name: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None, order: str = None) -> List[GetPersonPlaceCallParksObject]:
+    def available_agents_from_pickups(self, location_id: str, org_id: str = None, call_pickup_name: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None, order: str = None) -> List[GetPersonPlaceVirtualLineCallPickupObject]:
         """
         Retrieve available agents from call pickups for a given location.
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
@@ -5691,7 +5962,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().get(url=url, params=params)
         return data["queues"]
 
-    def create_queue(self, location_id: str, call_policies: PostCallQueueCallPolicyObject, queue_settings: CallQueueQueueSettingsObject, agents: PostPersonPlaceCallQueueObject, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, language_code: str = None, first_name: str = None, last_name: str = None, time_zone: str = None, allow_agent_join_enabled: bool = None, phone_number_for_outgoing_calls_enabled: bool = None) -> str:
+    def create_queue(self, location_id: str, call_policies: PostCallQueueCallPolicyObject, queue_settings: CallQueueQueueSettingsObject, agents: PostPersonPlaceVirtualLineCallQueueObject, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, language_code: str = None, first_name: str = None, last_name: str = None, time_zone: str = None, allow_agent_join_enabled: bool = None, phone_number_for_outgoing_calls_enabled: bool = None) -> str:
         """
         Create new Call Queues for the given location.
         Call queues temporarily hold calls in the cloud when all agents, which
@@ -5709,8 +5980,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type call_policies: PostCallQueueCallPolicyObject
         :param queue_settings: Overall call queue settings.
         :type queue_settings: CallQueueQueueSettingsObject
-        :param agents: People, including workspaces, that are eligible to receive calls.
-        :type agents: PostPersonPlaceCallQueueObject
+        :param agents: People, workspaces and virtual lines that are eligible to receive calls.
+        :type agents: PostPersonPlaceVirtualLineCallQueueObject
         :param org_id: Create the call queue for this organization.
         :type org_id: str
         :param extension: The extension for the call park extension.
@@ -5816,7 +6087,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().get(url=url, params=params)
         return GetDetailsForCallQueueResponse.parse_obj(data)
 
-    def update_queue(self, location_id: str, queue_id: str, queue_settings: CallQueueQueueSettingsObject, org_id: str = None, enabled: bool = None, phone_number: str = None, extension: int = None, name: str = None, language_code: str = None, first_name: str = None, last_name: str = None, time_zone: str = None, alternate_number_settings: AlternateNumberSettings = None, call_policies: PostCallQueueCallPolicyObject = None, allow_call_waiting_for_agents_enabled: bool = None, agents: ModifyPersonPlaceCallQueueObject = None, allow_agent_join_enabled: bool = None, phone_number_for_outgoing_calls_enabled: bool = None):
+    def update_queue(self, location_id: str, queue_id: str, queue_settings: CallQueueQueueSettingsObject, org_id: str = None, enabled: bool = None, phone_number: str = None, extension: int = None, name: str = None, language_code: str = None, first_name: str = None, last_name: str = None, time_zone: str = None, alternate_number_settings: AlternateNumberSettings = None, call_policies: PostCallQueueCallPolicyObject = None, allow_call_waiting_for_agents_enabled: bool = None, agents: ModifyPersonPlaceVirtualLineCallQueueObject = None, allow_agent_join_enabled: bool = None, phone_number_for_outgoing_calls_enabled: bool = None):
         """
         Update the designated Call Queue.
         Call queues temporarily hold calls in the cloud when all agents, which
@@ -5858,8 +6129,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type call_policies: PostCallQueueCallPolicyObject
         :param allow_call_waiting_for_agents_enabled: Flag to indicate whether call waiting is enabled for agents.
         :type allow_call_waiting_for_agents_enabled: bool
-        :param agents: People, including workspaces, that are eligible to receive calls.
-        :type agents: ModifyPersonPlaceCallQueueObject
+        :param agents: People, workspaces and virtual lines that are eligible to receive calls.
+        :type agents: ModifyPersonPlaceVirtualLineCallQueueObject
         :param allow_agent_join_enabled: Whether or not to allow agents to join or unjoin a queue.
         :type allow_agent_join_enabled: bool
         :param phone_number_for_outgoing_calls_enabled: When true, indicates that the agent's configuration allows them to use the queue's Caller ID for outgoing calls.
@@ -6335,10 +6606,10 @@ Possible values: 12345, 3456
         data = super().get(url=url, params=params)
         return data["huntGroups"]
 
-    def create_hunt_group(self, location_id: str, name: str, call_policies: PostHuntGroupCallPolicyObject, agents: PostPersonPlaceObject, org_id: str = None, enabled: bool = None, phone_number: str = None, extension: int = None, language_code: str = None, first_name: str = None, last_name: str = None, time_zone: str = None) -> str:
+    def create_hunt_group(self, location_id: str, name: str, call_policies: PostHuntGroupCallPolicyObject, agents: PostPersonPlaceVirtualLineHuntGroupObject, org_id: str = None, enabled: bool = None, phone_number: str = None, extension: int = None, language_code: str = None, first_name: str = None, last_name: str = None, time_zone: str = None) -> str:
         """
         Create new Hunt Groups for the given location.
-        Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to route to a whole group.
+        Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure a pattern to route to a whole group.
         Creating a hunt group requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
         :param location_id: Create the hunt group for the given location.
@@ -6347,8 +6618,8 @@ Possible values: 12345, 3456
         :type name: str
         :param call_policies: Policy controlling how calls are routed to agents.
         :type call_policies: PostHuntGroupCallPolicyObject
-        :param agents: People, including workspaces, that are eligible to  receive calls.
-        :type agents: PostPersonPlaceObject
+        :param agents: People, workspaces and virtual lines that are eligible to  receive calls.
+        :type agents: PostPersonPlaceVirtualLineHuntGroupObject
         :param org_id: Create the hunt group for this organization.
         :type org_id: str
         :param enabled: Enable/disable fax messaging.
@@ -6417,7 +6688,7 @@ Possible values: 12345, 3456
     def details_for_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None) -> GetDetailsForHuntGroupResponse:
         """
         Retrieve Hunt Group details.
-        Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to route to a whole group.
+        Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure a pattern to route to a whole group.
         Retrieving hunt group details requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
 
         :param location_id: Retrieve settings for a hunt group in this location.
@@ -6434,10 +6705,10 @@ Possible values: 12345, 3456
         data = super().get(url=url, params=params)
         return GetDetailsForHuntGroupResponse.parse_obj(data)
 
-    def update_hunt_group(self, location_id: str, hunt_group_id: str, id: str, org_id: str = None, enabled: bool = None, name: str = None, phone_number: str = None, extension: str = None, distinctive_ring: bool = None, alternate_numbers: AlternateNumbersWithPattern = None, language_code: str = None, first_name: str = None, last_name: str = None, time_zone: str = None, call_policies: PostHuntGroupCallPolicyObject = None, agents: PostPersonPlaceObject = None):
+    def update_hunt_group(self, location_id: str, hunt_group_id: str, id: str, org_id: str = None, enabled: bool = None, name: str = None, phone_number: str = None, extension: str = None, distinctive_ring: bool = None, alternate_numbers: AlternateNumbersWithPattern = None, language_code: str = None, first_name: str = None, last_name: str = None, time_zone: str = None, call_policies: PostHuntGroupCallPolicyObject = None, agents: PostPersonPlaceVirtualLineHuntGroupObject = None):
         """
         Update the designated Hunt Group.
-        Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to route to a whole group.
+        Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure a pattern to route to a whole group.
         Updating a hunt group requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
         :param location_id: Update the hunt group for this location.
@@ -6470,8 +6741,8 @@ Possible values: 12345, 3456
         :type time_zone: str
         :param call_policies: Policy controlling how calls are routed to agents.
         :type call_policies: PostHuntGroupCallPolicyObject
-        :param agents: People, including workspaces, that are eligible to  receive calls.
-        :type agents: PostPersonPlaceObject
+        :param agents: People, workspaces and virtual lines that are eligible to  receive calls.
+        :type agents: PostPersonPlaceVirtualLineHuntGroupObject
         """
         params = {}
         if org_id is not None:
@@ -7080,7 +7351,7 @@ SIP password setting
     def createnew_paging_group(self, location_id: str, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, language_code: str = None, first_name: str = None, last_name: str = None, originator_caller_id_enabled: bool = None, originators: List[str] = None, targets: List[str] = None) -> str:
         """
         Create a new Paging Group for the given location.
-        Group Paging allows a person to place a one-way call or group page to up to 75 people and/or workspaces by
+        Group Paging allows a one-way call or group page to up to 75 people, workspaces and virtual lines by
         dialing a number or extension assigned to a specific paging group. The Group Paging service makes a simultaneous call to all the assigned targets.
         Creating a paging group requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
@@ -7102,9 +7373,9 @@ SIP password setting
         :type last_name: str
         :param originator_caller_id_enabled: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator ID.
         :type originator_caller_id_enabled: bool
-        :param originators: An array of people and/or workspaces, who may originate pages to this paging group.
+        :param originators: An array of people, workspace, and virtual lines IDs who can originate pages to this paging group.
         :type originators: List[str]
-        :param targets: People, including workspaces, that are added to paging group as paging call targets.
+        :param targets: An array of people, workspaces and virtual lines IDs will add to a paging group as paging call targets.
         :type targets: List[str]
         """
         params = {}
@@ -7157,7 +7428,7 @@ SIP password setting
     def details_for_paging_group(self, location_id: str, paging_id: str, org_id: str = None) -> GetDetailsForPagingGroupResponse:
         """
         Retrieve Paging Group details.
-        Group Paging allows a person to place a one-way call or group page to up to 75 people and/or workspaces by
+        Group Paging allows a person, place or virtual line a one-way call or group page to up to 75 people and/or workspaces and/or virtual line by
         dialing a number or extension assigned to a specific paging group. The Group Paging service makes a simultaneous call to all the assigned targets.
         Retrieving paging group details requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
 
@@ -7178,7 +7449,7 @@ SIP password setting
     def update_paging_group(self, location_id: str, paging_id: str, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, language_code: str = None, first_name: str = None, last_name: str = None, originator_caller_id_enabled: bool = None, originators: List[str] = None, targets: List[str] = None, enabled: bool = None):
         """
         Update the designated Paging Group.
-        Group Paging allows a person to place a one-way call or group page to up to 75 people and/or workspaces by
+        Group Paging allows a person to place a one-way call or group page to up to 75 people, workspaces and virtual lines by
         dialing a number or extension assigned to a specific paging group. The Group Paging service makes a simultaneous call to all the assigned targets.
         Updating a paging group requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
@@ -7202,9 +7473,9 @@ SIP password setting
         :type last_name: str
         :param originator_caller_id_enabled: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator ID.
         :type originator_caller_id_enabled: bool
-        :param originators: An array of people and/or workspaces, who may originate pages to this paging group.
+        :param originators: An array of people, workspace, and virtual lines IDs who can originate pages to this paging group.
         :type originators: List[str]
-        :param targets: People, including workspaces, that are added to paging group as paging call targets.
+        :param targets: An array of people, workspaces and virtual lines IDs will add to a paging group as paging call targets.
         :type targets: List[str]
         :param enabled: Whether or not the paging group is enabled.
         :type enabled: bool
@@ -7647,7 +7918,7 @@ SIP password setting
         data = super().get(url=url, params=params)
         return GetDetailsForScheduleResponse.parse_obj(data)
 
-    def create_schedule(self, location_id: str, type_: Type23, name: str, org_id: str = None, events: ScheduleEventObject = None) -> str:
+    def create_schedule(self, location_id: str, type_: Type25, name: str, org_id: str = None, events: ScheduleEventObject = None) -> str:
         """
         Create new Schedule for the given location.
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for example auto attendants, can perform a specific action.
@@ -7656,7 +7927,7 @@ SIP password setting
         :param location_id: Create the schedule for this location.
         :type location_id: str
         :param type_: Type of the schedule.
-        :type type_: Type23
+        :type type_: Type25
         :param name: Unique name for the schedule.
         :type name: str
         :param org_id: Create the schedule for this organization.
@@ -7884,6 +8155,66 @@ SIP password setting
         url = self.ep(f'locations/{location_id}/schedules/{type}/{schedule_id}/events/{event_id}')
         super().delete(url=url, params=params)
         return
+
+    def read_list_of_virtual_lines(self, org_id: str = None, location_id: List[str] = None, max: int = None, start: int = None, id: List[str] = None, owner_name: List[str] = None, phone_number: List[str] = None, location_name: List[str] = None, order: List[str] = None, has_device_assigned: bool = None, has_extension_assigned: bool = None, has_dn_assigned: bool = None) -> List[ListVirtualLineObject]:
+        """
+        List all Virtual Lines for the organization.
+        Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex Calling users.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param org_id: List virtual lines for this organization.
+        :type org_id: str
+        :param location_id: Return the list of virtual lines matching these location ids. Example for multiple values - ?locationId=locId1&locationId=locId2.
+        :type location_id: List[str]
+        :param max: Limit the number of objects returned to this maximum count.
+        :type max: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
+        :param id: Return the list of virtual lines matching these virtualLineIds. Example for multiple values - ?id=id1&id=id2.
+        :type id: List[str]
+        :param owner_name: Return the list of virtual lines matching these owner names. Example for multiple values - ?ownerName=name1&ownerName=name2.
+        :type owner_name: List[str]
+        :param phone_number: Return the list of virtual lines matching these phone numbers. Example for multiple values - ?phoneNumber=number1&phoneNumber=number2.
+        :type phone_number: List[str]
+        :param location_name: Return the list of virtual lines matching the location names. Example for multiple values - ?locationName=loc1&locationName=loc2.
+        :type location_name: List[str]
+        :param order: Return the list of virtual lines based on the order. Default sort will be in an Ascending order. Maximum 3 orders allowed at a time. Example for multiple values - ?order=order1&order=order2.
+        :type order: List[str]
+        :param has_device_assigned: If true, includes only virtual lines with devices assigned. When not explicitly specified, the default includes both virtual lines with devices assigned and not assigned.
+        :type has_device_assigned: bool
+        :param has_extension_assigned: If true, includes only virtual lines with an extension assigned. When not explicitly specified, the default includes both virtual lines with extension assigned and not assigned.
+        :type has_extension_assigned: bool
+        :param has_dn_assigned: If true, includes only virtual lines with an assigned directory number, also known as a Dn. When not explicitly specified, the default includes both virtual lines with a Dn assigned and not assigned.
+        :type has_dn_assigned: bool
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if max is not None:
+            params['max'] = max
+        if start is not None:
+            params['start'] = start
+        if id is not None:
+            params['id'] = id
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if location_name is not None:
+            params['locationName'] = location_name
+        if order is not None:
+            params['order'] = order
+        if has_device_assigned is not None:
+            params['hasDeviceAssigned'] = has_device_assigned
+        if has_extension_assigned is not None:
+            params['hasExtensionAssigned'] = has_extension_assigned
+        if has_dn_assigned is not None:
+            params['hasDnAssigned'] = has_dn_assigned
+        url = self.ep('virtualLines')
+        data = super().get(url=url, params=params)
+        return data["virtualLines"]
 
     def voicemail_settings(self, org_id: str = None) -> GetVoicemailSettingsResponse:
         """
@@ -8132,7 +8463,7 @@ SIP password setting
         data = super().get(url=url, params=params)
         return GetMusicOnHoldResponse.parse_obj(data)
 
-    def update_music_on_hold(self, location_id: str, org_id: str = None, call_hold_enabled: bool = None, call_park_enabled: bool = None, greeting: Greeting25 = None):
+    def update_music_on_hold(self, location_id: str, org_id: str = None, call_hold_enabled: bool = None, call_park_enabled: bool = None, greeting: Greeting29 = None):
         """
         Update the location's music on hold settings.
         Location music on hold settings allows you to play music when a call is placed on hold or parked.
@@ -8147,7 +8478,7 @@ SIP password setting
         :param call_park_enabled: If enabled, music will be played when call is parked.
         :type call_park_enabled: bool
         :param greeting: Greeting type for the location.
-        :type greeting: Greeting25
+        :type greeting: Greeting29
         """
         params = {}
         if org_id is not None:
@@ -9214,7 +9545,7 @@ Possible values: +5555,+5556
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'premisePstn/trunks/{route_list_id}')
+        url = self.ep(f'premisePstn/routeLists/{route_list_id}')
         super().delete(url=url, params=params)
         return
 
@@ -9471,7 +9802,7 @@ Possible values: +5555,+5556
         data = super().get(url=url, params=params)
         return GetDetailsForCallQueueHolidayServiceResponse.parse_obj(data)
 
-    def update_queue_holiday_service(self, location_id: str, queue_id: str, holiday_service_enabled: bool, holiday_schedule_level: HolidayScheduleLevel, play_announcement_before_enabled: bool, org_id: str = None, action: Action11 = None, transfer_phone_number: str = None, audio_message_selection: Greeting = None, audio_files: CallQueueAudioFilesObject = None, holiday_schedule_name: str = None):
+    def update_queue_holiday_service(self, location_id: str, queue_id: str, holiday_service_enabled: bool, holiday_schedule_level: HolidayScheduleLevel, play_announcement_before_enabled: bool, org_id: str = None, action: Action15 = None, transfer_phone_number: str = None, audio_message_selection: Greeting = None, audio_files: CallQueueAudioFilesObject = None, holiday_schedule_name: str = None):
         """
         Update the designated Call Queue Holiday Service.
         Configure the call queue to route calls differently during the holidays.
@@ -9490,7 +9821,7 @@ Possible values: +5555,+5556
         :param org_id: Update call queue settings from this organization.
         :type org_id: str
         :param action: Specifies call processing action type.
-        :type action: Action11
+        :type action: Action15
         :param transfer_phone_number: Call gets transferred to this number when action is set to TRANSFER. This can also be an extension.
         :type transfer_phone_number: str
         :param audio_message_selection: Specifies what type of announcement to be played.
@@ -9545,7 +9876,7 @@ Possible values: +5555,+5556
         data = super().get(url=url, params=params)
         return GetDetailsForCallQueueNightServiceResponse.parse_obj(data)
 
-    def update_queue_night_service(self, location_id: str, queue_id: str, night_service_enabled: bool, play_announcement_before_enabled: bool, announcement_mode: AnnouncementMode, force_night_service_enabled: bool, manual_audio_message_selection: Greeting, org_id: str = None, action: Action11 = None, transfer_phone_number: str = None, audio_message_selection: Greeting = None, audio_files: CallQueueAudioFilesObject = None, business_hours_name: str = None, business_hours_level: HolidayScheduleLevel = None, manual_audio_files: CallQueueAudioFilesObject = None):
+    def update_queue_night_service(self, location_id: str, queue_id: str, night_service_enabled: bool, play_announcement_before_enabled: bool, announcement_mode: AnnouncementMode, force_night_service_enabled: bool, manual_audio_message_selection: Greeting, org_id: str = None, action: Action15 = None, transfer_phone_number: str = None, audio_message_selection: Greeting = None, audio_files: CallQueueAudioFilesObject = None, business_hours_name: str = None, business_hours_level: HolidayScheduleLevel = None, manual_audio_files: CallQueueAudioFilesObject = None):
         """
         Update Call Queue Night Service details.
         Configure the call queue to route calls differently during the hours when the queue is not in service. This is
@@ -9569,7 +9900,7 @@ Possible values: +5555,+5556
         :param org_id: Retrieve call queue night service settings from this organization.
         :type org_id: str
         :param action: Specifies call processing action type.
-        :type action: Action11
+        :type action: Action15
         :param transfer_phone_number: Call gets transferred to this number when action is set to TRANSFER. This can also be an extension.
         :type transfer_phone_number: str
         :param audio_message_selection: Specifies what type of announcement to be played.
@@ -9698,7 +10029,7 @@ Possible values: +5555,+5556
         data = super().get(url=url, params=params)
         return GetDetailsForCallQueueStrandedCallsResponse.parse_obj(data)
 
-    def update_queue_stranded_service(self, location_id: str, queue_id: str, org_id: str = None, action: Action11 = None, transfer_phone_number: str = None, audio_message_selection: Greeting = None, audio_files: CallQueueAudioFilesObject = None):
+    def update_queue_stranded_service(self, location_id: str, queue_id: str, org_id: str = None, action: Action15 = None, transfer_phone_number: str = None, audio_message_selection: Greeting = None, audio_files: CallQueueAudioFilesObject = None):
         """
         Update the designated Call Stranded Calls Service.
         Allow admin to modify configured Stranded Calls settings.
@@ -9711,7 +10042,7 @@ Possible values: +5555,+5556
         :param org_id: Update call queue settings from this organization.
         :type org_id: str
         :param action: Specifies call processing action type.
-        :type action: Action11
+        :type action: Action15
         :param transfer_phone_number: Call gets transferred to this number when action is set to TRANSFER. This can also be an extension.
         :type transfer_phone_number: str
         :param audio_message_selection: Specifies what type of announcement to be played.
@@ -9803,8 +10134,7 @@ Possible values: +5555,+5556
         :type extension: str
         """
         params = {}
-        if location_id is not None:
-            params['locationId'] = location_id
+        params['locationId'] = location_id
         if org_id is not None:
             params['orgId'] = org_id
         if start is not None:
@@ -9852,8 +10182,7 @@ Possible values: +5555,+5556
         :type org_id: str
         """
         params = {}
-        if device_model is not None:
-            params['deviceModel'] = device_model
+        params['deviceModel'] = device_model
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'devices/{device_id}/settings')
@@ -10113,6 +10442,65 @@ Possible values: {["ab125678cdef", "00005E0053B4"]}
         url = self.ep(f'jobs/devices/callDeviceSettings/{job_id}/errors')
         return self.session.follow_pagination(url=url, model=ItemObject, params=params)
 
+class AvailableSharedLineMemberItem(ApiModel):
+    #: A unique member identifier.
+    id: Optional[str]
+    #: First name of member.
+    first_name: Optional[str]
+    #: Last name of member.
+    last_name: Optional[str]
+    #: Phone number of member. Currently, E.164 format is not supported.
+    phone_number: Optional[str]
+    #: Phone extension of member.
+    extension: Optional[str]
+    #: Indicates if the line is acting as a primary line or a shared line for this device.
+    line_type: Optional[LineType]
+    #: Location object having a unique identifier for the location and its name.
+    location: Optional[GetAvailableRecallHuntGroupsObject]
+
+
+class PutSharedLineMemberItem(ApiModel):
+    #: Unique identifier for the person or workspace.
+    id: Optional[str]
+    #: Device port number assigned to person or workspace.
+    port: Optional[int]
+    #: T.38 Fax Compression setting. Valid only for ATA Devices. Overrides user level compression options.
+    t38_fax_compression_enabled: Optional[bool]
+    #: If true the person or the workspace is the owner of the device. Points to primary line/port of the device.
+    primary_owner: Optional[str]
+    #: Indicates if the line is acting as a primary line or a shared line for this device.
+    line_type: Optional[LineType]
+    #: Number of lines that have been configured for the person on the device.
+    line_weight: Optional[int]
+    #: Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line can only make calls to the predefined number set in hotlineDestination.
+    hotline_enabled: Optional[bool]
+    #: Preconfigured number for the hotline. Required only if hotlineEnabled is set to true.
+    hotline_destination: Optional[str]
+    #: Set how a device behaves when a call is declined. When set to true, a call decline request is extended to all the endpoints on the device. When set to false, a call decline request is only declined at the current endpoint.
+    allow_call_decline_enabled: Optional[bool]
+    #: Device line label.
+    line_label: Optional[str]
+
+
+class GetSharedLineMemberItem(PutSharedLineMemberItem):
+    #: First name of person or workspace.
+    first_name: Optional[str]
+    #: Last name of person or workspace.
+    last_name: Optional[str]
+    #: Phone number of a person or workspace. Currently, E.164 format is not supported. This will be supported in the future update.
+    phone_number: Optional[str]
+    #: Phone extension of a person or workspace.
+    extension: Optional[str]
+    #: Registration home IP for the line port.
+    host_ip: Optional[str]
+    #: Registration remote IP for the line port.
+    remote_ip: Optional[str]
+    #: Indicates if the member is of type PEOPLE or PLACE.
+    member_type: Optional[HostedAgentType]
+    #: Location object having a unique identifier for the location and its name.
+    location: Optional[GetAvailableRecallHuntGroupsObject]
+
+
 class EffectiveBehaviorType(str, Enum):
     #: Calling in Webex or Hybrid Calling.
     native_webex_teams_calling = 'NATIVE_WEBEX_TEAMS_CALLING'
@@ -10216,15 +10604,6 @@ class CallerIdSelectedType(CLIDPolicySelection):
     mobile_number: Optional[str]
 
 
-class ExternalCallerIdNamePolicy(str, Enum):
-    #: Outgoing caller ID will show the caller's direct line name.
-    direct_line = 'DIRECT_LINE'
-    #: Outgoing caller ID will show the Site Name for the location.
-    location = 'LOCATION'
-    #: Outgoing caller ID will show the value from the customExternalCallerIdName field.
-    other = 'OTHER'
-
-
 class ConfigureCallerIDSettingsForPersonBody(ApiModel):
     #: Which type of outgoing Caller ID will be used.
     #: Possible values: DIRECT_LINE
@@ -10292,7 +10671,7 @@ class ReadVoicemailSettingsForPersonResponse(ApiModel):
 
 class ScheduleShortDetails(GetAvailableRecallHuntGroupsObject):
     #: Indicates the schedule type whether businessHours or holidays.
-    type: Optional[Type23]
+    type: Optional[Type25]
 
 
 class RecurWeekly2(RecurWeeklyObject):
@@ -10335,25 +10714,25 @@ class CreateScheduleForPersonBody(ApiModel):
     #: Name for the schedule.
     name: Optional[str]
     #: Indicates the schedule type whether businessHours or holidays.
-    type: Optional[Type23]
+    type: Optional[Type25]
     #: Indicates a list of events.
     events: Optional[list[EventLongDetails]]
 
 
 class MonitoredMemberObject(ApiModel):
-    #: Unique identifier of the person or workspace to be monitored.
+    #: Unique identifier of the person, workspace or virtual line to be monitored.
     id: Optional[str]
-    #: Last name of the monitored person or workspace.
+    #: Last name of the monitored person, workspace or virtual line.
     last_name: Optional[str]
-    #: First name of the monitored person or workspace.
+    #: First name of the monitored person, workspace or virtual line.
     first_name: Optional[str]
-    #: Display name of the monitored person or workspace.
+    #: Display name of the monitored person, workspace or virtual line.
     display_name: Optional[str]
-    #: Indicates whether type is person or workspace.
-    type: Optional[Type7]
-    #: Email address of the monitored person or workspace.
+    #: Indicates whether type is person, workspace or virtual line.
+    type: Optional[Type8]
+    #: Email address of the monitored person, workspace or virtual line.
     email: Optional[str]
-    #: List of phone numbers of the monitored person or workspace.
+    #: List of phone numbers of the monitored person, workspace or virtual line.
     numbers: Optional[list[GetUserNumberItemObject]]
 
 
@@ -10364,9 +10743,7 @@ class Member(MonitoredMemberObject):
     location_id: Optional[str]
 
 
-class Callparkextension(GetAvailableRecallHuntGroupsObject):
-    #: The extension number for the call park extension.
-    extension: Optional[str]
+class Callparkextension(ListCPCallParkExtensionObject):
     #: The location name where the call park extension is.
     location: Optional[str]
     #: The ID for the location.
@@ -10378,7 +10755,7 @@ class GetMonitoredElementsObject(ApiModel):
     callparkextension: Optional[Callparkextension]
 
 
-class PhoneNumbers6(ApiModel):
+class PhoneNumbers7(ApiModel):
     #: Flag to indicate if the number is primary or not.
     #: Possible values: 
     primary: Optional[bool]
@@ -10400,6 +10777,8 @@ class ModifypersonsApplicationServicesSettingsBody(ApiModel):
     ring_devices_for_group_page_enabled: Optional[bool]
     #: When true, indicates to ring devices for Call Park recalled.
     ring_devices_for_call_park_enabled: Optional[bool]
+    #: Indicates that the browser Webex Calling application is enabled for use.
+    browser_client_enabled: Optional[bool]
     #: Indicates that the desktop Webex Calling application is enabled for use.
     desktop_client_enabled: Optional[bool]
     #: Indicates that the tablet Webex Calling application is enabled for use.
@@ -10417,15 +10796,15 @@ class MonitoredPersonObject(ApiModel):
     first_name: Optional[str]
     #: Display name of the person.
     display_name: Optional[str]
-    #: Type usually indicates PEOPLE or PLACE. Push-to-Talk and Privacy features only supports PEOPLE.
-    type: Optional[Type7]
+    #: Type usually indicates PEOPLE, PLACE or VIRTUAL_LINE. Push-to-Talk and Privacy features only supports PEOPLE.
+    type: Optional[Type8]
     #: Email address of the person.
     email: Optional[str]
     #: List of phone numbers of the person.
     numbers: Optional[list[GetUserNumberItemObject]]
 
 
-class Type30(str, Enum):
+class Type32(str, Enum):
     #: Indicates the feature is not enabled.
     unassigned = 'UNASSIGNED'
     #: Indicates the feature is enabled and the person is an Executive.
@@ -10494,11 +10873,39 @@ class PhoneNumber(GetUserNumberItemObject):
     ring_pattern: Optional[RingPattern]
 
 
-class CallQueueObject(GetAvailableRecallHuntGroupsObject):
+class CallQueueObject(ListCPCallParkExtensionObject):
     #: When not null, indicates the Call Queue's phone number.
     phone_number: Optional[str]
-    #: When not null, indicates the Call Queue's extension number.
-    extension: Optional[str]
+
+
+class SearchSharedLineAppearanceMembersBody(GetDetailsForCallParkExtensionResponse):
+    #: Number of records per page.
+    max: Optional[int]
+    #: Page number.
+    start: Optional[int]
+    #: Location ID for the user.
+    location: Optional[str]
+    #: Search for users with numbers that match the query.
+    number: Optional[str]
+    #: Sort by first name (fname) or last name (lname).
+    order: Optional[str]
+
+
+class SearchSharedLineAppearanceMembersResponse(ApiModel):
+    members: Optional[list[AvailableSharedLineMemberItem]]
+
+
+class GetSharedLineAppearanceMembersResponse(ApiModel):
+    #: Model name of device.
+    model: Optional[str]
+    #: List of members.
+    members: Optional[list[GetSharedLineMemberItem]]
+    #: Maximum number of device ports.
+    max_line_count: Optional[int]
+
+
+class PutSharedLineAppearanceMembersBody(ApiModel):
+    members: Optional[list[PutSharedLineMemberItem]]
 
 
 class ReadPersonsCallingBehaviorResponse(ConfigurepersonsCallingBehaviorBody):
@@ -10590,7 +10997,7 @@ class ConfigureCallWaitingSettingsForPersonBody(ApiModel):
 class RetrievepersonsMonitoringSettingsResponse(ApiModel):
     #: Call park notification is enabled or disabled.
     call_park_notification_enabled: Optional[bool]
-    #: Settings of monitored elements which can be person, place, or call park extension.
+    #: Settings of monitored elements which can be person, place, virtual line or call park extension.
     monitored_elements: Optional[list[GetMonitoredElementsObject]]
 
 
@@ -10606,7 +11013,7 @@ class GetListOfPhoneNumbersForPersonResponse(ApiModel):
     #: Enable/disable a distinctive ring pattern that identifies calls coming from a specific phone number.
     distinctive_ring_enabled: Optional[bool]
     #: Information about the number.
-    phone_numbers: Optional[list[PhoneNumbers6]]
+    phone_numbers: Optional[list[PhoneNumbers7]]
 
 
 class RetrievepersonsApplicationServicesSettingsResponse(ModifypersonsApplicationServicesSettingsBody):
@@ -10638,18 +11045,18 @@ class ConfigurepersonsPrivacySettingsBody(ApiModel):
 
 class RetrieveExecutiveAssistantSettingsForPersonResponse(ApiModel):
     #: Indicates the Executive Assistant type.
-    type: Optional[Type30]
+    type: Optional[Type32]
 
 
 class ModifyExecutiveAssistantSettingsForPersonBody(ApiModel):
     #: executive assistant type
-    type: Optional[Type30]
+    type: Optional[Type32]
 
 
 class ReadReceptionistClientSettingsForPersonResponse(ApiModel):
     #: Set to true to enable the Receptionist Client feature.
     reception_enabled: Optional[bool]
-    #: List of people and/or workspaces to monitor.
+    #: List of people, workspaces or virtual lines to monitor.
     monitored_members: Optional[list[MonitoredMemberObject]]
 
 
@@ -10727,6 +11134,82 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
     Viewing People requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read or, for select APIs, a user auth token with spark:people_read scope can be used by a person to read their own settings.
     Configuring People settings requires a full or user administrator auth token with the spark-admin:people_write scope or, for select APIs, a user auth token with spark:people_write scope can be used by a person to update their own settings.
     """
+
+    def search_shared_line_appearance_members(self, person_id: str, application_id: str, extension: str = None, name: str = None, max: int = None, start: int = None, location: str = None, number: str = None, order: str = None) -> List[AvailableSharedLineMemberItem]:
+        """
+        Get members available for shared-line assignment to a Webex Calling Apps Desktop device.
+        This API requires a full or user administrator auth token with the spark-admin:people_read scope.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param application_id: A unique identifier for the application.
+        :type application_id: str
+        :param extension: The extension for the call park extension.
+        :type extension: str
+        :param name: Unique name for the call park extension.
+        :type name: str
+        :param max: Number of records per page.
+        :type max: int
+        :param start: Page number.
+        :type start: int
+        :param location: Location ID for the user.
+        :type location: str
+        :param number: Search for users with numbers that match the query.
+        :type number: str
+        :param order: Sort by first name (fname) or last name (lname).
+        :type order: str
+        """
+        body = SearchSharedLineAppearanceMembersBody()
+        if extension is not None:
+            body.extension = extension
+        if name is not None:
+            body.name = name
+        if max is not None:
+            body.max = max
+        if start is not None:
+            body.start = start
+        if location is not None:
+            body.location = location
+        if number is not None:
+            body.number = number
+        if order is not None:
+            body.order = order
+        url = self.ep(f'telephony/config/people/{person_id}/applications/{application_id}/availableMembers')
+        data = super().get(url=url, data=body.json())
+        return data["members"]
+
+    def shared_line_appearance_members(self, person_id: str, application_id: str) -> GetSharedLineAppearanceMembersResponse:
+        """
+        Get primary and secondary members assigned to a shared line on a Webex Calling Apps Desktop device.
+        This API requires a full or user administrator auth token with the spark-admin:people_read scope.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param application_id: A unique identifier for the application.
+        :type application_id: str
+        """
+        url = self.ep(f'telephony/config/people/{person_id}/applications/{application_id}/members')
+        data = super().get(url=url)
+        return GetSharedLineAppearanceMembersResponse.parse_obj(data)
+
+    def put_shared_line_appearance_members(self, person_id: str, application_id: str, members: PutSharedLineMemberItem = None):
+        """
+        Add or modify primary and secondary users assigned to shared-lines on a Webex Calling Apps Desktop device.
+        This API requires a full or user administrator auth token with the spark-admin:people_write scope.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param application_id: A unique identifier for the application.
+        :type application_id: str
+        :param members: 
+        :type members: PutSharedLineMemberItem
+        """
+        body = PutSharedLineAppearanceMembersBody()
+        if members is not None:
+            body.members = members
+        url = self.ep(f'telephony/config/people/{person_id}/applications/{application_id}/members')
+        super().put(url=url, data=body.json())
+        return
 
     def read_persons_calling_behavior(self, person_id: str, org_id: str = None) -> enum:
         """
@@ -11246,7 +11729,7 @@ Possible values: DIRECT_LINE
         url = self.ep(f'people/{person_id}/features/schedules')
         return self.session.follow_pagination(url=url, model=ScheduleShortDetails, params=params)
 
-    def create_schedule_for_person(self, person_id: str, name: str, type_: Type23, org_id: str = None, events: EventLongDetails = None) -> str:
+    def create_schedule_for_person(self, person_id: str, name: str, type_: Type25, org_id: str = None, events: EventLongDetails = None) -> str:
         """
         Create a new schedule for a person.
         Schedules are used to support calling features and can be defined at the location or person level. businessHours schedules allow you to apply specific call settings at different times of the day or week by defining one or more events. holidays schedules define exceptions to normal business hours by defining one or more events.
@@ -11257,7 +11740,7 @@ Possible values: DIRECT_LINE
         :param name: Name for the schedule.
         :type name: str
         :param type_: Indicates the schedule type whether businessHours or holidays.
-        :type type_: Type23
+        :type type_: Type25
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :param events: Indicates a list of events.
@@ -11277,7 +11760,7 @@ Possible values: DIRECT_LINE
         data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
-    def schedule_details(self, person_id: str, schedule_type: Type23, schedule_id: str, org_id: str = None) -> List[EventLongDetails]:
+    def schedule_details(self, person_id: str, schedule_type: Type25, schedule_id: str, org_id: str = None) -> List[EventLongDetails]:
         """
         Retrieve a schedule by its schedule ID.
         Schedules are used to support calling features and can be defined at the location or person level. businessHours schedules allow you to apply specific call settings at different times of the day or week by defining one or more events. holidays schedules define exceptions to normal business hours by defining one or more events.
@@ -11286,7 +11769,7 @@ Possible values: DIRECT_LINE
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param schedule_type: Type of schedule, either businessHours or holidays.
-        :type schedule_type: Type23
+        :type schedule_type: Type25
         :param schedule_id: Unique identifier for the schedule.
         :type schedule_id: str
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
@@ -11299,7 +11782,7 @@ Possible values: DIRECT_LINE
         data = super().get(url=url, params=params)
         return data["events"]
 
-    def update_schedule(self, person_id: str, schedule_type: Type23, schedule_id: str, name: str, type_: Type23, new_name: str, org_id: str = None, events: EventLongDetails = None) -> str:
+    def update_schedule(self, person_id: str, schedule_type: Type25, schedule_id: str, name: str, type_: Type25, new_name: str, org_id: str = None, events: EventLongDetails = None) -> str:
         """
         Modify a schedule by its schedule ID.
         Schedules are used to support calling features and can be defined at the location or person level. businessHours schedules allow you to apply specific call settings at different times of the day or week by defining one or more events. holidays schedules define exceptions to normal business hours by defining one or more events.
@@ -11308,13 +11791,13 @@ Possible values: DIRECT_LINE
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param schedule_type: Type of schedule, either businessHours or holidays.
-        :type schedule_type: Type23
+        :type schedule_type: Type25
         :param schedule_id: Unique identifier for the schedule.
         :type schedule_id: str
         :param name: Name for the schedule.
         :type name: str
         :param type_: Indicates the schedule type whether businessHours or holidays.
-        :type type_: Type23
+        :type type_: Type25
         :param new_name: New name for the schedule.
         :type new_name: str
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
@@ -11338,7 +11821,7 @@ Possible values: DIRECT_LINE
         data = super().put(url=url, params=params, data=body.json())
         return data["id"]
 
-    def delete_schedule(self, person_id: str, schedule_type: Type23, schedule_id: str, org_id: str = None):
+    def delete_schedule(self, person_id: str, schedule_type: Type25, schedule_id: str, org_id: str = None):
         """
         Delete a schedule by its schedule ID.
         Schedules are used to support calling features and can be defined at the location or person level. businessHours schedules allow you to apply specific call settings at different times of the day or week by defining one or more events. holidays schedules define exceptions to normal business hours by defining one or more events.
@@ -11347,7 +11830,7 @@ Possible values: DIRECT_LINE
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param schedule_type: Type of schedule, either businessHours or holidays.
-        :type schedule_type: Type23
+        :type schedule_type: Type25
         :param schedule_id: Unique identifier for the schedule.
         :type schedule_id: str
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
@@ -11360,7 +11843,7 @@ Possible values: DIRECT_LINE
         super().delete(url=url, params=params)
         return
 
-    def fetch_event_forpersons_schedule(self, person_id: str, schedule_type: Type23, schedule_id: str, event_id: str, org_id: str = None) -> str:
+    def fetch_event_forpersons_schedule(self, person_id: str, schedule_type: Type25, schedule_id: str, event_id: str, org_id: str = None) -> str:
         """
         People can use shared location schedules or define personal schedules containing events.
         businessHours schedules allow you to apply specific call settings at different times of the day or week by defining one or more events. holidays schedules define exceptions to normal business hours by defining one or more events.
@@ -11369,7 +11852,7 @@ Possible values: DIRECT_LINE
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param schedule_type: Type of schedule, either businessHours or holidays.
-        :type schedule_type: Type23
+        :type schedule_type: Type25
         :param schedule_id: Unique identifier for the schedule.
         :type schedule_id: str
         :param event_id: Unique identifier for the event.
@@ -11384,7 +11867,7 @@ Possible values: DIRECT_LINE
         data = super().get(url=url, params=params)
         return data["id"]
 
-    def add_new_event_for_persons_schedule(self, person_id: str, schedule_type: Type23, schedule_id: str, name: str, start_date: str, end_date: str, start_time: str, end_time: str, org_id: str = None, all_day_enabled: bool = None, recurrence: Recurrence = None) -> str:
+    def add_new_event_for_persons_schedule(self, person_id: str, schedule_type: Type25, schedule_id: str, name: str, start_date: str, end_date: str, start_time: str, end_time: str, org_id: str = None, all_day_enabled: bool = None, recurrence: Recurrence = None) -> str:
         """
         People can use shared location schedules or define personal schedules containing events.
         businessHours schedules allow you to apply specific call settings at different times of the day or week by defining one or more events. holidays schedules define exceptions to normal business hours by defining one or more events.
@@ -11393,7 +11876,7 @@ Possible values: DIRECT_LINE
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param schedule_type: Type of schedule, either businessHours or holidays.
-        :type schedule_type: Type23
+        :type schedule_type: Type25
         :param schedule_id: Unique identifier for the schedule.
         :type schedule_id: str
         :param name: Name for the event.
@@ -11435,7 +11918,7 @@ Possible values: DIRECT_LINE
         data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
-    def update_event_forpersons_schedule(self, person_id: str, schedule_type: Type23, schedule_id: str, event_id: str, name: str, start_date: str, end_date: str, start_time: str, end_time: str, new_name: str, org_id: str = None, all_day_enabled: bool = None, recurrence: Recurrence = None) -> str:
+    def update_event_forpersons_schedule(self, person_id: str, schedule_type: Type25, schedule_id: str, event_id: str, name: str, start_date: str, end_date: str, start_time: str, end_time: str, new_name: str, org_id: str = None, all_day_enabled: bool = None, recurrence: Recurrence = None) -> str:
         """
         People can use shared location schedules or define personal schedules containing events.
         businessHours schedules allow you to apply specific call settings at different times of the day or week by defining one or more events. holidays schedules define exceptions to normal business hours by defining one or more events.
@@ -11444,7 +11927,7 @@ Possible values: DIRECT_LINE
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param schedule_type: Type of schedule, either businessHours or holidays.
-        :type schedule_type: Type23
+        :type schedule_type: Type25
         :param schedule_id: Unique identifier for the schedule.
         :type schedule_id: str
         :param event_id: Unique identifier for the event.
@@ -11492,7 +11975,7 @@ Possible values: DIRECT_LINE
         data = super().put(url=url, params=params, data=body.json())
         return data["id"]
 
-    def delete_event_forpersons_schedule(self, person_id: str, schedule_type: Type23, schedule_id: str, event_id: str, org_id: str = None):
+    def delete_event_forpersons_schedule(self, person_id: str, schedule_type: Type25, schedule_id: str, event_id: str, org_id: str = None):
         """
         People can use shared location schedules or define personal schedules containing events.
         businessHours schedules allow you to apply specific call settings at different times of the day or week by defining one or more events. holidays schedules define exceptions to normal business hours by defining one or more events.
@@ -11501,7 +11984,7 @@ Possible values: DIRECT_LINE
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param schedule_type: Type of schedule, either businessHours or holidays.
-        :type schedule_type: Type23
+        :type schedule_type: Type25
         :param schedule_id: Unique identifier for the schedule.
         :type schedule_id: str
         :param event_id: Unique identifier for the event.
@@ -11559,8 +12042,8 @@ Possible values: DIRECT_LINE
 
     def retrievepersons_monitoring(self, person_id: str, org_id: str = None) -> RetrievepersonsMonitoringSettingsResponse:
         """
-        Retrieves the monitoring settings of the person, which shows specified people, places or, call park extenions that are being monitoring.
-        Monitors the line status which indicates if a person or place is on a call and if a call has been parked on that extension.
+        Retrieves the monitoring settings of the person, which shows specified people, places, virtual lines or call park extenions that are being monitored.
+        Monitors the line status which indicates if a person, place or virtual line is on a call and if a call has been parked on that extension.
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
         :param person_id: Unique identifier for the person.
@@ -11578,7 +12061,7 @@ Possible values: DIRECT_LINE
     def modifypersons_monitoring(self, person_id: str, enable_call_park_notification: bool, monitored_elements: List[str], org_id: str = None):
         """
         Modifies the monitoring settings of the person.
-        Monitors the line status of specified people, places or, call park extension. The line status indicates if a person or place is on a call and if a call has been parked on that extension.
+        Monitors the line status of specified people, places, virtual lines or call park extension. The line status indicates if a person, place or virtual line is on a call and if a call has been parked on that extension.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
@@ -11638,7 +12121,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         data = super().get(url=url, params=params)
         return data["availableLineCount"]
 
-    def modifypersons_application_services(self, person_id: str, org_id: str = None, ring_devices_for_click_to_dial_calls_enabled: bool = None, ring_devices_for_group_page_enabled: bool = None, ring_devices_for_call_park_enabled: bool = None, desktop_client_enabled: bool = None, tablet_client_enabled: bool = None, mobile_client_enabled: bool = None):
+    def modifypersons_application_services(self, person_id: str, org_id: str = None, ring_devices_for_click_to_dial_calls_enabled: bool = None, ring_devices_for_group_page_enabled: bool = None, ring_devices_for_call_park_enabled: bool = None, browser_client_enabled: bool = None, desktop_client_enabled: bool = None, tablet_client_enabled: bool = None, mobile_client_enabled: bool = None):
         """
         Application services let you determine the ringing behavior for calls made to users in certain scenarios. You can also specify which devices users can download the Webex Calling app on.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
@@ -11653,6 +12136,8 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         :type ring_devices_for_group_page_enabled: bool
         :param ring_devices_for_call_park_enabled: When true, indicates to ring devices for Call Park recalled.
         :type ring_devices_for_call_park_enabled: bool
+        :param browser_client_enabled: Indicates that the browser Webex Calling application is enabled for use.
+        :type browser_client_enabled: bool
         :param desktop_client_enabled: Indicates that the desktop Webex Calling application is enabled for use.
         :type desktop_client_enabled: bool
         :param tablet_client_enabled: Indicates that the tablet Webex Calling application is enabled for use.
@@ -11670,6 +12155,8 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
             body.ring_devices_for_group_page_enabled = ring_devices_for_group_page_enabled
         if ring_devices_for_call_park_enabled is not None:
             body.ring_devices_for_call_park_enabled = ring_devices_for_call_park_enabled
+        if browser_client_enabled is not None:
+            body.browser_client_enabled = browser_client_enabled
         if desktop_client_enabled is not None:
             body.desktop_client_enabled = desktop_client_enabled
         if tablet_client_enabled is not None:
@@ -11751,7 +12238,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         data = super().get(url=url, params=params)
         return data["type"]
 
-    def modify_executive_assistant_for_person(self, person_id: str, org_id: str = None, type_: Type30 = None):
+    def modify_executive_assistant_for_person(self, person_id: str, org_id: str = None, type_: Type32 = None):
         """
         Modify the executive assistant settings for the specified personId.
         People with the executive service enabled, can select from a pool of assistants who have been assigned the executive assistant service and who can answer or place calls on their behalf. Executive assistants can set the call forward destination and join or leave an executive's pool.
@@ -11762,7 +12249,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :param type_: executive assistant type
-        :type type_: Type30
+        :type type_: Type32
         """
         params = {}
         if org_id is not None:
@@ -11777,7 +12264,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
     def read_receptionist_client_for_person(self, person_id: str, org_id: str = None) -> ReadReceptionistClientSettingsForPersonResponse:
         """
         Retrieve a person's Receptionist Client settings.
-        To help support the needs of your front-office personnel, you can set up people or workspaces as telephone attendants so that they can screen all incoming calls to certain numbers within your organization.
+        To help support the needs of your front-office personnel, you can set up people, workspaces or virtual lines as telephone attendants so that they can screen all incoming calls to certain numbers within your organization.
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
         :param person_id: Unique identifier for the person.
@@ -11795,7 +12282,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
     def configure_receptionist_client_for_person(self, person_id: str, reception_enabled: bool, org_id: str = None, monitored_members: List[str] = None):
         """
         Configure a person's Receptionist Client settings.
-        To help support the needs of your front-office personnel, you can set up people or workspaces as telephone attendants so that they can screen all incoming calls to certain numbers within your organization.
+        To help support the needs of your front-office personnel, you can set up people, workspaces or virtual lines as telephone attendants so that they can screen all incoming calls to certain numbers within your organization.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
@@ -12241,7 +12728,7 @@ class MonitoredElementUser(ApiModel):
     #: Display name of person or workspace.
     display_name: Optional[str]
     #: Type of the person or workspace.
-    type: Optional[Type7]
+    type: Optional[HostedAgentType]
     #: Email of the person or workspace.
     email: Optional[str]
     #: List of phone numbers of the person or workspace.
@@ -12272,7 +12759,7 @@ class InterceptAnnouncementsGet(ApiModel):
 
 class InterceptIncomingGet(ApiModel):
     #: Indicated incoming calls are intercepted.
-    type: Optional[Type17]
+    type: Optional[Type19]
     #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
     voicemail_enabled: Optional[bool]
     #: Settings related to how incoming calls are handled when the intercept feature is enabled.
@@ -12281,7 +12768,7 @@ class InterceptIncomingGet(ApiModel):
 
 class InterceptIncomingPatch(ApiModel):
     #: Indicated incoming calls are intercepted.
-    type: Optional[Type17]
+    type: Optional[Type19]
     #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
     voicemail_enabled: Optional[bool]
     #: Settings related to how incoming calls are handled when the intercept feature is enabled.
@@ -12650,10 +13137,8 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners) can use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        if attributes is not None:
-            params['Attributes'] = attributes
-        if body is not None:
-            params['Body'] = body
+        params['Attributes'] = attributes
+        params['Body'] = body
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'numbers')
