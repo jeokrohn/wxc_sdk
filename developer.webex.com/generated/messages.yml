@@ -1,4 +1,4 @@
-# command: developer.webex.com/read_api_spec.py -s Messaging -t Messages -f developer.webex.com/messages.yml
+# command: developer.webex.com/read_api_spec.py -s Messaging -t Messages -f developer.webex.com/generated/messages.yml
 docs:
   Attachment Actions:
     doc: null

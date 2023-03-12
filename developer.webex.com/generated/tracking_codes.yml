@@ -1,4 +1,4 @@
-# command: developer.webex.com/read_api_spec.py -s Messaging -t "Tracking Codes" -f developer.webex.com/tracking_codes.yml
+# command: developer.webex.com/read_api_spec.py -s Messaging -t "Tracking Codes" -f developer.webex.com/generated/tracking_codes.yml
 docs:
   Attachment Actions:
     doc: null

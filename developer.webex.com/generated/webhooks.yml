@@ -1,4 +1,4 @@
-# command: developer.webex.com/read_api_spec.py -s Messaging -t Webhooks -f developer.webex.com/webhooks.yml
+# command: developer.webex.com/read_api_spec.py -s Messaging -t Webhooks -f developer.webex.com/generated/webhooks.yml
 docs:
   Attachment Actions:
     doc: null

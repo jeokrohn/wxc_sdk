@@ -1,4 +1,4 @@
-# command: developer.webex.com/read_api_spec.py -s "Full API Reference" -t "Workspace Locations" -f developer.webex.com/ws_locations.yml
+# command: developer.webex.com/read_api_spec.py -s "Full API Reference" -t "Workspace Locations" -f developer.webex.com/generated/ws_locations.yml
 docs:
   Admin Audit Events:
     doc: null

@@ -1,4 +1,4 @@
-# command: developer.webex.com/read_api_spec.py -s "Full API Reference" -t "Report Templates" Reports -f developer.webex.com/reports.yml
+# command: developer.webex.com/read_api_spec.py -s "Full API Reference" -t "Report Templates" Reports -f developer.webex.com/generated/reports.yml
 docs:
   Admin Audit Events:
     doc: null

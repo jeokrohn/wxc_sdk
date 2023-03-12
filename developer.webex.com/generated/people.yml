@@ -1,4 +1,4 @@
-# command: developer.webex.com/read_api_spec.py -s Messaging -t People -f developer.webex.com/people.yml
+# command: developer.webex.com/read_api_spec.py -s Messaging -t People -f developer.webex.com/generated/people.yml
 docs:
   Attachment Actions:
     doc: null

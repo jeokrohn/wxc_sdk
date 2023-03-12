@@ -1,4 +1,4 @@
-# command: developer.webex.com/read_api_spec.py -s Messaging -t "Team Memberships" -f developer.webex.com/team_memberships.yml
+# command: developer.webex.com/read_api_spec.py -s Messaging -t "Team Memberships" -f developer.webex.com/generated/team_memberships.yml
 docs:
   Attachment Actions:
     doc: null
