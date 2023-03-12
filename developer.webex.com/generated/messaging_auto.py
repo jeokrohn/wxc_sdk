@@ -4,10 +4,20 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
-from pydantic import Field
+from pydantic import Field, parse_obj_as
 
 
-__all__ = ['Actions', 'AdaptiveCard', 'Attachment', 'AttachmentActionsApi', 'Body', 'CreateAttachmentActionBody', 'CreateAttachmentActionResponse', 'CreateMembershipBody', 'CreateMessageResponse', 'CreatePersonBody', 'CreateRoomBody', 'CreateRoomTabBody', 'CreateTeamBody', 'CreateTeamMembershipBody', 'CreateWebhookBody', 'Data', 'DirectMessage', 'EditMessageBody', 'Event', 'Event1', 'EventResourceEnum', 'EventTypeEnum', 'EventsApi', 'GetRoomMeetingDetailsResponse', 'Inputs', 'ListDirectMessagesResponse', 'ListEventsResponse', 'ListMembershipsResponse', 'ListMessage', 'ListMessagesResponse', 'ListPeopleResponse', 'ListRoomTabsResponse', 'ListRoomsResponse', 'ListTeamMembershipsResponse', 'ListTeamsResponse', 'ListWebhooksResponse', 'Membership', 'MembershipsApi', 'MessagesApi', 'PeopleApi', 'Person', 'PhoneNumbers', 'Resource', 'Room', 'RoomTab', 'RoomTabsApi', 'RoomType', 'RoomsApi', 'SipAddressesType', 'Status', 'Status5', 'Team', 'TeamMembership', 'TeamMembershipsApi', 'TeamsApi', 'Type', 'Webhook', 'WebhooksApi']
+__all__ = ['Actions', 'AdaptiveCard', 'Attachment', 'AttachmentActionsApi', 'Body', 'CreateAttachmentActionBody',
+           'CreateAttachmentActionResponse', 'CreateMembershipBody', 'CreateMessageResponse', 'CreatePersonBody',
+           'CreateRoomBody', 'CreateRoomTabBody', 'CreateTeamBody', 'CreateTeamMembershipBody', 'CreateWebhookBody',
+           'Data', 'DirectMessage', 'EditMessageBody', 'Event', 'Event1', 'EventResourceEnum', 'EventTypeEnum',
+           'EventsApi', 'GetRoomMeetingDetailsResponse', 'Inputs', 'ListDirectMessagesResponse', 'ListEventsResponse',
+           'ListMembershipsResponse', 'ListMessage', 'ListMessagesResponse', 'ListPeopleResponse',
+           'ListRoomTabsResponse', 'ListRoomsResponse', 'ListTeamMembershipsResponse', 'ListTeamsResponse',
+           'ListWebhooksResponse', 'Membership', 'MembershipsApi', 'MessagesApi', 'PeopleApi', 'Person',
+           'PhoneNumbers', 'Resource', 'Room', 'RoomTab', 'RoomTabsApi', 'RoomType', 'RoomsApi', 'SipAddressesType',
+           'Status', 'Status5', 'Team', 'TeamMembership', 'TeamMembershipsApi', 'TeamsApi', 'Type', 'Webhook',
+           'WebhooksApi']
 
 
 class Inputs(ApiModel):
@@ -39,7 +49,8 @@ class CreateAttachmentActionResponse(CreateAttachmentActionBody):
 
 class AttachmentActionsApi(ApiChild, base='attachment/actions'):
     """
-    Users create attachment actions by interacting with message attachments such as clicking on a submit button in a card.
+    Users create attachment actions by interacting with message attachments such as clicking on a submit button in a
+    card.
     """
 
     def create_action(self, type_: str, message_id: str, inputs: Inputs) -> CreateAttachmentActionResponse:
@@ -47,7 +58,6 @@ class AttachmentActionsApi(ApiChild, base='attachment/actions'):
         Create a new attachment action.
 
         :param type_: The type of action to perform.
-
         :type type_: str
         :param message_id: The ID of the message which contains the attachment.
         :type message_id: str
@@ -125,11 +135,15 @@ class Data(ApiModel):
     host: Optional[object]
     #: Common Identity (CI) authenticated meeting attendees
     attendees: Optional[list[]]
-    #: indicates whether or not the Voice Assistant was enabled during the meeting. If true a transcript should be available a couple minutes after the meeting ended at the meetingTranscripts resource
+    #: indicates whether or not the Voice Assistant was enabled during the meeting. If true a transcript should be
+    #: available a couple minutes after the meeting ended at the meetingTranscripts resource
     transcription_enabled: Optional[str]
-    #: indicates if recording was enabled for all or parts of the meeting. If true a recording should be available shortly after the meeting ended at the recordings resource
+    #: indicates if recording was enabled for all or parts of the meeting. If true a recording should be available
+    #: shortly after the meeting ended at the recordings resource
     recording_enabled: Optional[str]
-    #: indicates i chat messages were exchanged during the meeting in the meetings client (not the unified client). If true these messages can be accessed by a compliance officer at the postMeetingsChat resource. Meetings chat collection must be custom enabled.
+    #: indicates i chat messages were exchanged during the meeting in the meetings client (not the unified client). If
+    #: true these messages can be accessed by a compliance officer at the postMeetingsChat resource. Meetings chat
+    #: collection must be custom enabled.
     has_post_meetings_chat: Optional[str]
     created: Optional[str]
 
@@ -149,7 +163,8 @@ class Event(ApiModel):
     org_id: Optional[str]
     #: The date and time of the event.
     created: Optional[str]
-    #: The event's data representation. This object will contain the event's resource, such as memberships, messages, meetings, tabs, rooms or attachmentActions at the time the event took place.
+    #: The event's data representation. This object will contain the event's resource, such as memberships, messages,
+    #: meetings, tabs, rooms or attachmentActions at the time the event took place.
     data: Optional[Data]
 
 
@@ -160,25 +175,27 @@ class ListEventsResponse(ApiModel):
 class EventsApi(ApiChild, base='events'):
     """
     Events are generated when actions take place within Webex, such as when someone creates or deletes a message.
-    The Events API can only be used by a Compliance Officer with an API access token that contains the spark-compliance:events_read scope. See the Compliance Guide for more information.
+    The Events API can only be used by a Compliance Officer with an API access token that contains the
+    spark-compliance:events_read scope. See the Compliance Guide for more information.
     """
 
     def list_events(self, resource: str = None, type_: str = None, actor_id: str = None, from_: str = None, to_: str = None, **params) -> Generator[Event, None, None]:
         """
-        List events in your organization. Several query parameters are available to filter the events returned in the response.
+        List events in your organization. Several query parameters are available to filter the events returned in the
+        response.
         Long result sets will be split into pages.
 
-        :param resource: List events with a specific resource type.
-Possible values: messages, memberships, meetings, meetingMessages, meetingTranscripts, tabs, rooms, attachmentActions, files, file_transcodings
+        :param resource: List events with a specific resource type. Possible values: messages, memberships, meetings,
+            meetingMessages, meetingTranscripts, tabs, rooms, attachmentActions, files, file_transcodings
         :type resource: str
-        :param type_: List events with a specific event type.
-Possible values: created, updated, deleted, ended
+        :param type_: List events with a specific event type. Possible values: created, updated, deleted, ended
         :type type_: str
         :param actor_id: List events performed by this person, by person ID.
         :type actor_id: str
         :param from_: List events which occurred after a specific date and time.
         :type from_: str
-        :param to_: List events which occurred before a specific date and time. If unspecified, or set to a time in the future, lists events up to the present.
+        :param to_: List events which occurred before a specific date and time. If unspecified, or set to a time in the
+            future, lists events up to the present.
         :type to_: str
         """
         if resource is not None:
@@ -254,7 +271,9 @@ class UpdateMembershipBody(ApiModel):
 
 class MembershipsApi(ApiChild, base='memberships'):
     """
-    Memberships represent a person's relationship to a room. Use this API to list members of any room that you're in or create memberships to invite someone to a room. Compliance Officers can now also list memberships for personEmails where the CO is not part of the room.
+    Memberships represent a person's relationship to a room. Use this API to list members of any room that you're in or
+    create memberships to invite someone to a room. Compliance Officers can now also list memberships for personEmails
+    where the CO is not part of the room.
     Memberships can also be updated to make someone a moderator, or deleted, to remove someone from the room.
     Just like in the Webex client, you must be a member of the room in order to list its memberships or invite people.
     """
@@ -264,15 +283,19 @@ class MembershipsApi(ApiChild, base='memberships'):
         Lists all room memberships. By default, lists memberships for rooms to which the authenticated user belongs.
         Use query parameters to filter the response.
         Use roomId to list memberships for a room, by ID.
-        NOTE: For moderated team spaces, the list of memberships will include only the space moderators if the user is a team member but not a direct participant of the space.
-        Use either personId or personEmail to filter the results. The roomId parameter is required when using these parameters.
+        NOTE: For moderated team spaces, the list of memberships will include only the space moderators if the user is
+        a team member but not a direct participant of the space.
+        Use either personId or personEmail to filter the results. The roomId parameter is required when using these
+        parameters.
         Long result sets will be split into pages.
 
         :param room_id: List memberships associated with a room, by ID.
         :type room_id: str
-        :param person_id: List memberships associated with a person, by ID. The roomId parameter is required when using this parameter.
+        :param person_id: List memberships associated with a person, by ID. The roomId parameter is required when using
+            this parameter.
         :type person_id: str
-        :param person_email: List memberships associated with a person, by email address. The roomId parameter is required when using this parameter.
+        :param person_email: List memberships associated with a person, by email address. The roomId parameter is
+            required when using this parameter.
         :type person_email: str
         """
         if room_id is not None:
@@ -331,7 +354,8 @@ class MembershipsApi(ApiChild, base='memberships'):
         :type membership_id: str
         :param is_moderator: Whether or not the participant is a room moderator.
         :type is_moderator: bool
-        :param is_room_hidden: When set to true, hides direct spaces in the teams client. Any new message will make the room visible again.
+        :param is_room_hidden: When set to true, hides direct spaces in the teams client. Any new message will make the
+            room visible again.
         :type is_room_hidden: bool
         """
         body = UpdateMembershipBody()
@@ -347,7 +371,8 @@ class MembershipsApi(ApiChild, base='memberships'):
         """
         Deletes a membership by ID.
         Specify the membership ID in the membershipId URI parameter.
-        The membership for the last moderator of a Team's General space may not be deleted; promote another user to team moderator first.
+        The membership for the last moderator of a Team's General space may not be deleted; promote another user to
+        team moderator first.
 
         :param membership_id: The unique identifier for the membership.
         :type membership_id: str
@@ -395,9 +420,11 @@ class Attachment(ApiModel):
 class EditMessageBody(ApiModel):
     #: The room ID of the message.
     room_id: Optional[str]
-    #: The message, in plain text. If markdown is specified this parameter may be optionally used to provide alternate text for UI clients that do not support rich text. The maximum message length is 7439 bytes.
+    #: The message, in plain text. If markdown is specified this parameter may be optionally used to provide alternate
+    #: text for UI clients that do not support rich text. The maximum message length is 7439 bytes.
     text: Optional[str]
-    #: The message, in Markdown format. If this attribute is set ensure that the request does NOT contain an html attribute.
+    #: The message, in Markdown format. If this attribute is set ensure that the request does NOT contain an html
+    #: attribute.
     markdown: Optional[str]
 
 
@@ -410,7 +437,8 @@ class ListMessage(EditMessageBody):
     room_type: Optional[RoomType]
     #: The text content of the message, in HTML format. This read-only property is used by the Webex clients.
     html: Optional[str]
-    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads, see Message Attachments.
+    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads,
+    #: see Message Attachments.
     files: Optional[list[str]]
     #: The person ID of the message author.
     person_id: Optional[str]
@@ -424,9 +452,11 @@ class ListMessage(EditMessageBody):
     attachments: Optional[list[Attachment]]
     #: The date and time the message was created.
     created: Optional[str]
-    #: The date and time that the message was last edited by the author. This field is only present when the message contents have changed.
+    #: The date and time that the message was last edited by the author. This field is only present when the message
+    #: contents have changed.
     updated: Optional[str]
-    #: true if the audio file is a voice clip recorded by the client; false if the audio file is a standard audio file not posted using the voice clip feature.
+    #: true if the audio file is a voice clip recorded by the client; false if the audio file is a standard audio file
+    #: not posted using the voice clip feature.
     is_voice_clip: Optional[bool]
 
 
@@ -439,7 +469,8 @@ class DirectMessage(EditMessageBody):
     room_type: Optional[str]
     #: The text content of the message, in HTML format. This read-only property is used by the Webex clients.
     html: Optional[str]
-    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads, see Message Attachments.
+    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads,
+    #: see Message Attachments.
     files: Optional[list[str]]
     #: The person ID of the message author.
     person_id: Optional[str]
@@ -449,9 +480,11 @@ class DirectMessage(EditMessageBody):
     attachments: Optional[list[Attachment]]
     #: The date and time the message was created.
     created: Optional[str]
-    #: The date and time that the message was last edited by the author. This field is only present when the message contents have changed.
+    #: The date and time that the message was last edited by the author. This field is only present when the message
+    #: contents have changed.
     updated: Optional[str]
-    #: True if the audio file is a voice clip recorded by the client; false if the audio file is a standard audio file not posted using the voice clip feature.
+    #: True if the audio file is a voice clip recorded by the client; false if the audio file is a standard audio file
+    #: not posted using the voice clip feature.
     is_voice_clip: Optional[bool]
 
 
@@ -470,10 +503,13 @@ class CreateMessageBody(EditMessageBody):
     to_person_id: Optional[str]
     #: The email address of the recipient when sending a private 1:1 message.
     to_person_email: Optional[str]
-    #: The public URL to a binary file to be posted into the room. Only one file is allowed per message. Uploaded files are automatically converted into a format that all Webex clients can render. For the supported media types and the behavior of uploads, see the Message Attachments Guide.
+    #: The public URL to a binary file to be posted into the room. Only one file is allowed per message. Uploaded files
+    #: are automatically converted into a format that all Webex clients can render. For the supported media types and
+    #: the behavior of uploads, see the Message Attachments Guide.
     #: Possible values: http://www.example.com/images/media.png
     files: Optional[list[str]]
-    #: Content attachments to attach to the message. Only one card per message is supported. See the Cards Guide for more information.
+    #: Content attachments to attach to the message. Only one card per message is supported. See the Cards Guide for
+    #: more information.
     attachments: Optional[list[Attachment]]
 
 
@@ -486,14 +522,15 @@ class CreateMessageResponse(ListMessage):
 
 class MessagesApi(ApiChild, base='messages'):
     """
-    Messages are how you communicate in a room. In Webex, each message is displayed on its own line along with a timestamp and sender information. Use this API to list, create, update, and delete messages.
+    Messages are how you communicate in a room. In Webex, each message is displayed on its own line along with a
+    timestamp and sender information. Use this API to list, create, update, and delete messages.
     Message can contain plain text, rich text, and a file attachment.
     Just like in the Webex app, you must be a member of the room in order to target it with this API.
     """
 
     def list(self, room_id: str, parent_id: str = None, mentioned_people: List[str] = None, before: str = None, before_message: str = None, **params) -> Generator[ListMessagesResponse, None, None]:
         """
-        Lists all messages in a room.  Each message will include content attachments if present.
+        Lists all messages in a room. Each message will include content attachments if present.
         The list sorts the messages in descending order by creation date.
         Long result sets will be split into pages.
 
@@ -501,7 +538,9 @@ class MessagesApi(ApiChild, base='messages'):
         :type room_id: str
         :param parent_id: List messages with a parent, by ID.
         :type parent_id: str
-        :param mentioned_people: List messages with these people mentioned, by ID. Use me as a shorthand for the current API user. Only me or the person ID of the current user may be specified. Bots must include this parameter to list messages in group rooms (spaces).
+        :param mentioned_people: List messages with these people mentioned, by ID. Use me as a shorthand for the
+            current API user. Only me or the person ID of the current user may be specified. Bots must include this
+            parameter to list messages in group rooms (spaces).
         :type mentioned_people: List[str]
         :param before: List messages sent before a date and time.
         :type before: str
@@ -522,7 +561,8 @@ class MessagesApi(ApiChild, base='messages'):
 
     def list_direct(self, parent_id: str = None, person_id: str = None, person_email: str = None, **params) -> Generator[ListDirectMessagesResponse, None, None]:
         """
-        List all messages in a 1:1 (direct) room. Use the personId or personEmail query parameter to specify the room. Each message will include content attachments if present.
+        List all messages in a 1:1 (direct) room. Use the personId or personEmail query parameter to specify the room.
+        Each message will include content attachments if present.
         The list sorts the messages in descending order by creation date.
 
         :param parent_id: List messages with a parent, by ID.
@@ -544,13 +584,17 @@ class MessagesApi(ApiChild, base='messages'):
     def create(self, room_id: str = None, text: str = None, markdown: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None, files: List[str] = None, attachments: Attachment = None) -> CreateMessageResponse:
         """
         Post a plain text or rich text message, and optionally, a file attachment attachment, to a room.
-        The files parameter is an array, which accepts multiple values to allow for future expansion, but currently only one file may be included with the message. File previews are only rendered for attachments of 1MB or less.
+        The files parameter is an array, which accepts multiple values to allow for future expansion, but currently
+        only one file may be included with the message. File previews are only rendered for attachments of 1MB or less.
 
         :param room_id: The room ID of the message.
         :type room_id: str
-        :param text: The message, in plain text. If markdown is specified this parameter may be optionally used to provide alternate text for UI clients that do not support rich text. The maximum message length is 7439 bytes.
+        :param text: The message, in plain text. If markdown is specified this parameter may be optionally used to
+            provide alternate text for UI clients that do not support rich text. The maximum message length is 7439
+            bytes.
         :type text: str
-        :param markdown: The message, in Markdown format. If this attribute is set ensure that the request does NOT contain an html attribute.
+        :param markdown: The message, in Markdown format. If this attribute is set ensure that the request does NOT
+            contain an html attribute.
         :type markdown: str
         :param parent_id: The parent message to reply to.
         :type parent_id: str
@@ -558,10 +602,13 @@ class MessagesApi(ApiChild, base='messages'):
         :type to_person_id: str
         :param to_person_email: The email address of the recipient when sending a private 1:1 message.
         :type to_person_email: str
-        :param files: The public URL to a binary file to be posted into the room. Only one file is allowed per message. Uploaded files are automatically converted into a format that all Webex clients can render. For the supported media types and the behavior of uploads, see the Message Attachments Guide.
-Possible values: http://www.example.com/images/media.png
+        :param files: The public URL to a binary file to be posted into the room. Only one file is allowed per message.
+            Uploaded files are automatically converted into a format that all Webex clients can render. For the
+            supported media types and the behavior of uploads, see the Message Attachments Guide. Possible values:
+            http://www.example.com/images/media.png
         :type files: List[str]
-        :param attachments: Content attachments to attach to the message. Only one card per message is supported. See the Cards Guide for more information.
+        :param attachments: Content attachments to attach to the message. Only one card per message is supported. See
+            the Cards Guide for more information.
         :type attachments: Attachment
         """
         body = CreateMessageBody()
@@ -590,19 +637,29 @@ Possible values: http://www.example.com/images/media.png
         Update a message you have posted not more than 10 times.
         Specify the messageId of the message you want to edit.
         Edits of messages containing files or attachments are not currently supported.
-        If a user attempts to edit a message containing files or attachments a 400 Bad Request will be returned by the API with a message stating that the feature is currently unsupported.
-        There is also a maximum number of times a user can edit a message. The maximum currently supported is 10 edits per message.
-            If a user attempts to edit a message greater that the maximum times allowed the API will return 400 Bad Request with a message stating the edit limit has been reached.
-        While only the roomId and text or markdown attributes are required in the request body, a common pattern for editing message is to first call GET /messages/{id} for the message you wish to edit and to then update the text or markdown attribute accordingly, passing the updated message object in the request body of the PUT /messages/{id} request.
-        When this pattern is used on a message that included markdown, the html attribute must be deleted prior to making the PUT request.
+        If a user attempts to edit a message containing files or attachments a 400 Bad Request will be returned by the
+        API with a message stating that the feature is currently unsupported.
+        There is also a maximum number of times a user can edit a message. The maximum currently supported is 10 edits
+        per message.
+        If a user attempts to edit a message greater that the maximum times allowed the API will return 400 Bad Request
+        with a message stating the edit limit has been reached.
+        While only the roomId and text or markdown attributes are required in the request body, a common pattern for
+        editing message is to first call GET /messages/{id} for the message you wish to edit and to then update the
+        text or markdown attribute accordingly, passing the updated message object in the request body of the PUT
+        /messages/{id} request.
+        When this pattern is used on a message that included markdown, the html attribute must be deleted prior to
+        making the PUT request.
 
         :param message_id: The unique identifier for the message.
         :type message_id: str
         :param room_id: The room ID of the message.
         :type room_id: str
-        :param text: The message, in plain text. If markdown is specified this parameter may be optionally used to provide alternate text for UI clients that do not support rich text. The maximum message length is 7439 bytes.
+        :param text: The message, in plain text. If markdown is specified this parameter may be optionally used to
+            provide alternate text for UI clients that do not support rich text. The maximum message length is 7439
+            bytes.
         :type text: str
-        :param markdown: The message, in Markdown format. If this attribute is set ensure that the request does NOT contain an html attribute.
+        :param markdown: The message, in Markdown format. If this attribute is set ensure that the request does NOT
+            contain an html attribute.
         :type markdown: str
         """
         body = EditMessageBody()
@@ -707,10 +764,12 @@ class CreatePersonBody(ApiModel):
     #: The ID of the organization to which this person belongs.
     org_id: Optional[str]
     #: An array of role strings representing the roles to which this admin user belongs.
-    #: Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh, Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
+    #: Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+    #: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
     roles: Optional[list[str]]
     #: An array of license strings allocated to this person.
-    #: Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh, Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
+    #: Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+    #: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
     licenses: Optional[list[str]]
     #: The business department the user belongs to.
     department: Optional[str]
@@ -721,9 +780,11 @@ class CreatePersonBody(ApiModel):
     #: the person's title
     title: Optional[str]
     #: Person's address
-    #: Possible values: , country: `US`, locality: `Charlotte`, region: `North Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode: `99212`
+    #: Possible values: , country: `US`, locality: `Charlotte`, region: `North Carolina`, streetAddress: `1099 Bird
+    #: Ave.`, type: `work`, postalCode: `99212`
     addresses: Optional[list[object]]
-    #: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg: mysite.webex.com#attendee)
+    #: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg:
+    #: mysite.webex.com#attendee)
     #: Possible values: mysite.webex.com#attendee
     site_urls: Optional[list[str]]
 
@@ -731,23 +792,31 @@ class CreatePersonBody(ApiModel):
 class Person(CreatePersonBody):
     #: A unique identifier for the person.
     id: Optional[str]
-    #: The nickname of the person if configured. If no nickname is configured for the person, this field will not be present.
+    #: The nickname of the person if configured. If no nickname is configured for the person, this field will not be
+    #: present.
     nick_name: Optional[str]
     #: The date and time the person was created.
     created: Optional[str]
     #: The date and time the person was last changed.
     last_modified: Optional[str]
-    #: The time zone of the person if configured. If no timezone is configured on the account, this field will not be present
+    #: The time zone of the person if configured. If no timezone is configured on the account, this field will not be
+    #: present
     timezone: Optional[str]
-    #: The date and time of the person's last activity within Webex. This will only be returned for people within your organization or an organization you manage. Presence information will not be shown if the authenticated user has disabled status sharing.
+    #: The date and time of the person's last activity within Webex. This will only be returned for people within your
+    #: organization or an organization you manage. Presence information will not be shown if the authenticated user has
+    #: disabled status sharing.
     last_activity: Optional[str]
     #: The users sip addresses
     sip_addresses: Optional[list[SipAddressesType]]
-    #: The current presence status of the person. This will only be returned for people within your organization or an organization you manage. Presence information will not be shown if the authenticated user has disabled status sharing.
+    #: The current presence status of the person. This will only be returned for people within your organization or an
+    #: organization you manage. Presence information will not be shown if the authenticated user has disabled status
+    #: sharing.
     status: Optional[Status]
-    #: Whether or not an invite is pending for the user to complete account activation. This property is only returned if the authenticated user is an admin user for the person's organization.
+    #: Whether or not an invite is pending for the user to complete account activation. This property is only returned
+    #: if the authenticated user is an admin user for the person's organization.
     invite_pending: Optional[bool]
-    #: Whether or not the user is allowed to use Webex. This property is only returned if the authenticated user is an admin user for the person's organization.
+    #: Whether or not the user is allowed to use Webex. This property is only returned if the authenticated user is an
+    #: admin user for the person's organization.
     login_enabled: Optional[bool]
     #: The type of person account, such as person or bot.
     type: Optional[Type]
@@ -763,33 +832,51 @@ class ListPeopleResponse(ApiModel):
 class UpdatePersonBody(CreatePersonBody):
     #: The nickname of the person if configured. Set to the firstName automatically in update request.
     nick_name: Optional[str]
-    #: Whether or not the user is allowed to use Webex. This property is only accessible if the authenticated user is an admin user for the person's organization.
+    #: Whether or not the user is allowed to use Webex. This property is only accessible if the authenticated user is
+    #: an admin user for the person's organization.
     login_enabled: Optional[bool]
 
 
 class PeopleApi(ApiChild, base='people'):
     """
-    People are registered users of Webex. Searching and viewing People requires an auth token with a scope of spark:people_read. Viewing the list of all People in your Organization requires an administrator auth token with spark-admin:people_read scope. Adding, updating, and removing People requires an administrator auth token with the spark-admin:people_write and spark-admin:people_read scope.
+    People are registered users of Webex. Searching and viewing People requires an auth token with a scope of
+    spark:people_read. Viewing the list of all People in your Organization requires an administrator auth token with
+    spark-admin:people_read scope. Adding, updating, and removing People requires an administrator auth token with the
+    spark-admin:people_write and spark-admin:people_read scope.
     A person's call settings are for Webex Calling and necessitate Webex Calling licenses.
-    To learn more about managing people in a room see the Memberships API. For information about how to allocate Hybrid Services licenses to people, see the Managing Hybrid Services guide.
+    To learn more about managing people in a room see the Memberships API. For information about how to allocate Hybrid
+    Services licenses to people, see the Managing Hybrid Services guide.
     """
 
     def list_people(self, email: str = None, display_name: str = None, id: str = None, org_id: str = None, roles: str = None, calling_data: bool = None, location_id: str = None, **params) -> Generator[Person, None, None]:
         """
-        List people in your organization. For most users, either the email or displayName parameter is required. Admin users can omit these fields and list all users in their organization.
-        Response properties associated with a user's presence status, such as status or lastActivity, will only be returned for people within your organization or an organization you manage. Presence information will not be returned if the authenticated user has disabled status sharing.
-        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData parameter as true. Admin users can list all users in a location or with a specific phone number. Admin users will receive an enriched payload with additional administrative fields like liceneses,roles etc. These fields are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=
-        Lookup by email is only supported for people within the same org or where a partner admin relationship is in place.
+        List people in your organization. For most users, either the email or displayName parameter is required. Admin
+        users can omit these fields and list all users in their organization.
+        Response properties associated with a user's presence status, such as status or lastActivity, will only be
+        returned for people within your organization or an organization you manage. Presence information will not be
+        returned if the authenticated user has disabled status sharing.
+        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData
+        parameter as true. Admin users can list all users in a location or with a specific phone number. Admin users
+        will receive an enriched payload with additional administrative fields like liceneses,roles etc. These fields
+        are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=
+        Lookup by email is only supported for people within the same org or where a partner admin relationship is in
+        place.
         Lookup by roles is only supported for Admin users for the people within the same org.
         Long result sets will be split into pages.
 
-        :param email: List people with this email address. For non-admin requests, either this or displayName are required. With the exception of partner admins and a managed org relationship, people lookup by email is only available for users in the same org.
+        :param email: List people with this email address. For non-admin requests, either this or displayName are
+            required. With the exception of partner admins and a managed org relationship, people lookup by email is
+            only available for users in the same org.
         :type email: str
-        :param display_name: List people whose name starts with this string. For non-admin requests, either this or email are required.
+        :param display_name: List people whose name starts with this string. For non-admin requests, either this or
+            email are required.
         :type display_name: str
-        :param id: List people by ID. Accepts up to 85 person IDs separated by commas. If this parameter is provided then presence information (such as the lastActivity or status properties) will not be included in the response.
+        :param id: List people by ID. Accepts up to 85 person IDs separated by commas. If this parameter is provided
+            then presence information (such as the lastActivity or status properties) will not be included in the
+            response.
         :type id: str
-        :param org_id: List people in this organization. Only admin users of another organization (such as partners) may use this parameter.
+        :param org_id: List people in this organization. Only admin users of another organization (such as partners)
+            may use this parameter.
         :type org_id: str
         :param roles: List of roleIds separated by commas.
         :type roles: str
@@ -818,19 +905,26 @@ class PeopleApi(ApiChild, base='people'):
     def create(self, emails: List[str], calling_data: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: List[object] = None, site_urls: List[str] = None) -> Person:
         """
         Create a new user account for a given organization. Only an admin can create a new user account.
-        At least one of the following body parameters is required to create a new user: displayName, firstName, lastName.
-        Currently, users may have only one email address associated with their account. The emails parameter is an array, which accepts multiple values to allow for future expansion, but currently only one email address will be used for the new user.
-        Admin users can include Webex calling (BroadCloud) user details in the response by specifying callingData parameter as true.
-        When doing attendee management, append #attendee to the siteUrl parameter (e.g. mysite.webex.com#attendee) to make the new user an attendee for a site.
+        At least one of the following body parameters is required to create a new user: displayName, firstName,
+        lastName.
+        Currently, users may have only one email address associated with their account. The emails parameter is an
+        array, which accepts multiple values to allow for future expansion, but currently only one email address will
+        be used for the new user.
+        Admin users can include Webex calling (BroadCloud) user details in the response by specifying callingData
+        parameter as true.
+        When doing attendee management, append #attendee to the siteUrl parameter (e.g. mysite.webex.com#attendee) to
+        make the new user an attendee for a site.
 
-        :param emails: The email addresses of the person. Only one email address is allowed per person.
-Possible values: john.andersen@example.com
+        :param emails: The email addresses of the person. Only one email address is allowed per person. Possible
+            values: john.andersen@example.com
         :type emails: List[str]
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
-        :param phone_numbers: Phone numbers for the person. Only settable for Webex Calling. Requires a Webex Calling license.
+        :param phone_numbers: Phone numbers for the person. Only settable for Webex Calling. Requires a Webex Calling
+            license.
         :type phone_numbers: PhoneNumbers
-        :param extension: Webex Calling extension of the person. This is only settable for a person with a Webex Calling license.
+        :param extension: Webex Calling extension of the person. This is only settable for a person with a Webex
+            Calling license.
         :type extension: str
         :param location_id: The ID of the location for this person.
         :type location_id: str
@@ -844,11 +938,13 @@ Possible values: john.andersen@example.com
         :type avatar: str
         :param org_id: The ID of the organization to which this person belongs.
         :type org_id: str
-        :param roles: An array of role strings representing the roles to which this admin user belongs.
-Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh, Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
+        :param roles: An array of role strings representing the roles to which this admin user belongs. Possible
+            values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+            Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
         :type roles: List[str]
-        :param licenses: An array of license strings allocated to this person.
-Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh, Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
+        :param licenses: An array of license strings allocated to this person. Possible values:
+            Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+            Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
         :type licenses: List[str]
         :param department: The business department the user belongs to.
         :type department: str
@@ -858,11 +954,11 @@ Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTI
         :type manager_id: str
         :param title: the person's title
         :type title: str
-        :param addresses: Person's address
-Possible values: , country: `US`, locality: `Charlotte`, region: `North Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode: `99212`
+        :param addresses: Person's address Possible values: , country: `US`, locality: `Charlotte`, region: `North
+            Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode: `99212`
         :type addresses: List[object]
-        :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg: mysite.webex.com#attendee)
-Possible values: mysite.webex.com#attendee
+        :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the
+            sitename (eg: mysite.webex.com#attendee) Possible values: mysite.webex.com#attendee
         :type site_urls: List[str]
         """
         params = {}
@@ -910,8 +1006,11 @@ Possible values: mysite.webex.com#attendee
     def details(self, person_id: str, calling_data: bool = None) -> Person:
         """
         Shows details for a person, by ID.
-        Response properties associated with a user's presence status, such as status or lastActivity, will only be displayed for people within your organization or an organization you manage. Presence information will not be shown if the authenticated user has disabled status sharing.
-        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData parameter as true.
+        Response properties associated with a user's presence status, such as status or lastActivity, will only be
+        displayed for people within your organization or an organization you manage. Presence information will not be
+        shown if the authenticated user has disabled status sharing.
+        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData
+        parameter as true.
         Specify the person ID in the personId parameter in the URI.
 
         :param person_id: A unique identifier for the person.
@@ -930,25 +1029,33 @@ Possible values: mysite.webex.com#attendee
         """
         Update details for a person, by ID.
         Specify the person ID in the personId parameter in the URI. Only an admin can update a person details.
-        Include all details for the person. This action expects all user details to be present in the request. A common approach is to first GET the person's details, make changes, then PUT both the changed and unchanged values.
-        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData parameter as true.
-        Note: The locationId can only be set when adding a calling license to a user. It cannot be changed if a user is already an existing calling user.
-        When doing attendee management, to update a user from host role to an attendee for a site append #attendee to the respective siteUrl and remove the meeting host license for this site from the license array.
-        To update a person from an attendee role to a host for a site, add the meeting license for this site in the meeting array, and remove that site from the siteurl parameter.
-        To remove the attendee privilege for a user on a meeting site, remove the sitename#attendee from the siteUrls array. The showAllTypes parameter must be set to true.
+        Include all details for the person. This action expects all user details to be present in the request. A common
+        approach is to first GET the person's details, make changes, then PUT both the changed and unchanged values.
+        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData
+        parameter as true.
+        Note: The locationId can only be set when adding a calling license to a user. It cannot be changed if a user is
+        already an existing calling user.
+        When doing attendee management, to update a user from host role to an attendee for a site append #attendee to
+        the respective siteUrl and remove the meeting host license for this site from the license array.
+        To update a person from an attendee role to a host for a site, add the meeting license for this site in the
+        meeting array, and remove that site from the siteurl parameter.
+        To remove the attendee privilege for a user on a meeting site, remove the sitename#attendee from the siteUrls
+        array. The showAllTypes parameter must be set to true.
 
         :param person_id: A unique identifier for the person.
         :type person_id: str
-        :param emails: The email addresses of the person. Only one email address is allowed per person.
-Possible values: john.andersen@example.com
+        :param emails: The email addresses of the person. Only one email address is allowed per person. Possible
+            values: john.andersen@example.com
         :type emails: List[str]
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
         :param show_all_types: Include additional user data like #attendee role
         :type show_all_types: bool
-        :param phone_numbers: Phone numbers for the person. Only settable for Webex Calling. Requires a Webex Calling license.
+        :param phone_numbers: Phone numbers for the person. Only settable for Webex Calling. Requires a Webex Calling
+            license.
         :type phone_numbers: PhoneNumbers
-        :param extension: Webex Calling extension of the person. This is only settable for a person with a Webex Calling license.
+        :param extension: Webex Calling extension of the person. This is only settable for a person with a Webex
+            Calling license.
         :type extension: str
         :param location_id: The ID of the location for this person.
         :type location_id: str
@@ -962,11 +1069,13 @@ Possible values: john.andersen@example.com
         :type avatar: str
         :param org_id: The ID of the organization to which this person belongs.
         :type org_id: str
-        :param roles: An array of role strings representing the roles to which this admin user belongs.
-Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh, Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
+        :param roles: An array of role strings representing the roles to which this admin user belongs. Possible
+            values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+            Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
         :type roles: List[str]
-        :param licenses: An array of license strings allocated to this person.
-Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh, Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
+        :param licenses: An array of license strings allocated to this person. Possible values:
+            Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+            Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
         :type licenses: List[str]
         :param department: The business department the user belongs to.
         :type department: str
@@ -976,15 +1085,17 @@ Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTI
         :type manager_id: str
         :param title: the person's title
         :type title: str
-        :param addresses: Person's address
-Possible values: , country: `US`, locality: `Charlotte`, region: `North Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode: `99212`
+        :param addresses: Person's address Possible values: , country: `US`, locality: `Charlotte`, region: `North
+            Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode: `99212`
         :type addresses: List[object]
-        :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg: mysite.webex.com#attendee)
-Possible values: mysite.webex.com#attendee
+        :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the
+            sitename (eg: mysite.webex.com#attendee) Possible values: mysite.webex.com#attendee
         :type site_urls: List[str]
-        :param nick_name: The nickname of the person if configured. Set to the firstName automatically in update request.
+        :param nick_name: The nickname of the person if configured. Set to the firstName automatically in update
+            request.
         :type nick_name: str
-        :param login_enabled: Whether or not the user is allowed to use Webex. This property is only accessible if the authenticated user is an admin user for the person's organization.
+        :param login_enabled: Whether or not the user is allowed to use Webex. This property is only accessible if the
+            authenticated user is an admin user for the person's organization.
         :type login_enabled: bool
         """
         params = {}
@@ -1049,8 +1160,10 @@ Possible values: mysite.webex.com#attendee
 
     def my_own_details(self, calling_data: bool = None) -> Person:
         """
-        Get profile details for the authenticated user. This is the same as GET /people/{personId} using the Person ID associated with your Auth token.
-        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData parameter as true.
+        Get profile details for the authenticated user. This is the same as GET /people/{personId} using the Person ID
+        associated with your Auth token.
+        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData
+        parameter as true.
 
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
@@ -1088,7 +1201,9 @@ class ListRoomTabsResponse(ApiModel):
 
 class RoomTabsApi(ApiChild, base='room/tabs'):
     """
-    A Room Tab represents a URL shortcut that is added as a persistent tab to a Webex room (space) tab row. Use this API to list tabs of any Webex room that you belong to. Room Tabs can also be updated to point to a different content URL, or deleted to remove the tab from the room.
+    A Room Tab represents a URL shortcut that is added as a persistent tab to a Webex room (space) tab row. Use this
+    API to list tabs of any Webex room that you belong to. Room Tabs can also be updated to point to a different
+    content URL, or deleted to remove the tab from the room.
     Just like in the Webex app, you must be a member of the room in order to list its Room Tabs.
     """
 
@@ -1180,7 +1295,8 @@ class CreateRoomBody(ApiModel):
     classification_id: Optional[str]
     #: Set the space as locked/moderated and the creator becomes a moderator
     is_locked: Optional[bool]
-    #: The room is public and therefore discoverable within the org. Anyone can find and join that room. When true the description must be filled in.
+    #: The room is public and therefore discoverable within the org. Anyone can find and join that room. When true the
+    #: description must be filled in.
     is_public: Optional[bool]
     #: The description of the space.
     description: Optional[str]
@@ -1201,7 +1317,8 @@ class Room(CreateRoomBody):
     created: Optional[str]
     #: The ID of the organization which owns this room. See Webex Data in the Compliance Guide for more information.
     owner_id: Optional[str]
-    #: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in this space, while maintaing historical data.
+    #: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in
+    #: this space, while maintaing historical data.
     is_read_only: Optional[bool]
     #: Date and time when the room was made public.
     made_public: Optional[str]
@@ -1229,14 +1346,18 @@ class GetRoomMeetingDetailsResponse(ApiModel):
 
 
 class UpdateRoomBody(CreateRoomBody):
-    #: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in this space, while maintaing historical data.
+    #: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in
+    #: this space, while maintaing historical data.
     is_read_only: Optional[bool]
 
 
 class RoomsApi(ApiChild, base='rooms'):
     """
-    Rooms are virtual meeting places where people post messages and collaborate to get work done. This API is used to manage the rooms themselves. Rooms are created and deleted with this API. You can also update a room to change its title or make it public, for example.
-    To create a team room, specify the a teamId in the POST payload. Note that once a room is added to a team, it cannot be moved. To learn more about managing teams, see the Teams API.
+    Rooms are virtual meeting places where people post messages and collaborate to get work done. This API is used to
+    manage the rooms themselves. Rooms are created and deleted with this API. You can also update a room to change its
+    title or make it public, for example.
+    To create a team room, specify the a teamId in the POST payload. Note that once a room is added to a team, it
+    cannot be moved. To learn more about managing teams, see the Teams API.
     To manage people in a room see the Memberships API.
     To post content see the Messages API.
     """
@@ -1248,21 +1369,25 @@ class RoomsApi(ApiChild, base='rooms'):
         By default, lists rooms to which the authenticated user belongs.
         Long result sets will be split into pages.
         Known Limitations:
-        The underlying database does not support natural sorting by lastactivity and will only sort on limited set of results, which are pulled from the database in order of roomId. For users or bots in more than 3000 spaces this can result in anomalies such as spaces that have had recent activity not being returned in the results when sorting by lastacivity.
+        The underlying database does not support natural sorting by lastactivity and will only sort on limited set of
+        results, which are pulled from the database in order of roomId. For users or bots in more than 3000 spaces this
+        can result in anomalies such as spaces that have had recent activity not being returned in the results when
+        sorting by lastacivity.
 
         :param team_id: List rooms associated with a team, by ID. Cannot be set in combination with orgPublicSpaces.
         :type team_id: str
-        :param type_: List rooms by type. Cannot be set in combination with orgPublicSpaces.
-Possible values: direct, group
+        :param type_: List rooms by type. Cannot be set in combination with orgPublicSpaces. Possible values: direct,
+            group
         :type type_: str
-        :param org_public_spaces: Shows the org's public spaces joined and unjoined. When set the result list is sorted by the madePublic timestamp.
+        :param org_public_spaces: Shows the org's public spaces joined and unjoined. When set the result list is sorted
+            by the madePublic timestamp.
         :type org_public_spaces: bool
         :param from_: Filters rooms, that were made public after this time. See madePublic timestamp
         :type from_: str
         :param to_: Filters rooms, that were made public before this time. See maePublic timestamp
         :type to_: str
-        :param sort_by: Sort results. Cannot be set in combination with orgPublicSpaces.
-Possible values: id, lastactivity, created
+        :param sort_by: Sort results. Cannot be set in combination with orgPublicSpaces. Possible values: id,
+            lastactivity, created
         :type sort_by: str
         """
         if team_id is not None:
@@ -1282,9 +1407,12 @@ Possible values: id, lastactivity, created
 
     def create(self, title: str, team_id: str = None, classification_id: str = None, is_locked: bool = None, is_public: bool = None, description: str = None, is_announcement_only: bool = None) -> Room:
         """
-        Creates a room. The authenticated user is automatically added as a member of the room. See the Memberships API to learn how to add more people to the room.
-        To create a 1:1 room, use the Create Messages endpoint to send a message directly to another person by using the toPersonId or toPersonEmail parameters.
-        Bots are not able to create and simultaneously classify a room. A bot may update a space classification after a person of the same owning organization joined the space as the first human user.
+        Creates a room. The authenticated user is automatically added as a member of the room. See the Memberships API
+        to learn how to add more people to the room.
+        To create a 1:1 room, use the Create Messages endpoint to send a message directly to another person by using
+        the toPersonId or toPersonEmail parameters.
+        Bots are not able to create and simultaneously classify a room. A bot may update a space classification after a
+        person of the same owning organization joined the space as the first human user.
         A space can only be put into announcement mode when it is locked.
 
         :param title: A user-friendly name for the room.
@@ -1295,7 +1423,8 @@ Possible values: id, lastactivity, created
         :type classification_id: str
         :param is_locked: Set the space as locked/moderated and the creator becomes a moderator
         :type is_locked: bool
-        :param is_public: The room is public and therefore discoverable within the org. Anyone can find and join that room. When true the description must be filled in.
+        :param is_public: The room is public and therefore discoverable within the org. Anyone can find and join that
+            room. When true the description must be filled in.
         :type is_public: bool
         :param description: The description of the space.
         :type description: str
@@ -1336,7 +1465,8 @@ Possible values: id, lastactivity, created
 
     def meeting_details(self, room_id: str) -> GetRoomMeetingDetailsResponse:
         """
-        Shows Webex meeting details for a room such as the SIP address, meeting URL, toll-free and toll dial-in numbers.
+        Shows Webex meeting details for a room such as the SIP address, meeting URL, toll-free and toll dial-in
+        numbers.
         Specify the room ID in the roomId parameter in the URI.
 
         :param room_id: The unique identifier for the room.
@@ -1351,8 +1481,10 @@ Possible values: id, lastactivity, created
         Updates details for a room, by ID.
         Specify the room ID in the roomId parameter in the URI.
         A space can only be put into announcement mode when it is locked.
-        Any space participant or compliance officer can convert a space from public to private. Only a compliance officer can convert a space from private to public and only if the space is classified with the lowest category (usually public), and the space has a description.
-        To remove a description please use a space character   by itself.
+        Any space participant or compliance officer can convert a space from public to private. Only a compliance
+        officer can convert a space from private to public and only if the space is classified with the lowest category
+        (usually public), and the space has a description.
+        To remove a description please use a space character by itself.
 
         :param room_id: The unique identifier for the room.
         :type room_id: str
@@ -1364,13 +1496,15 @@ Possible values: id, lastactivity, created
         :type classification_id: str
         :param is_locked: Set the space as locked/moderated and the creator becomes a moderator
         :type is_locked: bool
-        :param is_public: The room is public and therefore discoverable within the org. Anyone can find and join that room. When true the description must be filled in.
+        :param is_public: The room is public and therefore discoverable within the org. Anyone can find and join that
+            room. When true the description must be filled in.
         :type is_public: bool
         :param description: The description of the space.
         :type description: str
         :param is_announcement_only: Sets the space into announcement Mode.
         :type is_announcement_only: bool
-        :param is_read_only: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in this space, while maintaing historical data.
+        :param is_read_only: A compliance officer can set a direct room as read-only, which will disallow any new
+            information exchanges in this space, while maintaing historical data.
         :type is_read_only: bool
         """
         body = UpdateRoomBody()
@@ -1397,7 +1531,8 @@ Possible values: id, lastactivity, created
     def delete(self, room_id: str):
         """
         Deletes a room, by ID. Deleted rooms cannot be recovered.
-        As a security measure to prevent accidental deletion, when a non moderator deletes the room they are removed from the room instead.
+        As a security measure to prevent accidental deletion, when a non moderator deletes the room they are removed
+        from the room instead.
         Deleting a room that is part of a team will archive the room instead.
         Specify the room ID in the roomId parameter in the URI.
 
@@ -1441,7 +1576,9 @@ class UpdateTeamMembershipBody(ApiModel):
 
 class TeamMembershipsApi(ApiChild, base='team/memberships'):
     """
-    Team Memberships represent a person's relationship to a team. Use this API to list members of any team that you're in or create memberships to invite someone to a team. Team memberships can also be updated to make someone a moderator or deleted to remove them from the team.
+    Team Memberships represent a person's relationship to a team. Use this API to list members of any team that you're
+    in or create memberships to invite someone to a team. Team memberships can also be updated to make someone a
+    moderator or deleted to remove them from the team.
     Just like in the Webex app, you must be a member of the team in order to list its memberships or invite people.
     """
 
@@ -1516,7 +1653,8 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         """
         Deletes a team membership, by ID.
         Specify the team membership ID in the membershipId URI parameter.
-        The team membership for the last moderator of a team may not be deleted; promote another user to team moderator first.
+        The team membership for the last moderator of a team may not be deleted; promote another user to team moderator
+        first.
 
         :param membership_id: The unique identifier for the team membership.
         :type membership_id: str
@@ -1545,7 +1683,9 @@ class ListTeamsResponse(ApiModel):
 
 class TeamsApi(ApiChild, base='teams'):
     """
-    Teams are groups of people with a set of rooms that are visible to all members of that team. This API is used to manage the teams themselves. Teams are created and deleted with this API. You can also update a team to change its name, for example.
+    Teams are groups of people with a set of rooms that are visible to all members of that team. This API is used to
+    manage the teams themselves. Teams are created and deleted with this API. You can also update a team to change its
+    name, for example.
     To manage people in a team see the Team Memberships API.
     To manage team rooms see the Rooms API.
     """
@@ -1560,7 +1700,8 @@ class TeamsApi(ApiChild, base='teams'):
     def create(self, name: str, description: str = None) -> Team:
         """
         Creates a team.
-        The authenticated user is automatically added as a member of the team. See the Team Memberships API to learn how to add more people to the team.
+        The authenticated user is automatically added as a member of the team. See the Team Memberships API to learn
+        how to add more people to the team.
 
         :param name: A user-friendly name for the team.
         :type name: str
@@ -1667,7 +1808,8 @@ class CreateWebhookBody(ApiModel):
     filter: Optional[str]
     #: The secret used to generate payload signature.
     secret: Optional[str]
-    #: Specified when creating an org/admin level webhook. Supported for meetings, recordings, meetingParticipants, and meetingTranscripts resources.
+    #: Specified when creating an org/admin level webhook. Supported for meetings, recordings, meetingParticipants, and
+    #: meetingTranscripts resources.
     owned_by: Optional[str]
 
 
@@ -1691,7 +1833,8 @@ class UpdateWebhookBody(ApiModel):
     target_url: Optional[str]
     #: The secret used to generate payload signature.
     secret: Optional[str]
-    #: Specified when creating an org/admin level webhook. Supported for meetings, recordings, meetingParticipants and meetingTranscripts resources.
+    #: Specified when creating an org/admin level webhook. Supported for meetings, recordings, meetingParticipants and
+    #: meetingTranscripts resources.
     owned_by: Optional[str]
     #: The status of the webhook. Use "active" to reactivate a disabled webhook.
     status: Optional[Status5]
@@ -1699,9 +1842,12 @@ class UpdateWebhookBody(ApiModel):
 
 class WebhooksApi(ApiChild, base='webhooks'):
     """
-    For Webex for Government (FedRAMP), the following resource types are not available for Webhooks: meetings, recordings, meetingParticipants, and meetingTranscripts.
-    Webhooks allow your app to be notified via HTTP when a specific event occurs in Webex. For example, your app can register a webhook to be notified when a new message is posted into a specific room.
-    Events trigger in near real-time allowing your app and backend IT systems to stay in sync with new content and room activity.
+    For Webex for Government (FedRAMP), the following resource types are not available for Webhooks: meetings,
+    recordings, meetingParticipants, and meetingTranscripts.
+    Webhooks allow your app to be notified via HTTP when a specific event occurs in Webex. For example, your app can
+    register a webhook to be notified when a new message is posted into a specific room.
+    Events trigger in near real-time allowing your app and backend IT systems to stay in sync with new content and room
+    activity.
     Check The Webhooks Guide and our blog regularly for announcements of additional webhook resources and event types.
     Long result sets will be split into pages.
     """
@@ -1727,7 +1873,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :type name: str
         :param target_url: The URL that receives POST requests for each event.
         :type target_url: str
-        :param resource: The resource type for the webhook. Creating a webhook requires 'read' scope on the resource the webhook is for.
+        :param resource: The resource type for the webhook. Creating a webhook requires 'read' scope on the resource
+            the webhook is for.
         :type resource: Resource
         :param event: The event type for the webhook.
         :type event: Event1
@@ -1735,7 +1882,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :type filter: str
         :param secret: The secret used to generate payload signature.
         :type secret: str
-        :param owned_by: Specified when creating an org/admin level webhook. Supported for meetings, recordings, meetingParticipants, and meetingTranscripts resources.
+        :param owned_by: Specified when creating an org/admin level webhook. Supported for meetings, recordings,
+            meetingParticipants, and meetingTranscripts resources.
         :type owned_by: str
         """
         body = CreateWebhookBody()
@@ -1771,8 +1919,10 @@ class WebhooksApi(ApiChild, base='webhooks'):
 
     def update(self, webhook_id: str, name: str, target_url: str, secret: str = None, owned_by: str = None, status: Status5 = None) -> Webhook:
         """
-        Updates a webhook, by ID. You cannot use this call to deactivate a webhook, only to activate a webhook that was auto deactivated. 
-        The fields that can be updated are name, targetURL, secret and status. All other fields, if supplied, are ignored.
+        Updates a webhook, by ID. You cannot use this call to deactivate a webhook, only to activate a webhook that was
+        auto deactivated.
+        The fields that can be updated are name, targetURL, secret and status. All other fields, if supplied, are
+        ignored.
         Specify the webhook ID in the webhookId parameter in the URI.
 
         :param webhook_id: The unique identifier for the webhook.
@@ -1783,7 +1933,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :type target_url: str
         :param secret: The secret used to generate payload signature.
         :type secret: str
-        :param owned_by: Specified when creating an org/admin level webhook. Supported for meetings, recordings, meetingParticipants and meetingTranscripts resources.
+        :param owned_by: Specified when creating an org/admin level webhook. Supported for meetings, recordings,
+            meetingParticipants and meetingTranscripts resources.
         :type owned_by: str
         :param status: The status of the webhook. Use "active" to reactivate a disabled webhook.
         :type status: Status5

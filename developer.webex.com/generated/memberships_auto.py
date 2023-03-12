@@ -4,7 +4,7 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
-from pydantic import Field
+from pydantic import Field, parse_obj_as
 
 
 __all__ = ['CreateMembershipBody', 'ListMembershipsResponse', 'Membership', 'MembershipsApi', 'RoomType']
@@ -58,7 +58,9 @@ class UpdateMembershipBody(ApiModel):
 
 class MembershipsApi(ApiChild, base='memberships'):
     """
-    Memberships represent a person's relationship to a room. Use this API to list members of any room that you're in or create memberships to invite someone to a room. Compliance Officers can now also list memberships for personEmails where the CO is not part of the room.
+    Memberships represent a person's relationship to a room. Use this API to list members of any room that you're in or
+    create memberships to invite someone to a room. Compliance Officers can now also list memberships for personEmails
+    where the CO is not part of the room.
     Memberships can also be updated to make someone a moderator, or deleted, to remove someone from the room.
     Just like in the Webex client, you must be a member of the room in order to list its memberships or invite people.
     """
@@ -68,15 +70,19 @@ class MembershipsApi(ApiChild, base='memberships'):
         Lists all room memberships. By default, lists memberships for rooms to which the authenticated user belongs.
         Use query parameters to filter the response.
         Use roomId to list memberships for a room, by ID.
-        NOTE: For moderated team spaces, the list of memberships will include only the space moderators if the user is a team member but not a direct participant of the space.
-        Use either personId or personEmail to filter the results. The roomId parameter is required when using these parameters.
+        NOTE: For moderated team spaces, the list of memberships will include only the space moderators if the user is
+        a team member but not a direct participant of the space.
+        Use either personId or personEmail to filter the results. The roomId parameter is required when using these
+        parameters.
         Long result sets will be split into pages.
 
         :param room_id: List memberships associated with a room, by ID.
         :type room_id: str
-        :param person_id: List memberships associated with a person, by ID. The roomId parameter is required when using this parameter.
+        :param person_id: List memberships associated with a person, by ID. The roomId parameter is required when using
+            this parameter.
         :type person_id: str
-        :param person_email: List memberships associated with a person, by email address. The roomId parameter is required when using this parameter.
+        :param person_email: List memberships associated with a person, by email address. The roomId parameter is
+            required when using this parameter.
         :type person_email: str
         """
         if room_id is not None:
@@ -135,7 +141,8 @@ class MembershipsApi(ApiChild, base='memberships'):
         :type membership_id: str
         :param is_moderator: Whether or not the participant is a room moderator.
         :type is_moderator: bool
-        :param is_room_hidden: When set to true, hides direct spaces in the teams client. Any new message will make the room visible again.
+        :param is_room_hidden: When set to true, hides direct spaces in the teams client. Any new message will make the
+            room visible again.
         :type is_room_hidden: bool
         """
         body = UpdateMembershipBody()
@@ -151,7 +158,8 @@ class MembershipsApi(ApiChild, base='memberships'):
         """
         Deletes a membership by ID.
         Specify the membership ID in the membershipId URI parameter.
-        The membership for the last moderator of a Team's General space may not be deleted; promote another user to team moderator first.
+        The membership for the last moderator of a Team's General space may not be deleted; promote another user to
+        team moderator first.
 
         :param membership_id: The unique identifier for the membership.
         :type membership_id: str

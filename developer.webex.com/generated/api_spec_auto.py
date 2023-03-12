@@ -4,10 +4,151 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
-from pydantic import Field
+from pydantic import Field, parse_obj_as
 
 
-__all__ = ['AccessCodes', 'AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 'ActivationStates', 'AddNewEventForPersonsScheduleResponse', 'AddPhoneNumbersTolocationBody', 'Address', 'Addresses', 'AlternateNumberSettings', 'AlternateNumbersObject', 'AlternateNumbersWithPattern', 'AlternateNumbersWithPattern1', 'Always', 'AnnouncementMode', 'Announcements', 'Announcements3', 'AtaDtmfMethodObject', 'AtaDtmfModeObject', 'AtaObject', 'AudioCodecPriorityObject', 'AutoAttendantCallForwardSettingsDetailsObject', 'AutoAttendantCallForwardSettingsModifyDetailsObject', 'AvailableSharedLineMemberItem', 'BackgroundImage', 'BacklightTimerObject', 'BehaviorType', 'BlockContiguousSequences', 'BlockPreviousPasscodes', 'BlockRepeatedDigits', 'BusinessContinuity', 'CDR', 'CLIDPolicySelection', 'Call', 'CallBounce', 'CallControlsApi', 'CallForwardRulesGet', 'CallForwardRulesModifyObject', 'CallForwardRulesObject', 'CallForwardSelectiveCallsFromCustomNumbersObject', 'CallForwardSelectiveCallsFromObject', 'CallForwardSelectiveCallsToNumbersObject', 'CallForwardSelectiveCallsToObject', 'CallForwardSelectiveForwardToObject', 'CallForwarding', 'CallForwarding1', 'CallForwarding4', 'CallForwardingPlaceSettingGet', 'CallForwardingPlaceSettingPatch', 'CallHistoryRecord', 'CallHistoryRecordTypeEnum', 'CallParkSettingsObject', 'CallPersonalityEnum', 'CallQueueAudioFilesObject', 'CallQueueHolidaySchedulesObject', 'CallQueueObject', 'CallQueueQueueSettingsObject', 'CallSourceInfo', 'CallSourceType', 'CallStateEnum', 'CallType', 'CallTypeEnum', 'CallerIdSelectedType', 'CallingLineId', 'CallingPermissionObject', 'CallingPermissions', 'Callparkextension', 'CallsFrom', 'CallsTo', 'ComfortMessage', 'ComfortMessageBypass', 'ConfigureCallRecordingSettingsForPersonBody', 'ConfigureCallerIDSettingsForPersonBody', 'ConfigurepersonsCallingBehaviorBody', 'CountObject', 'CreateAutoAttendantBody', 'CreateAutoAttendantResponse', 'CreateCallParkBody', 'CreateCallParkExtensionResponse', 'CreateCallParkResponse', 'CreateCallPickupBody', 'CreateCallPickupResponse', 'CreateCallQueueBody', 'CreateCallQueueResponse', 'CreateDialPlanResponse', 'CreateHuntGroupResponse', 'CreateLocationResponse', 'CreatePersonBody', 'CreateRouteGroupForOrganizationBody', 'CreateRouteGroupForOrganizationResponse', 'CreateRouteListResponse', 'CreateScheduleEventResponse', 'CreateScheduleForPersonBody', 'CreateScheduleForPersonResponse', 'CreateScheduleResponse', 'CreateSelectiveCallForwardingRuleForAutoAttendantBody', 'CreateSelectiveCallForwardingRuleForAutoAttendantResponse', 'CreateSelectiveCallForwardingRuleForCallQueueBody', 'CreateSelectiveCallForwardingRuleForCallQueueResponse', 'CreateSelectiveCallForwardingRuleForHuntGroupResponse', 'CreateTrunkResponse', 'CreatenewPagingGroupBody', 'CreatenewPagingGroupResponse', 'CreatenewVoicemailGroupForLocationResponse', 'CustomizationDeviceLevelObject', 'CustomizationObject', 'Day', 'DectDeviceList', 'DectObject', 'DefaultLoggingLevelObject', 'DefaultVoicemailPinRules', 'DestinationType', 'DeviceObject', 'DeviceOwner', 'DeviceStatus', 'DeviceType', 'Devices', 'DialPattern', 'DialPatternAction', 'DialPatternStatus', 'DialPatternValidate', 'DialPlan', 'DialResponse', 'DisplayCallqueueAgentSoftkeysObject', 'DisplayNameSelection', 'DistinctiveRing', 'EffectiveBehaviorType', 'EmailCopyOfMessage', 'Emergency', 'ErrorMessageObject', 'ErrorObject', 'EventLongDetails', 'ExpirePasscode', 'ExtensionDialing', 'ExtensionStatusObject', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts', 'FaxMessage', 'FeatureAccessCode', 'FetchEventForpersonsScheduleResponse', 'GenerateExamplePasswordForLocationResponse', 'GetAnnouncementFileInfo', 'GetAvailableAgentsFromCallParksResponse', 'GetAvailableAgentsFromCallPickupsResponse', 'GetAvailableRecallHuntGroupsFromCallParksResponse', 'GetAvailableRecallHuntGroupsObject', 'GetCallForwardAlwaysSettingObject', 'GetCallForwardingSettingsForAutoAttendantResponse', 'GetCallForwardingSettingsForCallQueueResponse', 'GetCallForwardingSettingsForHuntGroupResponse', 'GetCallParkSettingsResponse', 'GetCallRecordingSettingsResponse', 'GetCallRecordingTermsOfServiceSettingsResponse', 'GetDetailedCallHistoryResponse', 'GetDetailsForAutoAttendantResponse', 'GetDetailsForCallParkExtensionResponse', 'GetDetailsForCallParkResponse', 'GetDetailsForCallPickupResponse', 'GetDetailsForCallQueueForcedForwardResponse', 'GetDetailsForCallQueueHolidayServiceResponse', 'GetDetailsForCallQueueNightServiceResponse', 'GetDetailsForCallQueueResponse', 'GetDetailsForCallQueueStrandedCallsResponse', 'GetDetailsForHuntGroupResponse', 'GetDetailsForPagingGroupResponse', 'GetDetailsForScheduleResponse', 'GetDeviceMembersResponse', 'GetDeviceSettingsResponse', 'GetDialPlanResponse', 'GetListOfPhoneNumbersForPersonResponse', 'GetLocalGatewayCallToOnPremisesExtensionUsageForTrunkResponse', 'GetLocalGatewayDialPlanUsageForTrunkResponse', 'GetLocalGatewayUsageCountResponse', 'GetLocationInterceptResponse', 'GetLocationOutgoingPermissionResponse', 'GetLocationVoicemailGroupResponse', 'GetLocationVoicemailResponse', 'GetLocationWebexCallingDetailsResponse', 'GetLocationsUsingLocalGatewayAsPSTNConnectionRoutingResponse', 'GetManageNumbersJobStatusResponse', 'GetMessageSummaryResponse', 'GetMonitoredElementsObject', 'GetMusicOnHoldResponse', 'GetNumbersAssignedToRouteListResponse', 'GetOutgoingPermissionAutoTransferNumberResponse', 'GetOutgoingPermissionLocationAccessCodeResponse', 'GetPagingGroupAgentObject', 'GetPersonPlaceVirtualLineCallParksObject', 'GetPersonPlaceVirtualLineCallPickupObject', 'GetPersonPlaceVirtualLineCallQueueObject', 'GetPersonPlaceVirtualLineHuntGroupObject', 'GetPhoneNumbersForOrganizationWithGivenCriteriasResponse', 'GetPrivateNetworkConnectResponse', 'GetRecallHuntGroupObject', 'GetRouteGroupsUsingLocalGatewayResponse', 'GetRouteListResponse', 'GetScheduleDetailsResponse', 'GetScheduleEventObject', 'GetSelectiveCallForwardingRuleForAutoAttendantResponse', 'GetSelectiveCallForwardingRuleForCallQueueResponse', 'GetSharedLineAppearanceMembersResponse', 'GetSharedLineMemberItem', 'GetTrunkResponse', 'GetUserDevicesResponse', 'GetUserNumberItemObject', 'GetVoicePortalPasscodeRuleResponse', 'GetVoicePortalResponse', 'GetVoicemailGroupObject', 'GetVoicemailRulesResponse', 'GetVoicemailSettingsResponse', 'GetWorkspaceDevicesResponse', 'GetpersonsPrivacySettingsResponse', 'Greeting', 'Greeting29', 'HolidayScheduleLevel', 'HostedAgent', 'HostedAgentType', 'HostedFeature', 'Hoteling', 'HoursMenuObject', 'HuntPolicySelection', 'HuntRoutingTypeSelection', 'Incoming', 'InterceptAnnouncementsGet', 'InterceptIncomingGet', 'InterceptIncomingPatch', 'ItemObject', 'JobExecutionStatusObject', 'JobExecutionStatusObject1', 'KemModuleTypeObject', 'Key', 'KeyConfigurationsObject', 'Length', 'LineKeyLEDPattern', 'LineKeyLabelSelection', 'LineType', 'ListAutoAttendantObject', 'ListCPCallParkExtensionObject', 'ListCallHistoryResponse', 'ListCallParkExtensionObject', 'ListCallParkObject', 'ListCallQueueObject', 'ListCallsResponse', 'ListChangeDeviceSettingsJobErrorsResponse', 'ListChangeDeviceSettingsJobsResponse', 'ListLocationsResponse', 'ListManageNumbersJobErrorsResponse', 'ListManageNumbersJobsResponse', 'ListMessagesResponse', 'ListOfSchedulesForPersonResponse', 'ListPeopleResponse', 'ListScheduleObject', 'ListVirtualLineObject', 'ListVoicemailGroupResponse', 'LocalGateways', 'Location', 'LocationsApi', 'MacStatusObject', 'ManagedByObject', 'ManufacturerObject', 'MediaFileType', 'Member', 'MemberObject', 'MessageStorage', 'MessageStorage3', 'ModifyDialPlanBody', 'ModifyNumbersForRouteListResponse', 'ModifyPersonPlaceVirtualLineCallQueueObject', 'ModifyRouteListBody', 'ModifyScheduleEventListObject', 'ModifyTrunkBody', 'ModifypersonsApplicationServicesSettingsBody', 'ModifypersonsMonitoringSettingsBody', 'MohMessage', 'MonitoredElementItem', 'MonitoredElementUser', 'MonitoredMemberObject', 'MonitoredPersonObject', 'Month', 'MppAudioCodecPriorityObject', 'MppObject', 'MppVlanObject', 'NetworkConnectionType', 'NewNumber', 'NoAnswer', 'NoAnswer3', 'NormalSource', 'NumberItem', 'NumberListGetObject', 'NumberStatus', 'OnboardingMethodObject', 'Option', 'OriginatorType', 'Outgoing', 'Overflow', 'Owner', 'ParkResponse', 'PartyInformation', 'Passcode', 'PbxUser', 'PeopleApi', 'Person', 'PhoneLanguage', 'PhoneNumber', 'PhoneNumbers', 'PhoneNumbers7', 'PlaceDevices', 'PostCallQueueCallPolicyObject', 'PostHuntGroupCallPolicyObject', 'PostPersonPlaceVirtualLineCallQueueObject', 'PostPersonPlaceVirtualLineHuntGroupObject', 'PstnNumber', 'PushToTalkAccessType', 'PushToTalkConnectionType', 'PutMemberObject', 'PutRecallHuntGroupObject', 'PutSharedLineMemberItem', 'ReadBargeInSettingsForPersonResponse', 'ReadCallInterceptSettingsForWorkspaceResponse', 'ReadCallRecordingSettingsForPersonResponse', 'ReadCallToExtensionLocationsOfRoutingGroupResponse', 'ReadCallWaitingSettingsForPersonResponse', 'ReadCallerIDSettingsForPersonResponse', 'ReadDECTDeviceTypeListResponse', 'ReadDialPlanLocationsOfRoutingGroupResponse', 'ReadDoNotDisturbSettingsForPersonResponse', 'ReadForwardingSettingsForPersonResponse', 'ReadHotelingSettingsForPersonResponse', 'ReadIncomingPermissionSettingsForPersonResponse', 'ReadInternalDialingConfigurationForlocationResponse', 'ReadListOfAutoAttendantsResponse', 'ReadListOfCallParkExtensionsResponse', 'ReadListOfCallParksResponse', 'ReadListOfCallPickupsResponse', 'ReadListOfCallQueueAnnouncementFilesResponse', 'ReadListOfCallQueuesResponse', 'ReadListOfDialPatternsResponse', 'ReadListOfDialPlansResponse', 'ReadListOfHuntGroupsResponse', 'ReadListOfPagingGroupsResponse', 'ReadListOfRouteListsResponse', 'ReadListOfRoutingChoicesResponse', 'ReadListOfRoutingGroupsResponse', 'ReadListOfSchedulesResponse', 'ReadListOfSupportedDevicesResponse', 'ReadListOfTrunkTypesResponse', 'ReadListOfTrunksResponse', 'ReadListOfUCManagerProfilesResponse', 'ReadListOfVirtualLinesResponse', 'ReadPSTNConnectionLocationsOfRoutingGroupResponse', 'ReadPersonsCallingBehaviorResponse', 'ReadPushtoTalkSettingsForPersonResponse', 'ReadReceptionistClientSettingsForPersonResponse', 'ReadRouteGroupForOrganizationResponse', 'ReadRouteListsOfRoutingGroupResponse', 'ReadUsageOfRoutingGroupResponse', 'ReadVoicemailSettingsForPersonResponse', 'ReaddeviceOverrideSettingsFororganizationResponse', 'RecallInformation', 'RecallTypeEnum', 'Record', 'RecordingStateEnum', 'RecurWeekly2', 'RecurWeeklyObject', 'RecurYearlyByDateObject', 'RecurYearlyByDayObject', 'Recurrence', 'RecurrenceObject1', 'RedirectionInformation', 'RedirectionReasonEnum', 'RejectActionEnum', 'Repeat', 'ResponseStatus', 'ResponseStatusType', 'RetrieveAccessCodesForWorkspaceResponse', 'RetrieveCallForwardingSettingsForWorkspaceResponse', 'RetrieveCallQueueAgentsCallerIDInformationResponse', 'RetrieveCallWaitingSettingsForWorkspaceResponse', 'RetrieveCallerIDSettingsForWorkspaceResponse', 'RetrieveExecutiveAssistantSettingsForPersonResponse', 'RetrieveListOfCallQueueCallerIDInformationResponse', 'RetrieveMonitoringSettingsForWorkspaceResponse', 'RetrieveOutgoingPermissionSettingsForWorkspaceResponse', 'RetrievepersonsApplicationServicesSettingsResponse', 'RetrievepersonsMonitoringSettingsResponse', 'RetrievepersonsOutgoingCallingPermissionsSettingsResponse', 'RingPattern', 'RouteGroup', 'RouteGroupUsageRouteListGet', 'RouteIdentity', 'RouteList', 'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteType', 'ScheduleEventObject', 'ScheduleShortDetails', 'SearchMemberObject', 'SearchMembersResponse', 'SearchSharedLineAppearanceMembersResponse', 'Selection', 'Selection1', 'SelectionType', 'SendAllCalls', 'SendBusyCalls', 'SendBusyCalls1', 'SendUnansweredCalls', 'ServiceType', 'SipAddressesType', 'StartJobResponse', 'State', 'State1', 'State3', 'Status', 'Status5', 'StepExecutionStatusesObject', 'StorageType', 'TestCallRoutingResponse', 'Trunk', 'TrunkType', 'TrunkTypeWithDeviceType', 'Type', 'Type19', 'Type20', 'Type25', 'Type32', 'Type5', 'Type8', 'TypeObject', 'UnknownExtensionRouteIdentity', 'UpdateCallParkResponse', 'UpdateCallPickupResponse', 'UpdateDeviceSettingsBody', 'UpdateEventForpersonsScheduleResponse', 'UpdateLocationBody', 'UpdateLocationWebexCallingDetailsBody', 'UpdateScheduleEventResponse', 'UpdateScheduleResponse', 'UpdateScheduleResponse1', 'UpdateSelectiveCallForwardingRuleForAutoAttendantResponse', 'UpdateSelectiveCallForwardingRuleForCallQueueResponse', 'UpdateSelectiveCallForwardingRuleForHuntGroupResponse', 'UserNumberItem', 'ValidateDialPatternResponse', 'ValidateExtensionsResponse', 'ValidateLocalGatewayFQDNAndDomainForTrunkBody', 'ValidatelistOfMACAddressResponse', 'VirtualExtension', 'VlanObject', 'VoiceMailPartyInformation', 'VoiceMessageDetails', 'WaitMessage', 'WaitMode', 'WebexCallingDetailedCallHistoryApi', 'WebexCallingOrganizationSettingsApi', 'WebexCallingPersonSettingsApi', 'WebexCallingVoiceMessagingApi', 'WebexCallingWorkspaceSettingsApi', 'Week', 'WelcomeMessage', 'WifiNetworkObject']
+__all__ = ['AccessCodes', 'AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 'ActivationStates',
+           'AddNewEventForPersonsScheduleResponse', 'AddPhoneNumbersTolocationBody', 'Address', 'Addresses',
+           'AlternateNumberSettings', 'AlternateNumbersObject', 'AlternateNumbersWithPattern',
+           'AlternateNumbersWithPattern1', 'Always', 'AnnouncementMode', 'Announcements', 'Announcements3',
+           'AtaDtmfMethodObject', 'AtaDtmfModeObject', 'AtaObject', 'AudioCodecPriorityObject',
+           'AutoAttendantCallForwardSettingsDetailsObject', 'AutoAttendantCallForwardSettingsModifyDetailsObject',
+           'AvailableSharedLineMemberItem', 'BackgroundImage', 'BacklightTimerObject', 'BehaviorType',
+           'BlockContiguousSequences', 'BlockPreviousPasscodes', 'BlockRepeatedDigits', 'BusinessContinuity', 'CDR',
+           'CLIDPolicySelection', 'Call', 'CallBounce', 'CallControlsApi', 'CallForwardRulesGet',
+           'CallForwardRulesModifyObject', 'CallForwardRulesObject',
+           'CallForwardSelectiveCallsFromCustomNumbersObject', 'CallForwardSelectiveCallsFromObject',
+           'CallForwardSelectiveCallsToNumbersObject', 'CallForwardSelectiveCallsToObject',
+           'CallForwardSelectiveForwardToObject', 'CallForwarding', 'CallForwarding1', 'CallForwarding4',
+           'CallForwardingPlaceSettingGet', 'CallForwardingPlaceSettingPatch', 'CallHistoryRecord',
+           'CallHistoryRecordTypeEnum', 'CallParkSettingsObject', 'CallPersonalityEnum', 'CallQueueAudioFilesObject',
+           'CallQueueHolidaySchedulesObject', 'CallQueueObject', 'CallQueueQueueSettingsObject', 'CallSourceInfo',
+           'CallSourceType', 'CallStateEnum', 'CallType', 'CallTypeEnum', 'CallerIdSelectedType', 'CallingLineId',
+           'CallingPermissionObject', 'CallingPermissions', 'Callparkextension', 'CallsFrom', 'CallsTo',
+           'ComfortMessage', 'ComfortMessageBypass', 'ConfigureCallRecordingSettingsForPersonBody',
+           'ConfigureCallerIDSettingsForPersonBody', 'ConfigurepersonsCallingBehaviorBody', 'CountObject',
+           'CreateAutoAttendantBody', 'CreateAutoAttendantResponse', 'CreateCallParkBody',
+           'CreateCallParkExtensionResponse', 'CreateCallParkResponse', 'CreateCallPickupBody',
+           'CreateCallPickupResponse', 'CreateCallQueueBody', 'CreateCallQueueResponse', 'CreateDialPlanResponse',
+           'CreateHuntGroupResponse', 'CreateLocationResponse', 'CreatePersonBody',
+           'CreateRouteGroupForOrganizationBody', 'CreateRouteGroupForOrganizationResponse', 'CreateRouteListResponse',
+           'CreateScheduleEventResponse', 'CreateScheduleForPersonBody', 'CreateScheduleForPersonResponse',
+           'CreateScheduleResponse', 'CreateSelectiveCallForwardingRuleForAutoAttendantBody',
+           'CreateSelectiveCallForwardingRuleForAutoAttendantResponse',
+           'CreateSelectiveCallForwardingRuleForCallQueueBody',
+           'CreateSelectiveCallForwardingRuleForCallQueueResponse',
+           'CreateSelectiveCallForwardingRuleForHuntGroupResponse', 'CreateTrunkResponse', 'CreatenewPagingGroupBody',
+           'CreatenewPagingGroupResponse', 'CreatenewVoicemailGroupForLocationResponse',
+           'CustomizationDeviceLevelObject', 'CustomizationObject', 'Day', 'DectDeviceList', 'DectObject',
+           'DefaultLoggingLevelObject', 'DefaultVoicemailPinRules', 'DestinationType', 'DeviceObject', 'DeviceOwner',
+           'DeviceStatus', 'DeviceType', 'Devices', 'DialPattern', 'DialPatternAction', 'DialPatternStatus',
+           'DialPatternValidate', 'DialPlan', 'DialResponse', 'DisplayCallqueueAgentSoftkeysObject',
+           'DisplayNameSelection', 'DistinctiveRing', 'EffectiveBehaviorType', 'EmailCopyOfMessage', 'Emergency',
+           'ErrorMessageObject', 'ErrorObject', 'EventLongDetails', 'ExpirePasscode', 'ExtensionDialing',
+           'ExtensionStatusObject', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts', 'FaxMessage',
+           'FeatureAccessCode', 'FetchEventForpersonsScheduleResponse', 'GenerateExamplePasswordForLocationResponse',
+           'GetAnnouncementFileInfo', 'GetAvailableAgentsFromCallParksResponse',
+           'GetAvailableAgentsFromCallPickupsResponse', 'GetAvailableRecallHuntGroupsFromCallParksResponse',
+           'GetAvailableRecallHuntGroupsObject', 'GetCallForwardAlwaysSettingObject',
+           'GetCallForwardingSettingsForAutoAttendantResponse', 'GetCallForwardingSettingsForCallQueueResponse',
+           'GetCallForwardingSettingsForHuntGroupResponse', 'GetCallParkSettingsResponse',
+           'GetCallRecordingSettingsResponse', 'GetCallRecordingTermsOfServiceSettingsResponse',
+           'GetDetailedCallHistoryResponse', 'GetDetailsForAutoAttendantResponse',
+           'GetDetailsForCallParkExtensionResponse', 'GetDetailsForCallParkResponse',
+           'GetDetailsForCallPickupResponse', 'GetDetailsForCallQueueForcedForwardResponse',
+           'GetDetailsForCallQueueHolidayServiceResponse', 'GetDetailsForCallQueueNightServiceResponse',
+           'GetDetailsForCallQueueResponse', 'GetDetailsForCallQueueStrandedCallsResponse',
+           'GetDetailsForHuntGroupResponse', 'GetDetailsForPagingGroupResponse', 'GetDetailsForScheduleResponse',
+           'GetDeviceMembersResponse', 'GetDeviceSettingsResponse', 'GetDialPlanResponse',
+           'GetListOfPhoneNumbersForPersonResponse', 'GetLocalGatewayCallToOnPremisesExtensionUsageForTrunkResponse',
+           'GetLocalGatewayDialPlanUsageForTrunkResponse', 'GetLocalGatewayUsageCountResponse',
+           'GetLocationInterceptResponse', 'GetLocationOutgoingPermissionResponse',
+           'GetLocationVoicemailGroupResponse', 'GetLocationVoicemailResponse',
+           'GetLocationWebexCallingDetailsResponse', 'GetLocationsUsingLocalGatewayAsPSTNConnectionRoutingResponse',
+           'GetManageNumbersJobStatusResponse', 'GetMessageSummaryResponse', 'GetMonitoredElementsObject',
+           'GetMusicOnHoldResponse', 'GetNumbersAssignedToRouteListResponse',
+           'GetOutgoingPermissionAutoTransferNumberResponse', 'GetOutgoingPermissionLocationAccessCodeResponse',
+           'GetPagingGroupAgentObject', 'GetPersonPlaceVirtualLineCallParksObject',
+           'GetPersonPlaceVirtualLineCallPickupObject', 'GetPersonPlaceVirtualLineCallQueueObject',
+           'GetPersonPlaceVirtualLineHuntGroupObject', 'GetPhoneNumbersForOrganizationWithGivenCriteriasResponse',
+           'GetPrivateNetworkConnectResponse', 'GetRecallHuntGroupObject', 'GetRouteGroupsUsingLocalGatewayResponse',
+           'GetRouteListResponse', 'GetScheduleDetailsResponse', 'GetScheduleEventObject',
+           'GetSelectiveCallForwardingRuleForAutoAttendantResponse',
+           'GetSelectiveCallForwardingRuleForCallQueueResponse', 'GetSharedLineAppearanceMembersResponse',
+           'GetSharedLineMemberItem', 'GetTrunkResponse', 'GetUserDevicesResponse', 'GetUserNumberItemObject',
+           'GetVoicePortalPasscodeRuleResponse', 'GetVoicePortalResponse', 'GetVoicemailGroupObject',
+           'GetVoicemailRulesResponse', 'GetVoicemailSettingsResponse', 'GetWorkspaceDevicesResponse',
+           'GetpersonsPrivacySettingsResponse', 'Greeting', 'Greeting29', 'HolidayScheduleLevel', 'HostedAgent',
+           'HostedAgentType', 'HostedFeature', 'Hoteling', 'HoursMenuObject', 'HuntPolicySelection',
+           'HuntRoutingTypeSelection', 'Incoming', 'InterceptAnnouncementsGet', 'InterceptIncomingGet',
+           'InterceptIncomingPatch', 'ItemObject', 'JobExecutionStatusObject', 'JobExecutionStatusObject1',
+           'KemModuleTypeObject', 'Key', 'KeyConfigurationsObject', 'Length', 'LineKeyLEDPattern',
+           'LineKeyLabelSelection', 'LineType', 'ListAutoAttendantObject', 'ListCPCallParkExtensionObject',
+           'ListCallHistoryResponse', 'ListCallParkExtensionObject', 'ListCallParkObject', 'ListCallQueueObject',
+           'ListCallsResponse', 'ListChangeDeviceSettingsJobErrorsResponse', 'ListChangeDeviceSettingsJobsResponse',
+           'ListLocationsResponse', 'ListManageNumbersJobErrorsResponse', 'ListManageNumbersJobsResponse',
+           'ListMessagesResponse', 'ListOfSchedulesForPersonResponse', 'ListPeopleResponse', 'ListScheduleObject',
+           'ListVirtualLineObject', 'ListVoicemailGroupResponse', 'LocalGateways', 'Location', 'LocationsApi',
+           'MacStatusObject', 'ManagedByObject', 'ManufacturerObject', 'MediaFileType', 'Member', 'MemberObject',
+           'MessageStorage', 'MessageStorage3', 'ModifyDialPlanBody', 'ModifyNumbersForRouteListResponse',
+           'ModifyPersonPlaceVirtualLineCallQueueObject', 'ModifyRouteListBody', 'ModifyScheduleEventListObject',
+           'ModifyTrunkBody', 'ModifypersonsApplicationServicesSettingsBody', 'ModifypersonsMonitoringSettingsBody',
+           'MohMessage', 'MonitoredElementItem', 'MonitoredElementUser', 'MonitoredMemberObject',
+           'MonitoredPersonObject', 'Month', 'MppAudioCodecPriorityObject', 'MppObject', 'MppVlanObject',
+           'NetworkConnectionType', 'NewNumber', 'NoAnswer', 'NoAnswer3', 'NormalSource', 'NumberItem',
+           'NumberListGetObject', 'NumberStatus', 'OnboardingMethodObject', 'Option', 'OriginatorType', 'Outgoing',
+           'Overflow', 'Owner', 'ParkResponse', 'PartyInformation', 'Passcode', 'PbxUser', 'PeopleApi', 'Person',
+           'PhoneLanguage', 'PhoneNumber', 'PhoneNumbers', 'PhoneNumbers7', 'PlaceDevices',
+           'PostCallQueueCallPolicyObject', 'PostHuntGroupCallPolicyObject',
+           'PostPersonPlaceVirtualLineCallQueueObject', 'PostPersonPlaceVirtualLineHuntGroupObject', 'PstnNumber',
+           'PushToTalkAccessType', 'PushToTalkConnectionType', 'PutMemberObject', 'PutRecallHuntGroupObject',
+           'PutSharedLineMemberItem', 'ReadBargeInSettingsForPersonResponse',
+           'ReadCallInterceptSettingsForWorkspaceResponse', 'ReadCallRecordingSettingsForPersonResponse',
+           'ReadCallToExtensionLocationsOfRoutingGroupResponse', 'ReadCallWaitingSettingsForPersonResponse',
+           'ReadCallerIDSettingsForPersonResponse', 'ReadDECTDeviceTypeListResponse',
+           'ReadDialPlanLocationsOfRoutingGroupResponse', 'ReadDoNotDisturbSettingsForPersonResponse',
+           'ReadForwardingSettingsForPersonResponse', 'ReadHotelingSettingsForPersonResponse',
+           'ReadIncomingPermissionSettingsForPersonResponse', 'ReadInternalDialingConfigurationForlocationResponse',
+           'ReadListOfAutoAttendantsResponse', 'ReadListOfCallParkExtensionsResponse', 'ReadListOfCallParksResponse',
+           'ReadListOfCallPickupsResponse', 'ReadListOfCallQueueAnnouncementFilesResponse',
+           'ReadListOfCallQueuesResponse', 'ReadListOfDialPatternsResponse', 'ReadListOfDialPlansResponse',
+           'ReadListOfHuntGroupsResponse', 'ReadListOfPagingGroupsResponse', 'ReadListOfRouteListsResponse',
+           'ReadListOfRoutingChoicesResponse', 'ReadListOfRoutingGroupsResponse', 'ReadListOfSchedulesResponse',
+           'ReadListOfSupportedDevicesResponse', 'ReadListOfTrunkTypesResponse', 'ReadListOfTrunksResponse',
+           'ReadListOfUCManagerProfilesResponse', 'ReadListOfVirtualLinesResponse',
+           'ReadPSTNConnectionLocationsOfRoutingGroupResponse', 'ReadPersonsCallingBehaviorResponse',
+           'ReadPushtoTalkSettingsForPersonResponse', 'ReadReceptionistClientSettingsForPersonResponse',
+           'ReadRouteGroupForOrganizationResponse', 'ReadRouteListsOfRoutingGroupResponse',
+           'ReadUsageOfRoutingGroupResponse', 'ReadVoicemailSettingsForPersonResponse',
+           'ReaddeviceOverrideSettingsFororganizationResponse', 'RecallInformation', 'RecallTypeEnum', 'Record',
+           'RecordingStateEnum', 'RecurWeekly2', 'RecurWeeklyObject', 'RecurYearlyByDateObject',
+           'RecurYearlyByDayObject', 'Recurrence', 'RecurrenceObject1', 'RedirectionInformation',
+           'RedirectionReasonEnum', 'RejectActionEnum', 'Repeat', 'ResponseStatus', 'ResponseStatusType',
+           'RetrieveAccessCodesForWorkspaceResponse', 'RetrieveCallForwardingSettingsForWorkspaceResponse',
+           'RetrieveCallQueueAgentsCallerIDInformationResponse', 'RetrieveCallWaitingSettingsForWorkspaceResponse',
+           'RetrieveCallerIDSettingsForWorkspaceResponse', 'RetrieveExecutiveAssistantSettingsForPersonResponse',
+           'RetrieveListOfCallQueueCallerIDInformationResponse', 'RetrieveMonitoringSettingsForWorkspaceResponse',
+           'RetrieveOutgoingPermissionSettingsForWorkspaceResponse',
+           'RetrievepersonsApplicationServicesSettingsResponse', 'RetrievepersonsMonitoringSettingsResponse',
+           'RetrievepersonsOutgoingCallingPermissionsSettingsResponse', 'RingPattern', 'RouteGroup',
+           'RouteGroupUsageRouteListGet', 'RouteIdentity', 'RouteList', 'RouteListNumberPatch',
+           'RouteListNumberPatchResponse', 'RouteType', 'ScheduleEventObject', 'ScheduleShortDetails',
+           'SearchMemberObject', 'SearchMembersResponse', 'SearchSharedLineAppearanceMembersResponse', 'Selection',
+           'Selection1', 'SelectionType', 'SendAllCalls', 'SendBusyCalls', 'SendBusyCalls1', 'SendUnansweredCalls',
+           'ServiceType', 'SipAddressesType', 'StartJobResponse', 'State', 'State1', 'State3', 'Status', 'Status5',
+           'StepExecutionStatusesObject', 'StorageType', 'TestCallRoutingResponse', 'Trunk', 'TrunkType',
+           'TrunkTypeWithDeviceType', 'Type', 'Type19', 'Type20', 'Type25', 'Type32', 'Type5', 'Type8', 'TypeObject',
+           'UnknownExtensionRouteIdentity', 'UpdateCallParkResponse', 'UpdateCallPickupResponse',
+           'UpdateDeviceSettingsBody', 'UpdateEventForpersonsScheduleResponse', 'UpdateLocationBody',
+           'UpdateLocationWebexCallingDetailsBody', 'UpdateScheduleEventResponse', 'UpdateScheduleResponse',
+           'UpdateScheduleResponse1', 'UpdateSelectiveCallForwardingRuleForAutoAttendantResponse',
+           'UpdateSelectiveCallForwardingRuleForCallQueueResponse',
+           'UpdateSelectiveCallForwardingRuleForHuntGroupResponse', 'UserNumberItem', 'ValidateDialPatternResponse',
+           'ValidateExtensionsResponse', 'ValidateLocalGatewayFQDNAndDomainForTrunkBody',
+           'ValidatelistOfMACAddressResponse', 'VirtualExtension', 'VlanObject', 'VoiceMailPartyInformation',
+           'VoiceMessageDetails', 'WaitMessage', 'WaitMode', 'WebexCallingDetailedCallHistoryApi',
+           'WebexCallingOrganizationSettingsApi', 'WebexCallingPersonSettingsApi', 'WebexCallingVoiceMessagingApi',
+           'WebexCallingWorkspaceSettingsApi', 'Week', 'WelcomeMessage', 'WifiNetworkObject']
 
 
 class RejectActionEnum(str, Enum):
@@ -28,7 +169,8 @@ class CallTypeEnum(str, Enum):
 class VoiceMailPartyInformation(ApiModel):
     #: The party's name. Only present when the name is available and privacy is not enabled.
     name: Optional[str]
-    #: The party's number. Only present when the number is available and privacy is not enabled. The number can be digits or a URI. Some examples for number include: 1234, 2223334444, +12223334444, *73, and user@company.domain.
+    #: The party's number. Only present when the number is available and privacy is not enabled. The number can be
+    #: digits or a URI. Some examples for number include: 1234, 2223334444, +12223334444, *73, and user@company.domain.
     number: Optional[str]
     #: The party's person ID. Only present when the person ID is available and privacy is not enabled.
     person_id: Optional[str]
@@ -46,7 +188,8 @@ class PartyInformation(VoiceMailPartyInformation):
 class DialResponse(ApiModel):
     #: A unique identifier for the call which is used in all subsequent commands for the same call.
     call_id: Optional[str]
-    #: A unique identifier for the call session the call belongs to. This can be used to correlate multiple calls that are part of the same call session.
+    #: A unique identifier for the call session the call belongs to. This can be used to correlate multiple calls that
+    #: are part of the same call session.
     call_session_id: Optional[str]
 
 
@@ -90,9 +233,12 @@ class RecallTypeEnum(str, Enum):
 
 
 class RecallInformation(ApiModel):
-    #: The type of recall the incoming call is for. Park is the only type of recall currently supported but additional values may be added in the future.
+    #: The type of recall the incoming call is for. Park is the only type of recall currently supported but additional
+    #: values may be added in the future.
     type: Optional[RecallTypeEnum]
-    #: If the type is park, contains the details of where the call was parked. For example, if user A parks a call against user B and A is recalled for the park, then this field contains B's information in A's incoming call details. Only present when the type is park.
+    #: If the type is park, contains the details of where the call was parked. For example, if user A parks a call
+    #: against user B and A is recalled for the park, then this field contains B's information in A's incoming call
+    #: details. Only present when the type is park.
     party: Optional[PartyInformation]
 
 
@@ -107,25 +253,32 @@ class RecordingStateEnum(str, Enum):
 class Call(ApiModel):
     #: The call identifier of the call.
     id: Optional[str]
-    #: The call session identifier of the call session the call belongs to. This can be used to correlate multiple calls that are part of the same call session.
+    #: The call session identifier of the call session the call belongs to. This can be used to correlate multiple
+    #: calls that are part of the same call session.
     call_session_id: Optional[str]
-    #:  The personality of the call.
+    #: The personality of the call.
     personality: Optional[CallPersonalityEnum]
     #: The current state of the call.
     state: Optional[CallStateEnum]
-    #: The remote party's details. For example, if user A calls user B then B is the remote party in A's outgoing call details and A is the remote party in B's incoming call details.
+    #: The remote party's details. For example, if user A calls user B then B is the remote party in A's outgoing call
+    #: details and A is the remote party in B's incoming call details.
     remote_party: Optional[PartyInformation]
-    #: The appearance value for the call. The appearance value can be used to display the user's calls in an order consistent with the user's devices. Only present when the call has an appearance value assigned.
+    #: The appearance value for the call. The appearance value can be used to display the user's calls in an order
+    #: consistent with the user's devices. Only present when the call has an appearance value assigned.
     appearance: Optional[int]
     #: The date and time the call was created.
     created: Optional[str]
     #: The date and time the call was answered. Only present when the call has been answered.
     answered: Optional[str]
-    #: The list of details for previous redirections of the incoming call ordered from most recent to least recent. For example, if user B forwards an incoming call to user C, then a redirection entry is present for B's forwarding in C's incoming call details. Only present when there were previous redirections and the incoming call's state is alerting.
+    #: The list of details for previous redirections of the incoming call ordered from most recent to least recent. For
+    #: example, if user B forwards an incoming call to user C, then a redirection entry is present for B's forwarding
+    #: in C's incoming call details. Only present when there were previous redirections and the incoming call's state
+    #: is alerting.
     redirections: Optional[list[RedirectionInformation]]
     #: The recall details for the incoming call. Only present when the incoming call is for a recall.
     recall: Optional[RecallInformation]
-    #: The call's current recording state. Only present when the user's call recording has been invoked during the life of the call.
+    #: The call's current recording state. Only present when the user's call recording has been invoked during the life
+    #: of the call.
     recording_state: Optional[RecordingStateEnum]
 
 
@@ -140,16 +293,21 @@ class CallHistoryRecord(ApiModel):
     type: Optional[CallHistoryRecordTypeEnum]
     #: The name of the called/calling party. Only present when the name is available and privacy is not enabled.
     name: Optional[str]
-    #: The number of the called/calling party. Only present when the number is available and privacy is not enabled. The number can be digits or a URI. Some examples for number include: 1234, 2223334444, +12223334444, *73, user@company.domain
+    #: The number of the called/calling party. Only present when the number is available and privacy is not enabled.
+    #: The number can be digits or a URI. Some examples for number include: 1234, 2223334444, +12223334444, *73,
+    #: user@company.domain
     number: Optional[str]
     #: Indicates whether privacy is enabled for the name and number.
     privacy_enabled: Optional[bool]
-    #: The date and time the call history record was created. For a placed call history record, this is when the call was placed. For a missed call history record, this is when the call was disconnected. For a received call history record, this is when the call was answered.
+    #: The date and time the call history record was created. For a placed call history record, this is when the call
+    #: was placed. For a missed call history record, this is when the call was disconnected. For a received call
+    #: history record, this is when the call was answered.
     time: Optional[str]
 
 
 class DialBody(ApiModel):
-    #: The destination to be dialed. The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444, +12223334444, *73, tel:+12223334444, user@company.domain, and sip:user@company.domain.
+    #: The destination to be dialed. The destination can be digits or a URI. Some examples for destination include:
+    #: 1234, 2223334444, +12223334444, *73, tel:+12223334444, user@company.domain, and sip:user@company.domain.
     destination: Optional[str]
 
 
@@ -183,27 +341,37 @@ class ResumeBody(ApiModel):
 class DivertBody(ApiModel):
     #: The call identifier of the call to divert.
     call_id: Optional[str]
-    #: The destination to divert the call to. If toVoicemail is false, destination is required. The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444, +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain
+    #: The destination to divert the call to. If toVoicemail is false, destination is required. The destination can be
+    #: digits or a URI. Some examples for destination include: 1234, 2223334444, +12223334444, *73, tel:+12223334444,
+    #: user@company.domain, sip:user@company.domain
     destination: Optional[str]
-    #: If set to true, the call is diverted to voicemail. If no destination is specified, the call is diverted to the user's own voicemail. If a destination is specified, the call is diverted to the specified user's voicemail.
+    #: If set to true, the call is diverted to voicemail. If no destination is specified, the call is diverted to the
+    #: user's own voicemail. If a destination is specified, the call is diverted to the specified user's voicemail.
     to_voicemail: Optional[bool]
 
 
 class TransferBody(ApiModel):
-    #: The call identifier of the first call to transfer. This parameter is mandatory if either callId2 or destination is provided.
+    #: The call identifier of the first call to transfer. This parameter is mandatory if either callId2 or destination
+    #: is provided.
     call_id1: Optional[str]
-    #: The call identifier of the second call to transfer. This parameter is mandatory if callId1 is provided and destination is not provided.
+    #: The call identifier of the second call to transfer. This parameter is mandatory if callId1 is provided and
+    #: destination is not provided.
     call_id2: Optional[str]
-    #: The destination to be transferred to. The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain. This parameter is mandatory if callId1 is provided and callId2 is not provided.
+    #: The destination to be transferred to. The destination can be digits or a URI. Some examples for destination
+    #: include: 1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain. This
+    #: parameter is mandatory if callId1 is provided and callId2 is not provided.
     destination: Optional[str]
 
 
 class ParkBody(ApiModel):
     #: The call identifier of the call to park.
     call_id: Optional[str]
-    #: Identifes where the call is to be parked. If not provided, the call is parked against the parking user. The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444, +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain
+    #: Identifes where the call is to be parked. If not provided, the call is parked against the parking user. The
+    #: destination can be digits or a URI. Some examples for destination include: 1234, 2223334444, +12223334444, *73,
+    #: tel:+12223334444, user@company.domain, sip:user@company.domain
     destination: Optional[str]
-    #: If set totrue, the call is parked against an automatically selected member of the user's call park group and the destination parameter is ignored.
+    #: If set totrue, the call is parked against an automatically selected member of the user's call park group and the
+    #: destination parameter is ignored.
     is_group_park: Optional[bool]
 
 
@@ -213,7 +381,10 @@ class ParkResponse(ApiModel):
 
 
 class RetrieveBody(ApiModel):
-    #: Identifies where the call is parked. The number field from the park command response can be used as the destination for the retrieve command. If not provided, the call parked against the retrieving user is retrieved. The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444, +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain
+    #: Identifies where the call is parked. The number field from the park command response can be used as the
+    #: destination for the retrieve command. If not provided, the call parked against the retrieving user is retrieved.
+    #: The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444, +12223334444,
+    #: *73, tel:+12223334444, user@company.domain, sip:user@company.domain
     destination: Optional[str]
 
 
@@ -240,7 +411,9 @@ class ResumeRecordingBody(ApiModel):
 class TransmitDTMFBody(ApiModel):
     #: The call identifier of the call to transmit DTMF digits for.
     call_id: Optional[str]
-    #: The DTMF digits to transmit. Each digit must be part of the following set: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, *, #, A, B, C, D]. A comma "," may be included to indicate a pause between digits. For the value “1,234”, the DTMF 1 digit is initially sent. After a pause, the DTMF 2, 3, and 4 digits are sent successively.
+    #: The DTMF digits to transmit. Each digit must be part of the following set: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, *, #,
+    #: A, B, C, D]. A comma "," may be included to indicate a pause between digits. For the value “1,234”, the DTMF 1
+    #: digit is initially sent. After a pause, the DTMF 2, 3, and 4 digits are sent successively.
     dtmf: Optional[str]
 
 
@@ -250,12 +423,15 @@ class PushBody(ApiModel):
 
 
 class PickupBody(ApiModel):
-    #: Identifies the user to pickup an incoming call from. If not provided, an incoming call to the user's call pickup group is picked up. The target can be digits or a URI. Some examples for target include: 1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain
+    #: Identifies the user to pickup an incoming call from. If not provided, an incoming call to the user's call pickup
+    #: group is picked up. The target can be digits or a URI. Some examples for target include: 1234, 2223334444,
+    #: +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain
     target: Optional[str]
 
 
 class BargeInBody(ApiModel):
-    #: Identifies the user to barge-in on. The target can be digits or a URI. Some examples for target include: 1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain
+    #: Identifies the user to barge-in on. The target can be digits or a URI. Some examples for target include: 1234,
+    #: 2223334444, +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain
     target: Optional[str]
 
 
@@ -277,9 +453,13 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
     def dial(self, destination: str) -> DialResponse:
         """
-        Initiate an outbound call to a specified destination. This is also commonly referred to as Click to Call or Click to Dial. Alerts occur on all the devices belonging to a user. When a user answers on one of these alerting devices, an outbound call is placed from that device to the destination.
+        Initiate an outbound call to a specified destination. This is also commonly referred to as Click to Call or
+        Click to Dial. Alerts occur on all the devices belonging to a user. When a user answers on one of these
+        alerting devices, an outbound call is placed from that device to the destination.
 
-        :param destination: The destination to be dialed. The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444, +12223334444, *73, tel:+12223334444, user@company.domain, and sip:user@company.domain.
+        :param destination: The destination to be dialed. The destination can be digits or a URI. Some examples for
+            destination include: 1234, 2223334444, +12223334444, *73, tel:+12223334444, user@company.domain, and
+            sip:user@company.domain.
         :type destination: str
         """
         body = DialBody()
@@ -309,7 +489,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
         :param call_id: The call identifier of the call to be rejected.
         :type call_id: str
-        :param action: The rejection action to apply to the call. The busy action is applied if no specific action is provided.
+        :param action: The rejection action to apply to the call. The busy action is applied if no specific action is
+            provided.
         :type action: RejectActionEnum
         """
         body = RejectBody()
@@ -369,9 +550,13 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
         :param call_id: The call identifier of the call to divert.
         :type call_id: str
-        :param destination: The destination to divert the call to. If toVoicemail is false, destination is required. The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444, +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain
+        :param destination: The destination to divert the call to. If toVoicemail is false, destination is required.
+            The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444,
+            +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain
         :type destination: str
-        :param to_voicemail: If set to true, the call is diverted to voicemail. If no destination is specified, the call is diverted to the user's own voicemail. If a destination is specified, the call is diverted to the specified user's voicemail.
+        :param to_voicemail: If set to true, the call is diverted to voicemail. If no destination is specified, the
+            call is diverted to the user's own voicemail. If a destination is specified, the call is diverted to the
+            specified user's voicemail.
         :type to_voicemail: bool
         """
         body = DivertBody()
@@ -389,16 +574,26 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         """
         Transfer two calls together.
         Unanswered incoming calls cannot be transferred but can be diverted using the divert API.
-        If the user has only two calls and wants to transfer them together, the callId1 and callId2 parameters are optional and when not provided the calls are automatically selected and transferred.
-        If the user has more than two calls and wants to transfer two of them together, the callId1 and callId2 parameters are mandatory to specify which calls are being transferred. Those are also commonly referred to as Attended Transfer, Consultative Transfer, or Supervised Transfer and will return a 204 response.
-        If the user wants to transfer one call to a new destination but only when the destination responds, the callId1 and destination parameters are mandatory to specify the call being transferred and the destination.
-        This is referred to as a Mute Transfer and is similar to the divert API with the difference of waiting for the destination to respond prior to transferring the call. If the destination does not respond, the call is not transferred. This will return a 201 response.
+        If the user has only two calls and wants to transfer them together, the callId1 and callId2 parameters are
+        optional and when not provided the calls are automatically selected and transferred.
+        If the user has more than two calls and wants to transfer two of them together, the callId1 and callId2
+        parameters are mandatory to specify which calls are being transferred. Those are also commonly referred to as
+        Attended Transfer, Consultative Transfer, or Supervised Transfer and will return a 204 response.
+        If the user wants to transfer one call to a new destination but only when the destination responds, the callId1
+        and destination parameters are mandatory to specify the call being transferred and the destination.
+        This is referred to as a Mute Transfer and is similar to the divert API with the difference of waiting for the
+        destination to respond prior to transferring the call. If the destination does not respond, the call is not
+        transferred. This will return a 201 response.
 
-        :param call_id1: The call identifier of the first call to transfer. This parameter is mandatory if either callId2 or destination is provided.
+        :param call_id1: The call identifier of the first call to transfer. This parameter is mandatory if either
+            callId2 or destination is provided.
         :type call_id1: str
-        :param call_id2: The call identifier of the second call to transfer. This parameter is mandatory if callId1 is provided and destination is not provided.
+        :param call_id2: The call identifier of the second call to transfer. This parameter is mandatory if callId1 is
+            provided and destination is not provided.
         :type call_id2: str
-        :param destination: The destination to be transferred to. The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain. This parameter is mandatory if callId1 is provided and callId2 is not provided.
+        :param destination: The destination to be transferred to. The destination can be digits or a URI. Some examples
+            for destination include: 1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain,
+            sip:user@company.domain. This parameter is mandatory if callId1 is provided and callId2 is not provided.
         :type destination: str
         """
         body = TransferBody()
@@ -414,13 +609,17 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
     def park(self, call_id: str, destination: str = None, is_group_park: bool = None) -> PartyInformation:
         """
-        Park a connected call. The number field in the response can be used as the destination for the retrieve command to retrieve the parked call.
+        Park a connected call. The number field in the response can be used as the destination for the retrieve command
+        to retrieve the parked call.
 
         :param call_id: The call identifier of the call to park.
         :type call_id: str
-        :param destination: Identifes where the call is to be parked. If not provided, the call is parked against the parking user. The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444, +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain
+        :param destination: Identifes where the call is to be parked. If not provided, the call is parked against the
+            parking user. The destination can be digits or a URI. Some examples for destination include: 1234,
+            2223334444, +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain
         :type destination: str
-        :param is_group_park: If set totrue, the call is parked against an automatically selected member of the user's call park group and the destination parameter is ignored.
+        :param is_group_park: If set totrue, the call is parked against an automatically selected member of the user's
+            call park group and the destination parameter is ignored.
         :type is_group_park: bool
         """
         body = ParkBody()
@@ -436,9 +635,14 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
     def retrieve(self, destination: str = None) -> DialResponse:
         """
-        Retrieve a parked call. A new call is initiated to perform the retrieval in a similar manner to the dial command. The number field from the park command response can be used as the destination for the retrieve command.
+        Retrieve a parked call. A new call is initiated to perform the retrieval in a similar manner to the dial
+        command. The number field from the park command response can be used as the destination for the retrieve
+        command.
 
-        :param destination: Identifies where the call is parked. The number field from the park command response can be used as the destination for the retrieve command. If not provided, the call parked against the retrieving user is retrieved. The destination can be digits or a URI. Some examples for destination include: 1234, 2223334444, +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain
+        :param destination: Identifies where the call is parked. The number field from the park command response can be
+            used as the destination for the retrieve command. If not provided, the call parked against the retrieving
+            user is retrieved. The destination can be digits or a URI. Some examples for destination include: 1234,
+            2223334444, +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain
         :type destination: str
         """
         body = RetrieveBody()
@@ -450,7 +654,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
     def start(self, call_id: str = None):
         """
-        Start recording a call. Use of this API is only valid when the user's call recording mode is set to "On Demand".
+        Start recording a call. Use of this API is only valid when the user's call recording mode is set to "On
+        Demand".
 
         :param call_id: The call identifier of the call to start recording.
         :type call_id: str
@@ -464,7 +669,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
     def stop(self, call_id: str = None):
         """
-        Stop recording a call. Use of this API is only valid when a call is being recorded and the user's call recording mode is set to "On Demand".
+        Stop recording a call. Use of this API is only valid when a call is being recorded and the user's call
+        recording mode is set to "On Demand".
 
         :param call_id: The call identifier of the call to stop recording.
         :type call_id: str
@@ -478,7 +684,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
     def pause(self, call_id: str = None):
         """
-        Pause recording on a call. Use of this API is only valid when a call is being recorded and the user's call recording mode is set to "On Demand" or "Always with Pause/Resume".
+        Pause recording on a call. Use of this API is only valid when a call is being recorded and the user's call
+        recording mode is set to "On Demand" or "Always with Pause/Resume".
 
         :param call_id: The call identifier of the call to pause recording.
         :type call_id: str
@@ -492,7 +699,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
     def resume(self, call_id: str = None):
         """
-        Resume recording a call. Use of this API is only valid when a call's recording is paused and the user's call recording mode is set to "On Demand" or "Always with Pause/Resume".
+        Resume recording a call. Use of this API is only valid when a call's recording is paused and the user's call
+        recording mode is set to "On Demand" or "Always with Pause/Resume".
 
         :param call_id: The call identifier of the call to resume recording.
         :type call_id: str
@@ -510,7 +718,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
         :param call_id: The call identifier of the call to transmit DTMF digits for.
         :type call_id: str
-        :param dtmf: The DTMF digits to transmit. Each digit must be part of the following set: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, *, #, A, B, C, D]. A comma "," may be included to indicate a pause between digits. For the value “1,234”, the DTMF 1 digit is initially sent. After a pause, the DTMF 2, 3, and 4 digits are sent successively.
+        :param dtmf: The DTMF digits to transmit. Each digit must be part of the following set: [0, 1, 2, 3, 4, 5, 6,
+            7, 8, 9, *, #, A, B, C, D]. A comma "," may be included to indicate a pause between digits. For the value
+            “1,234”, the DTMF 1 digit is initially sent. After a pause, the DTMF 2, 3, and 4 digits are sent
+            successively.
         :type dtmf: str
         """
         body = TransmitDTMFBody()
@@ -524,7 +735,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
     def push(self, call_id: str = None):
         """
-        Pushes a call from the assistant to the executive the call is associated with. Use of this API is only valid when the assistant's call is associated with an executive.
+        Pushes a call from the assistant to the executive the call is associated with. Use of this API is only valid
+        when the assistant's call is associated with an executive.
 
         :param call_id: The call identifier of the call to push.
         :type call_id: str
@@ -538,9 +750,13 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
     def pickup(self, target: str = None) -> DialResponse:
         """
-        Picks up an incoming call to another user. A new call is initiated to perform the pickup in a similar manner to the dial command. When target is not present, the API pickups up a call from the user's call pickup group. When target is present, the API pickups an incoming call from the specified target user.
+        Picks up an incoming call to another user. A new call is initiated to perform the pickup in a similar manner to
+        the dial command. When target is not present, the API pickups up a call from the user's call pickup group. When
+        target is present, the API pickups an incoming call from the specified target user.
 
-        :param target: Identifies the user to pickup an incoming call from. If not provided, an incoming call to the user's call pickup group is picked up. The target can be digits or a URI. Some examples for target include: 1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain
+        :param target: Identifies the user to pickup an incoming call from. If not provided, an incoming call to the
+            user's call pickup group is picked up. The target can be digits or a URI. Some examples for target include:
+            1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain
         :type target: str
         """
         body = PickupBody()
@@ -552,9 +768,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
     def barge_in(self, target: str) -> DialResponse:
         """
-        Barge-in on another user's answered call. A new call is initiated to perform the barge-in in a similar manner to the dial command.
+        Barge-in on another user's answered call. A new call is initiated to perform the barge-in in a similar manner
+        to the dial command.
 
-        :param target: Identifies the user to barge-in on. The target can be digits or a URI. Some examples for target include: 1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain
+        :param target: Identifies the user to barge-in on. The target can be digits or a URI. Some examples for target
+            include: 1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain
         :type target: str
         """
         body = BargeInBody()
@@ -584,10 +802,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
     def list_call_history(self, type_: str = None, **params) -> Generator[ListCallHistoryResponse, None, None]:
         """
-        Get the list of call history records for the user. A maximum of 20 call history records per type (placed, missed, received) are returned.
+        Get the list of call history records for the user. A maximum of 20 call history records per type (placed,
+        missed, received) are returned.
 
-        :param type_: The type of call history records to retrieve. If not specified, then all call history records are retrieved.
-Possible values: placed, missed, received
+        :param type_: The type of call history records to retrieve. If not specified, then all call history records are
+            retrieved. Possible values: placed, missed, received
         :type type_: str
         """
         if type_ is not None:
@@ -629,7 +848,9 @@ class Location(GetAvailableRecallHuntGroupsObject):
 class UpdateLocationBody(ApiModel):
     #: The name of the location.
     name: Optional[str]
-    #: Time zone associated with this location, refer to this link (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone) for format.
+    #: Time zone associated with this location, refer to this link
+    #: (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone)
+    #: for format.
     time_zone: Optional[str]
     #: Default email language.
     preferred_language: Optional[str]
@@ -653,7 +874,9 @@ class CreateLocationResponse(ApiModel):
 
 class LocationsApi(ApiChild, base='locations'):
     """
-    Locations allow you to organize users and workspaces based on a physical location. You can configure both calling and workspace management functions into the same location. You can also create and inspect locations in Webex Control Hub. See Locations on Control Hub for more information.
+    Locations allow you to organize users and workspaces based on a physical location. You can configure both calling
+    and workspace management functions into the same location. You can also create and inspect locations in Webex
+    Control Hub. See Locations on Control Hub for more information.
     """
 
     def list(self, name: str = None, id: str = None, org_id: str = None, **params) -> Generator[Location, None, None]:
@@ -664,7 +887,8 @@ class LocationsApi(ApiChild, base='locations'):
         :type name: str
         :param id: List locations by ID.
         :type id: str
-        :param org_id: List locations in this organization. Only admin users of another organization (such as partners) may use this parameter.
+        :param org_id: List locations in this organization. Only admin users of another organization (such as partners)
+            may use this parameter.
         :type org_id: str
         """
         if name is not None:
@@ -702,7 +926,9 @@ class LocationsApi(ApiChild, base='locations'):
         :type org_id: str
         :param name: The name of the location.
         :type name: str
-        :param time_zone: Time zone associated with this location, refer to this link (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone) for format.
+        :param time_zone: Time zone associated with this location, refer to this link
+            (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone)
+            for format.
         :type time_zone: str
         :param preferred_language: Default email language.
         :type preferred_language: str
@@ -737,7 +963,9 @@ class LocationsApi(ApiChild, base='locations'):
         :type org_id: str
         :param name: The name of the location.
         :type name: str
-        :param time_zone: Time zone associated with this location, refer to this link (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone) for format.
+        :param time_zone: Time zone associated with this location, refer to this link
+            (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone)
+            for format.
         :type time_zone: str
         :param preferred_language: Default email language.
         :type preferred_language: str
@@ -845,10 +1073,12 @@ class CreatePersonBody(ApiModel):
     #: The ID of the organization to which this person belongs.
     org_id: Optional[str]
     #: An array of role strings representing the roles to which this admin user belongs.
-    #: Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh, Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
+    #: Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+    #: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
     roles: Optional[list[str]]
     #: An array of license strings allocated to this person.
-    #: Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh, Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
+    #: Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+    #: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
     licenses: Optional[list[str]]
     #: The business department the user belongs to.
     department: Optional[str]
@@ -860,7 +1090,8 @@ class CreatePersonBody(ApiModel):
     title: Optional[str]
     #: Person's address
     addresses: Optional[list[Addresses]]
-    #: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg: mysite.webex.com#attendee)
+    #: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg:
+    #: mysite.webex.com#attendee)
     #: Possible values: mysite.webex.com#attendee
     site_urls: Optional[list[str]]
 
@@ -868,23 +1099,31 @@ class CreatePersonBody(ApiModel):
 class Person(CreatePersonBody):
     #: A unique identifier for the person.
     id: Optional[str]
-    #: The nickname of the person if configured. If no nickname is configured for the person, this field will not be present.
+    #: The nickname of the person if configured. If no nickname is configured for the person, this field will not be
+    #: present.
     nick_name: Optional[str]
     #: The date and time the person was created.
     created: Optional[str]
     #: The date and time the person was last changed.
     last_modified: Optional[str]
-    #: The time zone of the person if configured. If no timezone is configured on the account, this field will not be present
+    #: The time zone of the person if configured. If no timezone is configured on the account, this field will not be
+    #: present
     timezone: Optional[str]
-    #: The date and time of the person's last activity within Webex. This will only be returned for people within your organization or an organization you manage. Presence information will not be shown if the authenticated user has disabled status sharing.
+    #: The date and time of the person's last activity within Webex. This will only be returned for people within your
+    #: organization or an organization you manage. Presence information will not be shown if the authenticated user has
+    #: disabled status sharing.
     last_activity: Optional[str]
     #: The users sip addresses
     sip_addresses: Optional[list[SipAddressesType]]
-    #: The current presence status of the person. This will only be returned for people within your organization or an organization you manage. Presence information will not be shown if the authenticated user has disabled status sharing.
+    #: The current presence status of the person. This will only be returned for people within your organization or an
+    #: organization you manage. Presence information will not be shown if the authenticated user has disabled status
+    #: sharing.
     status: Optional[Status]
-    #: Whether or not an invite is pending for the user to complete account activation. This property is only returned if the authenticated user is an admin user for the person's organization.
+    #: Whether or not an invite is pending for the user to complete account activation. This property is only returned
+    #: if the authenticated user is an admin user for the person's organization.
     invite_pending: Optional[bool]
-    #: Whether or not the user is allowed to use Webex. This property is only returned if the authenticated user is an admin user for the person's organization.
+    #: Whether or not the user is allowed to use Webex. This property is only returned if the authenticated user is an
+    #: admin user for the person's organization.
     login_enabled: Optional[bool]
     #: The type of person account, such as person or bot.
     type: Optional[Type]
@@ -900,33 +1139,51 @@ class ListPeopleResponse(ApiModel):
 class UpdatePersonBody(CreatePersonBody):
     #: The nickname of the person if configured. Set to the firstName automatically in update request.
     nick_name: Optional[str]
-    #: Whether or not the user is allowed to use Webex. This property is only accessible if the authenticated user is an admin user for the person's organization.
+    #: Whether or not the user is allowed to use Webex. This property is only accessible if the authenticated user is
+    #: an admin user for the person's organization.
     login_enabled: Optional[bool]
 
 
 class PeopleApi(ApiChild, base='people'):
     """
-    People are registered users of Webex. Searching and viewing People requires an auth token with a scope of spark:people_read. Viewing the list of all People in your Organization requires an administrator auth token with spark-admin:people_read scope. Adding, updating, and removing People requires an administrator auth token with the spark-admin:people_write and spark-admin:people_read scope.
+    People are registered users of Webex. Searching and viewing People requires an auth token with a scope of
+    spark:people_read. Viewing the list of all People in your Organization requires an administrator auth token with
+    spark-admin:people_read scope. Adding, updating, and removing People requires an administrator auth token with the
+    spark-admin:people_write and spark-admin:people_read scope.
     A person's call settings are for Webex Calling and necessitate Webex Calling licenses.
-    To learn more about managing people in a room see the Memberships API. For information about how to allocate Hybrid Services licenses to people, see the Managing Hybrid Services guide.
+    To learn more about managing people in a room see the Memberships API. For information about how to allocate Hybrid
+    Services licenses to people, see the Managing Hybrid Services guide.
     """
 
     def list_people(self, email: str = None, display_name: str = None, id: str = None, org_id: str = None, roles: str = None, calling_data: bool = None, location_id: str = None, **params) -> Generator[Person, None, None]:
         """
-        List people in your organization. For most users, either the email or displayName parameter is required. Admin users can omit these fields and list all users in their organization.
-        Response properties associated with a user's presence status, such as status or lastActivity, will only be returned for people within your organization or an organization you manage. Presence information will not be returned if the authenticated user has disabled status sharing.
-        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData parameter as true. Admin users can list all users in a location or with a specific phone number. Admin users will receive an enriched payload with additional administrative fields like liceneses,roles etc. These fields are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=
-        Lookup by email is only supported for people within the same org or where a partner admin relationship is in place.
+        List people in your organization. For most users, either the email or displayName parameter is required. Admin
+        users can omit these fields and list all users in their organization.
+        Response properties associated with a user's presence status, such as status or lastActivity, will only be
+        returned for people within your organization or an organization you manage. Presence information will not be
+        returned if the authenticated user has disabled status sharing.
+        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData
+        parameter as true. Admin users can list all users in a location or with a specific phone number. Admin users
+        will receive an enriched payload with additional administrative fields like liceneses,roles etc. These fields
+        are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=
+        Lookup by email is only supported for people within the same org or where a partner admin relationship is in
+        place.
         Lookup by roles is only supported for Admin users for the people within the same org.
         Long result sets will be split into pages.
 
-        :param email: List people with this email address. For non-admin requests, either this or displayName are required. With the exception of partner admins and a managed org relationship, people lookup by email is only available for users in the same org.
+        :param email: List people with this email address. For non-admin requests, either this or displayName are
+            required. With the exception of partner admins and a managed org relationship, people lookup by email is
+            only available for users in the same org.
         :type email: str
-        :param display_name: List people whose name starts with this string. For non-admin requests, either this or email are required.
+        :param display_name: List people whose name starts with this string. For non-admin requests, either this or
+            email are required.
         :type display_name: str
-        :param id: List people by ID. Accepts up to 85 person IDs separated by commas. If this parameter is provided then presence information (such as the lastActivity or status properties) will not be included in the response.
+        :param id: List people by ID. Accepts up to 85 person IDs separated by commas. If this parameter is provided
+            then presence information (such as the lastActivity or status properties) will not be included in the
+            response.
         :type id: str
-        :param org_id: List people in this organization. Only admin users of another organization (such as partners) may use this parameter.
+        :param org_id: List people in this organization. Only admin users of another organization (such as partners)
+            may use this parameter.
         :type org_id: str
         :param roles: List of roleIds separated by commas.
         :type roles: str
@@ -955,19 +1212,26 @@ class PeopleApi(ApiChild, base='people'):
     def create(self, emails: List[str], calling_data: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: Addresses = None, site_urls: List[str] = None) -> Person:
         """
         Create a new user account for a given organization. Only an admin can create a new user account.
-        At least one of the following body parameters is required to create a new user: displayName, firstName, lastName.
-        Currently, users may have only one email address associated with their account. The emails parameter is an array, which accepts multiple values to allow for future expansion, but currently only one email address will be used for the new user.
-        Admin users can include Webex calling (BroadCloud) user details in the response by specifying callingData parameter as true.
-        When doing attendee management, append #attendee to the siteUrl parameter (e.g. mysite.webex.com#attendee) to make the new user an attendee for a site.
+        At least one of the following body parameters is required to create a new user: displayName, firstName,
+        lastName.
+        Currently, users may have only one email address associated with their account. The emails parameter is an
+        array, which accepts multiple values to allow for future expansion, but currently only one email address will
+        be used for the new user.
+        Admin users can include Webex calling (BroadCloud) user details in the response by specifying callingData
+        parameter as true.
+        When doing attendee management, append #attendee to the siteUrl parameter (e.g. mysite.webex.com#attendee) to
+        make the new user an attendee for a site.
 
-        :param emails: The email addresses of the person. Only one email address is allowed per person.
-Possible values: john.andersen@example.com
+        :param emails: The email addresses of the person. Only one email address is allowed per person. Possible
+            values: john.andersen@example.com
         :type emails: List[str]
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
-        :param phone_numbers: Phone numbers for the person. Only settable for Webex Calling. Requires a Webex Calling license.
+        :param phone_numbers: Phone numbers for the person. Only settable for Webex Calling. Requires a Webex Calling
+            license.
         :type phone_numbers: PhoneNumbers
-        :param extension: Webex Calling extension of the person. This is only settable for a person with a Webex Calling license.
+        :param extension: Webex Calling extension of the person. This is only settable for a person with a Webex
+            Calling license.
         :type extension: str
         :param location_id: The ID of the location for this person.
         :type location_id: str
@@ -981,11 +1245,13 @@ Possible values: john.andersen@example.com
         :type avatar: str
         :param org_id: The ID of the organization to which this person belongs.
         :type org_id: str
-        :param roles: An array of role strings representing the roles to which this admin user belongs.
-Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh, Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
+        :param roles: An array of role strings representing the roles to which this admin user belongs. Possible
+            values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+            Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
         :type roles: List[str]
-        :param licenses: An array of license strings allocated to this person.
-Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh, Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
+        :param licenses: An array of license strings allocated to this person. Possible values:
+            Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+            Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
         :type licenses: List[str]
         :param department: The business department the user belongs to.
         :type department: str
@@ -997,8 +1263,8 @@ Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTI
         :type title: str
         :param addresses: Person's address
         :type addresses: Addresses
-        :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg: mysite.webex.com#attendee)
-Possible values: mysite.webex.com#attendee
+        :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the
+            sitename (eg: mysite.webex.com#attendee) Possible values: mysite.webex.com#attendee
         :type site_urls: List[str]
         """
         params = {}
@@ -1046,8 +1312,11 @@ Possible values: mysite.webex.com#attendee
     def details(self, person_id: str, calling_data: bool = None) -> Person:
         """
         Shows details for a person, by ID.
-        Response properties associated with a user's presence status, such as status or lastActivity, will only be displayed for people within your organization or an organization you manage. Presence information will not be shown if the authenticated user has disabled status sharing.
-        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData parameter as true.
+        Response properties associated with a user's presence status, such as status or lastActivity, will only be
+        displayed for people within your organization or an organization you manage. Presence information will not be
+        shown if the authenticated user has disabled status sharing.
+        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData
+        parameter as true.
         Specify the person ID in the personId parameter in the URI.
 
         :param person_id: A unique identifier for the person.
@@ -1066,25 +1335,33 @@ Possible values: mysite.webex.com#attendee
         """
         Update details for a person, by ID.
         Specify the person ID in the personId parameter in the URI. Only an admin can update a person details.
-        Include all details for the person. This action expects all user details to be present in the request. A common approach is to first GET the person's details, make changes, then PUT both the changed and unchanged values.
-        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData parameter as true.
-        Note: The locationId can only be set when adding a calling license to a user. It cannot be changed if a user is already an existing calling user.
-        When doing attendee management, to update a user from host role to an attendee for a site append #attendee to the respective siteUrl and remove the meeting host license for this site from the license array.
-        To update a person from an attendee role to a host for a site, add the meeting license for this site in the meeting array, and remove that site from the siteurl parameter.
-        To remove the attendee privilege for a user on a meeting site, remove the sitename#attendee from the siteUrls array. The showAllTypes parameter must be set to true.
+        Include all details for the person. This action expects all user details to be present in the request. A common
+        approach is to first GET the person's details, make changes, then PUT both the changed and unchanged values.
+        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData
+        parameter as true.
+        Note: The locationId can only be set when adding a calling license to a user. It cannot be changed if a user is
+        already an existing calling user.
+        When doing attendee management, to update a user from host role to an attendee for a site append #attendee to
+        the respective siteUrl and remove the meeting host license for this site from the license array.
+        To update a person from an attendee role to a host for a site, add the meeting license for this site in the
+        meeting array, and remove that site from the siteurl parameter.
+        To remove the attendee privilege for a user on a meeting site, remove the sitename#attendee from the siteUrls
+        array. The showAllTypes parameter must be set to true.
 
         :param person_id: A unique identifier for the person.
         :type person_id: str
-        :param emails: The email addresses of the person. Only one email address is allowed per person.
-Possible values: john.andersen@example.com
+        :param emails: The email addresses of the person. Only one email address is allowed per person. Possible
+            values: john.andersen@example.com
         :type emails: List[str]
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
         :param show_all_types: Include additional user data like #attendee role
         :type show_all_types: bool
-        :param phone_numbers: Phone numbers for the person. Only settable for Webex Calling. Requires a Webex Calling license.
+        :param phone_numbers: Phone numbers for the person. Only settable for Webex Calling. Requires a Webex Calling
+            license.
         :type phone_numbers: PhoneNumbers
-        :param extension: Webex Calling extension of the person. This is only settable for a person with a Webex Calling license.
+        :param extension: Webex Calling extension of the person. This is only settable for a person with a Webex
+            Calling license.
         :type extension: str
         :param location_id: The ID of the location for this person.
         :type location_id: str
@@ -1098,11 +1375,13 @@ Possible values: john.andersen@example.com
         :type avatar: str
         :param org_id: The ID of the organization to which this person belongs.
         :type org_id: str
-        :param roles: An array of role strings representing the roles to which this admin user belongs.
-Possible values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh, Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
+        :param roles: An array of role strings representing the roles to which this admin user belongs. Possible
+            values: Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+            Y2lzY29zcGFyazovL3VzL1JPTEUvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
         :type roles: List[str]
-        :param licenses: An array of license strings allocated to this person.
-Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh, Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
+        :param licenses: An array of license strings allocated to this person. Possible values:
+            Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh,
+            Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi
         :type licenses: List[str]
         :param department: The business department the user belongs to.
         :type department: str
@@ -1114,12 +1393,14 @@ Possible values: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTI
         :type title: str
         :param addresses: Person's address
         :type addresses: Addresses
-        :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg: mysite.webex.com#attendee)
-Possible values: mysite.webex.com#attendee
+        :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the
+            sitename (eg: mysite.webex.com#attendee) Possible values: mysite.webex.com#attendee
         :type site_urls: List[str]
-        :param nick_name: The nickname of the person if configured. Set to the firstName automatically in update request.
+        :param nick_name: The nickname of the person if configured. Set to the firstName automatically in update
+            request.
         :type nick_name: str
-        :param login_enabled: Whether or not the user is allowed to use Webex. This property is only accessible if the authenticated user is an admin user for the person's organization.
+        :param login_enabled: Whether or not the user is allowed to use Webex. This property is only accessible if the
+            authenticated user is an admin user for the person's organization.
         :type login_enabled: bool
         """
         params = {}
@@ -1184,8 +1465,10 @@ Possible values: mysite.webex.com#attendee
 
     def my_own_details(self, calling_data: bool = None) -> Person:
         """
-        Get profile details for the authenticated user. This is the same as GET /people/{personId} using the Person ID associated with your Auth token.
-        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData parameter as true.
+        Get profile details for the authenticated user. This is the same as GET /people/{personId} using the Person ID
+        associated with your Auth token.
+        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying callingData
+        parameter as true.
 
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
@@ -1200,21 +1483,28 @@ Possible values: mysite.webex.com#attendee
 class CDR(ApiModel):
     #: The time the call was answered. Time is in UTC.
     answer_time: Optional[str] = Field(alias='Answer time')
-    #: Whether the call leg was answered. For example, in a hunt group case, some legs will be unanswered, and one will be answered.
+    #: Whether the call leg was answered. For example, in a hunt group case, some legs will be unanswered, and one will
+    #: be answered.
     answered: Optional[str]
-    #: The authorization code admin created for a location or site for users to use. Collected by the Account/Authorization Codes or Enhanced Outgoing Calling Plan services.
+    #: The authorization code admin created for a location or site for users to use. Collected by the
+    #: Account/Authorization Codes or Enhanced Outgoing Calling Plan services.
     authorization_code: Optional[str] = Field(alias='Authorization code')
-    #: SIP Call ID used to identify the call. You can share the Call ID with Cisco TAC to help them pinpoint a call if necessary.
+    #: SIP Call ID used to identify the call. You can share the Call ID with Cisco TAC to help them pinpoint a call if
+    #: necessary.
     call_id: Optional[str] = Field(alias='Call ID')
     #: Type of call. For example:
     call_type: Optional[str] = Field(alias='Call type')
-    #: For incoming calls, the calling line ID of the user. For outgoing calls, it's the calling line ID of the called party.
+    #: For incoming calls, the calling line ID of the user. For outgoing calls, it's the calling line ID of the called
+    #: party.
     called_line_id: Optional[str] = Field(alias='Called line ID')
-    #: For incoming calls, the telephone number of the user. For outgoing calls, it's the telephone number of the called party.
+    #: For incoming calls, the telephone number of the user. For outgoing calls, it's the telephone number of the
+    #: called party.
     called_number: Optional[str] = Field(alias='Called number')
-    #: For incoming calls, the calling line ID of the calling party. For outgoing calls, it's the calling line ID of the user.
+    #: For incoming calls, the calling line ID of the calling party. For outgoing calls, it's the calling line ID of
+    #: the user.
     calling_line_id: Optional[str] = Field(alias='Calling line ID')
-    #: For incoming calls, the telephone number of the calling party. For outgoing calls, it's the telephone number of the user.
+    #: For incoming calls, the telephone number of the calling party. For outgoing calls, it's the telephone number of
+    #: the user.
     calling_number: Optional[str] = Field(alias='Calling number')
     #: The type of client that the user (creating this record) is using to make or receive the call. For example:
     client_type: Optional[str] = Field(alias='Client type')
@@ -1226,7 +1516,7 @@ class CDR(ApiModel):
     department_id: Optional[str] = Field(alias='Department ID')
     #: The MAC address of the device, if known.
     device_mac: Optional[str] = Field(alias='Device MAC')
-    #: The keypad digits as dialed by the user, before pre-translations. 
+    #: The keypad digits as dialed by the user, before pre-translations.
     #: This field reports multiple call dial possibilities:
     dialed_digits: Optional[str] = Field(alias='Dialed digits')
     #: Whether the call was inbound or outbound. The possible values are:
@@ -1239,7 +1529,7 @@ class CDR(ApiModel):
     international_country: Optional[str] = Field(alias='International country')
     #: Location of the report.
     location: Optional[str]
-    #: The device model type the user is using to make or receive the call. 
+    #: The device model type the user is using to make or receive the call.
     model: Optional[str]
     #: A unique identifier for the organization that made the call. This is a unique identifier across Cisco.
     org_uuid: Optional[str] = Field(alias='Org UUID')
@@ -1251,9 +1541,12 @@ class CDR(ApiModel):
     outbound_trunk: Optional[str] = Field(alias='Outbound trunk')
     #: Call Redirection Reason for the redirecting number. For example:
     redirect_reason: Optional[str] = Field(alias='Redirect reason')
-    #: When the call has been redirected one or more times, this field reports the last redirecting number. Identifies who last redirected the call. Only applies to call scenarios such as transfer, call forwarded calls, simultaneous rings, etc.
+    #: When the call has been redirected one or more times, this field reports the last redirecting number. Identifies
+    #: who last redirected the call. Only applies to call scenarios such as transfer, call forwarded calls,
+    #: simultaneous rings, etc.
     redirecting_number: Optional[str] = Field(alias='Redirecting number')
-    #: Indicates a trigger that led to a change in the call presence. The trigger could be for this particular call or redirected via a different call. For example:
+    #: Indicates a trigger that led to a change in the call presence. The trigger could be for this particular call or
+    #: redirected via a different call. For example:
     related_reason: Optional[str] = Field(alias='Related reason')
     #: Indicates which party released the call first. The possible values are:
     releasing_party: Optional[str] = Field(alias='Releasing party')
@@ -1261,7 +1554,9 @@ class CDR(ApiModel):
     report_id: Optional[str] = Field(alias='Report ID')
     #: The time this report was created. Time is in UTC.
     report_time: Optional[str] = Field(alias='Report time')
-    #: If present, this field's only reported in Originating records. Route group identifies the route group used for outbound calls routed via a route group to Premises-based PSTN or an on-prem deployment integrated with Webex Calling (dial plan or unknown extension).
+    #: If present, this field's only reported in Originating records. Route group identifies the route group used for
+    #: outbound calls routed via a route group to Premises-based PSTN or an on-prem deployment integrated with Webex
+    #: Calling (dial plan or unknown extension).
     route_group: Optional[str] = Field(alias='Route group')
     #: The main number for the user's site where the call was made or received.
     site_main_number: Optional[str] = Field(alias='Site main number')
@@ -1269,11 +1564,13 @@ class CDR(ApiModel):
     site_timezone: Optional[str] = Field(alias='Site timezone')
     #: A unique identifier for the site associated with the call. Unique across Cisco products.
     site_uuid: Optional[str] = Field(alias='Site UUID')
-    #: This is the start time of the call, the answer time may be slightly after this. Time is in UTC. 
+    #: This is the start time of the call, the answer time may be slightly after this. Time is in UTC.
     start_time: Optional[str] = Field(alias='Start time')
-    #: If the call is TO or FROM a mobile phone using Webex Go, the Client type will show SIP, and Sub client type will show MOBILE_NETWORK.
+    #: If the call is TO or FROM a mobile phone using Webex Go, the Client type will show SIP, and Sub client type will
+    #: show MOBILE_NETWORK.
     sub_client_type: Optional[str] = Field(alias='Sub client type')
-    #: Transfer related call ID is used as a call identifier of the other call involved in the transfer. You can share this ID with Cisco TAC to help them pinpoint parties who are involved during a call transfer.
+    #: Transfer related call ID is used as a call identifier of the other call involved in the transfer. You can share
+    #: this ID with Cisco TAC to help them pinpoint parties who are involved during a call transfer.
     transfer_related_call_id: Optional[str] = Field(alias='Transfer related call ID')
     #: The user who made or received the call.
     user: Optional[str]
@@ -1289,28 +1586,43 @@ class GetDetailedCallHistoryResponse(ApiModel):
 
 class WebexCallingDetailedCallHistoryApi(ApiChild, base=''):
     """
-    The base URL for these APIs is analytics.webexapis.com (or analytics-f.webex.com for Government), which does not work with the API reference's Try It feature. If you have any questions or need help please contact the Webex Developer Support team at devsupport@webex.com.
-    To retrieve Detailed Call History information, you must use a token with the spark-admin:calling_cdr_read scope. The authenticating user must be a read-only-admin or full-admin of the organization and have the administrator role "Webex Calling Detailed Call History API access" enabled.
-    Detailed Call History information is available 5 minutes after a call has ended and may be retrieved for up to 48 hours. For example, if a call ends at 9:46 am, the record for that call can be collected using the API from 9:51 am, and is available until 9:46 am two days later.
+    The base URL for these APIs is analytics.webexapis.com (or analytics-f.webex.com for Government), which does not
+    work with the API reference's Try It feature. If you have any questions or need help please contact the Webex
+    Developer Support team at devsupport@webex.com.
+    To retrieve Detailed Call History information, you must use a token with the spark-admin:calling_cdr_read scope.
+    The authenticating user must be a read-only-admin or full-admin of the organization and have the administrator role
+    "Webex Calling Detailed Call History API access" enabled.
+    Detailed Call History information is available 5 minutes after a call has ended and may be retrieved for up to 48
+    hours. For example, if a call ends at 9:46 am, the record for that call can be collected using the API from 9:51
+    am, and is available until 9:46 am two days later.
     This API is rate-limited to one call every 5 minutes for a given organization ID.
-    Details on the fields returned from this API and their potential values are available at https://help.webex.com/en-us/article/nmug598/Reports-for-Your-Cloud-Collaboration-Portfolio. Select the Report templates tab, and then in the Webex Calling reports section see Calling Detailed Call History Report.
+    Details on the fields returned from this API and their potential values are available at
+    https://help.webex.com/en-us/article/nmug598/Reports-for-Your-Cloud-Collaboration-Portfolio. Select the Report
+    templates tab, and then in the Webex Calling reports section see Calling Detailed Call History Report.
     """
 
     def detailed_call_history(self, start_time: str, end_time: str, locations: str = None, max: int = None) -> List[CDR]:
         """
         Provides Webex Calling Detailed Call History data for your organization.
-        Results can be filtered with the startTime, endTime and locations request parameters. The startTime and endTime parameters specify the start and end of the time period for the Detailed Call History reports you wish to collect. The API will return all reports that were created between startTime and endTime.
-        
+        Results can be filtered with the startTime, endTime and locations request parameters. The startTime and endTime
+        parameters specify the start and end of the time period for the Detailed Call History reports you wish to
+        collect. The API will return all reports that were created between startTime and endTime.
         Response entries may be added as more information is made available for the reports.
         Values in response items may be extended as more capabilities are added to Webex Calling.
 
-        :param start_time: Time of the first report you wish to collect. (Report time is the time the call finished). Note: The specified time must be between 5 minutes ago and 48 hours ago, and be formatted as YYYY-MM-DDTHH:MM:SS.mmmZ.
+        :param start_time: Time of the first report you wish to collect. (Report time is the time the call finished).
+            Note: The specified time must be between 5 minutes ago and 48 hours ago, and be formatted as
+            YYYY-MM-DDTHH:MM:SS.mmmZ.
         :type start_time: str
-        :param end_time: Time of the last report you wish to collect. (Report time is the time the call finished). Note: The specified time should be later than startTime but no later than 48 hours, and be formatted as YYYY-MM-DDTHH:MM:SS.mmmZ.
+        :param end_time: Time of the last report you wish to collect. (Report time is the time the call finished).
+            Note: The specified time should be later than startTime but no later than 48 hours, and be formatted as
+            YYYY-MM-DDTHH:MM:SS.mmmZ.
         :type end_time: str
-        :param locations: Name of the location (as shown in Control Hub). Up to 10 comma-separated locations can be provided. Allows you to query reports by location.
+        :param locations: Name of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
+            provided. Allows you to query reports by location.
         :type locations: str
-        :param max: Limit the maximum number of reports in the response. Range is 1 to 500. When the API has more reports to return than the max value, the API response will be paginated.
+        :param max: Limit the maximum number of reports in the response. Range is 1 to 500. When the API has more
+            reports to return than the max value, the API response will be paginated.
         :type max: int
         """
         params = {}
@@ -1329,9 +1641,9 @@ class ListAutoAttendantObject(GetAvailableRecallHuntGroupsObject):
     location_name: Optional[str]
     #: ID of location for auto attendant.
     location_id: Optional[str]
-    #: Auto attendant phone number.  Either phoneNumber or extension is mandatory.
+    #: Auto attendant phone number. Either phoneNumber or extension is mandatory.
     phone_number: Optional[str]
-    #: Auto attendant extension.  Either phoneNumber or extension is mandatory.
+    #: Auto attendant extension. Either phoneNumber or extension is mandatory.
     extension: Optional[str]
     #: Flag to indicate if auto attendant number is toll-free number.
     toll_free_number: Optional[bool]
@@ -1347,7 +1659,8 @@ class RingPattern(str, Enum):
 class AlternateNumbersWithPattern1(ApiModel):
     #: Alternate phone number for the hunt group.
     phone_number: Optional[str]
-    #: Ring pattern for when this alternate number is called. Only available when distinctiveRing is enabled for the hunt group.
+    #: Ring pattern for when this alternate number is called. Only available when distinctiveRing is enabled for the
+    #: hunt group.
     ring_pattern: Optional[RingPattern]
 
 
@@ -1429,7 +1742,7 @@ class GetDetailsForCallParkExtensionResponse(ApiModel):
 
 
 class CreateAutoAttendantBody(GetDetailsForCallParkExtensionResponse):
-    #: Auto attendant phone number.  Either phoneNumber or extension is mandatory.
+    #: Auto attendant phone number. Either phoneNumber or extension is mandatory.
     phone_number: Optional[str]
     #: First name defined for an auto attendant.
     first_name: Optional[str]
@@ -1465,21 +1778,26 @@ class NewNumber(ApiModel):
 class GetCallForwardAlwaysSettingObject(NewNumber):
     #: If true, a brief tone will be played on the person's phone when a call has been forwarded.
     ring_reminder_enabled: Optional[bool]
-    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
+    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal
+    #: phone number and that number has the voicemail service enabled.
     send_to_voicemail_enabled: Optional[bool]
 
 
 class CallForwardRulesModifyObject(ApiModel):
     #: A unique identifier for the auto attendant call forward selective rule.
     id: Optional[str]
-    #: Flag to indicate if always call forwarding selective rule criteria is active. If not set, flag will be set to false.
+    #: Flag to indicate if always call forwarding selective rule criteria is active. If not set, flag will be set to
+    #: false.
     enabled: Optional[bool]
 
 
 class CallForwardRulesObject(CallForwardRulesModifyObject):
     #: Unique name of rule.
     name: Optional[str]
-    #: Comma-separated list of incoming call numbers that, when matched, will not be forwarded. A Limit of 12 numbers is allowed. Use Any private Number in the comma-separated value to indicate rules that match incoming calls from a private number. Use Any unavailable number in the comma-separated value to match incoming calls from an unavailable number.
+    #: Comma-separated list of incoming call numbers that, when matched, will not be forwarded. A Limit of 12 numbers
+    #: is allowed. Use Any private Number in the comma-separated value to indicate rules that match incoming calls from
+    #: a private number. Use Any unavailable number in the comma-separated value to match incoming calls from an
+    #: unavailable number.
     calls_from: Optional[str]
     #: Comma-separated list of the types of numbers being matched for incoming call destination.
     calls_to: Optional[str]
@@ -1490,7 +1808,8 @@ class CallForwardRulesObject(CallForwardRulesModifyObject):
 class AutoAttendantCallForwardSettingsDetailsObject(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
     always: Optional[GetCallForwardAlwaysSettingObject]
-    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one rule for forwarding applied for call forwarding to be active.
+    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one
+    #: rule for forwarding applied for call forwarding to be active.
     selective: Optional[GetCallForwardAlwaysSettingObject]
     #: Rules for selectively forwarding calls.
     rules: Optional[list[CallForwardRulesObject]]
@@ -1499,7 +1818,8 @@ class AutoAttendantCallForwardSettingsDetailsObject(ApiModel):
 class AutoAttendantCallForwardSettingsModifyDetailsObject(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
     always: Optional[GetCallForwardAlwaysSettingObject]
-    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one rule for forwarding applied for call forwarding to be active.
+    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one
+    #: rule for forwarding applied for call forwarding to be active.
     selective: Optional[GetCallForwardAlwaysSettingObject]
     #: Rules for selectively forwarding calls. (Rules which are omitted in the list will not be deleted.)
     rules: Optional[list[CallForwardRulesModifyObject]]
@@ -1538,23 +1858,26 @@ class CallForwardSelectiveCallsFromCustomNumbersObject(ApiModel):
 
 
 class CallForwardSelectiveCallsFromObject(ApiModel):
-    #: If CUSTOM, use customNumbers to specify which incoming caller ID values cause this rule to match. ANY means any incoming call matches assuming the rule is in effect based on the associated schedules.
+    #: If CUSTOM, use customNumbers to specify which incoming caller ID values cause this rule to match. ANY means any
+    #: incoming call matches assuming the rule is in effect based on the associated schedules.
     selection: Optional[Selection1]
     #: Custom rules for matching incoming caller ID information. Mandatory if the selection option is set to CUSTOM.
     custom_numbers: Optional[CallForwardSelectiveCallsFromCustomNumbersObject]
 
 
 class Type5(str, Enum):
-    #: Indicates that the given phoneNumber or extension associated with this rule's containing object is a primary number or extension.
+    #: Indicates that the given phoneNumber or extension associated with this rule's containing object is a primary
+    #: number or extension.
     primary = 'PRIMARY'
-    #: Indicates that the given phoneNumber or extension associated with this rule's containing object is an alternate number or extension.
+    #: Indicates that the given phoneNumber or extension associated with this rule's containing object is an alternate
+    #: number or extension.
     alternate = 'ALTERNATE'
 
 
 class CallForwardSelectiveCallsToNumbersObject(ApiModel):
     #: AutoCalls To phone number. Either phone number or extension should be present as mandatory.
     phone_number: Optional[str]
-    #: Calls To extension.  Either phoneNumber or extension is mandatory.
+    #: Calls To extension. Either phoneNumber or extension is mandatory.
     extension: Optional[str]
     #: Calls to type options.
     type: Optional[Type5]
@@ -1668,9 +1991,11 @@ class CreateCallParkBody(CreateCallPickupBody):
 class CallParkSettingsObject(ApiModel):
     #: Ring pattern for when this callpark is called.
     ring_pattern: Optional[RingPattern]
-    #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up within the set time, then the call will be recalled based on the Call Park Recall setting.
+    #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up within the
+    #: set time, then the call will be recalled based on the Call Park Recall setting.
     recall_time: Optional[int]
-    #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up, the call will revert back to the hunt group (after the person who parked the call is alerted).
+    #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up, the call
+    #: will revert back to the hunt group (after the person who parked the call is alerted).
     hunt_wait_time: Optional[int]
 
 
@@ -1706,18 +2031,22 @@ class ListCallQueueObject(ListCallParkExtensionObject):
 class HuntRoutingTypeSelection(ApiModel):
     #: Default routing type which directly uses the routing policy to dispatch calls to the agents.
     priority_based: Optional[str]
-    #: This option uses skill level as the criteria to route calls to agents. When there is more than one agent with the same skill level, the selected policy helps dispatch the calls to the agents.
+    #: This option uses skill level as the criteria to route calls to agents. When there is more than one agent with
+    #: the same skill level, the selected policy helps dispatch the calls to the agents.
     skill_based: Optional[str]
 
 
 class HuntPolicySelection(ApiModel):
-    #: This option cycles through all agents after the last agent that took a call. It sends calls to the next available agent. This is supported for SKILL_BASED.
+    #: This option cycles through all agents after the last agent that took a call. It sends calls to the next
+    #: available agent. This is supported for SKILL_BASED.
     circular: Optional[str]
-    #: Send the call through the queue of agents in order, starting from the top each time. This is supported for SKILL_BASED.
+    #: Send the call through the queue of agents in order, starting from the top each time. This is supported for
+    #: SKILL_BASED.
     regular: Optional[str]
     #: Sends calls to all agents at once
     simultaneous: Optional[str]
-    #: Sends calls to the agent that has been idle the longest. If they don't answer, proceed to the next agent who has been idle the second longest, and so on until the call is answered. This is supported for SKILL_BASED.
+    #: Sends calls to the agent that has been idle the longest. If they don't answer, proceed to the next agent who has
+    #: been idle the second longest, and so on until the call is answered. This is supported for SKILL_BASED.
     uniform: Optional[str]
     #: Sends calls to idle agents based on percentages you assign to each agent (up to 100%).
     weighted: Optional[str]
@@ -1743,12 +2072,14 @@ class CallBounce(ApiModel):
 class DistinctiveRing(ApiModel):
     #: Whether or not the distinctiveRing is enabled.
     enabled: Optional[bool]
-    #: Ring pattern for when this call queue is called. Only available when distinctiveRing is enabled for the call queue.
+    #: Ring pattern for when this call queue is called. Only available when distinctiveRing is enabled for the call
+    #: queue.
     ring_pattern: Optional[RingPattern]
 
 
 class PostCallQueueCallPolicyObject(ApiModel):
-    #: Call routing type to use to dispatch calls to agents. The routing type should be SKILL_BASED if you want to assign skill level to agents. Only certain policy are allowed in SKILL_BASED type.
+    #: Call routing type to use to dispatch calls to agents. The routing type should be SKILL_BASED if you want to
+    #: assign skill level to agents. Only certain policy are allowed in SKILL_BASED type.
     routing_type: Optional[HuntRoutingTypeSelection]
     #: Call routing policy to use to dispatch calls to agents.
     policy: Optional[HuntPolicySelection]
@@ -1770,19 +2101,25 @@ class Action6(str, Enum):
 class Overflow(ApiModel):
     #: Indicates how to handle new calls when the queue is full.
     action: Optional[Action6]
-    #: When true, forwards all calls to a voicemail service of an internal number. This option is ignored when an external transferNumber is entered.
+    #: When true, forwards all calls to a voicemail service of an internal number. This option is ignored when an
+    #: external transferNumber is entered.
     send_to_voicemail: Optional[bool]
     #: Destination number for overflow calls when action is set to TRANSFER_TO_PHONE_NUMBER.
     transfer_number: Optional[str]
-    #: After calls wait for the configured number of seconds and no agent is available, the overflow treatment is triggered.
+    #: After calls wait for the configured number of seconds and no agent is available, the overflow treatment is
+    #: triggered.
     overflow_after_wait_enabled: Optional[bool]
-    #: Number of seconds to wait before the overflow treatment is triggered when no agent is available. The minimum value 0, The maximum value is 7200 seconds.
+    #: Number of seconds to wait before the overflow treatment is triggered when no agent is available. The minimum
+    #: value 0, The maximum value is 7200 seconds.
     overflow_after_wait_time: Optional[int]
-    #: Indicate overflow audio to be played, otherwise, callers will hear the hold music until the call is answered by a user.
+    #: Indicate overflow audio to be played, otherwise, callers will hear the hold music until the call is answered by
+    #: a user.
     play_overflow_greeting_enabled: Optional[bool]
     #: Indicates how to handle new calls when the queue is full.
     greeting: Optional[Greeting]
-    #: Array of announcement fileName strings to be played as overflow greetings. These files are from the list of announcement files associated with this call queue. For CUSTOM announcement, a minimum of 1 fileName is mandatory, and the maximum is 4.
+    #: Array of announcement fileName strings to be played as overflow greetings. These files are from the list of
+    #: announcement files associated with this call queue. For CUSTOM announcement, a minimum of 1 fileName is
+    #: mandatory, and the maximum is 4.
     audio_files: Optional[list[str]]
 
 
@@ -1796,7 +2133,9 @@ class SendBusyCalls1(ApiModel):
 class WelcomeMessage(SendBusyCalls1):
     #: Mandatory entrance message. The default value is false.
     always_enabled: Optional[bool]
-    #: Array of announcement fileName strings to be played as welcomeMessage greetings. These files are from the list of announcement files associated with this call queue. For CUSTOM announcement, a minimum of 1 fileName is mandatory, and the maximum is 4.
+    #: Array of announcement fileName strings to be played as welcomeMessage greetings. These files are from the list
+    #: of announcement files associated with this call queue. For CUSTOM announcement, a minimum of 1 fileName is
+    #: mandatory, and the maximum is 4.
     audio_files: Optional[list[str]]
 
 
@@ -1812,15 +2151,18 @@ class WaitMessage(ApiModel):
     enabled: Optional[bool]
     #: Estimated wait message operating mode. Supported values TIME and POSITION.
     wait_mode: Optional[WaitMode]
-    #: The number of minutes for which the estimated wait is played. The minimum time is 10 minutes. The maximum time is 100 minutes.
+    #: The number of minutes for which the estimated wait is played. The minimum time is 10 minutes. The maximum time
+    #: is 100 minutes.
     handling_time: Optional[int]
     #: The default number of call handling minutes. The minimum time is 1 minutes, The maximum time is 100 minutes.
     default_handling_time: Optional[int]
-    #: The number of the position for which the estimated wait is played. The minimum positions are 10, The maximum positions are 100.
+    #: The number of the position for which the estimated wait is played. The minimum positions are 10, The maximum
+    #: positions are 100.
     queue_position: Optional[int]
     #: Play time / Play position High Volume.
     high_volume_message_enabled: Optional[bool]
-    #: The number of estimated waiting times in seconds. The minimum time is 10 seconds. The maximum time is 600 seconds.
+    #: The number of estimated waiting times in seconds. The minimum time is 10 seconds. The maximum time is 600
+    #: seconds.
     estimated_waiting_time: Optional[int]
     #: Callback options enabled/disabled. Default value is false.
     callback_option_enabled: Optional[bool]
@@ -1833,21 +2175,30 @@ class WaitMessage(ApiModel):
 
 
 class ComfortMessage(SendBusyCalls1):
-    #: The interval in seconds between each repetition of the comfort message played to queued users. The minimum time is 10 seconds.The maximum time is 600 seconds.
+    #: The interval in seconds between each repetition of the comfort message played to queued users. The minimum time
+    #: is 10 seconds.The maximum time is 600 seconds.
     time_between_messages: Optional[int]
-    #: Array of announcement fileName strings to be played as comfortMessage greetings. These files are from the list of announcement files associated with this call queue. These files are from the list of announcements files associated with this call queue. For CUSTOM announcement, a minimum of 1 fileName is mandatory, and the maximum is 4.
+    #: Array of announcement fileName strings to be played as comfortMessage greetings. These files are from the list
+    #: of announcement files associated with this call queue. These files are from the list of announcements files
+    #: associated with this call queue. For CUSTOM announcement, a minimum of 1 fileName is mandatory, and the maximum
+    #: is 4.
     audio_files: Optional[list[str]]
 
 
 class ComfortMessageBypass(SendBusyCalls1):
-    #: The interval in seconds between each repetition of the comfort bypass message played to queued users. The minimum time is 1 seconds. The maximum time is 120 seconds.
+    #: The interval in seconds between each repetition of the comfort bypass message played to queued users. The
+    #: minimum time is 1 seconds. The maximum time is 120 seconds.
     call_waiting_age_threshold: Optional[int]
-    #: Array of announcement fileName strings to be played as comfortMessageBypass greetings. These files are from the list of announcements files associated with this call queue. For CUSTOM announcement, a minimum of 1 fileName is mandatory, and the maximum is 4.
+    #: Array of announcement fileName strings to be played as comfortMessageBypass greetings. These files are from the
+    #: list of announcements files associated with this call queue. For CUSTOM announcement, a minimum of 1 fileName is
+    #: mandatory, and the maximum is 4.
     audio_files: Optional[list[str]]
 
 
 class NormalSource(SendBusyCalls1):
-    #: Array of announcement fileName strings to be played as mohMessage greetings. These files are from the list of announcement files associated with this call queue. For CUSTOM announcement, a minimum of 1 fileName is mandatory, and the maximum is 4.
+    #: Array of announcement fileName strings to be played as mohMessage greetings. These files are from the list of
+    #: announcement files associated with this call queue. For CUSTOM announcement, a minimum of 1 fileName is
+    #: mandatory, and the maximum is 4.
     audio_files: Optional[list[str]]
 
 
@@ -1857,7 +2208,8 @@ class MohMessage(ApiModel):
 
 
 class CallQueueQueueSettingsObject(ApiModel):
-    #: The maximum number of calls for this call queue. Once this number is reached, the overflow settings are triggered.
+    #: The maximum number of calls for this call queue. Once this number is reached, the overflow settings are
+    #: triggered.
     queue_size: Optional[int]
     #: Play ringing tone to callers when their call is set to an available agent.
     call_offer_tone_enabled: Optional[bool]
@@ -1865,17 +2217,25 @@ class CallQueueQueueSettingsObject(ApiModel):
     reset_call_statistics_enabled: Optional[bool]
     #: Settings for incoming calls exceed queueSize.
     overflow: Optional[Overflow]
-    #: Play a message when callers first reach the queue. For example, “Thank you for calling. An agent will be with you shortly.” It can be set as mandatory. If the mandatory option is not selected and a caller reaches the call queue while there is an available agent, the caller will not hear this announcement and is transferred to an agent. The welcome message feature is enabled by default.
+    #: Play a message when callers first reach the queue. For example, “Thank you for calling. An agent will be with
+    #: you shortly.” It can be set as mandatory. If the mandatory option is not selected and a caller reaches the call
+    #: queue while there is an available agent, the caller will not hear this announcement and is transferred to an
+    #: agent. The welcome message feature is enabled by default.
     welcome_message: Optional[WelcomeMessage]
-    #: Notify the caller with either their estimated wait time or position in the queue. If this option is enabled, it plays after the welcome message and before the comfort message. By default, it is not enabled.
+    #: Notify the caller with either their estimated wait time or position in the queue. If this option is enabled, it
+    #: plays after the welcome message and before the comfort message. By default, it is not enabled.
     wait_message: Optional[WaitMessage]
-    #: Play a message after the welcome message and before hold music. This is typically a CUSTOM announcement that plays information, such as current promotions or information about products and services.
+    #: Play a message after the welcome message and before hold music. This is typically a CUSTOM announcement that
+    #: plays information, such as current promotions or information about products and services.
     comfort_message: Optional[ComfortMessage]
-    #: Play a shorter comfort message instead of the usual Comfort or Music On Hold announcement to all the calls that should be answered quickly. This feature prevents a caller from hearing a short portion of the standard comfort message that abruptly ends when they are connected to an agent.
+    #: Play a shorter comfort message instead of the usual Comfort or Music On Hold announcement to all the calls that
+    #: should be answered quickly. This feature prevents a caller from hearing a short portion of the standard comfort
+    #: message that abruptly ends when they are connected to an agent.
     comfort_message_bypass: Optional[ComfortMessageBypass]
     #: Play music after the comforting message in a repetitive loop.
     moh_message: Optional[MohMessage]
-    #: Play a message to the agent immediately before the incoming call is connected. The message typically announces the identity of the call queue from which the call is coming.
+    #: Play a message to the agent immediately before the incoming call is connected. The message typically announces
+    #: the identity of the call queue from which the call is coming.
     whisper_message: Optional[NormalSource]
 
 
@@ -1894,12 +2254,14 @@ class PostPersonPlaceVirtualLineCallQueueObject(PostPersonPlaceVirtualLineHuntGr
 class AlternateNumbersWithPattern(ApiModel):
     #: Alternate phone number for the hunt group.
     phone_number: Optional[str]
-    #: Ring pattern for when this alternate number is called. Only available when distinctiveRing is enabled for the hunt group.
+    #: Ring pattern for when this alternate number is called. Only available when distinctiveRing is enabled for the
+    #: hunt group.
     ring_pattern: Optional[RingPattern]
 
 
 class AlternateNumberSettings(ApiModel):
-    #: Distinctive Ringing selected for the alternate numbers in the call queue overrides the normal ringing patterns set for the Alternate Numbers.
+    #: Distinctive Ringing selected for the alternate numbers in the call queue overrides the normal ringing patterns
+    #: set for the Alternate Numbers.
     distinctive_ring_enabled: Optional[bool]
     #: Specifies up to 10 numbers which can each have an overriden distinctive ring setting.
     alternate_numbers: Optional[list[AlternateNumbersWithPattern]]
@@ -1927,7 +2289,8 @@ class CreateCallQueueBody(GetDetailsForCallParkExtensionResponse):
     language_code: Optional[str]
     #: First name to be shown when calls are forwarded out of this call queue. Defaults to ".".
     first_name: Optional[str]
-    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to phoneNumber if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to phoneNumber if set, otherwise
+    #: defaults to call group name.
     last_name: Optional[str]
     #: Time zone for the call queue.
     time_zone: Optional[str]
@@ -1958,14 +2321,18 @@ class GetAnnouncementFileInfo(ApiModel):
 class Always(NewNumber):
     #: If true, a brief tone will be played on the person's phone when a call has been forwarded.
     ring_reminder_enabled: Optional[bool]
-    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
+    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal
+    #: phone number and that number has the voicemail service enabled.
     destination_voicemail_enabled: Optional[bool]
 
 
 class CallForwardRulesGet(CallForwardRulesModifyObject):
     #: Unique name of rule.
     name: Optional[str]
-    #: Comma-separated list of incoming call numbers that, when matched, will not be forwarded. A Limit of 12 numbers is allowed. Use Any private Number in the comma-separated value to indicate rules that match incoming calls from a private number. Use Any unavailable number in the comma-separated value to match incoming calls from an unavailable number.
+    #: Comma-separated list of incoming call numbers that, when matched, will not be forwarded. A Limit of 12 numbers
+    #: is allowed. Use Any private Number in the comma-separated value to indicate rules that match incoming calls from
+    #: a private number. Use Any unavailable number in the comma-separated value to match incoming calls from an
+    #: unavailable number.
     call_from: Optional[str]
     #: Comma-separated list of the types of numbers being matched for incoming call destination.
     calls_to: Optional[str]
@@ -1976,7 +2343,8 @@ class CallForwardRulesGet(CallForwardRulesModifyObject):
 class CallForwarding(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
     always: Optional[Always]
-    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one rule for forwarding applied for call forwarding to be active.
+    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one
+    #: rule for forwarding applied for call forwarding to be active.
     selective: Optional[Always]
     #: Rules for selectively forwarding calls.
     rules: Optional[list[CallForwardRulesGet]]
@@ -1985,14 +2353,16 @@ class CallForwarding(ApiModel):
 class CallForwarding1(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
     always: Optional[Always]
-    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one rule for forwarding applied for call forwarding to be active.
+    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one
+    #: rule for forwarding applied for call forwarding to be active.
     selective: Optional[Always]
     #: Rules for selectively forwarding calls.
     rules: Optional[list[CallForwardRulesModifyObject]]
 
 
 class CallsFrom(ApiModel):
-    #: If CUSTOM, use customNumbers to specify which incoming caller ID values cause this rule to match. ANY means any incoming call matches assuming the rule is in effect based on the associated schedules.
+    #: If CUSTOM, use customNumbers to specify which incoming caller ID values cause this rule to match. ANY means any
+    #: incoming call matches assuming the rule is in effect based on the associated schedules.
     selection: Optional[Selection1]
     #: Custom rules for matching incoming caller ID information.
     custom_numbers: Optional[CallForwardSelectiveCallsFromCustomNumbersObject]
@@ -2041,13 +2411,21 @@ class CallSourceType(ApiModel):
 class CallSourceInfo(ApiModel):
     #: The type of call source.
     call_source_type: Optional[CallSourceType]
-    #: When originatorType is trunk, originatorId is a valid trunk, this trunk belongs to a route group which is assigned to a route list with the name routeListA and originatorNumber is a number assigned to routeListA. routeListA is returned here. This element is returned when callSourceType is ROUTE_LIST.
+    #: When originatorType is trunk, originatorId is a valid trunk, this trunk belongs to a route group which is
+    #: assigned to a route list with the name routeListA and originatorNumber is a number assigned to routeListA.
+    #: routeListA is returned here. This element is returned when callSourceType is ROUTE_LIST.
     route_list_name: Optional[str]
     #: Foute list ID.
     route_list_id: Optional[str]
-    #: When originatorType is trunk, originatorId is a valid trunk with name trunkA, trunkA belongs to a route group which is assigned to a route list with name routeListA,  trunkA is also assigned to dialPlanA as routing choice, dialPlanA has dialPattern xxxx assigned. If the originatorNumber matches the dialPattern xxxx, dialPlanA is returned. This element is returned when callSourceType is DIAL_PATTERN.
+    #: When originatorType is trunk, originatorId is a valid trunk with name trunkA, trunkA belongs to a route group
+    #: which is assigned to a route list with name routeListA, trunkA is also assigned to dialPlanA as routing choice,
+    #: dialPlanA has dialPattern xxxx assigned. If the originatorNumber matches the dialPattern xxxx, dialPlanA is
+    #: returned. This element is returned when callSourceType is DIAL_PATTERN.
     dial_plan_name: Optional[str]
-    #: When originatorType is trunk, originatorId is a valid trunk with the name trunkA, trunkA belongs to a route group which is assigned to a route list with the name routeListA,  trunkA is also assigned to dialPlanA as routing choice, dialPlanA has dialPattern xxxx assigned. If the originatorNumber matches the dialPattern xxxx, dialPattern xxxx is returned. This element is returned when callSourceType is DIAL_PATTERN.
+    #: When originatorType is trunk, originatorId is a valid trunk with the name trunkA, trunkA belongs to a route
+    #: group which is assigned to a route list with the name routeListA, trunkA is also assigned to dialPlanA as
+    #: routing choice, dialPlanA has dialPattern xxxx assigned. If the originatorNumber matches the dialPattern xxxx,
+    #: dialPattern xxxx is returned. This element is returned when callSourceType is DIAL_PATTERN.
     dial_pattern: Optional[str]
     #: Dial plan ID.
     dial_plan_id: Optional[str]
@@ -2056,7 +2434,8 @@ class CallSourceInfo(ApiModel):
 class DestinationType(ApiModel):
     #: Matching destination is a person or workspace with details in the hostedAgent field.
     hosted_agent: Optional[str]
-    #: Matching destination is a calling feature like auto-attendant or hunt group with details in the hostedFeature field.
+    #: Matching destination is a calling feature like auto-attendant or hunt group with details in the hostedFeature
+    #: field.
     hosted_feature: Optional[str]
     #: Matching destination routes into a separate PBX with details in the pbxUser field.
     pbx_user: Optional[str]
@@ -2228,23 +2607,28 @@ class NoAnswer(ApiModel):
     number_of_rings: Optional[int]
     #: Destination if forwardEnabled is True.
     destination: Optional[str]
-    #: If forwardEnabled is true, enables and disables sending incoming to destination number's voicemail if the destination is an internal phone number and that number has the voicemail service enabled.
+    #: If forwardEnabled is true, enables and disables sending incoming to destination number's voicemail if the
+    #: destination is an internal phone number and that number has the voicemail service enabled.
     destination_voicemail_enabled: Optional[bool]
 
 
 class BusinessContinuity(NewNumber):
-    #: Indicates enabled or disabled state of sending diverted incoming calls to the destination number's voicemail if the destination is an internal phone number and that number has the voicemail service enabled.
+    #: Indicates enabled or disabled state of sending diverted incoming calls to the destination number's voicemail if
+    #: the destination is an internal phone number and that number has the voicemail service enabled.
     destination_voicemail_enabled: Optional[bool]
 
 
 class PostHuntGroupCallPolicyObject(ApiModel):
     #: Call routing policy to use to dispatch calls to agents.
     policy: Optional[HuntPolicySelection]
-    #: If false, then the option is treated as "Advance when busy": the hunt group won't ring agents when they're on a call and will advance to the next agent. If a hunt group agent has call waiting enabled and the call is advanced to them, then the call will wait until that hunt group agent isn't busy.
+    #: If false, then the option is treated as "Advance when busy": the hunt group won't ring agents when they're on a
+    #: call and will advance to the next agent. If a hunt group agent has call waiting enabled and the call is advanced
+    #: to them, then the call will wait until that hunt group agent isn't busy.
     waiting_enabled: Optional[bool]
     #: Settings for when the call into the hunt group is not answered.
     no_answer: Optional[NoAnswer]
-    #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any reason, such as power outage, failed Internet connection, or wiring problem.
+    #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any
+    #: reason, such as power outage, failed Internet connection, or wiring problem.
     business_continuity: Optional[BusinessContinuity]
 
 
@@ -2311,7 +2695,8 @@ class Outgoing(ApiModel):
 
 
 class GetLocationInterceptResponse(ApiModel):
-    #: Enable/disable location intercept. Enable this feature to override any Location's Call Intercept settings that person configures.
+    #: Enable/disable location intercept. Enable this feature to override any Location's Call Intercept settings that
+    #: person configures.
     enabled: Optional[bool]
     #: Inbound call details.
     incoming: Optional[Incoming]
@@ -2365,9 +2750,11 @@ class UpdateLocationWebexCallingDetailsBody(ApiModel):
 class CallType(str, Enum):
     #: Controls calls within your own company.
     internal_call = 'INTERNAL_CALL'
-    #: Controls calls to a telephone number that is billed for all arriving calls instead of incurring charges to the originating caller, usually free of charge from a landline.
+    #: Controls calls to a telephone number that is billed for all arriving calls instead of incurring charges to the
+    #: originating caller, usually free of charge from a landline.
     toll_free = 'TOLL_FREE'
-    #: Controls calls to locations outside of the Long Distance areas that require an international calling code before the number is dialed.
+    #: Controls calls to locations outside of the Long Distance areas that require an international calling code before
+    #: the number is dialed.
     international = 'INTERNATIONAL'
     #: Controls calls requiring Operator Assistance.
     operator_assisted = 'OPERATOR_ASSISTED'
@@ -2392,11 +2779,14 @@ class Action9(str, Enum):
     block = 'BLOCK'
     #: Callers must enter the authorization code that you set before placing an outgoing call.
     auth_code = 'AUTH_CODE'
-    #: If you select this, then these types of calls are transferred automatically to the configured auto transfer number autoTransferNumber1.
+    #: If you select this, then these types of calls are transferred automatically to the configured auto transfer
+    #: number autoTransferNumber1.
     transfer_number_1 = 'TRANSFER_NUMBER_1'
-    #: If you select this, then these types of calls are transferred automatically to the configured auto transfer number autoTransferNumber2.
+    #: If you select this, then these types of calls are transferred automatically to the configured auto transfer
+    #: number autoTransferNumber2.
     transfer_number_2 = 'TRANSFER_NUMBER_2'
-    #: If you select this, then these types of calls are transferred automatically to the configured auto transfer number autoTransferNumber3.
+    #: If you select this, then these types of calls are transferred automatically to the configured auto transfer
+    #: number autoTransferNumber3.
     transfer_number_3 = 'TRANSFER_NUMBER_3'
 
 
@@ -2410,11 +2800,14 @@ class CallingPermissionObject(ApiModel):
 
 
 class GetOutgoingPermissionAutoTransferNumberResponse(ApiModel):
-    #: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_1 will be transferred to this number.
+    #: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_1 will be transferred to
+    #: this number.
     auto_transfer_number1: Optional[str]
-    #: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_2 will be transferred to this number.
+    #: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_2 will be transferred to
+    #: this number.
     auto_transfer_number2: Optional[str]
-    #: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_3 will be transferred to this number.
+    #: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_3 will be transferred to
+    #: this number.
     auto_transfer_number3: Optional[str]
 
 
@@ -2435,7 +2828,8 @@ class GetPagingGroupAgentObject(CallForwardSelectiveCallsToNumbersObject):
 
 
 class CreatenewPagingGroupBody(GetDetailsForCallParkExtensionResponse):
-    #: Paging group phone number. Minimum length is 1. Maximum length is 23.  Either phoneNumber or extension is mandatory.
+    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is
+    #: mandatory.
     phone_number: Optional[str]
     #: Language code.
     language_code: Optional[str]
@@ -2443,7 +2837,8 @@ class CreatenewPagingGroupBody(GetDetailsForCallParkExtensionResponse):
     first_name: Optional[str]
     #: Last name that displays when a group page is performed. Minimum length is 1. Maximum length is 30.
     last_name: Optional[str]
-    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator ID.
+    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator
+    #: ID.
     originator_caller_id_enabled: Optional[bool]
     #: An array of people, workspace, and virtual lines IDs who can originate pages to this paging group.
     originators: Optional[list[str]]
@@ -2532,7 +2927,8 @@ class StartJobResponse(GetAvailableRecallHuntGroupsObject):
     target_customer_id: Optional[str]
     #: Unique identifier to identify the instance of the job.
     instance_id: Optional[int]
-    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the execution of the job.
+    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
+    #: execution of the job.
     job_execution_status: Optional[list[JobExecutionStatusObject1]]
     #: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
     latest_execution_status: Optional[str]
@@ -2574,7 +2970,8 @@ class JobExecutionStatusObject(JobExecutionStatusObject1):
 
 
 class ErrorMessageObject(AccessCodes):
-    #: Error messages describing the location id in which the error occurs. For a move operation this is the target location ID.
+    #: Error messages describing the location id in which the error occurs. For a move operation this is the target
+    #: location ID.
     location_id: Optional[str]
 
 
@@ -2704,7 +3101,8 @@ class ScheduleEventObject(ApiModel):
     start_time: Optional[str]
     #: End time of event. Mandatory if the event is not all day.
     end_time: Optional[str]
-    #: An indication of whether given event is an all-day event or not. Mandatory if the startTime and endTime are not defined.
+    #: An indication of whether given event is an all-day event or not. Mandatory if the startTime and endTime are not
+    #: defined.
     all_day_enabled: Optional[bool]
     #: Recurrence definition.
     recurrence: Optional[RecurrenceObject1]
@@ -2761,7 +3159,8 @@ class GetVoicemailSettingsResponse(ApiModel):
     message_expiry_enabled: Optional[bool]
     #: Number of days after which messages expire.
     number_of_days_for_message_expiry: Optional[int]
-    #: When enabled, all read and unread voicemail messages will be deleted based on the time frame you set. When disabled, all unread voicemail messages will be kept.
+    #: When enabled, all read and unread voicemail messages will be deleted based on the time frame you set. When
+    #: disabled, all unread voicemail messages will be kept.
     strict_deletion_enabled: Optional[bool]
     #: When enabled, people in the organization can configure the email forwarding of voicemails.
     voice_message_forwarding_enabled: Optional[bool]
@@ -2793,7 +3192,8 @@ class Length(ApiModel):
 class DefaultVoicemailPinRules(ApiModel):
     #: If enabled, the passcode should not contain repeated pattern.
     block_repeated_patterns_enabled: Optional[bool]
-    #: Settings for not allowing single or groups of repeated digits in passcode (for example, 22888, 121212, or 408408).
+    #: Settings for not allowing single or groups of repeated digits in passcode (for example, 22888, 121212, or
+    #: 408408).
     block_repeated_digits: Optional[BlockRepeatedDigits]
     #: Settings for not allowing numerical sequence in passcode (for example, 012345 or 987654).
     block_contiguous_sequences: Optional[BlockContiguousSequences]
@@ -2832,7 +3232,8 @@ class FailedAttempts(ApiModel):
 
 
 class Greeting29(str, Enum):
-    #: Play default music when call is placed on hold or parked. The system plays music to fill the silence and lets the customer know they are still connected.
+    #: Play default music when call is placed on hold or parked. The system plays music to fill the silence and lets
+    #: the customer know they are still connected.
     system = 'SYSTEM'
     #: Play previously uploaded custom music when call is placed on hold or parked.
     custom = 'CUSTOM'
@@ -2915,7 +3316,8 @@ class DialPlan(ModifyDialPlanBody):
 class TrunkType(ApiModel):
     #: For Cisco CUBE Local Gateway.
     registering: Optional[str]
-    #: For Cisco Unified Border Element, Oracle ACME Session Border Controller, AudioCodes Session Border Controller, Ribbon Session Border Controller.
+    #: For Cisco Unified Border Element, Oracle ACME Session Border Controller, AudioCodes Session Border Controller,
+    #: Ribbon Session Border Controller.
     certificate_based: Optional[str]
 
 
@@ -3068,11 +3470,14 @@ class Action11(str, Enum):
 class Action15(Action11):
     #: Call remains in the queue.
     none = 'NONE'
-    #: Calls are handled according to the Night Service configuration. If the Night Service action is set to none, then this is equivalent to this policy being set to none (that is, calls remain in the queue).
+    #: Calls are handled according to the Night Service configuration. If the Night Service action is set to none, then
+    #: this is equivalent to this policy being set to none (that is, calls remain in the queue).
     night_service = 'NIGHT_SERVICE'
-    #: Calls are removed from the queue and are provided with ringing until the caller releases the call. The ringback tone played to the caller is localized according to the country code of the caller.
+    #: Calls are removed from the queue and are provided with ringing until the caller releases the call. The ringback
+    #: tone played to the caller is localized according to the country code of the caller.
     ringing = 'RINGING'
-    #: Calls are removed from the queue and are provided with an announcement that is played in a loop until the caller releases the call.
+    #: Calls are removed from the queue and are provided with an announcement that is played in a loop until the caller
+    #: releases the call.
     announcement = 'ANNOUNCEMENT'
 
 
@@ -3126,7 +3531,8 @@ class GetDetailsForCallQueueForcedForwardResponse(ApiModel):
 class LineType(ApiModel):
     #: Indicates a Primary line for the member.
     primary: Optional[str]
-    #: Indicates a Shared line for the member. Shared line appearance allows users to receive and place calls to and from another user's extension, using their device.
+    #: Indicates a Shared line for the member. Shared line appearance allows users to receive and place calls to and
+    #: from another user's extension, using their device.
     shared_call_appearance: Optional[str]
 
 
@@ -3135,7 +3541,8 @@ class PutMemberObject(ApiModel):
     port: Optional[int]
     #: Unique identifier for the member.
     id: Optional[str]
-    #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device requires this option. This will override user level compression options.
+    #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device
+    #: requires this option. This will override user level compression options.
     t38_fax_compression_enabled: Optional[bool]
     #: Whether the user is the owner of the device or not, and points to a primary Line/Port of device.
     primary_owner: Optional[bool]
@@ -3143,11 +3550,14 @@ class PutMemberObject(ApiModel):
     line_type: Optional[LineType]
     #: Number of lines that have been configured for the person on the device.
     line_weight: Optional[int]
-    #: Enable Hotline. Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line can only make calls to the predefined number set in hotlineDestination.
+    #: Enable Hotline. Configure this line to automatically call a predefined number whenever taken off-hook. Once
+    #: enabled, the line can only make calls to the predefined number set in hotlineDestination.
     hotline_enabled: Optional[bool]
     #: The preconfigured number for Hotline. Required only if hotlineEnabled is set to true.
     hotline_destination: Optional[str]
-    #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended to all the endpoints on the device. When set to false, a call decline request only declines the current endpoint.
+    #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended
+    #: to all the endpoints on the device. When set to false, a call decline request only declines the current
+    #: endpoint.
     allow_call_decline_enabled: Optional[bool]
     #: Device line label.
     line_label: Optional[str]
@@ -3158,7 +3568,8 @@ class MemberObject(PutMemberObject):
     first_name: Optional[str]
     #: Last name of a person or workspace.
     last_name: Optional[str]
-    #: Phone Number of a person or workspace. In some regions phone numbers are not returned in E.164 format. This will be supported in a future update.
+    #: Phone Number of a person or workspace. In some regions phone numbers are not returned in E.164 format. This will
+    #: be supported in a future update.
     phone_number: Optional[str]
     #: Extension of a person or workspace.
     extension: Optional[str]
@@ -3181,11 +3592,14 @@ class SearchMemberObject(ApiModel):
     last_name: Optional[str]
     #: Phone Number of a person or workspace.
     phone_number: Optional[str]
-    #: T.38 Fax Compression setting and available only for ATA Devices. Choose T.38 fax compression if the device requires this option. this will override user level compression options.
+    #: T.38 Fax Compression setting and available only for ATA Devices. Choose T.38 fax compression if the device
+    #: requires this option. this will override user level compression options.
     t38_fax_compression_enabled: Optional[bool]
     #: Line type is used to differentiate Primary and SCA, at which endpoint it is assigned.
     line_type: Optional[LineType]
-    #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended to all the endpoints on the device. When set to false, a call decline request only declines the current endpoint.
+    #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended
+    #: to all the endpoints on the device. When set to false, a call decline request only declines the current
+    #: endpoint.
     allow_call_decline_enabled: Optional[bool]
     #: Indicates if member is of type PEOPLE or PLACE.
     member_type: Optional[HostedAgentType]
@@ -3284,12 +3698,14 @@ class BackgroundImage(ApiModel):
     webex_dark_blue: Optional[str]
     #: Indicates that a custom background image will be set for the devices.
     custom_background: Optional[str]
-    #: When this option is selected, a field 'Custom Background URL' needs to be added with the image url. URLs provided must link directly to an image file and be in HTTP, HTTPS, or filepath format.
+    #: When this option is selected, a field 'Custom Background URL' needs to be added with the image url. URLs
+    #: provided must link directly to an image file and be in HTTP, HTTPS, or filepath format.
     custom_url: Optional[str]
 
 
 class DisplayNameSelection(ApiModel):
-    #: Indicates that devices will display the person's phone number, or if a person doesn't have a phone number, the location number will be displayed.
+    #: Indicates that devices will display the person's phone number, or if a person doesn't have a phone number, the
+    #: location number will be displayed.
     person_number: Optional[str]
     #: Indicates that devices will display the name in first name then last name format.
     person_first_then_last_name: Optional[str]
@@ -3317,7 +3733,8 @@ class AcdObject(ApiModel):
 
 
 class LineKeyLabelSelection(ApiModel):
-    #: This will display the person extension, or if a person doesn't have an extension, the person's first name will be displayed.
+    #: This will display the person extension, or if a person doesn't have an extension, the person's first name will
+    #: be displayed.
     person_extension: Optional[str]
     #: Indicates that devices will display the name in first name then last name format.
     person_first_then_last_name: Optional[str]
@@ -3412,7 +3829,8 @@ class MppObject(ApiModel):
     long_interdigit_timer: Optional[int]
     #: Line key labels define the format of what's shown next to line keys.
     line_key_label_format: Optional[LineKeyLabelSelection]
-    #: LED patterns define lighting schemes for the line keys on the MPP devices. Note that this parameter is not supported on the MPP 8875
+    #: LED patterns define lighting schemes for the line keys on the MPP devices. Note that this parameter is not
+    #: supported on the MPP 8875
     line_key_led_pattern: Optional[LineKeyLEDPattern]
     #: Enable/disable Link Layer Discovery Protocol for local devices.
     lldp_enabled: Optional[bool]
@@ -3422,7 +3840,8 @@ class MppObject(ApiModel):
     multicast: Optional[list[str]]
     #: Specify the amount of time (in seconds) that a phone can remain off-hook.
     off_hook_timer: Optional[int]
-    #: Select the language for your MPP phone. Setting this overrides the default language setting in place for your provisioned location.
+    #: Select the language for your MPP phone. Setting this overrides the default language setting in place for your
+    #: provisioned location.
     phone_language: Optional[PhoneLanguage]
     #: Enable/disable the Power-Over-Ethernet mode for Multi-Platform Phones.
     poe_mode: Optional[str]
@@ -3448,12 +3867,14 @@ class CustomizationDeviceLevelObject(ApiModel):
 class UpdateDeviceSettingsBody(ApiModel):
     #: Indicates the customization object of the device settings.
     customizations: Optional[CustomizationDeviceLevelObject]
-    #: Indicates if customization is allowed at a device level. If true, customized at a device level. If false, not customized; uses customer-level configuration.
+    #: Indicates if customization is allowed at a device level. If true, customized at a device level. If false, not
+    #: customized; uses customer-level configuration.
     custom_enabled: Optional[bool]
 
 
 class GetDeviceSettingsResponse(UpdateDeviceSettingsBody):
-    #: Customer devices setting update status. If true, an update is in progress (no further changes are allowed). If false, no update in progress (changes are allowed).
+    #: Customer devices setting update status. If true, an update is in progress (no further changes are allowed). If
+    #: false, no update in progress (changes are allowed).
     update_in_progress: Optional[bool]
     #: Number of devices that will be updated.
     device_count: Optional[int]
@@ -3492,7 +3913,8 @@ class Devices(ApiModel):
     mac: Optional[str]
     #: IP address of device.
     ip_address: Optional[str]
-    #: Indicates whether the person or the workspace is the owner of the device, and points to a primary Line/Port of the device.
+    #: Indicates whether the person or the workspace is the owner of the device, and points to a primary Line/Port of
+    #: the device.
     primary_owner: Optional[bool]
     #: Indicates if the line is acting as a primary line or a shared line for this device.
     type: Optional[LineType]
@@ -3503,8 +3925,10 @@ class Devices(ApiModel):
 
 
 class Hoteling(ApiModel):
-    #: Enable/Disable hoteling Host. Enabling the device for hoteling means that a guest(end user) can log into this host(workspace device) and use this device
-    #: as if it were their own. This is useful when traveling to a remote office but still needing to place/receive calls with their telephone number and access features normally available to them on their office phone.
+    #: Enable/Disable hoteling Host. Enabling the device for hoteling means that a guest(end user) can log into this
+    #: host(workspace device) and use this device
+    #: as if it were their own. This is useful when traveling to a remote office but still needing to place/receive
+    #: calls with their telephone number and access features normally available to them on their office phone.
     enabled: Optional[bool]
     #: Enable limiting the time a guest can use the device. The time limit is configured via guestHoursLimit.
     limit_guest_use: Optional[bool]
@@ -3531,14 +3955,16 @@ class TypeObject(ApiModel):
 class ManufacturerObject(ApiModel):
     #: Devices manufactured by Cisco.
     cisco: Optional[str]
-    #: Devices manufactured by a third-party that are approved by a Cisco account manager to be enabled for provisioning in the control hub.
+    #: Devices manufactured by a third-party that are approved by a Cisco account manager to be enabled for
+    #: provisioning in the control hub.
     third_party: Optional[str]
 
 
 class ManagedByObject(ApiModel):
     #: Devices managed by Cisco.
     cisco: Optional[str]
-    #: Devices managed by a customer that are approved by a Cisco account manager to be enabled for provisioning in the control hub.
+    #: Devices managed by a customer that are approved by a Cisco account manager to be enabled for provisioning in the
+    #: control hub.
     customer: Optional[str]
 
 
@@ -3664,7 +4090,8 @@ class GetManageNumbersJobStatusResponse(GetAvailableRecallHuntGroupsObject):
     target_customer_id: Optional[str]
     #: Unique identifier to identify the instance of the job.
     instance_id: Optional[int]
-    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the execution of the job.
+    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
+    #: execution of the job.
     job_execution_status: Optional[list[JobExecutionStatusObject]]
     #: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
     latest_execution_status: Optional[str]
@@ -3861,7 +4288,9 @@ class GetDetailsForCallQueueResponse(CreateCallQueueBody):
     enabled: Optional[bool]
     #: Language for the call queue.
     language: Optional[str]
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
     alternate_number_settings: Optional[AlternateNumberSettings]
     #: Language for the call queue.
     language: Optional[str]
@@ -3880,11 +4309,14 @@ class UpdateCallQueueBody(FaxMessage):
     language_code: Optional[str]
     #: First name to be shown when calls are forwarded out of this call queue. Defaults to ..
     first_name: Optional[str]
-    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the phoneNumber if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the phoneNumber if set,
+    #: otherwise defaults to call group name.
     last_name: Optional[str]
     #: Time zone for the hunt group.
     time_zone: Optional[str]
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
     alternate_number_settings: Optional[AlternateNumberSettings]
     #: Policy controlling how calls are routed to agents.
     call_policies: Optional[PostCallQueueCallPolicyObject]
@@ -3960,13 +4392,14 @@ class UpdateCallRecordingTermsOfServiceSettingsBody(ApiModel):
 
 
 class TestCallRoutingBody(ApiModel):
-    #: This element is used to identify the originating party.  It can be user UUID or trunk UUID.
+    #: This element is used to identify the originating party. It can be user UUID or trunk UUID.
     originator_id: Optional[str]
     #: USER or TRUNK.
     originator_type: Optional[OriginatorType]
     #: Only used when originatorType is TRUNK. This element could be a phone number or URI.
     originator_number: Optional[str]
-    #: This element specifies called party.  It can be any dialable string, for example, an ESN number, E.164 number, hosted user DN, extension, extension with location code, URL, FAC code.
+    #: This element specifies called party. It can be any dialable string, for example, an ESN number, E.164 number,
+    #: hosted user DN, extension, extension with location code, URL, FAC code.
     destination: Optional[str]
 
 
@@ -4035,13 +4468,14 @@ class CreateHuntGroupBody(FaxMessage):
     language_code: Optional[str]
     #: First name to be shown when calls are forwarded out of this hunt group. Defaults to ..
     first_name: Optional[str]
-    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set,
+    #: otherwise defaults to call group name.
     last_name: Optional[str]
     #: Time zone for the hunt group.
     time_zone: Optional[str]
     #: Policy controlling how calls are routed to agents.
     call_policies: Optional[PostHuntGroupCallPolicyObject]
-    #: People, workspaces and virtual lines that are eligible to  receive calls.
+    #: People, workspaces and virtual lines that are eligible to receive calls.
     agents: Optional[list[PostPersonPlaceVirtualLineHuntGroupObject]]
 
 
@@ -4057,7 +4491,9 @@ class GetDetailsForHuntGroupResponse(ListCPCallParkExtensionObject):
     phone_number: Optional[str]
     #: Whether or not the hunt group has the distinctive ring option enabled.
     distinctive_ring: Optional[bool]
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
     alternate_numbers: Optional[list[AlternateNumbersWithPattern]]
     #: Language for hunt group.
     language: Optional[str]
@@ -4065,13 +4501,14 @@ class GetDetailsForHuntGroupResponse(ListCPCallParkExtensionObject):
     language_code: Optional[str]
     #: First name to be shown when calls are forwarded out of this hunt group. Defaults to ..
     first_name: Optional[str]
-    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to phone number if set,
+    #: otherwise defaults to call group name.
     last_name: Optional[str]
     #: Time zone for the hunt group.
     time_zone: Optional[str]
     #: Policy controlling how calls are routed to agents.
     call_policies: Optional[PostHuntGroupCallPolicyObject]
-    #: People, workspaces and virtual lines that are eligible to  receive calls.
+    #: People, workspaces and virtual lines that are eligible to receive calls.
     agents: Optional[list[GetPersonPlaceVirtualLineHuntGroupObject]]
     #: Whether or not the hunt group is enabled.
     enabled: Optional[bool]
@@ -4086,19 +4523,22 @@ class UpdateHuntGroupBody(CallForwardRulesModifyObject):
     extension: Optional[str]
     #: Whether or not the hunt group has the distinctive ring option enabled.
     distinctive_ring: Optional[bool]
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
     alternate_numbers: Optional[list[AlternateNumbersWithPattern]]
     #: Language code.
     language_code: Optional[str]
     #: First name to be shown when calls are forwarded out of this hunt group. Defaults to ..
     first_name: Optional[str]
-    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set,
+    #: otherwise defaults to call group name.
     last_name: Optional[str]
     #: Time zone for the hunt group.
     time_zone: Optional[str]
     #: Policy controlling how calls are routed to agents.
     call_policies: Optional[PostHuntGroupCallPolicyObject]
-    #: People, workspaces and virtual lines that are eligible to  receive calls.
+    #: People, workspaces and virtual lines that are eligible to receive calls.
     agents: Optional[list[PostPersonPlaceVirtualLineHuntGroupObject]]
 
 
@@ -4123,14 +4563,16 @@ class UpdateSelectiveCallForwardingRuleForHuntGroupResponse(ApiModel):
 
 
 class ReadInternalDialingConfigurationForlocationResponse(ApiModel):
-    #: When enabled, calls made by users at the location to an unknown extension (between 2-6 digits) are routed to the selected route group/trunk as premises calls.
+    #: When enabled, calls made by users at the location to an unknown extension (between 2-6 digits) are routed to the
+    #: selected route group/trunk as premises calls.
     enable_unknown_extension_route_policy: Optional[bool]
     #: The selected route group/trunk as premises calls.
     unknown_extension_route_identity: Optional[RouteIdentity]
 
 
 class ModifyInternalDialingConfigurationForlocationBody(ApiModel):
-    #: When enabled, calls made by users at the location to an unknown extension (between 2-6 digits) are routed to the selected route group/trunk as premises calls.
+    #: When enabled, calls made by users at the location to an unknown extension (between 2-6 digits) are routed to the
+    #: selected route group/trunk as premises calls.
     enable_unknown_extension_route_policy: Optional[bool]
     #: Type associated with the identity.
     unknown_extension_route_identity: Optional[UnknownExtensionRouteIdentity]
@@ -4196,7 +4638,8 @@ class CreatenewPagingGroupResponse(ApiModel):
 class GetDetailsForPagingGroupResponse(ListCPCallParkExtensionObject):
     #: Whether or not the paging group is enabled.
     enabled: Optional[bool]
-    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is mandatory.
+    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is
+    #: mandatory.
     phone_number: Optional[str]
     #: Flag to indicate toll free number.
     toll_free_number: Optional[bool]
@@ -4208,7 +4651,8 @@ class GetDetailsForPagingGroupResponse(ListCPCallParkExtensionObject):
     first_name: Optional[str]
     #: Last name that displays when a group page is performed. Minimum length is 1. Maximum length is 30.
     last_name: Optional[str]
-    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator ID.
+    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator
+    #: ID.
     originator_caller_id_enabled: Optional[bool]
     #: An array of people, workspaces and virtual lines ID's who may originate pages to this paging group.
     originators: Optional[list[GetPagingGroupAgentObject]]
@@ -4384,7 +4828,8 @@ class GetVoicePortalPasscodeRuleResponse(ApiModel):
     failed_attempts: Optional[FailedAttempts]
     #: Settings for previous passcode usage.
     block_previous_passcodes: Optional[BlockPreviousPasscodes]
-    #: Settings for not allowing single or groups of repeated digits in passcode (for example, 22888, 121212, or 408408).
+    #: Settings for not allowing single or groups of repeated digits in passcode (for example, 22888, 121212, or
+    #: 408408).
     block_repeated_digits: Optional[object]
     #: Settings for not allowing numerical sequence in passcode (for example, 012345 or 987654).
     block_contiguous_sequences: Optional[object]
@@ -4499,7 +4944,8 @@ class ReadListOfUCManagerProfilesResponse(ApiModel):
 
 
 class ReadListOfDialPatternsResponse(ApiModel):
-    #: Array of dial patterns. An enterprise dial pattern is represented by a sequence of digits (1-9), followed by optional wildcard characters.
+    #: Array of dial patterns. An enterprise dial pattern is represented by a sequence of digits (1-9), followed by
+    #: optional wildcard characters.
     dial_patterns: Optional[list[str]]
 
 
@@ -4584,7 +5030,8 @@ class GetTrunkResponse(ValidateLocalGatewayFQDNAndDomainForTrunkBody):
     locations_using_trunk: Optional[list[GetAvailableRecallHuntGroupsObject]]
     #: User ID.
     pilot_user_id: Optional[str]
-    #: Contains the body of the HTTP response received following the request to Console API and will not be set if the response has no body.
+    #: Contains the body of the HTTP response received following the request to Console API and will not be set if the
+    #: response has no body.
     outbound_proxy: Optional[object]
     #: User's authentication service information.
     sip_authentication_user_name: Optional[str]
@@ -4730,7 +5177,8 @@ class GetLocalGatewayUsageCountResponse(ApiModel):
 class GetDetailsForCallQueueHolidayServiceResponse(GetDetailsForCallQueueStrandedCallsResponse):
     #: Whether or not the call queue holiday service routing policy is enabled.
     holiday_service_enabled: Optional[bool]
-    #: Specifies whether the schedule mentioned in holidayScheduleName is org or location specific. (Must be from holidaySchedules list)
+    #: Specifies whether the schedule mentioned in holidayScheduleName is org or location specific. (Must be from
+    #: holidaySchedules list)
     holiday_schedule_level: Optional[HolidayScheduleLevel]
     #: Name of the schedule configured for a holiday service as one of from holidaySchedules list.
     holiday_schedule_name: Optional[str]
@@ -4743,7 +5191,8 @@ class GetDetailsForCallQueueHolidayServiceResponse(GetDetailsForCallQueueStrande
 class UpdateCallQueueHolidayServiceBody(GetDetailsForCallQueueStrandedCallsResponse):
     #: Enable or Disable the call queue holiday service routing policy.
     holiday_service_enabled: Optional[bool]
-    #: Specifies whether the schedule mentioned in holidayScheduleName is org or location specific. (Must be from holidaySchedules list)
+    #: Specifies whether the schedule mentioned in holidayScheduleName is org or location specific. (Must be from
+    #: holidaySchedules list)
     holiday_schedule_level: Optional[HolidayScheduleLevel]
     #: Name of the schedule configured for a holiday service as one of from holidaySchedules list.
     holiday_schedule_name: Optional[str]
@@ -4760,7 +5209,8 @@ class GetDetailsForCallQueueNightServiceResponse(GetDetailsForCallQueueStrandedC
     announcement_mode: Optional[AnnouncementMode]
     #: Name of the schedule configured for a night service as one of from businessHourSchedules list.
     business_hours_name: Optional[str]
-    #: Specifies whether the above mentioned schedule is org or location specific. (Must be from businessHourSchedules list).
+    #: Specifies whether the above mentioned schedule is org or location specific. (Must be from businessHourSchedules
+    #: list).
     business_hours_level: Optional[HolidayScheduleLevel]
     #: Lists the pre-configured business hour schedules.
     business_hour_schedules: Optional[list[CallQueueHolidaySchedulesObject]]
@@ -4781,7 +5231,8 @@ class UpdateCallQueueNightServiceBody(GetDetailsForCallQueueStrandedCallsRespons
     announcement_mode: Optional[AnnouncementMode]
     #: Name of the schedule configured for a night service as one of from businessHourSchedules list.
     business_hours_name: Optional[str]
-    #: Specifies whether the above mentioned schedule is org or location specific. (Must be from businessHourSchedules list)
+    #: Specifies whether the above mentioned schedule is org or location specific. (Must be from businessHourSchedules
+    #: list)
     business_hours_level: Optional[HolidayScheduleLevel]
     #: Force night service regardless of business hour schedule.
     force_night_service_enabled: Optional[bool]
@@ -4861,7 +5312,9 @@ class ValidatelistOfMACAddressResponse(ApiModel):
 class ChangeDeviceSettingsAcrossOrganizationOrLocationJobBody(ApiModel):
     #: Location within an organization where changes of device setings will be applied to all the devices within it.
     location_id: Optional[str]
-    #: Indicates if all the devices within this location will be customized with new requested customizations(if set to true) or will be overridden with the one at organization level (if set to false or any other value). This field has no effect when the job is being triggered at organization level.
+    #: Indicates if all the devices within this location will be customized with new requested customizations(if set to
+    #: true) or will be overridden with the one at organization level (if set to false or any other value). This field
+    #: has no effect when the job is being triggered at organization level.
     location_customizations_enabled: Optional[bool]
     #: Indicates the settings for ATA devices, DECT devices and MPP devices.
     customizations: Optional[CustomizationObject]
@@ -4879,17 +5332,25 @@ class ListChangeDeviceSettingsJobErrorsResponse(ApiModel):
 class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     """
     Not supported for Webex for Government (FedRAMP)
-    Webex Calling Organization Settings support reading and writing of Webex Calling settings for a specific organization.
-    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read, as the current set of APIs is designed to provide supplemental information for administrators utilizing People Webex Calling APIs.
-    Modifying these organization settings requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
-    A partner administrator can retrieve or change settings in a customer's organization using the optional OrgId query parameter.
+    Webex Calling Organization Settings support reading and writing of Webex Calling settings for a specific
+    organization.
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    spark-admin:telephony_config_read, as the current set of APIs is designed to provide supplemental information for
+    administrators utilizing People Webex Calling APIs.
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    spark-admin:telephony_config_write.
+    A partner administrator can retrieve or change settings in a customer's organization using the optional OrgId query
+    parameter.
     """
 
     def change_announcement_language(self, location_id: str, announcement_language_code: str, org_id: str = None, agent_enabled: bool = None, service_enabled: bool = None):
         """
         Change announcement language for the given location.
-        Change announcement language for current people/workspaces and/or existing feature configurations. This does not change the default announcement language which is applied to new users/workspaces and new feature configurations.
-        Changing announcement language for the given location requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Change announcement language for current people/workspaces and/or existing feature configurations. This does
+        not change the default announcement language which is applied to new users/workspaces and new feature
+        configurations.
+        Changing announcement language for the given location requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Change announcement language for this location.
         :type location_id: str
@@ -4919,8 +5380,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def read_list_of_auto_attendants(self, org_id: str = None, location_id: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None) -> List[ListAutoAttendantObject]:
         """
         List all Auto Attendants for the organization.
-        Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: List auto attendants for this organization.
         :type org_id: str
@@ -4955,8 +5418,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def details_for_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None) -> GetDetailsForAutoAttendantResponse:
         """
         Retrieve an Auto Attendant details.
-        Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.
-        Retrieving an auto attendant details requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+        Retrieving an auto attendant details requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param location_id: Retrieve an auto attendant details in this location.
         :type location_id: str
@@ -4975,8 +5440,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def create_auto_attendant(self, location_id: str, business_schedule: str, business_hours_menu: HoursMenuObject, after_hours_menu: HoursMenuObject, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, first_name: str = None, last_name: str = None, alternate_numbers: AlternateNumbersObject = None, language_code: str = None, holiday_schedule: str = None, extension_dialing: ExtensionDialing = None, name_dialing: ExtensionDialing = None, time_zone: str = None) -> str:
         """
         Create new Auto Attendant for the given location.
-        Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.
-        Creating an auto attendant requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+        Creating an auto attendant requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Create the auto attendant for this location.
         :type location_id: str
@@ -4992,7 +5459,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type extension: str
         :param name: Unique name for the call park extension.
         :type name: str
-        :param phone_number: Auto attendant phone number.  Either phoneNumber or extension is mandatory.
+        :param phone_number: Auto attendant phone number. Either phoneNumber or extension is mandatory.
         :type phone_number: str
         :param first_name: First name defined for an auto attendant.
         :type first_name: str
@@ -5004,7 +5471,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type language_code: str
         :param holiday_schedule: Holiday defined for the auto attendant.
         :type holiday_schedule: str
-        :param extension_dialing: Extension dialing setting. If the values are not set default will be set as ENTERPRISE.
+        :param extension_dialing: Extension dialing setting. If the values are not set default will be set as
+            ENTERPRISE.
         :type extension_dialing: ExtensionDialing
         :param name_dialing: Name dialing setting. If the values are not set default will be set as ENTERPRISE.
         :type name_dialing: ExtensionDialing
@@ -5050,8 +5518,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def update_auto_attendant(self, location_id: str, auto_attendant_id: str, business_schedule: str, business_hours_menu: HoursMenuObject, after_hours_menu: HoursMenuObject, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, first_name: str = None, last_name: str = None, alternate_numbers: AlternateNumbersObject = None, language_code: str = None, holiday_schedule: str = None, extension_dialing: ExtensionDialing = None, name_dialing: ExtensionDialing = None, time_zone: str = None):
         """
         Update the designated Auto Attendant.
-        Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.
-        Updating an auto attendant requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+        Updating an auto attendant requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Location in which this auto attendant exists.
         :type location_id: str
@@ -5069,7 +5539,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type extension: str
         :param name: Unique name for the call park extension.
         :type name: str
-        :param phone_number: Auto attendant phone number.  Either phoneNumber or extension is mandatory.
+        :param phone_number: Auto attendant phone number. Either phoneNumber or extension is mandatory.
         :type phone_number: str
         :param first_name: First name defined for an auto attendant.
         :type first_name: str
@@ -5081,7 +5551,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type language_code: str
         :param holiday_schedule: Holiday defined for the auto attendant.
         :type holiday_schedule: str
-        :param extension_dialing: Extension dialing setting. If the values are not set default will be set as ENTERPRISE.
+        :param extension_dialing: Extension dialing setting. If the values are not set default will be set as
+            ENTERPRISE.
         :type extension_dialing: ExtensionDialing
         :param name_dialing: Name dialing setting. If the values are not set default will be set as ENTERPRISE.
         :type name_dialing: ExtensionDialing
@@ -5127,8 +5598,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def delete_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None):
         """
         Delete the designated Auto Attendant.
-        Auto attendants play customized prompts and provide callers with menu options for routing their calls through your system.
-        Deleting an auto attendant requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Auto attendants play customized prompts and provide callers with menu options for routing their calls through
+        your system.
+        Deleting an auto attendant requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Location from which to delete an auto attendant.
         :type location_id: str
@@ -5146,8 +5619,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
     def forwarding_settings_for_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None) -> AutoAttendantCallForwardSettingsDetailsObject:
         """
-        Retrieve Call Forwarding settings for the designated Auto Attendant including the list of call forwarding rules.
-        Retrieving call forwarding settings for an auto attendant requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieve Call Forwarding settings for the designated Auto Attendant including the list of call forwarding
+        rules.
+        Retrieving call forwarding settings for an auto attendant requires a full or read-only administrator auth token
+        with a scope of spark-admin:telephony_config_read.
 
         :param location_id: Location in which this auto attendant exists.
         :type location_id: str
@@ -5166,7 +5641,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def update_forwarding_settings_for_auto_attendant(self, location_id: str, auto_attendant_id: str, call_forwarding: AutoAttendantCallForwardSettingsModifyDetailsObject, org_id: str = None):
         """
         Update Call Forwarding settings for the designated Auto Attendant.
-        Updating call forwarding settings for an auto attendant requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Updating call forwarding settings for an auto attendant requires a full administrator auth token with a scope
+        of spark-admin:telephony_config_write.
 
         :param location_id: Location in which this auto attendant exists.
         :type location_id: str
@@ -5190,9 +5666,12 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def create_selective_forwarding_rule_for_auto_attendant(self, location_id: str, auto_attendant_id: str, name: str, forward_to: CallForwardSelectiveForwardToObject, calls_from: CallForwardSelectiveCallsFromObject, org_id: str = None, enabled: bool = None, business_schedule: str = None, holiday_schedule: str = None, calls_to: CallForwardSelectiveCallsToObject = None) -> str:
         """
         Create a Selective Call Forwarding Rule for the designated Auto Attendant.
-        A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the designated number, based on the defined criteria.
-        Note that the list of existing call forward rules is available in the auto attendant's call forwarding settings.
-        Creating a selective call forwarding rule for an auto attendant requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+        Note that the list of existing call forward rules is available in the auto attendant's call forwarding
+        settings.
+        Creating a selective call forwarding rule for an auto attendant requires a full administrator auth token with a
+        scope of spark-admin:telephony_config_write.
         NOTE: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which the auto attendant exists.
@@ -5201,7 +5680,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type auto_attendant_id: str
         :param name: Unique name for the selective rule in the auto attendant.
         :type name: str
-        :param forward_to: Controls what happens when the rule matches including the destination number for the call forwarding.
+        :param forward_to: Controls what happens when the rule matches including the destination number for the call
+            forwarding.
         :type forward_to: CallForwardSelectiveForwardToObject
         :param calls_from: Settings related to the rule matching based on incoming caller ID.
         :type calls_from: CallForwardSelectiveCallsFromObject
@@ -5209,9 +5689,11 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param enabled: Reflects if rule is enabled.
         :type enabled: bool
-        :param business_schedule: Name of the location's business schedule which determines when this selective call forwarding rule is in effect.
+        :param business_schedule: Name of the location's business schedule which determines when this selective call
+            forwarding rule is in effect.
         :type business_schedule: str
-        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call forwarding rule is in effect.
+        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call
+            forwarding rule is in effect.
         :type holiday_schedule: str
         :param calls_to: Settings related to the rule matching based on the destination number.
         :type calls_to: CallForwardSelectiveCallsToObject
@@ -5241,9 +5723,12 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def selective_forwarding_rule_for_auto_attendant(self, location_id: str, auto_attendant_id: str, rule_id: str, org_id: str = None) -> str:
         """
         Retrieve a Selective Call Forwarding Rule's settings for the designated Auto Attendant.
-        A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the designated number, based on the defined criteria.
-        Note that the list of existing call forward rules is available in the auto attendant's call forwarding settings.
-        Retrieving a selective call forwarding rule's settings for an auto attendant requires a full or read-only administrator
+        A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+        Note that the list of existing call forward rules is available in the auto attendant's call forwarding
+        settings.
+        Retrieving a selective call forwarding rule's settings for an auto attendant requires a full or read-only
+        administrator
         NOTE: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which this auto attendant exists.
@@ -5265,9 +5750,12 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def update_selective_forwarding_rule_for_auto_attendant(self, location_id: str, auto_attendant_id: str, rule_id: str, name: str, forward_to: CallForwardSelectiveForwardToObject, calls_from: CallForwardSelectiveCallsFromObject, org_id: str = None, enabled: bool = None, business_schedule: str = None, holiday_schedule: str = None, calls_to: CallForwardSelectiveCallsToObject = None) -> str:
         """
         Update a Selective Call Forwarding Rule's settings for the designated Auto Attendant.
-        A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the designated number, based on the defined criteria.
-        Note that the list of existing call forward rules is available in the auto attendant's call forwarding settings.
-        Updating a selective call forwarding rule's settings for an auto attendant requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+        Note that the list of existing call forward rules is available in the auto attendant's call forwarding
+        settings.
+        Updating a selective call forwarding rule's settings for an auto attendant requires a full administrator auth
+        token with a scope of spark-admin:telephony_config_write.
         NOTE: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which this auto attendant exists.
@@ -5278,7 +5766,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type rule_id: str
         :param name: Unique name for the selective rule in the auto attendant.
         :type name: str
-        :param forward_to: Controls what happens when the rule matches including the destination number for the call forwarding.
+        :param forward_to: Controls what happens when the rule matches including the destination number for the call
+            forwarding.
         :type forward_to: CallForwardSelectiveForwardToObject
         :param calls_from: Settings related to the rule matching based on incoming caller ID.
         :type calls_from: CallForwardSelectiveCallsFromObject
@@ -5286,9 +5775,11 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param enabled: Reflects if rule is enabled.
         :type enabled: bool
-        :param business_schedule: Name of the location's business schedule which determines when this selective call forwarding rule is in effect.
+        :param business_schedule: Name of the location's business schedule which determines when this selective call
+            forwarding rule is in effect.
         :type business_schedule: str
-        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call forwarding rule is in effect.
+        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call
+            forwarding rule is in effect.
         :type holiday_schedule: str
         :param calls_to: Settings related to the rule matching based on the destination number.
         :type calls_to: CallForwardSelectiveCallsToObject
@@ -5318,9 +5809,12 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def delete_selective_forwarding_rule_for_auto_attendant(self, location_id: str, auto_attendant_id: str, rule_id: str, org_id: str = None):
         """
         Delete a Selective Call Forwarding Rule for the designated Auto Attendant.
-        A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the designated number, based on the defined criteria.
-        Note that the list of existing call forward rules is available in the auto attendant's call forwarding settings.
-        Deleting a selective call forwarding rule for an auto attendant requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
+        Note that the list of existing call forward rules is available in the auto attendant's call forwarding
+        settings.
+        Deleting a selective call forwarding rule for an auto attendant requires a full administrator auth token with a
+        scope of spark-admin:telephony_config_write.
         NOTE: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which this auto attendant exists.
@@ -5343,7 +5837,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         """
         List all Call Parks for the organization.
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
         NOTE: The Call Park ID will change upon modification of the Call Park name.
 
         :param location_id: Return the list of call parks for this location.
@@ -5378,7 +5873,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         """
         Create new Call Parks for the given location.
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
-        Creating a call park requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Creating a call park requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
         NOTE: The Call Park ID will change upon modification of the Call Park name.
 
         :param location_id: Create the call park for this location.
@@ -5410,7 +5906,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         """
         Delete the designated Call Park.
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
-        Deleting a call park requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Deleting a call park requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
         NOTE: The Call Park ID will change upon modification of the Call Park name.
 
         :param location_id: Location from which to delete a call park.
@@ -5431,7 +5928,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         """
         Retrieve Call Park details.
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
-        Retrieving call park details requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving call park details requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
         NOTE: The Call Park ID will change upon modification of the Call Park name.
 
         :param location_id: Retrieve settings for a call park in this location.
@@ -5452,7 +5950,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         """
         Update the designated Call Park.
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
-        Updating a call park requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Updating a call park requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
         NOTE: The Call Park ID will change upon modification of the Call Park name.
 
         :param location_id: Location in which this call park exists.
@@ -5486,7 +5985,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         """
         Retrieve available agents from call parks for a given location.
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
-        Retrieving available agents from call parks requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving available agents from call parks requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
 
         :param location_id: Return the available agents for this location.
         :type location_id: str
@@ -5502,7 +6002,9 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type name: str
         :param phone_number: Only return available agents with the matching primary number.
         :type phone_number: str
-        :param order: Order the available agents according to the designated fields. Up to three vertical bar (|) separated sort order fields may be specified. Available sort fields: fname, lname, number and extension. The maximum supported sort order value is 3.
+        :param order: Order the available agents according to the designated fields. Up to three vertical bar (|)
+            separated sort order fields may be specified. Available sort fields: fname, lname, number and extension.
+            The maximum supported sort order value is 3.
         :type order: str
         """
         params = {}
@@ -5528,7 +6030,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         """
         Retrieve available recall hunt groups from call parks for a given location.
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
-        Retrieving available recall hunt groups from call parks requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving available recall hunt groups from call parks requires a full or read-only administrator auth token
+        with a scope of spark-admin:telephony_config_read.
 
         :param location_id: Return the available recall hunt groups for this location.
         :type location_id: str
@@ -5540,7 +6043,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type start: int
         :param name: Only return available recall hunt groups with the matching name.
         :type name: str
-        :param order: Order the available recall hunt groups according to the designated fields. Available sort fields: lname.
+        :param order: Order the available recall hunt groups according to the designated fields. Available sort fields:
+            lname.
         :type order: str
         """
         params = {}
@@ -5562,7 +6066,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         """
         Retrieve Call Park Settings from call parks for a given location.
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
-        Retrieving settings from call parks requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving settings from call parks requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param location_id: Return the call park settings for this location.
         :type location_id: str
@@ -5580,7 +6085,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         """
         Update Call Park settings for the designated location.
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
-        Updating call park settings requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Updating call park settings requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Location for which call park settings will be updated.
         :type location_id: str
@@ -5606,8 +6112,11 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def read_list_of_park_extensions(self, org_id: str = None, max: int = None, start: int = None, extension: str = None, name: str = None, location_id: str = None, location_name: str = None, order: str = None) -> List[ListCallParkExtensionObject]:
         """
         List all Call Park Extensions for the organization.
-        The Call Park service, enabled for all users by default, allows a user to park a call against an available user's extension or to a Call Park Extension. Call Park Extensions are extensions defined within the Call Park service for holding parked calls.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        The Call Park service, enabled for all users by default, allows a user to park a call against an available
+        user's extension or to a Call Park Extension. Call Park Extensions are extensions defined within the Call Park
+        service for holding parked calls.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: List call park extensions for this organization.
         :type org_id: str
@@ -5623,7 +6132,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param location_name: Only return call park extensions with the matching extension.
         :type location_name: str
-        :param order: Order the available agents according to the designated fields.  Available sort fields: groupName, callParkExtension, callParkExtensionName, callParkExtensionExternalId.
+        :param order: Order the available agents according to the designated fields. Available sort fields: groupName,
+            callParkExtension, callParkExtensionName, callParkExtensionExternalId.
         :type order: str
         """
         params = {}
@@ -5650,8 +6160,11 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def details_for_park_extension(self, location_id: str, call_park_extension_id: str, org_id: str = None) -> GetDetailsForCallParkExtensionResponse:
         """
         Retrieve Call Park Extension details.
-        The Call Park service, enabled for all users by default, allows a user to park a call against an available user's extension or to a Call Park Extension. Call Park Extensions are extensions defined within the Call Park service for holding parked calls.
-        Retrieving call park extension details requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        The Call Park service, enabled for all users by default, allows a user to park a call against an available
+        user's extension or to a Call Park Extension. Call Park Extensions are extensions defined within the Call Park
+        service for holding parked calls.
+        Retrieving call park extension details requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param location_id: Retrieve details for a call park extension in this location.
         :type location_id: str
@@ -5670,8 +6183,12 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def create_park_extension(self, location_id: str, org_id: str = None, extension: str = None, name: str = None) -> str:
         """
         Create new Call Park Extensions for the given location.
-        Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone line key.
-        Creating a call park extension requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same
+        Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as
+        monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone
+        line key.
+        Creating a call park extension requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Create the call park extension for this location.
         :type location_id: str
@@ -5697,8 +6214,12 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def delete_park_extension(self, location_id: str, call_park_extension_id: str, org_id: str = None):
         """
         Delete the designated Call Park Extension.
-        Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone line key.
-        Deleting a call park extension requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same
+        Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as
+        monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone
+        line key.
+        Deleting a call park extension requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Location from which to delete a call park extension.
         :type location_id: str
@@ -5717,8 +6238,12 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def update_park_extension(self, location_id: str, call_park_extension_id: str, org_id: str = None, extension: str = None, name: str = None):
         """
         Update the designated Call Park Extension.
-        Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone line key.
-        Updating a call park extension requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Call Park Extension enables a call recipient to park a call to an extension, so someone else within the same
+        Organization can retrieve the parked call by dialing that extension. Call Park Extensions can be added as
+        monitored lines by users' Cisco phones, so users can park and retrieve calls by pressing the associated phone
+        line key.
+        Updating a call park extension requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Location in which this call park extension exists.
         :type location_id: str
@@ -5747,7 +6272,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         """
         List all Call Pickups for the organization.
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
         NOTE: The Call Pickup ID will change upon modification of the Call Pickup name.
 
         :param location_id: Return the list of call pickups for this location.
@@ -5782,7 +6308,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         """
         Create new Call Pickups for the given location.
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
-        Creating a call pickup requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Creating a call pickup requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
         NOTE: The Call Pickup ID will change upon modification of the Call Pickup name.
 
         :param location_id: Create the call pickup for this location.
@@ -5810,7 +6337,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         """
         Delete the designated Call Pickup.
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
-        Deleting a call pickup requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Deleting a call pickup requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
         NOTE: The Call Pickup ID will change upon modification of the Call Pickup name.
 
         :param location_id: Location from which to delete a call pickup.
@@ -5831,7 +6359,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         """
         Retrieve Call Pickup details.
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
-        Retrieving call pickup details requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving call pickup details requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
         NOTE: The Call Pickup ID will change upon modification of the Call Pickup name.
 
         :param location_id: Retrieve settings for a call pickup in this location.
@@ -5852,7 +6381,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         """
         Update the designated Call Pickup.
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
-        Updating a call pickup requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Updating a call pickup requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
         NOTE: The Call Pickup ID will change upon modification of the Call Pickup name.
 
         :param location_id: Location in which this call pickup exists.
@@ -5882,7 +6412,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         """
         Retrieve available agents from call pickups for a given location.
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
-        Retrieving available agents from call pickups requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving available agents from call pickups requires a full or read-only administrator auth token with a
+        scope of spark-admin:telephony_config_read.
 
         :param location_id: Return the available agents for this location.
         :type location_id: str
@@ -5898,7 +6429,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type name: str
         :param phone_number: Only return available agents with the matching primary number.
         :type phone_number: str
-        :param order: Order the available agents according to the designated fields. Up to three vertical bar (|) separated sort order fields may be specified. Available sort fields: fname, lname, extension, number.
+        :param order: Order the available agents according to the designated fields. Up to three vertical bar (|)
+            separated sort order fields may be specified. Available sort fields: fname, lname, extension, number.
         :type order: str
         """
         params = {}
@@ -5930,7 +6462,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         number outside callers can dial to reach users assigned to the call queue.
         Call queues are also assigned an internal extension, which can be dialed
         internally to reach users assigned to the call queue.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: List call queues for this organization.
         :type org_id: str
@@ -5972,7 +6505,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         number outside callers can dial to reach users assigned to the call queue.
         Call queues are also assigned an internal extension, which can be dialed
         internally to reach users assigned to the call queue.
-        Creating a call queue requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Creating a call queue requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Create the call queue for this location.
         :type location_id: str
@@ -5994,13 +6528,15 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type language_code: str
         :param first_name: First name to be shown when calls are forwarded out of this call queue. Defaults to ".".
         :type first_name: str
-        :param last_name: Last name to be shown when calls are forwarded out of this call queue. Defaults to phoneNumber if set, otherwise defaults to call group name.
+        :param last_name: Last name to be shown when calls are forwarded out of this call queue. Defaults to
+            phoneNumber if set, otherwise defaults to call group name.
         :type last_name: str
         :param time_zone: Time zone for the call queue.
         :type time_zone: str
         :param allow_agent_join_enabled: Whether or not to allow agents to join or unjoin a queue.
         :type allow_agent_join_enabled: bool
-        :param phone_number_for_outgoing_calls_enabled: When true, indicates that the agent's configuration allows them to use the queue's Caller ID for outgoing calls.
+        :param phone_number_for_outgoing_calls_enabled: When true, indicates that the agent's configuration allows them
+            to use the queue's Caller ID for outgoing calls.
         :type phone_number_for_outgoing_calls_enabled: bool
         """
         params = {}
@@ -6045,7 +6581,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         number outside callers can dial to reach users assigned to the call queue.
         Call queues are also assigned an internal extension, which can be dialed
         internally to reach users assigned to the call queue.
-        Deleting a call queue requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Deleting a call queue requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Location from which to delete a call queue.
         :type location_id: str
@@ -6071,7 +6608,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         number outside callers can dial to reach users assigned to the call queue.
         Call queues are also assigned an internal extension, which can be dialed
         internally to reach users assigned to the call queue.
-        Retrieving call queue details requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving call queue details requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param location_id: Retrieve settings for a call queue in this location.
         :type location_id: str
@@ -6097,7 +6635,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         number outside callers can dial to reach users assigned to the call queue.
         Call queues are also assigned an internal extension, which can be dialed
         internally to reach users assigned to the call queue.
-        Updating a call queue requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Updating a call queue requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str
@@ -6119,11 +6658,15 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type language_code: str
         :param first_name: First name to be shown when calls are forwarded out of this call queue. Defaults to ..
         :type first_name: str
-        :param last_name: Last name to be shown when calls are forwarded out of this call queue. Defaults to the phoneNumber if set, otherwise defaults to call group name.
+        :param last_name: Last name to be shown when calls are forwarded out of this call queue. Defaults to the
+            phoneNumber if set, otherwise defaults to call group name.
         :type last_name: str
         :param time_zone: Time zone for the hunt group.
         :type time_zone: str
-        :param alternate_number_settings: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
+        :param alternate_number_settings: The alternate numbers feature allows you to assign multiple phone numbers or
+            extensions to a call queue. Each number will reach the same greeting and each menu will function
+            identically to the main number. The alternate numbers option enables you to have up to ten (10) phone
+            numbers ring into the call queue.
         :type alternate_number_settings: AlternateNumberSettings
         :param call_policies: Policy controlling how calls are routed to agents.
         :type call_policies: PostCallQueueCallPolicyObject
@@ -6133,7 +6676,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type agents: ModifyPersonPlaceVirtualLineCallQueueObject
         :param allow_agent_join_enabled: Whether or not to allow agents to join or unjoin a queue.
         :type allow_agent_join_enabled: bool
-        :param phone_number_for_outgoing_calls_enabled: When true, indicates that the agent's configuration allows them to use the queue's Caller ID for outgoing calls.
+        :param phone_number_for_outgoing_calls_enabled: When true, indicates that the agent's configuration allows them
+            to use the queue's Caller ID for outgoing calls.
         :type phone_number_for_outgoing_calls_enabled: bool
         """
         params = {}
@@ -6177,9 +6721,12 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def read_list_of_queue_announcement_files(self, location_id: str, queue_id: str, org_id: str = None) -> List[GetAnnouncementFileInfo]:
         """
         List file info for all Call Queue announcement files associated with this Call Queue.
-        Call Queue announcement files contain messages and music that callers hear while waiting in the queue. A call queue can be configured to play whatever subset of these announcement files is desired.
-        Retrieving this list of files requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
-        Note that uploading of announcement files via API is not currently supported, but is available via Webex Control Hub.
+        Call Queue announcement files contain messages and music that callers hear while waiting in the queue. A call
+        queue can be configured to play whatever subset of these announcement files is desired.
+        Retrieving this list of files requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+        Note that uploading of announcement files via API is not currently supported, but is available via Webex
+        Control Hub.
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str
@@ -6198,8 +6745,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def delete_queue_announcement_file(self, location_id: str, queue_id: str, file_name: str, org_id: str = None):
         """
         Delete an announcement file for the designated Call Queue.
-        Call Queue announcement files contain messages and music that callers hear while waiting in the queue. A call queue can be configured to play whatever subset of these announcement files is desired.
-        Deleting an announcement file for a call queue requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Call Queue announcement files contain messages and music that callers hear while waiting in the queue. A call
+        queue can be configured to play whatever subset of these announcement files is desired.
+        Deleting an announcement file for a call queue requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Delete an announcement for a call queue in this location.
         :type location_id: str
@@ -6220,7 +6769,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def forwarding_settings_for_queue(self, location_id: str, queue_id: str, org_id: str = None) -> object:
         """
         Retrieve Call Forwarding settings for the designated Call Queue including the list of call forwarding rules.
-        Retrieving call forwarding settings for a call queue requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving call forwarding settings for a call queue requires a full or read-only administrator auth token with
+        a scope of spark-admin:telephony_config_read.
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str
@@ -6239,7 +6789,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def update_forwarding_settings_for_queue(self, location_id: str, queue_id: str, org_id: str = None, call_forwarding: CallForwarding1 = None):
         """
         Update Call Forwarding settings for the designated Call Queue.
-        Updating call forwarding settings for a call queue requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Updating call forwarding settings for a call queue requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str
@@ -6263,9 +6814,11 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def create_selective_forwarding_rule_for_queue(self, location_id: str, queue_id: str, name: str, calls_from: CallsFrom, calls_to: CallsTo, org_id: str = None, enabled: bool = None, holiday_schedule: str = None, business_schedule: str = None, forward_to: CallForwardSelectiveForwardToObject = None) -> str:
         """
         Create a Selective Call Forwarding Rule for the designated Call Queue.
-        A selective call forwarding rule for a call queue allows calls to be forwarded or not forwarded to the designated number, based on the defined criteria.
+        A selective call forwarding rule for a call queue allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
         Note that the list of existing call forward rules is available in the call queue's call forwarding settings.
-        Creating a selective call forwarding rule for a call queue requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Creating a selective call forwarding rule for a call queue requires a full administrator auth token with a
+        scope of spark-admin:telephony_config_write.
         NOTE: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which the call queue exists.
@@ -6282,11 +6835,14 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param enabled: Reflects if rule is enabled.
         :type enabled: bool
-        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call forwarding rule is in effect.
+        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call
+            forwarding rule is in effect.
         :type holiday_schedule: str
-        :param business_schedule: Name of the location's business schedule which determines when this selective call forwarding rule is in effect.
+        :param business_schedule: Name of the location's business schedule which determines when this selective call
+            forwarding rule is in effect.
         :type business_schedule: str
-        :param forward_to: Controls what happens when the rule matches including the destination number for the call forwarding.
+        :param forward_to: Controls what happens when the rule matches including the destination number for the call
+            forwarding.
         :type forward_to: CallForwardSelectiveForwardToObject
         """
         params = {}
@@ -6314,9 +6870,11 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def selective_forwarding_rule_for_queue(self, location_id: str, queue_id: str, rule_id: str, org_id: str = None) -> str:
         """
         Retrieve a Selective Call Forwarding Rule's settings for the designated Call Queue.
-        A selective call forwarding rule for a call queue allows calls to be forwarded or not forwarded to the designated number, based on the defined criteria.
+        A selective call forwarding rule for a call queue allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
         Note that the list of existing call forward rules is available in the call queue's call forwarding settings.
-        Retrieving a selective call forwarding rule's settings for a call queue requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving a selective call forwarding rule's settings for a call queue requires a full or read-only
+        administrator auth token with a scope of spark-admin:telephony_config_read.
         NOTE: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which to call queue exists.
@@ -6338,9 +6896,11 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def update_selective_forwarding_rule_for_queue(self, location_id: str, queue_id: str, rule_id: str, name: str, calls_from: CallsFrom, calls_to: CallsTo, org_id: str = None, enabled: bool = None, holiday_schedule: str = None, business_schedule: str = None, forward_to: CallForwardSelectiveForwardToObject = None) -> str:
         """
         Update a Selective Call Forwarding Rule's settings for the designated Call Queue.
-        A selective call forwarding rule for a call queue allows calls to be forwarded or not forwarded to the designated number, based on the defined criteria.
+        A selective call forwarding rule for a call queue allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
         Note that the list of existing call forward rules is available in the call queue's call forwarding settings.
-        Updating a selective call forwarding rule's settings for a call queue requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Updating a selective call forwarding rule's settings for a call queue requires a full administrator auth token
+        with a scope of spark-admin:telephony_config_write.
         NOTE: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which this call queue exists.
@@ -6359,11 +6919,14 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param enabled: Reflects if rule is enabled.
         :type enabled: bool
-        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call forwarding rule is in effect.
+        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call
+            forwarding rule is in effect.
         :type holiday_schedule: str
-        :param business_schedule: Name of the location's business schedule which determines when this selective call forwarding rule is in effect.
+        :param business_schedule: Name of the location's business schedule which determines when this selective call
+            forwarding rule is in effect.
         :type business_schedule: str
-        :param forward_to: Controls what happens when the rule matches including the destination number for the call forwarding.
+        :param forward_to: Controls what happens when the rule matches including the destination number for the call
+            forwarding.
         :type forward_to: CallForwardSelectiveForwardToObject
         """
         params = {}
@@ -6391,9 +6954,11 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def delete_selective_forwarding_rule_for_queue(self, location_id: str, queue_id: str, rule_id: str, org_id: str = None):
         """
         Delete a Selective Call Forwarding Rule for the designated Call Queue.
-        A selective call forwarding rule for a call queue allows calls to be forwarded or not forwarded to the designated number, based on the defined criteria.
+        A selective call forwarding rule for a call queue allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
         Note that the list of existing call forward rules is available in the call queue's call forwarding settings.
-        Deleting a selective call forwarding rule for a call queue requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Deleting a selective call forwarding rule for a call queue requires a full administrator auth token with a
+        scope of spark-admin:telephony_config_write.
         NOTE: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which this call queue exists.
@@ -6416,7 +6981,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         """
         Retrieve Call Recording settings for the organization.
         Call Recording feature enables authorized agents to record any active call that Webex Contact Center manages.
-        Retrieving call recording settings requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving call recording settings requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: Retrieve call recording settings from this organization.
         :type org_id: str
@@ -6432,7 +6998,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         """
         Update Call Recording settings for the organization.
         Call Recording feature enables authorized agents to record any active call that Webex Contact Center manages.
-        Updating call recording settings requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Updating call recording settings requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
         NOTE: This API is for Cisco partners only.
 
         :param enabled: Whether or not the call recording is enabled.
@@ -6454,7 +7021,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         """
         Retrieve Call Recording Terms Of Service settings for the organization.
         Call Recording feature enables authorized agents to record any active call that Webex Contact Center manages.
-        Retrieving call recording terms of service settings requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving call recording terms of service settings requires a full or read-only administrator auth token with
+        a scope of spark-admin:telephony_config_read.
 
         :param vendor_id: Retrieve call recording terms of service details for the given vendor.
         :type vendor_id: str
@@ -6472,7 +7040,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         """
         Update Call Recording Terms Of Service settings for the given vendor.
         Call Recording feature enables authorized agents to record any active call that Webex Contact Center manages.
-        Updating call recording terms of service settings requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Updating call recording terms of service settings requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param vendor_id: Update call recording terms of service settings for the given vendor.
         :type vendor_id: str
@@ -6496,15 +7065,19 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         Validates that an incoming call can be routed.
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
         They are configured globally for an enterprise and apply to all users, regardless of location.
-        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial patterns.
+        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
+        patterns.
         Specific dial patterns can be defined as part of your dial plan.
-        Test call routing requires a full or write-only administrator auth token with a scope of spark-admin:telephony_config_write.
+        Test call routing requires a full or write-only administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
-        :param originator_id: This element is used to identify the originating party.  It can be user UUID or trunk UUID.
+        :param originator_id: This element is used to identify the originating party. It can be user UUID or trunk
+            UUID.
         :type originator_id: str
         :param originator_type: USER or TRUNK.
         :type originator_type: OriginatorType
-        :param destination: This element specifies called party.  It can be any dialable string, for example, an ESN number, E.164 number, hosted user DN, extension, extension with location code, URL, FAC code.
+        :param destination: This element specifies called party. It can be any dialable string, for example, an ESN
+            number, E.164 number, hosted user DN, extension, extension with location code, URL, FAC code.
         :type destination: str
         :param org_id: Organization in which we are validating a call routing.
         :type org_id: str
@@ -6530,12 +7103,12 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
     def validate_list_of_extensions(self, org_id: str = None, extensions: List[str] = None):
         """
         Validate the List of Extensions.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: Validate Extension for this organization.
         :type org_id: str
-        :param extensions: Array of Strings of IDs of the Extensions.
-Possible values: 12345, 3456
+        :param extensions: Array of Strings of IDs of the Extensions. Possible values: 12345, 3456
         :type extensions: List[str]
         """
         params = {}
@@ -6551,7 +7124,8 @@ Possible values: 12345, 3456
     def validate_extensions(self, location_id: str, extensions: List[str], org_id: str = None) -> ValidateExtensionsResponse:
         """
         Validate extensions for a specific location.
-        Validating extensions requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Validating extensions requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Validate extensions for this location.
         :type location_id: str
@@ -6573,8 +7147,10 @@ Possible values: 12345, 3456
     def read_list_of_hunt_groups(self, org_id: str = None, location_id: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None) -> List[ListCallQueueObject]:
         """
         List all calling Hunt Groups for the organization.
-        Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to route to a whole group.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
+        route to a whole group.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: List hunt groups for this organization.
         :type org_id: str
@@ -6609,8 +7185,10 @@ Possible values: 12345, 3456
     def create_hunt_group(self, location_id: str, name: str, call_policies: PostHuntGroupCallPolicyObject, agents: PostPersonPlaceVirtualLineHuntGroupObject, org_id: str = None, enabled: bool = None, phone_number: str = None, extension: int = None, language_code: str = None, first_name: str = None, last_name: str = None, time_zone: str = None) -> str:
         """
         Create new Hunt Groups for the given location.
-        Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure a pattern to route to a whole group.
-        Creating a hunt group requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure
+        a pattern to route to a whole group.
+        Creating a hunt group requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Create the hunt group for the given location.
         :type location_id: str
@@ -6618,7 +7196,7 @@ Possible values: 12345, 3456
         :type name: str
         :param call_policies: Policy controlling how calls are routed to agents.
         :type call_policies: PostHuntGroupCallPolicyObject
-        :param agents: People, workspaces and virtual lines that are eligible to  receive calls.
+        :param agents: People, workspaces and virtual lines that are eligible to receive calls.
         :type agents: PostPersonPlaceVirtualLineHuntGroupObject
         :param org_id: Create the hunt group for this organization.
         :type org_id: str
@@ -6632,7 +7210,8 @@ Possible values: 12345, 3456
         :type language_code: str
         :param first_name: First name to be shown when calls are forwarded out of this hunt group. Defaults to ..
         :type first_name: str
-        :param last_name: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set, otherwise defaults to call group name.
+        :param last_name: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone
+            number if set, otherwise defaults to call group name.
         :type last_name: str
         :param time_zone: Time zone for the hunt group.
         :type time_zone: str
@@ -6668,8 +7247,10 @@ Possible values: 12345, 3456
     def delete_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None):
         """
         Delete the designated Hunt Group.
-        Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to route to a whole group.
-        Deleting a hunt group requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
+        route to a whole group.
+        Deleting a hunt group requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Location from which to delete a hunt group.
         :type location_id: str
@@ -6688,8 +7269,10 @@ Possible values: 12345, 3456
     def details_for_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None) -> GetDetailsForHuntGroupResponse:
         """
         Retrieve Hunt Group details.
-        Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure a pattern to route to a whole group.
-        Retrieving hunt group details requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure
+        a pattern to route to a whole group.
+        Retrieving hunt group details requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param location_id: Retrieve settings for a hunt group in this location.
         :type location_id: str
@@ -6708,8 +7291,10 @@ Possible values: 12345, 3456
     def update_hunt_group(self, location_id: str, hunt_group_id: str, id: str, org_id: str = None, enabled: bool = None, name: str = None, phone_number: str = None, extension: str = None, distinctive_ring: bool = None, alternate_numbers: AlternateNumbersWithPattern = None, language_code: str = None, first_name: str = None, last_name: str = None, time_zone: str = None, call_policies: PostHuntGroupCallPolicyObject = None, agents: PostPersonPlaceVirtualLineHuntGroupObject = None):
         """
         Update the designated Hunt Group.
-        Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure a pattern to route to a whole group.
-        Updating a hunt group requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure
+        a pattern to route to a whole group.
+        Updating a hunt group requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Update the hunt group for this location.
         :type location_id: str
@@ -6719,7 +7304,8 @@ Possible values: 12345, 3456
         :type id: str
         :param org_id: Update hunt group settings from this organization.
         :type org_id: str
-        :param enabled: Flag to indicate if always call forwarding selective rule criteria is active. If not set, flag will be set to false.
+        :param enabled: Flag to indicate if always call forwarding selective rule criteria is active. If not set, flag
+            will be set to false.
         :type enabled: bool
         :param name: Unique name for the hunt group.
         :type name: str
@@ -6729,19 +7315,23 @@ Possible values: 12345, 3456
         :type extension: str
         :param distinctive_ring: Whether or not the hunt group has the distinctive ring option enabled.
         :type distinctive_ring: bool
-        :param alternate_numbers: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
+        :param alternate_numbers: The alternate numbers feature allows you to assign multiple phone numbers or
+            extensions to a hunt group. Each number will reach the same greeting and each menu will function
+            identically to the main number. The alternate numbers option enables you to have up to ten (10) phone
+            numbers ring into the hunt group.
         :type alternate_numbers: AlternateNumbersWithPattern
         :param language_code: Language code.
         :type language_code: str
         :param first_name: First name to be shown when calls are forwarded out of this hunt group. Defaults to ..
         :type first_name: str
-        :param last_name: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set, otherwise defaults to call group name.
+        :param last_name: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone
+            number if set, otherwise defaults to call group name.
         :type last_name: str
         :param time_zone: Time zone for the hunt group.
         :type time_zone: str
         :param call_policies: Policy controlling how calls are routed to agents.
         :type call_policies: PostHuntGroupCallPolicyObject
-        :param agents: People, workspaces and virtual lines that are eligible to  receive calls.
+        :param agents: People, workspaces and virtual lines that are eligible to receive calls.
         :type agents: PostPersonPlaceVirtualLineHuntGroupObject
         """
         params = {}
@@ -6781,7 +7371,8 @@ Possible values: 12345, 3456
     def forwarding_settings_for_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None) -> object:
         """
         Retrieve Call Forwarding settings for the designated Hunt Group including the list of call forwarding rules.
-        Retrieving call forwarding settings for a hunt group requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving call forwarding settings for a hunt group requires a full or read-only administrator auth token with
+        a scope of spark-admin:telephony_config_read.
 
         :param location_id: Location in which this hunt group exists.
         :type location_id: str
@@ -6800,7 +7391,8 @@ Possible values: 12345, 3456
     def update_forwarding_settings_for_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None, call_forwarding: CallForwarding1 = None):
         """
         Update Call Forwarding settings for the designated Hunt Group.
-        Updating call forwarding settings for a hunt group requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Updating call forwarding settings for a hunt group requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Location from which this hunt group exists.
         :type location_id: str
@@ -6824,9 +7416,11 @@ Possible values: 12345, 3456
     def create_selective_forwarding_rule_for_hunt_group(self, location_id: str, hunt_group_id: str, name: str, calls_from: CallsFrom, calls_to: CallsTo, org_id: str = None, enabled: bool = None, holiday_schedule: str = None, business_schedule: str = None, forward_to: CallForwardSelectiveForwardToObject = None) -> str:
         """
         Create a Selective Call Forwarding Rule for the designated Hunt Group.
-        A selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the designated number, based on the defined criteria.
+        A selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
         Note that the list of existing call forward rules is available in the hunt group's call forwarding settings.
-        Creating a selective call forwarding rule for a hunt group requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Creating a selective call forwarding rule for a hunt group requires a full administrator auth token with a
+        scope of spark-admin:telephony_config_write.
         NOTE: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which this hunt group exists.
@@ -6843,11 +7437,14 @@ Possible values: 12345, 3456
         :type org_id: str
         :param enabled: Reflects if rule is enabled.
         :type enabled: bool
-        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call forwarding rule is in effect.
+        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call
+            forwarding rule is in effect.
         :type holiday_schedule: str
-        :param business_schedule: Name of the location's business schedule which determines when this selective call forwarding rule is in effect.
+        :param business_schedule: Name of the location's business schedule which determines when this selective call
+            forwarding rule is in effect.
         :type business_schedule: str
-        :param forward_to: Controls what happens when the rule matches including the destination number for the call forwarding.
+        :param forward_to: Controls what happens when the rule matches including the destination number for the call
+            forwarding.
         :type forward_to: CallForwardSelectiveForwardToObject
         """
         params = {}
@@ -6875,9 +7472,11 @@ Possible values: 12345, 3456
     def selective_forwarding_rule_for_hunt_group(self, location_id: str, hunt_group_id: str, rule_id: str, org_id: str = None) -> GetSelectiveCallForwardingRuleForCallQueueResponse:
         """
         Retrieve a Selective Call Forwarding Rule's settings for the designated Hunt Group.
-        A selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the designated number, based on the defined criteria.
+        A selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
         Note that the list of existing call forward rules is available in the hunt group's call forwarding settings.
-        Retrieving a selective call forwarding rule's settings for a hunt group requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving a selective call forwarding rule's settings for a hunt group requires a full or read-only
+        administrator auth token with a scope of spark-admin:telephony_config_read.
         NOTE: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which this hunt group exists.
@@ -6899,9 +7498,11 @@ Possible values: 12345, 3456
     def update_selective_forwarding_rule_for_hunt_group(self, location_id: str, hunt_group_id: str, rule_id: str, name: str, calls_from: CallsFrom, calls_to: CallsTo, org_id: str = None, enabled: bool = None, holiday_schedule: str = None, business_schedule: str = None, forward_to: CallForwardSelectiveForwardToObject = None) -> str:
         """
         Update a Selective Call Forwarding Rule's settings for the designated Hunt Group.
-        A selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the designated number, based on the defined criteria.
+        A selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
         Note that the list of existing call forward rules is available in the hunt group's call forwarding settings.
-        Updating a selective call forwarding rule's settings for a hunt group requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Updating a selective call forwarding rule's settings for a hunt group requires a full administrator auth token
+        with a scope of spark-admin:telephony_config_write.
         NOTE: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which this hunt group exists.
@@ -6920,11 +7521,14 @@ Possible values: 12345, 3456
         :type org_id: str
         :param enabled: Reflects if rule is enabled.
         :type enabled: bool
-        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call forwarding rule is in effect.
+        :param holiday_schedule: Name of the location's holiday schedule which determines when this selective call
+            forwarding rule is in effect.
         :type holiday_schedule: str
-        :param business_schedule: Name of the location's business schedule which determines when this selective call forwarding rule is in effect.
+        :param business_schedule: Name of the location's business schedule which determines when this selective call
+            forwarding rule is in effect.
         :type business_schedule: str
-        :param forward_to: Controls what happens when the rule matches including the destination number for the call forwarding.
+        :param forward_to: Controls what happens when the rule matches including the destination number for the call
+            forwarding.
         :type forward_to: CallForwardSelectiveForwardToObject
         """
         params = {}
@@ -6952,9 +7556,11 @@ Possible values: 12345, 3456
     def delete_selective_forwarding_rule_for_hunt_group(self, location_id: str, hunt_group_id: str, rule_id: str, org_id: str = None):
         """
         Delete a Selective Call Forwarding Rule for the designated Hunt Group.
-        A selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the designated number, based on the defined criteria.
+        A selective call forwarding rule for a hunt group allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
         Note that the list of existing call forward rules is available in the hunt group's call forwarding settings.
-        Deleting a selective call forwarding rule for a hunt group requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Deleting a selective call forwarding rule for a hunt group requires a full administrator auth token with a
+        scope of spark-admin:telephony_config_write.
         NOTE: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which this hunt group exists.
@@ -6976,8 +7582,10 @@ Possible values: 12345, 3456
     def location_intercept(self, location_id: str, org_id: str = None) -> GetLocationInterceptResponse:
         """
         Retrieve intercept location details for a customer location.
-        Intercept incoming or outgoing calls for persons in your organization. If this is enabled, calls are either routed to a designated number the person chooses, or to the person's voicemail.
-        Retrieving intercept location details requires a full, user or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Intercept incoming or outgoing calls for persons in your organization. If this is enabled, calls are either
+        routed to a designated number the person chooses, or to the person's voicemail.
+        Retrieving intercept location details requires a full, user or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
 
         :param location_id: Retrieve intercept details for this location.
         :type location_id: str
@@ -6994,14 +7602,17 @@ Possible values: 12345, 3456
     def put_location_intercept(self, location_id: str, org_id: str = None, enabled: bool = None, incoming: Incoming = None, outgoing: Outgoing = None):
         """
         Modifies the intercept location details for a customer location.
-        Intercept incoming or outgoing calls for users in your organization. If this is enabled, calls are either routed to a designated number the user chooses, or to the user's voicemail.
-        Modifying the intercept location details requires a full, user administrator auth token with a scope of spark-admin:telephony_config_write.
+        Intercept incoming or outgoing calls for users in your organization. If this is enabled, calls are either
+        routed to a designated number the user chooses, or to the user's voicemail.
+        Modifying the intercept location details requires a full, user administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Modifies the intercept details for this location.
         :type location_id: str
         :param org_id: Modifies the intercept location details for a customer location.
         :type org_id: str
-        :param enabled: Enable/disable location intercept. Enable this feature to override any Location's Call Intercept settings that person configures.
+        :param enabled: Enable/disable location intercept. Enable this feature to override any Location's Call
+            Intercept settings that person configures.
         :type enabled: bool
         :param incoming: Inbound call details.
         :type incoming: Incoming
@@ -7025,8 +7636,10 @@ Possible values: 12345, 3456
     def read_internal_dialing_configuration_forlocation(self, location_id: str, org_id: str = None) -> ReadInternalDialingConfigurationForlocationResponse:
         """
         Get current configuration for routing unknown extensions to the Premises as internal calls
-        If some users in a location are registered to a PBX, retrieve the setting to route unknown extensions (digits that match the extension length) to the PBX.
-        Retrieving the internal dialing configuration requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        If some users in a location are registered to a PBX, retrieve the setting to route unknown extensions (digits
+        that match the extension length) to the PBX.
+        Retrieving the internal dialing configuration requires a full or read-only administrator auth token with a
+        scope of spark-admin:telephony_config_read.
 
         :param location_id: location for which internal calling configuration is being requested
         :type location_id: str
@@ -7043,14 +7656,17 @@ Possible values: 12345, 3456
     def modify_internal_dialing_configuration_forlocation(self, location_id: str, org_id: str = None, enable_unknown_extension_route_policy: bool = None, unknown_extension_route_identity: UnknownExtensionRouteIdentity = None):
         """
         Modify current configuration for routing unknown extensions to the premise as internal calls
-        If some users in a location are registered to a PBX, enable the setting to route unknown extensions (digits that match the extension length) to the PBX.
-        Editing the internal dialing configuration requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        If some users in a location are registered to a PBX, enable the setting to route unknown extensions (digits
+        that match the extension length) to the PBX.
+        Editing the internal dialing configuration requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: location for which internal calling configuration is being requested
         :type location_id: str
         :param org_id: List route identities for this organization.
         :type org_id: str
-        :param enable_unknown_extension_route_policy: When enabled, calls made by users at the location to an unknown extension (between 2-6 digits) are routed to the selected route group/trunk as premises calls.
+        :param enable_unknown_extension_route_policy: When enabled, calls made by users at the location to an unknown
+            extension (between 2-6 digits) are routed to the selected route group/trunk as premises calls.
         :type enable_unknown_extension_route_policy: bool
         :param unknown_extension_route_identity: Type associated with the identity.
         :type unknown_extension_route_identity: UnknownExtensionRouteIdentity
@@ -7071,7 +7687,8 @@ Possible values: 12345, 3456
         """
         Shows Webex Calling details for a location, by ID.
         Specifies the location ID in the locationId parameter in the URI.
-        Searching and viewing locations in your organization requires an administrator auth token with the spark-admin:telephony_config_read scope.
+        Searching and viewing locations in your organization requires an administrator auth token with the
+        spark-admin:telephony_config_read scope.
 
         :param location_id: Retrieve Webex Calling location attributes for this location.
         :type location_id: str
@@ -7090,7 +7707,8 @@ Possible values: 12345, 3456
         Update Webex Calling details for a location, by ID.
         Specifies the location ID in the locationId parameter in the URI.
         Modifying the connection via API is only supported for the local PSTN types of TRUNK and ROUTE_GROUP.
-        Updating a location in your organization requires an administrator auth token with the spark-admin:telephony_config_write scope.
+        Updating a location in your organization requires an administrator auth token with the
+        spark-admin:telephony_config_write scope.
 
         :param location_id: Updating Webex Calling location attributes for this location.
         :type location_id: str
@@ -7100,7 +7718,8 @@ Possible values: 12345, 3456
         :type announcement_language: str
         :param calling_line_id: Location calling line information.
         :type calling_line_id: CallingLineId
-        :param connection: Connection details can only be modified to and from local PSTN types of TRUNK and ROUTE_GROUP.
+        :param connection: Connection details can only be modified to and from local PSTN types of TRUNK and
+            ROUTE_GROUP.
         :type connection: UnknownExtensionRouteIdentity
         :param external_caller_id_name: Denve' (string) - External Caller ID Name value. Unicode characters.
         :type external_caller_id_name: str
@@ -7108,7 +7727,8 @@ Possible values: 12345, 3456
         :type p_access_network_info: str
         :param outside_dial_digit: Must dial to reach an outside line. Default is None.
         :type outside_dial_digit: str
-        :param routing_prefix: Must dial a prefix when calling between locations having same extension within same location; should be numeric.
+        :param routing_prefix: Must dial a prefix when calling between locations having same extension within same
+            location; should be numeric.
         :type routing_prefix: str
         """
         params = {}
@@ -7135,16 +7755,18 @@ Possible values: 12345, 3456
 
     def generate_example_password_for_location(self, location_id: str, org_id: str = None, generate: List[PasswordGenerate] = None) -> str:
         """
-        Generates an example password using the effective password settings for the location. If you don't specify anything in the generate field or don't provide a request body, then you will receive a SIP password by default.
+        Generates an example password using the effective password settings for the location. If you don't specify
+        anything in the generate field or don't provide a request body, then you will receive a SIP password by
+        default.
         Used while creating a trunk and shouldn't be used anywhere else.
-        Generating an example password requires a full or write-only administrator auth token with a scope of spark-admin:telephony_config_write.
+        Generating an example password requires a full or write-only administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Location for which example password has to be generated.
         :type location_id: str
         :param org_id: Organization to which the location belongs.
         :type org_id: str
-        :param generate: password settings array.
-SIP password setting
+        :param generate: password settings array. SIP password setting
         :type generate: List[PasswordGenerate]
         """
         params = {}
@@ -7160,8 +7782,11 @@ SIP password setting
     def location_outgoing_permission(self, location_id: str, org_id: str = None) -> List[CallingPermissionObject]:
         """
         Retrieve the location's outgoing call settings.
-        A location's outgoing call settings allow you to determine the types of calls the people/workspaces at the location are allowed to make, as well as configure the default calling permission for each call type at the location.
-        Retrieving a location's outgoing call settings requires a full, user or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        A location's outgoing call settings allow you to determine the types of calls the people/workspaces at the
+        location are allowed to make, as well as configure the default calling permission for each call type at the
+        location.
+        Retrieving a location's outgoing call settings requires a full, user or read-only administrator auth token with
+        a scope of spark-admin:telephony_config_read.
 
         :param location_id: Retrieve outgoing call settings for this location.
         :type location_id: str
@@ -7178,8 +7803,10 @@ SIP password setting
     def update_location_outgoing_permission(self, location_id: str, org_id: str = None, calling_permissions: CallingPermissionObject = None):
         """
         Update the location's outgoing call settings.
-        Location's outgoing call settings allows you to determine the types of calls the people/workspaces at this location are allowed to make and configure the default calling permission for each call type at a location.
-        Updating a location's outgoing call settings requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Location's outgoing call settings allows you to determine the types of calls the people/workspaces at this
+        location are allowed to make and configure the default calling permission for each call type at a location.
+        Updating a location's outgoing call settings requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Update outgoing call settings for this location.
         :type location_id: str
@@ -7201,8 +7828,10 @@ SIP password setting
     def outgoing_permission_auto_transfer_number(self, location_id: str, org_id: str = None) -> GetOutgoingPermissionAutoTransferNumberResponse:
         """
         Get the transfer numbers for the outbound permission in a location.
-        Outbound permissions can specify which transfer number an outbound call should transfer to via the action field.
-        Retrieving an auto transfer number requires a full, user or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Outbound permissions can specify which transfer number an outbound call should transfer to via the action
+        field.
+        Retrieving an auto transfer number requires a full, user or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param location_id: Retrieve auto transfer number for this location.
         :type location_id: str
@@ -7219,18 +7848,23 @@ SIP password setting
     def put_outgoing_permission_auto_transfer_number(self, location_id: str, org_id: str = None, auto_transfer_number1: str = None, auto_transfer_number2: str = None, auto_transfer_number3: str = None):
         """
         Modifies the transfer numbers for the outbound permission in a location.
-        Outbound permissions can specify which transfer number an outbound call should transfer to via the action field.
-        Updating auto transfer number requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Outbound permissions can specify which transfer number an outbound call should transfer to via the action
+        field.
+        Updating auto transfer number requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Updating auto transfer number for this location.
         :type location_id: str
         :param org_id: Updating auto transfer number for this organization.
         :type org_id: str
-        :param auto_transfer_number1: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_1 will be transferred to this number.
+        :param auto_transfer_number1: Calls placed meeting the criteria in an outbound rule whose action is
+            TRANSFER_NUMBER_1 will be transferred to this number.
         :type auto_transfer_number1: str
-        :param auto_transfer_number2: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_2 will be transferred to this number.
+        :param auto_transfer_number2: Calls placed meeting the criteria in an outbound rule whose action is
+            TRANSFER_NUMBER_2 will be transferred to this number.
         :type auto_transfer_number2: str
-        :param auto_transfer_number3: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_3 will be transferred to this number.
+        :param auto_transfer_number3: Calls placed meeting the criteria in an outbound rule whose action is
+            TRANSFER_NUMBER_3 will be transferred to this number.
         :type auto_transfer_number3: str
         """
         params = {}
@@ -7251,7 +7885,8 @@ SIP password setting
         """
         Retrieve access codes details for a customer location.
         Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
-        Retrieving access codes details requires a full, user or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving access codes details requires a full, user or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param location_id: Retrieve access codes details for this location.
         :type location_id: str
@@ -7269,7 +7904,8 @@ SIP password setting
         """
         Add a new access code for the given location for a customer.
         Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
-        Creating an access code for the given location requires a full or user administrator auth token with a scope of spark-admin:telephony_config_write.
+        Creating an access code for the given location requires a full or user administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Add new access code for this location.
         :type location_id: str
@@ -7292,7 +7928,8 @@ SIP password setting
         """
         Deletes the access code details for a particular location for a customer.
         Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
-        Modifying the access code location details requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Modifying the access code location details requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Deletes the access code details for this location.
         :type location_id: str
@@ -7315,8 +7952,10 @@ SIP password setting
         """
         List all Paging Groups for the organization.
         Group Paging allows a person to place a one-way call or group page to up to 75 people and/or workspaces by
-        dialing a number or extension assigned to a specific paging group. The Group Paging service makes a simultaneous call to all the assigned targets.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        dialing a number or extension assigned to a specific paging group. The Group Paging service makes a
+        simultaneous call to all the assigned targets.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: List paging groups for this organization.
         :type org_id: str
@@ -7352,8 +7991,10 @@ SIP password setting
         """
         Create a new Paging Group for the given location.
         Group Paging allows a one-way call or group page to up to 75 people, workspaces and virtual lines by
-        dialing a number or extension assigned to a specific paging group. The Group Paging service makes a simultaneous call to all the assigned targets.
-        Creating a paging group requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        dialing a number or extension assigned to a specific paging group. The Group Paging service makes a
+        simultaneous call to all the assigned targets.
+        Creating a paging group requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Create the paging group for this location.
         :type location_id: str
@@ -7363,19 +8004,25 @@ SIP password setting
         :type extension: str
         :param name: Unique name for the call park extension.
         :type name: str
-        :param phone_number: Paging group phone number. Minimum length is 1. Maximum length is 23.  Either phoneNumber or extension is mandatory.
+        :param phone_number: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber
+            or extension is mandatory.
         :type phone_number: str
         :param language_code: Language code.
         :type language_code: str
-        :param first_name: First name that displays when a group page is performed. Minimum length is 1. Maximum length is 30.
+        :param first_name: First name that displays when a group page is performed. Minimum length is 1. Maximum length
+            is 30.
         :type first_name: str
-        :param last_name: Last name that displays when a group page is performed. Minimum length is 1. Maximum length is 30.
+        :param last_name: Last name that displays when a group page is performed. Minimum length is 1. Maximum length
+            is 30.
         :type last_name: str
-        :param originator_caller_id_enabled: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator ID.
+        :param originator_caller_id_enabled: Determines what is shown on target users caller ID when a group page is
+            performed. If true shows page originator ID.
         :type originator_caller_id_enabled: bool
-        :param originators: An array of people, workspace, and virtual lines IDs who can originate pages to this paging group.
+        :param originators: An array of people, workspace, and virtual lines IDs who can originate pages to this paging
+            group.
         :type originators: List[str]
-        :param targets: An array of people, workspaces and virtual lines IDs will add to a paging group as paging call targets.
+        :param targets: An array of people, workspaces and virtual lines IDs will add to a paging group as paging call
+            targets.
         :type targets: List[str]
         """
         params = {}
@@ -7408,8 +8055,10 @@ SIP password setting
         """
         Delete the designated Paging Group.
         Group Paging allows a person to place a one-way call or group page to up to 75 people and/or workspaces by
-        dialing a number or extension assigned to a specific paging group. The Group Paging service makes a simultaneous call to all the assigned targets.
-        Deleting a paging group requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        dialing a number or extension assigned to a specific paging group. The Group Paging service makes a
+        simultaneous call to all the assigned targets.
+        Deleting a paging group requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Location from which to delete a paging group.
         :type location_id: str
@@ -7428,9 +8077,12 @@ SIP password setting
     def details_for_paging_group(self, location_id: str, paging_id: str, org_id: str = None) -> GetDetailsForPagingGroupResponse:
         """
         Retrieve Paging Group details.
-        Group Paging allows a person, place or virtual line a one-way call or group page to up to 75 people and/or workspaces and/or virtual line by
-        dialing a number or extension assigned to a specific paging group. The Group Paging service makes a simultaneous call to all the assigned targets.
-        Retrieving paging group details requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Group Paging allows a person, place or virtual line a one-way call or group page to up to 75 people and/or
+        workspaces and/or virtual line by
+        dialing a number or extension assigned to a specific paging group. The Group Paging service makes a
+        simultaneous call to all the assigned targets.
+        Retrieving paging group details requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param location_id: Retrieve settings for a paging group in this location.
         :type location_id: str
@@ -7449,9 +8101,12 @@ SIP password setting
     def update_paging_group(self, location_id: str, paging_id: str, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, language_code: str = None, first_name: str = None, last_name: str = None, originator_caller_id_enabled: bool = None, originators: List[str] = None, targets: List[str] = None, enabled: bool = None):
         """
         Update the designated Paging Group.
-        Group Paging allows a person to place a one-way call or group page to up to 75 people, workspaces and virtual lines by
-        dialing a number or extension assigned to a specific paging group. The Group Paging service makes a simultaneous call to all the assigned targets.
-        Updating a paging group requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Group Paging allows a person to place a one-way call or group page to up to 75 people, workspaces and virtual
+        lines by
+        dialing a number or extension assigned to a specific paging group. The Group Paging service makes a
+        simultaneous call to all the assigned targets.
+        Updating a paging group requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Update settings for a paging group in this location.
         :type location_id: str
@@ -7463,19 +8118,25 @@ SIP password setting
         :type extension: str
         :param name: Unique name for the call park extension.
         :type name: str
-        :param phone_number: Paging group phone number. Minimum length is 1. Maximum length is 23.  Either phoneNumber or extension is mandatory.
+        :param phone_number: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber
+            or extension is mandatory.
         :type phone_number: str
         :param language_code: Language code.
         :type language_code: str
-        :param first_name: First name that displays when a group page is performed. Minimum length is 1. Maximum length is 30.
+        :param first_name: First name that displays when a group page is performed. Minimum length is 1. Maximum length
+            is 30.
         :type first_name: str
-        :param last_name: Last name that displays when a group page is performed. Minimum length is 1. Maximum length is 30.
+        :param last_name: Last name that displays when a group page is performed. Minimum length is 1. Maximum length
+            is 30.
         :type last_name: str
-        :param originator_caller_id_enabled: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator ID.
+        :param originator_caller_id_enabled: Determines what is shown on target users caller ID when a group page is
+            performed. If true shows page originator ID.
         :type originator_caller_id_enabled: bool
-        :param originators: An array of people, workspace, and virtual lines IDs who can originate pages to this paging group.
+        :param originators: An array of people, workspace, and virtual lines IDs who can originate pages to this paging
+            group.
         :type originators: List[str]
-        :param targets: An array of people, workspaces and virtual lines IDs will add to a paging group as paging call targets.
+        :param targets: An array of people, workspaces and virtual lines IDs will add to a paging group as paging call
+            targets.
         :type targets: List[str]
         :param enabled: Whether or not the paging group is enabled.
         :type enabled: bool
@@ -7511,8 +8172,11 @@ SIP password setting
     def add_phone_numbers_tolocation(self, location_id: str, phone_numbers: List[str], state: State1, org_id: str = None):
         """
         Adds a specified set of phone numbers to a location for an organization.
-        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers must follow E.164 format for all countries, except for the United States, which can also follow the National format. Active phone numbers are in service.
-        Adding a phone number to a location requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
+        must follow E.164 format for all countries, except for the United States, which can also follow the National
+        format. Active phone numbers are in service.
+        Adding a phone number to a location requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: LocationId to which numbers should be added.
         :type location_id: str
@@ -7538,8 +8202,11 @@ SIP password setting
     def activate_phone_numbers_inlocation(self, location_id: str, phone_numbers: List[str], org_id: str = None):
         """
         Activate the specified set of phone numbers in a location for an organization.
-        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers must follow E.164 format for all countries, except for the United States, which can also follow the National format. Active phone numbers are in service.
-        Activating a phone number in a location requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
+        must follow E.164 format for all countries, except for the United States, which can also follow the National
+        format. Active phone numbers are in service.
+        Activating a phone number in a location requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: LocationId to which numbers should be added.
         :type location_id: str
@@ -7561,8 +8228,11 @@ SIP password setting
     def remove_phone_numbers_fromlocation(self, location_id: str, phone_numbers: List[str], state: State1, org_id: str = None):
         """
         Remove the specified set of phone numbers from a location for an organization.
-        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers must follow E.164 format for all countries, except for the United States, which can also follow the National format. Active phone numbers are in service.
-        Removing a phone number from a location requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
+        must follow E.164 format for all countries, except for the United States, which can also follow the National
+        format. Active phone numbers are in service.
+        Removing a phone number from a location requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: LocationId to which numbers should be added.
         :type location_id: str
@@ -7590,11 +8260,13 @@ SIP password setting
         List all the phone numbers for the given organization along with the status and owner (if any).
         PSTN phone numbers are associated with a specific location and can be active/inactive and assigned/unassigned.
         The owner is the person, workspace, or feature to which the number is assigned.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: List numbers for this organization.
         :type org_id: str
-        :param location_id: Return the list of phone numbers for this location within the given organization. The maximum length is 36.
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
         :type location_id: str
         :param max: Limit the number of phone numbers returned to this maximum count. Default is 2000.
         :type max: int
@@ -7602,25 +8274,30 @@ SIP password setting
         :type start: int
         :param phone_number: Search for this phoneNumber.
         :type phone_number: str
-        :param available: Search among the available phone numbers. This parameter cannot be used along with ownerType parameter when set to true.
+        :param available: Search among the available phone numbers. This parameter cannot be used along with ownerType
+            parameter when set to true.
         :type available: bool
-        :param order: Sort the list of phone numbers based on the following:lastName,dn,extension. Default sort will be based on number and extension in an ascending order
+        :param order: Sort the list of phone numbers based on the following:lastName,dn,extension. Default sort will be
+            based on number and extension in an ascending order
         :type order: str
         :param owner_name: Return the list of phone numbers that is owned by given ownerName. Maximum length is 255.
         :type owner_name: str
-        :param owner_id: Returns only the matched number/extension entries assigned to the feature with specified uuid/broadsoftId.
+        :param owner_id: Returns only the matched number/extension entries assigned to the feature with specified
+            uuid/broadsoftId.
         :type owner_id: str
         :param owner_type: Returns the list of phone numbers that are of given ownerType. Possible input values
         :type owner_type: enum
         :param extension: Returns the list of PSTN phone numbers with the given extension.
         :type extension: str
-        :param number_type: Returns the filtered list of PSTN phone numbers that contains given type of numbers. This parameter cannot be used along with available or state.
+        :param number_type: Returns the filtered list of PSTN phone numbers that contains given type of numbers. This
+            parameter cannot be used along with available or state.
         :type number_type: str
         :param phone_number_type: Returns the filtered list of PSTN phone numbers that are of given phoneNumberType.
         :type phone_number_type: str
         :param state: Returns the list of PSTN phone numbers with matching state.
         :type state: str
-        :param details: Returns the overall count of the PSTN phone numbers along with other details for given organization.
+        :param details: Returns the overall count of the PSTN phone numbers along with other details for given
+            organization.
         :type details: bool
         :param toll_free_numbers: Returns the list of toll free phone numbers.
         :type toll_free_numbers: bool
@@ -7668,10 +8345,12 @@ SIP password setting
 
     def list_manage_numbers_jobs(self, org_id: str = None, **params) -> Generator[StartJobResponse, None, None]:
         """
-        Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one irrespective of its status.
+        Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one irrespective
+        of its status.
         The public API only supports initiating jobs which move numbers between locations.
         Via Control Hub they can initiate both the move and delete, so this listing can show both.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: Retrieve list of Manage Number jobs for this organization.
         :type org_id: str
@@ -7683,14 +8362,17 @@ SIP password setting
 
     def initiate_move_number_jobs(self, operation: str, target_location_id: str, number_list: NumberItem) -> StartJobResponse:
         """
-        Starts the numbers move from one location to another location. Although jobs can do both MOVE and DELETE actions internally, only MOVE is supported publicly.
+        Starts the numbers move from one location to another location. Although jobs can do both MOVE and DELETE
+        actions internally, only MOVE is supported publicly.
         In order to move a number,
-        For example, you can move from Cisco PSTN to Cisco PSTN, but you cannot move from Cisco PSTN to a location with Cloud Connected PSTN.
+        For example, you can move from Cisco PSTN to Cisco PSTN, but you cannot move from Cisco PSTN to a location with
+        Cloud Connected PSTN.
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
         :param operation: Indicates the kind of operation to be carried out.
         :type operation: str
-        :param target_location_id: The target location within organization where the unassigned numbers will be moved from the source location.
+        :param target_location_id: The target location within organization where the unassigned numbers will be moved
+            from the source location.
         :type target_location_id: str
         :param number_list: Indicates the numbers to be moved from source to target locations.
         :type number_list: NumberItem
@@ -7709,7 +8391,8 @@ SIP password setting
     def manage_numbers_job_status(self, job_id: str = None) -> GetManageNumbersJobStatusResponse:
         """
         Returns the status and other details of the job.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param job_id: Retrieve job details for this jobId.
         :type job_id: str
@@ -7771,9 +8454,11 @@ SIP password setting
 
     def list_manage_numbers_job_errors(self, job_id: str = None, org_id: str = None, **params) -> Generator[ItemObject, None, None]:
         """
-        Lists all error details of Manage Numbers job. This will not list any errors if exitCode is COMPLETED. If the status is COMPLETED_WITH_ERRORS then this lists the cause of failures.
+        Lists all error details of Manage Numbers job. This will not list any errors if exitCode is COMPLETED. If the
+        status is COMPLETED_WITH_ERRORS then this lists the cause of failures.
         List of possible Errors:
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param job_id: Retrieve the error details for this jobId.
         :type job_id: str
@@ -7789,7 +8474,8 @@ SIP password setting
         """
         Retrieve the location's network connection type.
         Network Connection Type determines if the location's network connection is public or private.
-        Retrieving a location's network connection type requires a full, user or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving a location's network connection type requires a full, user or read-only administrator auth token
+        with a scope of spark-admin:telephony_config_read.
 
         :param location_id: Retrieve the network connection type for this location.
         :type location_id: str
@@ -7807,7 +8493,8 @@ SIP password setting
         """
         Update the location's network connection type.
         Network Connection Type determines if the location's network connection is public or private.
-        Updating a location's network connection type requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Updating a location's network connection type requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Update the network connection type for this location.
         :type location_id: str
@@ -7829,8 +8516,11 @@ SIP password setting
     def read_list_of_routing_choices(self, org_id: str = None, route_group_name: str = None, trunk_name: str = None, max: int = None, start: int = None, order: str = None) -> List[RouteIdentity]:
         """
         List all Routes for the organization.
-        Trunk and Route Group qualify as Route. Trunks and Route Groups provide you the ability to configure Webex Calling to manage calls between Webex Calling hosted users and premises PBX users. This solution lets you configure users to use Cloud PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Trunk and Route Group qualify as Route. Trunks and Route Groups provide you the ability to configure Webex
+        Calling to manage calls between Webex Calling hosted users and premises PBX users. This solution lets you
+        configure users to use Cloud PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: List route identities for this organization.
         :type org_id: str
@@ -7842,7 +8532,8 @@ SIP password setting
         :type max: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
-        :param order: Order the route identities according to the designated fields.  Available sort fields: routeName, routeType.
+        :param order: Order the route identities according to the designated fields. Available sort fields: routeName,
+            routeType.
         :type order: str
         """
         params = {}
@@ -7865,8 +8556,10 @@ SIP password setting
     def read_list_of_schedules(self, location_id: str, org_id: str = None, type_: str = None, max: int = None, start: int = None, name: str = None) -> List[ListScheduleObject]:
         """
         List all schedules for the given location of the organization.
-        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for example auto attendants, can perform a specific action.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param location_id: Return the list of schedules for this location.
         :type location_id: str
@@ -7899,8 +8592,10 @@ SIP password setting
     def details_for_schedule(self, location_id: str, type_: str, schedule_id: str, org_id: str = None) -> GetDetailsForScheduleResponse:
         """
         Retrieve Schedule details.
-        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for example auto attendants, can perform a specific action.
-        Retrieving schedule details requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+        Retrieving schedule details requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param location_id: Retrieve schedule details in this location.
         :type location_id: str
@@ -7921,8 +8616,10 @@ SIP password setting
     def create_schedule(self, location_id: str, type_: Type25, name: str, org_id: str = None, events: ScheduleEventObject = None) -> str:
         """
         Create new Schedule for the given location.
-        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for example auto attendants, can perform a specific action.
-        Creating a schedule requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+        Creating a schedule requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Create the schedule for this location.
         :type location_id: str
@@ -7952,8 +8649,10 @@ SIP password setting
     def update_schedule(self, location_id: str, type_: str, schedule_id: str, name: str, org_id: str = None, events: ModifyScheduleEventListObject = None) -> str:
         """
         Update the designated schedule.
-        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for example auto attendants, can perform a specific action.
-        Updating a schedule requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+        Updating a schedule requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
         NOTE: The Schedule ID will change upon modification of the Schedule name.
 
         :param location_id: Location in which this schedule exists.
@@ -7984,8 +8683,10 @@ SIP password setting
     def delete_schedule(self, location_id: str, type_: str, schedule_id: str, org_id: str = None):
         """
         Delete the designated Schedule.
-        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for example auto attendants, can perform a specific action.
-        Deleting a schedule requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+        Deleting a schedule requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Location from which to delete a schedule.
         :type location_id: str
@@ -8006,8 +8707,10 @@ SIP password setting
     def details_for_schedule_event(self, location_id: str, type_: str, schedule_id: str, event_id: str, org_id: str = None) -> GetScheduleEventObject:
         """
         Retrieve Schedule Event details.
-        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for example auto attendants, can perform a specific action.
-        Retrieving a schedule event's details requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+        Retrieving a schedule event's details requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param location_id: Retrieve schedule event details in this location.
         :type location_id: str
@@ -8030,8 +8733,10 @@ SIP password setting
     def create_schedule_event(self, location_id: str, type_: str, schedule_id: str, name: str, start_date: str, end_date: str, org_id: str = None, start_time: str = None, end_time: str = None, all_day_enabled: bool = None, recurrence: RecurrenceObject1 = None) -> str:
         """
         Create new Event for the given location Schedule.
-        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for example auto attendants, can perform a specific action.
-        Creating a schedule event requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+        Creating a schedule event requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Create the schedule for this location.
         :type location_id: str
@@ -8051,7 +8756,8 @@ SIP password setting
         :type start_time: str
         :param end_time: End time of event. Mandatory if the event is not all day.
         :type end_time: str
-        :param all_day_enabled: An indication of whether given event is an all-day event or not. Mandatory if the startTime and endTime are not defined.
+        :param all_day_enabled: An indication of whether given event is an all-day event or not. Mandatory if the
+            startTime and endTime are not defined.
         :type all_day_enabled: bool
         :param recurrence: Recurrence definition.
         :type recurrence: RecurrenceObject1
@@ -8081,8 +8787,10 @@ SIP password setting
     def update_schedule_event(self, location_id: str, type_: str, schedule_id: str, event_id: str, name: str, start_date: str, end_date: str, org_id: str = None, start_time: str = None, end_time: str = None, all_day_enabled: bool = None, recurrence: RecurrenceObject1 = None) -> str:
         """
         Update the designated Schedule Event.
-        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for example auto attendants, can perform a specific action.
-        Updating a schedule event requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+        Updating a schedule event requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
         NOTE: The schedule event ID will change upon modification of the schedule event name.
 
         :param location_id: Location in which this schedule event exists.
@@ -8105,7 +8813,8 @@ SIP password setting
         :type start_time: str
         :param end_time: End time of event. Mandatory if the event is not all day.
         :type end_time: str
-        :param all_day_enabled: An indication of whether given event is an all-day event or not. Mandatory if the startTime and endTime are not defined.
+        :param all_day_enabled: An indication of whether given event is an all-day event or not. Mandatory if the
+            startTime and endTime are not defined.
         :type all_day_enabled: bool
         :param recurrence: Recurrence definition.
         :type recurrence: RecurrenceObject1
@@ -8135,8 +8844,10 @@ SIP password setting
     def delete_schedule_event(self, location_id: str, type_: str, schedule_id: str, event_id: str, org_id: str = None):
         """
         Delete the designated Schedule Event.
-        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for example auto attendants, can perform a specific action.
-        Deleting a schedule event requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
+        example auto attendants, can perform a specific action.
+        Deleting a schedule event requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Location from which to delete a schedule.
         :type location_id: str
@@ -8159,32 +8870,44 @@ SIP password setting
     def read_list_of_virtual_lines(self, org_id: str = None, location_id: List[str] = None, max: int = None, start: int = None, id: List[str] = None, owner_name: List[str] = None, phone_number: List[str] = None, location_name: List[str] = None, order: List[str] = None, has_device_assigned: bool = None, has_extension_assigned: bool = None, has_dn_assigned: bool = None) -> List[ListVirtualLineObject]:
         """
         List all Virtual Lines for the organization.
-        Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex Calling users.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
+        Calling users.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: List virtual lines for this organization.
         :type org_id: str
-        :param location_id: Return the list of virtual lines matching these location ids. Example for multiple values - ?locationId=locId1&locationId=locId2.
+        :param location_id: Return the list of virtual lines matching these location ids. Example for multiple values -
+            ?locationId=locId1&locationId=locId2.
         :type location_id: List[str]
         :param max: Limit the number of objects returned to this maximum count.
         :type max: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
-        :param id: Return the list of virtual lines matching these virtualLineIds. Example for multiple values - ?id=id1&id=id2.
+        :param id: Return the list of virtual lines matching these virtualLineIds. Example for multiple values -
+            ?id=id1&id=id2.
         :type id: List[str]
-        :param owner_name: Return the list of virtual lines matching these owner names. Example for multiple values - ?ownerName=name1&ownerName=name2.
+        :param owner_name: Return the list of virtual lines matching these owner names. Example for multiple values -
+            ?ownerName=name1&ownerName=name2.
         :type owner_name: List[str]
-        :param phone_number: Return the list of virtual lines matching these phone numbers. Example for multiple values - ?phoneNumber=number1&phoneNumber=number2.
+        :param phone_number: Return the list of virtual lines matching these phone numbers. Example for multiple values
+            - ?phoneNumber=number1&phoneNumber=number2.
         :type phone_number: List[str]
-        :param location_name: Return the list of virtual lines matching the location names. Example for multiple values - ?locationName=loc1&locationName=loc2.
+        :param location_name: Return the list of virtual lines matching the location names. Example for multiple values
+            - ?locationName=loc1&locationName=loc2.
         :type location_name: List[str]
-        :param order: Return the list of virtual lines based on the order. Default sort will be in an Ascending order. Maximum 3 orders allowed at a time. Example for multiple values - ?order=order1&order=order2.
+        :param order: Return the list of virtual lines based on the order. Default sort will be in an Ascending order.
+            Maximum 3 orders allowed at a time. Example for multiple values - ?order=order1&order=order2.
         :type order: List[str]
-        :param has_device_assigned: If true, includes only virtual lines with devices assigned. When not explicitly specified, the default includes both virtual lines with devices assigned and not assigned.
+        :param has_device_assigned: If true, includes only virtual lines with devices assigned. When not explicitly
+            specified, the default includes both virtual lines with devices assigned and not assigned.
         :type has_device_assigned: bool
-        :param has_extension_assigned: If true, includes only virtual lines with an extension assigned. When not explicitly specified, the default includes both virtual lines with extension assigned and not assigned.
+        :param has_extension_assigned: If true, includes only virtual lines with an extension assigned. When not
+            explicitly specified, the default includes both virtual lines with extension assigned and not assigned.
         :type has_extension_assigned: bool
-        :param has_dn_assigned: If true, includes only virtual lines with an assigned directory number, also known as a Dn. When not explicitly specified, the default includes both virtual lines with a Dn assigned and not assigned.
+        :param has_dn_assigned: If true, includes only virtual lines with an assigned directory number, also known as a
+            Dn. When not explicitly specified, the default includes both virtual lines with a Dn assigned and not
+            assigned.
         :type has_dn_assigned: bool
         """
         params = {}
@@ -8219,8 +8942,10 @@ SIP password setting
     def voicemail_settings(self, org_id: str = None) -> GetVoicemailSettingsResponse:
         """
         Retrieve the organization's voicemail settings.
-        Organizational voicemail settings determines what voicemail features a person can configure and automatic message expiration.
-        Retrieving organization's voicemail settings requires a full, user or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Organizational voicemail settings determines what voicemail features a person can configure and automatic
+        message expiration.
+        Retrieving organization's voicemail settings requires a full, user or read-only administrator auth token with a
+        scope of spark-admin:telephony_config_read.
 
         :param org_id: Retrieve voicemail settings for this organization.
         :type org_id: str
@@ -8235,8 +8960,10 @@ SIP password setting
     def update_voicemail_settings(self, org_id: str = None, message_expiry_enabled: bool = None, number_of_days_for_message_expiry: int = None, strict_deletion_enabled: bool = None, voice_message_forwarding_enabled: bool = None):
         """
         Update the organization's voicemail settings.
-        Organizational voicemail settings determines what voicemail features a person can configure and automatic message expiration.
-        Updating an organization's voicemail settings requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Organizational voicemail settings determines what voicemail features a person can configure and automatic
+        message expiration.
+        Updating an organization's voicemail settings requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param org_id: Update voicemail settings for this organization.
         :type org_id: str
@@ -8244,9 +8971,11 @@ SIP password setting
         :type message_expiry_enabled: bool
         :param number_of_days_for_message_expiry: Number of days after which messages expire.
         :type number_of_days_for_message_expiry: int
-        :param strict_deletion_enabled: When enabled, all read and unread voicemail messages will be deleted based on the time frame you set. When disabled, all unread voicemail messages will be kept.
+        :param strict_deletion_enabled: When enabled, all read and unread voicemail messages will be deleted based on
+            the time frame you set. When disabled, all unread voicemail messages will be kept.
         :type strict_deletion_enabled: bool
-        :param voice_message_forwarding_enabled: When enabled, people in the organization can configure the email forwarding of voicemails.
+        :param voice_message_forwarding_enabled: When enabled, people in the organization can configure the email
+            forwarding of voicemails.
         :type voice_message_forwarding_enabled: bool
         """
         params = {}
@@ -8268,8 +8997,10 @@ SIP password setting
     def voicemail_rules(self, org_id: str = None) -> GetVoicemailRulesResponse:
         """
         Retrieve the organization's voicemail rules.
-        Organizational voicemail rules specify the default passcode requirements. They are provided for informational purposes only and cannot be modified.
-        Retrieving the organization's voicemail rules requires a full, user or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Organizational voicemail rules specify the default passcode requirements. They are provided for informational
+        purposes only and cannot be modified.
+        Retrieving the organization's voicemail rules requires a full, user or read-only administrator auth token with
+        a scope of spark-admin:telephony_config_read.
 
         :param org_id: Retrieve voicemail rules for this organization.
         :type org_id: str
@@ -8285,8 +9016,11 @@ SIP password setting
         """
         Update the organization's default voicemail passcode and/or rules.
         Organizational voicemail rules specify the default passcode requirements.
-        If you choose to set a default passcode for new people added to your organization, communicate to your people what that passcode is, and that it must be reset before they can access their voicemail. If this feature is not turned on, each new person must initially set their own passcode.
-        Updating an organization's voicemail passcode and/or rules requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        If you choose to set a default passcode for new people added to your organization, communicate to your people
+        what that passcode is, and that it must be reset before they can access their voicemail. If this feature is not
+        turned on, each new person must initially set their own passcode.
+        Updating an organization's voicemail passcode and/or rules requires a full administrator auth token with a
+        scope of spark-admin:telephony_config_write.
 
         :param org_id: Update voicemail rules for this organization.
         :type org_id: str
@@ -8323,7 +9057,8 @@ SIP password setting
         """
         Retrieve voicemail settings for a specific location.
         Location voicemail settings allows you to enable voicemail transcription for a specific location.
-        Retrieving a location's voicemail settings requires a full, user or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving a location's voicemail settings requires a full, user or read-only administrator auth token with a
+        scope of spark-admin:telephony_config_read.
 
         :param location_id: Retrieve voicemail settings for this location.
         :type location_id: str
@@ -8341,7 +9076,8 @@ SIP password setting
         """
         Update the voicemail settings for a specific location.
         Location voicemail settings allows you to enable voicemail transcription for a specific location.
-        Updating a location's voicemail settings requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Updating a location's voicemail settings requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Update voicemail settings for this location.
         :type location_id: str
@@ -8365,7 +9101,8 @@ SIP password setting
         Retrieve Voice portal information for the location.
         Voice portals provide an interactive voice response (IVR)
         system so administrators can manage auto attendant announcements.
-        Retrieving voice portal information for an organization requires a full read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving voice portal information for an organization requires a full read-only administrator auth token with
+        a scope of spark-admin:telephony_config_read.
 
         :param location_id: Location to which the voice portal belongs.
         :type location_id: str
@@ -8384,7 +9121,8 @@ SIP password setting
         Update Voice portal information for the location.
         Voice portals provide an interactive voice response (IVR)
         system so administrators can manage auto attendant anouncements.
-        Updating voice portal information for an organization and/or rules requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Updating voice portal information for an organization and/or rules requires a full administrator auth token
+        with a scope of spark-admin:telephony_config_write.
 
         :param location_id: Location to which the voice portal belongs.
         :type location_id: str
@@ -8430,8 +9168,10 @@ SIP password setting
     def voice_portal_passcode_rule(self, location_id: str, org_id: str = None) -> GetVoicePortalPasscodeRuleResponse:
         """
         Retrieve the voice portal passcode rule for a location.
-        Voice portals provide an interactive voice response (IVR) system so administrators can manage auto attendant anouncements
-        Retrieving the voice portal passcode rule requires a full read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Voice portals provide an interactive voice response (IVR) system so administrators can manage auto attendant
+        anouncements
+        Retrieving the voice portal passcode rule requires a full read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param location_id: Retrieve voice portal passcode rules for this location.
         :type location_id: str
@@ -8449,7 +9189,8 @@ SIP password setting
         """
         Retrieve the location's music on hold settings.
         Location music on hold settings allows you to play music when a call is placed on hold or parked.
-        Retrieving a location's music on hold settings requires a full, user or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving a location's music on hold settings requires a full, user or read-only administrator auth token with
+        a scope of spark-admin:telephony_config_read.
 
         :param location_id: Retrieve music on hold settings for this location.
         :type location_id: str
@@ -8467,7 +9208,8 @@ SIP password setting
         """
         Update the location's music on hold settings.
         Location music on hold settings allows you to play music when a call is placed on hold or parked.
-        Updating a location's music on hold settings requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Updating a location's music on hold settings requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Update music on hold settings for this location.
         :type location_id: str
@@ -8499,7 +9241,8 @@ SIP password setting
         List the voicemail group information for the organization.
         You can create a shared voicemail box and inbound FAX box to
         assign to users or call routing features like an auto attendant, call queue, or hunt group.
-        Retrieving a voicemail group for the organization requires a full read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving a voicemail group for the organization requires a full read-only administrator auth token with a
+        scope of spark-admin:telephony_config_read.
 
         :param location_id: Location to which the voicemail group belongs.
         :type location_id: str
@@ -8524,8 +9267,10 @@ SIP password setting
     def location_voicemail_group(self, location_id: str, voicemail_group_id: str, org_id: str = None) -> GetLocationVoicemailGroupResponse:
         """
         Retrieve voicemail group details for a location.
-        Manage your voicemail group settings for a specific location, like when you want your voicemail to be active, message storage settings, and how you would like to be notified of new voicemail messages.
-        Retrieving voicemail group details requires a full, user or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Manage your voicemail group settings for a specific location, like when you want your voicemail to be active,
+        message storage settings, and how you would like to be notified of new voicemail messages.
+        Retrieving voicemail group details requires a full, user or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param location_id: Retrieve voicemail group details for this location.
         :type location_id: str
@@ -8544,8 +9289,10 @@ SIP password setting
     def modify_location_voicemail_group(self, location_id: str, voicemail_group_id: str, org_id: str = None, enabled: bool = None, phone_number: str = None, extension: int = None, name: str = None, first_name: str = None, last_name: str = None, passcode: int = None, language_code: str = None, greeting: Greeting = None, greeting_description: str = None, message_storage: MessageStorage = None, notifications: NewNumber = None, fax_message: FaxMessage = None, transfer_to_number: NewNumber = None, email_copy_of_message: EmailCopyOfMessage = None):
         """
         Modifies the voicemail group location details for a particular location for a customer.
-        Manage your voicemail settings, like when you want your voicemail to be active, message storage settings, and how you would like to be notified of new voicemail messages.
-        Modifying the voicemail group location details requires a full, user administrator auth token with a scope of spark-admin:telephony_config_write.
+        Manage your voicemail settings, like when you want your voicemail to be active, message storage settings, and
+        how you would like to be notified of new voicemail messages.
+        Modifying the voicemail group location details requires a full, user administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Modifies the voicemail group details for this location.
         :type location_id: str
@@ -8626,7 +9373,8 @@ SIP password setting
         """
         Create a new voicemail group for the given location for a customer.
         A voicemail group can be created for given location for a customer.
-        Creating a voicemail group for the given location requires a full or user administrator auth token with a scope of spark-admin:telephony_config_write.
+        Creating a voicemail group for the given location requires a full or user administrator auth token with a scope
+        of spark-admin:telephony_config_write.
 
         :param location_id: Create a new voice mail group for this location.
         :type location_id: str
@@ -8692,7 +9440,8 @@ SIP password setting
     def delete_voicemail_group_for_location(self, location_id: str, voicemail_group_id: str, org_id: str = None):
         """
         Delete the designated voicemail group.
-        Deleting a voicemail group requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Deleting a voicemail group requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Location from which to delete a voicemail group.
         :type location_id: str
@@ -8711,9 +9460,13 @@ SIP password setting
     def read_list_of_uc_manager_profiles(self, org_id: str = None) -> List[GetAvailableRecallHuntGroupsObject]:
         """
         List all calling UC Manager Profiles for the organization.
-        UC Manager Profiles are applicable if your organization uses Jabber in Team Messaging mode or Calling in Webex (Unified CM).
-        The UC Manager Profile has an organization-wide default and may be overridden for individual persons, although currently only setting at a user level is supported by Webex APIs.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:people_read as this API is designed to be used in conjunction with calling behavior at the user level.
+        UC Manager Profiles are applicable if your organization uses Jabber in Team Messaging mode or Calling in Webex
+        (Unified CM).
+        The UC Manager Profile has an organization-wide default and may be overridden for individual persons, although
+        currently only setting at a user level is supported by Webex APIs.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:people_read as this API is designed to be used in conjunction with calling behavior at the user
+        level.
 
         :param org_id: List manager profiles in this organization.
         :type org_id: str
@@ -8730,23 +9483,25 @@ SIP password setting
         List all Dial Patterns for the organization.
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
         They are configured globally for an enterprise and apply to all users, regardless of location.
-        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial patterns.
+        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
+        patterns.
         Specific dial patterns can be defined as part of your dial plan.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param dial_plan_id: ID of the dial plan.
         :type dial_plan_id: str
         :param org_id: ID of the organization to which the dial patterns belong.
         :type org_id: str
-        :param dial_pattern: An enterprise dial pattern is represented by a sequence of digits (1-9), followed by optional wildcard characters.
-Valid wildcard characters are ! (matches any sequence of digits) and X (matches a single digit, 0-9).
-The ! wildcard can only occur once at the end and only in an E.164 pattern
+        :param dial_pattern: An enterprise dial pattern is represented by a sequence of digits (1-9), followed by
+            optional wildcard characters. Valid wildcard characters are ! (matches any sequence of digits) and X
+            (matches a single digit, 0-9). The ! wildcard can only occur once at the end and only in an E.164 pattern
         :type dial_pattern: str
         :param max: Limit the number of objects returned to this maximum count.
         :type max: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
-        :param order: Order the dial patterns according to the designated fields.  Available sort fields: dialPattern.
+        :param order: Order the dial patterns according to the designated fields. Available sort fields: dialPattern.
         :type order: str
         """
         params = {}
@@ -8769,15 +9524,18 @@ The ! wildcard can only occur once at the end and only in an E.164 pattern
         Modify dial patterns for the Dial Plan.
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
         They are configured globally for an enterprise and apply to all users, regardless of location.
-        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial patterns.
+        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
+        patterns.
         Specific dial patterns can be defined as part of your dial plan.
-        Modifying a dial pattern requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Modifying a dial pattern requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param dial_plan_id: ID of the dial plan being modified.
         :type dial_plan_id: str
         :param org_id: Organization to which dial plan belongs.
         :type org_id: str
-        :param dial_patterns: Array of dial patterns to add or delete. Dial Pattern that is not present in the request is not modified.
+        :param dial_patterns: Array of dial patterns to add or delete. Dial Pattern that is not present in the request
+            is not modified.
         :type dial_patterns: DialPattern
         :param delete_all_dial_patterns: Delete all the dial patterns for a dial plan.
         :type delete_all_dial_patterns: bool
@@ -8799,12 +9557,13 @@ The ! wildcard can only occur once at the end and only in an E.164 pattern
         Validate a Dial Pattern.
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
         They are configured globally for an enterprise and apply to all users, regardless of location.
-        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial patterns.
+        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
+        patterns.
         Specific dial patterns can be defined as part of your dial plan.
-        Validating a dial pattern requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Validating a dial pattern requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
-        :param dial_patterns: Array of dial patterns.
-Possible values: +5555,7777
+        :param dial_patterns: Array of dial patterns. Possible values: +5555,7777
         :type dial_patterns: List[str]
         :param org_id: Organization to which dial plan belongs.
         :type org_id: str
@@ -8822,8 +9581,11 @@ Possible values: +5555,7777
     def read_list_of_dial_plans(self, org_id: str = None, dial_plan_name: str = None, route_group_name: str = None, trunk_name: str = None, max: int = None, start: int = None, order: str = None) -> List[DialPlan]:
         """
         List all Dial Plans for the organization.
-        Dial plans route calls to on-premises destinations by use of the trunks or route groups with which the dial plan is associated. Multiple dial patterns can be defined as part of your dial plan.  Dial plans are configured globally for an enterprise and apply to all users, regardless of location.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Dial plans route calls to on-premises destinations by use of the trunks or route groups with which the dial
+        plan is associated. Multiple dial patterns can be defined as part of your dial plan. Dial plans are configured
+        globally for an enterprise and apply to all users, regardless of location.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: List dial plans for this organization.
         :type org_id: str
@@ -8837,7 +9599,8 @@ Possible values: +5555,7777
         :type max: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
-        :param order: Order the dial plans according to the designated fields.  Available sort fields: name, routeName, routeType. Sort order is ascending by default
+        :param order: Order the dial plans according to the designated fields. Available sort fields: name, routeName,
+            routeType. Sort order is ascending by default
         :type order: str
         """
         params = {}
@@ -8864,9 +9627,11 @@ Possible values: +5555,7777
         Create a Dial Plan for the organization.
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
         They are configured globally for an enterprise and apply to all users, regardless of location.
-        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial patterns.
+        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
+        patterns.
         Specific dial patterns can be defined as part of your dial plan.
-        Creating a dial plan requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Creating a dial plan requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param name: A unique name for the dial plan.
         :type name: str
@@ -8876,8 +9641,7 @@ Possible values: +5555,7777
         :type route_type: RouteType
         :param org_id: Organization to which dial plan belongs.
         :type org_id: str
-        :param dial_patterns: An Array of dial patterns.
-Possible values: +5555,+5556
+        :param dial_patterns: An Array of dial patterns. Possible values: +5555,+5556
         :type dial_patterns: List[str]
         """
         params = {}
@@ -8901,9 +9665,11 @@ Possible values: +5555,+5556
         Get a Dial Plan for the organization.
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
         They are configured globally for an enterprise and apply to all users, regardless of location.
-        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial patterns.
+        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
+        patterns.
         Specific dial patterns can be defined as part of your dial plan.
-        Retrieving a dial plan requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving a dial plan requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param dial_plan_id: ID of the dial plan.
         :type dial_plan_id: str
@@ -8922,9 +9688,11 @@ Possible values: +5555,+5556
         Modify a Dial Plan for the organization.
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
         They are configured globally for an enterprise and apply to all users, regardless of location.
-        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial patterns.
+        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
+        patterns.
         Specific dial patterns can be defined as part of your dial plan.
-        Modifying a dial plan requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Modifying a dial plan requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param dial_plan_id: ID of the dial plan being modified.
         :type dial_plan_id: str
@@ -8956,9 +9724,11 @@ Possible values: +5555,+5556
         Delete a Dial Plan for the organization.
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
         They are configured globally for an enterprise and apply to all users, regardless of location.
-        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial patterns.
+        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
+        patterns.
         Specific dial patterns can be defined as part of your dial plan.
-        Deleting a dial plan requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Deleting a dial plan requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param dial_plan_id: ID of the dial plan.
         :type dial_plan_id: str
@@ -8975,9 +9745,12 @@ Possible values: +5555,+5556
     def validate_local_gateway_fqdn_and_domain_for_trunk(self, org_id: str = None, address: str = None, domain: str = None, port: int = None):
         """
         Validate Local Gateway FQDN and Domain for the organization trunks.
-        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local gateway or other supported device.
-        The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
-        Validating Local Gateway FQDN and Domain requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls
+        over multiple trunks or to provide redundancy.
+        Validating Local Gateway FQDN and Domain requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param org_id: Organization to which trunk types belongs.
         :type org_id: str
@@ -9005,9 +9778,12 @@ Possible values: +5555,+5556
     def read_list_of_trunks(self, org_id: str = None, name: List[str] = None, location_name: List[str] = None, trunk_type: str = None, max: int = None, start: int = None, order: str = None) -> List[Trunk]:
         """
         List all Trunks for the organization.
-        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local gateway or other supported device.
-        The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls
+        over multiple trunks or to provide redundancy.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: List trunks for this organization.
         :type org_id: str
@@ -9021,7 +9797,8 @@ Possible values: +5555,+5556
         :type max: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
-        :param order: Order the trunks according to the designated fields.  Available sort fields: name, locationName. Sort order is ascending by default
+        :param order: Order the trunks according to the designated fields. Available sort fields: name, locationName.
+            Sort order is ascending by default
         :type order: str
         """
         params = {}
@@ -9046,8 +9823,10 @@ Possible values: +5555,+5556
     def create_trunk(self, name: str, password: str, location_id: str, trunk_type: TrunkType, org_id: str = None, dual_identity_support_enabled: bool = None, max_concurrent_calls: int = None, device_type: str = None, address: str = None, domain: str = None, port: int = None) -> str:
         """
         Create a Trunk for the organization.
-        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local gateway or other supported device.
-        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
+        calls over multiple trunks or to provide redundancy.
         Creating a trunk requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
         :param name: A unique name for the dial plan.
@@ -9104,9 +9883,12 @@ Possible values: +5555,+5556
     def trunk(self, trunk_id: str, org_id: str = None) -> GetTrunkResponse:
         """
         Get a Trunk for the organization.
-        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local gateway or other supported device.
-        The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
-        Retrieving a trunk requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls
+        over multiple trunks or to provide redundancy.
+        Retrieving a trunk requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param trunk_id: ID of the trunk.
         :type trunk_id: str
@@ -9123,8 +9905,10 @@ Possible values: +5555,+5556
     def modify_trunk(self, trunk_id: str, name: str, password: str, org_id: str = None, dual_identity_support_enabled: bool = None, max_concurrent_calls: int = None):
         """
         Modify a Trunk for the organization.
-        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local gateway or other supported device.
-        The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls
+        over multiple trunks or to provide redundancy.
         Modifying a trunk requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
         :param trunk_id: ID of the trunk being modified.
@@ -9159,8 +9943,10 @@ Possible values: +5555,+5556
     def delete_trunk(self, trunk_id: str, org_id: str = None):
         """
         Delete a Trunk for the organization.
-        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local gateway or other supported device.
-        The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group - a group of trunks that allow Webex Calling to distribute calls
+        over multiple trunks or to provide redundancy.
         Deleting a trunk requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
         :param trunk_id: ID of the trunk.
@@ -9178,9 +9964,13 @@ Possible values: +5555,+5556
     def read_list_of_trunk_types(self, org_id: str = None) -> List[TrunkTypeWithDeviceType]:
         """
         List all Trunk Types with Device Types for the organization.
-        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local gateway or other supported device.
-        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute calls over multiple trunks or to provide redundancy. Trunk Types are Registering or Certificate Based and are configured in Call Manager.
-        Retrieving trunk types requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
+        calls over multiple trunks or to provide redundancy. Trunk Types are Registering or Certificate Based and are
+        configured in Call Manager.
+        Retrieving trunk types requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: Organization to which the trunk types belong.
         :type org_id: str
@@ -9194,8 +9984,10 @@ Possible values: +5555,+5556
 
     def read_list_of_routing_groups(self, org_id: str = None, name: str = None, max: int = None, start: int = None, order: str = None) -> List[RouteGroup]:
         """
-        List all Route Groups for an organization. A Route Group is a group of trunks that allows further scale and redundancy with the connection to the premises.
-        Retrieving this route group list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        List all Route Groups for an organization. A Route Group is a group of trunks that allows further scale and
+        redundancy with the connection to the premises.
+        Retrieving this route group list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: List route groups for this organization.
         :type org_id: str
@@ -9205,7 +9997,7 @@ Possible values: +5555,+5556
         :type max: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
-        :param order: Order the route groups according to designated fields.  Available sort orders are asc and desc.
+        :param order: Order the route groups according to designated fields. Available sort orders are asc and desc.
         :type order: str
         """
         params = {}
@@ -9226,8 +10018,10 @@ Possible values: +5555,+5556
     def create_route_group_for_organization(self, name: str, local_gateways: LocalGateways, org_id: str = None) -> str:
         """
         Creates a Route Group for the organization.
-        A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the premises. Route groups can include up to 10 trunks from different locations.
-        Creating a Route Group requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the
+        premises. Route groups can include up to 10 trunks from different locations.
+        Creating a Route Group requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param name: A unique name for the Route Group.
         :type name: str
@@ -9251,8 +10045,10 @@ Possible values: +5555,+5556
     def read_route_group_for_organization(self, route_group_id: str, org_id: str = None) -> GetAvailableRecallHuntGroupsObject:
         """
         Reads a Route Group for the organization based on id.
-        A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the premises. Route groups can include up to 10 trunks from different locations.
-        Reading a Route Group requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the
+        premises. Route groups can include up to 10 trunks from different locations.
+        Reading a Route Group requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param route_group_id: Route Group for which details are being requested.
         :type route_group_id: str
@@ -9269,8 +10065,10 @@ Possible values: +5555,+5556
     def modify_route_group_for_organization(self, route_group_id: str, name: str, local_gateways: LocalGateways, org_id: str = None):
         """
         Modifies an existing Route Group for an organization based on id.
-        A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the premises. Route groups can include up to 10 trunks from different locations.
-        Modifying a Route Group requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the
+        premises. Route groups can include up to 10 trunks from different locations.
+        Modifying a Route Group requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param route_group_id: Route Group for which details are being requested.
         :type route_group_id: str
@@ -9296,8 +10094,10 @@ Possible values: +5555,+5556
     def remove_route_group_from_organization(self, route_group_id: str, org_id: str = None):
         """
         Remove a Route Group from an Organization based on id.
-        A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the premises. Route groups can include up to 10 trunks from different locations.
-        Removing a Route Group requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the
+        premises. Route groups can include up to 10 trunks from different locations.
+        Removing a Route Group requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param route_group_id: Route Group for which details are being requested.
         :type route_group_id: str
@@ -9313,12 +10113,16 @@ Possible values: +5555,+5556
 
     def read_usage_of_routing_group(self, route_group_id: str, org_id: str = None) -> ReadUsageOfRoutingGroupResponse:
         """
-        List the number of "Call to" on-premises Extensions, Dial Plans, PSTN Connections, and Route Lists used by a specific Route Group.
-        Users within Call to Extension locations are registered to a PBX which allows you to route unknown extensions (calling number length of 2-6 digits) to the PBX using an existing Trunk or Route Group.
+        List the number of "Call to" on-premises Extensions, Dial Plans, PSTN Connections, and Route Lists used by a
+        specific Route Group.
+        Users within Call to Extension locations are registered to a PBX which allows you to route unknown extensions
+        (calling number length of 2-6 digits) to the PBX using an existing Trunk or Route Group.
         PSTN Connections may be a Cisco PSTN, a cloud-connected PSTN, or a premises-based PSTN (local gateway).
         Dial Plans allow you to route calls to on-premises extensions via your trunk or route group.
-        Route Lists are a list of numbers that can be reached via a route group and can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
-        Retrieving usage information requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Route Lists are a list of numbers that can be reached via a route group and can be used to provide cloud PSTN
+        connectivity to Webex Calling Dedicated Instance.
+        Retrieving usage information requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param route_group_id: ID of the requested Route group.
         :type route_group_id: str
@@ -9334,8 +10138,11 @@ Possible values: +5555,+5556
 
     def read_to_extension_locations_of_routing_group(self, route_group_id: str, org_id: str = None, location_name: str = None, max: int = None, start: int = None, order: str = None) -> List[Location]:
         """
-        List "Call to" on-premises Extension Locations for a specific route group. Users within these locations are registered to a PBX which allows you to route unknown extensions (calling number length of 2-6 digits) to the PBX using an existing trunk or route group.
-        Retrieving this location list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        List "Call to" on-premises Extension Locations for a specific route group. Users within these locations are
+        registered to a PBX which allows you to route unknown extensions (calling number length of 2-6 digits) to the
+        PBX using an existing trunk or route group.
+        Retrieving this location list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param route_group_id: ID of the requested Route group.
         :type route_group_id: str
@@ -9347,7 +10154,7 @@ Possible values: +5555,+5556
         :type max: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
-        :param order: Order the locations according to designated fields.  Available sort orders are asc, and desc.
+        :param order: Order the locations according to designated fields. Available sort orders are asc, and desc.
         :type order: str
         """
         params = {}
@@ -9368,9 +10175,12 @@ Possible values: +5555,+5556
     def read_dial_plan_locations_of_routing_group(self, route_group_id: str, org_id: str = None, location_name: str = None, max: int = None, start: int = None, order: str = None) -> List[Location]:
         """
         List Dial Plan Locations for a specific route group.
-        Dial Plans allow you to route calls to on-premises destinations by use of trunks or route groups. They are configured globally for an enterprise and apply to all users, regardless of location.
-        A Dial Plan also specifies the routing choice (trunk or route group) for calls that match any of its dial patterns. Specific dial patterns can be defined as part of your dial plan.
-        Retrieving this location list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Dial Plans allow you to route calls to on-premises destinations by use of trunks or route groups. They are
+        configured globally for an enterprise and apply to all users, regardless of location.
+        A Dial Plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
+        patterns. Specific dial patterns can be defined as part of your dial plan.
+        Retrieving this location list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param route_group_id: ID of the requested Route group.
         :type route_group_id: str
@@ -9382,7 +10192,7 @@ Possible values: +5555,+5556
         :type max: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
-        :param order: Order the locations according to designated fields.  Available sort orders are asc, and desc.
+        :param order: Order the locations according to designated fields. Available sort orders are asc, and desc.
         :type order: str
         """
         params = {}
@@ -9402,8 +10212,10 @@ Possible values: +5555,+5556
 
     def read_pstn_connection_locations_of_routing_group(self, route_group_id: str, org_id: str = None, location_name: str = None, max: int = None, start: int = None, order: str = None) -> List[Location]:
         """
-        List PSTN Connection Locations for a specific route group. This solution lets you configure users to use Cloud PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
-        Retrieving this Location list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        List PSTN Connection Locations for a specific route group. This solution lets you configure users to use Cloud
+        PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
+        Retrieving this Location list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param route_group_id: ID of the requested Route group.
         :type route_group_id: str
@@ -9415,7 +10227,7 @@ Possible values: +5555,+5556
         :type max: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
-        :param order: Order the locations according to designated fields.  Available sort orders are asc, and desc.
+        :param order: Order the locations according to designated fields. Available sort orders are asc, and desc.
         :type order: str
         """
         params = {}
@@ -9435,8 +10247,10 @@ Possible values: +5555,+5556
 
     def read_route_lists_of_routing_group(self, route_group_id: str, org_id: str = None, name: str = None, max: int = None, start: int = None, order: str = None) -> List[RouteGroupUsageRouteListGet]:
         """
-        List Route Lists for a specific route group. Route Lists are a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
-        Retrieving this list of Route Lists requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        List Route Lists for a specific route group. Route Lists are a list of numbers that can be reached via a Route
+        Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
+        Retrieving this list of Route Lists requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param route_group_id: ID of the requested Route group.
         :type route_group_id: str
@@ -9448,7 +10262,7 @@ Possible values: +5555,+5556
         :type max: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
-        :param order: Order the locations according to designated fields.  Available sort orders are asc, and desc.
+        :param order: Order the locations according to designated fields. Available sort orders are asc, and desc.
         :type order: str
         """
         params = {}
@@ -9469,8 +10283,10 @@ Possible values: +5555,+5556
     def read_list_of_route_lists(self, org_id: str = None, name: List[str] = None, location_id: List[str] = None, max: int = None, start: int = None, order: str = None) -> List[RouteList]:
         """
         List all Route Lists for the organization.
-        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
-        Retrieving the Route List requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
+        connectivity to Webex Calling Dedicated Instance.
+        Retrieving the Route List requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: List all Route List for this organization.
         :type org_id: str
@@ -9482,7 +10298,8 @@ Possible values: +5555,+5556
         :type max: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
-        :param order: Order the Route List according to the designated fields. Available sort fields are name, and locationId. Sort order is ascending by default
+        :param order: Order the Route List according to the designated fields. Available sort fields are name, and
+            locationId. Sort order is ascending by default
         :type order: str
         """
         params = {}
@@ -9505,8 +10322,10 @@ Possible values: +5555,+5556
     def create_route_list(self, location_id: str, org_id: str = None, name: str = None, route_group_id: str = None) -> str:
         """
         Create a Route List for the organization.
-        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
-        Creating a Route List requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
+        connectivity to Webex Calling Dedicated Instance.
+        Creating a Route List requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Location associated with the Route List.
         :type location_id: str
@@ -9534,8 +10353,10 @@ Possible values: +5555,+5556
     def delete_route_list(self, route_list_id: str, org_id: str = None):
         """
         Delete a route list for a customer.
-        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
-        Deleting a Route List requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
+        connectivity to Webex Calling Dedicated Instance.
+        Deleting a Route List requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param route_list_id: ID of the Route List.
         :type route_list_id: str
@@ -9552,8 +10373,10 @@ Possible values: +5555,+5556
     def route_list(self, route_list_id: str, org_id: str = None) -> GetRouteListResponse:
         """
         Get a rout list details.
-        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
-        Retrieving a Route List requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
+        connectivity to Webex Calling Dedicated Instance.
+        Retrieving a Route List requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param route_list_id: ID of the Route List.
         :type route_list_id: str
@@ -9570,8 +10393,10 @@ Possible values: +5555,+5556
     def modify_route_list(self, route_list_id: str, org_id: str = None, name: str = None, route_group_id: str = None):
         """
         Modify the details for a Route List.
-        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
-        Retrieving a Route List requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_write.
+        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
+        connectivity to Webex Calling Dedicated Instance.
+        Retrieving a Route List requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param route_list_id: ID of the Route List.
         :type route_list_id: str
@@ -9597,8 +10422,10 @@ Possible values: +5555,+5556
     def modify_numbers_for_route_list(self, route_list_id: str, org_id: str = None, numbers: RouteListNumberPatch = None, delete_all_numbers: bool = None) -> List[RouteListNumberPatchResponse]:
         """
         Modify numbers for a specific Route List of a Customer.
-        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
-        Retrieving a Route List requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_write.
+        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
+        connectivity to Webex Calling Dedicated Instance.
+        Retrieving a Route List requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param route_list_id: ID of the Route List.
         :type route_list_id: str
@@ -9606,7 +10433,8 @@ Possible values: +5555,+5556
         :type org_id: str
         :param numbers: Array of the numbers to be deleted/added.
         :type numbers: RouteListNumberPatch
-        :param delete_all_numbers: If present, the numbers array is ignored and all numbers in the route list are deleted.
+        :param delete_all_numbers: If present, the numbers array is ignored and all numbers in the route list are
+            deleted.
         :type delete_all_numbers: bool
         """
         params = {}
@@ -9624,8 +10452,10 @@ Possible values: +5555,+5556
     def numbers_assigned_to_route_list(self, route_list_id: str, org_id: str = None, max: int = None, start: int = None, order: str = None, number: str = None) -> str:
         """
         Get numbers assigned to a Route List
-        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
-        Retrieving a Route List requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_write.
+        A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
+        connectivity to Webex Calling Dedicated Instance.
+        Retrieving a Route List requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param route_list_id: ID of the Route List.
         :type route_list_id: str
@@ -9658,9 +10488,12 @@ Possible values: +5555,+5556
     def local_gateway_to_on_premises_extension_usage_for_trunk(self, trunk_id: str, org_id: str = None, max: int = None, start: int = None, order: str = None, name: List[str] = None) -> Location:
         """
         Get local gateway call to on-premises extension usage for a trunk.
-        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local gateway or other supported device.
-        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
-        Retrieving this information requires a full administrator auth token with a scope of spark-admin:telephony_config_read.
+        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
+        calls over multiple trunks or to provide redundancy.
+        Retrieving this information requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param trunk_id: ID of the trunk.
         :type trunk_id: str
@@ -9670,7 +10503,8 @@ Possible values: +5555,+5556
         :type max: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
-        :param order: Order the trunks according to the designated fields.  Available sort fields are name, and locationName. Sort order is ascending by default
+        :param order: Order the trunks according to the designated fields. Available sort fields are name, and
+            locationName. Sort order is ascending by default
         :type order: str
         :param name: Return the list of trunks matching the local gateway names
         :type name: List[str]
@@ -9693,9 +10527,12 @@ Possible values: +5555,+5556
     def local_gateway_dial_plan_usage_for_trunk(self, trunk_id: str, org_id: str = None, max: int = None, start: int = None, order: str = None, name: List[str] = None) -> List[GetAvailableRecallHuntGroupsObject]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
-        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local gateway or other supported device.
-        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
-        Retrieving this information requires a full administrator auth token with a scope of spark-admin:telephony_config_read.
+        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
+        calls over multiple trunks or to provide redundancy.
+        Retrieving this information requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param trunk_id: ID of the trunk.
         :type trunk_id: str
@@ -9705,7 +10542,8 @@ Possible values: +5555,+5556
         :type max: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
-        :param order: Order the trunks according to the designated fields.  Available sort fields are name, and locationName. Sort order is ascending by default
+        :param order: Order the trunks according to the designated fields. Available sort fields are name, and
+            locationName. Sort order is ascending by default
         :type order: str
         :param name: Return the list of trunks matching the local gateway names
         :type name: List[str]
@@ -9728,9 +10566,12 @@ Possible values: +5555,+5556
     def locations_using_local_gateway_as_pstn_connection_routing(self, trunk_id: str, org_id: str = None) -> Location:
         """
         Get Locations Using the Local Gateway as PSTN Connection Routing.
-        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local gateway or other supported device.
-        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
-        Retrieving this information requires a full administrator auth token with a scope of spark-admin:telephony_config_read.
+        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
+        calls over multiple trunks or to provide redundancy.
+        Retrieving this information requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param trunk_id: ID of the trunk.
         :type trunk_id: str
@@ -9747,9 +10588,12 @@ Possible values: +5555,+5556
     def route_groups_using_local_gateway(self, trunk_id: str, org_id: str = None) -> List[RouteGroup]:
         """
         Get Route Groups Using the Local Gateway.
-        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local gateway or other supported device.
-        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
-        Retrieving this information requires a full administrator auth token with a scope of spark-admin:telephony_config_read.
+        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
+        calls over multiple trunks or to provide redundancy.
+        Retrieving this information requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param trunk_id: ID of the trunk.
         :type trunk_id: str
@@ -9766,9 +10610,12 @@ Possible values: +5555,+5556
     def local_gateway_usage_count(self, trunk_id: str, org_id: str = None) -> GetLocalGatewayUsageCountResponse:
         """
         Get Local Gateway Usage Count
-        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local gateway or other supported device.
-        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute calls over multiple trunks or to provide redundancy.
-        Retrieving this information requires a full administrator auth token with a scope of spark-admin:telephony_config_read.
+        A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
+        gateway or other supported device.
+        The trunk can be assigned to a Route Group which is a group of trunks that allow Webex Calling to distribute
+        calls over multiple trunks or to provide redundancy.
+        Retrieving this information requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param trunk_id: ID of the trunk.
         :type trunk_id: str
@@ -9786,7 +10633,8 @@ Possible values: +5555,+5556
         """
         Retrieve Call Queue Holiday Service details.
         Configure the call queue to route calls differently during the holidays.
-        Retrieving call queue holiday service details requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving call queue holiday service details requires a full or read-only administrator auth token with a
+        scope of spark-admin:telephony_config_read.
 
         :param location_id: Retrieve settings for a call queue in this location.
         :type location_id: str
@@ -9806,7 +10654,8 @@ Possible values: +5555,+5556
         """
         Update the designated Call Queue Holiday Service.
         Configure the call queue to route calls differently during the holidays.
-        Updating a call queue holiday service requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Updating a call queue holiday service requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str
@@ -9814,21 +10663,25 @@ Possible values: +5555,+5556
         :type queue_id: str
         :param holiday_service_enabled: Enable or Disable the call queue holiday service routing policy.
         :type holiday_service_enabled: bool
-        :param holiday_schedule_level: Specifies whether the schedule mentioned in holidayScheduleName is org or location specific. (Must be from holidaySchedules list)
+        :param holiday_schedule_level: Specifies whether the schedule mentioned in holidayScheduleName is org or
+            location specific. (Must be from holidaySchedules list)
         :type holiday_schedule_level: HolidayScheduleLevel
-        :param play_announcement_before_enabled: Specifies if an announcement plays to callers before applying the action.
+        :param play_announcement_before_enabled: Specifies if an announcement plays to callers before applying the
+            action.
         :type play_announcement_before_enabled: bool
         :param org_id: Update call queue settings from this organization.
         :type org_id: str
         :param action: Specifies call processing action type.
         :type action: Action15
-        :param transfer_phone_number: Call gets transferred to this number when action is set to TRANSFER. This can also be an extension.
+        :param transfer_phone_number: Call gets transferred to this number when action is set to TRANSFER. This can
+            also be an extension.
         :type transfer_phone_number: str
         :param audio_message_selection: Specifies what type of announcement to be played.
         :type audio_message_selection: Greeting
         :param audio_files: List of Announcement Audio Files when audioMessageSelection is CUSTOM.
         :type audio_files: CallQueueAudioFilesObject
-        :param holiday_schedule_name: Name of the schedule configured for a holiday service as one of from holidaySchedules list.
+        :param holiday_schedule_name: Name of the schedule configured for a holiday service as one of from
+            holidaySchedules list.
         :type holiday_schedule_name: str
         """
         params = {}
@@ -9860,7 +10713,8 @@ Possible values: +5555,+5556
         Retrieve Call Queue Night service details.
         Configure the call queue to route calls differently during the hours when the queue is not in service. This is
         determined by a schedule that defines the business hours of the queue.
-        Retrieving call queue details requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving call queue details requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param location_id: Retrieve settings for a call queue in this location.
         :type location_id: str
@@ -9881,7 +10735,8 @@ Possible values: +5555,+5556
         Update Call Queue Night Service details.
         Configure the call queue to route calls differently during the hours when the queue is not in service. This is
         determined by a schedule that defines the business hours of the queue.
-        Updating call queue night service details requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Updating call queue night service details requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Retrieve settings for a call queue in this location.
         :type location_id: str
@@ -9889,27 +10744,32 @@ Possible values: +5555,+5556
         :type queue_id: str
         :param night_service_enabled: Enable or disable call queue night service routing policy.
         :type night_service_enabled: bool
-        :param play_announcement_before_enabled: Specifies if an announcement plays to callers before applying the action.
+        :param play_announcement_before_enabled: Specifies if an announcement plays to callers before applying the
+            action.
         :type play_announcement_before_enabled: bool
         :param announcement_mode: Specifies the type of announcements to played.
         :type announcement_mode: AnnouncementMode
         :param force_night_service_enabled: Force night service regardless of business hour schedule.
         :type force_night_service_enabled: bool
-        :param manual_audio_message_selection: Specifies what type of announcement to be played when announcementMode is MANUAL.
+        :param manual_audio_message_selection: Specifies what type of announcement to be played when announcementMode
+            is MANUAL.
         :type manual_audio_message_selection: Greeting
         :param org_id: Retrieve call queue night service settings from this organization.
         :type org_id: str
         :param action: Specifies call processing action type.
         :type action: Action15
-        :param transfer_phone_number: Call gets transferred to this number when action is set to TRANSFER. This can also be an extension.
+        :param transfer_phone_number: Call gets transferred to this number when action is set to TRANSFER. This can
+            also be an extension.
         :type transfer_phone_number: str
         :param audio_message_selection: Specifies what type of announcement to be played.
         :type audio_message_selection: Greeting
         :param audio_files: List of Announcement Audio Files when audioMessageSelection is CUSTOM.
         :type audio_files: CallQueueAudioFilesObject
-        :param business_hours_name: Name of the schedule configured for a night service as one of from businessHourSchedules list.
+        :param business_hours_name: Name of the schedule configured for a night service as one of from
+            businessHourSchedules list.
         :type business_hours_name: str
-        :param business_hours_level: Specifies whether the above mentioned schedule is org or location specific. (Must be from businessHourSchedules list)
+        :param business_hours_level: Specifies whether the above mentioned schedule is org or location specific. (Must
+            be from businessHourSchedules list)
         :type business_hours_level: HolidayScheduleLevel
         :param manual_audio_files: List Of pre-configured Audio Files.
         :type manual_audio_files: CallQueueAudioFilesObject
@@ -9950,7 +10810,8 @@ Possible values: +5555,+5556
         """
         Retrieve Call Queue policy Forced Forward details.
         This policy allows calls to be temporarily diverted to a configured destination.
-        Retrieving call queue Forced Forward details requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving call queue Forced Forward details requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
 
         :param location_id: Retrieve settings for a call queue in this location.
         :type location_id: str
@@ -9969,9 +10830,11 @@ Possible values: +5555,+5556
     def update_queue_forced_forward_service(self, location_id: str, queue_id: str, org_id: str = None, forced_forward_enabled: bool = None, transfer_phone_number: str = None, play_announcement_before_enabled: bool = None, audio_message_selection: Greeting = None, audio_files: CallQueueAudioFilesObject = None):
         """
         Update the designated Forced Forward Service.
-        If the option is enabled, then incoming calls to the queue are forwarded to the configured destination. Calls that are already in the queue remain queued.
+        If the option is enabled, then incoming calls to the queue are forwarded to the configured destination. Calls
+        that are already in the queue remain queued.
         The policy can be configured to play an announcement prior to proceeding with the forward.
-        Updating a call queue Forced Forward service requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Updating a call queue Forced Forward service requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str
@@ -9981,9 +10844,11 @@ Possible values: +5555,+5556
         :type org_id: str
         :param forced_forward_enabled: Whether or not the call queue forced forward routing policy setting is enabled.
         :type forced_forward_enabled: bool
-        :param transfer_phone_number: Call gets transferred to this number when action is set to TRANSFER. This can also be an extension.
+        :param transfer_phone_number: Call gets transferred to this number when action is set to TRANSFER. This can
+            also be an extension.
         :type transfer_phone_number: str
-        :param play_announcement_before_enabled: Specifies if an announcement plays to callers before applying the action.
+        :param play_announcement_before_enabled: Specifies if an announcement plays to callers before applying the
+            action.
         :type play_announcement_before_enabled: bool
         :param audio_message_selection: Specifies what type of announcement to be played.
         :type audio_message_selection: Greeting
@@ -10011,9 +10876,12 @@ Possible values: +5555,+5556
     def details_for_queue_stranded(self, location_id: str, queue_id: str, org_id: str = None) -> GetDetailsForCallQueueStrandedCallsResponse:
         """
         Allow admin to view default/configured Stranded Calls settings.
-        Stranded-All agents logoff Policy: If the last agent staffing a queue “unjoins” the queue or signs out, then all calls in the queue become stranded.
-        Stranded-Unavailable Policy: This policy allows for the configuration of the processing of calls that are in a staffed queue when all agents are unavailable.
-        Retrieving call queue Stranded Calls details requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Stranded-All agents logoff Policy: If the last agent staffing a queue “unjoins” the queue or signs out, then
+        all calls in the queue become stranded.
+        Stranded-Unavailable Policy: This policy allows for the configuration of the processing of calls that are in a
+        staffed queue when all agents are unavailable.
+        Retrieving call queue Stranded Calls details requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
 
         :param location_id: Retrieve settings for a call queue in this location.
         :type location_id: str
@@ -10033,7 +10901,8 @@ Possible values: +5555,+5556
         """
         Update the designated Call Stranded Calls Service.
         Allow admin to modify configured Stranded Calls settings.
-        Updating a call queue stranded calls requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Updating a call queue stranded calls requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str
@@ -10043,7 +10912,8 @@ Possible values: +5555,+5556
         :type org_id: str
         :param action: Specifies call processing action type.
         :type action: Action15
-        :param transfer_phone_number: Call gets transferred to this number when action is set to TRANSFER. This can also be an extension.
+        :param transfer_phone_number: Call gets transferred to this number when action is set to TRANSFER. This can
+            also be an extension.
         :type transfer_phone_number: str
         :param audio_message_selection: Specifies what type of announcement to be played.
         :type audio_message_selection: Greeting
@@ -10069,9 +10939,11 @@ Possible values: +5555,+5556
     def device_members(self, device_id: str, org_id: str = None) -> GetDeviceMembersResponse:
         """
         Get the list of all the members of the device including primary and secondary users.
-        A device member can be either a person or a workspace. An admin can access the list of member details, modify member details and 
+        A device member can be either a person or a workspace. An admin can access the list of member details, modify
+        member details and
         search for available members on a device.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param device_id: Unique identifier for the device.
         :type device_id: str
@@ -10088,9 +10960,11 @@ Possible values: +5555,+5556
     def update_members_ondevice(self, device_id: str, org_id: str = None, members: PutMemberObject = None):
         """
         Modify member details on the device.
-        A device member can be either a person or a workspace. An admin can access the list of member details, modify member details and
+        A device member can be either a person or a workspace. An admin can access the list of member details, modify
+        member details and
         search for available members on a device.
-        Modifying members on the device requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Modifying members on the device requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param device_id: Unique identifier for the device.
         :type device_id: str
@@ -10112,7 +10986,8 @@ Possible values: +5555,+5556
     def search_members(self, device_id: str, location_id: str, org_id: str = None, start: int = None, max: int = None, member_name: str = None, phone_number: str = None, extension: str = None) -> List[SearchMemberObject]:
         """
         Search members that can be assigned to the device.
-        A device member can be either a person or a workspace. A admin can access the list of member details, modify member details and
+        A device member can be either a person or a workspace. A admin can access the list of member details, modify
+        member details and
         search for available members on a device.
         This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
 
@@ -10154,7 +11029,8 @@ Possible values: +5555,+5556
     def apply_changes_forspecific_device(self, device_id: str, org_id: str = None):
         """
         Issues request to the device to download and apply changes to the configuration.
-        Applying changes for a specific device requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Applying changes for a specific device requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param device_id: Unique identifier for the device.
         :type device_id: str
@@ -10171,7 +11047,8 @@ Possible values: +5555,+5556
     def device_settings(self, device_id: str, device_model: str, org_id: str = None) -> GetDeviceSettingsResponse:
         """
         Get override settings for a device.
-        Device settings lists all the applicable settings for an MPP and an ATA devices at the device level. An admin can also modify the settings. DECT devices do not support settings at the device level.
+        Device settings lists all the applicable settings for an MPP and an ATA devices at the device level. An admin
+        can also modify the settings. DECT devices do not support settings at the device level.
         This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
 
         :param device_id: Unique identifier for the device.
@@ -10192,14 +11069,17 @@ Possible values: +5555,+5556
     def update_device_settings(self, device_id: str, customizations: CustomizationDeviceLevelObject, custom_enabled: bool, org_id: str = None, device_model: str = None):
         """
         Modify override settings for a device.
-        Device settings list all the applicable settings for an MPP and an ATA devices at the device level. Admins can also modify the settings. NOTE: DECT devices do not support settings at the device level.
-        Updating settings on the device requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Device settings list all the applicable settings for an MPP and an ATA devices at the device level. Admins can
+        also modify the settings. NOTE: DECT devices do not support settings at the device level.
+        Updating settings on the device requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param device_id: Unique identifier for the device.
         :type device_id: str
         :param customizations: Indicates the customization object of the device settings.
         :type customizations: CustomizationDeviceLevelObject
-        :param custom_enabled: Indicates if customization is allowed at a device level. If true, customized at a device level. If false, not customized; uses customer-level configuration.
+        :param custom_enabled: Indicates if customization is allowed at a device level. If true, customized at a device
+            level. If false, not customized; uses customer-level configuration.
         :type custom_enabled: bool
         :param org_id: Organization in which the device resides..
         :type org_id: str
@@ -10274,16 +11154,20 @@ Possible values: +5555,+5556
     def modify_workspace_devices(self, workspace_id: str, org_id: str = None, enabled: bool = None, limit_guest_use: bool = None, guest_hours_limit: int = None):
         """
         Modify devices for a workspace.
-        Modifying devices for a workspace requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Modifying devices for a workspace requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param workspace_id: ID of the workspace for which to modify devices.
         :type workspace_id: str
         :param org_id: Organization to which the workspace belongs.
         :type org_id: str
-        :param enabled: Enable/Disable hoteling Host. Enabling the device for hoteling means that a guest(end user) can log into this host(workspace device) and use this device
-as if it were their own. This is useful when traveling to a remote office but still needing to place/receive calls with their telephone number and access features normally available to them on their office phone.
+        :param enabled: Enable/Disable hoteling Host. Enabling the device for hoteling means that a guest(end user) can
+            log into this host(workspace device) and use this device as if it were their own. This is useful when
+            traveling to a remote office but still needing to place/receive calls with their telephone number and
+            access features normally available to them on their office phone.
         :type enabled: bool
-        :param limit_guest_use: Enable limiting the time a guest can use the device. The time limit is configured via guestHoursLimit.
+        :param limit_guest_use: Enable limiting the time a guest can use the device. The time limit is configured via
+            guestHoursLimit.
         :type limit_guest_use: bool
         :param guest_hours_limit: Time Limit in hours until hoteling is enabled. Mandatory if limitGuestUse is enabled.
         :type guest_hours_limit: int
@@ -10305,7 +11189,8 @@ as if it were their own. This is useful when traveling to a remote office but st
     def read_list_of_supported_devices(self, org_id: str = None) -> List[DeviceObject]:
         """
         Gets the list of supported devices for an organization.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: List supported devices for an organization.
         :type org_id: str
@@ -10320,7 +11205,8 @@ as if it were their own. This is useful when traveling to a remote office but st
     def readdevice_override_settings_fororganization(self, org_id: str = None) -> ReaddeviceOverrideSettingsFororganizationResponse:
         """
         Get device override settings for an organization.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: List supported devices for an organization.
         :type org_id: str
@@ -10335,7 +11221,8 @@ as if it were their own. This is useful when traveling to a remote office but st
     def read_dect_device_type_list(self, org_id: str = None) -> List[DectDeviceList]:
         """
         Get DECT device type list with base stations and line ports supported count. This is a static list.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: 
         :type org_id: str
@@ -10350,10 +11237,10 @@ as if it were their own. This is useful when traveling to a remote office but st
     def validatelist_of_mac_address(self, macs: List[str], org_id: str = None) -> ValidatelistOfMACAddressResponse:
         """
         Validate a list of MAC addresses.
-        Validating this list requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_write.
+        Validating this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
-        :param macs: MAC addresses to be validated.
-Possible values: {["ab125678cdef", "00005E0053B4"]}
+        :param macs: MAC addresses to be validated. Possible values: {["ab125678cdef", "00005E0053B4"]}
         :type macs: List[str]
         :param org_id: Validate the mac address(es) for this organization.
         :type org_id: str
@@ -10371,16 +11258,25 @@ Possible values: {["ab125678cdef", "00005E0053B4"]}
     def change_device_settings_across_organization_or_location_job(self, org_id: str = None, location_id: str = None, location_customizations_enabled: bool = None, customizations: CustomizationObject = None) -> StartJobResponse:
         """
         Change device settings across organization or locations jobs.
-        Performs bulk and asynchronous processing for all types of device settings initiated by organization and system admins in a stateful persistent manner. This job will modify the requested device settings across all the devices. Whenever a location ID is specified in the request, it will modify the requested device settings only for the devices that are part of the provided location within an organization.
+        Performs bulk and asynchronous processing for all types of device settings initiated by organization and system
+        admins in a stateful persistent manner. This job will modify the requested device settings across all the
+        devices. Whenever a location ID is specified in the request, it will modify the requested device settings only
+        for the devices that are part of the provided location within an organization.
         Returns a unique job ID which can then be utilized further to retrieve status and errors for the same.
-        Only one job per customer can be running at any given time within the same organization. An attempt to run multiple jobs at the same time will result in a 409 error response.
-        Running a job requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_write.
+        Only one job per customer can be running at any given time within the same organization. An attempt to run
+        multiple jobs at the same time will result in a 409 error response.
+        Running a job requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_write.
 
         :param org_id: Apply change device settings for all the devices under this organization.
         :type org_id: str
-        :param location_id: Location within an organization where changes of device setings will be applied to all the devices within it.
+        :param location_id: Location within an organization where changes of device setings will be applied to all the
+            devices within it.
         :type location_id: str
-        :param location_customizations_enabled: Indicates if all the devices within this location will be customized with new requested customizations(if set to true) or will be overridden with the one at organization level (if set to false or any other value). This field has no effect when the job is being triggered at organization level.
+        :param location_customizations_enabled: Indicates if all the devices within this location will be customized
+            with new requested customizations(if set to true) or will be overridden with the one at organization level
+            (if set to false or any other value). This field has no effect when the job is being triggered at
+            organization level.
         :type location_customizations_enabled: bool
         :param customizations: Indicates the settings for ATA devices, DECT devices and MPP devices.
         :type customizations: CustomizationObject
@@ -10402,8 +11298,10 @@ Possible values: {["ab125678cdef", "00005E0053B4"]}
     def list_change_device_settings_jobs(self, org_id: str = None, **params) -> Generator[StartJobResponse, None, None]:
         """
         List change device settings jobs.
-        Lists all the jobs for jobType calldevicesettings for the given organization in order of most recent one to oldest one irrespective of its status.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Lists all the jobs for jobType calldevicesettings for the given organization in order of most recent one to
+        oldest one irrespective of its status.
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: Retrieve list of 'calldevicesettings' jobs for this organization.
         :type org_id: str
@@ -10417,7 +11315,8 @@ Possible values: {["ab125678cdef", "00005E0053B4"]}
         """
         Get change device settings job status.
         Provides details of the job with jobId of jobType calldevicesettings.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param job_id: Retrieve job details for this jobId.
         :type job_id: str
@@ -10430,7 +11329,8 @@ Possible values: {["ab125678cdef", "00005E0053B4"]}
         """
         List change device settings job errors.
         Lists all error details of the job with jobId of jobType calldevicesettings.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param job_id: Retrieve job details for this jobId.
         :type job_id: str
@@ -10472,11 +11372,13 @@ class PutSharedLineMemberItem(ApiModel):
     line_type: Optional[LineType]
     #: Number of lines that have been configured for the person on the device.
     line_weight: Optional[int]
-    #: Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line can only make calls to the predefined number set in hotlineDestination.
+    #: Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line
+    #: can only make calls to the predefined number set in hotlineDestination.
     hotline_enabled: Optional[bool]
     #: Preconfigured number for the hotline. Required only if hotlineEnabled is set to true.
     hotline_destination: Optional[str]
-    #: Set how a device behaves when a call is declined. When set to true, a call decline request is extended to all the endpoints on the device. When set to false, a call decline request is only declined at the current endpoint.
+    #: Set how a device behaves when a call is declined. When set to true, a call decline request is extended to all
+    #: the endpoints on the device. When set to false, a call decline request is only declined at the current endpoint.
     allow_call_decline_enabled: Optional[bool]
     #: Device line label.
     line_label: Optional[str]
@@ -10487,7 +11389,8 @@ class GetSharedLineMemberItem(PutSharedLineMemberItem):
     first_name: Optional[str]
     #: Last name of person or workspace.
     last_name: Optional[str]
-    #: Phone number of a person or workspace. Currently, E.164 format is not supported. This will be supported in the future update.
+    #: Phone number of a person or workspace. Currently, E.164 format is not supported. This will be supported in the
+    #: future update.
     phone_number: Optional[str]
     #: Phone extension of a person or workspace.
     extension: Optional[str]
@@ -10520,7 +11423,8 @@ class BehaviorType(EffectiveBehaviorType):
 
 
 class ConfigurepersonsCallingBehaviorBody(ApiModel):
-    #: The new Calling Behavior setting for the person (case-insensitive). If null, the effective Calling Behavior will be the Organization's current default.
+    #: The new Calling Behavior setting for the person (case-insensitive). If null, the effective Calling Behavior will
+    #: be the Organization's current default.
     behavior_type: Optional[BehaviorType]
     #: The UC Manager Profile ID. Specifying null results in the organizational default being applied.
     profile_id: Optional[str]
@@ -10543,7 +11447,8 @@ class NoAnswer3(BusinessContinuity):
 class CallForwarding4(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
     always: Optional[Always]
-    #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the person is busy.
+    #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the person
+    #: is busy.
     busy: Optional[BusinessContinuity]
     #: Settings for forwarding which only occurs when you are away or not answering your phone.
     no_answer: Optional[NoAnswer3]
@@ -10552,7 +11457,8 @@ class CallForwarding4(ApiModel):
 class ReadForwardingSettingsForPersonResponse(ApiModel):
     #: Settings related to "Always", "Busy", and "No Answer" call forwarding.
     call_forwarding: Optional[CallForwarding4]
-    #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any reason, such as power outage, failed Internet connection, or wiring problem.
+    #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any
+    #: reason, such as power outage, failed Internet connection, or wiring problem.
     business_continuity: Optional[BusinessContinuity]
 
 
@@ -10563,14 +11469,16 @@ class Record(str, Enum):
     never = 'Never'
     #: Calls are always recorded, but user can pause or resume the recording. Stop recording is not supported.
     always_with_pause_resume = 'Always with Pause/Resume'
-    #: Records only the portion of the call after the recording start (*44) has been entered. Pause, resume, and stop controls are supported.
+    #: Records only the portion of the call after the recording start (*44) has been entered. Pause, resume, and stop
+    #: controls are supported.
     on_demand_with_user_initiated_start = 'On Demand with User Initiated Start'
 
 
 class Repeat(ApiModel):
     #: Interval at which warning tone "beep" will be played. This interval is an integer from 10 to 1800 seconds
     interval: Optional[int]
-    #: true when ongoing call recording tone will be played at the designated interval. false indicates no warning tone will be played.
+    #: true when ongoing call recording tone will be played at the designated interval. false indicates no warning tone
+    #: will be played.
     enabled: Optional[bool]
 
 
@@ -10581,7 +11489,8 @@ class ConfigureCallRecordingSettingsForPersonBody(ApiModel):
     record: Optional[Record]
     #: When true, voicemail messages are also recorded.
     record_voicemail_enabled: Optional[bool]
-    #: When enabled, an announcement is played when call recording starts and an announcement is played when call recording ends.
+    #: When enabled, an announcement is played when call recording starts and an announcement is played when call
+    #: recording ends.
     start_stop_announcement_enabled: Optional[bool]
     #: Pause/resume notification settings.
     #: true when notification feature is in effect. false indicates notification is disabled.
@@ -10610,15 +11519,15 @@ class ConfigureCallerIDSettingsForPersonBody(ApiModel):
     selected: Optional[CallerIdSelectedType]
     #: This value must be an assigned number from the person's location.
     custom_number: Optional[str]
-    #: Person's Caller ID first name.  Characters of %,  +, ``, " and Unicode characters are not allowed.
+    #: Person's Caller ID first name. Characters of %, +, ``, " and Unicode characters are not allowed.
     first_name: Optional[str]
-    #: Person's Caller ID last name.  Characters of %,  +, ``, " and Unicode characters are not allowed.
+    #: Person's Caller ID last name. Characters of %, +, ``, " and Unicode characters are not allowed.
     last_name: Optional[str]
     #: true if person's identity has to be blocked when receiving a transferred or forwarded call.
     block_in_forward_calls_enabled: Optional[bool]
     #: Designates which type of External Caller Id Name policy is used. Default is DIRECT_LINE.
     external_caller_id_name_policy: Optional[ExternalCallerIdNamePolicy]
-    #: Person's custom External Caller ID last name.  Characters of %,  +, ``, " and Unicode characters are not allowed.
+    #: Person's custom External Caller ID last name. Characters of %, +, ``, " and Unicode characters are not allowed.
     custom_external_caller_id_name: Optional[str]
 
 
@@ -10682,12 +11591,15 @@ class RecurWeekly2(RecurWeeklyObject):
 class Recurrence(ApiModel):
     #: True if the event repeats forever. Requires either recurDaily or recurWeekly to be specified.
     recur_for_ever: Optional[bool]
-    #: End date for the recurring event in the format of YYYY-MM-DD. Requires either recurDaily or recurWeekly to be specified.
+    #: End date for the recurring event in the format of YYYY-MM-DD. Requires either recurDaily or recurWeekly to be
+    #: specified.
     recur_end_date: Optional[str]
-    #: End recurrence after the event has repeated the specified number of times. Requires either recurDaily or recurWeekly to be specified.
+    #: End recurrence after the event has repeated the specified number of times. Requires either recurDaily or
+    #: recurWeekly to be specified.
     recur_end_occurrence: Optional[int]
     #: Specifies the number of days between the start of each recurrence. Not allowed with recurWeekly.
-    #: Recurring interval in days. The number of days after the start when an event will repeat.  Repetitions cannot overlap.
+    #: Recurring interval in days. The number of days after the start when an event will repeat. Repetitions cannot
+    #: overlap.
     recur_daily: Optional[object]
     #: Specifies the event recur weekly on the designated days of the week. Not allowed with recurDaily.
     recur_weekly: Optional[RecurWeekly2]
@@ -10696,13 +11608,17 @@ class Recurrence(ApiModel):
 class EventLongDetails(ApiModel):
     #: Name for the event.
     name: Optional[str]
-    #: Start date of the event, or first occurrence if repeating, in the format of YYYY-MM-DD.  This field is required if the allDayEnabled field is present.
+    #: Start date of the event, or first occurrence if repeating, in the format of YYYY-MM-DD. This field is required
+    #: if the allDayEnabled field is present.
     start_date: Optional[str]
-    #: End date of the event, or first occurrence if repeating, in the format of YYYY-MM-DD.  This field is required if the allDayEnabled field is present.
+    #: End date of the event, or first occurrence if repeating, in the format of YYYY-MM-DD. This field is required if
+    #: the allDayEnabled field is present.
     end_date: Optional[str]
-    #: Start time of the event in the format of HH:MM (24 hours format).  This field is required if the allDayEnabled field is false or omitted.
+    #: Start time of the event in the format of HH:MM (24 hours format). This field is required if the allDayEnabled
+    #: field is false or omitted.
     start_time: Optional[str]
-    #: End time of the event in the format of HH:MM (24 hours format).  This field is required if the allDayEnabled field is false or omitted.
+    #: End time of the event in the format of HH:MM (24 hours format). This field is required if the allDayEnabled
+    #: field is false or omitted.
     end_time: Optional[str]
     #: True if it is all-day event.
     all_day_enabled: Optional[bool]
@@ -10757,7 +11673,7 @@ class GetMonitoredElementsObject(ApiModel):
 
 class PhoneNumbers7(ApiModel):
     #: Flag to indicate if the number is primary or not.
-    #: Possible values: 
+    #: Possible values:
     primary: Optional[bool]
     #: Phone number.
     #: Possible values: 2143456789
@@ -10814,9 +11730,11 @@ class Type32(str, Enum):
 
 
 class PushToTalkConnectionType(ApiModel):
-    #: Push-to-Talk initiators can chat with this person but only in one direction. The person you enable Push-to-Talk for cannot respond.
+    #: Push-to-Talk initiators can chat with this person but only in one direction. The person you enable Push-to-Talk
+    #: for cannot respond.
     one_way: Optional[str]
-    #: Push-to-Talk initiators can chat with this person in a two-way conversation. The person you enable Push-to-Talk for can respond.
+    #: Push-to-Talk initiators can chat with this person in a two-way conversation. The person you enable Push-to-Talk
+    #: for can respond.
     two_way: Optional[str]
 
 
@@ -10837,7 +11755,8 @@ class ExternalTransfer(str, Enum):
 
 
 class ReadIncomingPermissionSettingsForPersonResponse(ApiModel):
-    #: When true, indicates that this person uses the specified calling permissions for receiving inbound calls rather than the organizational defaults.
+    #: When true, indicates that this person uses the specified calling permissions for receiving inbound calls rather
+    #: than the organizational defaults.
     use_custom_enabled: Optional[bool]
     #: Specifies the transfer behavior for incoming, external calls.
     external_transfer: Optional[ExternalTransfer]
@@ -10849,13 +11768,14 @@ class ReadIncomingPermissionSettingsForPersonResponse(ApiModel):
 
 class CallingPermissions(ApiModel):
     #: Designates the action to be taken for each call type and if transferring the call type is allowed.
-    #: Possible values: INTERNAL_CALL, TOLL_FREE, INTERNATIONAL, OPERATOR_ASSISTED, CHARGEABLE_DIRECTORY_ASSISTED, SPECIAL_SERVICES_I, SPECIAL_SERVICES_II, PREMIUM_SERVICES_I, PREMIUM_SERVICES_II, NATIONAL
+    #: Possible values: INTERNAL_CALL, TOLL_FREE, INTERNATIONAL, OPERATOR_ASSISTED, CHARGEABLE_DIRECTORY_ASSISTED,
+    #: SPECIAL_SERVICES_I, SPECIAL_SERVICES_II, PREMIUM_SERVICES_I, PREMIUM_SERVICES_II, NATIONAL
     call_type: Optional[str]
     #: Action on the given callType.
     #: Possible values: ALLOW, BLOCK, AUTH_CODE, TRANSFER_NUMBER_1, TRANSFER_NUMBER_2, TRANSFER_NUMBER_3
     action: Optional[str]
     #: Allow the person to transfer or forward a call of the specified call type.
-    #: Possible values: 
+    #: Possible values:
     transfer_enabled: Optional[bool]
 
 
@@ -10909,7 +11829,8 @@ class PutSharedLineAppearanceMembersBody(ApiModel):
 
 
 class ReadPersonsCallingBehaviorResponse(ConfigurepersonsCallingBehaviorBody):
-    #: The effective Calling Behavior setting for the person, will be the organization's default Calling Behavior if the user's behaviorType is set to null.
+    #: The effective Calling Behavior setting for the person, will be the organization's default Calling Behavior if
+    #: the user's behaviorType is set to null.
     effective_behavior_type: Optional[EffectiveBehaviorType]
 
 
@@ -11069,7 +11990,8 @@ class ConfigureReceptionistClientSettingsForPersonBody(ApiModel):
 
 
 class ReadPushtoTalkSettingsForPersonResponse(ApiModel):
-    #: Set to true to enable the Push-to-Talk feature.  When enabled, a person receives a Push-to-Talk call and answers the call automatically.
+    #: Set to true to enable the Push-to-Talk feature. When enabled, a person receives a Push-to-Talk call and answers
+    #: the call automatically.
     allow_auto_answer: Optional[bool]
     #: Specifies the connection type to be used.
     connection_type: Optional[PushToTalkConnectionType]
@@ -11109,21 +12031,27 @@ class AssignOrUnassignNumbersTopersonBody(ApiModel):
 
 
 class RetrieveListOfCallQueueCallerIDInformationResponse(ApiModel):
-    #: Indicates a list of Call Queues that the agent belongs and are available to be selected as the Caller ID for outgoing calls. It is empty when the agent's Call Queues have disabled the Call Queue outgoing phone number setting to be used as Caller ID. In the case where this setting is enabled the array will be populated.
+    #: Indicates a list of Call Queues that the agent belongs and are available to be selected as the Caller ID for
+    #: outgoing calls. It is empty when the agent's Call Queues have disabled the Call Queue outgoing phone number
+    #: setting to be used as Caller ID. In the case where this setting is enabled the array will be populated.
     available_queues: Optional[list[CallQueueObject]]
 
 
 class RetrieveCallQueueAgentsCallerIDInformationResponse(ApiModel):
-    #: When true, indicates that this agent is using the selectedQueue for its Caller ID. When false, indicates that it is using the agent's configured Caller ID.
+    #: When true, indicates that this agent is using the selectedQueue for its Caller ID. When false, indicates that it
+    #: is using the agent's configured Caller ID.
     queue_caller_id_enabled: Optional[bool]
-    #: Indicates agent's choice of using this queue's Caller ID for outgoing calls. It is empty object when queueCallerIdEnabled is false. When queueCallerIdEnabled is true this data must be populated.
+    #: Indicates agent's choice of using this queue's Caller ID for outgoing calls. It is empty object when
+    #: queueCallerIdEnabled is false. When queueCallerIdEnabled is true this data must be populated.
     selected_queue: Optional[CallQueueObject]
 
 
 class ModifyCallQueueAgentsCallerIDInformationBody(ApiModel):
-    #: When true, indicates that this agent is using the selectedQueue for its Caller ID. When false, indicates that it is using the agent's configured Caller ID.
+    #: When true, indicates that this agent is using the selectedQueue for its Caller ID. When false, indicates that it
+    #: is using the agent's configured Caller ID.
     queue_caller_id_enabled: Optional[bool]
-    #: Indicates agent's choice of using this queue's Caller ID for outgoing calls. It is empty object when queueCallerIdEnabled is false. When queueCallerIdEnabled is true this data must be populated.
+    #: Indicates agent's choice of using this queue's Caller ID for outgoing calls. It is empty object when
+    #: queueCallerIdEnabled is false. When queueCallerIdEnabled is true this data must be populated.
     selected_queue: Optional[GetAvailableRecallHuntGroupsObject]
 
 
@@ -11131,8 +12059,12 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
     """
     Not supported for Webex for Government (FedRAMP)
     Webex Calling Person Settings supports modifying Webex Calling settings for a specific person.
-    Viewing People requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read or, for select APIs, a user auth token with spark:people_read scope can be used by a person to read their own settings.
-    Configuring People settings requires a full or user administrator auth token with the spark-admin:people_write scope or, for select APIs, a user auth token with spark:people_write scope can be used by a person to update their own settings.
+    Viewing People requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
+    or, for select APIs, a user auth token with spark:people_read scope can be used by a person to read their own
+    settings.
+    Configuring People settings requires a full or user administrator auth token with the spark-admin:people_write
+    scope or, for select APIs, a user auth token with spark:people_write scope can be used by a person to update their
+    own settings.
     """
 
     def search_shared_line_appearance_members(self, person_id: str, application_id: str, extension: str = None, name: str = None, max: int = None, start: int = None, location: str = None, number: str = None, order: str = None) -> List[AvailableSharedLineMemberItem]:
@@ -11213,16 +12145,22 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
 
     def read_persons_calling_behavior(self, person_id: str, org_id: str = None) -> enum:
         """
-        Retrieves the calling behavior and UC Manager Profile settings for the person which includes overall calling behavior and calling UC Manager Profile ID.
-        Webex Calling Behavior controls which Webex telephony application and which UC Manager Profile is to be used for a person.
-        An organization has an organization-wide default Calling Behavior that may be overridden for individual persons.
-        UC Manager Profiles are applicable if your organization uses Jabber in Team Messaging mode or Calling in Webex (Unified CM).
+        Retrieves the calling behavior and UC Manager Profile settings for the person which includes overall calling
+        behavior and calling UC Manager Profile ID.
+        Webex Calling Behavior controls which Webex telephony application and which UC Manager Profile is to be used
+        for a person.
+        An organization has an organization-wide default Calling Behavior that may be overridden for individual
+        persons.
+        UC Manager Profiles are applicable if your organization uses Jabber in Team Messaging mode or Calling in Webex
+        (Unified CM).
         The UC Manager Profile also has an organization-wide default and may be overridden for individual persons.
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -11234,20 +12172,28 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
 
     def configurepersons_calling_behavior(self, person_id: str, org_id: str = None, behavior_type: BehaviorType = None, profile_id: str = None):
         """
-        Modifies the calling behavior settings for the person which includes calling behavior and UC Manager Profile ID.
-        Webex Calling Behavior controls which Webex telephony application and which UC Manager Profile is to be used for a person.
-        An organization has an organization-wide default Calling Behavior that may be overridden for individual persons.
-        UC Manager Profiles are applicable if your organization uses Jabber in Team Messaging mode or Calling in Webex (Unified CM).
+        Modifies the calling behavior settings for the person which includes calling behavior and UC Manager Profile
+        ID.
+        Webex Calling Behavior controls which Webex telephony application and which UC Manager Profile is to be used
+        for a person.
+        An organization has an organization-wide default Calling Behavior that may be overridden for individual
+        persons.
+        UC Manager Profiles are applicable if your organization uses Jabber in Team Messaging mode or Calling in Webex
+        (Unified CM).
         The UC Manager Profile also has an organization-wide default and may be overridden for individual persons.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
-        :param behavior_type: The new Calling Behavior setting for the person (case-insensitive). If null, the effective Calling Behavior will be the Organization's current default.
+        :param behavior_type: The new Calling Behavior setting for the person (case-insensitive). If null, the
+            effective Calling Behavior will be the Organization's current default.
         :type behavior_type: BehaviorType
-        :param profile_id: The UC Manager Profile ID. Specifying null results in the organizational default being applied.
+        :param profile_id: The UC Manager Profile ID. Specifying null results in the organizational default being
+            applied.
         :type profile_id: str
         """
         params = {}
@@ -11265,12 +12211,16 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
     def read_barge_in_for_person(self, person_id: str, org_id: str = None) -> ReadBargeInSettingsForPersonResponse:
         """
         Retrieve a person's Barge In settings.
-        The Barge In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to another subscriber, or barge-in on the call if it was already answered. Barge In can be used across locations.
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read or a user auth token with spark:people_read scope can be used by a person to read their own settings.
+        The Barge In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to
+        another subscriber, or barge-in on the call if it was already answered. Barge In can be used across locations.
+        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
+        or a user auth token with spark:people_read scope can be used by a person to read their own settings.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -11283,16 +12233,21 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
     def configure_barge_in_for_person(self, person_id: str, org_id: str = None, enabled: bool = None, tone_enabled: bool = None):
         """
         Configure a person's Barge In settings.
-        The Barge In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to another subscriber, or barge-in on the call if it was already answered. Barge In can be used across locations.
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user auth token with spark:people_write scope can be used by a person to update their own settings.
+        The Barge In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to
+        another subscriber, or barge-in on the call if it was already answered. Barge In can be used across locations.
+        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
+        auth token with spark:people_write scope can be used by a person to update their own settings.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         :param enabled: Indicates if the Barge In feature is enabled.
         :type enabled: bool
-        :param tone_enabled: Indicates that a stutter dial tone will be played when a person is barging in on the active call.
+        :param tone_enabled: Indicates that a stutter dial tone will be played when a person is barging in on the
+            active call.
         :type tone_enabled: bool
         """
         params = {}
@@ -11311,12 +12266,17 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         """
         Retrieve a person's Call Forwarding settings.
         Three types of call forwarding are supported:
-        In addition, the Business Continuity feature will send calls to a destination of your choice if your phone is not connected to the network for any reason, such as a power outage, failed Internet connection, or wiring problem.
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read or a user auth token with spark:people_read scope can be used by a person to read their own settings.
+        In addition, the Business Continuity feature will send calls to a destination of your choice if your phone is
+        not connected to the network for any reason, such as a power outage, failed Internet connection, or wiring
+        problem.
+        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
+        or a user auth token with spark:people_read scope can be used by a person to read their own settings.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -11330,16 +12290,23 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         """
         Configure a person's Call Forwarding settings.
         Three types of call forwarding are supported:
-        In addition, the Business Continuity feature will send calls to a destination of your choice if your phone is not connected to the network for any reason, such as a power outage, failed Internet connection, or wiring problem.
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user auth token with spark:people_write scope can be used by a person to update their settings.
+        In addition, the Business Continuity feature will send calls to a destination of your choice if your phone is
+        not connected to the network for any reason, such as a power outage, failed Internet connection, or wiring
+        problem.
+        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
+        auth token with spark:people_write scope can be used by a person to update their settings.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         :param call_forwarding: Settings related to "Always", "Busy", and "No Answer" call forwarding.
         :type call_forwarding: CallForwarding4
-        :param business_continuity: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any reason, such as power outage, failed Internet connection, or wiring problem.
+        :param business_continuity: Settings for sending calls to a destination of your choice if your phone is not
+            connected to the network for any reason, such as power outage, failed Internet connection, or wiring
+            problem.
         :type business_continuity: BusinessContinuity
         """
         params = {}
@@ -11357,12 +12324,17 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
     def read_call_intercept_for_person(self, person_id: str, org_id: str = None) -> GetLocationInterceptResponse:
         """
         Retrieves Person's Call Intercept settings.
-        The intercept feature gracefully takes a person's phone out of service, while providing callers with informative announcements and alternative routing options. Depending on the service configuration, none, some, or all incoming calls to the specified person are intercepted. Also depending on the service configuration, outgoing calls are intercepted or rerouted to another location.
+        The intercept feature gracefully takes a person's phone out of service, while providing callers with
+        informative announcements and alternative routing options. Depending on the service configuration, none, some,
+        or all incoming calls to the specified person are intercepted. Also depending on the service configuration,
+        outgoing calls are intercepted or rerouted to another location.
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -11375,14 +12347,20 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
     def configure_call_intercept_for_person(self, person_id: str, org_id: str = None, enabled: bool = None, incoming: Incoming = None, outgoing: Outgoing = None):
         """
         Configures a person's Call Intercept settings.
-        The intercept feature gracefully takes a person's phone out of service, while providing callers with informative announcements and alternative routing options. Depending on the service configuration, none, some, or all incoming calls to the specified person are intercepted. Also depending on the service configuration, outgoing calls are intercepted or rerouted to another location.
+        The intercept feature gracefully takes a person's phone out of service, while providing callers with
+        informative announcements and alternative routing options. Depending on the service configuration, none, some,
+        or all incoming calls to the specified person are intercepted. Also depending on the service configuration,
+        outgoing calls are intercepted or rerouted to another location.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
-        :param enabled: Enable/disable location intercept. Enable this feature to override any Location's Call Intercept settings that person configures.
+        :param enabled: Enable/disable location intercept. Enable this feature to override any Location's Call
+            Intercept settings that person configures.
         :type enabled: bool
         :param incoming: Inbound call details.
         :type incoming: Incoming
@@ -11405,13 +12383,17 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
 
     def configure_call_intercept_greeting_for_person(self, person_id: str, org_id: str = None):
         """
-        Configure a person's Call Intercept Greeting by uploading a Waveform Audio File Format, .wav, encoded audio file.
+        Configure a person's Call Intercept Greeting by uploading a Waveform Audio File Format, .wav, encoded audio
+        file.
         Your request will need to be a multipart/form-data request rather than JSON, using the audio/wav Content-Type.
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user auth token with spark:people_write scope can be used by a person to update their settings.
+        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
+        auth token with spark:people_write scope can be used by a person to update their settings.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -11424,12 +12406,15 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
     def read_call_recording_for_person(self, person_id: str, org_id: str = None) -> ReadCallRecordingSettingsForPersonResponse:
         """
         Retrieve a person's Call Recording settings.
-        The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
+        The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
+        platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -11442,12 +12427,15 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
     def configure_call_recording_for_person(self, person_id: str, org_id: str = None, enabled: bool = None, record: Record = None, record_voicemail_enabled: bool = None, start_stop_announcement_enabled: bool = None, notification: object = None, repeat: Repeat = None):
         """
         Configure a person's Call Recording settings.
-        The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
+        The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
+        platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         :param enabled: true if call recording is enabled.
         :type enabled: bool
@@ -11455,10 +12443,11 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :type record: Record
         :param record_voicemail_enabled: When true, voicemail messages are also recorded.
         :type record_voicemail_enabled: bool
-        :param start_stop_announcement_enabled: When enabled, an announcement is played when call recording starts and an announcement is played when call recording ends.
+        :param start_stop_announcement_enabled: When enabled, an announcement is played when call recording starts and
+            an announcement is played when call recording ends.
         :type start_stop_announcement_enabled: bool
-        :param notification: Pause/resume notification settings.
-true when notification feature is in effect. false indicates notification is disabled.
+        :param notification: Pause/resume notification settings. true when notification feature is in effect. false
+            indicates notification is disabled.
         :type notification: object
         :param repeat: Beep sound plays periodically.
         :type repeat: Repeat
@@ -11491,7 +12480,9 @@ true when notification feature is in effect. false indicates notification is dis
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -11509,22 +12500,28 @@ true when notification feature is in effect. false indicates notification is dis
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
-        :param selected: Which type of outgoing Caller ID will be used.
-Possible values: DIRECT_LINE
+        :param selected: Which type of outgoing Caller ID will be used. Possible values: DIRECT_LINE
         :type selected: CallerIdSelectedType
         :param custom_number: This value must be an assigned number from the person's location.
         :type custom_number: str
-        :param first_name: Person's Caller ID first name.  Characters of %,  +, ``, " and Unicode characters are not allowed.
+        :param first_name: Person's Caller ID first name. Characters of %, +, ``, " and Unicode characters are not
+            allowed.
         :type first_name: str
-        :param last_name: Person's Caller ID last name.  Characters of %,  +, ``, " and Unicode characters are not allowed.
+        :param last_name: Person's Caller ID last name. Characters of %, +, ``, " and Unicode characters are not
+            allowed.
         :type last_name: str
-        :param block_in_forward_calls_enabled: true if person's identity has to be blocked when receiving a transferred or forwarded call.
+        :param block_in_forward_calls_enabled: true if person's identity has to be blocked when receiving a transferred
+            or forwarded call.
         :type block_in_forward_calls_enabled: bool
-        :param external_caller_id_name_policy: Designates which type of External Caller Id Name policy is used. Default is DIRECT_LINE.
+        :param external_caller_id_name_policy: Designates which type of External Caller Id Name policy is used. Default
+            is DIRECT_LINE.
         :type external_caller_id_name_policy: ExternalCallerIdNamePolicy
-        :param custom_external_caller_id_name: Person's custom External Caller ID last name.  Characters of %,  +, ``, " and Unicode characters are not allowed.
+        :param custom_external_caller_id_name: Person's custom External Caller ID last name. Characters of %, +, ``, "
+            and Unicode characters are not allowed.
         :type custom_external_caller_id_name: str
         """
         params = {}
@@ -11552,12 +12549,16 @@ Possible values: DIRECT_LINE
     def read_do_not_disturb_for_person(self, person_id: str, org_id: str = None) -> ReadDoNotDisturbSettingsForPersonResponse:
         """
         Retrieve a person's Do Not Disturb settings.
-        When enabled, this feature will give all incoming calls the busy treatment. Optionally, you can enable a Ring Reminder to play a brief tone on your desktop phone when you receive incoming calls.
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read or a user auth token with spark:people_read scope can be used by a person to read their settings.
+        When enabled, this feature will give all incoming calls the busy treatment. Optionally, you can enable a Ring
+        Reminder to play a brief tone on your desktop phone when you receive incoming calls.
+        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
+        or a user auth token with spark:people_read scope can be used by a person to read their settings.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -11570,16 +12571,21 @@ Possible values: DIRECT_LINE
     def configure_do_not_disturb_for_person(self, person_id: str, org_id: str = None, enabled: bool = None, ring_splash_enabled: bool = None):
         """
         Configure a person's Do Not Disturb settings.
-        When enabled, this feature will give all incoming calls the busy treatment. Optionally, you can enable a Ring Reminder to play a brief tone on your desktop phone when you receive incoming calls.
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user auth token with spark:people_write scope can be used by a person to update their settings.
+        When enabled, this feature will give all incoming calls the busy treatment. Optionally, you can enable a Ring
+        Reminder to play a brief tone on your desktop phone when you receive incoming calls.
+        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
+        auth token with spark:people_write scope can be used by a person to update their settings.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         :param enabled: true if the Do Not Disturb feature is enabled.
         :type enabled: bool
-        :param ring_splash_enabled: Enables a Ring Reminder to play a brief tone on your desktop phone when you receive incoming calls.
+        :param ring_splash_enabled: Enables a Ring Reminder to play a brief tone on your desktop phone when you receive
+            incoming calls.
         :type ring_splash_enabled: bool
         """
         params = {}
@@ -11597,13 +12603,18 @@ Possible values: DIRECT_LINE
     def read_voicemail_for_person(self, person_id: str, org_id: str = None) -> ReadVoicemailSettingsForPersonResponse:
         """
         Retrieve a person's Voicemail settings.
-        The voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice messages via Voicemail. Voicemail audio is sent in Waveform Audio File Format, .wav, format.
-        Optionally, notifications can be sent to a mobile phone via text or email. These notifications will not include the voicemail files.
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read or a user auth token with spark:people_read scope can be used by a person to read their settings.
+        The voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice
+        messages via Voicemail. Voicemail audio is sent in Waveform Audio File Format, .wav, format.
+        Optionally, notifications can be sent to a mobile phone via text or email. These notifications will not include
+        the voicemail files.
+        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
+        or a user auth token with spark:people_read scope can be used by a person to read their settings.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -11616,13 +12627,18 @@ Possible values: DIRECT_LINE
     def configure_voicemail_for_person(self, person_id: str, org_id: str = None, enabled: bool = None, send_all_calls: SendAllCalls = None, send_busy_calls: SendBusyCalls = None, send_unanswered_calls: SendUnansweredCalls = None, notifications: NewNumber = None, transfer_to_number: NewNumber = None, email_copy_of_message: EmailCopyOfMessage = None, message_storage: MessageStorage3 = None, fax_message: FaxMessage = None):
         """
         Configure a person's Voicemail settings.
-        The voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice messages via Voicemail. Voicemail audio is sent in Waveform Audio File Format, .wav, format.
-        Optionally, notifications can be sent to a mobile phone via text or email. These notifications will not include the voicemail files.
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user auth token with spark:people_write scope can be used by a person to update their settings.
+        The voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice
+        messages via Voicemail. Voicemail audio is sent in Waveform Audio File Format, .wav, format.
+        Optionally, notifications can be sent to a mobile phone via text or email. These notifications will not include
+        the voicemail files.
+        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
+        auth token with spark:people_write scope can be used by a person to update their settings.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         :param enabled: Voicemail is enabled or disabled.
         :type enabled: bool
@@ -11634,7 +12650,8 @@ Possible values: DIRECT_LINE
         :type send_unanswered_calls: SendUnansweredCalls
         :param notifications: Settings for notifications when there are any new voicemails.
         :type notifications: NewNumber
-        :param transfer_to_number: Settings for voicemail caller to transfer to a different number by pressing zero (0).
+        :param transfer_to_number: Settings for voicemail caller to transfer to a different number by pressing zero
+            (0).
         :type transfer_to_number: NewNumber
         :param email_copy_of_message: Settings for sending a copy of new voicemail message audio via email.
         :type email_copy_of_message: EmailCopyOfMessage
@@ -11671,13 +12688,17 @@ Possible values: DIRECT_LINE
 
     def configure_busy_voicemail_greeting_for_person(self, person_id: str, org_id: str = None):
         """
-        Configure a person's Busy Voicemail Greeting by uploading a Waveform Audio File Format, .wav, encoded audio file.
+        Configure a person's Busy Voicemail Greeting by uploading a Waveform Audio File Format, .wav, encoded audio
+        file.
         Your request will need to be a multipart/form-data request rather than JSON, using the audio/wav Content-Type.
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user auth token with spark:people_write scope can be used by a person to update their settings.
+        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
+        auth token with spark:people_write scope can be used by a person to update their settings.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -11689,13 +12710,17 @@ Possible values: DIRECT_LINE
 
     def configure_no_answer_voicemail_greeting_for_person(self, person_id: str, org_id: str = None):
         """
-        Configure a person's No Answer Voicemail Greeting by uploading a Waveform Audio File Format, .wav, encoded audio file.
+        Configure a person's No Answer Voicemail Greeting by uploading a Waveform Audio File Format, .wav, encoded
+        audio file.
         Your request will need to be a multipart/form-data request rather than JSON, using the audio/wav Content-Type.
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user auth token with spark:people_write scope can be used by a person to update their settings.
+        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
+        auth token with spark:people_write scope can be used by a person to update their settings.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -11708,14 +12733,20 @@ Possible values: DIRECT_LINE
     def list_of_schedules_for_person(self, person_id: str, org_id: str = None, name: str = None, type_: str = None, **params) -> Generator[ScheduleShortDetails, None, None]:
         """
         List schedules for a person in an organization.
-        Schedules are used to support calling features and can be defined at the location or person level. businessHours schedules allow you to apply specific call settings at different times of the day or week by defining one or more events. holidays schedules define exceptions to normal business hours by defining one or more events.
+        Schedules are used to support calling features and can be defined at the location or person level.
+        businessHours schedules allow you to apply specific call settings at different times of the day or week by
+        defining one or more events. holidays schedules define exceptions to normal business hours by defining one or
+        more events.
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
-        :param name: Specifies the case insensitive substring to be matched against the schedule names. The maximum length is 40.
+        :param name: Specifies the case insensitive substring to be matched against the schedule names. The maximum
+            length is 40.
         :type name: str
         :param type_: Specifies the schedule event type to be matched on the given type.
         :type type_: str
@@ -11732,7 +12763,10 @@ Possible values: DIRECT_LINE
     def create_schedule_for_person(self, person_id: str, name: str, type_: Type25, org_id: str = None, events: EventLongDetails = None) -> str:
         """
         Create a new schedule for a person.
-        Schedules are used to support calling features and can be defined at the location or person level. businessHours schedules allow you to apply specific call settings at different times of the day or week by defining one or more events. holidays schedules define exceptions to normal business hours by defining one or more events.
+        Schedules are used to support calling features and can be defined at the location or person level.
+        businessHours schedules allow you to apply specific call settings at different times of the day or week by
+        defining one or more events. holidays schedules define exceptions to normal business hours by defining one or
+        more events.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
@@ -11741,7 +12775,9 @@ Possible values: DIRECT_LINE
         :type name: str
         :param type_: Indicates the schedule type whether businessHours or holidays.
         :type type_: Type25
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         :param events: Indicates a list of events.
         :type events: EventLongDetails
@@ -11763,7 +12799,10 @@ Possible values: DIRECT_LINE
     def schedule_details(self, person_id: str, schedule_type: Type25, schedule_id: str, org_id: str = None) -> List[EventLongDetails]:
         """
         Retrieve a schedule by its schedule ID.
-        Schedules are used to support calling features and can be defined at the location or person level. businessHours schedules allow you to apply specific call settings at different times of the day or week by defining one or more events. holidays schedules define exceptions to normal business hours by defining one or more events.
+        Schedules are used to support calling features and can be defined at the location or person level.
+        businessHours schedules allow you to apply specific call settings at different times of the day or week by
+        defining one or more events. holidays schedules define exceptions to normal business hours by defining one or
+        more events.
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
         :param person_id: Unique identifier for the person.
@@ -11772,7 +12811,9 @@ Possible values: DIRECT_LINE
         :type schedule_type: Type25
         :param schedule_id: Unique identifier for the schedule.
         :type schedule_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -11785,7 +12826,10 @@ Possible values: DIRECT_LINE
     def update_schedule(self, person_id: str, schedule_type: Type25, schedule_id: str, name: str, type_: Type25, new_name: str, org_id: str = None, events: EventLongDetails = None) -> str:
         """
         Modify a schedule by its schedule ID.
-        Schedules are used to support calling features and can be defined at the location or person level. businessHours schedules allow you to apply specific call settings at different times of the day or week by defining one or more events. holidays schedules define exceptions to normal business hours by defining one or more events.
+        Schedules are used to support calling features and can be defined at the location or person level.
+        businessHours schedules allow you to apply specific call settings at different times of the day or week by
+        defining one or more events. holidays schedules define exceptions to normal business hours by defining one or
+        more events.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
@@ -11800,7 +12844,9 @@ Possible values: DIRECT_LINE
         :type type_: Type25
         :param new_name: New name for the schedule.
         :type new_name: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         :param events: Indicates a list of events.
         :type events: EventLongDetails
@@ -11824,7 +12870,10 @@ Possible values: DIRECT_LINE
     def delete_schedule(self, person_id: str, schedule_type: Type25, schedule_id: str, org_id: str = None):
         """
         Delete a schedule by its schedule ID.
-        Schedules are used to support calling features and can be defined at the location or person level. businessHours schedules allow you to apply specific call settings at different times of the day or week by defining one or more events. holidays schedules define exceptions to normal business hours by defining one or more events.
+        Schedules are used to support calling features and can be defined at the location or person level.
+        businessHours schedules allow you to apply specific call settings at different times of the day or week by
+        defining one or more events. holidays schedules define exceptions to normal business hours by defining one or
+        more events.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
@@ -11833,7 +12882,9 @@ Possible values: DIRECT_LINE
         :type schedule_type: Type25
         :param schedule_id: Unique identifier for the schedule.
         :type schedule_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -11846,7 +12897,9 @@ Possible values: DIRECT_LINE
     def fetch_event_forpersons_schedule(self, person_id: str, schedule_type: Type25, schedule_id: str, event_id: str, org_id: str = None) -> str:
         """
         People can use shared location schedules or define personal schedules containing events.
-        businessHours schedules allow you to apply specific call settings at different times of the day or week by defining one or more events. holidays schedules define exceptions to normal business hours by defining one or more events.
+        businessHours schedules allow you to apply specific call settings at different times of the day or week by
+        defining one or more events. holidays schedules define exceptions to normal business hours by defining one or
+        more events.
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
         :param person_id: Unique identifier for the person.
@@ -11857,7 +12910,9 @@ Possible values: DIRECT_LINE
         :type schedule_id: str
         :param event_id: Unique identifier for the event.
         :type event_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -11870,7 +12925,9 @@ Possible values: DIRECT_LINE
     def add_new_event_for_persons_schedule(self, person_id: str, schedule_type: Type25, schedule_id: str, name: str, start_date: str, end_date: str, start_time: str, end_time: str, org_id: str = None, all_day_enabled: bool = None, recurrence: Recurrence = None) -> str:
         """
         People can use shared location schedules or define personal schedules containing events.
-        businessHours schedules allow you to apply specific call settings at different times of the day or week by defining one or more events. holidays schedules define exceptions to normal business hours by defining one or more events.
+        businessHours schedules allow you to apply specific call settings at different times of the day or week by
+        defining one or more events. holidays schedules define exceptions to normal business hours by defining one or
+        more events.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
@@ -11881,15 +12938,21 @@ Possible values: DIRECT_LINE
         :type schedule_id: str
         :param name: Name for the event.
         :type name: str
-        :param start_date: Start date of the event, or first occurrence if repeating, in the format of YYYY-MM-DD.  This field is required if the allDayEnabled field is present.
+        :param start_date: Start date of the event, or first occurrence if repeating, in the format of YYYY-MM-DD. This
+            field is required if the allDayEnabled field is present.
         :type start_date: str
-        :param end_date: End date of the event, or first occurrence if repeating, in the format of YYYY-MM-DD.  This field is required if the allDayEnabled field is present.
+        :param end_date: End date of the event, or first occurrence if repeating, in the format of YYYY-MM-DD. This
+            field is required if the allDayEnabled field is present.
         :type end_date: str
-        :param start_time: Start time of the event in the format of HH:MM (24 hours format).  This field is required if the allDayEnabled field is false or omitted.
+        :param start_time: Start time of the event in the format of HH:MM (24 hours format). This field is required if
+            the allDayEnabled field is false or omitted.
         :type start_time: str
-        :param end_time: End time of the event in the format of HH:MM (24 hours format).  This field is required if the allDayEnabled field is false or omitted.
+        :param end_time: End time of the event in the format of HH:MM (24 hours format). This field is required if the
+            allDayEnabled field is false or omitted.
         :type end_time: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         :param all_day_enabled: True if it is all-day event.
         :type all_day_enabled: bool
@@ -11921,7 +12984,9 @@ Possible values: DIRECT_LINE
     def update_event_forpersons_schedule(self, person_id: str, schedule_type: Type25, schedule_id: str, event_id: str, name: str, start_date: str, end_date: str, start_time: str, end_time: str, new_name: str, org_id: str = None, all_day_enabled: bool = None, recurrence: Recurrence = None) -> str:
         """
         People can use shared location schedules or define personal schedules containing events.
-        businessHours schedules allow you to apply specific call settings at different times of the day or week by defining one or more events. holidays schedules define exceptions to normal business hours by defining one or more events.
+        businessHours schedules allow you to apply specific call settings at different times of the day or week by
+        defining one or more events. holidays schedules define exceptions to normal business hours by defining one or
+        more events.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
@@ -11934,17 +12999,23 @@ Possible values: DIRECT_LINE
         :type event_id: str
         :param name: Name for the event.
         :type name: str
-        :param start_date: Start date of the event, or first occurrence if repeating, in the format of YYYY-MM-DD.  This field is required if the allDayEnabled field is present.
+        :param start_date: Start date of the event, or first occurrence if repeating, in the format of YYYY-MM-DD. This
+            field is required if the allDayEnabled field is present.
         :type start_date: str
-        :param end_date: End date of the event, or first occurrence if repeating, in the format of YYYY-MM-DD.  This field is required if the allDayEnabled field is present.
+        :param end_date: End date of the event, or first occurrence if repeating, in the format of YYYY-MM-DD. This
+            field is required if the allDayEnabled field is present.
         :type end_date: str
-        :param start_time: Start time of the event in the format of HH:MM (24 hours format).  This field is required if the allDayEnabled field is false or omitted.
+        :param start_time: Start time of the event in the format of HH:MM (24 hours format). This field is required if
+            the allDayEnabled field is false or omitted.
         :type start_time: str
-        :param end_time: End time of the event in the format of HH:MM (24 hours format).  This field is required if the allDayEnabled field is false or omitted.
+        :param end_time: End time of the event in the format of HH:MM (24 hours format). This field is required if the
+            allDayEnabled field is false or omitted.
         :type end_time: str
         :param new_name: New name for the event.
         :type new_name: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         :param all_day_enabled: True if it is all-day event.
         :type all_day_enabled: bool
@@ -11978,7 +13049,9 @@ Possible values: DIRECT_LINE
     def delete_event_forpersons_schedule(self, person_id: str, schedule_type: Type25, schedule_id: str, event_id: str, org_id: str = None):
         """
         People can use shared location schedules or define personal schedules containing events.
-        businessHours schedules allow you to apply specific call settings at different times of the day or week by defining one or more events. holidays schedules define exceptions to normal business hours by defining one or more events.
+        businessHours schedules allow you to apply specific call settings at different times of the day or week by
+        defining one or more events. holidays schedules define exceptions to normal business hours by defining one or
+        more events.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
@@ -11989,7 +13062,9 @@ Possible values: DIRECT_LINE
         :type schedule_id: str
         :param event_id: Unique identifier for the event.
         :type event_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -12002,12 +13077,16 @@ Possible values: DIRECT_LINE
     def read_call_waiting_for_person(self, person_id: str, org_id: str = None) -> bool:
         """
         Retrieve a person's Call Waiting settings.
-        With this feature, a person can place an active call on hold and answer an incoming call.  When enabled, while you are on an active call, a tone alerts you of an incoming call and you can choose to answer or ignore the call.
+        With this feature, a person can place an active call on hold and answer an incoming call. When enabled, while
+        you are on an active call, a tone alerts you of an incoming call and you can choose to answer or ignore the
+        call.
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -12020,14 +13099,18 @@ Possible values: DIRECT_LINE
     def configure_call_waiting_for_person(self, person_id: str, enabled: bool, org_id: str = None):
         """
         Configure a person's Call Waiting settings.
-        With this feature, a person can place an active call on hold and answer an incoming call.  When enabled, while you are on an active call, a tone alerts you of an incoming call and you can choose to answer or ignore the call.
+        With this feature, a person can place an active call on hold and answer an incoming call. When enabled, while
+        you are on an active call, a tone alerts you of an incoming call and you can choose to answer or ignore the
+        call.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param enabled: true if the Call Waiting feature is enabled.
         :type enabled: bool
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -12042,13 +13125,17 @@ Possible values: DIRECT_LINE
 
     def retrievepersons_monitoring(self, person_id: str, org_id: str = None) -> RetrievepersonsMonitoringSettingsResponse:
         """
-        Retrieves the monitoring settings of the person, which shows specified people, places, virtual lines or call park extenions that are being monitored.
-        Monitors the line status which indicates if a person, place or virtual line is on a call and if a call has been parked on that extension.
+        Retrieves the monitoring settings of the person, which shows specified people, places, virtual lines or call
+        park extenions that are being monitored.
+        Monitors the line status which indicates if a person, place or virtual line is on a call and if a call has been
+        parked on that extension.
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -12061,7 +13148,8 @@ Possible values: DIRECT_LINE
     def modifypersons_monitoring(self, person_id: str, enable_call_park_notification: bool, monitored_elements: List[str], org_id: str = None):
         """
         Modifies the monitoring settings of the person.
-        Monitors the line status of specified people, places, virtual lines or call park extension. The line status indicates if a person, place or virtual line is on a call and if a call has been parked on that extension.
+        Monitors the line status of specified people, places, virtual lines or call park extension. The line status
+        indicates if a person, place or virtual line is on a call and if a call has been parked on that extension.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
@@ -12069,9 +13157,11 @@ Possible values: DIRECT_LINE
         :param enable_call_park_notification: Enable or disable call park notification.
         :type enable_call_park_notification: bool
         :param monitored_elements: Identifiers of monitored elements whose monitoring settings will be modified.
-Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1jNjA5YTRiMjgzODY
+            Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1jNjA5YTRiMjgzODY
         :type monitored_elements: List[str]
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -12094,7 +13184,9 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -12106,12 +13198,15 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
 
     def retrievepersons_application_services(self, person_id: str, org_id: str = None) -> int:
         """
-        Application services let you determine the ringing behavior for calls made to people in certain scenarios. You can also specify which devices can download the Webex Calling app.
+        Application services let you determine the ringing behavior for calls made to people in certain scenarios. You
+        can also specify which devices can download the Webex Calling app.
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -12123,14 +13218,18 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
 
     def modifypersons_application_services(self, person_id: str, org_id: str = None, ring_devices_for_click_to_dial_calls_enabled: bool = None, ring_devices_for_group_page_enabled: bool = None, ring_devices_for_call_park_enabled: bool = None, browser_client_enabled: bool = None, desktop_client_enabled: bool = None, tablet_client_enabled: bool = None, mobile_client_enabled: bool = None):
         """
-        Application services let you determine the ringing behavior for calls made to users in certain scenarios. You can also specify which devices users can download the Webex Calling app on.
+        Application services let you determine the ringing behavior for calls made to users in certain scenarios. You
+        can also specify which devices users can download the Webex Calling app on.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
-        :param ring_devices_for_click_to_dial_calls_enabled: When true, indicates to ring devices for outbound Click to Dial calls.
+        :param ring_devices_for_click_to_dial_calls_enabled: When true, indicates to ring devices for outbound Click to
+            Dial calls.
         :type ring_devices_for_click_to_dial_calls_enabled: bool
         :param ring_devices_for_group_page_enabled: When true, indicates to ring devices for inbound Group Pages.
         :type ring_devices_for_group_page_enabled: bool
@@ -12170,12 +13269,15 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
     def getpersons_privacy(self, person_id: str, org_id: str = None) -> GetpersonsPrivacySettingsResponse:
         """
         Get a person's privacy settings for the specified person ID.
-        The privacy feature enables the person's line to be monitored by others and determine if they can be reached by Auto Attendant services.
+        The privacy feature enables the person's line to be monitored by others and determine if they can be reached by
+        Auto Attendant services.
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -12188,12 +13290,15 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
     def configurepersons_privacy(self, person_id: str, org_id: str = None, aa_extension_dialing_enabled: bool = None, aa_naming_dialing_enabled: bool = None, enable_phone_status_directory_privacy: bool = None, monitoring_agents: List[str] = None):
         """
         Configure a person's privacy settings for the specified person ID.
-        The privacy feature enables the person's line to be monitored by others and determine if they can be reached by Auto Attendant services.
+        The privacy feature enables the person's line to be monitored by others and determine if they can be reached by
+        Auto Attendant services.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         :param aa_extension_dialing_enabled: When true auto attendant extension dialing is enabled.
         :type aa_extension_dialing_enabled: bool
@@ -12223,12 +13328,16 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
     def retrieve_executive_assistant_for_person(self, person_id: str, org_id: str = None) -> enum:
         """
         Retrieve the executive assistant settings for the specified personId.
-        People with the executive service enabled, can select from a pool of assistants who have been assigned the executive assistant service and who can answer or place calls on their behalf. Executive assistants can set the call forward destination and join or leave an executive's pool.
+        People with the executive service enabled, can select from a pool of assistants who have been assigned the
+        executive assistant service and who can answer or place calls on their behalf. Executive assistants can set the
+        call forward destination and join or leave an executive's pool.
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -12241,12 +13350,16 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
     def modify_executive_assistant_for_person(self, person_id: str, org_id: str = None, type_: Type32 = None):
         """
         Modify the executive assistant settings for the specified personId.
-        People with the executive service enabled, can select from a pool of assistants who have been assigned the executive assistant service and who can answer or place calls on their behalf. Executive assistants can set the call forward destination and join or leave an executive's pool.
+        People with the executive service enabled, can select from a pool of assistants who have been assigned the
+        executive assistant service and who can answer or place calls on their behalf. Executive assistants can set the
+        call forward destination and join or leave an executive's pool.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         :param type_: executive assistant type
         :type type_: Type32
@@ -12264,12 +13377,15 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
     def read_receptionist_client_for_person(self, person_id: str, org_id: str = None) -> ReadReceptionistClientSettingsForPersonResponse:
         """
         Retrieve a person's Receptionist Client settings.
-        To help support the needs of your front-office personnel, you can set up people, workspaces or virtual lines as telephone attendants so that they can screen all incoming calls to certain numbers within your organization.
+        To help support the needs of your front-office personnel, you can set up people, workspaces or virtual lines as
+        telephone attendants so that they can screen all incoming calls to certain numbers within your organization.
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -12282,17 +13398,20 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
     def configure_receptionist_client_for_person(self, person_id: str, reception_enabled: bool, org_id: str = None, monitored_members: List[str] = None):
         """
         Configure a person's Receptionist Client settings.
-        To help support the needs of your front-office personnel, you can set up people, workspaces or virtual lines as telephone attendants so that they can screen all incoming calls to certain numbers within your organization.
+        To help support the needs of your front-office personnel, you can set up people, workspaces or virtual lines as
+        telephone attendants so that they can screen all incoming calls to certain numbers within your organization.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param reception_enabled: true if the Receptionist Client feature is enabled.
         :type reception_enabled: bool
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
-        :param monitored_members: List of members' unique identifiers to monitor.
-Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC04NmE5MDgxYWFkNmE
+        :param monitored_members: List of members' unique identifiers to monitor. Possible values:
+            Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC04NmE5MDgxYWFkNmE
         :type monitored_members: List[str]
         """
         params = {}
@@ -12310,12 +13429,15 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
     def read_push_to_talk_for_person(self, person_id: str, org_id: str = None) -> ReadPushtoTalkSettingsForPersonResponse:
         """
         Retrieve a person's Push-to-Talk settings.
-        Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in different parts of your organization.
+        Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in
+        different parts of your organization.
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -12328,12 +13450,15 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
     def configure_push_to_talk_for_person(self, person_id: str, org_id: str = None, allow_auto_answer: bool = None, connection_type: PushToTalkConnectionType = None, access_type: PushToTalkAccessType = None, members: List[str] = None):
         """
         Configure a person's Push-to-Talk settings.
-        Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in different parts of your organization.
+        Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in
+        different parts of your organization.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         :param allow_auto_answer: true if Push-to-Talk feature is enabled.
         :type allow_auto_answer: bool
@@ -12342,7 +13467,7 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
         :param access_type: Specifies the access type to be applied when evaluating the member list.
         :type access_type: PushToTalkAccessType
         :param members: List of people that are allowed or disallowed to interact using the Push-to-Talk feature.
-Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC04NmE5MDgxYWFkNmE
+            Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC04NmE5MDgxYWFkNmE
         :type members: List[str]
         """
         params = {}
@@ -12364,12 +13489,15 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
     def read_hoteling_for_person(self, person_id: str, org_id: str = None) -> bool:
         """
         Retrieve a person's hoteling settings.
-        As an administrator, you can enable hoteling for people so that their phone profile (phone number, features, and calling plan) is temporarily loaded onto a shared (host) phone.
+        As an administrator, you can enable hoteling for people so that their phone profile (phone number, features,
+        and calling plan) is temporarily loaded onto a shared (host) phone.
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -12382,14 +13510,17 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
     def configure_hoteling_for_person(self, person_id: str, enabled: bool, org_id: str = None):
         """
         Configure a person's hoteling settings.
-        As an administrator, you can enable hoteling for people so that their phone profile (phone number, features, and calling plan) is temporarily loaded onto a shared (host) phone.
+        As an administrator, you can enable hoteling for people so that their phone profile (phone number, features,
+        and calling plan) is temporarily loaded onto a shared (host) phone.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param enabled: When true, allow this person to connect to a Hoteling host device.
         :type enabled: bool
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -12405,13 +13536,17 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
     def reset_voicemail_pin(self, person_id: str, org_id: str = None):
         """
         Reset a voicemail PIN for a person.
-        The voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice messages via Voicemail.  A voicemail PIN is used to retrieve your voicemail messages.
+        The voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice
+        messages via Voicemail. A voicemail PIN is used to retrieve your voicemail messages.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
-        NOTE: This API is expected to have an empty request body and Content-Type header should be set to application/json.
+        NOTE: This API is expected to have an empty request body and Content-Type header should be set to
+        application/json.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -12424,12 +13559,15 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
     def read_incoming_permission_for_person(self, person_id: str, org_id: str = None) -> ReadIncomingPermissionSettingsForPersonResponse:
         """
         Retrieve a person's Incoming Permission settings.
-        You can change the incoming calling permissions for a person if you want them to be different from your organization's default.
+        You can change the incoming calling permissions for a person if you want them to be different from your
+        organization's default.
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -12442,14 +13580,18 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
     def configure_incoming_permission_for_person(self, person_id: str, org_id: str = None, use_custom_enabled: bool = None, external_transfer: ExternalTransfer = None, internal_calls_enabled: bool = None, collect_calls_enabled: bool = None):
         """
         Configure a person's Incoming Permission settings.
-        You can change the incoming calling permissions for a person if you want them to be different from your organization's default.
+        You can change the incoming calling permissions for a person if you want them to be different from your
+        organization's default.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
-        :param use_custom_enabled: When true, indicates that this person uses the specified calling permissions for receiving inbound calls rather than the organizational defaults.
+        :param use_custom_enabled: When true, indicates that this person uses the specified calling permissions for
+            receiving inbound calls rather than the organizational defaults.
         :type use_custom_enabled: bool
         :param external_transfer: Specifies the transfer behavior for incoming, external calls.
         :type external_transfer: ExternalTransfer
@@ -12477,12 +13619,15 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
     def retrievepersons_outgoing_calling_permissions(self, person_id: str, org_id: str = None) -> RetrievepersonsOutgoingCallingPermissionsSettingsResponse:
         """
         Retrieve a person's Outgoing Calling Permissions settings.
-        You can change the outgoing calling permissions for a person if you want them to be different from your organization's default.
+        You can change the outgoing calling permissions for a person if you want them to be different from your
+        organization's default.
         This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
         """
         params = {}
@@ -12495,14 +13640,18 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
     def modifypersons_outgoing_calling_permissions(self, person_id: str, org_id: str = None, use_custom_enabled: bool = None, calling_permissions: CallingPermissions = None):
         """
         Modify a person's Outgoing Calling Permissions settings.
-        You can change the outgoing calling permissions for a person if you want them to be different from your organization's default.
+        You can change the outgoing calling permissions for a person if you want them to be different from your
+        organization's default.
         This API requires a full or user administrator auth token with the spark-admin:people_write scope.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
         :type org_id: str
-        :param use_custom_enabled: When true, indicates that this user uses the specified calling permissions when placing outbound calls.
+        :param use_custom_enabled: When true, indicates that this user uses the specified calling permissions when
+            placing outbound calls.
         :type use_custom_enabled: bool
         :param calling_permissions: Specifies the outbound calling permissions settings.
         :type calling_permissions: CallingPermissions
@@ -12522,8 +13671,11 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
     def assign_or_unassign_numbers_toperson(self, person_id: str, phone_numbers: PhoneNumber, org_id: str = None, enable_distinctive_ring_pattern: bool = None):
         """
         Assign or unassign alternate phone numbers to a person.
-        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers must follow the E.164 format for all countries, except for the United States, which can also follow the National format. Active phone numbers are in service.
-        Assigning or unassigning an alternate phone number to a person requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
+        must follow the E.164 format for all countries, except for the United States, which can also follow the
+        National format. Active phone numbers are in service.
+        Assigning or unassigning an alternate phone number to a person requires a full administrator auth token with a
+        scope of spark-admin:telephony_config_write.
 
         :param person_id: Unique identitfier of the person.
         :type person_id: str
@@ -12549,8 +13701,11 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
     def retrieve_list_of_call_queue_caller_id_information(self, person_id: str) -> List[CallQueueObject]:
         """
         Retrieve the list of the person's available call queues and the associated Caller ID information.
-        If the Agent is to enable queueCallerIdEnabled, they must choose which queue to use as the source for outgoing Caller ID.  This API returns a list of Call Queues from which the person must select.  If this setting is disabled or the Agent does not belong to any queue, this list will be empty.
-        This API requires a full admin or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        If the Agent is to enable queueCallerIdEnabled, they must choose which queue to use as the source for outgoing
+        Caller ID. This API returns a list of Call Queues from which the person must select. If this setting is
+        disabled or the Agent does not belong to any queue, this list will be empty.
+        This API requires a full admin or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
@@ -12562,8 +13717,11 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
     def retrieve_call_queue_agents_caller_id_information(self, person_id: str) -> RetrieveCallQueueAgentsCallerIDInformationResponse:
         """
         Retrieve a call queue agent's Caller ID information.
-        Each agent in the Call Queue will be able to set their outgoing Caller ID as either the Call Queue's phone number or their own configured Caller ID. This API fetches the configured Caller ID for the agent in the system.
-        This API requires a full admin or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+        Each agent in the Call Queue will be able to set their outgoing Caller ID as either the Call Queue's phone
+        number or their own configured Caller ID. This API fetches the configured Caller ID for the agent in the
+        system.
+        This API requires a full admin or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
@@ -12575,14 +13733,18 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
     def modify_call_queue_agents_caller_id_information(self, person_id: str, queue_caller_id_enabled: bool, selected_queue: GetAvailableRecallHuntGroupsObject):
         """
         Modify a call queue agent's Caller ID information.
-        Each Agent in the Call Queue will be able to set their outgoing Caller ID as either the designated Call Queue's phone number or their own configured Caller ID. This API modifies the configured Caller ID for the agent in the system.
+        Each Agent in the Call Queue will be able to set their outgoing Caller ID as either the designated Call Queue's
+        phone number or their own configured Caller ID. This API modifies the configured Caller ID for the agent in the
+        system.
         This API requires a full or user administrator auth token with the spark-admin:telephony_config_write scope.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param queue_caller_id_enabled: When true, indicates that this agent is using the selectedQueue for its Caller ID. When false, indicates that it is using the agent's configured Caller ID.
+        :param queue_caller_id_enabled: When true, indicates that this agent is using the selectedQueue for its Caller
+            ID. When false, indicates that it is using the agent's configured Caller ID.
         :type queue_caller_id_enabled: bool
-        :param selected_queue: Indicates agent's choice of using this queue's Caller ID for outgoing calls. It is empty object when queueCallerIdEnabled is false. When queueCallerIdEnabled is true this data must be populated.
+        :param selected_queue: Indicates agent's choice of using this queue's Caller ID for outgoing calls. It is empty
+            object when queueCallerIdEnabled is false. When queueCallerIdEnabled is true this data must be populated.
         :type selected_queue: GetAvailableRecallHuntGroupsObject
         """
         body = ModifyCallQueueAgentsCallerIDInformationBody()
@@ -12597,9 +13759,10 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC0
 class VoiceMessageDetails(ApiModel):
     #: The message identifier of the voicemail message.
     id: Optional[str]
-    #:  The duration (in seconds) of the voicemail message.  Duration is not present for a FAX message.
+    #: The duration (in seconds) of the voicemail message. Duration is not present for a FAX message.
     duration: Optional[int]
-    #: The calling party's details. For example, if user A calls user B and leaves a voicemail message, then A is the calling party.
+    #: The calling party's details. For example, if user A calls user B and leaves a voicemail message, then A is the
+    #: calling party.
     calling_party: Optional[VoiceMailPartyInformation]
     #: true if the voicemail message is urgent.
     urgent: Optional[bool]
@@ -12607,7 +13770,7 @@ class VoiceMessageDetails(ApiModel):
     confidential: Optional[bool]
     #: true if the voicemail message has been read.
     read: Optional[bool]
-    #: Number of pages for the FAX.  Only set for a FAX.
+    #: Number of pages for the FAX. Only set for a FAX.
     fax_page_count: Optional[int]
     #: The date and time the voicemail message was created.
     created: Optional[str]
@@ -12629,18 +13792,22 @@ class ListMessagesResponse(ApiModel):
 
 
 class MarkAsReadBody(ApiModel):
-    #: The voicemail message identifier of the message to mark as read.  If the messageId is not provided, then all voicemail messages for the user are marked as read.
+    #: The voicemail message identifier of the message to mark as read. If the messageId is not provided, then all
+    #: voicemail messages for the user are marked as read.
     message_id: Optional[str]
 
 
 class MarkAsUnreadBody(ApiModel):
-    #: The voicemail message identifier of the message to mark as unread.  If the messageId is not provided, then all voicemail messages for the user are marked as unread.
+    #: The voicemail message identifier of the message to mark as unread. If the messageId is not provided, then all
+    #: voicemail messages for the user are marked as unread.
     message_id: Optional[str]
 
 
 class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
     """
-    Voice Messaging APIs provide support for handling voicemail and message waiting indicators in Webex Calling.  The APIs are limited to user access (no admin access), and all GET commands require the spark:calls_read scope, while the other commands require the spark:calls_write scope.
+    Voice Messaging APIs provide support for handling voicemail and message waiting indicators in Webex Calling. The
+    APIs are limited to user access (no admin access), and all GET commands require the spark:calls_read scope, while
+    the other commands require the spark:calls_write scope.
     """
 
     def summary(self) -> GetMessageSummaryResponse:
@@ -12672,9 +13839,11 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
     def mark_as_read(self, message_id: str = None):
         """
         Update the voicemail message(s) as read for the user.
-        If the messageId is provided, then only mark that message as read.  Otherwise, all messages for the user are marked as read.
+        If the messageId is provided, then only mark that message as read. Otherwise, all messages for the user are
+        marked as read.
 
-        :param message_id: The voicemail message identifier of the message to mark as read.  If the messageId is not provided, then all voicemail messages for the user are marked as read.
+        :param message_id: The voicemail message identifier of the message to mark as read. If the messageId is not
+            provided, then all voicemail messages for the user are marked as read.
         :type message_id: str
         """
         body = MarkAsReadBody()
@@ -12687,9 +13856,11 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
     def mark_as_unread(self, message_id: str = None):
         """
         Update the voicemail message(s) as unread for the user.
-        If the messageId is provided, then only mark that message as unread.  Otherwise, all messages for the user are marked as unread.
+        If the messageId is provided, then only mark that message as unread. Otherwise, all messages for the user are
+        marked as unread.
 
-        :param message_id: The voicemail message identifier of the message to mark as unread.  If the messageId is not provided, then all voicemail messages for the user are marked as unread.
+        :param message_id: The voicemail message identifier of the message to mark as unread. If the messageId is not
+            provided, then all voicemail messages for the user are marked as unread.
         :type message_id: str
         """
         body = MarkAsUnreadBody()
@@ -12700,14 +13871,16 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
         return
 
 class CallForwardingPlaceSettingGet(ApiModel):
-    #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the workspace is busy.
+    #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the
+    #: workspace is busy.
     busy: Optional[BusinessContinuity]
     #: Settings for forwarding which only occurs when you are away or not answering your phone.
     no_answer: Optional[NoAnswer3]
 
 
 class CallForwardingPlaceSettingPatch(ApiModel):
-    #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the workspace is busy.
+    #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the
+    #: workspace is busy.
     busy: Optional[BusinessContinuity]
     #: Settings for forwarding which only occurs when you are away or not answering your phone.
     no_answer: Optional[NoAnswer3]
@@ -12760,7 +13933,8 @@ class InterceptAnnouncementsGet(ApiModel):
 class InterceptIncomingGet(ApiModel):
     #: Indicated incoming calls are intercepted.
     type: Optional[Type19]
-    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
+    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal
+    #: phone number and that number has the voicemail service enabled.
     voicemail_enabled: Optional[bool]
     #: Settings related to how incoming calls are handled when the intercept feature is enabled.
     announcements: Optional[InterceptAnnouncementsGet]
@@ -12769,7 +13943,8 @@ class InterceptIncomingGet(ApiModel):
 class InterceptIncomingPatch(ApiModel):
     #: Indicated incoming calls are intercepted.
     type: Optional[Type19]
-    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
+    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal
+    #: phone number and that number has the voicemail service enabled.
     voicemail_enabled: Optional[bool]
     #: Settings related to how incoming calls are handled when the intercept feature is enabled.
     announcements: Optional[Announcements3]
@@ -12893,23 +14068,33 @@ class ConfigureCallInterceptSettingsForWorkspaceBody(ApiModel):
 
 class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/features/'):
     """
-    Workspaces represent places where people work, such as conference rooms, meeting spaces, lobbies, and lunchrooms. Devices may be associated with workspaces.
-    Webex Calling Workspace Settings support reading and writing of Webex Calling settings for a specific workspace within the organization.
-    Viewing the list of settings in a workspace requires an administrator auth token with the spark-admin:workspaces_read scope. 
-    Adding, updating, or deleting settings in a workspace requires an administrator auth token with the spark-admin:workspaces_write scope.
-    This API can also be used by partner administrators acting as administrators of a different organization than their own. In those cases, an orgId must be supplied, as indicated in the reference documentation for the relevant endpoints.
-    A partner administrator can retrieve or change settings in a customer's organization using the optional OrgId query parameter.
+    Workspaces represent places where people work, such as conference rooms, meeting spaces, lobbies, and lunchrooms.
+    Devices may be associated with workspaces.
+    Webex Calling Workspace Settings support reading and writing of Webex Calling settings for a specific workspace
+    within the organization.
+    Viewing the list of settings in a workspace requires an administrator auth token with the
+    spark-admin:workspaces_read scope.
+    Adding, updating, or deleting settings in a workspace requires an administrator auth token with the
+    spark-admin:workspaces_write scope.
+    This API can also be used by partner administrators acting as administrators of a different organization than their
+    own. In those cases, an orgId must be supplied, as indicated in the reference documentation for the relevant
+    endpoints.
+    A partner administrator can retrieve or change settings in a customer's organization using the optional OrgId query
+    parameter.
     """
 
     def retrieve_call_forwarding_settings_for(self, workspace_id: str, org_id: str = None) -> CallForwardingPlaceSettingGet:
         """
         Retrieve Call Forwarding Settings for a Workspace.
         Two types of call forwarding are supported:
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a
+        user auth token with spark:workspaces_read scope can be used to read workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -12923,13 +14108,16 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         """
         Modify call forwarding settings for a Workspace.
         Two types of call forwarding are supported:
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user
+        auth token with spark:workspaces_write scope can be used to update workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
         :param call_forwarding: Call forwarding settings for a Workspace.
         :type call_forwarding: CallForwardingPlaceSettingPatch
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -12945,12 +14133,16 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
     def retrieve_call_waiting_settings_for(self, workspace_id: str, org_id: str = None) -> bool:
         """
         Retrieve Call Waiting Settings for a Workspace.
-        Call Waiting allows workspaces to handle multiple simultaneous calls. Workspaces with Call Waiting enabled can place a call on hold to answer or initiate another call.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        Call Waiting allows workspaces to handle multiple simultaneous calls. Workspaces with Call Waiting enabled can
+        place a call on hold to answer or initiate another call.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a
+        user auth token with spark:workspaces_read scope can be used to read workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -12963,12 +14155,16 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
     def modify_call_waiting_settings_for(self, workspace_id: str, org_id: str = None, enabled: bool = None):
         """
         Modify Call Waiting Settings for a Workspace.
-        Call Waiting allows workspaces to handle multiple simultaneous calls. Workspaces with Call Waiting enabled can place a call on hold to answer or initiate another call.
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        Call Waiting allows workspaces to handle multiple simultaneous calls. Workspaces with Call Waiting enabled can
+        place a call on hold to answer or initiate another call.
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user
+        auth token with spark:workspaces_write scope can be used to update workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         :param enabled: Call Waiting state.
         :type enabled: bool
@@ -12987,11 +14183,14 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         """
         Retrieve Caller ID Settings for a Workspace.
         Caller ID settings control how a workspace's information is displayed when making outgoing calls.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a
+        user auth token with spark:workspaces_read scope can be used to read workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -13005,13 +14204,16 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         """
         Modify Caller ID settings for a Workspace.
         Caller ID settings control how a workspace's information is displayed when making outgoing calls.
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user
+        auth token with spark:workspaces_write scope can be used to update workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
         :param selected: Which type of outgoing Caller ID will be used.
         :type selected: CLIDPolicySelection
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         :param custom_number: This value must be an assigned number from the workspace's location.
         :type custom_number: str
@@ -13021,12 +14223,14 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :type display_detail: str
         :param block_in_forward_calls_enabled: Flag to block call forwarding.
         :type block_in_forward_calls_enabled: bool
-        :param external_caller_id_name_policy: Designates which type of External Caller ID Name policy is used. Default is DIRECT_LINE.
-Possible values: DIRECT_LINE
+        :param external_caller_id_name_policy: Designates which type of External Caller ID Name policy is used. Default
+            is DIRECT_LINE. Possible values: DIRECT_LINE
         :type external_caller_id_name_policy: ExternalCallerIdNamePolicy
-        :param custom_external_caller_id_name: Custom External Caller Name, which will be shown if External Caller ID Name is OTHER.
+        :param custom_external_caller_id_name: Custom External Caller Name, which will be shown if External Caller ID
+            Name is OTHER.
         :type custom_external_caller_id_name: str
-        :param location_external_caller_id_name: External Caller Name, which will be shown if External Caller ID Name is OTHER.
+        :param location_external_caller_id_name: External Caller Name, which will be shown if External Caller ID Name
+            is OTHER.
         :type location_external_caller_id_name: str
         """
         params = {}
@@ -13056,12 +14260,17 @@ Possible values: DIRECT_LINE
     def retrieve_monitoring_settings_for(self, workspace_id: str, org_id: str = None) -> RetrieveMonitoringSettingsForWorkspaceResponse:
         """
         Retrieves Monitoring settings for a Workspace.
-        Allow workspaces to monitor the line status of specified agents, workspaces, or call park extensions. The line status indicates if a monitored agent or a workspace is on a call, or if a call has been parked on the monitored call park extension.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        Allow workspaces to monitor the line status of specified agents, workspaces, or call park extensions. The line
+        status indicates if a monitored agent or a workspace is on a call, or if a call has been parked on the
+        monitored call park extension.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a
+        user auth token with spark:workspaces_read scope can be used to read workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -13074,17 +14283,22 @@ Possible values: DIRECT_LINE
     def modify_monitoring_settings_for(self, workspace_id: str, enable_call_park_notification: bool, monitored_elements: List[str], org_id: str = None):
         """
         Modify Monitoring settings for a Workspace.
-        Allow workspaces to monitor the line status of specified agents, workspaces, or call park extensions. The line status indicates if a monitored agent or a workspace is on a call, or if a call has been parked on the monitored call park extension.
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        Allow workspaces to monitor the line status of specified agents, workspaces, or call park extensions. The line
+        status indicates if a monitored agent or a workspace is on a call, or if a call has been parked on the
+        monitored call park extension.
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user
+        auth token with spark:workspaces_write scope can be used to update workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
         :param enable_call_park_notification: Enable or disable call park notification.
         :type enable_call_park_notification: bool
         :param monitored_elements: Identifiers of monitored elements whose monitoring settings will be modified.
-Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1jNjA5YTRiMjgzODY
+            Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1jNjA5YTRiMjgzODY
         :type monitored_elements: List[str]
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -13101,40 +14315,25 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
 
     def list_numbers_associated_withspecific(self, workspace_id: str, attributes: , body: , org_id: str = None, **params):
         """
-        List the PSTN phone numbers associated with a specific workspace, by ID, within the organization. Also shows the location and organization associated with the workspace.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read.
+        List the PSTN phone numbers associated with a specific workspace, by ID, within the organization. Also shows
+        the location and organization associated with the workspace.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:workspaces_read.
 
         :param workspace_id: List numbers for this workspace.
         :type workspace_id: str
         :param attributes: 
         :type attributes: 
-        :param body: {
-        "phoneNumbers": [
-            {
-                "external": "+12055550001",
-                "extension": "12211",
-                "primary": true
-            },
-             {
-                "external": "+12055550002",
-                "extension": "122",
-                "primary": false
-            }
-        ],
-        "workspace": {
-            "id": "Y2lzY29zcGFyazovL3VzL1BMQUNFLzg0MjkzOGQ1LTkyNzMtNGJjNi1hYTNhLTA1Njc3MmRiMzE2NQ"
-        },
-        "location": {
-            "name": "MainOffice",
-            "id": "Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4Mjg5NzIyLTFiODAtNDFiNy05Njc4LTBlNzdhZThjMTA5OA"
-        },
-        "organization": {
-            "id": "Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi9hNDVkNmNkYS1hZTVhLTQwYzMtYTdhZC01NjUwZmRkZGQ1M2M",
-            "name": "Atlas_Test_CALL-1237"
-        }
-    }
+        :param body: { "phoneNumbers": [ { "external": "+12055550001", "extension": "12211", "primary": true }, {
+            "external": "+12055550002", "extension": "122", "primary": false } ], "workspace": { "id":
+            "Y2lzY29zcGFyazovL3VzL1BMQUNFLzg0MjkzOGQ1LTkyNzMtNGJjNi1hYTNhLTA1Njc3MmRiMzE2NQ" }, "location": { "name":
+            "MainOffice", "id": "Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4Mjg5NzIyLTFiODAtNDFiNy05Njc4LTBlNzdhZThjMTA5OA" },
+            "organization": { "id":
+            "Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi9hNDVkNmNkYS1hZTVhLTQwYzMtYTdhZC01NjUwZmRkZGQ1M2M", "name":
+            "Atlas_Test_CALL-1237" } }
         :type body: 
-        :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners) can use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
+            can use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
         params['Attributes'] = attributes
@@ -13147,12 +14346,16 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
     def retrieve_incoming_permission_settings_for(self, workspace_id: str, org_id: str = None) -> ReadIncomingPermissionSettingsForPersonResponse:
         """
         Retrieve Incoming Permission settings for a Workspace.
-        Incoming permission settings allow modifying permissions for a workspace that can be different from the organization's default to manage different call types.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        Incoming permission settings allow modifying permissions for a workspace that can be different from the
+        organization's default to manage different call types.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a
+        user auth token with spark:workspaces_read scope can be used to read workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -13165,14 +14368,19 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
     def modify_incoming_permission_settings_for(self, workspace_id: str, org_id: str = None, use_custom_enabled: bool = None, external_transfer: ExternalTransfer = None, internal_calls_enabled: bool = None, collect_calls_enabled: bool = None):
         """
         Modify Incoming Permission settings for a Workspace.
-        Incoming permission settings allow modifying permissions for a workspace that can be different from the organization's default to manage different call types.
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        Incoming permission settings allow modifying permissions for a workspace that can be different from the
+        organization's default to manage different call types.
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user
+        auth token with spark:workspaces_write scope can be used to update workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
-        :param use_custom_enabled: When true, indicates that this person uses the specified calling permissions for receiving inbound calls rather than the organizational defaults.
+        :param use_custom_enabled: When true, indicates that this person uses the specified calling permissions for
+            receiving inbound calls rather than the organizational defaults.
         :type use_custom_enabled: bool
         :param external_transfer: Specifies the transfer behavior for incoming, external calls.
         :type external_transfer: ExternalTransfer
@@ -13200,12 +14408,16 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
     def retrieve_outgoing_permission_settings_for(self, workspace_id: str, org_id: str = None) -> RetrieveOutgoingPermissionSettingsForWorkspaceResponse:
         """
         Retrieve Outgoing Permission settings for a Workspace.
-        Turn on outgoing call settings for this workspace to override the calling settings from the location that are used by default.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        Turn on outgoing call settings for this workspace to override the calling settings from the location that are
+        used by default.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a
+        user auth token with spark:workspaces_read scope can be used to read workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -13218,12 +14430,16 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
     def modify_outgoing_permission_settings_for(self, workspace_id: str, org_id: str = None, use_custom_enabled: bool = None, calling_permissions: CallingPermissionObject = None):
         """
         Modify Outgoing Permission settings for a Place.
-        Turn on outgoing call settings for this workspace to override the calling settings from the location that are used by default.
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        Turn on outgoing call settings for this workspace to override the calling settings from the location that are
+        used by default.
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user
+        auth token with spark:workspaces_write scope can be used to update workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         :param use_custom_enabled: Outgoing Permission state. If disabled, the default settings are used.
         :type use_custom_enabled: bool
@@ -13246,11 +14462,14 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         """
         Retrieve Access codes for a Workspace.
         Access codes are used to bypass permissions.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a
+        user auth token with spark:workspaces_read scope can be used to read workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -13264,11 +14483,14 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         """
         Modify Access codes for a workspace.
         Access codes are used to bypass permissions.
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user
+        auth token with spark:workspaces_write scope can be used to update workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         :param delete_codes: Indicates access codes to delete.
         :type delete_codes: List[str]
@@ -13287,11 +14509,14 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
         """
         Create new Access codes for the given workspace.
         Access codes are used to bypass permissions.
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user
+        auth token with spark:workspaces_write scope can be used to update workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         :param code: Access code number.
         :type code: str
@@ -13313,12 +14538,18 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
     def read_call_intercept_settings_for(self, workspace_id: str, org_id: str = None) -> ReadCallInterceptSettingsForWorkspaceResponse:
         """
         Retrieves Workspace's Call Intercept Settings
-        The intercept feature gracefully takes a workspace's phone out of service, while providing callers with informative announcements and alternative routing options. Depending on the service configuration, none, some, or all incoming calls to the specified workspace are intercepted. Also depending on the service configuration, outgoing calls are intercepted or rerouted to another location.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        The intercept feature gracefully takes a workspace's phone out of service, while providing callers with
+        informative announcements and alternative routing options. Depending on the service configuration, none, some,
+        or all incoming calls to the specified workspace are intercepted. Also depending on the service configuration,
+        outgoing calls are intercepted or rerouted to another location.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a
+        user auth token with spark:workspaces_read scope can be used to read workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -13331,12 +14562,18 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
     def configure_call_intercept_settings_for(self, workspace_id: str, org_id: str = None, enabled: bool = None, incoming: InterceptIncomingPatch = None, outgoing: Outgoing = None):
         """
         Configures a Workspace's Call Intercept Settings
-        The intercept feature gracefully takes a workspace's phone out of service, while providing callers with informative announcements and alternative routing options. Depending on the service configuration, none, some, or all incoming calls to the specified person are intercepted. Also depending on the service configuration, outgoing calls are intercepted or rerouted to another location.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_write or a user auth token with spark:workspaces_read scope can be used by a person to read their settings.
+        The intercept feature gracefully takes a workspace's phone out of service, while providing callers with
+        informative announcements and alternative routing options. Depending on the service configuration, none, some,
+        or all incoming calls to the specified person are intercepted. Also depending on the service configuration,
+        outgoing calls are intercepted or rerouted to another location.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_write or
+        a user auth token with spark:workspaces_read scope can be used by a person to read their settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         :param enabled: true if call interception is enabled.
         :type enabled: bool
@@ -13362,12 +14599,17 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
     def retrieve_transfer_numbers_settings_for(self, workspace_id: str, org_id: str = None) -> GetOutgoingPermissionAutoTransferNumberResponse:
         """
         Retrieve Transfer Numbers Settings for a Workspace.
-        When calling a specific call type, this workspace will be automatically transferred to another number. The person assigned the Auto Transfer Number can then approve the call and send it through or reject the call type. You can add up to 3 numbers.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        When calling a specific call type, this workspace will be automatically transferred to another number. The
+        person assigned the Auto Transfer Number can then approve the call and send it through or reject the call type.
+        You can add up to 3 numbers.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a
+        user auth token with spark:workspaces_read scope can be used to read workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -13380,18 +14622,26 @@ Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1
     def modify_transfer_numbers_settings_for(self, workspace_id: str, org_id: str = None, auto_transfer_number1: str = None, auto_transfer_number2: str = None, auto_transfer_number3: str = None):
         """
         Modify Transfer Numbers Settings for a place.
-        When calling a specific call type, this workspace will be automatically transferred to another number. The person assigned the Auto Transfer Number can then approve the call and send it through or reject the call type. You can add up to 3 numbers.
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        When calling a specific call type, this workspace will be automatically transferred to another number. The
+        person assigned the Auto Transfer Number can then approve the call and send it through or reject the call type.
+        You can add up to 3 numbers.
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user
+        auth token with spark:workspaces_write scope can be used to update workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
-        :param auto_transfer_number1: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_1 will be transferred to this number.
+        :param auto_transfer_number1: Calls placed meeting the criteria in an outbound rule whose action is
+            TRANSFER_NUMBER_1 will be transferred to this number.
         :type auto_transfer_number1: str
-        :param auto_transfer_number2: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_2 will be transferred to this number.
+        :param auto_transfer_number2: Calls placed meeting the criteria in an outbound rule whose action is
+            TRANSFER_NUMBER_2 will be transferred to this number.
         :type auto_transfer_number2: str
-        :param auto_transfer_number3: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_3 will be transferred to this number.
+        :param auto_transfer_number3: Calls placed meeting the criteria in an outbound rule whose action is
+            TRANSFER_NUMBER_3 will be transferred to this number.
         :type auto_transfer_number3: str
         """
         params = {}

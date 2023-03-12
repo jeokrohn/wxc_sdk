@@ -4,7 +4,7 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
-from pydantic import Field
+from pydantic import Field, parse_obj_as
 
 
 __all__ = ['CreateTeamMembershipBody', 'ListTeamMembershipsResponse', 'TeamMembership', 'TeamMembershipsApi']
@@ -43,7 +43,9 @@ class UpdateTeamMembershipBody(ApiModel):
 
 class TeamMembershipsApi(ApiChild, base='team/memberships'):
     """
-    Team Memberships represent a person's relationship to a team. Use this API to list members of any team that you're in or create memberships to invite someone to a team. Team memberships can also be updated to make someone a moderator or deleted to remove them from the team.
+    Team Memberships represent a person's relationship to a team. Use this API to list members of any team that you're
+    in or create memberships to invite someone to a team. Team memberships can also be updated to make someone a
+    moderator or deleted to remove them from the team.
     Just like in the Webex app, you must be a member of the team in order to list its memberships or invite people.
     """
 
@@ -118,7 +120,8 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         """
         Deletes a team membership, by ID.
         Specify the team membership ID in the membershipId URI parameter.
-        The team membership for the last moderator of a team may not be deleted; promote another user to team moderator first.
+        The team membership for the last moderator of a team may not be deleted; promote another user to team moderator
+        first.
 
         :param membership_id: The unique identifier for the team membership.
         :type membership_id: str

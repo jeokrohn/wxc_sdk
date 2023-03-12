@@ -4,10 +4,12 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
-from pydantic import Field
+from pydantic import Field, parse_obj_as
 
 
-__all__ = ['Calendar1', 'CapabilityMap', 'GetWorkspaceCapabilitiesResponse', 'HotdeskingStatus', 'ListWorkspacesResponse', 'SupportAndConfiguredInfo', 'SupportedDevices', 'Type', 'UpdateWorkspaceBody', 'Workspace', 'WorkspacesApi']
+__all__ = ['Calendar1', 'CapabilityMap', 'GetWorkspaceCapabilitiesResponse', 'HotdeskingStatus',
+           'ListWorkspacesResponse', 'SupportAndConfiguredInfo', 'SupportedDevices', 'Type', 'UpdateWorkspaceBody',
+           'Workspace', 'WorkspacesApi']
 
 
 class SupportedDevices(str, Enum):
@@ -58,7 +60,9 @@ class UpdateWorkspaceBody(ApiModel):
     capacity: Optional[int]
     #: The type that best describes the workspace.
     type: Optional[Type]
-    #: An empty/null calendar field will not cause any changes. Provide a type (microsoft, google or none) and an emailAddress. Removing calendar is done by setting the none type, and setting none type does not require an emailAddress.
+    #: An empty/null calendar field will not cause any changes. Provide a type (microsoft, google or none) and an
+    #: emailAddress. Removing calendar is done by setting the none type, and setting none type does not require an
+    #: emailAddress.
     calendar: Optional[Calendar1]
     #: The sipAddress field can only be provided when calling type is thirdPartySipCalling
     sip_address: Optional[str]
@@ -112,7 +116,8 @@ class ListWorkspacesResponse(ApiModel):
 
 
 class CreateWorkspaceBody(UpdateWorkspaceBody):
-    #: OrgId associated with the workspace. Only admin users of another organization (such as partners) may use this parameter.
+    #: OrgId associated with the workspace. Only admin users of another organization (such as partners) may use this
+    #: parameter.
     org_id: Optional[str]
 
 
@@ -123,17 +128,26 @@ class GetWorkspaceCapabilitiesResponse(ApiModel):
 
 class WorkspacesApi(ApiChild, base='workspaces'):
     """
-    Workspaces represent where people work, such as conference rooms, meeting spaces, lobbies, and lunch rooms. Devices may be associated with workspaces.
-    Viewing the list of workspaces in an organization requires an administrator auth token with the spark-admin:workspaces_read scope. Adding, updating, or deleting workspaces in an organization requires an administrator auth token with the spark-admin:workspaces_write scope.
-    The Workspaces API can also be used by partner administrators acting as administrators of a different organization than their own. In those cases an orgId value must be supplied, as indicated in the reference documentation for the relevant endpoints.
+    Workspaces represent where people work, such as conference rooms, meeting spaces, lobbies, and lunch rooms. Devices
+    may be associated with workspaces.
+    Viewing the list of workspaces in an organization requires an administrator auth token with the
+    spark-admin:workspaces_read scope. Adding, updating, or deleting workspaces in an organization requires an
+    administrator auth token with the spark-admin:workspaces_write scope.
+    The Workspaces API can also be used by partner administrators acting as administrators of a different organization
+    than their own. In those cases an orgId value must be supplied, as indicated in the reference documentation for the
+    relevant endpoints.
     """
 
     def list(self, org_id: str = None, workspace_location_id: str = None, floor_id: str = None, display_name: str = None, capacity: int = None, type_: str = None, calling: str = None, calendar: str = None, **params) -> Generator[Workspace, None, None]:
         """
         List workspaces.
-        Use query parameters to filter the response. The orgId parameter can only be used by admin users of another organization (such as partners). The workspaceLocationId, floorId, capacity and type fields will only be present for workspaces that have a value set for them. The special values notSet (for filtering on category) and -1 (for filtering on capacity) can be used to filter for workspaces without a type and/or capacity.
+        Use query parameters to filter the response. The orgId parameter can only be used by admin users of another
+        organization (such as partners). The workspaceLocationId, floorId, capacity and type fields will only be
+        present for workspaces that have a value set for them. The special values notSet (for filtering on category)
+        and -1 (for filtering on capacity) can be used to filter for workspaces without a type and/or capacity.
 
-        :param org_id: List workspaces in this organization. Only admin users of another organization (such as partners) may use this parameter.
+        :param org_id: List workspaces in this organization. Only admin users of another organization (such as
+            partners) may use this parameter.
         :type org_id: str
         :param workspace_location_id: Location associated with the workspace.
         :type workspace_location_id: str
@@ -141,16 +155,15 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type floor_id: str
         :param display_name: List workspaces by display name.
         :type display_name: str
-        :param capacity: List workspaces with the given capacity. Must be -1 or higher. A value of -1 lists workspaces with no capacity set.
+        :param capacity: List workspaces with the given capacity. Must be -1 or higher. A value of -1 lists workspaces
+            with no capacity set.
         :type capacity: int
-        :param type_: List workspaces by type.
-Possible values: notSet, focus, huddle, meetingRoom, open, desk, other
+        :param type_: List workspaces by type. Possible values: notSet, focus, huddle, meetingRoom, open, desk, other
         :type type_: str
-        :param calling: List workspaces by calling type.
-Possible values: freeCalling, hybridCalling, webexCalling, webexEdgeForDevices, thirdPartySipCalling, none
+        :param calling: List workspaces by calling type. Possible values: freeCalling, hybridCalling, webexCalling,
+            webexEdgeForDevices, thirdPartySipCalling, none
         :type calling: str
-        :param calendar: List workspaces by calendar type.
-Possible values: none, google, microsoft
+        :param calendar: List workspaces by calendar type. Possible values: none, google, microsoft
         :type calendar: str
         """
         if org_id is not None:
@@ -175,7 +188,11 @@ Possible values: none, google, microsoft
     def create(self, display_name: str, workspace_location_id: str = None, floor_id: str = None, capacity: int = None, type_: Type = None, calendar: Calendar1 = None, sip_address: str = None, calling: object = None, notes: str = None, hotdesking_status: HotdeskingStatus = None, org_id: str = None) -> Workspace:
         """
         Create a workspace.
-        The workspaceLocationId, floorId, capacity, type, notes and hotdeskingStatus  parameters are optional, and omitting them will result in the creation of a workspace without these values set, or set to their default. A workspaceLocationId must be provided when the floorId is set. Calendar and calling can also be set for a new workspace. Omitting them will default to free calling and no calendaring. The orgId parameter can only be used by admin users of another organization (such as partners).
+        The workspaceLocationId, floorId, capacity, type, notes and hotdeskingStatus parameters are optional, and
+        omitting them will result in the creation of a workspace without these values set, or set to their default. A
+        workspaceLocationId must be provided when the floorId is set. Calendar and calling can also be set for a new
+        workspace. Omitting them will default to free calling and no calendaring. The orgId parameter can only be used
+        by admin users of another organization (such as partners).
 
         :param display_name: A friendly name for the workspace.
         :type display_name: str
@@ -187,18 +204,20 @@ Possible values: none, google, microsoft
         :type capacity: int
         :param type_: The type that best describes the workspace.
         :type type_: Type
-        :param calendar: An empty/null calendar field will not cause any changes. Provide a type (microsoft, google or none) and an emailAddress. Removing calendar is done by setting the none type, and setting none type does not require an emailAddress.
+        :param calendar: An empty/null calendar field will not cause any changes. Provide a type (microsoft, google or
+            none) and an emailAddress. Removing calendar is done by setting the none type, and setting none type does
+            not require an emailAddress.
         :type calendar: Calendar1
         :param sip_address: The sipAddress field can only be provided when calling type is thirdPartySipCalling
         :type sip_address: str
-        :param calling: Calling types supported on update are freeCalling, thirdPartySipCalling and none.
-Calling type.
+        :param calling: Calling types supported on update are freeCalling, thirdPartySipCalling and none. Calling type.
         :type calling: object
         :param notes: Notes associated to the workspace.
         :type notes: str
         :param hotdesking_status: Hot desking status of the workspace.
         :type hotdesking_status: HotdeskingStatus
-        :param org_id: OrgId associated with the workspace. Only admin users of another organization (such as partners) may use this parameter.
+        :param org_id: OrgId associated with the workspace. Only admin users of another organization (such as partners)
+            may use this parameter.
         :type org_id: str
         """
         body = CreateWorkspaceBody()
@@ -231,7 +250,8 @@ Calling type.
     def details(self, workspace_id: str) -> Workspace:
         """
         Shows details for a workspace, by ID.
-        The workspaceLocationId, floorId, capacity, type and notes fields will only be present if they have been set for the workspace. Specify the workspace ID in the workspaceId parameter in the URI.
+        The workspaceLocationId, floorId, capacity, type and notes fields will only be present if they have been set
+        for the workspace. Specify the workspace ID in the workspaceId parameter in the URI.
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
@@ -243,9 +263,15 @@ Calling type.
     def update(self, workspace_id: str, display_name: str, workspace_location_id: str = None, floor_id: str = None, capacity: int = None, type_: Type = None, calendar: Calendar1 = None, sip_address: str = None, calling: object = None, notes: str = None, hotdesking_status: HotdeskingStatus = None) -> Workspace:
         """
         Updates details for a workspace by ID.
-        Specify the workspace ID in the workspaceId parameter in the URI. Include all details for the workspace that are present in a GET request for the workspace details. Not including the optional capacity, type or notes fields will result in the fields no longer being defined for the workspace. A workspaceLocationId must be provided when the floorId is set. The workspaceLocationId, floorId, calendar and calling fields do not change when omitted from the update request.
-        Updating the calling parameter is only supported if the existing calling type is freeCalling, none or thirdPartySipCalling.
-        Updating the calling parameter to none or thirdPartySipCalling is not supported if the workspace contains any devices.
+        Specify the workspace ID in the workspaceId parameter in the URI. Include all details for the workspace that
+        are present in a GET request for the workspace details. Not including the optional capacity, type or notes
+        fields will result in the fields no longer being defined for the workspace. A workspaceLocationId must be
+        provided when the floorId is set. The workspaceLocationId, floorId, calendar and calling fields do not change
+        when omitted from the update request.
+        Updating the calling parameter is only supported if the existing calling type is freeCalling, none or
+        thirdPartySipCalling.
+        Updating the calling parameter to none or thirdPartySipCalling is not supported if the workspace contains any
+        devices.
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
@@ -259,12 +285,13 @@ Calling type.
         :type capacity: int
         :param type_: The type that best describes the workspace.
         :type type_: Type
-        :param calendar: An empty/null calendar field will not cause any changes. Provide a type (microsoft, google or none) and an emailAddress. Removing calendar is done by setting the none type, and setting none type does not require an emailAddress.
+        :param calendar: An empty/null calendar field will not cause any changes. Provide a type (microsoft, google or
+            none) and an emailAddress. Removing calendar is done by setting the none type, and setting none type does
+            not require an emailAddress.
         :type calendar: Calendar1
         :param sip_address: The sipAddress field can only be provided when calling type is thirdPartySipCalling
         :type sip_address: str
-        :param calling: Calling types supported on update are freeCalling, thirdPartySipCalling and none.
-Calling type.
+        :param calling: Calling types supported on update are freeCalling, thirdPartySipCalling and none. Calling type.
         :type calling: object
         :param notes: Notes associated to the workspace.
         :type notes: str
@@ -299,7 +326,8 @@ Calling type.
     def delete(self, workspace_id: str):
         """
         Deletes a workspace by ID.
-        Also deletes all devices associated with the workspace. Any deleted devices will need to be reactivated. Specify the workspace ID in the workspaceId parameter in the URI.
+        Also deletes all devices associated with the workspace. Any deleted devices will need to be reactivated.
+        Specify the workspace ID in the workspaceId parameter in the URI.
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
@@ -311,7 +339,11 @@ Calling type.
     def capabilities(self, workspace_id: str) -> CapabilityMap:
         """
         Shows the capabilities for a workspace by ID.
-        Returns a set of capabilities, including whether or not the capability is supported by any device in the workspace, and if the capability is configured (enabled). For example for a specific capability like occupancyDetection, the API will return if the capability is supported and/or configured such that occupancy detection data will flow from the workspace (device) to the cloud. Specify the workspace ID in the workspaceId parameter in the URI.
+        Returns a set of capabilities, including whether or not the capability is supported by any device in the
+        workspace, and if the capability is configured (enabled). For example for a specific capability like
+        occupancyDetection, the API will return if the capability is supported and/or configured such that occupancy
+        detection data will flow from the workspace (device) to the cloud. Specify the workspace ID in the workspaceId
+        parameter in the URI.
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str

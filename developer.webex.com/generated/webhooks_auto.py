@@ -4,7 +4,7 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
-from pydantic import Field
+from pydantic import Field, parse_obj_as
 
 
 __all__ = ['CreateWebhookBody', 'Event', 'ListWebhooksResponse', 'Resource', 'Status', 'Webhook', 'WebhooksApi']
@@ -66,7 +66,8 @@ class CreateWebhookBody(ApiModel):
     filter: Optional[str]
     #: The secret used to generate payload signature.
     secret: Optional[str]
-    #: Specified when creating an org/admin level webhook. Supported for meetings, recordings, meetingParticipants, and meetingTranscripts resources.
+    #: Specified when creating an org/admin level webhook. Supported for meetings, recordings, meetingParticipants, and
+    #: meetingTranscripts resources.
     owned_by: Optional[str]
 
 
@@ -90,7 +91,8 @@ class UpdateWebhookBody(ApiModel):
     target_url: Optional[str]
     #: The secret used to generate payload signature.
     secret: Optional[str]
-    #: Specified when creating an org/admin level webhook. Supported for meetings, recordings, meetingParticipants and meetingTranscripts resources.
+    #: Specified when creating an org/admin level webhook. Supported for meetings, recordings, meetingParticipants and
+    #: meetingTranscripts resources.
     owned_by: Optional[str]
     #: The status of the webhook. Use "active" to reactivate a disabled webhook.
     status: Optional[Status]
@@ -98,9 +100,12 @@ class UpdateWebhookBody(ApiModel):
 
 class WebhooksApi(ApiChild, base='webhooks'):
     """
-    For Webex for Government (FedRAMP), the following resource types are not available for Webhooks: meetings, recordings, meetingParticipants, and meetingTranscripts.
-    Webhooks allow your app to be notified via HTTP when a specific event occurs in Webex. For example, your app can register a webhook to be notified when a new message is posted into a specific room.
-    Events trigger in near real-time allowing your app and backend IT systems to stay in sync with new content and room activity.
+    For Webex for Government (FedRAMP), the following resource types are not available for Webhooks: meetings,
+    recordings, meetingParticipants, and meetingTranscripts.
+    Webhooks allow your app to be notified via HTTP when a specific event occurs in Webex. For example, your app can
+    register a webhook to be notified when a new message is posted into a specific room.
+    Events trigger in near real-time allowing your app and backend IT systems to stay in sync with new content and room
+    activity.
     Check The Webhooks Guide and our blog regularly for announcements of additional webhook resources and event types.
     Long result sets will be split into pages.
     """
@@ -126,7 +131,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :type name: str
         :param target_url: The URL that receives POST requests for each event.
         :type target_url: str
-        :param resource: The resource type for the webhook. Creating a webhook requires 'read' scope on the resource the webhook is for.
+        :param resource: The resource type for the webhook. Creating a webhook requires 'read' scope on the resource
+            the webhook is for.
         :type resource: Resource
         :param event: The event type for the webhook.
         :type event: Event
@@ -134,7 +140,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :type filter: str
         :param secret: The secret used to generate payload signature.
         :type secret: str
-        :param owned_by: Specified when creating an org/admin level webhook. Supported for meetings, recordings, meetingParticipants, and meetingTranscripts resources.
+        :param owned_by: Specified when creating an org/admin level webhook. Supported for meetings, recordings,
+            meetingParticipants, and meetingTranscripts resources.
         :type owned_by: str
         """
         body = CreateWebhookBody()
@@ -170,8 +177,10 @@ class WebhooksApi(ApiChild, base='webhooks'):
 
     def update(self, webhook_id: str, name: str, target_url: str, secret: str = None, owned_by: str = None, status: Status = None) -> Webhook:
         """
-        Updates a webhook, by ID. You cannot use this call to deactivate a webhook, only to activate a webhook that was auto deactivated. 
-        The fields that can be updated are name, targetURL, secret and status. All other fields, if supplied, are ignored.
+        Updates a webhook, by ID. You cannot use this call to deactivate a webhook, only to activate a webhook that was
+        auto deactivated.
+        The fields that can be updated are name, targetURL, secret and status. All other fields, if supplied, are
+        ignored.
         Specify the webhook ID in the webhookId parameter in the URI.
 
         :param webhook_id: The unique identifier for the webhook.
@@ -182,7 +191,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :type target_url: str
         :param secret: The secret used to generate payload signature.
         :type secret: str
-        :param owned_by: Specified when creating an org/admin level webhook. Supported for meetings, recordings, meetingParticipants and meetingTranscripts resources.
+        :param owned_by: Specified when creating an org/admin level webhook. Supported for meetings, recordings,
+            meetingParticipants and meetingTranscripts resources.
         :type owned_by: str
         :param status: The status of the webhook. Use "active" to reactivate a disabled webhook.
         :type status: Status

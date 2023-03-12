@@ -4,7 +4,7 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
-from pydantic import Field
+from pydantic import Field, parse_obj_as
 
 
 __all__ = ['CreateRoomTabBody', 'ListRoomTabsResponse', 'RoomTab', 'RoomTabsApi', 'RoomType']
@@ -43,7 +43,9 @@ class ListRoomTabsResponse(ApiModel):
 
 class RoomTabsApi(ApiChild, base='room/tabs'):
     """
-    A Room Tab represents a URL shortcut that is added as a persistent tab to a Webex room (space) tab row. Use this API to list tabs of any Webex room that you belong to. Room Tabs can also be updated to point to a different content URL, or deleted to remove the tab from the room.
+    A Room Tab represents a URL shortcut that is added as a persistent tab to a Webex room (space) tab row. Use this
+    API to list tabs of any Webex room that you belong to. Room Tabs can also be updated to point to a different
+    content URL, or deleted to remove the tab from the room.
     Just like in the Webex app, you must be a member of the room in order to list its Room Tabs.
     """
 

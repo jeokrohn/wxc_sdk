@@ -4,10 +4,12 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
-from pydantic import Field
+from pydantic import Field, parse_obj_as
 
 
-__all__ = ['CreateWorkspaceLocationBody', 'CreateWorkspaceLocationFloorBody', 'Floor', 'ListWorkspaceLocationFloorsResponse', 'ListWorkspaceLocationsResponse', 'Location', 'WorkspaceLocationsApi']
+__all__ = ['CreateWorkspaceLocationBody', 'CreateWorkspaceLocationFloorBody', 'Floor',
+           'ListWorkspaceLocationFloorsResponse', 'ListWorkspaceLocationsResponse', 'Location',
+           'WorkspaceLocationsApi']
 
 
 class CreateWorkspaceLocationBody(ApiModel):
@@ -66,8 +68,12 @@ class ListWorkspaceLocationFloorsResponse(ApiModel):
 class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
     """
     A Workspace Location is a physical location with a name, address, country, city, latitude and longitude.
-    Viewing the list of locations in an organization requires an administrator auth token with the spark-admin:workspace_locations_read scope. Adding, updating, or deleting workspace locations in an organization requires an administrator auth token with the spark-admin:workspace_locations_write scope.
-    The Workspace Locations API can also be used by partner administrators acting as administrators of a different organization than their own. In those cases an orgId value must be supplied, as indicated in the reference documentation for the relevant endpoints.
+    Viewing the list of locations in an organization requires an administrator auth token with the
+    spark-admin:workspace_locations_read scope. Adding, updating, or deleting workspace locations in an organization
+    requires an administrator auth token with the spark-admin:workspace_locations_write scope.
+    The Workspace Locations API can also be used by partner administrators acting as administrators of a different
+    organization than their own. In those cases an orgId value must be supplied, as indicated in the reference
+    documentation for the relevant endpoints.
     """
 
     def list_locations(self, display_name: str = None, address: str = None, country_code: str = None, city_name: str = None, **params) -> Generator[Location, None, None]:
@@ -96,7 +102,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
 
     def create_location(self, display_name: str, address: str, country_code: str, latitude: int, longitude: int, city_name: str = None, notes: str = None) -> Location:
         """
-        Create a location. The cityName and notes parameters are optional, and omitting them will result in the creation of a location without values for those attributes.
+        Create a location. The cityName and notes parameters are optional, and omitting them will result in the
+        creation of a location without values for those attributes.
 
         :param display_name: A friendly name for the location.
         :type display_name: str
@@ -145,7 +152,10 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
 
     def update_location(self, location_id: str, display_name: str, address: str, country_code: str, latitude: int, longitude: int, city_name: str = None, notes: str = None, id: str = None) -> Location:
         """
-        Updates details for a location, by ID. Specify the location ID in the locationId parameter in the URI. The request should include all details for the location returned in a previous call to Get Workspace Location Details. Omitting the optional cityName or notes fields will result in those fields no longer being defined for the location.
+        Updates details for a location, by ID. Specify the location ID in the locationId parameter in the URI. The
+        request should include all details for the location returned in a previous call to Get Workspace Location
+        Details. Omitting the optional cityName or notes fields will result in those fields no longer being defined for
+        the location.
 
         :param location_id: A unique identifier for the location.
         :type location_id: str
@@ -189,7 +199,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
 
     def delete_location(self, location_id: str):
         """
-        Deletes a location, by ID. The workspaces associated to that location will no longer have a location, but a new location can be reassigned to them.
+        Deletes a location, by ID. The workspaces associated to that location will no longer have a location, but a new
+        location can be reassigned to them.
 
         :param location_id: A unique identifier for the location.
         :type location_id: str
@@ -210,7 +221,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
 
     def create_location_floor(self, location_id: str, floor_number: int, display_name: str = None) -> Floor:
         """
-        Create a new floor in the given location. The displayName parameter is optional, and omitting it will result in the creation of a floor without that value set.
+        Create a new floor in the given location. The displayName parameter is optional, and omitting it will result in
+        the creation of a floor without that value set.
 
         :param location_id: A unique identifier for the location.
         :type location_id: str
@@ -243,7 +255,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
 
     def update_location_floor(self, location_id: str, floor_id: str, floor_number: int, display_name: str = None) -> Floor:
         """
-        Updates details for a floor, by ID. Specify the floor ID in the floorId parameter in the URI. Include all details for the floor returned by a previous call to Get Workspace Location Floor Details. Omitting the optional displayName field will result in that field no longer being defined for the floor.
+        Updates details for a floor, by ID. Specify the floor ID in the floorId parameter in the URI. Include all
+        details for the floor returned by a previous call to Get Workspace Location Floor Details. Omitting the
+        optional displayName field will result in that field no longer being defined for the floor.
 
         :param location_id: A unique identifier for the location.
         :type location_id: str

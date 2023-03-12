@@ -4,10 +4,11 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
-from pydantic import Field
+from pydantic import Field, parse_obj_as
 
 
-__all__ = ['CreateReportResponse', 'ListReportTemplatesResponse', 'ListReportsResponse', 'Report', 'ReportTemplatesApi', 'ReportsApi', 'Template', 'ValidationRules', 'ValidationRulesCollection']
+__all__ = ['CreateReportResponse', 'ListReportTemplatesResponse', 'ListReportsResponse', 'Report',
+           'ReportTemplatesApi', 'ReportsApi', 'Template', 'ValidationRules', 'ValidationRulesCollection']
 
 
 class ValidationRules(ApiModel):
@@ -44,7 +45,8 @@ class ListReportTemplatesResponse(ApiModel):
 class ReportTemplatesApi(ApiChild, base='report/templates'):
     """
     Report templates are available for use with the Reports API.
-    To access this endpoint, you must use an administrator token with the analytics:read_all scope. The authenticated user must be a read-only or full administrator of the organization to which the report belongs.
+    To access this endpoint, you must use an administrator token with the analytics:read_all scope. The authenticated
+    user must be a read-only or full administrator of the organization to which the report belongs.
     To use this endpoint the organization needs to be licensed for Pro Pack for Control Hub.
     For more information about Report Templates, see the Admin API guide.
     """
@@ -52,7 +54,8 @@ class ReportTemplatesApi(ApiChild, base='report/templates'):
     def list_report_templates(self, **params) -> Generator[Template, None, None]:
         """
         List all the available report templates that can be generated.
-        CSV (comma separated value) reports for Webex services are only supported for organizations based in the North American region. Organizations based in other regions will return blank CSV files for any Webex reports.
+        CSV (comma separated value) reports for Webex services are only supported for organizations based in the North
+        American region. Organizations based in other regions will return blank CSV files for any Webex reports.
         """
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Template, params=params)
@@ -105,16 +108,20 @@ class CreateReportResponse(ApiModel):
 
 class ReportsApi(ApiChild, base='reports'):
     """
-    To access these endpoints, you must use an administrator token with the analytics:read_all scope. The authenticated user must be a read-only or full administrator of the organization to which the report belongs.
+    To access these endpoints, you must use an administrator token with the analytics:read_all scope. The authenticated
+    user must be a read-only or full administrator of the organization to which the report belongs.
     To use this endpoint the org needs to be licensed for the Pro Pack.
-    Reports available via Webex Control Hub may be generated and downloaded via the Reports API. To access this API, the authenticated user must be a read-only or full administrator of the organization to which the report belongs.
+    Reports available via Webex Control Hub may be generated and downloaded via the Reports API. To access this API,
+    the authenticated user must be a read-only or full administrator of the organization to which the report belongs.
     For more information about Reports, see the Admin API guide.
     """
 
     def list(self, report_id: str = None, service: str = None, template_id: int = None, from_: str = None, to_: str = None, **params) -> Generator[Report, None, None]:
         """
-        Lists all reports. Use query parameters to filter the response. The parameters are optional. However, from and to parameters should be provided together.
-        CSV reports for Teams services are only supported for organizations based in the North American region. Organizations based in a different region will return blank CSV files for any Teams reports.
+        Lists all reports. Use query parameters to filter the response. The parameters are optional. However, from and
+        to parameters should be provided together.
+        CSV reports for Teams services are only supported for organizations based in the North American region.
+        Organizations based in a different region will return blank CSV files for any Teams reports.
 
         :param report_id: List reports by ID.
         :type report_id: str
@@ -142,9 +149,13 @@ class ReportsApi(ApiChild, base='reports'):
 
     def create(self, template_id: int, start_date: str = None, end_date: str = None, site_list: str = None) -> str:
         """
-        Create a new report. For each templateId, there are a set of validation rules that need to be followed. For example, for templates belonging to Webex, the user needs to provide siteUrl. These validation rules can be retrieved via the Report Templates API.
-        The 'templateId' parameter is a number. However, it is a limitation of developer.webex.com platform that it is passed as a string when you try to test the API from here.
-        CSV reports for Teams services are only supported for organizations based in the North American region. Organizations based in a different region will return blank CSV files for any Teams reports.
+        Create a new report. For each templateId, there are a set of validation rules that need to be followed. For
+        example, for templates belonging to Webex, the user needs to provide siteUrl. These validation rules can be
+        retrieved via the Report Templates API.
+        The 'templateId' parameter is a number. However, it is a limitation of developer.webex.com platform that it is
+        passed as a string when you try to test the API from here.
+        CSV reports for Teams services are only supported for organizations based in the North American region.
+        Organizations based in a different region will return blank CSV files for any Teams reports.
 
         :param template_id: Unique ID representing valid report templates.
         :type template_id: int
@@ -172,7 +183,8 @@ class ReportsApi(ApiChild, base='reports'):
         """
         Shows details for a report, by report ID.
         Specify the report ID in the reportId parameter in the URI.
-        CSV reports for Teams services are only supported for organizations based in the North American region. Organizations based in a different region will return blank CSV files for any Teams reports.
+        CSV reports for Teams services are only supported for organizations based in the North American region.
+        Organizations based in a different region will return blank CSV files for any Teams reports.
 
         :param report_id: The unique identifier for the report.
         :type report_id: str
@@ -185,7 +197,8 @@ class ReportsApi(ApiChild, base='reports'):
         """
         Remove a report from the system.
         Specify the report ID in the reportId parameter in the URI
-        CSV reports for Teams services are only supported for organizations based in the North American region. Organizations based in a different region will return blank CSV files for any Teams reports.
+        CSV reports for Teams services are only supported for organizations based in the North American region.
+        Organizations based in a different region will return blank CSV files for any Teams reports.
 
         :param report_id: The unique identifier for the report.
         :type report_id: str

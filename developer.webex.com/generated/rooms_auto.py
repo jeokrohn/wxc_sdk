@@ -4,7 +4,7 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
-from pydantic import Field
+from pydantic import Field, parse_obj_as
 
 
 __all__ = ['CreateRoomBody', 'GetRoomMeetingDetailsResponse', 'ListRoomsResponse', 'Room', 'RoomsApi', 'Type']
@@ -26,7 +26,8 @@ class CreateRoomBody(ApiModel):
     classification_id: Optional[str]
     #: Set the space as locked/moderated and the creator becomes a moderator
     is_locked: Optional[bool]
-    #: The room is public and therefore discoverable within the org. Anyone can find and join that room. When true the description must be filled in.
+    #: The room is public and therefore discoverable within the org. Anyone can find and join that room. When true the
+    #: description must be filled in.
     is_public: Optional[bool]
     #: The description of the space.
     description: Optional[str]
@@ -47,7 +48,8 @@ class Room(CreateRoomBody):
     created: Optional[str]
     #: The ID of the organization which owns this room. See Webex Data in the Compliance Guide for more information.
     owner_id: Optional[str]
-    #: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in this space, while maintaing historical data.
+    #: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in
+    #: this space, while maintaing historical data.
     is_read_only: Optional[bool]
     #: Date and time when the room was made public.
     made_public: Optional[str]
@@ -75,14 +77,18 @@ class GetRoomMeetingDetailsResponse(ApiModel):
 
 
 class UpdateRoomBody(CreateRoomBody):
-    #: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in this space, while maintaing historical data.
+    #: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in
+    #: this space, while maintaing historical data.
     is_read_only: Optional[bool]
 
 
 class RoomsApi(ApiChild, base='rooms'):
     """
-    Rooms are virtual meeting places where people post messages and collaborate to get work done. This API is used to manage the rooms themselves. Rooms are created and deleted with this API. You can also update a room to change its title or make it public, for example.
-    To create a team room, specify the a teamId in the POST payload. Note that once a room is added to a team, it cannot be moved. To learn more about managing teams, see the Teams API.
+    Rooms are virtual meeting places where people post messages and collaborate to get work done. This API is used to
+    manage the rooms themselves. Rooms are created and deleted with this API. You can also update a room to change its
+    title or make it public, for example.
+    To create a team room, specify the a teamId in the POST payload. Note that once a room is added to a team, it
+    cannot be moved. To learn more about managing teams, see the Teams API.
     To manage people in a room see the Memberships API.
     To post content see the Messages API.
     """
@@ -94,21 +100,25 @@ class RoomsApi(ApiChild, base='rooms'):
         By default, lists rooms to which the authenticated user belongs.
         Long result sets will be split into pages.
         Known Limitations:
-        The underlying database does not support natural sorting by lastactivity and will only sort on limited set of results, which are pulled from the database in order of roomId. For users or bots in more than 3000 spaces this can result in anomalies such as spaces that have had recent activity not being returned in the results when sorting by lastacivity.
+        The underlying database does not support natural sorting by lastactivity and will only sort on limited set of
+        results, which are pulled from the database in order of roomId. For users or bots in more than 3000 spaces this
+        can result in anomalies such as spaces that have had recent activity not being returned in the results when
+        sorting by lastacivity.
 
         :param team_id: List rooms associated with a team, by ID. Cannot be set in combination with orgPublicSpaces.
         :type team_id: str
-        :param type_: List rooms by type. Cannot be set in combination with orgPublicSpaces.
-Possible values: direct, group
+        :param type_: List rooms by type. Cannot be set in combination with orgPublicSpaces. Possible values: direct,
+            group
         :type type_: str
-        :param org_public_spaces: Shows the org's public spaces joined and unjoined. When set the result list is sorted by the madePublic timestamp.
+        :param org_public_spaces: Shows the org's public spaces joined and unjoined. When set the result list is sorted
+            by the madePublic timestamp.
         :type org_public_spaces: bool
         :param from_: Filters rooms, that were made public after this time. See madePublic timestamp
         :type from_: str
         :param to_: Filters rooms, that were made public before this time. See maePublic timestamp
         :type to_: str
-        :param sort_by: Sort results. Cannot be set in combination with orgPublicSpaces.
-Possible values: id, lastactivity, created
+        :param sort_by: Sort results. Cannot be set in combination with orgPublicSpaces. Possible values: id,
+            lastactivity, created
         :type sort_by: str
         """
         if team_id is not None:
@@ -128,9 +138,12 @@ Possible values: id, lastactivity, created
 
     def create(self, title: str, team_id: str = None, classification_id: str = None, is_locked: bool = None, is_public: bool = None, description: str = None, is_announcement_only: bool = None) -> Room:
         """
-        Creates a room. The authenticated user is automatically added as a member of the room. See the Memberships API to learn how to add more people to the room.
-        To create a 1:1 room, use the Create Messages endpoint to send a message directly to another person by using the toPersonId or toPersonEmail parameters.
-        Bots are not able to create and simultaneously classify a room. A bot may update a space classification after a person of the same owning organization joined the space as the first human user.
+        Creates a room. The authenticated user is automatically added as a member of the room. See the Memberships API
+        to learn how to add more people to the room.
+        To create a 1:1 room, use the Create Messages endpoint to send a message directly to another person by using
+        the toPersonId or toPersonEmail parameters.
+        Bots are not able to create and simultaneously classify a room. A bot may update a space classification after a
+        person of the same owning organization joined the space as the first human user.
         A space can only be put into announcement mode when it is locked.
 
         :param title: A user-friendly name for the room.
@@ -141,7 +154,8 @@ Possible values: id, lastactivity, created
         :type classification_id: str
         :param is_locked: Set the space as locked/moderated and the creator becomes a moderator
         :type is_locked: bool
-        :param is_public: The room is public and therefore discoverable within the org. Anyone can find and join that room. When true the description must be filled in.
+        :param is_public: The room is public and therefore discoverable within the org. Anyone can find and join that
+            room. When true the description must be filled in.
         :type is_public: bool
         :param description: The description of the space.
         :type description: str
@@ -182,7 +196,8 @@ Possible values: id, lastactivity, created
 
     def meeting_details(self, room_id: str) -> GetRoomMeetingDetailsResponse:
         """
-        Shows Webex meeting details for a room such as the SIP address, meeting URL, toll-free and toll dial-in numbers.
+        Shows Webex meeting details for a room such as the SIP address, meeting URL, toll-free and toll dial-in
+        numbers.
         Specify the room ID in the roomId parameter in the URI.
 
         :param room_id: The unique identifier for the room.
@@ -197,8 +212,10 @@ Possible values: id, lastactivity, created
         Updates details for a room, by ID.
         Specify the room ID in the roomId parameter in the URI.
         A space can only be put into announcement mode when it is locked.
-        Any space participant or compliance officer can convert a space from public to private. Only a compliance officer can convert a space from private to public and only if the space is classified with the lowest category (usually public), and the space has a description.
-        To remove a description please use a space character   by itself.
+        Any space participant or compliance officer can convert a space from public to private. Only a compliance
+        officer can convert a space from private to public and only if the space is classified with the lowest category
+        (usually public), and the space has a description.
+        To remove a description please use a space character by itself.
 
         :param room_id: The unique identifier for the room.
         :type room_id: str
@@ -210,13 +227,15 @@ Possible values: id, lastactivity, created
         :type classification_id: str
         :param is_locked: Set the space as locked/moderated and the creator becomes a moderator
         :type is_locked: bool
-        :param is_public: The room is public and therefore discoverable within the org. Anyone can find and join that room. When true the description must be filled in.
+        :param is_public: The room is public and therefore discoverable within the org. Anyone can find and join that
+            room. When true the description must be filled in.
         :type is_public: bool
         :param description: The description of the space.
         :type description: str
         :param is_announcement_only: Sets the space into announcement Mode.
         :type is_announcement_only: bool
-        :param is_read_only: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in this space, while maintaing historical data.
+        :param is_read_only: A compliance officer can set a direct room as read-only, which will disallow any new
+            information exchanges in this space, while maintaing historical data.
         :type is_read_only: bool
         """
         body = UpdateRoomBody()
@@ -243,7 +262,8 @@ Possible values: id, lastactivity, created
     def delete(self, room_id: str):
         """
         Deletes a room, by ID. Deleted rooms cannot be recovered.
-        As a security measure to prevent accidental deletion, when a non moderator deletes the room they are removed from the room instead.
+        As a security measure to prevent accidental deletion, when a non moderator deletes the room they are removed
+        from the room instead.
         Deleting a room that is part of a team will archive the room instead.
         Specify the room ID in the roomId parameter in the URI.
 

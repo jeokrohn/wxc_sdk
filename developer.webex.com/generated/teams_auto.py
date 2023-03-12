@@ -4,7 +4,7 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
-from pydantic import Field
+from pydantic import Field, parse_obj_as
 
 
 __all__ = ['CreateTeamBody', 'ListTeamsResponse', 'Team', 'TeamsApi']
@@ -30,7 +30,9 @@ class ListTeamsResponse(ApiModel):
 
 class TeamsApi(ApiChild, base='teams'):
     """
-    Teams are groups of people with a set of rooms that are visible to all members of that team. This API is used to manage the teams themselves. Teams are created and deleted with this API. You can also update a team to change its name, for example.
+    Teams are groups of people with a set of rooms that are visible to all members of that team. This API is used to
+    manage the teams themselves. Teams are created and deleted with this API. You can also update a team to change its
+    name, for example.
     To manage people in a team see the Team Memberships API.
     To manage team rooms see the Rooms API.
     """
@@ -45,7 +47,8 @@ class TeamsApi(ApiChild, base='teams'):
     def create(self, name: str, description: str = None) -> Team:
         """
         Creates a team.
-        The authenticated user is automatically added as a member of the team. See the Team Memberships API to learn how to add more people to the team.
+        The authenticated user is automatically added as a member of the team. See the Team Memberships API to learn
+        how to add more people to the team.
 
         :param name: A user-friendly name for the team.
         :type name: str

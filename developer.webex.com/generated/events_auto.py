@@ -4,7 +4,7 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
-from pydantic import Field
+from pydantic import Field, parse_obj_as
 
 
 __all__ = ['Data', 'Event', 'EventResourceEnum', 'EventTypeEnum', 'EventsApi', 'ListEventsResponse']
@@ -58,11 +58,15 @@ class Data(ApiModel):
     host: Optional[object]
     #: Common Identity (CI) authenticated meeting attendees
     attendees: Optional[list[]]
-    #: indicates whether or not the Voice Assistant was enabled during the meeting. If true a transcript should be available a couple minutes after the meeting ended at the meetingTranscripts resource
+    #: indicates whether or not the Voice Assistant was enabled during the meeting. If true a transcript should be
+    #: available a couple minutes after the meeting ended at the meetingTranscripts resource
     transcription_enabled: Optional[str]
-    #: indicates if recording was enabled for all or parts of the meeting. If true a recording should be available shortly after the meeting ended at the recordings resource
+    #: indicates if recording was enabled for all or parts of the meeting. If true a recording should be available
+    #: shortly after the meeting ended at the recordings resource
     recording_enabled: Optional[str]
-    #: indicates i chat messages were exchanged during the meeting in the meetings client (not the unified client). If true these messages can be accessed by a compliance officer at the postMeetingsChat resource. Meetings chat collection must be custom enabled.
+    #: indicates i chat messages were exchanged during the meeting in the meetings client (not the unified client). If
+    #: true these messages can be accessed by a compliance officer at the postMeetingsChat resource. Meetings chat
+    #: collection must be custom enabled.
     has_post_meetings_chat: Optional[str]
     created: Optional[str]
 
@@ -82,7 +86,8 @@ class Event(ApiModel):
     org_id: Optional[str]
     #: The date and time of the event.
     created: Optional[str]
-    #: The event's data representation. This object will contain the event's resource, such as memberships, messages, meetings, tabs, rooms or attachmentActions at the time the event took place.
+    #: The event's data representation. This object will contain the event's resource, such as memberships, messages,
+    #: meetings, tabs, rooms or attachmentActions at the time the event took place.
     data: Optional[Data]
 
 
@@ -93,25 +98,27 @@ class ListEventsResponse(ApiModel):
 class EventsApi(ApiChild, base='events'):
     """
     Events are generated when actions take place within Webex, such as when someone creates or deletes a message.
-    The Events API can only be used by a Compliance Officer with an API access token that contains the spark-compliance:events_read scope. See the Compliance Guide for more information.
+    The Events API can only be used by a Compliance Officer with an API access token that contains the
+    spark-compliance:events_read scope. See the Compliance Guide for more information.
     """
 
     def list_events(self, resource: str = None, type_: str = None, actor_id: str = None, from_: str = None, to_: str = None, **params) -> Generator[Event, None, None]:
         """
-        List events in your organization. Several query parameters are available to filter the events returned in the response.
+        List events in your organization. Several query parameters are available to filter the events returned in the
+        response.
         Long result sets will be split into pages.
 
-        :param resource: List events with a specific resource type.
-Possible values: messages, memberships, meetings, meetingMessages, meetingTranscripts, tabs, rooms, attachmentActions, files, file_transcodings
+        :param resource: List events with a specific resource type. Possible values: messages, memberships, meetings,
+            meetingMessages, meetingTranscripts, tabs, rooms, attachmentActions, files, file_transcodings
         :type resource: str
-        :param type_: List events with a specific event type.
-Possible values: created, updated, deleted, ended
+        :param type_: List events with a specific event type. Possible values: created, updated, deleted, ended
         :type type_: str
         :param actor_id: List events performed by this person, by person ID.
         :type actor_id: str
         :param from_: List events which occurred after a specific date and time.
         :type from_: str
-        :param to_: List events which occurred before a specific date and time. If unspecified, or set to a time in the future, lists events up to the present.
+        :param to_: List events which occurred before a specific date and time. If unspecified, or set to a time in the
+            future, lists events up to the present.
         :type to_: str
         """
         if resource is not None:

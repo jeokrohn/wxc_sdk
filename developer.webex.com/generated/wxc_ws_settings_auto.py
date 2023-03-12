@@ -4,10 +4,20 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
-from pydantic import Field
+from pydantic import Field, parse_obj_as
 
 
-__all__ = ['Action', 'AuthorizationCode', 'CLIDPolicySelection', 'CallForwardingBusyGet', 'CallForwardingNoAnswerGet', 'CallForwardingPlaceSettingGet', 'CallForwardingPlaceSettingPatch', 'CallType', 'CallingPermission', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'Greeting', 'InterceptAnnouncementsGet', 'InterceptAnnouncementsPatch', 'InterceptIncomingGet', 'InterceptIncomingPatch', 'InterceptNumberGet', 'InterceptOutGoingGet', 'MonitoredElementCallParkExtension', 'MonitoredElementItem', 'MonitoredElementUser', 'ReadCallInterceptSettingsForWorkspaceResponse', 'RetrieveAccessCodesForWorkspaceResponse', 'RetrieveCallForwardingSettingsForWorkspaceResponse', 'RetrieveCallWaitingSettingsForWorkspaceResponse', 'RetrieveCallerIDSettingsForWorkspaceResponse', 'RetrieveIncomingPermissionSettingsForWorkspaceResponse', 'RetrieveMonitoringSettingsForWorkspaceResponse', 'RetrieveOutgoingPermissionSettingsForWorkspaceResponse', 'RetrieveTransferNumbersSettingsForWorkspaceResponse', 'Type', 'Type1', 'Type2', 'UserNumberItem', 'WebexCallingWorkspaceSettingsApi']
+__all__ = ['Action', 'AuthorizationCode', 'CLIDPolicySelection', 'CallForwardingBusyGet', 'CallForwardingNoAnswerGet',
+           'CallForwardingPlaceSettingGet', 'CallForwardingPlaceSettingPatch', 'CallType', 'CallingPermission',
+           'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'Greeting', 'InterceptAnnouncementsGet',
+           'InterceptAnnouncementsPatch', 'InterceptIncomingGet', 'InterceptIncomingPatch', 'InterceptNumberGet',
+           'InterceptOutGoingGet', 'MonitoredElementCallParkExtension', 'MonitoredElementItem', 'MonitoredElementUser',
+           'ReadCallInterceptSettingsForWorkspaceResponse', 'RetrieveAccessCodesForWorkspaceResponse',
+           'RetrieveCallForwardingSettingsForWorkspaceResponse', 'RetrieveCallWaitingSettingsForWorkspaceResponse',
+           'RetrieveCallerIDSettingsForWorkspaceResponse', 'RetrieveIncomingPermissionSettingsForWorkspaceResponse',
+           'RetrieveMonitoringSettingsForWorkspaceResponse', 'RetrieveOutgoingPermissionSettingsForWorkspaceResponse',
+           'RetrieveTransferNumbersSettingsForWorkspaceResponse', 'Type', 'Type1', 'Type2', 'UserNumberItem',
+           'WebexCallingWorkspaceSettingsApi']
 
 
 class InterceptNumberGet(ApiModel):
@@ -18,7 +28,8 @@ class InterceptNumberGet(ApiModel):
 
 
 class CallForwardingBusyGet(InterceptNumberGet):
-    #: Indicates the enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
+    #: Indicates the enabled or disabled state of sending incoming calls to voicemail when the destination is an
+    #: internal phone number and that number has the voicemail service enabled.
     destination_voicemail_enabled: Optional[bool]
 
 
@@ -30,14 +41,16 @@ class CallForwardingNoAnswerGet(CallForwardingBusyGet):
 
 
 class CallForwardingPlaceSettingGet(ApiModel):
-    #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the workspace is busy.
+    #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the
+    #: workspace is busy.
     busy: Optional[CallForwardingBusyGet]
     #: Settings for forwarding which only occurs when you are away or not answering your phone.
     no_answer: Optional[CallForwardingNoAnswerGet]
 
 
 class CallForwardingPlaceSettingPatch(ApiModel):
-    #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the workspace is busy.
+    #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the
+    #: workspace is busy.
     busy: Optional[CallForwardingBusyGet]
     #: Settings for forwarding which only occurs when you are away or not answering your phone.
     no_answer: Optional[CallForwardingNoAnswerGet]
@@ -222,7 +235,8 @@ class InterceptAnnouncementsGet(ApiModel):
 class InterceptIncomingGet(ApiModel):
     #: Indicated incoming calls are intercepted.
     type: Optional[Type1]
-    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
+    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal
+    #: phone number and that number has the voicemail service enabled.
     voicemail_enabled: Optional[bool]
     #: Settings related to how incoming calls are handled when the intercept feature is enabled.
     announcements: Optional[InterceptAnnouncementsGet]
@@ -238,7 +252,8 @@ class Type2(str, Enum):
 class InterceptOutGoingGet(ApiModel):
     #: Indicated all outgoing calls are intercepted.
     type: Optional[Type2]
-    #: If true, when the person attempts to make an outbound call, a system default message is played and the call is made to the destination phone number.
+    #: If true, when the person attempts to make an outbound call, a system default message is played and the call is
+    #: made to the destination phone number.
     transfer_enabled: Optional[bool]
     #: Number to which the outbound call be transferred.
     destination: Optional[str]
@@ -256,7 +271,8 @@ class InterceptAnnouncementsPatch(ApiModel):
 class InterceptIncomingPatch(ApiModel):
     #: Indicated incoming calls are intercepted.
     type: Optional[Type1]
-    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
+    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal
+    #: phone number and that number has the voicemail service enabled.
     voicemail_enabled: Optional[bool]
     #: Settings related to how incoming calls are handled when the intercept feature is enabled.
     announcements: Optional[InterceptAnnouncementsPatch]
@@ -396,23 +412,33 @@ class ConfigureCallInterceptSettingsForWorkspaceBody(ApiModel):
 
 class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/features/'):
     """
-    Workspaces represent places where people work, such as conference rooms, meeting spaces, lobbies, and lunchrooms. Devices may be associated with workspaces.
-    Webex Calling Workspace Settings support reading and writing of Webex Calling settings for a specific workspace within the organization.
-    Viewing the list of settings in a workspace requires an administrator auth token with the spark-admin:workspaces_read scope. 
-    Adding, updating, or deleting settings in a workspace requires an administrator auth token with the spark-admin:workspaces_write scope.
-    This API can also be used by partner administrators acting as administrators of a different organization than their own. In those cases, an orgId must be supplied, as indicated in the reference documentation for the relevant endpoints.
-    A partner administrator can retrieve or change settings in a customer's organization using the optional OrgId query parameter.
+    Workspaces represent places where people work, such as conference rooms, meeting spaces, lobbies, and lunchrooms.
+    Devices may be associated with workspaces.
+    Webex Calling Workspace Settings support reading and writing of Webex Calling settings for a specific workspace
+    within the organization.
+    Viewing the list of settings in a workspace requires an administrator auth token with the
+    spark-admin:workspaces_read scope.
+    Adding, updating, or deleting settings in a workspace requires an administrator auth token with the
+    spark-admin:workspaces_write scope.
+    This API can also be used by partner administrators acting as administrators of a different organization than their
+    own. In those cases, an orgId must be supplied, as indicated in the reference documentation for the relevant
+    endpoints.
+    A partner administrator can retrieve or change settings in a customer's organization using the optional OrgId query
+    parameter.
     """
 
     def retrieve_call_forwarding_settings_for(self, workspace_id: str, org_id: str = None) -> CallForwardingPlaceSettingGet:
         """
         Retrieve Call Forwarding Settings for a Workspace.
         Two types of call forwarding are supported:
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a
+        user auth token with spark:workspaces_read scope can be used to read workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -426,13 +452,16 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         """
         Modify call forwarding settings for a Workspace.
         Two types of call forwarding are supported:
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user
+        auth token with spark:workspaces_write scope can be used to update workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
         :param call_forwarding: Call forwarding settings for a Workspace.
         :type call_forwarding: CallForwardingPlaceSettingPatch
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -448,12 +477,16 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
     def retrieve_call_waiting_settings_for(self, workspace_id: str, org_id: str = None) -> bool:
         """
         Retrieve Call Waiting Settings for a Workspace.
-        Call Waiting allows workspaces to handle multiple simultaneous calls. Workspaces with Call Waiting enabled can place a call on hold to answer or initiate another call.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        Call Waiting allows workspaces to handle multiple simultaneous calls. Workspaces with Call Waiting enabled can
+        place a call on hold to answer or initiate another call.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a
+        user auth token with spark:workspaces_read scope can be used to read workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -466,12 +499,16 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
     def modify_call_waiting_settings_for(self, workspace_id: str, org_id: str = None, enabled: bool = None):
         """
         Modify Call Waiting Settings for a Workspace.
-        Call Waiting allows workspaces to handle multiple simultaneous calls. Workspaces with Call Waiting enabled can place a call on hold to answer or initiate another call.
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        Call Waiting allows workspaces to handle multiple simultaneous calls. Workspaces with Call Waiting enabled can
+        place a call on hold to answer or initiate another call.
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user
+        auth token with spark:workspaces_write scope can be used to update workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         :param enabled: Call Waiting state.
         :type enabled: bool
@@ -490,11 +527,14 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         """
         Retrieve Caller ID Settings for a Workspace.
         Caller ID settings control how a workspace's information is displayed when making outgoing calls.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a
+        user auth token with spark:workspaces_read scope can be used to read workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -508,13 +548,16 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         """
         Modify Caller ID settings for a Workspace.
         Caller ID settings control how a workspace's information is displayed when making outgoing calls.
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user
+        auth token with spark:workspaces_write scope can be used to update workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
         :param selected: Which type of outgoing Caller ID will be used.
         :type selected: CLIDPolicySelection
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         :param custom_number: This value must be an assigned number from the workspace's location.
         :type custom_number: str
@@ -524,12 +567,14 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :type display_detail: str
         :param block_in_forward_calls_enabled: Flag to block call forwarding.
         :type block_in_forward_calls_enabled: bool
-        :param external_caller_id_name_policy: Designates which type of External Caller ID Name policy is used. Default is DIRECT_LINE.
-Possible values: DIRECT_LINE
+        :param external_caller_id_name_policy: Designates which type of External Caller ID Name policy is used. Default
+            is DIRECT_LINE. Possible values: DIRECT_LINE
         :type external_caller_id_name_policy: ExternalCallerIdNamePolicy
-        :param custom_external_caller_id_name: Custom External Caller Name, which will be shown if External Caller ID Name is OTHER.
+        :param custom_external_caller_id_name: Custom External Caller Name, which will be shown if External Caller ID
+            Name is OTHER.
         :type custom_external_caller_id_name: str
-        :param location_external_caller_id_name: External Caller Name, which will be shown if External Caller ID Name is OTHER.
+        :param location_external_caller_id_name: External Caller Name, which will be shown if External Caller ID Name
+            is OTHER.
         :type location_external_caller_id_name: str
         """
         params = {}
@@ -559,12 +604,17 @@ Possible values: DIRECT_LINE
     def retrieve_monitoring_settings_for(self, workspace_id: str, org_id: str = None) -> RetrieveMonitoringSettingsForWorkspaceResponse:
         """
         Retrieves Monitoring settings for a Workspace.
-        Allow workspaces to monitor the line status of specified agents, workspaces, or call park extensions. The line status indicates if a monitored agent or a workspace is on a call, or if a call has been parked on the monitored call park extension.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        Allow workspaces to monitor the line status of specified agents, workspaces, or call park extensions. The line
+        status indicates if a monitored agent or a workspace is on a call, or if a call has been parked on the
+        monitored call park extension.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a
+        user auth token with spark:workspaces_read scope can be used to read workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -577,12 +627,17 @@ Possible values: DIRECT_LINE
     def modify_monitoring_settings_for(self, workspace_id: str, org_id: str = None, enable_call_park_notification: bool = None, monitored_elements: List[str] = None):
         """
         Modify Monitoring settings for a Workspace.
-        Allow workspaces to monitor the line status of specified agents, workspaces, or call park extensions. The line status indicates if a monitored agent or a workspace is on a call, or if a call has been parked on the monitored call park extension.
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        Allow workspaces to monitor the line status of specified agents, workspaces, or call park extensions. The line
+        status indicates if a monitored agent or a workspace is on a call, or if a call has been parked on the
+        monitored call park extension.
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user
+        auth token with spark:workspaces_write scope can be used to update workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         :param enable_call_park_notification: Call park notification is enabled or disabled.
         :type enable_call_park_notification: bool
@@ -603,40 +658,25 @@ Possible values: DIRECT_LINE
 
     def list_numbers_associated_withspecific(self, workspace_id: str, attributes: , body: , org_id: str = None, **params):
         """
-        List the PSTN phone numbers associated with a specific workspace, by ID, within the organization. Also shows the location and organization associated with the workspace.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read.
+        List the PSTN phone numbers associated with a specific workspace, by ID, within the organization. Also shows
+        the location and organization associated with the workspace.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:workspaces_read.
 
         :param workspace_id: List numbers for this workspace.
         :type workspace_id: str
         :param attributes: 
         :type attributes: 
-        :param body: {
-        "phoneNumbers": [
-            {
-                "external": "+12055550001",
-                "extension": "12211",
-                "primary": true
-            },
-             {
-                "external": "+12055550002",
-                "extension": "122",
-                "primary": false
-            }
-        ],
-        "workspace": {
-            "id": "Y2lzY29zcGFyazovL3VzL1BMQUNFLzg0MjkzOGQ1LTkyNzMtNGJjNi1hYTNhLTA1Njc3MmRiMzE2NQ"
-        },
-        "location": {
-            "name": "MainOffice",
-            "id": "Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4Mjg5NzIyLTFiODAtNDFiNy05Njc4LTBlNzdhZThjMTA5OA"
-        },
-        "organization": {
-            "id": "Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi9hNDVkNmNkYS1hZTVhLTQwYzMtYTdhZC01NjUwZmRkZGQ1M2M",
-            "name": "Atlas_Test_CALL-1237"
-        }
-    }
+        :param body: { "phoneNumbers": [ { "external": "+12055550001", "extension": "12211", "primary": true }, {
+            "external": "+12055550002", "extension": "122", "primary": false } ], "workspace": { "id":
+            "Y2lzY29zcGFyazovL3VzL1BMQUNFLzg0MjkzOGQ1LTkyNzMtNGJjNi1hYTNhLTA1Njc3MmRiMzE2NQ" }, "location": { "name":
+            "MainOffice", "id": "Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4Mjg5NzIyLTFiODAtNDFiNy05Njc4LTBlNzdhZThjMTA5OA" },
+            "organization": { "id":
+            "Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi9hNDVkNmNkYS1hZTVhLTQwYzMtYTdhZC01NjUwZmRkZGQ1M2M", "name":
+            "Atlas_Test_CALL-1237" } }
         :type body: 
-        :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners) can use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
+            can use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
         params['Attributes'] = attributes
@@ -649,12 +689,16 @@ Possible values: DIRECT_LINE
     def retrieve_incoming_permission_settings_for(self, workspace_id: str, org_id: str = None) -> RetrieveIncomingPermissionSettingsForWorkspaceResponse:
         """
         Retrieve Incoming Permission settings for a Workspace.
-        Incoming permission settings allow modifying permissions for a workspace that can be different from the organization's default to manage different call types.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        Incoming permission settings allow modifying permissions for a workspace that can be different from the
+        organization's default to manage different call types.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a
+        user auth token with spark:workspaces_read scope can be used to read workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -667,12 +711,16 @@ Possible values: DIRECT_LINE
     def modify_incoming_permission_settings_for(self, workspace_id: str, org_id: str = None, use_custom_enabled: bool = None, external_transfer: ExternalTransfer = None, internal_calls_enabled: bool = None, collect_calls_enabled: bool = None):
         """
         Modify Incoming Permission settings for a Workspace.
-        Incoming permission settings allow modifying permissions for a workspace that can be different from the organization's default to manage different call types.
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        Incoming permission settings allow modifying permissions for a workspace that can be different from the
+        organization's default to manage different call types.
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user
+        auth token with spark:workspaces_write scope can be used to update workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         :param use_custom_enabled: Incoming Permission state. If disabled, the default settings are used.
         :type use_custom_enabled: bool
@@ -702,12 +750,16 @@ Possible values: DIRECT_LINE
     def retrieve_outgoing_permission_settings_for(self, workspace_id: str, org_id: str = None) -> RetrieveOutgoingPermissionSettingsForWorkspaceResponse:
         """
         Retrieve Outgoing Permission settings for a Workspace.
-        Turn on outgoing call settings for this workspace to override the calling settings from the location that are used by default.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        Turn on outgoing call settings for this workspace to override the calling settings from the location that are
+        used by default.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a
+        user auth token with spark:workspaces_read scope can be used to read workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -720,12 +772,16 @@ Possible values: DIRECT_LINE
     def modify_outgoing_permission_settings_for(self, workspace_id: str, org_id: str = None, use_custom_enabled: bool = None, calling_permissions: CallingPermission = None):
         """
         Modify Outgoing Permission settings for a Place.
-        Turn on outgoing call settings for this workspace to override the calling settings from the location that are used by default.
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        Turn on outgoing call settings for this workspace to override the calling settings from the location that are
+        used by default.
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user
+        auth token with spark:workspaces_write scope can be used to update workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         :param use_custom_enabled: Outgoing Permission state. If disabled, the default settings are used.
         :type use_custom_enabled: bool
@@ -748,11 +804,14 @@ Possible values: DIRECT_LINE
         """
         Retrieve Access codes for a Workspace.
         Access codes are used to bypass permissions.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a
+        user auth token with spark:workspaces_read scope can be used to read workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -766,11 +825,14 @@ Possible values: DIRECT_LINE
         """
         Modify Access codes for a workspace.
         Access codes are used to bypass permissions.
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user
+        auth token with spark:workspaces_write scope can be used to update workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         :param delete_codes: Indicates access codes to delete.
         :type delete_codes: List[str]
@@ -789,11 +851,14 @@ Possible values: DIRECT_LINE
         """
         Create new Access codes for the given workspace.
         Access codes are used to bypass permissions.
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user
+        auth token with spark:workspaces_write scope can be used to update workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         :param code: Indicates an access code.
         :type code: str
@@ -815,12 +880,18 @@ Possible values: DIRECT_LINE
     def read_call_intercept_settings_for(self, workspace_id: str, org_id: str = None) -> ReadCallInterceptSettingsForWorkspaceResponse:
         """
         Retrieves Workspace's Call Intercept Settings
-        The intercept feature gracefully takes a workspace's phone out of service, while providing callers with informative announcements and alternative routing options. Depending on the service configuration, none, some, or all incoming calls to the specified workspace are intercepted. Also depending on the service configuration, outgoing calls are intercepted or rerouted to another location.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        The intercept feature gracefully takes a workspace's phone out of service, while providing callers with
+        informative announcements and alternative routing options. Depending on the service configuration, none, some,
+        or all incoming calls to the specified workspace are intercepted. Also depending on the service configuration,
+        outgoing calls are intercepted or rerouted to another location.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a
+        user auth token with spark:workspaces_read scope can be used to read workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -833,12 +904,18 @@ Possible values: DIRECT_LINE
     def configure_call_intercept_settings_for(self, workspace_id: str, org_id: str = None, enabled: bool = None, incoming: InterceptIncomingPatch = None, outgoing: InterceptOutGoingGet = None):
         """
         Configures a Workspace's Call Intercept Settings
-        The intercept feature gracefully takes a workspace's phone out of service, while providing callers with informative announcements and alternative routing options. Depending on the service configuration, none, some, or all incoming calls to the specified person are intercepted. Also depending on the service configuration, outgoing calls are intercepted or rerouted to another location.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_write or a user auth token with spark:workspaces_read scope can be used by a person to read their settings.
+        The intercept feature gracefully takes a workspace's phone out of service, while providing callers with
+        informative announcements and alternative routing options. Depending on the service configuration, none, some,
+        or all incoming calls to the specified person are intercepted. Also depending on the service configuration,
+        outgoing calls are intercepted or rerouted to another location.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_write or
+        a user auth token with spark:workspaces_read scope can be used by a person to read their settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         :param enabled: true if call interception is enabled.
         :type enabled: bool
@@ -864,12 +941,17 @@ Possible values: DIRECT_LINE
     def retrieve_transfer_numbers_settings_for(self, workspace_id: str, org_id: str = None) -> RetrieveTransferNumbersSettingsForWorkspaceResponse:
         """
         Retrieve Transfer Numbers Settings for a Workspace.
-        When calling a specific call type, this workspace will be automatically transferred to another number. The person assigned the Auto Transfer Number can then approve the call and send it through or reject the call type. You can add up to 3 numbers.
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a user auth token with spark:workspaces_read scope can be used to read workspace settings.
+        When calling a specific call type, this workspace will be automatically transferred to another number. The
+        person assigned the Auto Transfer Number can then approve the call and send it through or reject the call type.
+        You can add up to 3 numbers.
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or a
+        user auth token with spark:workspaces_read scope can be used to read workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
         params = {}
@@ -882,18 +964,26 @@ Possible values: DIRECT_LINE
     def modify_transfer_numbers_settings_for(self, workspace_id: str, org_id: str = None, auto_transfer_number1: str = None, auto_transfer_number2: str = None, auto_transfer_number3: str = None):
         """
         Modify Transfer Numbers Settings for a place.
-        When calling a specific call type, this workspace will be automatically transferred to another number. The person assigned the Auto Transfer Number can then approve the call and send it through or reject the call type. You can add up to 3 numbers.
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        When calling a specific call type, this workspace will be automatically transferred to another number. The
+        person assigned the Auto Transfer Number can then approve the call and send it through or reject the call type.
+        You can add up to 3 numbers.
+        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a user
+        auth token with spark:workspaces_write scope can be used to update workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param org_id: ID of the organization within which the workspace resides. Only admin users of another organization (such as partners) may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
-        :param auto_transfer_number1: When calling a specific call type, this workspace will be automatically transferred to another number.
+        :param auto_transfer_number1: When calling a specific call type, this workspace will be automatically
+            transferred to another number.
         :type auto_transfer_number1: str
-        :param auto_transfer_number2: When calling a specific call type, this workspace will be automatically transferred to another number.
+        :param auto_transfer_number2: When calling a specific call type, this workspace will be automatically
+            transferred to another number.
         :type auto_transfer_number2: str
-        :param auto_transfer_number3: When calling a specific call type, this workspace will be automatically transferred to another number.
+        :param auto_transfer_number3: When calling a specific call type, this workspace will be automatically
+            transferred to another number.
         :type auto_transfer_number3: str
         """
         params = {}
