@@ -185,6 +185,38 @@ class Parameter(BaseModel):
         return super().dict(exclude={'param_class'}, **kwargs)
 
 
+def break_lines(line: str, line_start: str, first_line_prefix: str=None) -> Generator[str, None, None]:
+    """
+    Break line in multiple lines (max 120 chars) if needed
+    :param line:
+    :param line_start:
+    :return:
+    """
+    max_len = 120
+    current_line = ''
+    if first_line_prefix:
+        # consider the first_line_prefix for determination of line breaks for the 1st row
+        line_prefix = first_line_prefix
+        # first line returned as is. Prefixed as needed by caller
+        start_of_line = ''
+    else:
+        # no special treatment for 1st line
+        line_prefix = line_start
+        start_of_line = line_start
+    for word in line.split():
+        if len(current_line) + len(line_prefix) + len(word) + 1 >= max_len:
+            yield f'{start_of_line}{current_line}'
+            current_line = ''
+            # every line starting with the 2nd line always gets prefixed with line_start
+            start_of_line = line_start
+            # ... and the line_start is considered for line break determination
+            line_prefix = line_start
+        # append word to current line
+        current_line = f'{current_line} {word}'.strip()
+    if current_line:
+        yield f'{start_of_line}{current_line}'
+
+
 @dataclass
 class Class:
     #: registry of Class instances by name
@@ -343,7 +375,7 @@ class Class:
         print(f'class {self._name}({bases}):', file=source)
         for attr in self.attributes:
             for line in attr.doc.strip('\n').splitlines():
-                print(f'    #: {line}', file=source)
+                print('\n'.join(break_lines(line, '    #: ')), file=source)
             if self.is_enum:
                 print(f'    {handle_starting_digit(enum_name(attr.name))} = \'{attr.name}\'', file=source)
             else:
@@ -560,9 +592,12 @@ class DevWebexComScraper:
     new_only: bool
     section: str
     tabs: Union[str, list[str]]
+    # ignore sections not part of the "core": the ones listed in IGNORE_MENUS
+    ignore_non_core: bool
 
     def __init__(self, credentials: Credentials = None, baseline: DocMethodDetails = None,
-                 new_only: bool = True, section: str = None, tabs: Union[str, list[str]] = None):
+                 new_only: bool = True, section: str = None, tabs: Union[str, list[str]] = None,
+                 ignore_non_core: bool = True):
         self.driver = webdriver.Chrome()
         self.logger = logging.getLogger(f'{__name__}.{self.__class__.__name__}')
         self.credentials = credentials
@@ -570,6 +605,7 @@ class DevWebexComScraper:
         self.new_only = new_only
         self.section = section or 'Calling'
         self.tabs = tabs or 'all'
+        self.ignore_non_core = ignore_non_core
 
     def close(self):
         self.log('close()')
@@ -781,7 +817,7 @@ class DevWebexComScraper:
             else:
                 if isinstance(self.tabs, list) and submenu_text not in self.tabs:
                     ignore = True
-                elif submenu_text in IGNORE_MENUS:
+                elif submenu_text in IGNORE_MENUS and self.ignore_non_core:
                     # .. skip all non-"standard" menus
                     ignore = True
                 if False and debugger() and submenu_text not in RELEVANT_MENUS:
