@@ -73,8 +73,10 @@ CALLING_DATA_TIMEOUT_PROTECTION = False
 # identify sync calls to be translated to "await .." calls
 RE_SYNC_CALLS = re.compile(r"""
     (?:(?:self\.(?:(?:_)?session\.)?)|  # self., self._session., self.session.
+                                        # ... or
        (?:super\(\)\.))                 # super().
-    (?:rest_)?(?:get|put|post|delete|patch|close|list)""",
+                                        # followed by these methods and an opening bracket:
+    (?:rest_)?(?:get|put|post|delete|patch|close|list)\(""",
                            flags=re.VERBOSE)
 
 # start of a class until the 1st method

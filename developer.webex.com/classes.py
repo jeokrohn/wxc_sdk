@@ -18,6 +18,7 @@ import argparse
 import json
 import logging
 import re
+import sys
 from collections import Counter
 from collections.abc import Generator, Callable
 from contextlib import contextmanager
@@ -30,7 +31,7 @@ from typing import TextIO, Optional, NamedTuple
 
 from inflection import underscore
 
-from scraper import DocMethodDetails, Parameter, Class, MethodDetails, python_type
+from scraper import DocMethodDetails, Parameter, Class, MethodDetails, python_type, break_lines
 from wxc_sdk.base import to_camel
 
 collected_types = list()
@@ -44,7 +45,7 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
-from pydantic import Field
+from pydantic import Field, parse_obj_as
 """
 
 
@@ -101,6 +102,8 @@ class APIMethod:
     PARAM_INIT = '''
         if {p_name} is not None:
             params['{p_name_camel}'] = {p_name}'''
+    PARAM_INIT_REQUIRED = '''
+        params['{p_name_camel}'] = {p_name}'''
 
     BODY_INIT = '''
         if {p_name} is not None:
@@ -129,11 +132,20 @@ class APIMethod:
             # in list_ methods we want to get rid of "max" and "start"
             if not name.startswith('list_') or p_name not in {'start', 'max'}:
                 param_list.append(for_param_list)
+                p_doc = '\n'.join(break_lines(param.doc,
+                                              # 2nd line and following start with three indentations
+                                              line_start=' ' * 12,
+                                              # 1str line starts with this string, consider this for line breaks of
+                                              # 1st line
+                                              first_line_prefix=f'        :param {p_name}: '))
                 param_docs.append(self.PARAM_DOC.format(p_name=p_name,
                                                         p_type=p_type,
-                                                        p_doc=param.doc).strip('\n'))
+                                                        p_doc=p_doc).strip('\n'))
                 if is_query:
-                    param_code.append(self.PARAM_INIT.format(p_name=p_name, p_name_camel=param.name))
+                    if param.required:
+                        param_code.append(self.PARAM_INIT_REQUIRED.format(p_name=p_name, p_name_camel=param.name))
+                    else:
+                        param_code.append(self.PARAM_INIT.format(p_name=p_name, p_name_camel=param.name))
             if is_body:
                 body_params.append(self.BODY_INIT.format(p_name=p_name))
 
@@ -172,7 +184,8 @@ class APIMethod:
         for param in optional:
             add_param(param.p, is_query=param.is_query, is_body=param.is_body)
 
-        method_doc = '\n'.join(f'        {line}' for line in self.methods_details.doc.splitlines())
+        method_doc = '\n'.join(chain.from_iterable(
+            break_lines(line=line, line_start=' ' * 8) for line in self.methods_details.doc.splitlines()))
         if method_doc:
             method_doc = method_doc + '\n'
         if param_docs:
@@ -236,17 +249,26 @@ class APIMethod:
         if name.startswith('list'):
             if self.response_class is None:
                 # create some syntax error
-                result = f'return !$!!$!$       # documentation at {self.methods_details.documentation.doc_link} is missing return type'
+                result = f'return !$!!$!$       # documentation at {self.methods_details.documentation.doc_link} is ' \
+                         f'missing return type'
                 return_type = ''
             else:
                 result_type = python_type(self.response_class.name, for_list=True)
                 return_type = f' -> Generator[{result_type}, None, None]'
-                result = f'return self.session.follow_pagination(url=url, model={result_type}, params=params{json_param})'
+                result = f'return self.session.follow_pagination(url=url, model={result_type}, ' \
+                         f'params=params{json_param})'
             rest_call = ''
         elif self.response_class:
             if len(self.response_class.attributes) == 1:
-                return_type = python_type(self.response_class.attributes[0].type)
-                result = f'return data["{to_camel(self.response_class.attributes[0].name)}"]'
+                if self.response_class.attributes[0].type =='array[object]':
+                    # we need to deserialize a list fo something
+                    return_type = python_type(self.response_class.attributes[0].param_class.name)
+                    result = f'return parse_obj_as(list[{return_type}], data["'\
+                             f'{to_camel(self.response_class.attributes[0].name)}"])'
+                    return_type = f'list[{return_type}]'
+                else:
+                    return_type = python_type(self.response_class.attributes[0].type)
+                    result = f'return data["{to_camel(self.response_class.attributes[0].name)}"]'
             else:
                 result_type = python_type(self.response_class.name)
                 return_type = f'{result_type}'
@@ -308,7 +330,8 @@ class {class_name}(ApiChild, base='{base}'):
             base = ''
             common_prefix = ''
         if self.doc:
-            doc = '\n'.join(f'    {line}' for line in self.doc.splitlines())
+            doc = '\n'.join(chain.from_iterable(break_lines(line=line, line_start='    ')
+                                                for line in self.doc.splitlines()))
         else:
             doc = ''
         yield self.API_HEADER.format(class_name=class_name, base=base, class_name_doc=doc).strip('\n')
@@ -316,7 +339,10 @@ class {class_name}(ApiChild, base='{base}'):
         # for methods like list_rooms, create_room, update_room, ... we want to get rid of "room"
         # let's look for the most common word in all methods names
         word_counts = Counter(chain.from_iterable(underscore(method.name).split('_') for method in self.methods))
-        word, _ = max(word_counts.items(), key=lambda t: t[1])
+        word, word_count = max(word_counts.items(), key=lambda t: t[1])
+        if word == 'options' or word_count == 1:
+            # let's not transform any: set word to something that is never going to be matching anything
+            word = 'zzzzzzzzzzzzzz'
         method_matcher = re.compile(f'_{word}s?')
 
         def transform_method_name(name: str) -> str:
@@ -355,7 +381,7 @@ class ClassGenerator:
         """
         get list of URL parameters from URL
 
-        Paraméters in URL are strings like "{locationId}". Parameters are returned in CamelCase
+        Parameters in URL are strings like "{locationId}". Parameters are returned in CamelCase
 
         :param url:
         :return:
@@ -531,9 +557,9 @@ class ClassGenerator:
             f'create class: {new_class.name} - {", ".join(f"{attr.name}({attr.type})" for attr in attributes)}')
         return new_class
 
-    def from_doc_method_details(self, api_spec: DocMethodDetails):
+    def from_doc_method_details(self, api_spec: DocMethodDetails, only_section: str = None):
         """
-        Read API spec and identify classes for objects in the API spec
+        Read API spec and identify classes for objects in the API spec. Optionally limited to only one section
 
         :param api_spec:
         :return:
@@ -551,6 +577,8 @@ class ClassGenerator:
         # * param_attrs only for enums
         # * param_object is a class
         for section in api_spec.docs:
+            if only_section and only_section != section:
+                continue
             section_details = api_spec.docs[section]
             methods = section_details.methods
             if not methods:
@@ -608,7 +636,12 @@ class ClassGenerator:
                 if method.body_class:
                     names.update(class_names(method.body_class, attrs_only=True))
         names = sorted(names)
-        return f"""__all__ = [{', '.join(f"'{n}'" for n in names)}]"""
+        first_line_prefix = '__all__ = ['
+        line = f"""{', '.join(f"'{n}'" for n in names)}]"""
+        line = '\n'.join(break_lines(line=line,
+                                     line_start=' ' * len(first_line_prefix),
+                                     first_line_prefix=first_line_prefix))
+        return f'{first_line_prefix}{line}'
 
 
 def main():
@@ -624,6 +657,10 @@ def main():
     # write detailed logs (debug level) to a file
     parser.add_argument('-l', '--logfile', dest='log_path', action='store', required=False, type=str,
                         help='Write detailed logs to this file.')
+
+    # limit output to a single section
+    parser.add_argument('--section', type=str,
+                        help='Limit output to a single section. Example --section "Meeting chats"')
 
     args = parser.parse_args()
 
@@ -644,7 +681,7 @@ def main():
         api_spec = DocMethodDetails.from_yml(args.api_spec)
 
         class_generator = ClassGenerator(output=output)
-        class_generator.from_doc_method_details(api_spec)
+        class_generator.from_doc_method_details(api_spec, only_section=args.section)
         print(PY_HEADER.strip('\n'), file=output)
         print('\n', file=output)
         print(class_generator.dunder_all(), file=output)

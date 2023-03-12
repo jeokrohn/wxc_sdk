@@ -103,6 +103,8 @@ def main():
     parser.add_argument('-t', '--tabs', required=False, type=str, help='tab to parse. Example: "Locations". To read '
                                                                        'all tabs a value of "all" can be used.',
                         default='all', nargs='*')
+    parser.add_argument('--no_ignore', help='Include all sections and don\'t skip stuff like "Wholesale Customer", ...',
+                        action='store_true')
 
     args = parser.parse_args()
 
@@ -149,7 +151,7 @@ def main():
         baseline = None
 
     with DevWebexComScraper(credentials=credentials, baseline=baseline, new_only=args.newonly,
-                            section=args.section, tabs=args.tabs) as site:
+                            section=args.section, tabs=args.tabs, ignore_non_core=not args.no_ignore) as site:
         # get information about existing documentation from developer.webex.com
         docs = site.get_section_docs()
 
