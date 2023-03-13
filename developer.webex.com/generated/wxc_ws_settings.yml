@@ -1,4 +1,4 @@
-# command: developer.webex.com/read_api_spec.py -s Calling -t "Webex Calling Workspace Settings" -f developer.webex.com/wxc_ws_settings.yml
+# command: developer.webex.com/read_api_spec.py -s Calling -t "Webex Calling Workspace Settings" -f developer.webex.com/generated/wxc_ws_settings.yml
 docs:
   BroadWorks Billing Reports:
     doc: null
@@ -868,7 +868,17 @@ docs:
           param_object: []
           type: string
           type_spec: null
-        - doc: ''
+        - doc: '* phoneNumbers (array[PhoneNumbers], fixed-type, required) - Array
+            of numbers (primary/alternate).
+
+            * workspace (workspace, fixed-type, required) - Workspace object having
+            a unique identifier for the Workspace.
+
+            * location (location, fixed-type, required) - Location object having a
+            unique identifier for the location and its name.
+
+            * organization (organization, fixed-type, required) - Organization object
+            having a unique identifier for the organization and its name.'
           name: Attributes
           param_attrs: []
           param_object: []

@@ -665,7 +665,11 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
 
         :param workspace_id: List numbers for this workspace.
         :type workspace_id: str
-        :param attributes: 
+        :param attributes:   * phoneNumbers (array[PhoneNumbers], fixed-type, required) - Array of numbers
+                (primary/alternate). * workspace (workspace, fixed-type, required) - Workspace object having a unique
+                identifier for the Workspace. * location (location, fixed-type, required) - Location object having a
+                unique identifier for the location and its name. * organization (organization, fixed-type, required) -
+                Organization object having a unique identifier for the organization and its name.
         :type attributes: 
         :param body: { "phoneNumbers": [ { "external": "+12055550001", "extension": "12211", "primary": true }, {
             "external": "+12055550002", "extension": "122", "primary": false } ], "workspace": { "id":
