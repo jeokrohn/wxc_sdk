@@ -194,6 +194,14 @@ def break_lines(line: str, line_start: str, first_line_prefix: str=None) -> Gene
     """
     max_len = 120
     current_line = ''
+    # indentation for lines starting with "*"
+    star_line = line.strip().startswith('*')
+    if star_line:
+        line = line.strip()
+        star_indent = '  '
+    else:
+        star_indent = ''
+
     if first_line_prefix:
         # consider the first_line_prefix for determination of line breaks for the 1st row
         line_prefix = first_line_prefix
@@ -204,17 +212,20 @@ def break_lines(line: str, line_start: str, first_line_prefix: str=None) -> Gene
         line_prefix = line_start
         start_of_line = line_start
     for word in line.split():
-        if len(current_line) + len(line_prefix) + len(word) + 1 >= max_len:
-            yield f'{start_of_line}{current_line}'
+        if len(current_line) + len(line_prefix) + len(star_indent) + len(word) + 1 >= max_len:
+            yield f'{start_of_line}{star_indent}{current_line}'
             current_line = ''
             # every line starting with the 2nd line always gets prefixed with line_start
             start_of_line = line_start
+            if star_line:
+                # increased indent of enumerations (star lines) starting with 2nd line
+                star_indent = f'    '
             # ... and the line_start is considered for line break determination
             line_prefix = line_start
         # append word to current line
         current_line = f'{current_line} {word}'.strip()
     if current_line:
-        yield f'{start_of_line}{current_line}'
+        yield f'{start_of_line}{star_indent}{current_line}'
 
 
 @dataclass
@@ -1135,9 +1146,33 @@ class DevWebexComScraper:
                     name = name.split()[0]
 
                 # doc is in the second div
+                # get all <p> and <ul> tags and build doc from that
+                # * each <p> is a line
+                # * each <p> in each <li> of each <ul> is a line prefixed by "* "
+                # stop as soon as a any other tag is hit
+                def doc_lines_from_p_spec():
+                    for child in p_spec_div.children:
+                        child: Tag
+                        if child.name == 'p':
+                            yield child.text
+                            ...
+                        elif child.name == 'ul':
+                            for ul_child in child.children:
+                                ul_child: Tag
+                                if ul_child.name != 'li':
+                                    raise KeyError(f'Unexpected child of <ul>: {ul_child.name}')
+                                yield f"* {' '.join(ul_child.strings)}"
+                        else:
+                            break
+                    return
+                new_doc = '\n'.join(doc_lines_from_p_spec())
+
+
                 doc_paragraphs = p_spec_div.find_all('p', recursive=False)
                 doc = '\n'.join(map(lambda p: p.text, doc_paragraphs))
 
+                assert new_doc.startswith(doc)
+                doc = new_doc
                 # for an enum the second div can have a list of enum values
                 child_divs = p_spec_div.find_all('div', recursive=False)
                 if child_divs:
