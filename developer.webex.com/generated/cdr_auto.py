@@ -23,6 +23,17 @@ class CDR(ApiModel):
     #: necessary.
     call_id: Optional[str] = Field(alias='Call ID')
     #: Type of call. For example:
+    #:   * SIP_MEETING
+    #:   * SIP_INTERNATIONAL
+    #:   * SIP_SHORTCODE
+    #:   * SIP_INBOUND
+    #:   * UNKNOWN
+    #:   * SIP_EMERGENCY
+    #:   * SIP_PREMIUM
+    #:   * SIP_ENTERPRISE
+    #:   * SIP_TOLLFREE
+    #:   * SIP_NATIONAL
+    #:   * SIP_MOBILE
     call_type: Optional[str] = Field(alias='Call type')
     #: For incoming calls, the calling line ID of the user. For outgoing calls, it's the calling line ID of the called
     #: party.
@@ -37,6 +48,12 @@ class CDR(ApiModel):
     #: the user.
     calling_number: Optional[str] = Field(alias='Calling number')
     #: The type of client that the user (creating this record) is using to make or receive the call. For example:
+    #:   * SIP
+    #:   * WXC_CLIENT
+    #:   * WXC_THIRD_PARTY
+    #:   * TEAMS_WXC_CLIENT
+    #:   * WXC_DEVICE
+    #:   * WXC_SIP_GW
     client_type: Optional[str] = Field(alias='Client type')
     #: The version of the client that the user (creating this record) is using to make or receive the call.
     client_version: Optional[str] = Field(alias='Client version')
@@ -48,8 +65,17 @@ class CDR(ApiModel):
     device_mac: Optional[str] = Field(alias='Device MAC')
     #: The keypad digits as dialed by the user, before pre-translations.
     #: This field reports multiple call dial possibilities:
+    #:   * Feature access codes (FAC) used for invoking features such as Last Number Redial or a Call Return.
+    #:   * An extension that got dialed and a mis-dialed keypad digit from a device/app.
+    #:   * When a user must dial an outside access code (for example, 9+) before dialing a number, this access code is
+    #:     also reported, as well as the digits dialed thereafter.
+    #: Note that when pre-translations have no effect, the dialed digits field contains the same data as the called
+    #: number field.
+    #: This field is only used for originating (outgoing) Calls and is not available for terminating (incoming) Calls.
     dialed_digits: Optional[str] = Field(alias='Dialed digits')
     #: Whether the call was inbound or outbound. The possible values are:
+    #:   * ORIGINATING
+    #:   * TERMINATING
     direction: Optional[str]
     #: The length of the call in seconds.
     duration: Optional[int]
@@ -64,12 +90,36 @@ class CDR(ApiModel):
     #: A unique identifier for the organization that made the call. This is a unique identifier across Cisco.
     org_uuid: Optional[str] = Field(alias='Org UUID')
     #: Call redirection reason for the original called number. For example:
+    #:   * Unconditional: Call Forward Always (CFA) service, Group night forwarding.
+    #:   * NoAnswer: The party was not available to take the call. CF/busy or Voicemail/busy.
+    #:   * Deflection: Indicates that a call was redirected. Possible causes could be auto attendant transfer, transfer
+    #:     out of a call-center, user’s app/device redirection, direct VM transfer etc..
+    #:   * TimeOfDay: Call scheduled period of automated redirection. CF/selective, group night forwarding.
+    #:   * UserBusy: DND enabled or the user willingly declined the call. CF/busy or voicemail/busy.
+    #:   * FollowMe: Automated redirection to a personal redirecting service.
+    #:   * CallQueue: A call center call to an agent or a user (a member of the call queue).
+    #:   * HuntGroup: A hunt-group-based call to an agent or a user (denotes a member of the hunt group).
+    #:   * Unavailable: To voicemail, when the user has no app or device.
+    #:   * Unrecognized: Unable to determine the reason.
+    #:   * Unknown: Call forward by phone with no reason.
     original_reason: Optional[str] = Field(alias='Original reason')
     #: The operating system that the app was running on, if available.
     os_type: Optional[str] = Field(alias='OS type')
     #: Outbound trunk may be presented in Originating and Terminating records.
     outbound_trunk: Optional[str] = Field(alias='Outbound trunk')
     #: Call Redirection Reason for the redirecting number. For example:
+    #:   * Unconditional: Call Forward Always (CFA) service.
+    #:   * NoAnswer: The party was not available to take the call. CF/busy or Voicemail/busy.
+    #:   * Deflection: Indicates that a call was redirected. Possible causes could be auto attendant transfer, transfer
+    #:     out of a call-center, user’s app/device redirection, direct VM transfer etc..
+    #:   * TimeOfDay: Call scheduled period of automated redirection. CF/Selective.
+    #:   * UserBusy: DND enabled or user willingly declined the call. CF/busy or Voicemail/busy.
+    #:   * FollowMe: Automated redirection to a personal redirecting service.
+    #:   * CallQueue: A call center call to an agent or a user (denotes a member of the call queue).
+    #:   * HuntGroup: A hunt-group-based call to an agent or a user (denotes a member of the hunt group).
+    #:   * Unavailable: To voicemail, when the user has no app or device.
+    #:   * Unrecognized: Unable to determine the reason.
+    #:   * Unknown: Call forward by phone with no reason.
     redirect_reason: Optional[str] = Field(alias='Redirect reason')
     #: When the call has been redirected one or more times, this field reports the last redirecting number. Identifies
     #: who last redirected the call. Only applies to call scenarios such as transfer, call forwarded calls,
@@ -77,8 +127,37 @@ class CDR(ApiModel):
     redirecting_number: Optional[str] = Field(alias='Redirecting number')
     #: Indicates a trigger that led to a change in the call presence. The trigger could be for this particular call or
     #: redirected via a different call. For example:
+    #:   * ConsultativeTransfer: While on a call, the call was transferred to another user by announcing it first.
+    #:     meaning the person was given a heads up or asked if they're interested in taking the call and then
+    #:     transferred.
+    #:   * CallForwardSelective: Call Forward as per the defined schedule. Might be based on factors like a specific
+    #:     time, specific callers or to a VM. It always takes precedence over Call Forwarding.
+    #:   * CallForwardAlways: Calls are unconditionally forwarded to a defined phone number or to VM.
+    #:   * CallForwardNoAnswer: The party was not available to take the call.
+    #:   * CallQueue: A call center call to an agent or a user (denotes a member of the call queue).
+    #:   * HuntGroup: A hunt group based call to an agent or a user (denotes a member of the hunt group).
+    #:   * CallPickup: The user part of a pickup group or pickup attempted by this user against a ringing call for a
+    #:     different user or extension.
+    #:   * CalllPark: An ongoing call was parked, assigned with a parked number (not the user’s phone number).
+    #:   * CallParkRetrieve: Call park retrieval attempt by the user, either for a different extension or against the
+    #:     user’s own extension.
+    #:   * Deflection: Indicates that a call was redirected. Possible causes include an auto attendant transfer,
+    #:     transfer out of a call-center, user’s app/device redirection etc..
+    #:   * FaxDeposit: Indicates a FAX was transmitted to the FAX service.
+    #:   * PushNotificationRetrieval: Push notification feature usage indication. Means that a push notification was
+    #:     sent to wake up the client and get ready to receive a call.
+    #:   * BargeIn: Indicates the user barged-in to someone else’s call.
+    #:   * VoiceXMLScriptTermination: Route Point feature usage indication.
+    #:   * AnywhereLocation: Indicates call origination towards the single number reach location.
+    #:   * AnywherePortal: Indicates call origination towards the “user” identified by the single number reach portal.
+    #:   * Unrecognized: Unable to determine the reason.
     related_reason: Optional[str] = Field(alias='Related reason')
     #: Indicates which party released the call first. The possible values are:
+    #:   * Local: Used when the local user has released the call first.
+    #:   * Remote: Used when the far-end party releases the call first.
+    #:   * Unknown: Used when the call has partial information or is unable to gather enough information about the
+    #:     party who released the call. It could be because of situations like force lock or because of a session audit
+    #:     failure.
     releasing_party: Optional[str] = Field(alias='Releasing party')
     #: A unique ID for this particular record. This can be used when processing records to aid in deduplication.
     report_id: Optional[str] = Field(alias='Report ID')
@@ -105,6 +184,18 @@ class CDR(ApiModel):
     #: The user who made or received the call.
     user: Optional[str]
     #: The type of user (user or workspace) that made or received the call. For example:
+    #:   * AutomatedAttendantVideo
+    #:   * Anchor
+    #:   * BroadworksAnywhere
+    #:   * VoiceMailRetrieval
+    #:   * LocalGateway
+    #:   * HuntGroup
+    #:   * GroupPaging
+    #:   * User
+    #:   * VoiceMailGroup
+    #:   * CallCenterStandard
+    #:   * VoiceXML
+    #:   * RoutePoint
     user_type: Optional[str] = Field(alias='User type')
     #: A unique identifier for the user associated with the call. This is a unique identifier across Cisco products.
     user_uuid: Optional[str] = Field(alias='User UUID')

@@ -1,4 +1,4 @@
-# command: developer.webex.com/read_api_spec.py -a developer.webex.com/.env -f developer.webex.com/auth_api_spec.yml
+# command: developer.webex.com/read_api_spec.py -a developer.webex.com/.env -f developer.webex.com/generated/auth_api_spec.yml
 docs:
   BroadWorks Billing Reports:
     doc: null
@@ -6348,7 +6348,29 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: 'Type of call. For example:'
+          - doc: 'Type of call. For example:
+
+              * SIP_MEETING
+
+              * SIP_INTERNATIONAL
+
+              * SIP_SHORTCODE
+
+              * SIP_INBOUND
+
+              * UNKNOWN
+
+              * SIP_EMERGENCY
+
+              * SIP_PREMIUM
+
+              * SIP_ENTERPRISE
+
+              * SIP_TOLLFREE
+
+              * SIP_NATIONAL
+
+              * SIP_MOBILE'
             name: Call type
             param_attrs: []
             param_object: []
@@ -6383,7 +6405,19 @@ docs:
             type: string
             type_spec: null
           - doc: 'The type of client that the user (creating this record) is using
-              to make or receive the call. For example:'
+              to make or receive the call. For example:
+
+              * SIP
+
+              * WXC_CLIENT
+
+              * WXC_THIRD_PARTY
+
+              * TEAMS_WXC_CLIENT
+
+              * WXC_DEVICE
+
+              * WXC_SIP_GW'
             name: Client type
             param_attrs: []
             param_object: []
@@ -6416,13 +6450,26 @@ docs:
             type: string
             type_spec: null
           - doc: "The keypad digits as dialed by the user, before pre-translations.\
-              \ \nThis field reports multiple call dial possibilities:"
+              \ \nThis field reports multiple call dial possibilities:\n* Feature\
+              \ access codes (FAC) used for invoking features such as Last Number\
+              \ Redial or a Call Return.\n* An extension that got dialed and a mis-dialed\
+              \ keypad digit from a device/app.\n* When a user must dial an outside\
+              \ access code (for example, 9+) before dialing a number, this access\
+              \ code is also reported, as well as the digits dialed thereafter. \n\
+              Note that when pre-translations have no effect, the dialed digits field\
+              \ contains the same data as the called number field. \nThis field is\
+              \ only used for originating (outgoing) Calls and is not available for\
+              \ terminating (incoming) Calls."
             name: Dialed digits
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: 'Whether the call was inbound or outbound. The possible values are:'
+          - doc: 'Whether the call was inbound or outbound. The possible values are:
+
+              * ORIGINATING
+
+              * TERMINATING'
             name: Direction
             param_attrs: []
             param_object: []
@@ -6466,7 +6513,21 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: 'Call redirection reason for the original called number. For example:'
+          - doc: "Call redirection reason for the original called number. For example:\n\
+              * Unconditional: Call Forward Always (CFA) service, Group night forwarding.\n\
+              * NoAnswer: The party was not available to take the call. CF/busy or\
+              \ Voicemail/busy.\n* Deflection: Indicates that a call was redirected.\
+              \ Possible causes could be auto attendant transfer, transfer out of\
+              \ a call-center, user\u2019s app/device redirection, direct VM transfer\
+              \ etc..\n* TimeOfDay: Call scheduled period of automated redirection.\
+              \ CF/selective, group night forwarding.\n* UserBusy: DND enabled or\
+              \ the user willingly declined the call. CF/busy or voicemail/busy.\n\
+              * FollowMe: Automated redirection to a personal redirecting service.\n\
+              * CallQueue: A call center call to an agent or a user (a member of the\
+              \ call queue).\n* HuntGroup: A hunt-group-based call to an agent or\
+              \ a user (denotes a member of the hunt group).\n* Unavailable: To voicemail,\
+              \ when the user has no app or device.\n* Unrecognized: Unable to determine\
+              \ the reason.\n* Unknown: Call forward by phone with no reason."
             name: Original reason
             param_attrs: []
             param_object: []
@@ -6484,7 +6545,21 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: 'Call Redirection Reason for the redirecting number. For example:'
+          - doc: "Call Redirection Reason for the redirecting number. For example:\n\
+              * Unconditional: Call Forward Always (CFA) service.\n* NoAnswer: The\
+              \ party was not available to take the call. CF/busy or Voicemail/busy.\n\
+              * Deflection: Indicates that a call was redirected. Possible causes\
+              \ could be auto attendant transfer, transfer out of a call-center, user\u2019\
+              s app/device redirection, direct VM transfer etc..\n* TimeOfDay: Call\
+              \ scheduled period of automated redirection. CF/Selective.\n* UserBusy:\
+              \ DND enabled or user willingly declined the call. CF/busy or Voicemail/busy.\n\
+              * FollowMe: Automated redirection to a personal redirecting service.\n\
+              * CallQueue: A call center call to an agent or a user (denotes a member\
+              \ of the call queue).\n* HuntGroup: A hunt-group-based call to an agent\
+              \ or a user (denotes a member of the hunt group).\n* Unavailable: To\
+              \ voicemail, when the user has no app or device.\n* Unrecognized: Unable\
+              \ to determine the reason.\n* Unknown: Call forward by phone with no\
+              \ reason."
             name: Redirect reason
             param_attrs: []
             param_object: []
@@ -6499,16 +6574,52 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: 'Indicates a trigger that led to a change in the call presence. The
-              trigger could be for this particular call or redirected via a different
-              call. For example:'
+          - doc: "Indicates a trigger that led to a change in the call presence. The\
+              \ trigger could be for this particular call or redirected via a different\
+              \ call. For example:\n* ConsultativeTransfer: While on a call, the call\
+              \ was transferred to another user by announcing it first. meaning the\
+              \ person was given a heads up or asked if they're interested in taking\
+              \ the call and then transferred.\n* CallForwardSelective: Call Forward\
+              \ as per the defined schedule. Might be based on factors like a specific\
+              \ time, specific callers or to a VM. It always takes precedence over\
+              \ Call Forwarding.\n* CallForwardAlways: Calls are unconditionally forwarded\
+              \ to a defined phone number or to VM.\n* CallForwardNoAnswer: The party\
+              \ was not available to take the call.\n* CallQueue: A call center call\
+              \ to an agent or a user (denotes a member of the call queue).\n* HuntGroup:\
+              \ A hunt group based call to an agent or a user (denotes a member of\
+              \ the hunt group).\n* CallPickup: The user part of a pickup group or\
+              \ pickup attempted by this user against a ringing call for a different\
+              \ user or extension.\n* CalllPark: An ongoing call was parked, assigned\
+              \ with a parked number (not the user\u2019s phone number).\n* CallParkRetrieve:\
+              \ Call park retrieval attempt by the user, either for a different extension\
+              \ or against the user\u2019s own extension.\n* Deflection: Indicates\
+              \ that a call was redirected. Possible causes include an auto attendant\
+              \ transfer, transfer out of a call-center, user\u2019s app/device redirection\
+              \ etc..\n* FaxDeposit: Indicates a FAX was transmitted to the FAX service.\n\
+              * PushNotificationRetrieval: Push notification feature usage indication.\
+              \ Means that a push notification was sent to wake up the client and\
+              \ get ready to receive a call.\n* BargeIn: Indicates the user barged-in\
+              \ to someone else\u2019s call.\n* VoiceXMLScriptTermination: Route Point\
+              \ feature usage indication.\n* AnywhereLocation: Indicates call origination\
+              \ towards the single number reach location.\n* AnywherePortal: Indicates\
+              \ call origination towards the \u201Cuser\u201D identified by the single\
+              \ number reach portal.\n* Unrecognized: Unable to determine the reason."
             name: Related reason
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
           - doc: 'Indicates which party released the call first. The possible values
-              are:'
+              are:
+
+              * Local: Used when the local user has released the call first.
+
+              * Remote: Used when the far-end party releases the call first.
+
+              * Unknown: Used when the call has partial information or is unable to
+              gather enough information about the party who released the call. It
+              could be because of situations like force lock or because of a session
+              audit failure.'
             name: Releasing party
             param_attrs: []
             param_object: []
@@ -6585,7 +6696,31 @@ docs:
             type: string
             type_spec: null
           - doc: 'The type of user (user or workspace) that made or received the call.
-              For example:'
+              For example:
+
+              * AutomatedAttendantVideo
+
+              * Anchor
+
+              * BroadworksAnywhere
+
+              * VoiceMailRetrieval
+
+              * LocalGateway
+
+              * HuntGroup
+
+              * GroupPaging
+
+              * User
+
+              * VoiceMailGroup
+
+              * CallCenterStandard
+
+              * VoiceXML
+
+              * RoutePoint'
             name: User type
             param_attrs: []
             param_object: []
@@ -6982,6 +7117,42 @@ docs:
             param_object: []
             type: boolean
             type_spec: null
+          - doc: Announcement Audio File details.
+            name: audioFile
+            param_attrs:
+            - doc: Announcement audio file name.
+              name: name
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Announcement audio file media type.
+              name: mediaType
+              param_attrs:
+              - doc: WMA File Extension.
+                name: WMA
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: WAV File Extension.
+                name: WAV
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: 3GP File Extension.
+                name: 3GP
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            param_object: []
+            type: AudioFileObject
+            type_spec: null
           - doc: Key configurations defined for the auto attendant.
             name: keyConfigurations
             param_attrs:
@@ -7161,6 +7332,42 @@ docs:
             param_attrs: []
             param_object: []
             type: boolean
+            type_spec: null
+          - doc: Announcement Audio File details.
+            name: audioFile
+            param_attrs:
+            - doc: Announcement audio file name.
+              name: name
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Announcement audio file media type.
+              name: mediaType
+              param_attrs:
+              - doc: WMA File Extension.
+                name: WMA
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: WAV File Extension.
+                name: WAV
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: 3GP File Extension.
+                name: 3GP
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            param_object: []
+            type: AudioFileObject
             type_spec: null
           - doc: Key configurations defined for the auto attendant.
             name: keyConfigurations
@@ -7661,7 +7868,7 @@ docs:
             type: KeyConfigurationsObject
             type_spec: required
           param_object: []
-          type: HoursMenuObject
+          type: PostHoursMenuObject
           type_spec: required
         - doc: After hours menu defined for the auto attendant.
           name: afterHoursMenu
@@ -7841,7 +8048,7 @@ docs:
             type: KeyConfigurationsObject
             type_spec: required
           param_object: []
-          type: HoursMenuObject
+          type: PostHoursMenuObject
           type_spec: required
         Query Parameters:
         - doc: Create the auto attendant for this organization.
@@ -8046,6 +8253,42 @@ docs:
             param_object: []
             type: boolean
             type_spec: required
+          - doc: Announcement Audio File details.
+            name: audioFile
+            param_attrs:
+            - doc: Announcement audio file name.
+              name: name
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: required
+            - doc: Announcement audio file media type.
+              name: mediaType
+              param_attrs:
+              - doc: WMA File Extension.
+                name: WMA
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: WAV File Extension.
+                name: WAV
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: 3GP File Extension.
+                name: 3GP
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: required
+            param_object: []
+            type: AudioFileObject
+            type_spec: null
           - doc: Key configurations defined for the auto attendant.
             name: keyConfigurations
             param_attrs:
@@ -8226,6 +8469,42 @@ docs:
             param_object: []
             type: boolean
             type_spec: required
+          - doc: Announcement Audio File details.
+            name: audioFile
+            param_attrs:
+            - doc: Announcement audio file name.
+              name: name
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: required
+            - doc: Announcement audio file media type.
+              name: mediaType
+              param_attrs:
+              - doc: WMA File Extension.
+                name: WMA
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: WAV File Extension.
+                name: WAV
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: 3GP File Extension.
+                name: 3GP
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: required
+            param_object: []
+            type: AudioFileObject
+            type_spec: null
           - doc: Key configurations defined for the auto attendant.
             name: keyConfigurations
             param_attrs:
@@ -21545,7 +21824,11 @@ docs:
           param_object: []
           type: string
           type_spec: null
-        - doc: Type of the schedule.
+        - doc: 'Type of the schedule.
+
+            * businessHours  - Business hours schedule type.
+
+            * holidays  - Holidays schedule type.'
           name: type
           param_attrs: []
           param_object: []
@@ -22057,7 +22340,11 @@ docs:
           param_object: []
           type: string
           type_spec: required
-        - doc: Type of the schedule.
+        - doc: 'Type of the schedule.
+
+            * businessHours  - Business hours schedule type.
+
+            * holidays  - Holidays schedule type.'
           name: type
           param_attrs: []
           param_object: []
@@ -22915,7 +23202,11 @@ docs:
           param_object: []
           type: string
           type_spec: required
-        - doc: Type of schedule.
+        - doc: 'Type of schedule.
+
+            * businessHours  - Business hours schedule type.
+
+            * holidays  - Holidays schedule type.'
           name: type
           param_attrs: []
           param_object: []
@@ -22956,7 +23247,11 @@ docs:
           param_object: []
           type: string
           type_spec: required
-        - doc: Type of the schedule.
+        - doc: 'Type of the schedule.
+
+            * businessHours  - Business hours schedule type.
+
+            * holidays  - Holidays schedule type.'
           name: type
           param_attrs: []
           param_object: []
@@ -23364,7 +23659,11 @@ docs:
           param_object: []
           type: string
           type_spec: required
-        - doc: Type of schedule.
+        - doc: 'Type of schedule.
+
+            * businessHours  - Business hours schedule type.
+
+            * holidays  - Holidays schedule type.'
           name: type
           param_attrs: []
           param_object: []
@@ -23780,7 +24079,11 @@ docs:
           param_object: []
           type: string
           type_spec: required
-        - doc: Type of schedule.
+        - doc: 'Type of schedule.
+
+            * businessHours  - Business hours schedule type.
+
+            * holidays  - Holidays schedule type.'
           name: type
           param_attrs: []
           param_object: []
@@ -24193,7 +24496,11 @@ docs:
           param_object: []
           type: string
           type_spec: required
-        - doc: Type of schedule.
+        - doc: 'Type of schedule.
+
+            * businessHours  - Business hours schedule type.
+
+            * holidays  - Holidays schedule type.'
           name: type
           param_attrs: []
           param_object: []
@@ -24240,7 +24547,11 @@ docs:
           param_object: []
           type: string
           type_spec: required
-        - doc: Type of schedule.
+        - doc: 'Type of schedule.
+
+            * businessHours  - Business hours schedule type.
+
+            * holidays  - Holidays schedule type.'
           name: type
           param_attrs: []
           param_object: []
@@ -46263,7 +46574,17 @@ docs:
           param_object: []
           type: string
           type_spec: null
-        - doc: ''
+        - doc: '* phoneNumbers (array[PhoneNumbers], fixed-type, required) - Array
+            of numbers (primary/alternate).
+
+            * workspace (workspace, fixed-type, required) - Workspace object having
+            a unique identifier for the Workspace.
+
+            * location (location, fixed-type, required) - Location object having a
+            unique identifier for the location and its name.
+
+            * organization (organization, fixed-type, required) - Organization object
+            having a unique identifier for the organization and its name.'
           name: Attributes
           param_attrs: []
           param_object: []
@@ -48125,7 +48446,11 @@ docs:
           type_spec: null
         - doc: 'List of errors that occurred during report generation.
 
-            Note:'
+            Note:
+
+            * This list captures errors that occurred during asynchronous or background
+            report generation, after the request has been accepted and a  202 OK  response
+            is returned.'
           name: errors
           param_attrs:
           - doc: An error code that identifies the reason for the error.
@@ -48248,1058 +48573,6 @@ docs:
     doc: null
     header: null
     methods: []
-  Wholesale Customers RPL Flow Enabled:
-    doc: 'These are a set of APIs that are specifically targeted at Service Providers
-      who sign up for Webex Wholesale. They enable Service Providers to provision
-      Cisco Webex Services for their Customers.
-
-      Viewing Webex Wholesale customer information requires an administrator auth
-      token with spark-admin:wholesale_customers_read scope. Provisioning, updating,
-      and removing customers requires an administrator auth token with the spark-admin:wholesale_customers_write
-      scope.'
-    header: Wholesale Customers RPL Flow Enabled
-    methods:
-    - doc: This API will allow a Service Provider to search for their customers. There
-        are a number of filter options which can be combined in a single request.
-      documentation:
-        doc: List Wholesale Customers
-        doc_link: https://developer.webex.com/docs/api/v1/wholesale-customers-rpl-flow-enabled/list-wholesale-customers
-        endpoint: https://webexapis.com/v1/wholesale/customers
-        http_method: GET
-      header: List Wholesale Customers
-      parameters_and_response:
-        Query Parameters:
-        - doc: Customer external ID.
-          name: externalId
-          param_attrs: []
-          param_object: []
-          type: string
-          type_spec: null
-        - doc: Customer API Status.
-          name: status
-          param_attrs: []
-          param_object: []
-          type: list
-          type_spec: null
-        - doc: Specific Offset value.
-          name: offset
-          param_attrs: []
-          param_object: []
-          type: int
-          type_spec: null
-        - doc: The max limit of customers.
-          name: max
-          param_attrs: []
-          param_object: []
-          type: int
-          type_spec: null
-        Response Properties:
-        - doc: An array of Customer objects.
-          name: items
-          param_attrs:
-          - doc: A unique Cisco identifier for the customer. To be used when referencing
-              this customer in the Wholesale Customers and Wholesale Subscribers API
-              when it references customerId.
-            name: id
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: The Organization ID of the enterprise on Cisco Webex, to be used
-              when referencing this customer on other Cisco Webex APIs. Only presented
-              when status is provisioned.
-            name: orgId
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: External ID of the Customer.
-            name: externalId
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: ''
-            name: address
-            param_attrs:
-            - doc: First address line.
-              name: addressLine1
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: Second address line.
-              name: addressLine2
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: City of the customer.
-              name: city
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: State or Province of the customer.
-              name: stateOrProvince
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: Postal/Zip code of the customer.
-              name: zipOrPostalCode
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: ISO2 country code of the customer; maximum of 2 characters.
-              name: country
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            param_object: []
-            type: Address
-            type_spec: null
-          - doc: The provisioning status of the customer.
-            name: status
-            param_attrs:
-            - doc: The customer is fully provisioned on Cisco Webex.
-              name: provisioned
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: The customer is provisioned with errors.
-              name: provisioned_with_errors
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: The customer is provisioning.
-              name: provisioning
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: The customer is updating.
-              name: updating
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: The customer is being deleted.
-              name: deleting
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: An error occurred provisioning the customer on Cisco Webex.
-              name: error
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            - doc: The customer is pending a Denied Party List compliance check.
-              name: pending_rpl_review
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            param_object: []
-            type: enum
-            type_spec: null
-          - doc: List of package names provisioned.
-            name: packages
-            param_attrs: []
-            param_object: []
-            type: array[string]
-            type_spec: null
-          - doc: ''
-            name: resourceDetails
-            param_attrs:
-            - doc: ''
-              name: packages
-              param_attrs:
-              - doc: The Webex Wholesale Packages assigned to the customer.
-                name: name
-                param_attrs:
-                - doc: The Webex Common Area Calling Package.
-                  name: common_area_calling
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                - doc: The Webex Calling Package.
-                  name: webex_calling
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                - doc: The Webex Meetings Package.
-                  name: webex_meetings
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                - doc: The Webex Suite Package.
-                  name: webex_suite
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                param_object: []
-                type: enum
-                type_spec: null
-              - doc: The provisioning status of the a particular package.
-                name: status
-                param_attrs:
-                - doc: The customer is fully provisioned on Cisco Webex.
-                  name: provisioned
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                - doc: The customer is provisioning.
-                  name: provisioning
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                - doc: The customer is being deleted.
-                  name: deleting
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                - doc: An error occurred provisioning the customer on Cisco Webex.
-                  name: error
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                param_object: []
-                type: enum
-                type_spec: null
-              - doc: "List of warnings that occurred during that last attempt to provision/update\
-                  \ this customer.\n Note:"
-                name: warnings
-                param_attrs:
-                - doc: An error code that identifies the reason for the error
-                  name: errorCode
-                  param_attrs: []
-                  param_object: []
-                  type: number
-                  type_spec: null
-                - doc: A textual representation of the error code.
-                  name: description
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                param_object: []
-                type: array[Error]
-                type_spec: null
-              - doc: "List of errors that occurred during that last attempt to provision/update\
-                  \ this customer.\n Note:"
-                name: errors
-                param_attrs:
-                - doc: An error code that identifies the reason for the error
-                  name: errorCode
-                  param_attrs: []
-                  param_object: []
-                  type: number
-                  type_spec: null
-                - doc: A textual representation of the error code.
-                  name: description
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                param_object: []
-                type: array[Error]
-                type_spec: null
-              param_object: []
-              type: array[Package]
-              type_spec: null
-            param_object: []
-            type: ResourceDetails
-            type_spec: null
-          - doc: "List of errors that occurred during that last attempt to provision/update\
-              \ this customer.\n Note:"
-            name: errors
-            param_attrs:
-            - doc: An error code that identifies the reason for the error
-              name: errorCode
-              param_attrs: []
-              param_object: []
-              type: number
-              type_spec: null
-            - doc: A textual representation of the error code.
-              name: description
-              param_attrs: []
-              param_object: []
-              type: string
-              type_spec: null
-            param_object: []
-            type: array[Error]
-            type_spec: null
-          param_object: []
-          type: array[Customer]
-          type_spec: null
-    - doc: 'Provision a Wholesale customer for Cisco Webex services.
-
-        This API will allow a Service Provider to map the Wholesale customer and assign
-        the required licenses and entitlements for Webex, Calling and Meetings.
-
-        The Wholesale customer provisioning is asynchronous and thus a background
-        task is created when this endpoint is invoked.'
-      documentation:
-        doc: Provision a Wholesale Customer
-        doc_link: https://developer.webex.com/docs/api/v1/wholesale-customers-rpl-flow-enabled/provision-a-wholesale-customer
-        endpoint: https://webexapis.com/v1/wholesale/customers
-        http_method: POST
-      header: Provision a Wholesale Customer
-      parameters_and_response:
-        Body Parameters:
-        - doc: 'This Provisioning ID defines how this customer is to be provisioned
-            for Cisco Webex Services.
-
-            Each Customer Template will have their own unique Provisioning ID. This
-            ID will be displayed under the chosen Customer Template
-
-            on Cisco Webex Control Hub.'
-          name: provisioningId
-          param_attrs: []
-          param_object: []
-          type: string
-          type_spec: required
-        - doc: 'The complete list of Webex Wholesale packages to be assigned to the
-            customer.
-
-            Possible values: common_area_calling, webex_calling, webex_meetings, webex_suite'
-          name: packages
-          param_attrs: []
-          param_object: []
-          type: array[string]
-          type_spec: required
-        - doc: The Organization ID of the enterprise on Cisco Webex. Mandatory for
-            existing customer.
-          name: orgId
-          param_attrs: []
-          param_object: []
-          type: string
-          type_spec: null
-        - doc: External ID of the Wholesale customer.
-          name: externalId
-          param_attrs: []
-          param_object: []
-          type: string
-          type_spec: required
-        - doc: Billing Address of the customer.
-          name: address
-          param_attrs:
-          - doc: First address line.
-            name: addressLine1
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: required
-          - doc: Second address line.
-            name: addressLine2
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: City of the customer.
-            name: city
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: required
-          - doc: State or Province of the customer. This attribute may be required
-              in specific geographies, please refer to address section in the admin
-              guide for more information.
-            name: stateOrProvince
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: Postal/Zip code of the customer. This attribute may be required in
-              specific geographies, please refer to address section in the admin guide
-              for more information.
-            name: zipOrPostalCode
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: ISO2 country code of the customer; maximum of 2 characters.
-            name: country
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: required
-          param_object: []
-          type: object
-          type_spec: required
-        - doc: Mandatory for new customer. Optional if Organization ID is provided
-          name: customerInfo
-          param_attrs:
-          - doc: The name of the Wholesale customer.
-            name: name
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: required
-          - doc: The primary email address of the customer.
-            name: primaryEmail
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: required
-          param_object: []
-          type: object
-          type_spec: null
-        - doc: ''
-          name: provisioningParameters
-          param_attrs:
-          - doc: ''
-            name: calling
-            param_attrs:
-            - doc: ''
-              name: location
-              param_attrs:
-              - doc: Name of the wholesale customer office.
-                name: name
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: required
-              - doc: Address of the wholesale customer.
-                name: address
-                param_attrs:
-                - doc: First address line.
-                  name: addressLine1
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: required
-                - doc: Second address line.
-                  name: addressLine2
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                - doc: City of the wholesale customer.
-                  name: city
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: required
-                - doc: State or Province of the customer. This attribute may be required
-                    in specific geographies, please refer to address section in the
-                    admin guide for more information.
-                  name: stateOrProvince
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                - doc: Postal/Zip code of the customer. This attribute may be required
-                    in specific geographies, please refer to address section in the
-                    admin guide for more information.
-                  name: zipOrPostalCode
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                - doc: ''
-                  name: country
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: required
-                param_object: []
-                type: object
-                type_spec: required
-              - doc: Customer timezone for calling package.
-                name: timezone
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: required
-              - doc: Determine language for all generated emails and voice announcements.
-                name: language
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: required
-              - doc: SIP Header for any emergency calls from this location.
-                name: emergencyLocationIdentifier
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
-              - doc: List of numbers to be assigned to the location.
-                name: numbers
-                param_attrs:
-                - doc: ''
-                  name: '+17205557878'
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                - doc: ''
-                  name: '+17205557879'
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                - doc: ''
-                  name: '+17205557880'
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                - doc: ''
-                  name: '+17205557881'
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                param_object: []
-                type: array[string]
-                type_spec: null
-              - doc: Main number of the Wholesale customer.
-                name: mainNumber
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
-              param_object: []
-              type: object
-              type_spec: required
-            param_object: []
-            type: object
-            type_spec: null
-          - doc: '
-
-              Customer timezone for meetings package.'
-            name: meetings
-            param_attrs: []
-            param_object: []
-            type: object
-            type_spec: null
-          param_object: []
-          type: object
-          type_spec: null
-        Response Properties:
-        - doc: A URL which points to the Get a Wholesale Customer endpoint for the
-            provisioned customer.
-          name: url
-          param_attrs: []
-          param_object: []
-          type: string
-          type_spec: null
-    - doc: Retrieve details of a provisioned Wholesale customer on Cisco Webex.
-      documentation:
-        doc: Get a Wholesale Customer
-        doc_link: https://developer.webex.com/docs/api/v1/wholesale-customers-rpl-flow-enabled/get-a-wholesale-customer
-        endpoint: https://webexapis.com/v1/wholesale/customers/{customerId}
-        http_method: GET
-      header: Get a Wholesale Customer
-      parameters_and_response:
-        Response Properties:
-        - doc: A unique Cisco identifier for the customer. To be used when referencing
-            this customer in the Wholesale Customers and Wholesale Subscribers API
-            when it references customerId.
-          name: id
-          param_attrs: []
-          param_object: []
-          type: string
-          type_spec: null
-        - doc: The Organization ID of the enterprise on Cisco Webex, to be used when
-            referencing this customer on other Cisco Webex APIs. Only presented when
-            status is provisioned.
-          name: orgId
-          param_attrs: []
-          param_object: []
-          type: string
-          type_spec: null
-        - doc: External ID of the Customer.
-          name: externalId
-          param_attrs: []
-          param_object: []
-          type: string
-          type_spec: null
-        - doc: ''
-          name: address
-          param_attrs:
-          - doc: First address line.
-            name: addressLine1
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: Second address line.
-            name: addressLine2
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: City of the customer.
-            name: city
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: State or Province of the customer.
-            name: stateOrProvince
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: Postal/Zip code of the customer.
-            name: zipOrPostalCode
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: ISO2 country code of the customer; maximum of 2 characters.
-            name: country
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          param_object: []
-          type: Address
-          type_spec: null
-        - doc: The provisioning status of the customer.
-          name: status
-          param_attrs:
-          - doc: The customer is fully provisioned on Cisco Webex.
-            name: provisioned
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: The customer is provisioned with errors.
-            name: provisioned_with_errors
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: The customer is provisioning.
-            name: provisioning
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: The customer is updating.
-            name: updating
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: The customer is being deleted.
-            name: deleting
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: An error occurred provisioning the customer on Cisco Webex.
-            name: error
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: The customer is pending a Denied Party List compliance check.
-            name: pending_rpl_review
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          param_object: []
-          type: enum
-          type_spec: null
-        - doc: List of package names provisioned.
-          name: packages
-          param_attrs: []
-          param_object: []
-          type: array[string]
-          type_spec: null
-        - doc: ''
-          name: resourceDetails
-          param_attrs:
-          - doc: ''
-            name: packages
-            param_attrs:
-            - doc: The Webex Wholesale Packages assigned to the customer.
-              name: name
-              param_attrs:
-              - doc: The Webex Common Area Calling Package.
-                name: common_area_calling
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
-              - doc: The Webex Calling Package.
-                name: webex_calling
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
-              - doc: The Webex Meetings Package.
-                name: webex_meetings
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
-              - doc: The Webex Suite Package.
-                name: webex_suite
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
-              param_object: []
-              type: enum
-              type_spec: null
-            - doc: The provisioning status of the a particular package.
-              name: status
-              param_attrs:
-              - doc: The customer is fully provisioned on Cisco Webex.
-                name: provisioned
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
-              - doc: The customer is provisioning.
-                name: provisioning
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
-              - doc: The customer is being deleted.
-                name: deleting
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
-              - doc: An error occurred provisioning the customer on Cisco Webex.
-                name: error
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
-              param_object: []
-              type: enum
-              type_spec: null
-            - doc: "List of warnings that occurred during that last attempt to provision/update\
-                \ this customer.\n Note:"
-              name: warnings
-              param_attrs:
-              - doc: An error code that identifies the reason for the error
-                name: errorCode
-                param_attrs: []
-                param_object: []
-                type: number
-                type_spec: null
-              - doc: A textual representation of the error code.
-                name: description
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
-              param_object: []
-              type: array[Error]
-              type_spec: null
-            - doc: "List of errors that occurred during that last attempt to provision/update\
-                \ this customer.\n Note:"
-              name: errors
-              param_attrs:
-              - doc: An error code that identifies the reason for the error
-                name: errorCode
-                param_attrs: []
-                param_object: []
-                type: number
-                type_spec: null
-              - doc: A textual representation of the error code.
-                name: description
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
-              param_object: []
-              type: array[Error]
-              type_spec: null
-            param_object: []
-            type: array[Package]
-            type_spec: null
-          param_object: []
-          type: ResourceDetails
-          type_spec: null
-        - doc: "List of errors that occurred during that last attempt to provision/update\
-            \ this customer.\n Note:"
-          name: errors
-          param_attrs:
-          - doc: An error code that identifies the reason for the error
-            name: errorCode
-            param_attrs: []
-            param_object: []
-            type: number
-            type_spec: null
-          - doc: A textual representation of the error code.
-            name: description
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          param_object: []
-          type: array[Error]
-          type_spec: null
-        URI Parameters:
-        - doc: A unique identifier for the customer in question.
-          name: customerId
-          param_attrs: []
-          param_object: []
-          type: string
-          type_spec: required
-    - doc: 'Update certain details of a provisioned Wholesale customer on Cisco Webex.
-
-        The Wholesale customer provisioning is asynchronous and thus a background
-        task is created when this endpoint is invoked.'
-      documentation:
-        doc: Update a Wholesale Customer
-        doc_link: https://developer.webex.com/docs/api/v1/wholesale-customers-rpl-flow-enabled/update-a-wholesale-customer
-        endpoint: https://webexapis.com/v1/wholesale/customers/{customerId}
-        http_method: PUT
-      header: Update a Wholesale Customer
-      parameters_and_response:
-        Body Parameters:
-        - doc: External ID of the Wholesale cutomer
-          name: externalId
-          param_attrs: []
-          param_object: []
-          type: string
-          type_spec: null
-        - doc: 'The complete list of Webex Wholesale packages to be assigned to the
-            customer, including any packages already provisioned. If a package has
-            already been assigned to this customer and is not present in this list,
-            then that package will be removed.
-
-            Possible values: common_area_calling, webex_calling, webex_meetings, webex_suite'
-          name: packages
-          param_attrs: []
-          param_object: []
-          type: array[string]
-          type_spec: required
-        - doc: Billing address of the customer.
-          name: address
-          param_attrs:
-          - doc: First address line.
-            name: addressLine1
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: required
-          - doc: Second address line.
-            name: addressLine2
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: City of the customer.
-            name: city
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: required
-          - doc: State or Province of the customer. This attribute may be required
-              in specific geographies, please refer to address section in the admin
-              guide for more information.
-            name: stateOrProvince
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: Postal/Zip code of the customer. This attribute may be required in
-              specific geographies, please refer to address section in the admin guide
-              for more information.
-            name: zipOrPostalCode
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: null
-          - doc: ISO2 country code of the customer; maximum of 2 characters.
-            name: country
-            param_attrs: []
-            param_object: []
-            type: string
-            type_spec: required
-          param_object: []
-          type: object
-          type_spec: null
-        - doc: Provisioning parameters are required when updating an existing package.
-          name: provisioningParameters
-          param_attrs:
-          - doc: ''
-            name: calling
-            param_attrs:
-            - doc: ''
-              name: location
-              param_attrs:
-              - doc: Name of the wholesale customer office.
-                name: name
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: required
-              - doc: Address of the wholesale customer.
-                name: address
-                param_attrs:
-                - doc: First address line.
-                  name: addressLine1
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: required
-                - doc: Second address line.
-                  name: addressLine2
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                - doc: City of the wholesale customer.
-                  name: city
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: required
-                - doc: State or Province of the customer. This attribute may be required
-                    in specific geographies, please refer to address section in the
-                    admin guide for more information.
-                  name: stateOrProvince
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                - doc: Postal/Zip code of the customer. This attribute may be required
-                    in specific geographies, please refer to address section in the
-                    admin guide for more information.
-                  name: zipOrPostalCode
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                - doc: ''
-                  name: country
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: required
-                param_object: []
-                type: object
-                type_spec: required
-              - doc: Customer timezone for calling package.
-                name: timezone
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: required
-              - doc: Determine language for all generated emails and voice announcements.
-                name: language
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: required
-              - doc: SIP Header for any emergency calls from this location.
-                name: emergencyLocationIdentifier
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
-              - doc: List of numbers to be assigned to the location.
-                name: numbers
-                param_attrs:
-                - doc: ''
-                  name: '+17205557878'
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                - doc: ''
-                  name: '+17205557879'
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                - doc: ''
-                  name: '+17205557880'
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                - doc: ''
-                  name: '+17205557881'
-                  param_attrs: []
-                  param_object: []
-                  type: string
-                  type_spec: null
-                param_object: []
-                type: array[string]
-                type_spec: null
-              - doc: Main number of the wholesale customer.
-                name: mainNumber
-                param_attrs: []
-                param_object: []
-                type: string
-                type_spec: null
-              param_object: []
-              type: object
-              type_spec: required
-            param_object: []
-            type: object
-            type_spec: null
-          - doc: '
-
-              Customer timezone for meetings package.'
-            name: meetings
-            param_attrs: []
-            param_object: []
-            type: object
-            type_spec: null
-          param_object: []
-          type: object
-          type_spec: null
-        Response Properties:
-        - doc: A URL which points to the Get a Wholesale Customer endpoint for the
-            provisioned customer.
-          name: url
-          param_attrs: []
-          param_object: []
-          type: string
-          type_spec: null
-        URI Parameters:
-        - doc: A unique identifier for the customer in question.
-          name: customerId
-          param_attrs: []
-          param_object: []
-          type: string
-          type_spec: required
-    - doc: Remove the mapping between a Wholesale Customer and a Cisco Webex user.
-      documentation:
-        doc: Remove a Wholesale Customer
-        doc_link: https://developer.webex.com/docs/api/v1/wholesale-customers-rpl-flow-enabled/remove-a-wholesale-customer
-        endpoint: https://webexapis.com/v1/wholesale/customers/{customerId}
-        http_method: DELETE
-      header: Remove a Wholesale Customer
-      parameters_and_response:
-        URI Parameters:
-        - doc: A unique identifier for the customer in question.
-          name: customerId
-          param_attrs: []
-          param_object: []
-          type: string
-          type_spec: required
   Wholesale Subscribers:
     doc: null
     header: null

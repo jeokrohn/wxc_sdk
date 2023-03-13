@@ -1,4 +1,4 @@
-# command: developer.webex.com/read_api_spec.py -a developer.webex.com/.env -s Calling -t "Webex Calling Detailed Call History" -f developer.webex.com/cdr.yml
+# command: developer.webex.com/read_api_spec.py -a developer.webex.com/.env -s Calling -t "Webex Calling Detailed Call History" -f developer.webex.com/generated/cdr.yml
 docs:
   BroadWorks Billing Reports:
     doc: null
@@ -161,7 +161,29 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: 'Type of call. For example:'
+          - doc: 'Type of call. For example:
+
+              * SIP_MEETING
+
+              * SIP_INTERNATIONAL
+
+              * SIP_SHORTCODE
+
+              * SIP_INBOUND
+
+              * UNKNOWN
+
+              * SIP_EMERGENCY
+
+              * SIP_PREMIUM
+
+              * SIP_ENTERPRISE
+
+              * SIP_TOLLFREE
+
+              * SIP_NATIONAL
+
+              * SIP_MOBILE'
             name: Call type
             param_attrs: []
             param_object: []
@@ -196,7 +218,19 @@ docs:
             type: string
             type_spec: null
           - doc: 'The type of client that the user (creating this record) is using
-              to make or receive the call. For example:'
+              to make or receive the call. For example:
+
+              * SIP
+
+              * WXC_CLIENT
+
+              * WXC_THIRD_PARTY
+
+              * TEAMS_WXC_CLIENT
+
+              * WXC_DEVICE
+
+              * WXC_SIP_GW'
             name: Client type
             param_attrs: []
             param_object: []
@@ -229,13 +263,26 @@ docs:
             type: string
             type_spec: null
           - doc: "The keypad digits as dialed by the user, before pre-translations.\
-              \ \nThis field reports multiple call dial possibilities:"
+              \ \nThis field reports multiple call dial possibilities:\n* Feature\
+              \ access codes (FAC) used for invoking features such as Last Number\
+              \ Redial or a Call Return.\n* An extension that got dialed and a mis-dialed\
+              \ keypad digit from a device/app.\n* When a user must dial an outside\
+              \ access code (for example, 9+) before dialing a number, this access\
+              \ code is also reported, as well as the digits dialed thereafter. \n\
+              Note that when pre-translations have no effect, the dialed digits field\
+              \ contains the same data as the called number field. \nThis field is\
+              \ only used for originating (outgoing) Calls and is not available for\
+              \ terminating (incoming) Calls."
             name: Dialed digits
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: 'Whether the call was inbound or outbound. The possible values are:'
+          - doc: 'Whether the call was inbound or outbound. The possible values are:
+
+              * ORIGINATING
+
+              * TERMINATING'
             name: Direction
             param_attrs: []
             param_object: []
@@ -279,7 +326,21 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: 'Call redirection reason for the original called number. For example:'
+          - doc: "Call redirection reason for the original called number. For example:\n\
+              * Unconditional: Call Forward Always (CFA) service, Group night forwarding.\n\
+              * NoAnswer: The party was not available to take the call. CF/busy or\
+              \ Voicemail/busy.\n* Deflection: Indicates that a call was redirected.\
+              \ Possible causes could be auto attendant transfer, transfer out of\
+              \ a call-center, user\u2019s app/device redirection, direct VM transfer\
+              \ etc..\n* TimeOfDay: Call scheduled period of automated redirection.\
+              \ CF/selective, group night forwarding.\n* UserBusy: DND enabled or\
+              \ the user willingly declined the call. CF/busy or voicemail/busy.\n\
+              * FollowMe: Automated redirection to a personal redirecting service.\n\
+              * CallQueue: A call center call to an agent or a user (a member of the\
+              \ call queue).\n* HuntGroup: A hunt-group-based call to an agent or\
+              \ a user (denotes a member of the hunt group).\n* Unavailable: To voicemail,\
+              \ when the user has no app or device.\n* Unrecognized: Unable to determine\
+              \ the reason.\n* Unknown: Call forward by phone with no reason."
             name: Original reason
             param_attrs: []
             param_object: []
@@ -297,7 +358,21 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: 'Call Redirection Reason for the redirecting number. For example:'
+          - doc: "Call Redirection Reason for the redirecting number. For example:\n\
+              * Unconditional: Call Forward Always (CFA) service.\n* NoAnswer: The\
+              \ party was not available to take the call. CF/busy or Voicemail/busy.\n\
+              * Deflection: Indicates that a call was redirected. Possible causes\
+              \ could be auto attendant transfer, transfer out of a call-center, user\u2019\
+              s app/device redirection, direct VM transfer etc..\n* TimeOfDay: Call\
+              \ scheduled period of automated redirection. CF/Selective.\n* UserBusy:\
+              \ DND enabled or user willingly declined the call. CF/busy or Voicemail/busy.\n\
+              * FollowMe: Automated redirection to a personal redirecting service.\n\
+              * CallQueue: A call center call to an agent or a user (denotes a member\
+              \ of the call queue).\n* HuntGroup: A hunt-group-based call to an agent\
+              \ or a user (denotes a member of the hunt group).\n* Unavailable: To\
+              \ voicemail, when the user has no app or device.\n* Unrecognized: Unable\
+              \ to determine the reason.\n* Unknown: Call forward by phone with no\
+              \ reason."
             name: Redirect reason
             param_attrs: []
             param_object: []
@@ -312,16 +387,52 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: 'Indicates a trigger that led to a change in the call presence. The
-              trigger could be for this particular call or redirected via a different
-              call. For example:'
+          - doc: "Indicates a trigger that led to a change in the call presence. The\
+              \ trigger could be for this particular call or redirected via a different\
+              \ call. For example:\n* ConsultativeTransfer: While on a call, the call\
+              \ was transferred to another user by announcing it first. meaning the\
+              \ person was given a heads up or asked if they're interested in taking\
+              \ the call and then transferred.\n* CallForwardSelective: Call Forward\
+              \ as per the defined schedule. Might be based on factors like a specific\
+              \ time, specific callers or to a VM. It always takes precedence over\
+              \ Call Forwarding.\n* CallForwardAlways: Calls are unconditionally forwarded\
+              \ to a defined phone number or to VM.\n* CallForwardNoAnswer: The party\
+              \ was not available to take the call.\n* CallQueue: A call center call\
+              \ to an agent or a user (denotes a member of the call queue).\n* HuntGroup:\
+              \ A hunt group based call to an agent or a user (denotes a member of\
+              \ the hunt group).\n* CallPickup: The user part of a pickup group or\
+              \ pickup attempted by this user against a ringing call for a different\
+              \ user or extension.\n* CalllPark: An ongoing call was parked, assigned\
+              \ with a parked number (not the user\u2019s phone number).\n* CallParkRetrieve:\
+              \ Call park retrieval attempt by the user, either for a different extension\
+              \ or against the user\u2019s own extension.\n* Deflection: Indicates\
+              \ that a call was redirected. Possible causes include an auto attendant\
+              \ transfer, transfer out of a call-center, user\u2019s app/device redirection\
+              \ etc..\n* FaxDeposit: Indicates a FAX was transmitted to the FAX service.\n\
+              * PushNotificationRetrieval: Push notification feature usage indication.\
+              \ Means that a push notification was sent to wake up the client and\
+              \ get ready to receive a call.\n* BargeIn: Indicates the user barged-in\
+              \ to someone else\u2019s call.\n* VoiceXMLScriptTermination: Route Point\
+              \ feature usage indication.\n* AnywhereLocation: Indicates call origination\
+              \ towards the single number reach location.\n* AnywherePortal: Indicates\
+              \ call origination towards the \u201Cuser\u201D identified by the single\
+              \ number reach portal.\n* Unrecognized: Unable to determine the reason."
             name: Related reason
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
           - doc: 'Indicates which party released the call first. The possible values
-              are:'
+              are:
+
+              * Local: Used when the local user has released the call first.
+
+              * Remote: Used when the far-end party releases the call first.
+
+              * Unknown: Used when the call has partial information or is unable to
+              gather enough information about the party who released the call. It
+              could be because of situations like force lock or because of a session
+              audit failure.'
             name: Releasing party
             param_attrs: []
             param_object: []
@@ -398,7 +509,31 @@ docs:
             type: string
             type_spec: null
           - doc: 'The type of user (user or workspace) that made or received the call.
-              For example:'
+              For example:
+
+              * AutomatedAttendantVideo
+
+              * Anchor
+
+              * BroadworksAnywhere
+
+              * VoiceMailRetrieval
+
+              * LocalGateway
+
+              * HuntGroup
+
+              * GroupPaging
+
+              * User
+
+              * VoiceMailGroup
+
+              * CallCenterStandard
+
+              * VoiceXML
+
+              * RoutePoint'
             name: User type
             param_attrs: []
             param_object: []
@@ -459,10 +594,6 @@ docs:
     header: null
     methods: []
   Wholesale Customers:
-    doc: null
-    header: null
-    methods: []
-  Wholesale Customers RPL Flow Enabled:
     doc: null
     header: null
     methods: []

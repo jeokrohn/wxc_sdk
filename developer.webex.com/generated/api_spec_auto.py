@@ -11,7 +11,7 @@ __all__ = ['AccessCodes', 'AcdObject', 'Action', 'Action11', 'Action15', 'Action
            'AddNewEventForPersonsScheduleResponse', 'AddPhoneNumbersTolocationBody', 'Address', 'Addresses',
            'AlternateNumberSettings', 'AlternateNumbersObject', 'AlternateNumbersWithPattern',
            'AlternateNumbersWithPattern1', 'Always', 'AnnouncementMode', 'Announcements', 'Announcements3',
-           'AtaDtmfMethodObject', 'AtaDtmfModeObject', 'AtaObject', 'AudioCodecPriorityObject',
+           'AtaDtmfMethodObject', 'AtaDtmfModeObject', 'AtaObject', 'AudioCodecPriorityObject', 'AudioFileObject',
            'AutoAttendantCallForwardSettingsDetailsObject', 'AutoAttendantCallForwardSettingsModifyDetailsObject',
            'AvailableSharedLineMemberItem', 'BackgroundImage', 'BacklightTimerObject', 'BehaviorType',
            'BlockContiguousSequences', 'BlockPreviousPasscodes', 'BlockRepeatedDigits', 'BusinessContinuity', 'CDR',
@@ -27,13 +27,13 @@ __all__ = ['AccessCodes', 'AcdObject', 'Action', 'Action11', 'Action15', 'Action
            'CallingPermissionObject', 'CallingPermissions', 'Callparkextension', 'CallsFrom', 'CallsTo',
            'ComfortMessage', 'ComfortMessageBypass', 'ConfigureCallRecordingSettingsForPersonBody',
            'ConfigureCallerIDSettingsForPersonBody', 'ConfigurepersonsCallingBehaviorBody', 'CountObject',
-           'CreateAutoAttendantBody', 'CreateAutoAttendantResponse', 'CreateCallParkBody',
-           'CreateCallParkExtensionResponse', 'CreateCallParkResponse', 'CreateCallPickupBody',
-           'CreateCallPickupResponse', 'CreateCallQueueBody', 'CreateCallQueueResponse', 'CreateDialPlanResponse',
-           'CreateHuntGroupResponse', 'CreateLocationResponse', 'CreatePersonBody',
-           'CreateRouteGroupForOrganizationBody', 'CreateRouteGroupForOrganizationResponse', 'CreateRouteListResponse',
-           'CreateScheduleEventResponse', 'CreateScheduleForPersonBody', 'CreateScheduleForPersonResponse',
-           'CreateScheduleResponse', 'CreateSelectiveCallForwardingRuleForAutoAttendantBody',
+           'CreateAutoAttendantResponse', 'CreateCallParkBody', 'CreateCallParkExtensionResponse',
+           'CreateCallParkResponse', 'CreateCallPickupBody', 'CreateCallPickupResponse', 'CreateCallQueueBody',
+           'CreateCallQueueResponse', 'CreateDialPlanResponse', 'CreateHuntGroupResponse', 'CreateLocationResponse',
+           'CreatePersonBody', 'CreateRouteGroupForOrganizationBody', 'CreateRouteGroupForOrganizationResponse',
+           'CreateRouteListResponse', 'CreateScheduleEventResponse', 'CreateScheduleForPersonBody',
+           'CreateScheduleForPersonResponse', 'CreateScheduleResponse',
+           'CreateSelectiveCallForwardingRuleForAutoAttendantBody',
            'CreateSelectiveCallForwardingRuleForAutoAttendantResponse',
            'CreateSelectiveCallForwardingRuleForCallQueueBody',
            'CreateSelectiveCallForwardingRuleForCallQueueResponse',
@@ -89,7 +89,7 @@ __all__ = ['AccessCodes', 'AcdObject', 'Action', 'Action11', 'Action15', 'Action
            'ListLocationsResponse', 'ListManageNumbersJobErrorsResponse', 'ListManageNumbersJobsResponse',
            'ListMessagesResponse', 'ListOfSchedulesForPersonResponse', 'ListPeopleResponse', 'ListScheduleObject',
            'ListVirtualLineObject', 'ListVoicemailGroupResponse', 'LocalGateways', 'Location', 'LocationsApi',
-           'MacStatusObject', 'ManagedByObject', 'ManufacturerObject', 'MediaFileType', 'Member', 'MemberObject',
+           'MacStatusObject', 'ManagedByObject', 'ManufacturerObject', 'MediaType', 'Member', 'MemberObject',
            'MessageStorage', 'MessageStorage3', 'ModifyDialPlanBody', 'ModifyNumbersForRouteListResponse',
            'ModifyPersonPlaceVirtualLineCallQueueObject', 'ModifyRouteListBody', 'ModifyScheduleEventListObject',
            'ModifyTrunkBody', 'ModifypersonsApplicationServicesSettingsBody', 'ModifypersonsMonitoringSettingsBody',
@@ -99,7 +99,7 @@ __all__ = ['AccessCodes', 'AcdObject', 'Action', 'Action11', 'Action15', 'Action
            'NumberListGetObject', 'NumberStatus', 'OnboardingMethodObject', 'Option', 'OriginatorType', 'Outgoing',
            'Overflow', 'Owner', 'ParkResponse', 'PartyInformation', 'Passcode', 'PbxUser', 'PeopleApi', 'Person',
            'PhoneLanguage', 'PhoneNumber', 'PhoneNumbers', 'PhoneNumbers7', 'PlaceDevices',
-           'PostCallQueueCallPolicyObject', 'PostHuntGroupCallPolicyObject',
+           'PostCallQueueCallPolicyObject', 'PostHoursMenuObject', 'PostHuntGroupCallPolicyObject',
            'PostPersonPlaceVirtualLineCallQueueObject', 'PostPersonPlaceVirtualLineHuntGroupObject', 'PstnNumber',
            'PushToTalkAccessType', 'PushToTalkConnectionType', 'PutMemberObject', 'PutRecallHuntGroupObject',
            'PutSharedLineMemberItem', 'ReadBargeInSettingsForPersonResponse',
@@ -1493,6 +1493,17 @@ class CDR(ApiModel):
     #: necessary.
     call_id: Optional[str] = Field(alias='Call ID')
     #: Type of call. For example:
+    #:   * SIP_MEETING
+    #:   * SIP_INTERNATIONAL
+    #:   * SIP_SHORTCODE
+    #:   * SIP_INBOUND
+    #:   * UNKNOWN
+    #:   * SIP_EMERGENCY
+    #:   * SIP_PREMIUM
+    #:   * SIP_ENTERPRISE
+    #:   * SIP_TOLLFREE
+    #:   * SIP_NATIONAL
+    #:   * SIP_MOBILE
     call_type: Optional[str] = Field(alias='Call type')
     #: For incoming calls, the calling line ID of the user. For outgoing calls, it's the calling line ID of the called
     #: party.
@@ -1507,6 +1518,12 @@ class CDR(ApiModel):
     #: the user.
     calling_number: Optional[str] = Field(alias='Calling number')
     #: The type of client that the user (creating this record) is using to make or receive the call. For example:
+    #:   * SIP
+    #:   * WXC_CLIENT
+    #:   * WXC_THIRD_PARTY
+    #:   * TEAMS_WXC_CLIENT
+    #:   * WXC_DEVICE
+    #:   * WXC_SIP_GW
     client_type: Optional[str] = Field(alias='Client type')
     #: The version of the client that the user (creating this record) is using to make or receive the call.
     client_version: Optional[str] = Field(alias='Client version')
@@ -1518,8 +1535,17 @@ class CDR(ApiModel):
     device_mac: Optional[str] = Field(alias='Device MAC')
     #: The keypad digits as dialed by the user, before pre-translations.
     #: This field reports multiple call dial possibilities:
+    #:   * Feature access codes (FAC) used for invoking features such as Last Number Redial or a Call Return.
+    #:   * An extension that got dialed and a mis-dialed keypad digit from a device/app.
+    #:   * When a user must dial an outside access code (for example, 9+) before dialing a number, this access code is
+    #:     also reported, as well as the digits dialed thereafter.
+    #: Note that when pre-translations have no effect, the dialed digits field contains the same data as the called
+    #: number field.
+    #: This field is only used for originating (outgoing) Calls and is not available for terminating (incoming) Calls.
     dialed_digits: Optional[str] = Field(alias='Dialed digits')
     #: Whether the call was inbound or outbound. The possible values are:
+    #:   * ORIGINATING
+    #:   * TERMINATING
     direction: Optional[str]
     #: The length of the call in seconds.
     duration: Optional[int]
@@ -1534,12 +1560,36 @@ class CDR(ApiModel):
     #: A unique identifier for the organization that made the call. This is a unique identifier across Cisco.
     org_uuid: Optional[str] = Field(alias='Org UUID')
     #: Call redirection reason for the original called number. For example:
+    #:   * Unconditional: Call Forward Always (CFA) service, Group night forwarding.
+    #:   * NoAnswer: The party was not available to take the call. CF/busy or Voicemail/busy.
+    #:   * Deflection: Indicates that a call was redirected. Possible causes could be auto attendant transfer, transfer
+    #:     out of a call-center, user’s app/device redirection, direct VM transfer etc..
+    #:   * TimeOfDay: Call scheduled period of automated redirection. CF/selective, group night forwarding.
+    #:   * UserBusy: DND enabled or the user willingly declined the call. CF/busy or voicemail/busy.
+    #:   * FollowMe: Automated redirection to a personal redirecting service.
+    #:   * CallQueue: A call center call to an agent or a user (a member of the call queue).
+    #:   * HuntGroup: A hunt-group-based call to an agent or a user (denotes a member of the hunt group).
+    #:   * Unavailable: To voicemail, when the user has no app or device.
+    #:   * Unrecognized: Unable to determine the reason.
+    #:   * Unknown: Call forward by phone with no reason.
     original_reason: Optional[str] = Field(alias='Original reason')
     #: The operating system that the app was running on, if available.
     os_type: Optional[str] = Field(alias='OS type')
     #: Outbound trunk may be presented in Originating and Terminating records.
     outbound_trunk: Optional[str] = Field(alias='Outbound trunk')
     #: Call Redirection Reason for the redirecting number. For example:
+    #:   * Unconditional: Call Forward Always (CFA) service.
+    #:   * NoAnswer: The party was not available to take the call. CF/busy or Voicemail/busy.
+    #:   * Deflection: Indicates that a call was redirected. Possible causes could be auto attendant transfer, transfer
+    #:     out of a call-center, user’s app/device redirection, direct VM transfer etc..
+    #:   * TimeOfDay: Call scheduled period of automated redirection. CF/Selective.
+    #:   * UserBusy: DND enabled or user willingly declined the call. CF/busy or Voicemail/busy.
+    #:   * FollowMe: Automated redirection to a personal redirecting service.
+    #:   * CallQueue: A call center call to an agent or a user (denotes a member of the call queue).
+    #:   * HuntGroup: A hunt-group-based call to an agent or a user (denotes a member of the hunt group).
+    #:   * Unavailable: To voicemail, when the user has no app or device.
+    #:   * Unrecognized: Unable to determine the reason.
+    #:   * Unknown: Call forward by phone with no reason.
     redirect_reason: Optional[str] = Field(alias='Redirect reason')
     #: When the call has been redirected one or more times, this field reports the last redirecting number. Identifies
     #: who last redirected the call. Only applies to call scenarios such as transfer, call forwarded calls,
@@ -1547,8 +1597,37 @@ class CDR(ApiModel):
     redirecting_number: Optional[str] = Field(alias='Redirecting number')
     #: Indicates a trigger that led to a change in the call presence. The trigger could be for this particular call or
     #: redirected via a different call. For example:
+    #:   * ConsultativeTransfer: While on a call, the call was transferred to another user by announcing it first.
+    #:     meaning the person was given a heads up or asked if they're interested in taking the call and then
+    #:     transferred.
+    #:   * CallForwardSelective: Call Forward as per the defined schedule. Might be based on factors like a specific
+    #:     time, specific callers or to a VM. It always takes precedence over Call Forwarding.
+    #:   * CallForwardAlways: Calls are unconditionally forwarded to a defined phone number or to VM.
+    #:   * CallForwardNoAnswer: The party was not available to take the call.
+    #:   * CallQueue: A call center call to an agent or a user (denotes a member of the call queue).
+    #:   * HuntGroup: A hunt group based call to an agent or a user (denotes a member of the hunt group).
+    #:   * CallPickup: The user part of a pickup group or pickup attempted by this user against a ringing call for a
+    #:     different user or extension.
+    #:   * CalllPark: An ongoing call was parked, assigned with a parked number (not the user’s phone number).
+    #:   * CallParkRetrieve: Call park retrieval attempt by the user, either for a different extension or against the
+    #:     user’s own extension.
+    #:   * Deflection: Indicates that a call was redirected. Possible causes include an auto attendant transfer,
+    #:     transfer out of a call-center, user’s app/device redirection etc..
+    #:   * FaxDeposit: Indicates a FAX was transmitted to the FAX service.
+    #:   * PushNotificationRetrieval: Push notification feature usage indication. Means that a push notification was
+    #:     sent to wake up the client and get ready to receive a call.
+    #:   * BargeIn: Indicates the user barged-in to someone else’s call.
+    #:   * VoiceXMLScriptTermination: Route Point feature usage indication.
+    #:   * AnywhereLocation: Indicates call origination towards the single number reach location.
+    #:   * AnywherePortal: Indicates call origination towards the “user” identified by the single number reach portal.
+    #:   * Unrecognized: Unable to determine the reason.
     related_reason: Optional[str] = Field(alias='Related reason')
     #: Indicates which party released the call first. The possible values are:
+    #:   * Local: Used when the local user has released the call first.
+    #:   * Remote: Used when the far-end party releases the call first.
+    #:   * Unknown: Used when the call has partial information or is unable to gather enough information about the
+    #:     party who released the call. It could be because of situations like force lock or because of a session audit
+    #:     failure.
     releasing_party: Optional[str] = Field(alias='Releasing party')
     #: A unique ID for this particular record. This can be used when processing records to aid in deduplication.
     report_id: Optional[str] = Field(alias='Report ID')
@@ -1575,6 +1654,18 @@ class CDR(ApiModel):
     #: The user who made or received the call.
     user: Optional[str]
     #: The type of user (user or workspace) that made or received the call. For example:
+    #:   * AutomatedAttendantVideo
+    #:   * Anchor
+    #:   * BroadworksAnywhere
+    #:   * VoiceMailRetrieval
+    #:   * LocalGateway
+    #:   * HuntGroup
+    #:   * GroupPaging
+    #:   * User
+    #:   * VoiceMailGroup
+    #:   * CallCenterStandard
+    #:   * VoiceXML
+    #:   * RoutePoint
     user_type: Optional[str] = Field(alias='User type')
     #: A unique identifier for the user associated with the call. This is a unique identifier across Cisco products.
     user_uuid: Optional[str] = Field(alias='User UUID')
@@ -1674,6 +1765,22 @@ class ExtensionDialing(str, Enum):
     group = 'GROUP'
 
 
+class MediaType(str, Enum):
+    #: WMA File Extension.
+    wma = 'WMA'
+    #: WAV File Extension.
+    wav = 'WAV'
+    #: 3GP File Extension.
+    three_gp = '3GP'
+
+
+class AudioFileObject(ApiModel):
+    #: Announcement audio file name.
+    name: Optional[str]
+    #: Announcement audio file media type.
+    media_type: Optional[MediaType]
+
+
 class Greeting(str, Enum):
     default = 'DEFAULT'
     custom = 'CUSTOM'
@@ -1716,13 +1823,18 @@ class KeyConfigurationsObject(ApiModel):
     value: Optional[str]
 
 
-class HoursMenuObject(ApiModel):
+class PostHoursMenuObject(ApiModel):
     #: Greeting type defined for the auto attendant.
     greeting: Optional[Greeting]
     #: Flag to indicate if auto attendant extension is enabled or not.
     extension_enabled: Optional[bool]
     #: Key configurations defined for the auto attendant.
     key_configurations: Optional[KeyConfigurationsObject]
+
+
+class HoursMenuObject(PostHoursMenuObject):
+    #: Announcement Audio File details.
+    audio_file: Optional[AudioFileObject]
 
 
 class FaxMessage(ApiModel):
@@ -1739,33 +1851,6 @@ class GetDetailsForCallParkExtensionResponse(ApiModel):
     extension: Optional[str]
     #: Unique name for the call park extension.
     name: Optional[str]
-
-
-class CreateAutoAttendantBody(GetDetailsForCallParkExtensionResponse):
-    #: Auto attendant phone number. Either phoneNumber or extension is mandatory.
-    phone_number: Optional[str]
-    #: First name defined for an auto attendant.
-    first_name: Optional[str]
-    #: Last name defined for an auto attendant.
-    last_name: Optional[str]
-    #: Alternate numbers defined for the auto attendant.
-    alternate_numbers: Optional[list[AlternateNumbersObject]]
-    #: Language code for the auto attendant.
-    language_code: Optional[str]
-    #: Business hours defined for the auto attendant.
-    business_schedule: Optional[str]
-    #: Holiday defined for the auto attendant.
-    holiday_schedule: Optional[str]
-    #: Extension dialing setting. If the values are not set default will be set as ENTERPRISE.
-    extension_dialing: Optional[ExtensionDialing]
-    #: Name dialing setting. If the values are not set default will be set as ENTERPRISE.
-    name_dialing: Optional[ExtensionDialing]
-    #: Time zone defined for the auto attendant.
-    time_zone: Optional[str]
-    #: Business hours menu defined for the auto attendant.
-    business_hours_menu: Optional[HoursMenuObject]
-    #: After hours menu defined for the auto attendant.
-    after_hours_menu: Optional[HoursMenuObject]
 
 
 class NewNumber(ApiModel):
@@ -3481,20 +3566,11 @@ class Action15(Action11):
     announcement = 'ANNOUNCEMENT'
 
 
-class MediaFileType(str, Enum):
-    #: WMA File Extension.
-    wma = 'WMA'
-    #: WAV File Extension.
-    wav = 'WAV'
-    #: 3GP File Extension.
-    three_gp = '3GP'
-
-
 class CallQueueAudioFilesObject(ApiModel):
     #: Name of the file.
     file_name: Optional[str]
     #: Media Type of the audio file.
-    media_file_type: Optional[MediaFileType]
+    media_file_type: Optional[MediaType]
 
 
 class GetDetailsForCallQueueStrandedCallsResponse(ApiModel):
@@ -4156,9 +4232,63 @@ class GetDetailsForAutoAttendantResponse(FaxMessage):
     after_hours_menu: Optional[HoursMenuObject]
 
 
+class CreateAutoAttendantBody(GetDetailsForCallParkExtensionResponse):
+    #: Auto attendant phone number. Either phoneNumber or extension is mandatory.
+    phone_number: Optional[str]
+    #: First name defined for an auto attendant.
+    first_name: Optional[str]
+    #: Last name defined for an auto attendant.
+    last_name: Optional[str]
+    #: Alternate numbers defined for the auto attendant.
+    alternate_numbers: Optional[list[AlternateNumbersObject]]
+    #: Language code for the auto attendant.
+    language_code: Optional[str]
+    #: Business hours defined for the auto attendant.
+    business_schedule: Optional[str]
+    #: Holiday defined for the auto attendant.
+    holiday_schedule: Optional[str]
+    #: Extension dialing setting. If the values are not set default will be set as ENTERPRISE.
+    extension_dialing: Optional[ExtensionDialing]
+    #: Name dialing setting. If the values are not set default will be set as ENTERPRISE.
+    name_dialing: Optional[ExtensionDialing]
+    #: Time zone defined for the auto attendant.
+    time_zone: Optional[str]
+    #: Business hours menu defined for the auto attendant.
+    business_hours_menu: Optional[PostHoursMenuObject]
+    #: After hours menu defined for the auto attendant.
+    after_hours_menu: Optional[PostHoursMenuObject]
+
+
 class CreateAutoAttendantResponse(ApiModel):
     #: ID of the newly created auto attendant.
     id: Optional[str]
+
+
+class UpdateAutoAttendantBody(GetDetailsForCallParkExtensionResponse):
+    #: Auto attendant phone number. Either phoneNumber or extension is mandatory.
+    phone_number: Optional[str]
+    #: First name defined for an auto attendant.
+    first_name: Optional[str]
+    #: Last name defined for an auto attendant.
+    last_name: Optional[str]
+    #: Alternate numbers defined for the auto attendant.
+    alternate_numbers: Optional[list[AlternateNumbersObject]]
+    #: Language code for the auto attendant.
+    language_code: Optional[str]
+    #: Business hours defined for the auto attendant.
+    business_schedule: Optional[str]
+    #: Holiday defined for the auto attendant.
+    holiday_schedule: Optional[str]
+    #: Extension dialing setting. If the values are not set default will be set as ENTERPRISE.
+    extension_dialing: Optional[ExtensionDialing]
+    #: Name dialing setting. If the values are not set default will be set as ENTERPRISE.
+    name_dialing: Optional[ExtensionDialing]
+    #: Time zone defined for the auto attendant.
+    time_zone: Optional[str]
+    #: Business hours menu defined for the auto attendant.
+    business_hours_menu: Optional[HoursMenuObject]
+    #: After hours menu defined for the auto attendant.
+    after_hours_menu: Optional[HoursMenuObject]
 
 
 class GetCallForwardingSettingsForAutoAttendantResponse(ApiModel):
@@ -5437,7 +5567,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().get(url=url, params=params)
         return GetDetailsForAutoAttendantResponse.parse_obj(data)
 
-    def create_auto_attendant(self, location_id: str, business_schedule: str, business_hours_menu: HoursMenuObject, after_hours_menu: HoursMenuObject, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, first_name: str = None, last_name: str = None, alternate_numbers: AlternateNumbersObject = None, language_code: str = None, holiday_schedule: str = None, extension_dialing: ExtensionDialing = None, name_dialing: ExtensionDialing = None, time_zone: str = None) -> str:
+    def create_auto_attendant(self, location_id: str, business_schedule: str, business_hours_menu: PostHoursMenuObject, after_hours_menu: PostHoursMenuObject, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, first_name: str = None, last_name: str = None, alternate_numbers: AlternateNumbersObject = None, language_code: str = None, holiday_schedule: str = None, extension_dialing: ExtensionDialing = None, name_dialing: ExtensionDialing = None, time_zone: str = None) -> str:
         """
         Create new Auto Attendant for the given location.
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
@@ -5450,9 +5580,9 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param business_schedule: Business hours defined for the auto attendant.
         :type business_schedule: str
         :param business_hours_menu: Business hours menu defined for the auto attendant.
-        :type business_hours_menu: HoursMenuObject
+        :type business_hours_menu: PostHoursMenuObject
         :param after_hours_menu: After hours menu defined for the auto attendant.
-        :type after_hours_menu: HoursMenuObject
+        :type after_hours_menu: PostHoursMenuObject
         :param org_id: Create the auto attendant for this organization.
         :type org_id: str
         :param extension: The extension for the call park extension.
@@ -5515,7 +5645,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
-    def update_auto_attendant(self, location_id: str, auto_attendant_id: str, business_schedule: str, business_hours_menu: HoursMenuObject, after_hours_menu: HoursMenuObject, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, first_name: str = None, last_name: str = None, alternate_numbers: AlternateNumbersObject = None, language_code: str = None, holiday_schedule: str = None, extension_dialing: ExtensionDialing = None, name_dialing: ExtensionDialing = None, time_zone: str = None):
+    def update_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, first_name: str = None, last_name: str = None, alternate_numbers: AlternateNumbersObject = None, language_code: str = None, business_schedule: str = None, holiday_schedule: str = None, extension_dialing: ExtensionDialing = None, name_dialing: ExtensionDialing = None, time_zone: str = None, business_hours_menu: HoursMenuObject = None, after_hours_menu: HoursMenuObject = None):
         """
         Update the designated Auto Attendant.
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
@@ -5527,12 +5657,6 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param auto_attendant_id: Update an auto attendant with the matching ID.
         :type auto_attendant_id: str
-        :param business_schedule: Business hours defined for the auto attendant.
-        :type business_schedule: str
-        :param business_hours_menu: Business hours menu defined for the auto attendant.
-        :type business_hours_menu: HoursMenuObject
-        :param after_hours_menu: After hours menu defined for the auto attendant.
-        :type after_hours_menu: HoursMenuObject
         :param org_id: Update an auto attendant from this organization.
         :type org_id: str
         :param extension: The extension for the call park extension.
@@ -5549,6 +5673,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type alternate_numbers: AlternateNumbersObject
         :param language_code: Language code for the auto attendant.
         :type language_code: str
+        :param business_schedule: Business hours defined for the auto attendant.
+        :type business_schedule: str
         :param holiday_schedule: Holiday defined for the auto attendant.
         :type holiday_schedule: str
         :param extension_dialing: Extension dialing setting. If the values are not set default will be set as
@@ -5558,17 +5684,15 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type name_dialing: ExtensionDialing
         :param time_zone: Time zone defined for the auto attendant.
         :type time_zone: str
+        :param business_hours_menu: Business hours menu defined for the auto attendant.
+        :type business_hours_menu: HoursMenuObject
+        :param after_hours_menu: After hours menu defined for the auto attendant.
+        :type after_hours_menu: HoursMenuObject
         """
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = CreateAutoAttendantBody()
-        if business_schedule is not None:
-            body.business_schedule = business_schedule
-        if business_hours_menu is not None:
-            body.business_hours_menu = business_hours_menu
-        if after_hours_menu is not None:
-            body.after_hours_menu = after_hours_menu
+        body = UpdateAutoAttendantBody()
         if extension is not None:
             body.extension = extension
         if name is not None:
@@ -5583,6 +5707,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             body.alternate_numbers = alternate_numbers
         if language_code is not None:
             body.language_code = language_code
+        if business_schedule is not None:
+            body.business_schedule = business_schedule
         if holiday_schedule is not None:
             body.holiday_schedule = holiday_schedule
         if extension_dialing is not None:
@@ -5591,6 +5717,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             body.name_dialing = name_dialing
         if time_zone is not None:
             body.time_zone = time_zone
+        if business_hours_menu is not None:
+            body.business_hours_menu = business_hours_menu
+        if after_hours_menu is not None:
+            body.after_hours_menu = after_hours_menu
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
         super().put(url=url, params=params, data=body.json())
         return
@@ -8565,7 +8695,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: List schedules for this organization.
         :type org_id: str
-        :param type_: Type of the schedule.
+        :param type_: Type of the schedule. * businessHours - Business hours schedule type. * holidays - Holidays
+            schedule type.
         :type type_: str
         :param max: Limit the number of objects returned to this maximum count.
         :type max: int
@@ -8599,7 +8730,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param location_id: Retrieve schedule details in this location.
         :type location_id: str
-        :param type_: Type of the schedule.
+        :param type_: Type of the schedule. * businessHours - Business hours schedule type. * holidays - Holidays
+            schedule type.
         :type type_: str
         :param schedule_id: Retrieve the schedule with the matching ID.
         :type schedule_id: str
@@ -8657,7 +8789,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param location_id: Location in which this schedule exists.
         :type location_id: str
-        :param type_: Type of schedule.
+        :param type_: Type of schedule. * businessHours - Business hours schedule type. * holidays - Holidays schedule
+            type.
         :type type_: str
         :param schedule_id: Update schedule with the matching ID.
         :type schedule_id: str
@@ -8690,7 +8823,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param location_id: Location from which to delete a schedule.
         :type location_id: str
-        :param type_: Type of the schedule.
+        :param type_: Type of the schedule. * businessHours - Business hours schedule type. * holidays - Holidays
+            schedule type.
         :type type_: str
         :param schedule_id: Delete the schedule with the matching ID.
         :type schedule_id: str
@@ -8714,7 +8848,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param location_id: Retrieve schedule event details in this location.
         :type location_id: str
-        :param type_: Type of schedule.
+        :param type_: Type of schedule. * businessHours - Business hours schedule type. * holidays - Holidays schedule
+            type.
         :type type_: str
         :param schedule_id: Retrieve the schedule event with the matching schedule ID.
         :type schedule_id: str
@@ -8740,7 +8875,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param location_id: Create the schedule for this location.
         :type location_id: str
-        :param type_: Type of schedule.
+        :param type_: Type of schedule. * businessHours - Business hours schedule type. * holidays - Holidays schedule
+            type.
         :type type_: str
         :param schedule_id: Create event for a given schedule ID.
         :type schedule_id: str
@@ -8795,7 +8931,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param location_id: Location in which this schedule event exists.
         :type location_id: str
-        :param type_: Type of schedule.
+        :param type_: Type of schedule. * businessHours - Business hours schedule type. * holidays - Holidays schedule
+            type.
         :type type_: str
         :param schedule_id: Update schedule event with the matching schedule ID.
         :type schedule_id: str
@@ -8851,7 +8988,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param location_id: Location from which to delete a schedule.
         :type location_id: str
-        :param type_: Type of schedule.
+        :param type_: Type of schedule. * businessHours - Business hours schedule type. * holidays - Holidays schedule
+            type.
         :type type_: str
         :param schedule_id: Delete the schedule with the matching ID.
         :type schedule_id: str
@@ -14322,7 +14460,11 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
 
         :param workspace_id: List numbers for this workspace.
         :type workspace_id: str
-        :param attributes: 
+        :param attributes:   * phoneNumbers (array[PhoneNumbers], fixed-type, required) - Array of numbers
+                (primary/alternate). * workspace (workspace, fixed-type, required) - Workspace object having a unique
+                identifier for the Workspace. * location (location, fixed-type, required) - Location object having a
+                unique identifier for the location and its name. * organization (organization, fixed-type, required) -
+                Organization object having a unique identifier for the organization and its name.
         :type attributes: 
         :param body: { "phoneNumbers": [ { "external": "+12055550001", "extension": "12211", "primary": true }, {
             "external": "+12055550002", "extension": "122", "primary": false } ], "workspace": { "id":
