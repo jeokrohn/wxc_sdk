@@ -911,6 +911,9 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.schedules.update
         Update a Schedule
      - :meth:`~wxc_sdk.common.schedules.ScheduleApi.update`
+   * - api.telephony.virtual_lines.list
+        List all Virtual Lines for the organization
+     - :meth:`~wxc_sdk.telephony.virtual_line.VirtualLinesApi.list`
    * - api.telephony.voice_messaging.delete
         Delete a specfic voicemail message for the user
      - :meth:`~wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.delete`

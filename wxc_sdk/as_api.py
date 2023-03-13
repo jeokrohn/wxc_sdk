@@ -64,9 +64,9 @@ __all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsApi
            'AsReceptionistContactsDirectoryApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi',
            'AsRouteGroupApi', 'AsRouteListApi', 'AsScheduleApi', 'AsTeamMembershipsApi', 'AsTeamsApi',
            'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi',
-           'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi',
-           'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi',
-           'AsWorkspaceNumbersApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
+           'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
+           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceLocationApi',
+           'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
 
 @dataclass(init=False)
@@ -903,12 +903,10 @@ class AsLocationsApi(AsApiChild, base='locations'):
     """
     Location API
 
-    Locations are used to organize Webex Calling (BroadCloud) features within physical locations. Webex Control Hub
-    may be used to define new locations.
+    Locations allow you to organize users and workspaces based on a physical location. You can configure both calling
+    and workspace management functions into the same location. You can also create and inspect locations in Webex
+    Control Hub. See Locations on Control Hub for more information.
 
-    Searching and viewing locations in your organization requires an administrator auth token with the
-    spark-admin:people_read and spark-admin:people_write or spark-admin:device_read AND spark-admin:device_write
-    scope combinations.
     """
 
     def list_gen(self, name: str = None, location_id: str = None, org_id: str = None,
@@ -974,33 +972,35 @@ class AsLocationsApi(AsApiChild, base='locations'):
         return next((location for location in await self.list(name=name, org_id=org_id)
                      if location.name == name), None)
 
-    async def details(self, location_id) -> Location:
+    async def details(self, location_id:str, org_id:str = None) -> Location:
         """
         Shows details for a location, by ID.
 
-        This API only works for Customer administrators and for Partner administrators to query their own organization.
-        Partner administrators looking to query customer organizations should use the List Locations endpoint to
-        retrieve information about locations.
-
         :param location_id: A unique identifier for the location.
         :type location_id: str
+        :param org_id: Get location common attributes for this organization.
+        :type org_id: str
+
         :return: location details
         :rtype: :class:`Location`
         """
+        params = org_id and {'oorgId': org_id} or None
         ep = self.ep(location_id)
-        return Location.parse_obj(await self.get(ep))
+        return Location.parse_obj(await self.get(ep, params=params))
 
     async def create(self, name: str, time_zone: str, preferred_language: str, announcement_language: str, address1: str,
                city: str, state: str, postal_code: str, country: str, address2: str = None, org_id: str = None) -> str:
         """
-        Create a new Location for a given organization. Only an admin in a Webex Calling licensed organization can
-        create a new Location.
+        Create a new Location for a given organization. Only an admin in the organization can create a new Location.
+
+        Creating a location in your organization requires an administrator auth token with
+        the spark-admin:locations_write.
+
+        Partners may specify orgId query parameter to create location in managed organization.
 
         The following body parameters are required to create a new location: name, timeZone, preferredLanguage,
         address, announcementLanguage.
 
-        Creating a location in your organization requires an administrator auth token with
-        the spark-admin:locations_write.
 
         :param name: The name of the location.
         :type name: str
@@ -1510,7 +1510,8 @@ class AsPeopleApi(AsApiChild, base='people'):
     """
 
     def list_gen(self, email: str = None, display_name: str = None, id_list: list[str] = None, org_id: str = None,
-             calling_data: bool = None, location_id: str = None, **params) -> AsyncGenerator[Person, None, None]:
+             roles: str = None, calling_data: bool = None, location_id: str = None,
+             **params) -> AsyncGenerator[Person, None, None]:
         """
         List people in your organization. For most users, either the email or displayName parameter is required. Admin
         users can omit these fields and list all users in their organization.
@@ -1527,6 +1528,8 @@ class AsPeopleApi(AsApiChild, base='people'):
         Lookup by email is only supported for people within the same org or where a partner admin relationship is in
         place.
 
+        Lookup by roles is only supported for Admin users for the people within the same org.
+
         :param email: List people with this email address. For non-admin requests, either this or displayName are
             required.
         :type email: str
@@ -1539,6 +1542,8 @@ class AsPeopleApi(AsApiChild, base='people'):
         :param org_id: List people in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
         :type org_id: str
+        :param roles: List of roleIds separated by commas.
+        :type roles: str
         :param calling_data: Include Webex Calling user details in the response. Default: False
         :type calling_data: bool
         :param location_id: List people present in this location.
@@ -1561,7 +1566,8 @@ class AsPeopleApi(AsApiChild, base='people'):
         return self.session.follow_pagination(url=ep, model=Person, params=params)
 
     async def list(self, email: str = None, display_name: str = None, id_list: list[str] = None, org_id: str = None,
-             calling_data: bool = None, location_id: str = None, **params) -> List[Person]:
+             roles: str = None, calling_data: bool = None, location_id: str = None,
+             **params) -> List[Person]:
         """
         List people in your organization. For most users, either the email or displayName parameter is required. Admin
         users can omit these fields and list all users in their organization.
@@ -1578,6 +1584,8 @@ class AsPeopleApi(AsApiChild, base='people'):
         Lookup by email is only supported for people within the same org or where a partner admin relationship is in
         place.
 
+        Lookup by roles is only supported for Admin users for the people within the same org.
+
         :param email: List people with this email address. For non-admin requests, either this or displayName are
             required.
         :type email: str
@@ -1590,6 +1598,8 @@ class AsPeopleApi(AsApiChild, base='people'):
         :param org_id: List people in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
         :type org_id: str
+        :param roles: List of roleIds separated by commas.
+        :type roles: str
         :param calling_data: Include Webex Calling user details in the response. Default: False
         :type calling_data: bool
         :param location_id: List people present in this location.
@@ -9678,6 +9688,132 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         return DeviceCustomization.parse_obj(data)
 
 
+class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
+    def list_gen(self, org_id: str = None, location_id: list[str] = None,
+             id: list[str] = None, owner_name: list[str] = None, phone_number: list[str] = None,
+             location_name: list[str] = None, order: list[str] = None, has_device_assigned: bool = None,
+             has_extension_assigned: bool = None, has_dn_assigned: bool = None,
+             **params) -> AsyncGenerator[VirtualLine, None, None]:
+        """
+        List all Virtual Lines for the organization.
+        Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
+        Calling users.
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param org_id: List virtual lines for this organization.
+        :type org_id: str
+        :param location_id: Return the list of virtual lines matching these location ids. Example for multiple values -
+            ?locationId=locId1&locationId=locId2.
+        :type location_id: List[str]
+        :param id: Return the list of virtual lines matching these virtualLineIds.
+        :type id: List[str]
+        :param owner_name: Return the list of virtual lines matching these owner names.
+        :type owner_name: List[str]
+        :param phone_number: Return the list of virtual lines matching these phone numbers.
+        :type phone_number: List[str]
+        :param location_name: Return the list of virtual lines matching the location names.
+        :type location_name: List[str]
+        :param order: Return the list of virtual lines based on the order. Default sort will be in an Ascending order.
+            Maximum 3 orders allowed at a time.
+        :type order: List[str]
+        :param has_device_assigned: If true, includes only virtual lines with devices assigned. When not explicitly
+            specified, the default includes both virtual lines with devices assigned and not assigned.
+        :type has_device_assigned: bool
+        :param has_extension_assigned: If true, includes only virtual lines with an extension assigned. When not
+            explicitly specified, the default includes both virtual lines with extension assigned and not assigned.
+        :type has_extension_assigned: bool
+        :param has_dn_assigned: If true, includes only virtual lines with an assigned directory number, also known as a
+            Dn. When not explicitly specified, the default includes both virtual lines with a Dn assigned and not
+            assigned.
+        :type has_dn_assigned: bool
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if id is not None:
+            params['id'] = id
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if location_name is not None:
+            params['locationName'] = location_name
+        if order is not None:
+            params['order'] = order
+        if has_device_assigned is not None:
+            params['hasDeviceAssigned'] = has_device_assigned
+        if has_extension_assigned is not None:
+            params['hasExtensionAssigned'] = has_extension_assigned
+        if has_dn_assigned is not None:
+            params['hasDnAssigned'] = has_dn_assigned
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=VirtualLine, params=params, item_key='virtualLines')
+
+    async def list(self, org_id: str = None, location_id: list[str] = None,
+             id: list[str] = None, owner_name: list[str] = None, phone_number: list[str] = None,
+             location_name: list[str] = None, order: list[str] = None, has_device_assigned: bool = None,
+             has_extension_assigned: bool = None, has_dn_assigned: bool = None,
+             **params) -> List[VirtualLine]:
+        """
+        List all Virtual Lines for the organization.
+        Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
+        Calling users.
+        Retrieving this list requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param org_id: List virtual lines for this organization.
+        :type org_id: str
+        :param location_id: Return the list of virtual lines matching these location ids. Example for multiple values -
+            ?locationId=locId1&locationId=locId2.
+        :type location_id: List[str]
+        :param id: Return the list of virtual lines matching these virtualLineIds.
+        :type id: List[str]
+        :param owner_name: Return the list of virtual lines matching these owner names.
+        :type owner_name: List[str]
+        :param phone_number: Return the list of virtual lines matching these phone numbers.
+        :type phone_number: List[str]
+        :param location_name: Return the list of virtual lines matching the location names.
+        :type location_name: List[str]
+        :param order: Return the list of virtual lines based on the order. Default sort will be in an Ascending order.
+            Maximum 3 orders allowed at a time.
+        :type order: List[str]
+        :param has_device_assigned: If true, includes only virtual lines with devices assigned. When not explicitly
+            specified, the default includes both virtual lines with devices assigned and not assigned.
+        :type has_device_assigned: bool
+        :param has_extension_assigned: If true, includes only virtual lines with an extension assigned. When not
+            explicitly specified, the default includes both virtual lines with extension assigned and not assigned.
+        :type has_extension_assigned: bool
+        :param has_dn_assigned: If true, includes only virtual lines with an assigned directory number, also known as a
+            Dn. When not explicitly specified, the default includes both virtual lines with a Dn assigned and not
+            assigned.
+        :type has_dn_assigned: bool
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if id is not None:
+            params['id'] = id
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if location_name is not None:
+            params['locationName'] = location_name
+        if order is not None:
+            params['order'] = order
+        if has_device_assigned is not None:
+            params['hasDeviceAssigned'] = has_device_assigned
+        if has_extension_assigned is not None:
+            params['hasExtensionAssigned'] = has_extension_assigned
+        if has_dn_assigned is not None:
+            params['hasDnAssigned'] = has_dn_assigned
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=VirtualLine, params=params, item_key='virtualLines')]
+
+
 class AsVoiceMessagingApi(AsApiChild, base='telephony/voiceMessages'):
     """
     Voice Messaging APIs provide support for handling voicemail and message waiting indicators in Webex Calling.  The
@@ -10084,6 +10220,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     prem_pstn: AsPremisePstnApi
     pnc: AsPrivateNetworkConnectApi
     schedules: AsScheduleApi
+    virtual_lines: AsVirtualLinesApi
     # location voicemail groups
     voicemail_groups: AsVoicemailGroupsApi
     voicemail_rules: AsVoicemailRulesApi
@@ -10110,6 +10247,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.pnc = AsPrivateNetworkConnectApi(session=session)
         self.prem_pstn = AsPremisePstnApi(session=session)
         self.schedules = AsScheduleApi(session=session, base=ScheduleApiBase.locations)
+        self.virtual_lines = AsVirtualLinesApi(session=session)
         self.voicemail_groups = AsVoicemailGroupsApi(session=session)
         self.voicemail_rules = AsVoicemailRulesApi(session=session)
         self.voice_messaging = AsVoiceMessagingApi(session=session)

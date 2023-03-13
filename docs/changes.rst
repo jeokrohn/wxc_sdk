@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- new API for virtual lines :class:`wxc_sdk.telephony.virtual_line.VirtualLinesApi`
+
 1.12.0
 ------
 - feat: new attribute call_park_extension in :class:`wxc_sdk.telephony.callpark.CallPark`

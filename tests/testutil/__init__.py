@@ -27,7 +27,8 @@ from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 
 __all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'LocationInfo', 'us_location_info',
            'calling_users', 'available_numbers', 'available_extensions_gen', 'get_or_create_holiday_schedule',
-           'get_or_create_business_schedule', 'random_users', 'create_call_park_extension']
+           'get_or_create_business_schedule', 'random_users', 'create_call_park_extension',
+           'as_available_extensions_gen']
 
 
 def available_numbers(numbers: Iterable[str], seed: str = None) -> Generator[str, None, None]:
@@ -121,6 +122,15 @@ def available_extensions_gen(*, api: WebexSimpleApi, location_id: str, seed: str
     extensions.extend(cpe.extension for cpe in api.telephony.callpark_extension.list(location_id=location_id))
     return available_numbers(numbers=extensions, seed=seed)
 
+
+async def as_available_extensions_gen(*, api: AsWebexSimpleApi,
+                                      location_id: str, seed: str = None) -> Generator[str, None, None]:
+    phone_numbers, cpe_list = await asyncio.gather(api.telephony.phone_numbers(location_id=location_id),
+                                                api.telephony.callpark_extension.list(location_id=location_id))
+    extensions = [pn.extension for pn in phone_numbers
+                  if pn.extension]
+    extensions.extend(cpe.extension for cpe in cpe_list)
+    return available_numbers(numbers=extensions, seed=seed)
 
 def available_extensions(*, api: WebexSimpleApi, location_id: str, ext_requested: int = 1,
                          seed: str = None) -> list[str]:
