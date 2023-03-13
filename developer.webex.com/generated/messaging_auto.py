@@ -7,17 +7,17 @@ from typing import List, Optional
 from pydantic import Field, parse_obj_as
 
 
-__all__ = ['Actions', 'AdaptiveCard', 'Attachment', 'AttachmentActionsApi', 'Body', 'CreateAttachmentActionBody',
-           'CreateAttachmentActionResponse', 'CreateMembershipBody', 'CreateMessageResponse', 'CreatePersonBody',
-           'CreateRoomBody', 'CreateRoomTabBody', 'CreateTeamBody', 'CreateTeamMembershipBody', 'CreateWebhookBody',
-           'Data', 'DirectMessage', 'EditMessageBody', 'Event', 'Event1', 'EventResourceEnum', 'EventTypeEnum',
-           'EventsApi', 'GetRoomMeetingDetailsResponse', 'Inputs', 'ListDirectMessagesResponse', 'ListEventsResponse',
-           'ListMembershipsResponse', 'ListMessage', 'ListMessagesResponse', 'ListPeopleResponse',
-           'ListRoomTabsResponse', 'ListRoomsResponse', 'ListTeamMembershipsResponse', 'ListTeamsResponse',
-           'ListWebhooksResponse', 'Membership', 'MembershipsApi', 'MessagesApi', 'PeopleApi', 'Person',
-           'PhoneNumbers', 'Resource', 'Room', 'RoomTab', 'RoomTabsApi', 'RoomType', 'RoomsApi', 'SipAddressesType',
-           'Status', 'Status5', 'Team', 'TeamMembership', 'TeamMembershipsApi', 'TeamsApi', 'Type', 'Webhook',
-           'WebhooksApi']
+__all__ = ['Actions', 'AdaptiveCard', 'Addresses', 'Attachment', 'AttachmentActionsApi', 'Body',
+           'CreateAttachmentActionBody', 'CreateAttachmentActionResponse', 'CreateMembershipBody',
+           'CreateMessageResponse', 'CreatePersonBody', 'CreateRoomBody', 'CreateRoomTabBody', 'CreateTeamBody',
+           'CreateTeamMembershipBody', 'CreateWebhookBody', 'Data', 'DirectMessage', 'EditMessageBody', 'Event',
+           'Event1', 'EventResourceEnum', 'EventTypeEnum', 'EventsApi', 'GetRoomMeetingDetailsResponse', 'Inputs',
+           'ListDirectMessagesResponse', 'ListEventsResponse', 'ListMembershipsResponse', 'ListMessage',
+           'ListMessagesResponse', 'ListPeopleResponse', 'ListRoomTabsResponse', 'ListRoomsResponse',
+           'ListTeamMembershipsResponse', 'ListTeamsResponse', 'ListWebhooksResponse', 'Membership', 'MembershipsApi',
+           'MessagesApi', 'PeopleApi', 'Person', 'PhoneNumbers', 'Resource', 'Room', 'RoomTab', 'RoomTabsApi',
+           'RoomType', 'RoomsApi', 'SipAddressesType', 'Status', 'Status5', 'Team', 'TeamMembership',
+           'TeamMembershipsApi', 'TeamsApi', 'Type', 'Webhook', 'WebhooksApi']
 
 
 class Inputs(ApiModel):
@@ -743,6 +743,27 @@ class Type(str, Enum):
     appuser = 'appuser'
 
 
+class Addresses(ApiModel):
+    #: The type of address
+    #: Possible values: work
+    type: Optional[str]
+    #: The user's country
+    #: Possible values: US
+    country: Optional[str]
+    #: the user's locality, often city
+    #: Possible values: Milpitas
+    locality: Optional[str]
+    #: the user's region, often state
+    #: Possible values: California
+    region: Optional[str]
+    #: the user's street
+    #: Possible values: 1099 Bird Ave.
+    street_address: Optional[str]
+    #: the user's postal or zip code
+    #: Possible values: 99212
+    postal_code: Optional[str]
+
+
 class CreatePersonBody(ApiModel):
     #: The email addresses of the person. Only one email address is allowed per person.
     #: Possible values: john.andersen@example.com
@@ -780,9 +801,7 @@ class CreatePersonBody(ApiModel):
     #: the person's title
     title: Optional[str]
     #: Person's address
-    #: Possible values: , country: `US`, locality: `Charlotte`, region: `North Carolina`, streetAddress: `1099 Bird
-    #: Ave.`, type: `work`, postalCode: `99212`
-    addresses: Optional[list[object]]
+    addresses: Optional[list[Addresses]]
     #: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg:
     #: mysite.webex.com#attendee)
     #: Possible values: mysite.webex.com#attendee
@@ -902,7 +921,7 @@ class PeopleApi(ApiChild, base='people'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Person, params=params)
 
-    def create(self, emails: List[str], calling_data: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: List[object] = None, site_urls: List[str] = None) -> Person:
+    def create(self, emails: List[str], calling_data: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: Addresses = None, site_urls: List[str] = None) -> Person:
         """
         Create a new user account for a given organization. Only an admin can create a new user account.
         At least one of the following body parameters is required to create a new user: displayName, firstName,
@@ -954,9 +973,8 @@ class PeopleApi(ApiChild, base='people'):
         :type manager_id: str
         :param title: the person's title
         :type title: str
-        :param addresses: Person's address Possible values: , country: `US`, locality: `Charlotte`, region: `North
-            Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode: `99212`
-        :type addresses: List[object]
+        :param addresses: Person's address
+        :type addresses: Addresses
         :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the
             sitename (eg: mysite.webex.com#attendee) Possible values: mysite.webex.com#attendee
         :type site_urls: List[str]
@@ -1025,7 +1043,7 @@ class PeopleApi(ApiChild, base='people'):
         data = super().get(url=url, params=params)
         return Person.parse_obj(data)
 
-    def update(self, person_id: str, emails: List[str], calling_data: bool = None, show_all_types: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: List[object] = None, site_urls: List[str] = None, nick_name: str = None, login_enabled: bool = None) -> Person:
+    def update(self, person_id: str, emails: List[str], calling_data: bool = None, show_all_types: bool = None, phone_numbers: PhoneNumbers = None, extension: str = None, location_id: str = None, display_name: str = None, first_name: str = None, last_name: str = None, avatar: str = None, org_id: str = None, roles: List[str] = None, licenses: List[str] = None, department: str = None, manager: str = None, manager_id: str = None, title: str = None, addresses: Addresses = None, site_urls: List[str] = None, nick_name: str = None, login_enabled: bool = None) -> Person:
         """
         Update details for a person, by ID.
         Specify the person ID in the personId parameter in the URI. Only an admin can update a person details.
@@ -1085,9 +1103,8 @@ class PeopleApi(ApiChild, base='people'):
         :type manager_id: str
         :param title: the person's title
         :type title: str
-        :param addresses: Person's address Possible values: , country: `US`, locality: `Charlotte`, region: `North
-            Carolina`, streetAddress: `1099 Bird Ave.`, type: `work`, postalCode: `99212`
-        :type addresses: List[object]
+        :param addresses: Person's address
+        :type addresses: Addresses
         :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the
             sitename (eg: mysite.webex.com#attendee) Possible values: mysite.webex.com#attendee
         :type site_urls: List[str]
