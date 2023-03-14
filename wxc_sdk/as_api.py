@@ -57,9 +57,11 @@ __all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsApi
            'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi', 'AsHotelingApi', 'AsHuntGroupApi',
            'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationInterceptApi',
            'AsLocationMoHApi', 'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi',
-           'AsManageNumbersJobsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi', 'AsNumbersApi',
-           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi',
-           'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
+           'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi',
+           'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi',
+           'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi',
+           'AsNumbersApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi',
+           'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
            'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsReceptionistApi',
            'AsReceptionistContactsDirectoryApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi',
            'AsRouteGroupApi', 'AsRouteListApi', 'AsScheduleApi', 'AsTeamMembershipsApi', 'AsTeamsApi',
@@ -1068,6 +1070,1444 @@ class AsLocationsApi(AsApiChild, base='locations'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
         await self.put(url=url, data=data, params=params)
+
+
+class AsMeetingChatsApi(AsApiChild, base='meetings/postMeetingChats'):
+    """
+    Chats are content captured in a meeting when chat messages are sent between the participants within a meeting. This feature allows a Compliance Officer to access the in-meeting chat content.
+    The Compliance Officer can use the Meeting Chats API to retrieve the chats of a meeting and to delete all chats associated with a meeting. private chats are text messages between two people. group chats are for larger breakout spaces. Meeting chats are different from room messages in that there is no catch-up propagation. For example, if a user joins a meeting late only, chat messages that are created from then on, will be propagated to this user. To understand which user saw which message if they joined late, you have to query the meetingParticipants REST resource for the joined/left times and compare to the meetingsChat chatTime field.
+    The Webex meetings chat functionality and API endpoint described here is "upon-request" and not enabled by default. If you need it enabled for your org, or if you need help, please contact the Webex Developer Support team at devsupport@webex.com.
+    """
+
+    def list_gen(self, meeting_id: str, offset: int = None, **params) -> AsyncGenerator[ChatObject, None, None]:
+        """
+        Lists the meeting chats of a finished meeting instance specified by meetingId. You can set a maximum number of chats to return.
+        Use this operation to list the chats of a finished meeting instance when they are ready. Please note that only meeting instances in state ended are supported for meetingId. Meeting series, scheduled meetings and in-progress meeting instances are not supported.
+
+        :param meeting_id: A unique identifier for the meeting instance to which the chats belong. The meeting ID of a scheduled personal room meeting is not supported.
+        :type meeting_id: str
+        :param offset: Offset from the first result that you want to fetch.
+        :type offset: int
+        """
+        params['meetingId'] = meeting_id
+        if offset is not None:
+            params['offset'] = offset
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=ChatObject, params=params)
+
+    async def list(self, meeting_id: str, offset: int = None, **params) -> List[ChatObject]:
+        """
+        Lists the meeting chats of a finished meeting instance specified by meetingId. You can set a maximum number of chats to return.
+        Use this operation to list the chats of a finished meeting instance when they are ready. Please note that only meeting instances in state ended are supported for meetingId. Meeting series, scheduled meetings and in-progress meeting instances are not supported.
+
+        :param meeting_id: A unique identifier for the meeting instance to which the chats belong. The meeting ID of a scheduled personal room meeting is not supported.
+        :type meeting_id: str
+        :param offset: Offset from the first result that you want to fetch.
+        :type offset: int
+        """
+        params['meetingId'] = meeting_id
+        if offset is not None:
+            params['offset'] = offset
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=ChatObject, params=params)]
+
+    async def delete(self, meeting_id: str):
+        """
+        Deletes the meeting chats of a finished meeting instance specified by meetingId.
+        Use this operation to delete the chats of a finished meeting instance when they are ready. Please note that only meeting instances in state ended are supported for meetingId. Meeting series, scheduled meetings and in-progress meeting instances are not supported.
+
+        :param meeting_id: A unique identifier for the meeting instance to which the chats belong. Meeting IDs of a scheduled personal room meeting are not supported.
+        :type meeting_id: str
+        """
+        params = {}
+        params['meetingId'] = meeting_id
+        url = self.ep()
+        await super().delete(url=url, params=params)
+        return
+
+
+class AsMeetingClosedCaptionsApi(AsApiChild, base='meetingClosedCaptions'):
+    """
+    Meeting Closed Captions APIs are enabled upon request, and are not available by default. Please contact the Webex
+    Developer Support team at devsupport@webex.com if you would like to enable this feature for your organization.
+    Meeting closed captions are the automatic transcriptions of what is being said during a meeting in real-time.
+    Closed captions appear after being enabled during a meeting and can be translated to a participant's language.
+    A closed caption snippet is a short text snippet from a meeting closed caption which was spoken by a particular
+    participant in the meeting. A meeting's closed captions consists of many snippets.
+    The Closed Captions API manages meeting closed captions and snippets. You can list meeting closed captions, as well
+    as list and download snippets. Closed captions can be retrieved in either Web Video Text Tracks (VTT) or plain text
+    (TXT) format via the download links provided by the vttDownloadLink and txtDownloadlink response properties,
+    respectively.
+    Refer to the Meetings API Scopes section of Meetings Overview guide for the scopes required for each API.
+    Notes:
+    Currently, closed caption APIs are only supported for the Compliance Officer role.
+    Closed captions will be available 15 minutes after the meeting is finished.
+    """
+
+    def list_gen(self, meeting_id: str, **params) -> AsyncGenerator[ClosedCaption, None, None]:
+        """
+        Lists closed captions of a finished meeting instance specified by meetingId.
+
+        :param meeting_id: Unique identifier for the meeting instance which the closed captions belong to. This
+            parameter only applies to ended meeting instnaces. It does not apply to meeting series, scheduled meetings
+            or scheduled personal room meetings.
+        :type meeting_id: str
+        """
+        params['meetingId'] = meeting_id
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=ClosedCaption, params=params)
+
+    async def list(self, meeting_id: str, **params) -> List[ClosedCaption]:
+        """
+        Lists closed captions of a finished meeting instance specified by meetingId.
+
+        :param meeting_id: Unique identifier for the meeting instance which the closed captions belong to. This
+            parameter only applies to ended meeting instnaces. It does not apply to meeting series, scheduled meetings
+            or scheduled personal room meetings.
+        :type meeting_id: str
+        """
+        params['meetingId'] = meeting_id
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=ClosedCaption, params=params)]
+
+    def list_snippets_gen(self, closed_caption_id: str, meeting_id: str, **params) -> AsyncGenerator[CCSnippet, None, None]:
+        """
+        Lists snippets of a meeting closed caption specified by closedCaptionId.
+
+        :param closed_caption_id: Unique identifier for the meeting closed caption which the snippets belong to.
+        :type closed_caption_id: str
+        :param meeting_id: Unique identifier for the meeting instance which the closed caption snippets belong to. This
+            parameter only applies to ended meeting instances. It does not apply to meeting series, scheduled meetings
+            or scheduled personal room meetings.
+        :type meeting_id: str
+        """
+        params['meetingId'] = meeting_id
+        url = self.ep(f'{closed_caption_id}/snippets')
+        return self.session.follow_pagination(url=url, model=CCSnippet, params=params)
+
+    async def list_snippets(self, closed_caption_id: str, meeting_id: str, **params) -> List[CCSnippet]:
+        """
+        Lists snippets of a meeting closed caption specified by closedCaptionId.
+
+        :param closed_caption_id: Unique identifier for the meeting closed caption which the snippets belong to.
+        :type closed_caption_id: str
+        :param meeting_id: Unique identifier for the meeting instance which the closed caption snippets belong to. This
+            parameter only applies to ended meeting instances. It does not apply to meeting series, scheduled meetings
+            or scheduled personal room meetings.
+        :type meeting_id: str
+        """
+        params['meetingId'] = meeting_id
+        url = self.ep(f'{closed_caption_id}/snippets')
+        return [o async for o in self.session.follow_pagination(url=url, model=CCSnippet, params=params)]
+
+    async def download_snippets(self, closed_caption_id: str, meeting_id: str, format: str = None):
+        """
+        Download meeting closed caption snippets from the meeting closed caption specified by closedCaptionId formatted
+        either as a Video Text Track (.vtt) file or plain text (.txt) file.
+
+        :param closed_caption_id: Unique identifier for the meeting closed caption.
+        :type closed_caption_id: str
+        :param meeting_id: Unique identifier for the meeting instance which the closed caption snippets belong to. This
+            parameter only applies to meeting instances in the ended state. It does not apply to meeting series,
+            scheduled meetings or scheduled personal room meetings.
+        :type meeting_id: str
+        :param format: Format for the downloaded meeting closed caption snippets. Possible values: vtt, txt
+        :type format: str
+        """
+        # TODO: verify return and adapt
+        params = {}
+        params['meetingId'] = meeting_id
+        if format is not None:
+            params['format'] = format
+        url = self.ep(f'{closed_caption_id}/download')
+        await super().get(url=url, params=params)
+        return
+
+
+class AsMeetingInviteesApi(AsApiChild, base='meetingInvitees'):
+    """
+    This API manages invitees' relationships to a meeting.
+    You can use the Meeting Invitees API to list, create, update, and delete invitees.
+    Refer to the Meetings API Scopes section of Meetings Overview for scopes required for each API.
+    """
+
+    def list_gen(self, meeting_id: str, host_email: str = None, panelist: bool = None,
+             **params) -> AsyncGenerator[Invitee, None, None]:
+        """
+        Lists meeting invitees for a meeting with a specified meetingId. You can set a maximum number of invitees to
+        return. This operation can be used for meeting series, scheduled meetings, and ended or ongoing meeting
+        instance objects. If the specified meetingId is for a meeting series, the invitees for the series will be
+        listed; if the meetingId is for a scheduled meeting, the invitees for the particular scheduled meeting will
+        be listed; if the meetingId is for an ended or ongoing meeting instance, the invitees for the particular
+        meeting instance will be listed. See the Webex Meetings guide for more information about the types of
+        meetings. The list returned is sorted in ascending order by email address. Long result sets are split into
+        pages.
+
+        :param meeting_id: Unique identifier for the meeting for which invitees are being requested. The meeting
+            can be a meeting series, a scheduled meeting, or a meeting instance which has ended or is ongoing. The
+            meeting ID of a scheduled personal room meeting is not supported for this API.
+        :type meeting_id: str
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or
+            application calling the API has the admin on-behalf-of scopes. If set, the admin may specify the email of
+            a user in a site they manage and the API will return meeting invitees that are hosted by that user.
+        :type host_email: str
+        :param panelist: Filter invitees or attendees for webinars only. If true,
+            returns invitees. If false, returns attendees. If null, returns both invitees and attendees.
+        :type panelist: bool
+        """
+        params['meetingId'] = meeting_id
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if panelist is not None:
+            params['panelist'] = str(panelist).lower()
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=Invitee, params=params)
+
+    async def list(self, meeting_id: str, host_email: str = None, panelist: bool = None,
+             **params) -> List[Invitee]:
+        """
+        Lists meeting invitees for a meeting with a specified meetingId. You can set a maximum number of invitees to
+        return. This operation can be used for meeting series, scheduled meetings, and ended or ongoing meeting
+        instance objects. If the specified meetingId is for a meeting series, the invitees for the series will be
+        listed; if the meetingId is for a scheduled meeting, the invitees for the particular scheduled meeting will
+        be listed; if the meetingId is for an ended or ongoing meeting instance, the invitees for the particular
+        meeting instance will be listed. See the Webex Meetings guide for more information about the types of
+        meetings. The list returned is sorted in ascending order by email address. Long result sets are split into
+        pages.
+
+        :param meeting_id: Unique identifier for the meeting for which invitees are being requested. The meeting
+            can be a meeting series, a scheduled meeting, or a meeting instance which has ended or is ongoing. The
+            meeting ID of a scheduled personal room meeting is not supported for this API.
+        :type meeting_id: str
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or
+            application calling the API has the admin on-behalf-of scopes. If set, the admin may specify the email of
+            a user in a site they manage and the API will return meeting invitees that are hosted by that user.
+        :type host_email: str
+        :param panelist: Filter invitees or attendees for webinars only. If true,
+            returns invitees. If false, returns attendees. If null, returns both invitees and attendees.
+        :type panelist: bool
+        """
+        params['meetingId'] = meeting_id
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if panelist is not None:
+            params['panelist'] = str(panelist).lower()
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=Invitee, params=params)]
+
+    async def create_invitee(self, email: str, meeting_id: str, display_name: str = None, co_host: bool = None,
+                       send_email: bool = None, panelist: bool = None, host_email: str = None) -> Invitee:
+        """
+        Invite a person to attend a meeting.
+        Identify the invitee in the request body, by email address.
+
+        :param email: Email address for meeting invitee.
+        :type email: str
+        :param meeting_id: Unique identifier for the meeting to which a person is being invited. This attribute only
+            applies to meeting series and scheduled meeting. If it's a meeting series, the meeting invitee is invited
+            to the entire meeting series; if it's a scheduled meeting, the meeting invitee is invited to this individual
+            scheduled meeting. It doesn't apply to an ended or ongoing meeting instance. The meeting ID of a scheduled
+            personal room meeting is not supported for this API.
+        :type meeting_id: str
+
+        :param display_name: Display name for meeting invitee. The maximum length of displayName is 128
+            characters. In Webex App, if the email has been associated with an existing Webex account, the display
+            name associated with the Webex account will be used; otherwise, the email will be used as displayName. In
+            Webex site, if displayName is specified, it will show displayName. If displayName is not specified,
+            and the email has been associated with an existing Webex account, the display name associated with the
+            Webex account will be used; otherwise, the email will be used as displayName. Please note that if the
+            invitee has an existing Webex account, the displayName shown in the meeting will be the displayName
+            associated with the Webex account; otherwise, displayName shown in the meeting will be the displayName
+            which is specified by the invitee who does not have a Webex account.
+
+        :type display_name: str
+        :param co_host: Whether or not invitee is a designated alternate host for the meeting. See Add Alternate
+            Hosts for Cisco Webex Meetings for more details.
+        :type co_host: bool
+        :param send_email: If true, send an email to the invitee.
+        :type send_email: bool
+        :param panelist: If true, the invitee is a designated panelist for the event meeting.
+        :type panelist: bool
+        :param host_email: Email address for the meeting host. This attribute should only be set if the user or
+            application calling the API has the admin on-behalf-of scopes. When used, the admin may specify the email of
+            a user in a site they manage to be the meeting host.
+        :type host_email: str
+        """
+        body = CreateMeetingInviteeBody()
+        if email is not None:
+            body.email = email
+        if meeting_id is not None:
+            body.meeting_id = meeting_id
+        if display_name is not None:
+            body.display_name = display_name
+        if co_host is not None:
+            body.co_host = co_host
+        if send_email is not None:
+            body.send_email = send_email
+        if panelist is not None:
+            body.panelist = panelist
+        if host_email is not None:
+            body.host_email = host_email
+        url = self.ep()
+        data = await super().post(url=url, data=body.json())
+        return Invitee.parse_obj(data)
+
+    async def create_invitees(self, meeting_id: str, items: List[CreateInviteesItem],
+                        host_email: str = None) -> List[Invitee]:
+        """
+        Invite people to attend a meeting in bulk.
+        Identify each invitee by the email address of each item in the items of the request body.
+        Each invitee should have a unique email.
+        This API limits the maximum size of items in the request body to 100.
+
+        :param meeting_id: Unique identifier for the meeting to which the people are being invited. This attribute
+            only applies to meeting series and scheduled meetings. If it's a meeting series, the meeting invitees are
+            invited to the entire meeting series; if it's a scheduled meeting, the meeting invitees are invited to this
+            individual scheduled meeting. It doesn't apply to an ended or ongoing meeting instance. The meeting ID of a
+            scheduled personal room meeting is not supported for this API.
+        :type meeting_id: str
+        :param host_email: Email address for the meeting host. This attribute should only be set if the user or
+            application calling the API has the admin on-behalf-of scopes. When used, the admin may specify the email of
+            a user in a site they manage to be the meeting host.
+        :type host_email: str
+        :param items: Meeting invitees to be inserted.
+        :type items: CreateInviteesItem
+        """
+        body = CreateMeetingInviteesBody()
+        if meeting_id is not None:
+            body.meeting_id = meeting_id
+        if host_email is not None:
+            body.host_email = host_email
+        if items is not None:
+            body.items = items
+        url = self.ep('bulkInsert')
+        data = await super().post(url=url, data=body.json())
+        return data["items"]
+
+    async def invitee_details(self, meeting_invitee_id: str, host_email: str = None) -> Invitee:
+        """
+        Retrieve details for a meeting invitee identified by a meetingInviteeId in the URI.
+
+        :param meeting_invitee_id: Unique identifier for the invitee whose details are being requested.
+        :type meeting_invitee_id: str
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the admin on-behalf-of scopes. If set, the admin may specify the email of a user in a
+            site they manage and the API will return details for a meeting invitee that is hosted by that user.
+        :type host_email: str
+        """
+        params = {}
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'{meeting_invitee_id}')
+        data = await super().get(url=url, params=params)
+        return Invitee.parse_obj(data)
+
+    async def update(self, meeting_invitee_id: str, email: str, display_name: str = None, co_host: bool = None,
+               send_email: bool = None, panelist: bool = None, host_email: str = None) -> Invitee:
+        """
+        Update details for a meeting invitee identified by a meetingInviteeId in the URI.
+
+        :param meeting_invitee_id: Unique identifier for the invitee to be updated. This parameter only applies to an
+            invitee to a meeting series or a scheduled meeting. It doesn't apply to an invitee to an ended or ongoing
+            meeting instance.
+        :type meeting_invitee_id: str
+        :param email: Email address for meeting invitee.
+        :type email: str
+        :param display_name: Display name for meeting invitee. The maximum length of displayName is 128 characters.
+            In Webex App, if the email has been associated with an existing Webex account, the display name associated
+            with the Webex account will be used; otherwise, the email will be used as displayName. In Webex site,
+            if displayName is specified, it will show displayName. If displayName is not specified, and the email has
+            been associated with an existing Webex account, the display name associated with the Webex account will be
+            used; otherwise, the email will be used as displayName.
+            Please note that if the invitee has an existing Webex account, the displayName shown in the meeting will
+            be the displayName associated with the Webex account; otherwise, displayName shown in the meeting will be
+            the displayName which is specified by the invitee who does not have a Webex account.
+        :type display_name: str
+        :param co_host: Whether or not invitee is a designated alternate host for the meeting. See Add Alternate
+            Hosts for Cisco Webex Meetings for more details.
+        :type co_host: bool
+        :param send_email: If true, send an email to the invitee.
+        :type send_email: bool
+        :param panelist: If true, the invitee is a designated panelist for the event meeting.
+        :type panelist: bool
+        :param host_email: Email address for the meeting host. This attribute should only be set if the user or
+            application calling the API has the admin on-behalf-of scopes. When used, the admin may specify the email of
+            a user in a site they manage to be the meeting host.
+        :type host_email: str
+        """
+        body = UpdateMeetingInviteeBody()
+        if email is not None:
+            body.email = email
+        if display_name is not None:
+            body.display_name = display_name
+        if co_host is not None:
+            body.co_host = co_host
+        if send_email is not None:
+            body.send_email = send_email
+        if panelist is not None:
+            body.panelist = panelist
+        if host_email is not None:
+            body.host_email = host_email
+        url = self.ep(f'{meeting_invitee_id}')
+        data = await super().put(url=url, data=body.json())
+        return Invitee.parse_obj(data)
+
+    async def delete(self, meeting_invitee_id: str, host_email: str = None, send_email: bool = None):
+        """
+        Removes a meeting invitee identified by a meetingInviteeId specified in the URI. The deleted meeting invitee
+        cannot be recovered.
+        If the meeting invitee is associated with a meeting series, the invitee will be removed from the entire
+        meeting series. If the invitee is associated with a scheduled meeting, the invitee will be removed from only
+        that scheduled meeting.
+
+        :param meeting_invitee_id: Unique identifier for the invitee to be removed. This parameter only applies to an
+            invitee to a meeting series or a scheduled meeting. It doesn't apply to an invitee to an ended or ongoing
+            meeting instance.
+        :type meeting_invitee_id: str
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the admin on-behalf-of scopes. If set, the admin may specify the email of a user in a
+            site they manage and the API will delete a meeting invitee that is hosted by that user.
+        :type host_email: str
+        :param send_email: If true, send an email to the invitee.
+        :type send_email: bool
+        """
+        params = {}
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if send_email is not None:
+            params['sendEmail'] = send_email
+        url = self.ep(f'{meeting_invitee_id}')
+        await super().delete(url=url, params=params)
+        return
+
+
+class AsMeetingParticipantsApi(AsApiChild, base='meetingParticipants'):
+    """
+    This API manages meeting participants.
+    Refer to the Meetings API Scopes section of Meetings Overview for scopes required for each API.
+    """
+
+    def list_participants_gen(self, meeting_id: str, host_email: str = None, join_time_from: str = None,
+                          join_time_to: str = None, **params) -> AsyncGenerator[Participant, None, None]:
+        """
+        List all participants in a live or post meeting. The meetingId parameter is required, which is the unique
+        identifier for the meeting.
+        The authenticated user calling this API must either have an Administrator role with the
+        meeting:admin_participants_read scope, or be the meeting host.
+
+        :param meeting_id: The unique identifier for the meeting. Please note that currently meeting ID of a scheduled
+            personal room meeting is not supported for this API.
+        :type meeting_id: str
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the admin-level scopes, the admin may specify the email of a user in a site they manage
+            and the API will return meeting participants of the meetings that are hosted by that user.
+        :type host_email: str
+        :param join_time_from: The time participants join a meeting starts from the specified date and time (inclusive)
+            in any ISO 8601 compliant format. If joinTimeFrom is not specified, it equals joinTimeTo minus 7 days.
+        :type join_time_from: str
+        :param join_time_to: The time participants join a meeting before the specified date and time (exclusive) in any
+            ISO 8601 compliant format. If joinTimeTo is not specified, it equals joinTimeFrom plus 7 days. The interval
+            between joinTimeFrom and joinTimeTo must be within 90 days.
+        :type join_time_to: str
+        """
+        params['meetingId'] = meeting_id
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if join_time_from is not None:
+            params['joinTimeFrom'] = join_time_from
+        if join_time_to is not None:
+            params['joinTimeTo'] = join_time_to
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=Participant, params=params)
+
+    async def list_participants(self, meeting_id: str, host_email: str = None, join_time_from: str = None,
+                          join_time_to: str = None, **params) -> List[Participant]:
+        """
+        List all participants in a live or post meeting. The meetingId parameter is required, which is the unique
+        identifier for the meeting.
+        The authenticated user calling this API must either have an Administrator role with the
+        meeting:admin_participants_read scope, or be the meeting host.
+
+        :param meeting_id: The unique identifier for the meeting. Please note that currently meeting ID of a scheduled
+            personal room meeting is not supported for this API.
+        :type meeting_id: str
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the admin-level scopes, the admin may specify the email of a user in a site they manage
+            and the API will return meeting participants of the meetings that are hosted by that user.
+        :type host_email: str
+        :param join_time_from: The time participants join a meeting starts from the specified date and time (inclusive)
+            in any ISO 8601 compliant format. If joinTimeFrom is not specified, it equals joinTimeTo minus 7 days.
+        :type join_time_from: str
+        :param join_time_to: The time participants join a meeting before the specified date and time (exclusive) in any
+            ISO 8601 compliant format. If joinTimeTo is not specified, it equals joinTimeFrom plus 7 days. The interval
+            between joinTimeFrom and joinTimeTo must be within 90 days.
+        :type join_time_to: str
+        """
+        params['meetingId'] = meeting_id
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if join_time_from is not None:
+            params['joinTimeFrom'] = join_time_from
+        if join_time_to is not None:
+            params['joinTimeTo'] = join_time_to
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=Participant, params=params)]
+
+    async def query_participants_with_email(self, meeting_id: str, max: int = None, host_email: str = None,
+                                      join_time_from: str = None, join_time_to: str = None,
+                                      emails: list[str] = None) -> list[Participant]:
+        """
+        Query participants in a live meeting, or after the meeting, using participant's email. The meetingId parameter
+        is the unique identifier for the meeting and is required.
+        The authenticated user calling this API must either have an Administrator role with the
+        meeting:admin_participants_read scope, or be the meeting host.
+
+        :param meeting_id: The unique identifier for the meeting.
+        :type meeting_id: str
+        :param max: Limit the maximum number of participants in the response, up to 1000.
+        :type max: int
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the admin-level scopes, the admin may specify the email of a user in a site they manage
+            and the API will return meeting participants of the meetings that are hosted by that user.
+        :type host_email: str
+        :param join_time_from: The time participants join a meeting starts from the specified date and time (inclusive)
+            in any ISO 8601 compliant format. If joinTimeFrom is not specified, it equals joinTimeTo minus 7 days.
+        :type join_time_from: str
+        :param join_time_to: The time participants join a meeting before the specified date and time (exclusive) in any
+            ISO 8601 compliant format. If joinTimeTo is not specified, it equals joinTimeFrom plus 7 days. The interval
+            between joinTimeFrom and joinTimeTo must be within 90 days.
+        :type join_time_to: str
+        :param emails: Participants email list Possible values: a@example.com
+        :type emails: List[str]
+        """
+        params = {}
+        params['meetingId'] = meeting_id
+        if max is not None:
+            params['max'] = max
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if join_time_from is not None:
+            params['joinTimeFrom'] = join_time_from
+        if join_time_to is not None:
+            params['joinTimeTo'] = join_time_to
+        body = QueryMeetingParticipantsWithEmailBody()
+        if emails is not None:
+            body.emails = emails
+        url = self.ep('query')
+        data = await super().post(url=url, params=params, data=body.json())
+        # TODO: this is wrong -> fix code generation
+        return data["items"]
+
+    async def participant_details(self, participant_id: str, host_email: str = None) -> Participant:
+        """
+        Get a meeting participant details of a live or post meeting. The participantId is required to identify the
+        meeting and the participant.
+        The authenticated user calling this API must either have an Administrator role with the
+        meeting:admin_participants_read scope, or be the meeting host.
+
+        :param participant_id: The unique identifier for the meeting and the participant.
+        :type participant_id: str
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the admin-level scopes, the admin may specify the email of a user in a site they manage
+            and the API will return meeting participants of the meetings that are hosted by that user.
+        :type host_email: str
+        """
+        params = {}
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'{participant_id}')
+        data = await super().get(url=url, params=params)
+        return Participant.parse_obj(data)
+
+    async def update_participant(self, participant_id: str, muted: bool = None, admit: bool = None,
+                           expel: bool = None) -> UpdateParticipantResponse:
+        """
+        To mute, un-mute, expel, or admit a participant in a live meeting. The participantId is required to identify
+        the meeting and the participant.
+        Notes:
+
+        :param participant_id: The unique identifier for the meeting and the participant.
+        :type participant_id: str
+        :param muted: The value is true or false, and means to mute or unmute the audio of a participant.
+        :type muted: bool
+        :param admit: The value can be true or false. The value of true is to admit a participant to the meeting if the
+            participant is in the lobby, No-Op if the participant is not in the lobby or when the value is set to
+            false.
+        :type admit: bool
+        :param expel: The attribute is exclusive and its value can be true or false. The value of true means that the
+            participant will be expelled from the meeting, the value of false means No-Op.
+        :type expel: bool
+        """
+        body = UpdateParticipantBody()
+        if muted is not None:
+            body.muted = muted
+        if admit is not None:
+            body.admit = admit
+        if expel is not None:
+            body.expel = expel
+        url = self.ep(f'{participant_id}')
+        data = await super().put(url=url, data=body.json())
+        return UpdateParticipantResponse.parse_obj(data)
+
+    async def admit_participants(self, participant_ids: List[str] = None):
+        """
+        To admit participants into a live meeting in bulk.
+        This API limits the maximum size of items in the request body to 100.
+        Each participantId of items in the request body should have the same prefix of meetingId.
+
+        :param participant_ids: The ID that identifies the meeting participant.
+        :type participant_ids: List[str]
+        """
+        body = AdmitParticipantsBody()
+        if participant_ids is not None:
+            body.items = participant_ids
+        url = self.ep('admit')
+        await super().post(url=url, data=body.json())
+        return
+
+
+class AsMeetingPreferencesApi(AsApiChild, base='meetingPreferences'):
+    """
+    This API manages a user's meeting preferences, including Personal Meeting Room settings, video and audio settings,
+    meeting scheduling options, and site settings.
+    Refer to the Meetings API Scopes section of Meetings Overview for scopes required for each API.
+    """
+
+    async def details(self, user_email: str = None, site_url: str = None) -> MeetingPreferenceDetails:
+        """
+        Retrieves meeting preferences for the authenticated user.
+
+        :param user_email: Email address for the user. This parameter is only used if the user or application calling
+            the API has the required admin-level scopes. If set, the admin may specify the email of a user in a site
+            they manage and the API will return details of the meeting preferences for that user.
+        :type user_email: str
+        :param site_url: URL of the Webex site to query. For individual use, if siteUrl is not specified, the query
+            will use the default site of the user. For admin use, if siteUrl is not specified, the query will use the
+            default site for the admin's authorization token used to make the call. In the case where the user belongs
+            to a site different than the admin’s default site, the admin can set the site to query using the siteUrl
+            parameter. All available Webex sites and default site of a user can be retrieved from
+            /meetingPreferences/sites.
+        :type site_url: str
+        """
+        params = {}
+        if user_email is not None:
+            params['userEmail'] = user_email
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        url = self.ep()
+        data = await super().get(url=url, params=params)
+        return MeetingPreferenceDetails.parse_obj(data)
+
+    async def personal_meeting_room_options(self, user_email: str = None, site_url: str = None) -> PersonalMeetingRoomOptions:
+        """
+        Retrieves the Personal Meeting Room options for the authenticated user.
+
+        :param user_email: Email address for the user. This parameter is only used if the user or application calling
+            the API has the admin-level scopes. If set, the admin may specify the email of a user in a site they manage
+            and the API will return details of the Personal Meeting Room options for that user.
+        :type user_email: str
+        :param site_url: URL of the Webex site to query. For individual use, if siteUrl is not specified, the query
+            will use the default site of the user. For admin use, if siteUrl is not specified, the query will use the
+            default site for the admin's authorization token used to make the call. In the case where the user belongs
+            to a site different than the admin’s default site, the admin can set the site to query using the siteUrl
+            parameter. All available Webex sites and default site of a user can be retrieved from
+            /meetingPreferences/sites.
+        :type site_url: str
+        """
+        params = {}
+        if user_email is not None:
+            params['userEmail'] = user_email
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        url = self.ep('personalMeetingRoom')
+        data = await super().get(url=url, params=params)
+        return PersonalMeetingRoomOptions.parse_obj(data)
+
+    async def update_personal_meeting_room_options(self, topic: str, host_pin: str, enabled_auto_lock: bool,
+                                             auto_lock_minutes: int, enabled_notify_host: bool, support_co_host: bool,
+                                             co_hosts: CoHost, user_email: str = None, site_url: str = None,
+                                             support_anyone_as_co_host: bool = None,
+                                             allow_first_user_to_be_co_host: bool = None,
+                                             allow_authenticated_devices: bool = None) -> PersonalMeetingRoomOptions:
+        """
+        Update a single meeting
+
+        :param topic: Personal Meeting Room topic to be updated.
+        :type topic: str
+        :param host_pin: Updated PIN for joining the room as host. The host PIN must be digits of a predefined length,
+            e.g. 4 digits. It cannot contain sequential digits, such as 1234 or 4321, or repeated digits of the
+            predefined length, such as 1111. The predefined length for host PIN can be viewed in user's My Personal
+            Room page and it can only be changed by site administrator.
+        :type host_pin: str
+        :param enabled_auto_lock: Update for option to automatically lock the Personal Room a number of minutes after a
+            meeting starts. When a room is locked, invitees cannot enter until the owner admits them. The period after
+            which the meeting is locked is defined by autoLockMinutes.
+        :type enabled_auto_lock: bool
+        :param auto_lock_minutes: Updated number of minutes after which the Personal Room is locked if enabledAutoLock
+            is enabled. Valid options are 0, 5, 10, 15 and 20.
+        :type auto_lock_minutes: int
+        :param enabled_notify_host: Update for flag to enable notifying the owner of a Personal Room when someone
+            enters the Personal Room lobby while the owner is not in the room.
+        :type enabled_notify_host: bool
+        :param support_co_host: Update for flag allowing other invitees to host a meetingCoHost in the Personal Room
+            without the owner.
+        :type support_co_host: bool
+        :param co_hosts: Updated array defining cohosts for the room if both supportAnyoneAsCoHost and
+            allowFirstUserToBeCoHost are false
+        :type co_hosts: CoHost
+        :param user_email: Email address for the user. This parameter is only used if the user or application calling
+            the API has the admin-level scopes. If set, the admin may specify the email of a user in a site they manage
+            and the API will update Personal Meeting Room options for that user.
+        :type user_email: str
+        :param site_url: URL of the Webex site to query. For individual use, if siteUrl is not specified, the query
+            will use the default site of the user. For admin use, if siteUrl is not specified, the query will use the
+            default site for the admin's authorization token used to make the call. In the case where the user belongs
+            to a site different than the admin’s default site, the admin can set the site to query using the siteUrl
+            parameter. All available Webex sites and default site of a user can be retrieved from
+            /meetingPreferences/sites.
+        :type site_url: str
+        :param support_anyone_as_co_host: Whether or not to allow any attendee with a host account on the target site
+            to become a cohost when joining the Personal Room. The target site is user's preferred site.
+        :type support_anyone_as_co_host: bool
+        :param allow_first_user_to_be_co_host: Whether or not to allow the first attendee with a host account on the
+            target site to become a cohost when joining the Personal Room. The target site is user's preferred site.
+        :type allow_first_user_to_be_co_host: bool
+        :param allow_authenticated_devices: Whether or not to allow authenticated video devices in the user's
+            organization to start or join the meeting without a prompt.
+        :type allow_authenticated_devices: bool
+        """
+        params = {}
+        if user_email is not None:
+            params['userEmail'] = user_email
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        body = UpdatePersonalMeetingRoomOptionsBody()
+        if topic is not None:
+            body.topic = topic
+        if host_pin is not None:
+            body.host_pin = host_pin
+        if enabled_auto_lock is not None:
+            body.enabled_auto_lock = enabled_auto_lock
+        if auto_lock_minutes is not None:
+            body.auto_lock_minutes = auto_lock_minutes
+        if enabled_notify_host is not None:
+            body.enabled_notify_host = enabled_notify_host
+        if support_co_host is not None:
+            body.support_co_host = support_co_host
+        if co_hosts is not None:
+            body.co_hosts = co_hosts
+        if support_anyone_as_co_host is not None:
+            body.support_anyone_as_co_host = support_anyone_as_co_host
+        if allow_first_user_to_be_co_host is not None:
+            body.allow_first_user_to_be_co_host = allow_first_user_to_be_co_host
+        if allow_authenticated_devices is not None:
+            body.allow_authenticated_devices = allow_authenticated_devices
+        url = self.ep('personalMeetingRoom')
+        data = await super().put(url=url, params=params, data=body.json())
+        return PersonalMeetingRoomOptions.parse_obj(data)
+
+    async def audio_options(self, user_email: str = None, site_url: str = None) -> Audio:
+        """
+        Retrieves audio options for the authenticated user.
+
+        :param user_email: Email address for the user. This parameter is only used if the user or application calling
+            the API has the admin-level scopes. If set, the admin may specify the email of a user in a site they manage
+            and the API will return details of the audio options for that user.
+        :type user_email: str
+        :param site_url: URL of the Webex site to query. For individual use, if siteUrl is not specified, the query
+            will use the default site of the user. For admin use, if siteUrl is not specified, the query will use the
+            default site for the admin's authorization token used to make the call. In the case where the user belongs
+            to a site different than the admin’s default site, the admin can set the site to query using the siteUrl
+            parameter. All available Webex sites and default site of a user can be retrieved from
+            /meetingPreferences/sites.
+        :type site_url: str
+        """
+        params = {}
+        if user_email is not None:
+            params['userEmail'] = user_email
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        url = self.ep('audio')
+        data = await super().get(url=url, params=params)
+        return Audio.parse_obj(data)
+
+    async def update_audio_options(self, user_email: str = None, site_url: str = None,
+                             default_audio_type: DefaultAudioType = None, other_teleconference_description: str = None,
+                             enabled_global_call_in: bool = None, enabled_toll_free: bool = None,
+                             enabled_auto_connection: bool = None, audio_pin: str = None,
+                             office_number: OfficeNumber = None, mobile_number: OfficeNumber = None) -> Audio:
+        """
+        Updates audio options for the authenticated user.
+
+        :param user_email: Email address for the user. This parameter is only used if the user or application calling
+            the API has the admin-level scopes. If set, the admin may specify the email of a user in a site they manage
+            and the API will update audio options for that user.
+        :type user_email: str
+        :param site_url: URL of the Webex site to query. For individual use, if siteUrl is not specified, the query
+            will use the default site of the user. For admin use, if siteUrl is not specified, the query will use the
+            default site for the admin's authorization token used to make the call. In the case where the user belongs
+            to a site different than the admin’s default site, the admin can set the site to query using the siteUrl
+            parameter. All available Webex sites and default site of a user can be retrieved
+            from /meetingPreferences/sites.
+        :type site_url: str
+        :param default_audio_type: Default audio type. This attribute can be modified with the with the Update Audio
+            Options API.
+        :type default_audio_type: DefaultAudioType
+        :param other_teleconference_description: Phone number and other information for the teleconference provider to
+            be used, along with instructions for invitees. This attribute can be modified with the with the Update
+            Audio Options API.
+        :type other_teleconference_description: str
+        :param enabled_global_call_in: Flag to enable/disable global call ins. Note: If the site does not support
+            global call-ins, you cannot set this option. This attribute can be modified with the with the Update Audio
+            Options API.
+        :type enabled_global_call_in: bool
+        :param enabled_toll_free: Flag to enable/disable call-ins from toll-free numbers. Note: If the site does not
+            support calls from toll-free numbers, you cannot set this option. This attribute can be modified with the
+            with the Update Audio Options API.
+        :type enabled_toll_free: bool
+        :param enabled_auto_connection: Flag to enable/disable automatically connecting to audio using a computer. The
+            meeting host can enable/disable this option. When this option is set to true, the user is automatically
+            connected to audio via a computer when they start or join a Webex Meetings meeting on a desktop. This
+            attribute can be modified with the Update Audio Options API.
+        :type enabled_auto_connection: bool
+        :param audio_pin: PIN to provide a secondary level of authentication for calls where the host is using the
+            phone and may need to invite additional invitees. It must be exactly 4 digits. It cannot contain sequential
+            digits, such as 1234 or 4321, or repeat a digit 4 times, such as 1111. This attribute can be modified with
+            the with the Update Audio Options API.
+        :type audio_pin: str
+        :param office_number: Office phone number. We recommend that phone numbers be specified to facilitate
+            connecting via audio. This attribute can be modified with the with the Update Audio Options API.
+        :type office_number: OfficeNumber
+        :param mobile_number: Mobile phone number. We recommend that phone numbers be specified to facilitate
+            connecting via audio. This attribute can be modified with the with the Update Audio Options API.
+        :type mobile_number: OfficeNumber
+        """
+        params = {}
+        if user_email is not None:
+            params['userEmail'] = user_email
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        body = Audio()
+        if default_audio_type is not None:
+            body.default_audio_type = default_audio_type
+        if other_teleconference_description is not None:
+            body.other_teleconference_description = other_teleconference_description
+        if enabled_global_call_in is not None:
+            body.enabled_global_call_in = enabled_global_call_in
+        if enabled_toll_free is not None:
+            body.enabled_toll_free = enabled_toll_free
+        if enabled_auto_connection is not None:
+            body.enabled_auto_connection = enabled_auto_connection
+        if audio_pin is not None:
+            body.audio_pin = audio_pin
+        if office_number is not None:
+            body.office_number = office_number
+        if mobile_number is not None:
+            body.mobile_number = mobile_number
+        url = self.ep('audio')
+        data = await super().put(url=url, params=params, data=body.json())
+        return Audio.parse_obj(data)
+
+    async def video_options(self, user_email: str = None, site_url: str = None) -> list[VideoDevice]:
+        """
+        Retrieves video options for the authenticated user.
+
+        :param user_email: Email address for the user. This parameter is only used if the user or application calling
+            the API has the admin-level scopes. If set, the admin may specify the email of a user in a site they manage
+            and the API will return details of the video options for that user.
+        :type user_email: str
+        :param site_url: URL of the Webex site to query. For individual use, if siteUrl is not specified, the query
+            will use the default site of the user. For admin use, if siteUrl is not specified, the query will use the
+            default site for the admin's authorization token used to make the call. In the case where the user belongs
+            to a site different than the admin’s default site, the admin can set the site to query using the siteUrl
+            parameter. All available Webex sites and default site of a user can be retrieved using Get Site List.
+        :type site_url: str
+        """
+        params = {}
+        if user_email is not None:
+            params['userEmail'] = user_email
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        url = self.ep('video')
+        data = await super().get(url=url, params=params)
+        return parse_obj_as(list[VideoDevice], data["videoDevices"])
+
+    async def update_video_options(self, video_devices: VideoDevice, user_email: str = None,
+                             site_url: str = None) -> list[VideoDevice]:
+        """
+        Updates video options for the authenticated user.
+
+        :param video_devices: Array of video devices. If the array is not empty, one device and no more than one
+            devices must be set as default device.
+        :type video_devices: VideoDevice
+        :param user_email: Email address for the user. This parameter is only used if the user or application calling
+            the API has the admin-level scopes. If set, the admin may specify the email of a user in a site they manage
+            and the API will update video options for that user.
+        :type user_email: str
+        :param site_url: URL of the Webex site to query. For individual use, if siteUrl is not specified, the query
+            will use the default site of the user. For admin use, if siteUrl is not specified, the query will use the
+            default site for the admin's authorization token used to make the call. In the case where the user belongs
+            to a site different than the admin’s default site, the admin can set the site to query using the siteUrl
+            parameter. All available Webex sites and default site of a user can be retrieved from
+            /meetingPreferences/sites.
+        :type site_url: str
+        """
+        params = {}
+        if user_email is not None:
+            params['userEmail'] = user_email
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        body = VideoOptions()
+        if video_devices is not None:
+            body.video_devices = video_devices
+        url = self.ep('video')
+        data = await super().put(url=url, params=params, data=body.json())
+        return parse_obj_as(list[VideoDevice], data["videoDevices"])
+
+    async def scheduling_options(self, user_email: str = None, site_url: str = None) -> SchedulingOptions:
+        """
+        Retrieves scheduling options for the authenticated user.
+
+        :param user_email: Email address for the user. This parameter is only used if the user or application calling
+            the API has the admin-level scopes. If set, the admin may specify the email of a user in a site they manage
+            and the API will return details of the scheduling options for that user.
+        :type user_email: str
+        :param site_url: URL of the Webex site to query. For individual use, if siteUrl is not specified, the query
+            will use the default site of the user. For admin use, if siteUrl is not specified, the query will use the
+            default site for the admin's authorization token used to make the call. In the case where the user belongs
+            to a site different than the admin’s default site, the admin can set the site to query using the siteUrl
+            parameter. All available Webex sites and default site of a user can be retrieved from
+            /meetingPreferences/sites.
+        :type site_url: str
+        """
+        params = {}
+        if user_email is not None:
+            params['userEmail'] = user_email
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        url = self.ep('schedulingOptions')
+        data = await super().get(url=url, params=params)
+        return SchedulingOptions.parse_obj(data)
+
+    async def update_scheduling_options(self, user_email: str = None, site_url: str = None,
+                                  enabled_join_before_host: bool = None, join_before_host_minutes: int = None,
+                                  enabled_auto_share_recording: bool = None,
+                                  enabled_webex_assistant_by_default: bool = None) -> SchedulingOptions:
+        """
+        Updates scheduling options for the authenticated user.
+
+        :param user_email: Email address for the user. This parameter is only used if the user or application calling
+            the API has the admin-level scopes. If set, the admin may specify the email of a user in a site they manage
+            and the API will update scheduling options for that user.
+        :type user_email: str
+        :param site_url: URL of the Webex site to query. For individual use, if siteUrl is not specified, the query
+            will use the default site of the user. For admin use, if siteUrl is not specified, the query will use the
+            default site for the admin's authorization token used to make the call. In the case where the user belongs
+            to a site different than the admin’s default site, the admin can set the site to query using the siteUrl
+            parameter. All available Webex sites and default site of a user can be retrieved from
+            /meetingPreferences/sites.
+        :type site_url: str
+        :param enabled_join_before_host: Flag to enable/disable Join Before Host. The period during which invitees can
+            join before the start time is defined by autoLockMinutes. This attribute can be modified with the Update
+            Scheduling Options API. Note: This feature is only effective if the site supports the Join Before Host
+            feature. This attribute can be modified with the Update Scheduling Options API.
+        :type enabled_join_before_host: bool
+        :param join_before_host_minutes: Number of minutes before the start time that an invitee can join a meeting if
+            enabledJoinBeforeHost is true. Valid options are 0, 5, 10 and 15. This attribute can be modified with the
+            Update Scheduling Options API.
+        :type join_before_host_minutes: int
+        :param enabled_auto_share_recording: Flag to enable/disable the automatic sharing of the meeting recording with
+            invitees when it is available. This attribute can be modified with the Update Scheduling Options API.
+        :type enabled_auto_share_recording: bool
+        :param enabled_webex_assistant_by_default: Flag to automatically enable Webex Assistant whenever you start a
+            meeting. This attribute can be modified with the Update Scheduling Options API.
+        :type enabled_webex_assistant_by_default: bool
+        """
+        params = {}
+        if user_email is not None:
+            params['userEmail'] = user_email
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        body = SchedulingOptions()
+        if enabled_join_before_host is not None:
+            body.enabled_join_before_host = enabled_join_before_host
+        if join_before_host_minutes is not None:
+            body.join_before_host_minutes = join_before_host_minutes
+        if enabled_auto_share_recording is not None:
+            body.enabled_auto_share_recording = enabled_auto_share_recording
+        if enabled_webex_assistant_by_default is not None:
+            body.enabled_webex_assistant_by_default = enabled_webex_assistant_by_default
+        url = self.ep('schedulingOptions')
+        data = await super().put(url=url, params=params, data=body.json())
+        return SchedulingOptions.parse_obj(data)
+
+    async def site_list(self, user_email: str = None) -> list[MeetingsSite]:
+        """
+        Retrieves the list of Webex sites that the authenticated user is set up to use.
+
+        :param user_email: Email address for the user. This parameter is only used if the user or application calling
+            the API has the admin-level scopes. If set, the admin may specify the email of a user and the API will
+            return the list of Webex sites for that user.
+        :type user_email: str
+        """
+        params = {}
+        if user_email is not None:
+            params['userEmail'] = user_email
+        url = self.ep('sites')
+        data = await super().get(url=url, params=params)
+        return parse_obj_as(list[MeetingsSite], data["sites"])
+
+    async def update_default_site(self, default_site: bool, site_url: str, user_email: str = None) -> MeetingsSite:
+        """
+        Updates the default site for the authenticated user.
+
+        :param default_site: Whether or not to change user's default site. Note: defaultSite should be set to true for
+            the user's single default site
+        :type default_site: bool
+        :param site_url: Access URL for the site.
+        :type site_url: str
+        :param user_email: Email address for the user. This parameter is only used if the user or application calling
+            the API has the admin-level scopes. If set, the admin may specify the email of a user in a site they manage
+            and the API will update default site for that user.
+        :type user_email: str
+        """
+        params = {}
+        params['defaultSite'] = default_site
+        if user_email is not None:
+            params['userEmail'] = user_email
+        body = UpdateDefaultSiteBody()
+        if site_url is not None:
+            body.site_url = site_url
+        url = self.ep('sites')
+        data = await super().put(url=url, params=params, data=body.json())
+        return MeetingsSite.parse_obj(data)
+
+
+class AsMeetingQandAApi(AsApiChild, base='meetings/q_and_a'):
+    """
+    During a Question and Answer (Q&A) session, attendees can pose questions to hosts, co-hosts, and presenters, who
+    can answer and moderate those questions. You use the Meeting Q&A API to retrieve the questions and the answers in a
+    meeting.
+    Currently, these APIs are available to users with one of the meeting host, admin or Compliance Officer roles.
+    The features and APIs described here are available upon-request and is not enabled by default. If would like this
+    feature enabled for your organization please contact the Webex Developer Support team at devsupport@webex.com.
+    """
+
+    def list_gen(self, meeting_id: str, **params) -> AsyncGenerator[QAObject, None, None]:
+        """
+        Lists questions and answers from a meeting, when ready.
+        Notes:
+
+        :param meeting_id: A unique identifier for the meeting instance which the Q&A belongs to.
+        :type meeting_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-q-and-a/list-meeting-q-and-a
+        """
+        params['meetingId'] = meeting_id
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=QAObject, params=params)
+
+    async def list(self, meeting_id: str, **params) -> List[QAObject]:
+        """
+        Lists questions and answers from a meeting, when ready.
+        Notes:
+
+        :param meeting_id: A unique identifier for the meeting instance which the Q&A belongs to.
+        :type meeting_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-q-and-a/list-meeting-q-and-a
+        """
+        params['meetingId'] = meeting_id
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=QAObject, params=params)]
+
+    def list_answers_gen(self, question_id: str, meeting_id: str,
+                     **params) -> AsyncGenerator[AnswerObject, None, None]:
+        """
+        Lists the answers to a specific question asked in a meeting.
+
+        :param question_id: The ID of a question.
+        :type question_id: str
+        :param meeting_id: A unique identifier for the meeting instance which the Q&A belongs to.
+        :type meeting_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-q-and-a/list-answers-of-a-question
+        """
+        params['meetingId'] = meeting_id
+        url = self.ep(f'{question_id}/answers')
+        return self.session.follow_pagination(url=url, model=AnswerObject, params=params)
+
+    async def list_answers(self, question_id: str, meeting_id: str,
+                     **params) -> List[AnswerObject]:
+        """
+        Lists the answers to a specific question asked in a meeting.
+
+        :param question_id: The ID of a question.
+        :type question_id: str
+        :param meeting_id: A unique identifier for the meeting instance which the Q&A belongs to.
+        :type meeting_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-q-and-a/list-answers-of-a-question
+        """
+        params['meetingId'] = meeting_id
+        url = self.ep(f'{question_id}/answers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AnswerObject, params=params)]
+
+
+class AsMeetingQualitiesApi(AsApiChild, base=''):
+    """
+    To retrieve quality information, you must use an administrator token with the analytics:read_all scope. The
+    authenticated user must be a read-only or full administrator of the organization to which the meeting belongs and
+    must not be an external administrator.
+    To use this endpoint, the org needs to be licensed for the Webex Pro Pack.
+    For CI-Native site, no additional settings are required.
+    For CI-linked site, the admin must also be set as the Full/ReadOnly Site Admin of the site.
+    A minimum Webex and Teams client version is required. For details, see Troubleshooting Help Doc.
+    Quality information is available 10 minutes after a meeting has started and may be retrieved for up to 7 days.
+    A rate limit of 1 API call every 5 minutes for the same meeting instance ID applies.
+    """
+
+    def meeting_qualities_gen(self, meeting_id: str, offset: int = None,
+                          **params) -> AsyncGenerator[MediaSessionQuality, None, None]:
+        """
+        Get quality data for a meeting, by meetingId. Only organization administrators can retrieve meeting quality
+        data.
+
+        :param meeting_id: Unique identifier for the specific meeting instance. Note: The meetingId can be obtained via
+            the Meeting List API when meetingType=meeting. The id attribute in the Meeting List Response is what is
+            needed, for example, e5dba9613a9d455aa49f6ffdafb6e7db_I_191395283063545470.
+        :type meeting_id: str
+        :param offset: Offset from the first result that you want to fetch.
+        :type offset: int
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-qualities/get-meeting-qualities
+        """
+        params['meetingId'] = meeting_id
+        if offset is not None:
+            params['offset'] = offset
+        url = self.ep('https://analytics.webexapis.com/v1/meeting/qualities')
+        return self.session.follow_pagination(url=url, model=MediaSessionQuality, params=params)
+
+    async def meeting_qualities(self, meeting_id: str, offset: int = None,
+                          **params) -> List[MediaSessionQuality]:
+        """
+        Get quality data for a meeting, by meetingId. Only organization administrators can retrieve meeting quality
+        data.
+
+        :param meeting_id: Unique identifier for the specific meeting instance. Note: The meetingId can be obtained via
+            the Meeting List API when meetingType=meeting. The id attribute in the Meeting List Response is what is
+            needed, for example, e5dba9613a9d455aa49f6ffdafb6e7db_I_191395283063545470.
+        :type meeting_id: str
+        :param offset: Offset from the first result that you want to fetch.
+        :type offset: int
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-qualities/get-meeting-qualities
+        """
+        params['meetingId'] = meeting_id
+        if offset is not None:
+            params['offset'] = offset
+        url = self.ep('https://analytics.webexapis.com/v1/meeting/qualities')
+        return [o async for o in self.session.follow_pagination(url=url, model=MediaSessionQuality, params=params)]
+
+
+class AsMeetingTranscriptsApi(AsApiChild, base=''):
+    """
+    Not supported for Webex for Government (FedRAMP)
+    A meeting transcript is the automatic transcription of a meeting's recordings by our industry-leading
+    speech-to-text engine to capture of what was discussed and decided during the meeting, in text form.
+    A transcript snippet is a short text snippet from a meeting transcript which was spoken by a particular participant
+    in the meeting. A meeting transcript consists of many snippets.
+    This API manages meeting transcripts and snippets. You can use the Transcript API to list meeting transcripts,
+    list, get and update transcript snippets. Transcripts may be retrieved via download link defined by vttDownloadLink
+    or txtDownloadlink in the response body.
+    Refer to the Meetings API Scopes section of Meetings Overview for scopes required for each API.
+    NOTE:
+    """
+
+    def list_gen(self, meeting_id: str = None, host_email: str = None, site_url: str = None, from_: str = None,
+             to_: str = None, **params) -> AsyncGenerator[Transcript, None, None]:
+        """
+        Lists available transcripts of an ended meeting instance.
+        Use this operation to list transcripts of an ended meeting instance when they are ready. Please note that only
+        meeting instances in state ended are supported for meetingId. Meeting series, scheduled meetings and
+        in-progress meeting instances are not supported.
+
+        :param meeting_id: Unique identifier for the meeting instance to which the transcript belongs. Please note that
+            currently the meeting ID of a scheduled personal room meeting is not supported for this API. If meetingId
+            is not specified, the operation returns an array of transcripts for all meetings of the current user.
+        :type meeting_id: str
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
+            they manage and the API will return details for a meeting that is hosted by that user. If meetingId is not
+            specified, it can not support hostEmail.
+        :type host_email: str
+        :param site_url: URL of the Webex site from which the API lists transcripts. If not specified, the API lists
+            transcripts from user's preferred site. All available Webex sites and the preferred site of the user can be
+            retrieved by the Get Site List API.
+        :type site_url: str
+        :param from_: Starting date and time (inclusive) for transcripts to return, in any ISO 8601 compliant format.
+            from cannot be after to.
+        :type from_: str
+        :param to_: Ending date and time (exclusive) for List transcripts to return, in any ISO 8601 compliant format.
+            to cannot be before from.
+        :type to_: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-transcripts/list-meeting-transcripts
+        """
+        if meeting_id is not None:
+            params['meetingId'] = meeting_id
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        if from_ is not None:
+            params['from'] = from_
+        if to_ is not None:
+            params['to'] = to_
+        url = self.ep('meetingTranscripts')
+        return self.session.follow_pagination(url=url, model=Transcript, params=params)
+
+    async def list(self, meeting_id: str = None, host_email: str = None, site_url: str = None, from_: str = None,
+             to_: str = None, **params) -> List[Transcript]:
+        """
+        Lists available transcripts of an ended meeting instance.
+        Use this operation to list transcripts of an ended meeting instance when they are ready. Please note that only
+        meeting instances in state ended are supported for meetingId. Meeting series, scheduled meetings and
+        in-progress meeting instances are not supported.
+
+        :param meeting_id: Unique identifier for the meeting instance to which the transcript belongs. Please note that
+            currently the meeting ID of a scheduled personal room meeting is not supported for this API. If meetingId
+            is not specified, the operation returns an array of transcripts for all meetings of the current user.
+        :type meeting_id: str
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
+            they manage and the API will return details for a meeting that is hosted by that user. If meetingId is not
+            specified, it can not support hostEmail.
+        :type host_email: str
+        :param site_url: URL of the Webex site from which the API lists transcripts. If not specified, the API lists
+            transcripts from user's preferred site. All available Webex sites and the preferred site of the user can be
+            retrieved by the Get Site List API.
+        :type site_url: str
+        :param from_: Starting date and time (inclusive) for transcripts to return, in any ISO 8601 compliant format.
+            from cannot be after to.
+        :type from_: str
+        :param to_: Ending date and time (exclusive) for List transcripts to return, in any ISO 8601 compliant format.
+            to cannot be before from.
+        :type to_: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-transcripts/list-meeting-transcripts
+        """
+        if meeting_id is not None:
+            params['meetingId'] = meeting_id
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        if from_ is not None:
+            params['from'] = from_
+        if to_ is not None:
+            params['to'] = to_
+        url = self.ep('meetingTranscripts')
+        return [o async for o in self.session.follow_pagination(url=url, model=Transcript, params=params)]
+
+    def list_compliance_officer_gen(self, site_url: str, from_: str = None, to_: str = None,
+                                **params) -> AsyncGenerator[Transcript, None, None]:
+        """
+        Lists available or deleted transcripts of an ended meeting instance for a specific site.
+        The returned list is sorted in descending order by the date and time that the transcript was created.
+
+        :param site_url: URL of the Webex site from which the API lists transcripts.
+        :type site_url: str
+        :param from_: Starting date and time (inclusive) for transcripts to return, in any ISO 8601 compliant format.
+            from cannot be after to.
+        :type from_: str
+        :param to_: Ending date and time (exclusive) for List transcripts to return, in any ISO 8601 compliant format.
+            to cannot be before from.
+        :type to_: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-transcripts/list-meeting-transcripts-for
+        -compliance-officer
+        """
+        params['siteUrl'] = site_url
+        if from_ is not None:
+            params['from'] = from_
+        if to_ is not None:
+            params['to'] = to_
+        url = self.ep('admin/meetingTranscripts')
+        return self.session.follow_pagination(url=url, model=Transcript, params=params)
+
+    async def list_compliance_officer(self, site_url: str, from_: str = None, to_: str = None,
+                                **params) -> List[Transcript]:
+        """
+        Lists available or deleted transcripts of an ended meeting instance for a specific site.
+        The returned list is sorted in descending order by the date and time that the transcript was created.
+
+        :param site_url: URL of the Webex site from which the API lists transcripts.
+        :type site_url: str
+        :param from_: Starting date and time (inclusive) for transcripts to return, in any ISO 8601 compliant format.
+            from cannot be after to.
+        :type from_: str
+        :param to_: Ending date and time (exclusive) for List transcripts to return, in any ISO 8601 compliant format.
+            to cannot be before from.
+        :type to_: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-transcripts/list-meeting-transcripts-for
+        -compliance-officer
+        """
+        params['siteUrl'] = site_url
+        if from_ is not None:
+            params['from'] = from_
+        if to_ is not None:
+            params['to'] = to_
+        url = self.ep('admin/meetingTranscripts')
+        return [o async for o in self.session.follow_pagination(url=url, model=Transcript, params=params)]
+
+    async def download(self, transcript_id: str, format: str = None, host_email: str = None):
+        """
+        Download a meeting transcript from the meeting transcript specified by transcriptId.
+
+        :param transcript_id: Unique identifier for the meeting transcript.
+        :type transcript_id: str
+        :param format: Format for the downloaded meeting transcript. Possible values: vtt, txt
+        :type format: str
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
+            they manage and the API will return details for a meeting that is hosted by that user.
+        :type host_email: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-transcripts/download-a-meeting-transcript
+        """
+        params = {}
+        if format is not None:
+            params['format'] = format
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'meetingTranscripts/{transcript_id}/download')
+        await super().get(url=url, params=params)
+        # TODO: fix. Find out what the actual return type is
+
+    def list_snippets_gen(self, transcript_id: str, **params) -> AsyncGenerator[TranscriptSnippet, None, None]:
+        """
+        Lists snippets of a meeting transcript specified by transcriptId.
+        Use this operation to list snippets of a meeting transcript when they are ready.
+
+        :param transcript_id: Unique identifier for the meeting transcript to which the snippets belong.
+        :type transcript_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-transcripts/list-snippets-of-a-meeting-transcript
+        """
+        url = self.ep(f'meetingTranscripts/{transcript_id}/snippets')
+        return self.session.follow_pagination(url=url, model=TranscriptSnippet, params=params)
+
+    async def list_snippets(self, transcript_id: str, **params) -> List[TranscriptSnippet]:
+        """
+        Lists snippets of a meeting transcript specified by transcriptId.
+        Use this operation to list snippets of a meeting transcript when they are ready.
+
+        :param transcript_id: Unique identifier for the meeting transcript to which the snippets belong.
+        :type transcript_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-transcripts/list-snippets-of-a-meeting-transcript
+        """
+        url = self.ep(f'meetingTranscripts/{transcript_id}/snippets')
+        return [o async for o in self.session.follow_pagination(url=url, model=TranscriptSnippet, params=params)]
+
+    async def snippet_detail(self, transcript_id: str, snippet_id: str) -> TranscriptSnippet:
+        """
+        Retrieves details for a transcript snippet specified by snippetId from the meeting transcript specified by
+        transcriptId.
+
+        :param transcript_id: Unique identifier for the meeting transcript to which the requested snippet belongs.
+        :type transcript_id: str
+        :param snippet_id: Unique identifier for the snippet being requested.
+        :type snippet_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-transcripts/get-a-transcript-snippet
+        """
+        url = self.ep(f'meetingTranscripts/{transcript_id}/snippets/{snippet_id}')
+        data = await super().get(url=url)
+        return TranscriptSnippet.parse_obj(data)
+
+    async def update_snippet(self, transcript_id: str, snippet_id: str, text: str, reason: str = None) -> TranscriptSnippet:
+        """
+        Updates details for a transcript snippet specified by snippetId from the meeting transcript specified by
+        transcriptId.
+
+        :param transcript_id: Unique identifier for the meeting transcript to which the snippet to be updated belongs.
+        :type transcript_id: str
+        :param snippet_id: Unique identifier for the snippet being updated.
+        :type snippet_id: str
+        :param text: Text for the snippet.
+        :type text: str
+        :param reason: Reason for snippet update; only required for Compliance Officers.
+        :type reason: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-transcripts/update-a-transcript-snippet
+        """
+        body = UpdateTranscriptSnippetBody()
+        if text is not None:
+            body.text = text
+        if reason is not None:
+            body.reason = reason
+        url = self.ep(f'meetingTranscripts/{transcript_id}/snippets/{snippet_id}')
+        data = await super().put(url=url, data=body.json())
+        return TranscriptSnippet.parse_obj(data)
+
+    async def delete(self, transcript_id: str, reason: str = None, comment: str = None):
+        """
+        Removes a transcript with a specified transcript ID. The deleted transcript cannot be recovered. If a
+        Compliance Officer deletes another user's transcript, the transcript will be inaccessible to regular users
+        (host, attendees), but will be still available to the Compliance Officer.
+
+        :param transcript_id: Unique identifier for the meeting transcript.
+        :type transcript_id: str
+        :param reason: Reason for deleting a transcript. Only required when a Compliance Officer is operating on
+            another user's transcript.
+        :type reason: str
+        :param comment: Explanation for deleting a transcript. The comment can be a maximum of 255 characters long.
+        :type comment: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-transcripts/delete-a-transcript
+        """
+        body = DeleteTranscriptBody()
+        if reason is not None:
+            body.reason = reason
+        if comment is not None:
+            body.comment = comment
+        url = self.ep(f'meetingTranscripts/{transcript_id}')
+        await super().delete(url=url, data=body.json())
+        return
+
+
+@dataclass(init=False)
+class AsMeetingsApi(AsApiChild, base=''):
+    #: meeting chats API
+    chats: AsMeetingChatsApi
+    #: closed captions API
+    closed_captions: AsMeetingClosedCaptionsApi
+    #: meeting invitees API
+    invitees: AsMeetingInviteesApi
+    #: meeting participants API
+    participants: AsMeetingParticipantsApi
+    #: preferences API
+    preferences: AsMeetingPreferencesApi
+    #: Q and A API
+    qanda: AsMeetingQandAApi
+    #: qualities API
+    qualities: AsMeetingQualitiesApi
+    #: transcripts
+    transcripts: AsMeetingTranscriptsApi
+
+    def __init__(self, session: AsRestSession):
+        super().__init__(session=session)
+        self.chats = AsMeetingChatsApi(session=session)
+        self.closed_captions = AsMeetingClosedCaptionsApi(session=session)
+        self.invitees = AsMeetingInviteesApi(session=session)
+        self.participants = AsMeetingParticipantsApi(session=session)
+        self.preferences = AsMeetingPreferencesApi(session=session)
+        self.qanda = AsMeetingQandAApi(session=session)
+        self.qualities = AsMeetingQualitiesApi(session=session)
+        self.transcripts = AsMeetingTranscriptsApi(session=session)
 
 
 class AsMembershipApi(AsApiChild, base='memberships'):
@@ -11202,6 +12642,8 @@ class AsWebexSimpleApi:
     licenses: AsLicensesApi
     #: Location API :class:`AsLocationsApi`
     locations: AsLocationsApi
+    #: meetings API :class:`AsMeetingsApi`
+    meetings: AsMeetingsApi
     #: membership API :class:`AsMembershipApi`
     membership: AsMembershipApi
     #: Messages API :class:`AsMessagesApi`
@@ -11260,6 +12702,7 @@ class AsWebexSimpleApi:
         self.groups = AsGroupsApi(session=session)
         self.licenses = AsLicensesApi(session=session)
         self.locations = AsLocationsApi(session=session)
+        self.meetings = AsMeetingsApi(session=session)
         self.membership = AsMembershipApi(session=session)
         self.messages = AsMessagesApi(session=session)
         self.organizations = AsOrganizationApi(session=session)

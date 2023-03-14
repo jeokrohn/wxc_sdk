@@ -1,0 +1,372 @@
+locations
+  GET    https://webexapis.com/v1/locations --- List Locations
+  POST   https://webexapis.com/v1/locations --- Create a Location
+  GET    https://webexapis.com/v1/locations/{locationId} --- Get Location Details
+  PUT    https://webexapis.com/v1/locations/{locationId} --- Update a Location
+people
+  GET    https://webexapis.com/v1/people --- List People
+  POST   https://webexapis.com/v1/people --- Create a Person
+  GET    https://webexapis.com/v1/people/me --- Get My Own Details
+  GET    https://webexapis.com/v1/people/{personId} --- Get Person Details
+  PUT    https://webexapis.com/v1/people/{personId} --- Update a Person
+  DELETE https://webexapis.com/v1/people/{personId} --- Delete a Person
+people/{personId}/features
+  GET    https://webexapis.com/v1/people/{personId}/features/applications --- Retrieve a person's Application Services Settings
+  PUT    https://webexapis.com/v1/people/{personId}/features/applications --- Modify a person's Application Services Settings
+  GET    https://webexapis.com/v1/people/{personId}/features/bargeIn --- Read Barge In Settings for a Person
+  PUT    https://webexapis.com/v1/people/{personId}/features/bargeIn --- Configure Barge In Settings for a Person
+  GET    https://webexapis.com/v1/people/{personId}/features/callForwarding --- Read Forwarding Settings for a Person
+  PUT    https://webexapis.com/v1/people/{personId}/features/callForwarding --- Configure Call Forwarding Settings for a Person
+  GET    https://webexapis.com/v1/people/{personId}/features/callRecording --- Read Call Recording Settings for a Person
+  PUT    https://webexapis.com/v1/people/{personId}/features/callRecording --- Configure Call Recording Settings for a Person
+  GET    https://webexapis.com/v1/people/{personId}/features/callWaiting --- Read Call Waiting Settings for a Person
+  PUT    https://webexapis.com/v1/people/{personId}/features/callWaiting --- Configure Call Waiting Settings for a Person
+  GET    https://webexapis.com/v1/people/{personId}/features/callerId --- Read Caller ID Settings for a Person
+  PUT    https://webexapis.com/v1/people/{personId}/features/callerId --- Configure Caller ID Settings for a Person
+  GET    https://webexapis.com/v1/people/{personId}/features/callingBehavior --- Read Person's Calling Behavior
+  PUT    https://webexapis.com/v1/people/{personId}/features/callingBehavior --- Configure a person's Calling Behavior
+  GET    https://webexapis.com/v1/people/{personId}/features/doNotDisturb --- Read Do Not Disturb Settings for a Person
+  PUT    https://webexapis.com/v1/people/{personId}/features/doNotDisturb --- Configure Do Not Disturb Settings for a Person
+  GET    https://webexapis.com/v1/people/{personId}/features/executiveAssistant --- Retrieve Executive Assistant Settings for a Person
+  PUT    https://webexapis.com/v1/people/{personId}/features/executiveAssistant --- Modify Executive Assistant Settings for a Person
+  GET    https://webexapis.com/v1/people/{personId}/features/hoteling --- Read Hoteling Settings for a Person
+  PUT    https://webexapis.com/v1/people/{personId}/features/hoteling --- Configure Hoteling Settings for a Person
+  GET    https://webexapis.com/v1/people/{personId}/features/incomingPermission --- Read Incoming Permission Settings for a Person
+  PUT    https://webexapis.com/v1/people/{personId}/features/incomingPermission --- Configure Incoming Permission Settings for a Person
+  GET    https://webexapis.com/v1/people/{personId}/features/intercept --- Read Call Intercept Settings for a Person
+  PUT    https://webexapis.com/v1/people/{personId}/features/intercept --- Configure Call Intercept Settings for a Person
+  GET    https://webexapis.com/v1/people/{personId}/features/monitoring --- Retrieve a person's Monitoring Settings
+  PUT    https://webexapis.com/v1/people/{personId}/features/monitoring --- Modify a person's Monitoring Settings
+  GET    https://webexapis.com/v1/people/{personId}/features/numbers --- Get a List of Phone Numbers for a Person
+  GET    https://webexapis.com/v1/people/{personId}/features/outgoingPermission --- Retrieve a person's Outgoing Calling Permissions Settings
+  PUT    https://webexapis.com/v1/people/{personId}/features/outgoingPermission --- Modify a person's Outgoing Calling Permissions Settings
+  GET    https://webexapis.com/v1/people/{personId}/features/privacy --- Get a person's Privacy Settings
+  PUT    https://webexapis.com/v1/people/{personId}/features/privacy --- Configure a person's Privacy Settings
+  GET    https://webexapis.com/v1/people/{personId}/features/pushToTalk --- Read Push-to-Talk Settings for a Person
+  PUT    https://webexapis.com/v1/people/{personId}/features/pushToTalk --- Configure Push-to-Talk Settings for a Person
+  GET    https://webexapis.com/v1/people/{personId}/features/reception --- Read Receptionist Client Settings for a Person
+  PUT    https://webexapis.com/v1/people/{personId}/features/reception --- Configure Receptionist Client Settings for a Person
+  GET    https://webexapis.com/v1/people/{personId}/features/schedules --- List of Schedules for a Person
+  POST   https://webexapis.com/v1/people/{personId}/features/schedules --- Create Schedule for a Person
+  GET    https://webexapis.com/v1/people/{personId}/features/voicemail --- Read Voicemail Settings for a Person
+  PUT    https://webexapis.com/v1/people/{personId}/features/voicemail --- Configure Voicemail Settings for a Person
+people/{personId}/features/intercept/actions/announcementUpload
+  POST   https://webexapis.com/v1/people/{personId}/features/intercept/actions/announcementUpload/invoke --- Configure Call Intercept Greeting for a Person
+people/{personId}/features/schedules/{scheduleType}/{scheduleId}
+  GET    https://webexapis.com/v1/people/{personId}/features/schedules/{scheduleType}/{scheduleId} --- Get a Schedule Details
+  PUT    https://webexapis.com/v1/people/{personId}/features/schedules/{scheduleType}/{scheduleId} --- Update a Schedule
+  DELETE https://webexapis.com/v1/people/{personId}/features/schedules/{scheduleType}/{scheduleId} --- Delete a Schedule
+people/{personId}/features/schedules/{scheduleType}/{scheduleId}/events
+  POST   https://webexapis.com/v1/people/{personId}/features/schedules/{scheduleType}/{scheduleId}/events --- Add a New Event for Person's Schedule
+  GET    https://webexapis.com/v1/people/{personId}/features/schedules/{scheduleType}/{scheduleId}/events/{eventId} --- Fetch Event for a person's Schedule
+  PUT    https://webexapis.com/v1/people/{personId}/features/schedules/{scheduleType}/{scheduleId}/events/{eventId} --- Update an Event for a person's Schedule
+  DELETE https://webexapis.com/v1/people/{personId}/features/schedules/{scheduleType}/{scheduleId}/events/{eventId} --- Delete an Event for a person's Schedule
+people/{personId}/features/voicemail/actions/resetPin
+  POST   https://webexapis.com/v1/people/{personId}/features/voicemail/actions/resetPin/invoke --- Reset Voicemail PIN
+people/{personId}/features/voicemail/actions/uploadBusyGreeting
+  POST   https://webexapis.com/v1/people/{personId}/features/voicemail/actions/uploadBusyGreeting/invoke --- Configure Busy Voicemail Greeting for a Person
+people/{personId}/features/voicemail/actions/uploadNoAnswerGreeting
+  POST   https://webexapis.com/v1/people/{personId}/features/voicemail/actions/uploadNoAnswerGreeting/invoke --- Configure No Answer Voicemail Greeting for a Person
+telephony/calls
+  GET    https://webexapis.com/v1/telephony/calls --- List Calls
+  POST   https://webexapis.com/v1/telephony/calls/answer --- Answer
+  POST   https://webexapis.com/v1/telephony/calls/bargeIn --- Barge In
+  POST   https://webexapis.com/v1/telephony/calls/dial --- Dial
+  POST   https://webexapis.com/v1/telephony/calls/divert --- Divert
+  POST   https://webexapis.com/v1/telephony/calls/hangup --- Hangup
+  GET    https://webexapis.com/v1/telephony/calls/history --- List Call History
+  POST   https://webexapis.com/v1/telephony/calls/hold --- Hold
+  POST   https://webexapis.com/v1/telephony/calls/park --- Park
+  POST   https://webexapis.com/v1/telephony/calls/pauseRecording --- Pause Recording
+  POST   https://webexapis.com/v1/telephony/calls/pickup --- Pickup
+  POST   https://webexapis.com/v1/telephony/calls/push --- Push
+  POST   https://webexapis.com/v1/telephony/calls/reject --- Reject
+  POST   https://webexapis.com/v1/telephony/calls/resume --- Resume
+  POST   https://webexapis.com/v1/telephony/calls/resumeRecording --- Resume Recording
+  POST   https://webexapis.com/v1/telephony/calls/retrieve --- Retrieve
+  POST   https://webexapis.com/v1/telephony/calls/startRecording --- Start Recording
+  POST   https://webexapis.com/v1/telephony/calls/stopRecording --- Stop Recording
+  POST   https://webexapis.com/v1/telephony/calls/transfer --- Transfer
+  POST   https://webexapis.com/v1/telephony/calls/transmitDtmf --- Transmit DTMF
+  GET    https://webexapis.com/v1/telephony/calls/{callId} --- Get Call Details
+telephony/config
+  GET    https://webexapis.com/v1/telephony/config/autoAttendants --- Read the List of Auto Attendants
+  GET    https://webexapis.com/v1/telephony/config/callParkExtensions --- Read the List of Call Park Extensions
+  GET    https://webexapis.com/v1/telephony/config/callRecording --- Get Call Recording Settings
+  PUT    https://webexapis.com/v1/telephony/config/callRecording --- Update Call Recording Settings
+  GET    https://webexapis.com/v1/telephony/config/callingProfiles --- Read the List of UC Manager Profiles
+  GET    https://webexapis.com/v1/telephony/config/huntGroups --- Read the List of Hunt Groups
+  GET    https://webexapis.com/v1/telephony/config/numbers --- Get Phone Numbers for an Organization with Given Criterias
+  GET    https://webexapis.com/v1/telephony/config/paging --- Read the List of Paging Groups
+  GET    https://webexapis.com/v1/telephony/config/queues --- Read the List of Call Queues
+  GET    https://webexapis.com/v1/telephony/config/routeChoices --- Read the List of Routing Choices
+  GET    https://webexapis.com/v1/telephony/config/supportedDevices --- Read the List of Supported Devices
+  GET    https://webexapis.com/v1/telephony/config/virtualLines --- Read the List of Virtual Lines
+  GET    https://webexapis.com/v1/telephony/config/voicemailGroups --- List VoicemailGroup
+telephony/config/actions/testCallRouting
+  POST   https://webexapis.com/v1/telephony/config/actions/testCallRouting/invoke --- Test Call Routing
+telephony/config/actions/validateExtensions
+  POST   https://webexapis.com/v1/telephony/config/actions/validateExtensions/invoke --- Validate the List of Extensions
+telephony/config/callRecording/vendors/{vendorId}
+  GET    https://webexapis.com/v1/telephony/config/callRecording/vendors/{vendorId}/termsOfService --- Get Call Recording Terms Of Service Settings
+  PUT    https://webexapis.com/v1/telephony/config/callRecording/vendors/{vendorId}/termsOfService --- Update Call Recording Terms Of Service Settings
+telephony/config/devices
+  GET    https://webexapis.com/v1/telephony/config/devices/settings --- Read the device override settings for a organization
+telephony/config/devices/actions/validateMacs
+  POST   https://webexapis.com/v1/telephony/config/devices/actions/validateMacs/invoke --- Validate a list of MAC address
+telephony/config/devices/dects
+  GET    https://webexapis.com/v1/telephony/config/devices/dects/supportedDevices --- Read the DECT device type list
+telephony/config/devices/{deviceId}
+  GET    https://webexapis.com/v1/telephony/config/devices/{deviceId}/availableMembers --- Search Members
+  GET    https://webexapis.com/v1/telephony/config/devices/{deviceId}/members --- Get Device Members
+  PUT    https://webexapis.com/v1/telephony/config/devices/{deviceId}/members --- Update Members on the device
+  GET    https://webexapis.com/v1/telephony/config/devices/{deviceId}/settings --- Get Device Settings
+  PUT    https://webexapis.com/v1/telephony/config/devices/{deviceId}/settings --- Update device settings
+telephony/config/devices/{deviceId}/actions/applyChanges
+  POST   https://webexapis.com/v1/telephony/config/devices/{deviceId}/actions/applyChanges/invoke --- Apply Changes for a specific device
+telephony/config/jobs/devices/callDeviceSettings
+  POST   https://webexapis.com/v1/telephony/config/jobs/devices/callDeviceSettings --- Change Device Settings Across Organization Or Location Job
+  GET    https://webexapis.com/v1/telephony/config/jobs/devices/callDeviceSettings --- List Change Device Settings Jobs
+telephony/config/jobs/devices/callDeviceSettings/{jobId}
+  GET    https://webexapis.com/v1/telephony/config/jobs/devices/callDeviceSettings/{jobId} --- Get Change Device Settings Job Status
+  GET    https://webexapis.com/v1/telephony/config/jobs/devices/callDeviceSettings/{jobId}/errors --- List Change Device Settings Job Errors
+telephony/config/jobs/numbers/manageNumbers
+  GET    https://webexapis.com/v1/telephony/config/jobs/numbers/manageNumbers --- List Manage Numbers Jobs
+  POST   https://webexapis.com/v1/telephony/config/jobs/numbers/manageNumbers --- Initiate Move Number Jobs
+telephony/config/jobs/numbers/manageNumbers/{jobId}
+  GET    https://webexapis.com/v1/telephony/config/jobs/numbers/manageNumbers/{jobId} --- Get Manage Numbers Job Status
+  GET    https://webexapis.com/v1/telephony/config/jobs/numbers/manageNumbers/{jobId}/errors --- List Manage Numbers Job errors
+telephony/config/jobs/numbers/manageNumbers/{jobId}/actions/abandon
+  POST   https://webexapis.com/v1/telephony/config/jobs/numbers/manageNumbers/{jobId}/actions/abandon/invoke --- Abandon the Manage Numbers Job
+telephony/config/jobs/numbers/manageNumbers/{jobId}/actions/pause
+  POST   https://webexapis.com/v1/telephony/config/jobs/numbers/manageNumbers/{jobId}/actions/pause/invoke --- Pause the Manage Numbers Job
+telephony/config/jobs/numbers/manageNumbers/{jobId}/actions/resume
+  POST   https://webexapis.com/v1/telephony/config/jobs/numbers/manageNumbers/{jobId}/actions/resume/invoke --- Resume the Manage Numbers Job
+telephony/config/locations/{locationId}
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId} --- Get Location Webex Calling Details
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId} --- Update Location Webex Calling Details
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/intercept --- Get Location Intercept
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/intercept --- Put Location Intercept
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/internalDialing --- Read the Internal Dialing configuration for a location
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/internalDialing --- Modify the Internal Dialing configuration for a location
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/musicOnHold --- Get Music On Hold
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/musicOnHold --- Update Music On Hold
+  POST   https://webexapis.com/v1/telephony/config/locations/{locationId}/numbers --- Add Phone Numbers to a location
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/numbers --- Activate Phone Numbers in a location
+  DELETE https://webexapis.com/v1/telephony/config/locations/{locationId}/numbers --- Remove phone numbers from a location
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/privateNetworkConnect --- Get Private Network Connect
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/privateNetworkConnect --- Update Private Network Connect
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/schedules --- Read the List of Schedules
+  POST   https://webexapis.com/v1/telephony/config/locations/{locationId}/schedules --- Create a Schedule
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/voicemail --- Get Location Voicemail
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/voicemail --- Update Location Voicemail
+telephony/config/locations/{locationId}/actions/generatePassword
+  POST   https://webexapis.com/v1/telephony/config/locations/{locationId}/actions/generatePassword/invoke --- Generate example password for Location
+telephony/config/locations/{locationId}/actions/modifyAnnouncementLanguage
+  POST   https://webexapis.com/v1/telephony/config/locations/{locationId}/actions/modifyAnnouncementLanguage/invoke --- Change Announcement Language
+telephony/config/locations/{locationId}/actions/validateExtensions
+  POST   https://webexapis.com/v1/telephony/config/locations/{locationId}/actions/validateExtensions/invoke --- Validate Extensions
+telephony/config/locations/{locationId}/autoAttendants
+  POST   https://webexapis.com/v1/telephony/config/locations/{locationId}/autoAttendants --- Create an Auto Attendant
+telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId}
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId} --- Get Details for an Auto Attendant
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId} --- Update an Auto Attendant
+  DELETE https://webexapis.com/v1/telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId} --- Delete an Auto Attendant
+telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId}/callForwarding
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId}/callForwarding --- Get Call Forwarding Settings for an Auto Attendant
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId}/callForwarding --- Update Call Forwarding Settings for an Auto Attendant
+telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId}/callForwarding/selectiveRules
+  POST   https://webexapis.com/v1/telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId}/callForwarding/selectiveRules --- Create a Selective Call Forwarding Rule for an Auto Attendant
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId}/callForwarding/selectiveRules/{ruleId} --- Get Selective Call Forwarding Rule for an Auto Attendant
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId}/callForwarding/selectiveRules/{ruleId} --- Update Selective Call Forwarding Rule for an Auto Attendant
+  DELETE https://webexapis.com/v1/telephony/config/locations/{locationId}/autoAttendants/{autoAttendantId}/callForwarding/selectiveRules/{ruleId} --- Delete a Selective Call Forwarding Rule for an Auto Attendant
+telephony/config/locations/{locationId}/callParkExtensions
+  POST   https://webexapis.com/v1/telephony/config/locations/{locationId}/callParkExtensions --- Create a Call Park Extension
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/callParkExtensions/{callParkExtensionId} --- Get Details for a Call Park Extension
+  DELETE https://webexapis.com/v1/telephony/config/locations/{locationId}/callParkExtensions/{callParkExtensionId} --- Delete a Call Park Extension
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/callParkExtensions/{callParkExtensionId} --- Update a Call Park Extension
+telephony/config/locations/{locationId}/callParks
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/callParks --- Read the List of Call Parks
+  POST   https://webexapis.com/v1/telephony/config/locations/{locationId}/callParks --- Create a Call Park
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/callParks/availableRecallHuntGroups --- Get available recall hunt groups from Call Parks
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/callParks/availableUsers --- Get available agents from Call Parks
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/callParks/settings --- Get Call Park Settings
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/callParks/settings --- Update Call Park settings
+  DELETE https://webexapis.com/v1/telephony/config/locations/{locationId}/callParks/{callParkId} --- Delete a Call Park
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/callParks/{callParkId} --- Get Details for a Call Park
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/callParks/{callParkId} --- Update a Call Park
+telephony/config/locations/{locationId}/callPickups
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/callPickups --- Read the List of Call Pickups
+  POST   https://webexapis.com/v1/telephony/config/locations/{locationId}/callPickups --- Create a Call Pickup
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/callPickups/availableUsers --- Get available agents from Call Pickups
+  DELETE https://webexapis.com/v1/telephony/config/locations/{locationId}/callPickups/{callPickupId} --- Delete a Call Pickup
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/callPickups/{callPickupId} --- Get Details for a Call Pickup
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/callPickups/{callPickupId} --- Update a Call Pickup
+telephony/config/locations/{locationId}/devices
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/devices/settings --- Get Location Device Settings
+telephony/config/locations/{locationId}/huntGroups
+  POST   https://webexapis.com/v1/telephony/config/locations/{locationId}/huntGroups --- Create a Hunt Group
+telephony/config/locations/{locationId}/huntGroups/{huntGroupId}
+  DELETE https://webexapis.com/v1/telephony/config/locations/{locationId}/huntGroups/{huntGroupId} --- Delete a Hunt Group
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/huntGroups/{huntGroupId} --- Get Details for a Hunt Group
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/huntGroups/{huntGroupId} --- Update a Hunt Group
+telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding --- Get Call Forwarding Settings for a Hunt Group
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding --- Update Call Forwarding Settings for a Hunt Group
+telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding/selectiveRules
+  POST   https://webexapis.com/v1/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding/selectiveRules --- Create a Selective Call Forwarding Rule for a Hunt Group
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding/selectiveRules/{ruleId} --- Get Selective Call Forwarding Rule for a Hunt Group
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding/selectiveRules/{ruleId} --- Update a Selective Call Forwarding Rule for a Hunt Group
+  DELETE https://webexapis.com/v1/telephony/config/locations/{locationId}/huntGroups/{huntGroupId}/callForwarding/selectiveRules/{ruleId} --- Delete a Selective Call Forwarding Rule for a Hunt Group
+telephony/config/locations/{locationId}/outgoingPermission
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/outgoingPermission --- Get Location Outgoing Permission
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/outgoingPermission --- Update Location Outgoing Permission
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/outgoingPermission/accessCodes --- Get Outgoing Permission Location Access Code
+  POST   https://webexapis.com/v1/telephony/config/locations/{locationId}/outgoingPermission/accessCodes --- Create Outgoing Permission a new access code for a customer location
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/outgoingPermission/accessCodes --- Delete Outgoing Permission Access Code Location
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/outgoingPermission/autoTransferNumbers --- Get Outgoing Permission Auto Transfer Number
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/outgoingPermission/autoTransferNumbers --- Put Outgoing Permission Auto Transfer Number
+telephony/config/locations/{locationId}/paging
+  POST   https://webexapis.com/v1/telephony/config/locations/{locationId}/paging --- Create a new Paging Group
+  DELETE https://webexapis.com/v1/telephony/config/locations/{locationId}/paging/{pagingId} --- Delete a Paging Group
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/paging/{pagingId} --- Get Details for a Paging Group
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/paging/{pagingId} --- Update a Paging Group
+telephony/config/locations/{locationId}/queues
+  POST   https://webexapis.com/v1/telephony/config/locations/{locationId}/queues --- Create a Call Queue
+telephony/config/locations/{locationId}/queues/{queueId}
+  DELETE https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId} --- Delete a Call Queue
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId} --- Get Details for a Call Queue
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId} --- Update a Call Queue
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/forcedForward --- Get Details for a Call Queue Forced Forward
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/forcedForward --- Update a Call Queue Forced Forward service
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/holidayService --- Get Details for a Call Queue Holiday Service
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/holidayService --- Update a Call Queue Holiday Service
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/nightService --- Get Details for a Call Queue Night Service
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/nightService --- Update a Call Queue Night Service
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/strandedCalls --- Get Details for a Call Queue Stranded Calls
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/strandedCalls --- Update a Call Queue Stranded Calls service
+telephony/config/locations/{locationId}/queues/{queueId}/announcements
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/announcements --- Read the List of Call Queue Announcement Files
+  DELETE https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/announcements/{fileName} --- Delete a Call Queue Announcement File
+telephony/config/locations/{locationId}/queues/{queueId}/callForwarding
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/callForwarding --- Get Call Forwarding Settings for a Call Queue
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/callForwarding --- Update Call Forwarding Settings for a Call Queue
+telephony/config/locations/{locationId}/queues/{queueId}/callForwarding/selectiveRules
+  POST   https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/callForwarding/selectiveRules --- Create a Selective Call Forwarding Rule for a Call Queue
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/callForwarding/selectiveRules/{ruleId} --- Get Selective Call Forwarding Rule for a Call Queue
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/callForwarding/selectiveRules/{ruleId} --- Update a Selective Call Forwarding Rule for a Call Queue
+  DELETE https://webexapis.com/v1/telephony/config/locations/{locationId}/queues/{queueId}/callForwarding/selectiveRules/{ruleId} --- Delete a Selective Call Forwarding Rule for a Call Queue
+telephony/config/locations/{locationId}/schedules/{type}/{scheduleId}
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/schedules/{type}/{scheduleId} --- Get Details for a Schedule
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/schedules/{type}/{scheduleId} --- Update a Schedule
+  DELETE https://webexapis.com/v1/telephony/config/locations/{locationId}/schedules/{type}/{scheduleId} --- Delete a Schedule
+telephony/config/locations/{locationId}/schedules/{type}/{scheduleId}/events
+  POST   https://webexapis.com/v1/telephony/config/locations/{locationId}/schedules/{type}/{scheduleId}/events --- Create a Schedule Event
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/schedules/{type}/{scheduleId}/events/{eventId} --- Get Details for a Schedule Event
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/schedules/{type}/{scheduleId}/events/{eventId} --- Update a Schedule Event
+  DELETE https://webexapis.com/v1/telephony/config/locations/{locationId}/schedules/{type}/{scheduleId}/events/{eventId} --- Delete a Schedule Event
+telephony/config/locations/{locationId}/voicePortal
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/voicePortal --- Get VoicePortal
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/voicePortal --- Update VoicePortal
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/voicePortal/passcodeRules --- Get VoicePortal Passcode Rule
+telephony/config/locations/{locationId}/voicemailGroups
+  POST   https://webexapis.com/v1/telephony/config/locations/{locationId}/voicemailGroups --- Create a new Voicemail Group for a Location
+  GET    https://webexapis.com/v1/telephony/config/locations/{locationId}/voicemailGroups/{voicemailGroupId} --- Get Location Voicemail Group
+  PUT    https://webexapis.com/v1/telephony/config/locations/{locationId}/voicemailGroups/{voicemailGroupId} --- Modify Location Voicemail Group
+  DELETE https://webexapis.com/v1/telephony/config/locations/{locationId}/voicemailGroups/{voicemailGroupId} --- Delete a Voicemail Group for a Location
+telephony/config/people/{personId}
+  GET    https://webexapis.com/v1/telephony/config/people/{personId}/devices --- Get User Devices
+  PUT    https://webexapis.com/v1/telephony/config/people/{personId}/numbers --- Assign or Unassign numbers to a person
+telephony/config/people/{personId}/applications/{applicationId}
+  GET    https://webexapis.com/v1/telephony/config/people/{personId}/applications/{applicationId}/availableMembers --- Search Shared-Line Appearance Members
+  GET    https://webexapis.com/v1/telephony/config/people/{personId}/applications/{applicationId}/members --- Get Shared-Line Appearance Members
+  PUT    https://webexapis.com/v1/telephony/config/people/{personId}/applications/{applicationId}/members --- Put Shared-Line Appearance Members
+telephony/config/people/{personId}/queues
+  GET    https://webexapis.com/v1/telephony/config/people/{personId}/queues/availableCallerIds --- Retrieve List of Call Queue Caller ID information
+  GET    https://webexapis.com/v1/telephony/config/people/{personId}/queues/callerId --- Retrieve a Call Queue Agent's Caller ID information
+  PUT    https://webexapis.com/v1/telephony/config/people/{personId}/queues/callerId --- Modify a Call Queue Agent's Caller ID information
+telephony/config/premisePstn/actions/validateDialPatterns
+  POST   https://webexapis.com/v1/telephony/config/premisePstn/actions/validateDialPatterns/invoke --- Validate a Dial Pattern
+telephony/config/premisePstn/dialPlans
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/dialPlans --- Read the List of Dial Plans
+  POST   https://webexapis.com/v1/telephony/config/premisePstn/dialPlans --- Create a Dial Plan
+telephony/config/premisePstn/dialPlans/{dialPlanId}
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/dialPlans/{dialPlanId} --- Get a Dial Plan
+  PUT    https://webexapis.com/v1/telephony/config/premisePstn/dialPlans/{dialPlanId} --- Modify a Dial Plan
+  DELETE https://webexapis.com/v1/telephony/config/premisePstn/dialPlans/{dialPlanId} --- Delete a Dial Plan
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/dialPlans/{dialPlanId}/dialPatterns --- Read the List of Dial Patterns
+  PUT    https://webexapis.com/v1/telephony/config/premisePstn/dialPlans/{dialPlanId}/dialPatterns --- Modify Dial Patterns
+telephony/config/premisePstn/routeGroups
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/routeGroups --- Read the List of Routing Groups
+  POST   https://webexapis.com/v1/telephony/config/premisePstn/routeGroups --- Create Route Group for a Organization
+telephony/config/premisePstn/routeGroups/{routeGroupId}
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/routeGroups/{routeGroupId} --- Read a Route Group for a Organization
+  PUT    https://webexapis.com/v1/telephony/config/premisePstn/routeGroups/{routeGroupId} --- Modify a Route Group for a Organization
+  DELETE https://webexapis.com/v1/telephony/config/premisePstn/routeGroups/{routeGroupId} --- Remove a Route Group from an Organization
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/routeGroups/{routeGroupId}/usage --- Read the Usage of a Routing Group
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/routeGroups/{routeGroupId}/usageCallToExtension --- Read the Call to Extension Locations of a Routing Group
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/routeGroups/{routeGroupId}/usageDialPlan --- Read the Dial Plan Locations of a Routing Group
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/routeGroups/{routeGroupId}/usagePstnConnection --- Read the PSTN Connection Locations of a Routing Group
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/routeGroups/{routeGroupId}/usageRouteList --- Read the Route Lists of a Routing Group
+telephony/config/premisePstn/routeLists
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/routeLists --- Read the List of Route Lists
+  POST   https://webexapis.com/v1/telephony/config/premisePstn/routeLists --- Create a Route List
+telephony/config/premisePstn/routeLists/{routeListId}
+  DELETE https://webexapis.com/v1/telephony/config/premisePstn/routeLists/{routeListId} --- Delete a Route List
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/routeLists/{routeListId} --- Get a Route List
+  PUT    https://webexapis.com/v1/telephony/config/premisePstn/routeLists/{routeListId} --- Modify a Route List
+  PUT    https://webexapis.com/v1/telephony/config/premisePstn/routeLists/{routeListId}/numbers --- Modify Numbers for Route List
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/routeLists/{routeListId}/numbers --- Get Numbers assigned to a Route List
+telephony/config/premisePstn/trunks
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/trunks --- Read the List of Trunks
+  POST   https://webexapis.com/v1/telephony/config/premisePstn/trunks --- Create a Trunk
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/trunks/trunkTypes --- Read the List of Trunk Types
+telephony/config/premisePstn/trunks/actions/fqdnValidation
+  POST   https://webexapis.com/v1/telephony/config/premisePstn/trunks/actions/fqdnValidation/invoke --- Validate Local Gateway FQDN and Domain for a Trunk
+telephony/config/premisePstn/trunks/{trunkId}
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/trunks/{trunkId} --- Get a Trunk
+  PUT    https://webexapis.com/v1/telephony/config/premisePstn/trunks/{trunkId} --- Modify a Trunk
+  DELETE https://webexapis.com/v1/telephony/config/premisePstn/trunks/{trunkId} --- Delete a Trunk
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/trunks/{trunkId}/usage --- Get Local Gateway Usage Count
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/trunks/{trunkId}/usageCallToExtension --- Get Local Gateway Call to On-Premises Extension Usage for a Trunk
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/trunks/{trunkId}/usageDialPlan --- Get Local Gateway Dial Plan Usage for a Trunk
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/trunks/{trunkId}/usagePstnConnection --- Get Locations Using the Local Gateway as PSTN Connection Routing
+  GET    https://webexapis.com/v1/telephony/config/premisePstn/trunks/{trunkId}/usageRouteGroup --- Get Route Groups Using the Local Gateway
+telephony/config/voicemail
+  GET    https://webexapis.com/v1/telephony/config/voicemail/rules --- Get Voicemail Rules
+  PUT    https://webexapis.com/v1/telephony/config/voicemail/rules --- Update Voicemail Rules
+  GET    https://webexapis.com/v1/telephony/config/voicemail/settings --- Get Voicemail Settings
+  PUT    https://webexapis.com/v1/telephony/config/voicemail/settings --- Update Voicemail Settings
+telephony/config/workspaces/{workspaceId}
+  GET    https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/devices --- Get Workspace Devices
+  PUT    https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/devices --- Modify Workspace Devices
+telephony/voiceMessages
+  GET    https://webexapis.com/v1/telephony/voiceMessages --- List Messages
+  POST   https://webexapis.com/v1/telephony/voiceMessages/markAsRead --- Mark As Read
+  POST   https://webexapis.com/v1/telephony/voiceMessages/markAsUnread --- Mark As Unread
+  GET    https://webexapis.com/v1/telephony/voiceMessages/summary --- Get Message Summary
+  DELETE https://webexapis.com/v1/telephony/voiceMessages/{messageId} --- Delete Message
+workspaces/{workspaceId}/features
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/callForwarding --- Retrieve Call Forwarding Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/callForwarding --- Modify Call Forwarding Settings for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/callWaiting --- Retrieve Call Waiting Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/callWaiting --- Modify Call Waiting Settings for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/callerId --- Retrieve Caller ID Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/callerId --- Modify Caller ID Settings for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/incomingPermission --- Retrieve Incoming Permission Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/incomingPermission --- Modify Incoming Permission Settings for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept --- Read Call Intercept Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/intercept --- Configure Call Intercept Settings for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/monitoring --- Retrieve Monitoring Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/monitoring --- Modify Monitoring Settings for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/numbers --- List numbers associated with a specific workspace
+workspaces/{workspaceId}/features/outgoingPermission
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission --- Retrieve Outgoing Permission Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission --- Modify Outgoing Permission Settings for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/accessCodes --- Retrieve Access Codes for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/accessCodes --- Modify Access Codes for a Workspace
+  POST   https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/accessCodes --- Create Access Codes for a Workspace
+  GET    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers --- Retrieve Transfer Numbers Settings for a Workspace
+  PUT    https://webexapis.com/v1/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers --- Modify Transfer Numbers Settings for a Workspace
+https://analytics.webexapis.com/v1/cdr_feed
+  GET    https://analytics.webexapis.com/v1/cdr_feed --- Get Detailed Call History

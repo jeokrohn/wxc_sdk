@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# re-create all meetings APIs
+# Copyright (c) 2022 Johannes Krohn <jkrohn@cisco.com>
+# License: MIT
+./developer.webex.com/classes.py developer.webex.com/generated/meetings.yml --section "Meeting Chats" -o developer.webex.com/generated/meeting_chats_auto.py
+./developer.webex.com/classes.py developer.webex.com/generated/meetings.yml --section "Meeting Closed Captions" -o developer.webex.com/generated/meeting_closed_captions_auto.py
+./developer.webex.com/classes.py developer.webex.com/generated/meetings.yml --section "Meeting Invitees" -o developer.webex.com/generated/meeting_invitees_auto.py
+./developer.webex.com/classes.py developer.webex.com/generated/meetings.yml --section "Meeting Messages" -o developer.webex.com/generated/meeting_messages_auto.py
+./developer.webex.com/classes.py developer.webex.com/generated/meetings.yml --section "Meeting Participants" -o developer.webex.com/generated/meeting_participants_auto.py
+./developer.webex.com/classes.py developer.webex.com/generated/meetings.yml --section "Meeting Polls" -o developer.webex.com/generated/meeting_polls_auto.py
+./developer.webex.com/classes.py developer.webex.com/generated/meetings.yml --section "Meeting Preferences" -o developer.webex.com/generated/meeting_preferences_auto.py
+./developer.webex.com/classes.py developer.webex.com/generated/meetings.yml --section "Meeting Q and A" -o developer.webex.com/generated/meeting_qanda_auto.py
+./developer.webex.com/classes.py developer.webex.com/generated/meetings.yml --section "Meeting Qualities" -o developer.webex.com/generated/meeting_qualities_auto.py
+./developer.webex.com/classes.py developer.webex.com/generated/meetings.yml --section "Meeting Transcripts" -o developer.webex.com/generated/meeting_transcripts_auto.py
+./developer.webex.com/classes.py developer.webex.com/generated/meetings.yml --section "Meeting Summary Report" -o developer.webex.com/generated/meeting_summary_report_auto.py
+./developer.webex.com/classes.py developer.webex.com/generated/meetings.yml -o developer.webex.com/generated/meetings_auto.py

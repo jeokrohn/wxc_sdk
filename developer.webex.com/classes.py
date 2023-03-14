@@ -92,6 +92,8 @@ class APIMethod:
     def {method_name}(self{param_list}){return_type}:
         """
 {method_doc}
+
+        documentation: {doc_url}
         """
 {code}
 '''
@@ -265,7 +267,7 @@ class APIMethod:
             # if only a single attribute is returned then we might have a list of something
             # if the single attribute is not a list then we might as well just return that thing
             if not self.response_class.base and len(self.response_class.attributes) == 1:
-                if (m := re.match(r'^array\[(.+)]$', self.response_class.attributes[0].type)):
+                if m := re.match(r'^array\[(.+)]$', self.response_class.attributes[0].type):
                     # the only return attribute is a list
                     if self.response_class.attributes[0].param_class:
                         base_type = self.response_class.attributes[0].param_class.name
@@ -312,6 +314,7 @@ class APIMethod:
         # return something
         yield self.METHOD.format(method_name=transform_name(name), param_list=param_list, return_type=return_type,
                                  method_doc=method_doc,
+                                 doc_url=self.methods_details.documentation.doc_link,
                                  code=method_body.getvalue()).strip('\n')
         return
 

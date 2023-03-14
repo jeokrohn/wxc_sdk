@@ -128,6 +128,8 @@ class MeetingChatsApi(ApiChild, base='meetings/postMeetingChats'):
         :type meeting_id: str
         :param offset: Offset from the first result that you want to fetch.
         :type offset: int
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-chats/list-meeting-chats
         """
         params['meetingId'] = meeting_id
         if offset is not None:
@@ -145,6 +147,8 @@ class MeetingChatsApi(ApiChild, base='meetings/postMeetingChats'):
         :param meeting_id: A unique identifier for the meeting instance to which the chats belong. Meeting IDs of a
             scheduled personal room meeting are not supported.
         :type meeting_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-chats/delete-meeting-chats
         """
         params = {}
         params['meetingId'] = meeting_id
@@ -227,6 +231,8 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
             parameter only applies to ended meeting instnaces. It does not apply to meeting series, scheduled meetings
             or scheduled personal room meetings.
         :type meeting_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-closed-captions/list-meeting-closed-captions
         """
         params = {}
         params['meetingId'] = meeting_id
@@ -244,6 +250,8 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
             parameter only applies to ended meeting instances. It does not apply to meeting series, scheduled meetings
             or scheduled personal room meetings.
         :type meeting_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-closed-captions/list-meeting-closed-caption-snippets
         """
         params = {}
         params['meetingId'] = meeting_id
@@ -264,6 +272,8 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
         :type meeting_id: str
         :param format: Format for the downloaded meeting closed caption snippets. Possible values: vtt, txt
         :type format: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-closed-captions/download-meeting-closed-caption-snippets
         """
         params = {}
         params['meetingId'] = meeting_id
@@ -378,6 +388,8 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         :param panelist: Filter invitees or attendees for webinars only. If true, returns invitees. If false, returns
             attendees. If null, returns both invitees and attendees.
         :type panelist: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-invitees/list-meeting-invitees
         """
         params['meetingId'] = meeting_id
         if host_email is not None:
@@ -415,6 +427,8 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         :type send_email: bool
         :param panelist: If true, the invitee is a designated panelist for the event meeting.
         :type panelist: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-invitees/create-a-meeting-invitee
         """
         body = CreateMeetingInviteeBody()
         if meeting_id is not None:
@@ -454,6 +468,8 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         :type host_email: str
         :param items: Meeting invitees to be inserted.
         :type items: CreateInviteesItemObject
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-invitees/create-meeting-invitees
         """
         body = CreateMeetingInviteesBody()
         if meeting_id is not None:
@@ -476,6 +492,8 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
             calling the API has the admin on-behalf-of scopes. If set, the admin may specify the email of a user in a
             site they manage and the API will return details for a meeting invitee that is hosted by that user.
         :type host_email: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-invitees/get-a-meeting-invitee
         """
         params = {}
         if host_email is not None:
@@ -509,6 +527,8 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
             application calling the API has the admin on-behalf-of scopes. When used, the admin may specify the email
             of a user in a site they manage to be the meeting host.
         :type host_email: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-invitees/update-a-meeting-invitee
         """
         body = UpdateMeetingInviteeBody()
         if email is not None:
@@ -545,6 +565,8 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         :type host_email: str
         :param send_email: If true, send an email to the invitee.
         :type send_email: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-invitees/delete-a-meeting-invitee
         """
         params = {}
         if host_email is not None:
@@ -573,6 +595,8 @@ class MeetingMessagesApi(ApiChild, base='meeting/messages/{meetingMessageId}'):
 
         :param meeting_message_id: The unique identifier for the message.
         :type meeting_message_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-messages/delete-a-meeting-message
         """
         url = self.ep(f'')
         super().delete(url=url)
@@ -767,6 +791,8 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
             ISO 8601 compliant format. If joinTimeTo is not specified, it equals joinTimeFrom plus 7 days. The interval
             between joinTimeFrom and joinTimeTo must be within 90 days.
         :type join_time_to: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-participants/list-meeting-participants
         """
         params['meetingId'] = meeting_id
         if host_email is not None:
@@ -800,6 +826,8 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
         :type join_time_to: str
         :param emails: Participants email list Possible values: a@example.com
         :type emails: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-participants/query-meeting-participants-with-email
         """
         params['meetingId'] = meeting_id
         if host_email is not None:
@@ -827,6 +855,8 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
             calling the API has the admin-level scopes, the admin may specify the email of a user in a site they manage
             and the API will return meeting participants of the meetings that are hosted by that user.
         :type host_email: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-participants/get-meeting-participant-details
         """
         params = {}
         if host_email is not None:
@@ -852,6 +882,8 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
         :param expel: The attribute is exclusive and its value can be true or false. The value of true means that the
             participant will be expelled from the meeting, the value of false means No-Op.
         :type expel: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-participants/update-a-participant
         """
         body = UpdateParticipantBody()
         if muted is not None:
@@ -872,6 +904,8 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
 
         :param items: The ID that identifies the meeting participant.
         :type items: List[ParticipantID]
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-participants/admit-participants
         """
         body = AdmitParticipantsBody()
         if items is not None:
@@ -1020,6 +1054,8 @@ class MeetingPollsApi(ApiChild, base='meetings/poll'):
 
         :param meeting_id: A unique identifier for the meeting instance to which the polls belong.
         :type meeting_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-polls/list-meeting-polls
         """
         params = {}
         params['meetingId'] = meeting_id
@@ -1033,6 +1069,8 @@ class MeetingPollsApi(ApiChild, base='meetings/poll'):
 
         :param meeting_id: A unique identifier for the meeting instance to which the polls belong.
         :type meeting_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-polls/get-meeting-pollresults
         """
         params['meetingId'] = meeting_id
         url = self.ep('Results')
@@ -1048,6 +1086,8 @@ class MeetingPollsApi(ApiChild, base='meetings/poll'):
         :type question_id: str
         :param meeting_id: A unique identifier for the meeting instance to which the respondents belong.
         :type meeting_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-polls/list-respondents-of-a-question
         """
         params['meetingId'] = meeting_id
         url = self.ep(f's/{poll_id}/questions/{question_id}/respondents')
@@ -1345,6 +1385,8 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             parameter. All available Webex sites and default site of a user can be retrieved from
             /meetingPreferences/sites.
         :type site_url: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-preferences/get-meeting-preference-details
         """
         params = {}
         if user_email is not None:
@@ -1370,6 +1412,8 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             parameter. All available Webex sites and default site of a user can be retrieved from
             /meetingPreferences/sites.
         :type site_url: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-preferences/get-personal-meeting-room-options
         """
         params = {}
         if user_email is not None:
@@ -1427,6 +1471,8 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
         :param allow_authenticated_devices: Whether or not to allow authenticated video devices in the user's
             organization to start or join the meeting without a prompt.
         :type allow_authenticated_devices: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-preferences/update-personal-meeting-room-options
         """
         params = {}
         if user_email is not None:
@@ -1473,6 +1519,8 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             parameter. All available Webex sites and default site of a user can be retrieved from
             /meetingPreferences/sites.
         :type site_url: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-preferences/get-audio-options
         """
         params = {}
         if user_email is not None:
@@ -1529,6 +1577,8 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
         :param mobile_number: Mobile phone number. We recommend that phone numbers be specified to facilitate
             connecting via audio. This attribute can be modified with the with the Update Audio Options API.
         :type mobile_number: OfficeNumber
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-preferences/update-audio-options
         """
         params = {}
         if user_email is not None:
@@ -1570,6 +1620,8 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             to a site different than the admin’s default site, the admin can set the site to query using the siteUrl
             parameter. All available Webex sites and default site of a user can be retrieved using Get Site List.
         :type site_url: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-preferences/get-video-options
         """
         params = {}
         if user_email is not None:
@@ -1598,6 +1650,8 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             parameter. All available Webex sites and default site of a user can be retrieved from
             /meetingPreferences/sites.
         :type site_url: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-preferences/update-video-options
         """
         params = {}
         if user_email is not None:
@@ -1626,6 +1680,8 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             parameter. All available Webex sites and default site of a user can be retrieved from
             /meetingPreferences/sites.
         :type site_url: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-preferences/get-scheduling-options
         """
         params = {}
         if user_email is not None:
@@ -1666,6 +1722,8 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
         :param enabled_webex_assistant_by_default: Flag to automatically enable Webex Assistant whenever you start a
             meeting. This attribute can be modified with the Update Scheduling Options API.
         :type enabled_webex_assistant_by_default: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-preferences/update-scheduling-options
         """
         params = {}
         if user_email is not None:
@@ -1693,6 +1751,8 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             the API has the admin-level scopes. If set, the admin may specify the email of a user and the API will
             return the list of Webex sites for that user.
         :type user_email: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-preferences/get-site-list
         """
         params = {}
         if user_email is not None:
@@ -1714,6 +1774,8 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             the API has the admin-level scopes. If set, the admin may specify the email of a user in a site they manage
             and the API will update default site for that user.
         :type user_email: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-preferences/update-default-site
         """
         params = {}
         params['defaultSite'] = default_site
@@ -1784,6 +1846,8 @@ class MeetingQandAApi(ApiChild, base='meetings/q_and_a'):
 
         :param meeting_id: A unique identifier for the meeting instance which the Q&A belongs to.
         :type meeting_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-q-and-a/list-meeting-q-and-a
         """
         params['meetingId'] = meeting_id
         url = self.ep()
@@ -1797,6 +1861,8 @@ class MeetingQandAApi(ApiChild, base='meetings/q_and_a'):
         :type question_id: str
         :param meeting_id: A unique identifier for the meeting instance which the Q&A belongs to.
         :type meeting_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-q-and-a/list-answers-of-a-question
         """
         params['meetingId'] = meeting_id
         url = self.ep(f'{question_id}/answers')
@@ -1943,6 +2009,8 @@ class MeetingQualitiesApi(ApiChild, base=''):
         :type meeting_id: str
         :param offset: Offset from the first result that you want to fetch.
         :type offset: int
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-qualities/get-meeting-qualities
         """
         params['meetingId'] = meeting_id
         if offset is not None:
@@ -2053,6 +2121,8 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         :param to_: Ending date and time (exclusive) for List transcripts to return, in any ISO 8601 compliant format.
             to cannot be before from.
         :type to_: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-transcripts/list-meeting-transcripts
         """
         if meeting_id is not None:
             params['meetingId'] = meeting_id
@@ -2080,6 +2150,8 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         :param to_: Ending date and time (exclusive) for List transcripts to return, in any ISO 8601 compliant format.
             to cannot be before from.
         :type to_: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-transcripts/list-meeting-transcripts-for-compliance-officer
         """
         params['siteUrl'] = site_url
         if from_ is not None:
@@ -2101,6 +2173,8 @@ class MeetingTranscriptsApi(ApiChild, base=''):
             calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
             they manage and the API will return details for a meeting that is hosted by that user.
         :type host_email: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-transcripts/download-a-meeting-transcript
         """
         params = {}
         if format is not None:
@@ -2118,6 +2192,8 @@ class MeetingTranscriptsApi(ApiChild, base=''):
 
         :param transcript_id: Unique identifier for the meeting transcript to which the snippets belong.
         :type transcript_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-transcripts/list-snippets-of-a-meeting-transcript
         """
         url = self.ep(f'meetingTranscripts/{transcript_id}/snippets')
         return self.session.follow_pagination(url=url, model=SnippetObject1, params=params)
@@ -2131,6 +2207,8 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         :type transcript_id: str
         :param snippet_id: Unique identifier for the snippet being requested.
         :type snippet_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-transcripts/get-a-transcript-snippet
         """
         url = self.ep(f'meetingTranscripts/{transcript_id}/snippets/{snippet_id}')
         data = super().get(url=url)
@@ -2149,6 +2227,8 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         :type text: str
         :param reason: Reason for snippet update; only required for Compliance Officers.
         :type reason: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-transcripts/update-a-transcript-snippet
         """
         body = UpdateTranscriptSnippetBody()
         if text is not None:
@@ -2172,6 +2252,8 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         :type reason: str
         :param comment: Explanation for deleting a transcript. The comment can be a maximum of 255 characters long.
         :type comment: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meeting-transcripts/delete-a-transcript
         """
         body = DeleteTranscriptBody()
         if reason is not None:
@@ -3731,6 +3813,8 @@ class MeetingsApi(ApiChild, base='meetings'):
             will be changed to panelist. Breakout session is not supported for a meeting with simultaneous
             interpretation.
         :type breakout_sessions: BreakoutSessionObject
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/create-a-meeting
         """
         body = CreateMeetingBody()
         if title is not None:
@@ -3833,6 +3917,8 @@ class MeetingsApi(ApiChild, base='meetings'):
             calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
             they manage and the API will return details for a meeting that is hosted by that user.
         :type host_email: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/get-a-meeting
         """
         params = {}
         if current is not None:
@@ -3901,6 +3987,8 @@ class MeetingsApi(ApiChild, base='meetings'):
             integration application to query meetings by a key in its own domain such as a Zendesk ticket ID, a Jira
             ID, a Salesforce Opportunity ID, etc.
         :type integration_tag: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/list-meetings
         """
         if meeting_number is not None:
             params['meetingNumber'] = meeting_number
@@ -3971,6 +4059,8 @@ class MeetingsApi(ApiChild, base='meetings'):
             calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
             they manage and the API will return meetings that are hosted by that user.
         :type host_email: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/list-meetings-of-a-meeting-series
         """
         params['meetingSeriesId'] = meeting_series_id
         if from_ is not None:
@@ -4117,6 +4207,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type tracking_codes: TrackingCodeItemForCreateMeetingObject
         :param audio_connection_options: Audio connection options.
         :type audio_connection_options: AudioConnectionOptions
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/patch-a-meeting
         """
         body = PatchMeetingBody()
         if title is not None:
@@ -4316,6 +4408,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type tracking_codes: TrackingCodeItemForCreateMeetingObject
         :param audio_connection_options: Audio connection options.
         :type audio_connection_options: AudioConnectionOptions
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/update-a-meeting
         """
         body = PatchMeetingBody()
         if title is not None:
@@ -4402,6 +4496,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :param send_email: Whether or not to send emails to host and invitees. It is an optional field and default
             value is true.
         :type send_email: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/delete-a-meeting
         """
         params = {}
         if host_email is not None:
@@ -4441,6 +4537,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type password: str
         :param expiration_minutes: Expiration duration of joinLink in minutes. Must be between 1 and 60.
         :type expiration_minutes: int
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/join-a-meeting
         """
         body = JoinMeetingBody()
         if email is not None:
@@ -4491,6 +4589,8 @@ class MeetingsApi(ApiChild, base='meetings'):
             lists meeting templates from user's preferred site. All available Webex sites and preferred site of the
             user can be retrieved by Get Site List API.
         :type site_url: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/list-meeting-templates
         """
         params = {}
         if template_type is not None:
@@ -4519,6 +4619,8 @@ class MeetingsApi(ApiChild, base='meetings'):
             calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
             they manage and the API will return the meeting template that is available for that user.
         :type host_email: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/get-a-meeting-template
         """
         params = {}
         if host_email is not None:
@@ -4535,6 +4637,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :param meeting_id: Unique identifier for the meeting. Does not support meeting IDs for a scheduled personal
             room meeting.
         :type meeting_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/get-meeting-control-status
         """
         params = {}
         params['meetingId'] = meeting_id
@@ -4555,6 +4659,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type recording_started: bool
         :param recording_paused: The value can be true or false, it indicates the meeting recording paused or not.
         :type recording_paused: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/update-meeting-control-status
         """
         params = {}
         params['meetingId'] = meeting_id
@@ -4581,6 +4687,8 @@ class MeetingsApi(ApiChild, base='meetings'):
             If the authorization token has the admin-level scopes, the admin can set the Webex site URL on behalf of
             the user specified in the hostEmail parameter.
         :type site_url: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/list-meeting-session-types
         """
         params = {}
         if host_email is not None:
@@ -4605,6 +4713,8 @@ class MeetingsApi(ApiChild, base='meetings'):
             If the authorization token has the admin-level scopes, the admin can set the Webex site URL on behalf of
             the user specified in the hostEmail parameter.
         :type site_url: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/get-a-meeting-session-type
         """
         params = {}
         if host_email is not None:
@@ -4622,6 +4732,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :param meeting_id: Unique identifier for the meeting. Does not support meeting IDs for a scheduled personal
             room meeting.
         :type meeting_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/get-registration-form-for-a-meeting
         """
         url = self.ep(f'{meeting_id}/registration')
         data = super().get(url=url)
@@ -4680,6 +4792,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type customized_questions: CustomizedQuestionForCreateMeeting
         :param rules: The approval rule for standard questions.
         :type rules: StandardRegistrationApproveRule
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/update-meeting-registration-form
         """
         body = UpdateMeetingRegistrationFormBody()
         if host_email is not None:
@@ -4727,6 +4841,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :param meeting_id: Unique identifier for the meeting. Does not support meeting IDs for a scheduled personal
             room meeting or an occurrence meeting.
         :type meeting_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/delete-meeting-registration-form
         """
         url = self.ep(f'{meeting_id}/registration')
         super().delete(url=url)
@@ -4774,6 +4890,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :param customized_questions: The registrant's answers for customized questions. Registration options define
             whether or not this is required.
         :type customized_questions: CustomizedRegistrant
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/register-a-meeting-registrant
         """
         body = RegisterMeetingRegistrantBody()
         if first_name is not None:
@@ -4818,6 +4936,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type meeting_id: str
         :param items: Registrants array.
         :type items: RegisterMeetingRegistrantBody
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/batch-register-meeting-registrants
         """
         body = BatchRegisterMeetingRegistrantsBody()
         if items is not None:
@@ -4835,6 +4955,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type meeting_id: str
         :param registrant_id: Unique identifier for the registrant
         :type registrant_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/get-a-meeting-registrant's-detail-information
         """
         url = self.ep(f'{meeting_id}/registrants/{registrant_id}')
         data = super().get(url=url)
@@ -4856,6 +4978,8 @@ class MeetingsApi(ApiChild, base='meetings'):
             in any ISO 8601 compliant format. If registerTimeTo is not specified, it equals registerTimeFrom plus 7
             days. The interval between registerTimeFrom and registerTimeTo must be within 90 days.
         :type register_time_to: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/list-meeting-registrants
         """
         if email is not None:
             params['email'] = email
@@ -4881,6 +5005,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type order_type: OrderType
         :param order_by: Registrant ordering field. Ordered by registrationTime by default.
         :type order_by: OrderBy
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/query-meeting-registrants
         """
         body = QueryMeetingRegistrantsBody()
         if emails is not None:
@@ -4908,6 +5034,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type send_email: bool
         :param registrants: Registrants array. Registrant ID.
         :type registrants: List[Registrants]
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/batch-update-meeting-registrants-status
         """
         body = BatchUpdateMeetingRegistrantsStatusBody()
         if send_email is not None:
@@ -4927,6 +5055,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type meeting_id: str
         :param registrant_id: Unique identifier for the registrant.
         :type registrant_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/delete-a-meeting-registrant
         """
         url = self.ep(f'{meeting_id}/registrants/{registrant_id}')
         super().delete(url=url)
@@ -4944,6 +5074,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type enabled: bool
         :param interpreters: Interpreters for meeting.
         :type interpreters: InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/update-meeting-simultaneous-interpretation
         """
         body = SimultaneousInterpretation()
         if enabled is not None:
@@ -4978,6 +5110,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type host_email: str
         :param send_email: If true, send email to the interpreter.
         :type send_email: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/create-a-meeting-interpreter
         """
         body = CreateMeetingInterpreterBody()
         if language_code1 is not None:
@@ -5009,6 +5143,8 @@ class MeetingsApi(ApiChild, base='meetings'):
             site they manage and the API will return details for an interpreter of the meeting that is hosted by that
             user.
         :type host_email: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/get-a-meeting-interpreter
         """
         params = {}
         if host_email is not None:
@@ -5035,6 +5171,8 @@ class MeetingsApi(ApiChild, base='meetings'):
             calling the API has the admin on-behalf-of scopes. If set, the admin may specify the email of a user in a
             site they manage and the API will return interpreters of the meeting that is hosted by that user.
         :type host_email: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/list-meeting-interpreters
         """
         params = {}
         if host_email is not None:
@@ -5069,6 +5207,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type host_email: str
         :param send_email: If true, send email to the interpreter.
         :type send_email: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/update-a-meeting-interpreter
         """
         body = CreateMeetingInterpreterBody()
         if language_code1 is not None:
@@ -5102,6 +5242,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type host_email: str
         :param send_email: If true, send email to the interpreter.
         :type send_email: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/delete-a-meeting-interpreter
         """
         params = {}
         if host_email is not None:
@@ -5134,6 +5276,8 @@ class MeetingsApi(ApiChild, base='meetings'):
             In webinars, if hosts preassign attendees to breakout sessions, the role of attendee will be changed to
             panelist. Breakout session is not supported for a meeting with simultaneous interpretation.
         :type items: BreakoutSessionObject
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/update-meeting-breakout-sessions
         """
         body = UpdateMeetingBreakoutSessionsBody()
         if host_email is not None:
@@ -5156,6 +5300,8 @@ class MeetingsApi(ApiChild, base='meetings'):
             meeting and ended or ongoing meeting instance objects. Please note that currently meeting ID of a scheduled
             personal room meeting is not supported for this API.
         :type meeting_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/list-meeting-breakout-sessions
         """
         url = self.ep(f'{meeting_id}/breakoutSessions')
         data = super().get(url=url)
@@ -5174,6 +5320,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :param send_email: Whether or not to send emails to host and invitees. It is an optional field and default
             value is true.
         :type send_email: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/delete-meeting-breakout-sessions
         """
         params = {}
         if send_email is not None:
@@ -5189,6 +5337,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :param meeting_id: Unique identifier for the meeting. Please note that only the meeting ID of a scheduled
             webinar is supported for this API.
         :type meeting_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/get-a-meeting-survey
         """
         url = self.ep(f'{meeting_id}/survey')
         data = super().get(url=url)
@@ -5216,6 +5366,8 @@ class MeetingsApi(ApiChild, base='meetings'):
             month ago, the default value for meetingStartTimeTo is 1 month after meetingStartTimeFrom.Otherwise it is
             the current date and time.
         :type meeting_start_time_to: String
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/list-meeting-survey-results
         """
         if meeting_start_time_from is not None:
             params['meetingStartTimeFrom'] = meeting_start_time_from
@@ -5241,6 +5393,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type person_id: str
         :param items: 
         :type items: InvitationSourceCreateObject
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/create-invitation-sources
         """
         body = CreateInvitationSourcesBody()
         if host_email is not None:
@@ -5260,6 +5414,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :param meeting_id: Unique identifier for the meeting. Only the meeting ID of a scheduled webinar is supported
             for this API.
         :type meeting_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/list-invitation-sources
         """
         url = self.ep(f'{meeting_id}/invitationSources')
         data = super().get(url=url)
@@ -5280,6 +5436,8 @@ class MeetingsApi(ApiChild, base='meetings'):
             calling the API has the admin-level scopes. The admin may specify the email of a user on a site they manage
             and the API will return meeting participants of the meetings that are hosted by that user.
         :type host_email: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/list-meeting-tracking-codes
         """
         params = {}
         params['service'] = service
@@ -5429,6 +5587,8 @@ class MeetingsSummaryReportApi(ApiChild, base='meetingReports/'):
         :param to_: Ending date and time for meeting usage reports to return, in any ISO 8601 compliant format. to
             cannot be before from. The interval between to and from cannot exceed 30 days.
         :type to_: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings-summary-report/list-meeting-usage-reports
         """
         params['siteUrl'] = site_url
         if from_ is not None:
@@ -5474,6 +5634,8 @@ class MeetingsSummaryReportApi(ApiChild, base='meetingReports/'):
         :param to_: Ending date and time for the meeting attendee reports to return, in any ISO 8601 compliant format.
             to cannot be before from. The interval between to and from cannot exceed 30 days.
         :type to_: str
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings-summary-report/list-meeting-attendee-reports
         """
         params['siteUrl'] = site_url
         if meeting_id is not None:
@@ -5676,6 +5838,8 @@ class PeopleApi(ApiChild, base='people'):
         :type calling_data: bool
         :param location_id: List people present in this location.
         :type location_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/people/list-people
         """
         if email is not None:
             params['email'] = email
@@ -5752,6 +5916,8 @@ class PeopleApi(ApiChild, base='people'):
         :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the
             sitename (eg: mysite.webex.com#attendee) Possible values: mysite.webex.com#attendee
         :type site_urls: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/people/create-a-person
         """
         params = {}
         if calling_data is not None:
@@ -5809,6 +5975,8 @@ class PeopleApi(ApiChild, base='people'):
         :type person_id: str
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/people/get-person-details
         """
         params = {}
         if calling_data is not None:
@@ -5889,6 +6057,8 @@ class PeopleApi(ApiChild, base='people'):
         :param login_enabled: Whether or not the user is allowed to use Webex. This property is only accessible if the
             authenticated user is an admin user for the person's organization.
         :type login_enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/people/update-a-person
         """
         params = {}
         if calling_data is not None:
@@ -5945,6 +6115,8 @@ class PeopleApi(ApiChild, base='people'):
 
         :param person_id: A unique identifier for the person.
         :type person_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/people/delete-a-person
         """
         url = self.ep(f'{person_id}')
         super().delete(url=url)
@@ -5959,6 +6131,8 @@ class PeopleApi(ApiChild, base='people'):
 
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/people/get-my-own-details
         """
         params = {}
         if calling_data is not None:
@@ -6131,6 +6305,8 @@ class RecordingsApi(ApiChild, base=''):
             Otherwise, if specified as deleted, retrieves recordings that have been moved into the recycle bin.
             Possible values: available, deleted
         :type status: str
+
+        documentation: https://developer.webex.com/docs/api/v1/recordings/list-recordings
         """
         if from_ is not None:
             params['from'] = from_
@@ -6196,6 +6372,8 @@ class RecordingsApi(ApiChild, base=''):
             Otherwise, if specified as deleted, retrieves recordings that have been moved to the recycle bin. Possible
             values: available, deleted
         :type status: str
+
+        documentation: https://developer.webex.com/docs/api/v1/recordings/list-recordings-for-an-admin-or-compliance-officer
         """
         if from_ is not None:
             params['from'] = from_
@@ -6229,6 +6407,8 @@ class RecordingsApi(ApiChild, base=''):
             required admin-level meeting scopes. If set, the admin may specify the email of a user in a site they
             manage, and the API will return recording details of that user.
         :type host_email: str
+
+        documentation: https://developer.webex.com/docs/api/v1/recordings/get-recording-details
         """
         params = {}
         if host_email is not None:
@@ -6255,6 +6435,8 @@ class RecordingsApi(ApiChild, base=''):
         :type reason: str
         :param comment: Explanation for deleting a transcript. The comment can be a maximum of 255 characters long.
         :type comment: str
+
+        documentation: https://developer.webex.com/docs/api/v1/recordings/delete-a-recording
         """
         params = {}
         if host_email is not None:
@@ -6287,6 +6469,8 @@ class RecordingsApi(ApiChild, base=''):
             recordings from the user's preferred site. All available Webex sites and preferred sites of a user can be
             retrieved by the Get Site List API.
         :type site_url: str
+
+        documentation: https://developer.webex.com/docs/api/v1/recordings/move-recordings-into-the-recycle-bin
         """
         params = {}
         if host_email is not None:
@@ -6320,6 +6504,8 @@ class RecordingsApi(ApiChild, base=''):
         :param restore_all: If not specified or false, restores the recordings specified by recordingIds. If true,
             restores all recordings from the recycle bin.
         :type restore_all: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/recordings/restore-recordings-from-recycle-bin
         """
         params = {}
         if host_email is not None:
@@ -6355,6 +6541,8 @@ class RecordingsApi(ApiChild, base=''):
         :param purge_all: If not specified or false, purges the recordings specified by recordingIds. If true, purges
             all recordings from the recycle bin.
         :type purge_all: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/recordings/purge-recordings-from-recycle-bin
         """
         params = {}
         if host_email is not None:
@@ -6444,6 +6632,8 @@ class SessionTypesApi(ApiChild, base='admin/meeting/'):
         :param site_url: URL of the Webex site to query. If siteUrl is not specified, the query will use the default
             site for the admin's authorization token used to make the call.
         :type site_url: str
+
+        documentation: https://developer.webex.com/docs/api/v1/session-types/list-site-session-types
         """
         params = {}
         if site_url is not None:
@@ -6460,6 +6650,8 @@ class SessionTypesApi(ApiChild, base='admin/meeting/'):
         :type site_url: str
         :param person_id: A unique identifier for the user.
         :type person_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/session-types/list-user-session-type
         """
         params = {}
         if site_url is not None:
@@ -6482,6 +6674,8 @@ class SessionTypesApi(ApiChild, base='admin/meeting/'):
         :type person_id: str
         :param email: The email of the user.
         :type email: str
+
+        documentation: https://developer.webex.com/docs/api/v1/session-types/update-user-session-types
         """
         body = UpdateUserSessionTypesBody()
         if site_url is not None:
@@ -6581,6 +6775,8 @@ class TrackingCodesApi(ApiChild, base=''):
             API retrieves the tracking code from the user's preferred site. All available Webex sites and preferred
             sites of a user can be retrieved by the Get Site List API.
         :type site_url: str
+
+        documentation: https://developer.webex.com/docs/api/v1/tracking-codes/list-tracking-codes
         """
         params = {}
         if site_url is not None:
@@ -6599,6 +6795,8 @@ class TrackingCodesApi(ApiChild, base=''):
             API retrieves the tracking code from the user's preferred site. All available Webex sites and the preferred
             sites of a user can be retrieved by the Get Site List API.
         :type site_url: str
+
+        documentation: https://developer.webex.com/docs/api/v1/tracking-codes/get-a-tracking-code
         """
         params = {}
         if site_url is not None:
@@ -6626,6 +6824,8 @@ class TrackingCodesApi(ApiChild, base=''):
         :param schedule_start_codes: Specify how tracking codes are used for each service on the meeting scheduler or
             meeting start pages. The maximum size of scheduleStartCodes is 5.
         :type schedule_start_codes: ScheduleStartCodeObject
+
+        documentation: https://developer.webex.com/docs/api/v1/tracking-codes/create-a-tracking-code
         """
         body = CreateTrackingCodeBody()
         if name is not None:
@@ -6663,6 +6863,8 @@ class TrackingCodesApi(ApiChild, base=''):
         :param schedule_start_codes: Specify how tracking codes are used for each service on the meeting scheduler or
             meeting start pages. The maximum size of scheduleStartCodes is 5.
         :type schedule_start_codes: ScheduleStartCodeObject
+
+        documentation: https://developer.webex.com/docs/api/v1/tracking-codes/update-a-tracking-code
         """
         body = CreateTrackingCodeBody()
         if name is not None:
@@ -6690,6 +6892,8 @@ class TrackingCodesApi(ApiChild, base=''):
         :param site_url: URL of the Webex site from which the API deletes the tracking code. All available Webex sites
             and preferred sites of a user can be retrieved by the Get Site List API.
         :type site_url: str
+
+        documentation: https://developer.webex.com/docs/api/v1/tracking-codes/delete-a-tracking-code
         """
         params = {}
         params['siteUrl'] = site_url
@@ -6709,6 +6913,8 @@ class TrackingCodesApi(ApiChild, base=''):
             specify the personId of a user on a site they manage and the API returns details for the user's tracking
             codes. At least one parameter of personId or email is required.
         :type person_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/tracking-codes/get-user-tracking-codes
         """
         params = {}
         if site_url is not None:
@@ -6733,6 +6939,8 @@ class TrackingCodesApi(ApiChild, base=''):
         :type email: str
         :param tracking_codes: Tracking code information for updates.
         :type tracking_codes: TrackingCodeItemForCreateMeetingObject
+
+        documentation: https://developer.webex.com/docs/api/v1/tracking-codes/update-user-tracking-codes
         """
         body = UpdateUserTrackingCodesBody()
         if site_url is not None:
@@ -6846,6 +7054,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
 
         :param owned_by: Limit the result list to org wide webhooks. Only allowed value is org.
         :type owned_by: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webhooks/list-webhooks
         """
         if owned_by is not None:
             params['ownedBy'] = owned_by
@@ -6873,6 +7083,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :param owned_by: Specified when creating an org/admin level webhook. Supported for meetings, recordings,
             meetingParticipants, and meetingTranscripts resources.
         :type owned_by: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webhooks/create-a-webhook
         """
         body = CreateWebhookBody()
         if name is not None:
@@ -6900,6 +7112,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
 
         :param webhook_id: The unique identifier for the webhook.
         :type webhook_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webhooks/get-webhook-details
         """
         url = self.ep(f'{webhook_id}')
         data = super().get(url=url)
@@ -6926,6 +7140,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :type owned_by: str
         :param status: The status of the webhook. Use "active" to reactivate a disabled webhook.
         :type status: Status16
+
+        documentation: https://developer.webex.com/docs/api/v1/webhooks/update-a-webhook
         """
         body = UpdateWebhookBody()
         if name is not None:
@@ -6949,6 +7165,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
 
         :param webhook_id: The unique identifier for the webhook.
         :type webhook_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webhooks/delete-a-webhook
         """
         url = self.ep(f'{webhook_id}')
         super().delete(url=url)

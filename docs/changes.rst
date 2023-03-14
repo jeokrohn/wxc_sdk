@@ -2,6 +2,7 @@ Release history
 ===============
 
 - new API for virtual lines :class:`wxc_sdk.telephony.virtual_line.VirtualLinesApi`
+- new API: :class:`wxc_sdk.meetings.MeetingsApi`. Experimental: not unit tested, 100% auto generated
 
 1.12.0
 ------

@@ -92,6 +92,117 @@ The second column of the table has a link to the documentation of the method.
    * - api.locations.update
         Update details for a location, by ID
      - :meth:`~wxc_sdk.locations.LocationsApi.update`
+   * - api.meetings.chats.delete
+        Deletes the meeting chats of a finished meeting instance specified by meetingId
+     - :meth:`~wxc_sdk.meetings.chats.MeetingChatsApi.delete`
+   * - api.meetings.chats.list
+        Lists the meeting chats of a finished meeting instance specified by meetingId
+     - :meth:`~wxc_sdk.meetings.chats.MeetingChatsApi.list`
+   * - api.meetings.closed_captions.download_snippets
+        Download meeting closed caption snippets from the meeting closed caption specified by closedCaptionId formatted
+     - :meth:`~wxc_sdk.meetings.closed_captions.MeetingClosedCaptionsApi.download_snippets`
+   * - api.meetings.closed_captions.list
+        Lists closed captions of a finished meeting instance specified by meetingId
+     - :meth:`~wxc_sdk.meetings.closed_captions.MeetingClosedCaptionsApi.list`
+   * - api.meetings.closed_captions.list_snippets
+        Lists snippets of a meeting closed caption specified by closedCaptionId
+     - :meth:`~wxc_sdk.meetings.closed_captions.MeetingClosedCaptionsApi.list_snippets`
+   * - api.meetings.invitees.create_invitee
+        Invite a person to attend a meeting
+     - :meth:`~wxc_sdk.meetings.invitees.MeetingInviteesApi.create_invitee`
+   * - api.meetings.invitees.create_invitees
+        Invite people to attend a meeting in bulk
+     - :meth:`~wxc_sdk.meetings.invitees.MeetingInviteesApi.create_invitees`
+   * - api.meetings.invitees.delete
+        Removes a meeting invitee identified by a meetingInviteeId specified in the URI
+     - :meth:`~wxc_sdk.meetings.invitees.MeetingInviteesApi.delete`
+   * - api.meetings.invitees.invitee_details
+        Retrieve details for a meeting invitee identified by a meetingInviteeId in the URI
+     - :meth:`~wxc_sdk.meetings.invitees.MeetingInviteesApi.invitee_details`
+   * - api.meetings.invitees.list
+        Lists meeting invitees for a meeting with a specified meetingId
+     - :meth:`~wxc_sdk.meetings.invitees.MeetingInviteesApi.list`
+   * - api.meetings.invitees.update
+        Update details for a meeting invitee identified by a meetingInviteeId in the URI
+     - :meth:`~wxc_sdk.meetings.invitees.MeetingInviteesApi.update`
+   * - api.meetings.participants.admit_participants
+        To admit participants into a live meeting in bulk
+     - :meth:`~wxc_sdk.meetings.participants.MeetingParticipantsApi.admit_participants`
+   * - api.meetings.participants.list_participants
+        List all participants in a live or post meeting
+     - :meth:`~wxc_sdk.meetings.participants.MeetingParticipantsApi.list_participants`
+   * - api.meetings.participants.participant_details
+        Get a meeting participant details of a live or post meeting
+     - :meth:`~wxc_sdk.meetings.participants.MeetingParticipantsApi.participant_details`
+   * - api.meetings.participants.query_participants_with_email
+        Query participants in a live meeting, or after the meeting, using participant's email
+     - :meth:`~wxc_sdk.meetings.participants.MeetingParticipantsApi.query_participants_with_email`
+   * - api.meetings.participants.update_participant
+        To mute, un-mute, expel, or admit a participant in a live meeting
+     - :meth:`~wxc_sdk.meetings.participants.MeetingParticipantsApi.update_participant`
+   * - api.meetings.preferences.audio_options
+        Retrieves audio options for the authenticated user
+     - :meth:`~wxc_sdk.meetings.preferences.MeetingPreferencesApi.audio_options`
+   * - api.meetings.preferences.details
+        Retrieves meeting preferences for the authenticated user
+     - :meth:`~wxc_sdk.meetings.preferences.MeetingPreferencesApi.details`
+   * - api.meetings.preferences.personal_meeting_room_options
+        Retrieves the Personal Meeting Room options for the authenticated user
+     - :meth:`~wxc_sdk.meetings.preferences.MeetingPreferencesApi.personal_meeting_room_options`
+   * - api.meetings.preferences.scheduling_options
+        Retrieves scheduling options for the authenticated user
+     - :meth:`~wxc_sdk.meetings.preferences.MeetingPreferencesApi.scheduling_options`
+   * - api.meetings.preferences.site_list
+        Retrieves the list of Webex sites that the authenticated user is set up to use
+     - :meth:`~wxc_sdk.meetings.preferences.MeetingPreferencesApi.site_list`
+   * - api.meetings.preferences.update_audio_options
+        Updates audio options for the authenticated user
+     - :meth:`~wxc_sdk.meetings.preferences.MeetingPreferencesApi.update_audio_options`
+   * - api.meetings.preferences.update_default_site
+        Updates the default site for the authenticated user
+     - :meth:`~wxc_sdk.meetings.preferences.MeetingPreferencesApi.update_default_site`
+   * - api.meetings.preferences.update_personal_meeting_room_options
+        Update a single meeting
+     - :meth:`~wxc_sdk.meetings.preferences.MeetingPreferencesApi.update_personal_meeting_room_options`
+   * - api.meetings.preferences.update_scheduling_options
+        Updates scheduling options for the authenticated user
+     - :meth:`~wxc_sdk.meetings.preferences.MeetingPreferencesApi.update_scheduling_options`
+   * - api.meetings.preferences.update_video_options
+        Updates video options for the authenticated user
+     - :meth:`~wxc_sdk.meetings.preferences.MeetingPreferencesApi.update_video_options`
+   * - api.meetings.preferences.video_options
+        Retrieves video options for the authenticated user
+     - :meth:`~wxc_sdk.meetings.preferences.MeetingPreferencesApi.video_options`
+   * - api.meetings.qanda.list
+        Lists questions and answers from a meeting, when ready
+     - :meth:`~wxc_sdk.meetings.qanda.MeetingQandAApi.list`
+   * - api.meetings.qanda.list_answers
+        Lists the answers to a specific question asked in a meeting
+     - :meth:`~wxc_sdk.meetings.qanda.MeetingQandAApi.list_answers`
+   * - api.meetings.qualities.meeting_qualities
+        Get quality data for a meeting, by meetingId
+     - :meth:`~wxc_sdk.meetings.qualities.MeetingQualitiesApi.meeting_qualities`
+   * - api.meetings.transcripts.delete
+        Removes a transcript with a specified transcript ID
+     - :meth:`~wxc_sdk.meetings.transcripts.MeetingTranscriptsApi.delete`
+   * - api.meetings.transcripts.download
+        Download a meeting transcript from the meeting transcript specified by transcriptId
+     - :meth:`~wxc_sdk.meetings.transcripts.MeetingTranscriptsApi.download`
+   * - api.meetings.transcripts.list
+        Lists available transcripts of an ended meeting instance
+     - :meth:`~wxc_sdk.meetings.transcripts.MeetingTranscriptsApi.list`
+   * - api.meetings.transcripts.list_compliance_officer
+        Lists available or deleted transcripts of an ended meeting instance for a specific site
+     - :meth:`~wxc_sdk.meetings.transcripts.MeetingTranscriptsApi.list_compliance_officer`
+   * - api.meetings.transcripts.list_snippets
+        Lists snippets of a meeting transcript specified by transcriptId
+     - :meth:`~wxc_sdk.meetings.transcripts.MeetingTranscriptsApi.list_snippets`
+   * - api.meetings.transcripts.snippet_detail
+        Retrieves details for a transcript snippet specified by snippetId from the meeting transcript specified by
+     - :meth:`~wxc_sdk.meetings.transcripts.MeetingTranscriptsApi.snippet_detail`
+   * - api.meetings.transcripts.update_snippet
+        Updates details for a transcript snippet specified by snippetId from the meeting transcript specified by
+     - :meth:`~wxc_sdk.meetings.transcripts.MeetingTranscriptsApi.update_snippet`
    * - api.membership.create
         Add someone to a room by Person ID or email address, optionally making them a moderator
      - :meth:`~wxc_sdk.memberships.MembershipApi.create`
