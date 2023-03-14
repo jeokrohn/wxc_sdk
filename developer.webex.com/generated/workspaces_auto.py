@@ -350,4 +350,4 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         """
         url = self.ep(f'{workspace_id}/capabilities')
         data = super().get(url=url)
-        return data["capabilities"]
+        return CapabilityMap.parse_obj(data["capabilities"])

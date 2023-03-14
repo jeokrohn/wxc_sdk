@@ -87,12 +87,13 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
         data = super().get(url=url)
         return GetMessageSummaryResponse.parse_obj(data)
 
-    def list(self, **params) -> Generator[VoiceMessageDetails, None, None]:
+    def list(self) -> list[VoiceMessageDetails]:
         """
         Get the list of all voicemail messages for the user.
         """
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=VoiceMessageDetails, params=params)
+        data = super().get(url=url)
+        return parse_obj_as(list[VoiceMessageDetails], data["items"])
 
     def delete(self, message_id: str):
         """

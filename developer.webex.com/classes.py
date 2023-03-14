@@ -14,6 +14,7 @@ options:
   -l LOG_PATH, --logfile LOG_PATH
                         Write detailed logs to this file.
 """
+# TODO: check/fix private_network_connect
 import argparse
 import json
 import logging
@@ -109,6 +110,10 @@ class APIMethod:
         if {p_name} is not None:
             body.{p_name} = {p_name}'''
 
+    @property
+    def is_paginated(self) -> bool:
+        return self.methods_details.is_paginated
+
     def source(self, common_prefix: str, transform_name: Callable[[str], str]) -> Generator[str, None, None]:
         """
         source for one method
@@ -129,8 +134,8 @@ class APIMethod:
             for_param_list = f'{p_name}: {p_type}'
             if not param.required:
                 for_param_list = f'{for_param_list} = None'
-            # in list_ methods we want to get rid of "max" and "start"
-            if not name.startswith('list_') or p_name not in {'start', 'max'}:
+            # in paginated methods we want to get rid of "max" and "start"
+            if not self.is_paginated or p_name not in {'start', 'max'}:
                 param_list.append(for_param_list)
                 p_doc = '\n'.join(break_lines(param.doc,
                                               # 2nd line and following start with three indentations
@@ -193,8 +198,8 @@ class APIMethod:
             method_doc = '\n'.join((method_doc, param_docs))
         method_doc = method_doc.strip('\n')
 
-        # in list_ methods we want to add "**params" to allow additional parameters
-        if name.startswith('list_'):
+        # in paginated methods we want to add "**params" to allow additional parameters
+        if self.is_paginated:
             param_list.append('**params')
             kwargs = True
         else:
@@ -246,37 +251,58 @@ class APIMethod:
         if self.response_class:
             rest_call = f'data = {rest_call}'
 
-        if name.startswith('list'):
-            if self.response_class is None:
-                # create some syntax error
-                result = f'return !$!!$!$       # documentation at {self.methods_details.documentation.doc_link} is ' \
-                         f'missing return type'
-                return_type = ''
+        if self.is_paginated:
+            item_key, result_type = python_type(self.response_class.name, for_list=True)
+            return_type = f' -> Generator[{result_type}, None, None]'
+            if item_key == 'items':
+                item_key = ''
             else:
-                result_type = python_type(self.response_class.name, for_list=True)
-                return_type = f' -> Generator[{result_type}, None, None]'
-                result = f'return self.session.follow_pagination(url=url, model={result_type}, ' \
-                         f'params=params{json_param})'
+                item_key = f"item_key='{item_key}', "
+            result = f'return self.session.follow_pagination(url=url, model={result_type}, {item_key}' \
+                     f'params=params{json_param})'
             rest_call = ''
         elif self.response_class:
-            if len(self.response_class.attributes) == 1:
-                if self.response_class.attributes[0].type =='array[object]':
-                    # we need to deserialize a list fo something
-                    return_type = python_type(self.response_class.attributes[0].param_class.name)
-                    result = f'return parse_obj_as(list[{return_type}], data["'\
-                             f'{to_camel(self.response_class.attributes[0].name)}"])'
-                    return_type = f'list[{return_type}]'
+            # if only a single attribute is returned then we might have a list of something
+            # if the single attribute is not a list then we might as well just return that thing
+            if not self.response_class.base and len(self.response_class.attributes) == 1:
+                if (m := re.match(r'^array\[(.+)]$', self.response_class.attributes[0].type)):
+                    # the only return attribute is a list
+                    if self.response_class.attributes[0].param_class:
+                        base_type = self.response_class.attributes[0].param_class.name
+                        # we need to deserialize a list fo something
+                        return_type = python_type(base_type)
+                        result = f'return parse_obj_as(list[{return_type}], data["' \
+                                 f'{to_camel(self.response_class.attributes[0].name)}"])'
+                        return_type = f'list[{return_type}]'
+                    else:
+                        return_type = python_type(self.response_class.attributes[0].type)
+                        result = f'return data["{to_camel(self.response_class.attributes[0].name)}"]'
                 else:
-                    return_type = python_type(self.response_class.attributes[0].type)
-                    result = f'return data["{to_camel(self.response_class.attributes[0].name)}"]'
+                    # the result has only one attribute
+                    # this is either a trivial type or needs to be parsed as object
+                    attr = self.response_class.attributes[0]
+                    if attr.param_class:
+                        # we need to deserialize a single object
+                        return_type = python_type(attr.param_class.name)
+                        result = f'return {return_type}.parse_obj(data["{to_camel(attr.name)}"])'
+                    else:
+                        return_type = python_type(attr.type)
+                        result = f'return data["{to_camel(attr.name)}"]'
             else:
+                # the result has multiple attributes -> needs to be parsed as object
                 result_type = python_type(self.response_class.name)
                 return_type = f'{result_type}'
                 result = f'return {result_type}.parse_obj(data)'
             return_type = f' -> {return_type}'
         else:
+            if http_method == 'get':
+                # that is weird. a GET method w/o any return?
+                # force a syntax error
+                result = f'return $!$!$!   # this is weird. ' \
+                         f'Check the spec at {self.methods_details.documentation.doc_link}'
+            else:
+                result = 'return'
             return_type = ''
-            result = 'return'
 
         if rest_call:
             # no REST call if we return a Generator

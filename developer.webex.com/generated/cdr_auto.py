@@ -222,7 +222,7 @@ class WebexCallingDetailedCallHistoryApi(ApiChild, base=''):
     templates tab, and then in the Webex Calling reports section see Calling Detailed Call History Report.
     """
 
-    def detailed_call_history(self, start_time: str, end_time: str, locations: str = None, max: int = None) -> List[CDR]:
+    def detailed_call_history(self, start_time: str, end_time: str, locations: str = None, **params) -> Generator[CDR, None, None]:
         """
         Provides Webex Calling Detailed Call History data for your organization.
         Results can be filtered with the startTime, endTime and locations request parameters. The startTime and endTime
@@ -242,17 +242,10 @@ class WebexCallingDetailedCallHistoryApi(ApiChild, base=''):
         :param locations: Name of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
             provided. Allows you to query reports by location.
         :type locations: str
-        :param max: Limit the maximum number of reports in the response. Range is 1 to 500. When the API has more
-            reports to return than the max value, the API response will be paginated.
-        :type max: int
         """
-        params = {}
         params['startTime'] = start_time
         params['endTime'] = end_time
         if locations is not None:
             params['locations'] = locations
-        if max is not None:
-            params['max'] = max
         url = self.ep('https://analytics.webexapis.com/v1/cdr_feed')
-        data = super().get(url=url, params=params)
-        return data["items"]
+        return self.session.follow_pagination(url=url, model=CDR, params=params)

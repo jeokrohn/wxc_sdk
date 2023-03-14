@@ -49,7 +49,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
     Just like in the Webex app, you must be a member of the team in order to list its memberships or invite people.
     """
 
-    def list_memberships(self, team_id: str, **params) -> Generator[ListTeamMembershipsResponse, None, None]:
+    def list_memberships(self, team_id: str, **params) -> Generator[TeamMembership, None, None]:
         """
         Lists all team memberships for a given team, specified by the teamId query parameter.
         Use query parameters to filter the response.
@@ -59,7 +59,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         """
         params['teamId'] = team_id
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=ListTeamMembershipsResponse, params=params)
+        return self.session.follow_pagination(url=url, model=TeamMembership, params=params)
 
     def create_membership(self, team_id: str, person_id: str = None, person_email: str = None, is_moderator: bool = None) -> TeamMembership:
         """

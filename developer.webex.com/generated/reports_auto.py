@@ -51,14 +51,15 @@ class ReportTemplatesApi(ApiChild, base='report/templates'):
     For more information about Report Templates, see the Admin API guide.
     """
 
-    def list_report_templates(self, **params) -> Generator[Template, None, None]:
+    def list_report_templates(self) -> list[Template]:
         """
         List all the available report templates that can be generated.
         CSV (comma separated value) reports for Webex services are only supported for organizations based in the North
         American region. Organizations based in other regions will return blank CSV files for any Webex reports.
         """
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=Template, params=params)
+        data = super().get(url=url)
+        return parse_obj_as(list[Template], data["Template Attributes"])
 
 class Report(ApiModel):
     #: Unique identifier for the report.
@@ -116,7 +117,7 @@ class ReportsApi(ApiChild, base='reports'):
     For more information about Reports, see the Admin API guide.
     """
 
-    def list(self, report_id: str = None, service: str = None, template_id: int = None, from_: str = None, to_: str = None, **params) -> Generator[Report, None, None]:
+    def list(self, report_id: str = None, service: str = None, template_id: int = None, from_: str = None, to_: str = None) -> list[Report]:
         """
         Lists all reports. Use query parameters to filter the response. The parameters are optional. However, from and
         to parameters should be provided together.
@@ -134,6 +135,7 @@ class ReportsApi(ApiChild, base='reports'):
         :param to_: List reports that were created before this date.
         :type to_: str
         """
+        params = {}
         if report_id is not None:
             params['reportId'] = report_id
         if service is not None:
@@ -145,7 +147,8 @@ class ReportsApi(ApiChild, base='reports'):
         if to_ is not None:
             params['to'] = to_
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=Report, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[Report], data["Report Attributes"])
 
     def create(self, template_id: int, start_date: str = None, end_date: str = None, site_list: str = None) -> str:
         """

@@ -528,7 +528,7 @@ class MessagesApi(ApiChild, base='messages'):
     Just like in the Webex app, you must be a member of the room in order to target it with this API.
     """
 
-    def list(self, room_id: str, parent_id: str = None, mentioned_people: List[str] = None, before: str = None, before_message: str = None, **params) -> Generator[ListMessagesResponse, None, None]:
+    def list(self, room_id: str, parent_id: str = None, mentioned_people: List[str] = None, before: str = None, before_message: str = None, **params) -> Generator[ListMessage, None, None]:
         """
         Lists all messages in a room. Each message will include content attachments if present.
         The list sorts the messages in descending order by creation date.
@@ -557,9 +557,9 @@ class MessagesApi(ApiChild, base='messages'):
         if before_message is not None:
             params['beforeMessage'] = before_message
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=ListMessagesResponse, params=params)
+        return self.session.follow_pagination(url=url, model=ListMessage, params=params)
 
-    def list_direct(self, parent_id: str = None, person_id: str = None, person_email: str = None, **params) -> Generator[ListDirectMessagesResponse, None, None]:
+    def list_direct(self, parent_id: str = None, person_id: str = None, person_email: str = None) -> list[DirectMessage]:
         """
         List all messages in a 1:1 (direct) room. Use the personId or personEmail query parameter to specify the room.
         Each message will include content attachments if present.
@@ -572,6 +572,7 @@ class MessagesApi(ApiChild, base='messages'):
         :param person_email: List messages in a 1:1 room, by person email.
         :type person_email: str
         """
+        params = {}
         if parent_id is not None:
             params['parentId'] = parent_id
         if person_id is not None:
@@ -579,7 +580,8 @@ class MessagesApi(ApiChild, base='messages'):
         if person_email is not None:
             params['personEmail'] = person_email
         url = self.ep('direct')
-        return self.session.follow_pagination(url=url, model=ListDirectMessagesResponse, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[DirectMessage], data["items"])
 
     def create(self, room_id: str = None, text: str = None, markdown: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None, files: List[str] = None, attachments: Attachment = None) -> CreateMessageResponse:
         """
@@ -1224,16 +1226,18 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
     Just like in the Webex app, you must be a member of the room in order to list its Room Tabs.
     """
 
-    def list_tabs(self, room_id: str, **params) -> Generator[ListRoomTabsResponse, None, None]:
+    def list_tabs(self, room_id: str) -> list[RoomTab]:
         """
         Lists all Room Tabs of a room specified by the roomId query parameter.
 
         :param room_id: ID of the room for which to list room tabs.
         :type room_id: str
         """
+        params = {}
         params['roomId'] = room_id
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=ListRoomTabsResponse, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[RoomTab], data["items"])
 
     def create_tab(self, room_id: str, content_url: str, display_name: str) -> RoomTab:
         """
@@ -1599,7 +1603,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
     Just like in the Webex app, you must be a member of the team in order to list its memberships or invite people.
     """
 
-    def list_memberships(self, team_id: str, **params) -> Generator[ListTeamMembershipsResponse, None, None]:
+    def list_memberships(self, team_id: str, **params) -> Generator[TeamMembership, None, None]:
         """
         Lists all team memberships for a given team, specified by the teamId query parameter.
         Use query parameters to filter the response.
@@ -1609,7 +1613,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         """
         params['teamId'] = team_id
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=ListTeamMembershipsResponse, params=params)
+        return self.session.follow_pagination(url=url, model=TeamMembership, params=params)
 
     def create_membership(self, team_id: str, person_id: str = None, person_email: str = None, is_moderator: bool = None) -> TeamMembership:
         """

@@ -49,16 +49,18 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
     Just like in the Webex app, you must be a member of the room in order to list its Room Tabs.
     """
 
-    def list_tabs(self, room_id: str, **params) -> Generator[ListRoomTabsResponse, None, None]:
+    def list_tabs(self, room_id: str) -> list[RoomTab]:
         """
         Lists all Room Tabs of a room specified by the roomId query parameter.
 
         :param room_id: ID of the room for which to list room tabs.
         :type room_id: str
         """
+        params = {}
         params['roomId'] = room_id
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=ListRoomTabsResponse, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[RoomTab], data["items"])
 
     def create_tab(self, room_id: str, content_url: str, display_name: str) -> RoomTab:
         """

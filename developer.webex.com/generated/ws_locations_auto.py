@@ -76,7 +76,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
     documentation for the relevant endpoints.
     """
 
-    def list_locations(self, display_name: str = None, address: str = None, country_code: str = None, city_name: str = None, **params) -> Generator[Location, None, None]:
+    def list_locations(self, display_name: str = None, address: str = None, country_code: str = None, city_name: str = None) -> list[Location]:
         """
         List workspace locations.
 
@@ -89,6 +89,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :param city_name: Location city name.
         :type city_name: str
         """
+        params = {}
         if display_name is not None:
             params['displayName'] = display_name
         if address is not None:
@@ -98,7 +99,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         if city_name is not None:
             params['cityName'] = city_name
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=Location, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[Location], data["items"])
 
     def create_location(self, display_name: str, address: str, country_code: str, latitude: int, longitude: int, city_name: str = None, notes: str = None) -> Location:
         """
@@ -209,7 +211,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         super().delete(url=url)
         return
 
-    def list_location_floors(self, location_id: str, **params) -> Generator[Floor, None, None]:
+    def list_location_floors(self, location_id: str) -> list[Floor]:
         """
         List workspace location floors.
 
@@ -217,7 +219,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type location_id: str
         """
         url = self.ep(f'{location_id}/floors')
-        return self.session.follow_pagination(url=url, model=Floor, params=params)
+        data = super().get(url=url)
+        return parse_obj_as(list[Floor], data["items"])
 
     def create_location_floor(self, location_id: str, floor_number: int, display_name: str = None) -> Floor:
         """

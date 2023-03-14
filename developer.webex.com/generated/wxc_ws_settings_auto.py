@@ -446,7 +446,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             params['orgId'] = org_id
         url = self.ep(f'callForwarding')
         data = super().get(url=url, params=params)
-        return data["callForwarding"]
+        return CallForwardingPlaceSettingGet.parse_obj(data["callForwarding"])
 
     def modify_call_forwarding_settings_for(self, workspace_id: str, call_forwarding: CallForwardingPlaceSettingPatch, org_id: str = None):
         """
@@ -656,7 +656,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         super().put(url=url, params=params, data=body.json())
         return
 
-    def list_numbers_associated_withspecific(self, workspace_id: str, attributes: , body: , org_id: str = None, **params):
+    def list_numbers_associated_withspecific(self, workspace_id: str, attributes: , body: , org_id: str = None):
         """
         List the PSTN phone numbers associated with a specific workspace, by ID, within the organization. Also shows
         the location and organization associated with the workspace.
@@ -683,12 +683,14 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             can use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
+        params = {}
         params['Attributes'] = attributes
         params['Body'] = body
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'numbers')
-        return !$!!$!$       # documentation at https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace is missing return type
+        super().get(url=url, params=params)
+        return $!$!$!   # this is weird. Check the spec at https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace
 
     def retrieve_incoming_permission_settings_for(self, workspace_id: str, org_id: str = None) -> RetrieveIncomingPermissionSettingsForWorkspaceResponse:
         """
@@ -804,7 +806,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         super().put(url=url, params=params, data=body.json())
         return
 
-    def retrieve_access_codes_for(self, workspace_id: str, org_id: str = None) -> List[AuthorizationCode]:
+    def retrieve_access_codes_for(self, workspace_id: str, org_id: str = None) -> list[AuthorizationCode]:
         """
         Retrieve Access codes for a Workspace.
         Access codes are used to bypass permissions.
@@ -823,7 +825,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             params['orgId'] = org_id
         url = self.ep(f'outgoingPermission/accessCodes')
         data = super().get(url=url, params=params)
-        return data["accessCodes"]
+        return parse_obj_as(list[AuthorizationCode], data["accessCodes"])
 
     def modify_access_codes_for(self, workspace_id: str, org_id: str = None, delete_codes: List[str] = None):
         """

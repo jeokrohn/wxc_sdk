@@ -15,7 +15,7 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'AnswerForCustomizedQuestion', 'AnswerObject', 'AnswerSummaryItem', 'Answers', 'Arguments',
            'AtaDtmfMethodObject', 'AtaDtmfModeObject', 'AtaObject', 'Attachment', 'AttachmentActionsApi',
            'AttendeePrivileges', 'Audio', 'Audio1', 'AudioCodecPriorityObject', 'AudioConnectionOptions',
-           'AudioConnectionType', 'AuditEvent', 'Authorization', 'AuthorizationsApi',
+           'AudioConnectionType', 'AudioFileObject', 'AudioType', 'AuditEvent', 'Authorization', 'AuthorizationsApi',
            'AutoAttendantCallForwardSettingsDetailsObject', 'AutoAttendantCallForwardSettingsModifyDetailsObject',
            'AvailableSharedLineMemberItem', 'BackgroundImage', 'BacklightTimerObject',
            'BatchRegisterMeetingRegistrantsResponse', 'BehaviorType', 'BlockContiguousSequences',
@@ -31,7 +31,7 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'CallHistoryRecord', 'CallHistoryRecordTypeEnum', 'CallInNumbers', 'CallParkSettingsObject',
            'CallPersonalityEnum', 'CallQueueAudioFilesObject', 'CallQueueHolidaySchedulesObject', 'CallQueueObject',
            'CallQueueQueueSettingsObject', 'CallSourceInfo', 'CallSourceType', 'CallStateEnum', 'CallType',
-           'CallTypeEnum', 'CallerIdSelectedType', 'Calling', 'CallingLineId', 'CallingPermissionObject',
+           'CallType3', 'CallTypeEnum', 'CallerIdSelectedType', 'Calling', 'CallingLineId', 'CallingPermissionObject',
            'CallingPermissions', 'Callparkextension', 'CallsFrom', 'CallsTo', 'CapabilityMap', 'ChatObject',
            'ClosedCaptionObject', 'CloudOverflowTrend1', 'Cluster', 'ClusterAvailability',
            'ClusterAvailabilityCollection', 'ClusterAvailableTimeline', 'ClusterDetailsCollection',
@@ -43,8 +43,8 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'ConnectivityTestResultsClustersObject1', 'ConnectivityTestResultsClustersObject2',
            'ConnectivityTestResultsClustersObject3', 'ConnectivityTestResultsForNode', 'Connector', 'ConnectorStatus',
            'ConnectorType', 'Content', 'CountObject', 'CreateAttachmentActionBody', 'CreateAttachmentActionResponse',
-           'CreateAutoAttendantBody', 'CreateAutoAttendantResponse', 'CreateBroadWorksBillingReportResponse',
-           'CreateCallParkBody', 'CreateCallParkExtensionResponse', 'CreateCallParkResponse', 'CreateCallPickupBody',
+           'CreateAutoAttendantResponse', 'CreateBroadWorksBillingReportResponse', 'CreateCallParkBody',
+           'CreateCallParkExtensionResponse', 'CreateCallParkResponse', 'CreateCallPickupBody',
            'CreateCallPickupResponse', 'CreateCallQueueBody', 'CreateCallQueueResponse',
            'CreateDeviceActivationCodeResponse', 'CreateDialPlanResponse', 'CreateGroupResponse',
            'CreateHuntGroupResponse', 'CreateInvitationSourcesResponse', 'CreateInviteesItemObject',
@@ -65,20 +65,21 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'CustomizedQuestionForCreateMeeting', 'CustomizedQuestionForGetMeeting', 'CustomizedRegistrant',
            'DNSResolutionTest', 'Data', 'Data1', 'Data3', 'Day', 'DectDeviceList', 'DectObject', 'Default',
            'DefaultAudioType', 'DefaultLoggingLevelObject', 'DefaultSchedulerOptions', 'DefaultVoicemailPinRules',
-           'DeleteTranscriptBody', 'DestinationType', 'Device', 'DeviceConfiguration', 'DeviceConfigurationsApi',
-           'DeviceConnectionStatus', 'DeviceObject', 'DeviceOwner', 'DeviceStatus', 'DeviceType', 'Devices',
-           'DevicesApi', 'DialPattern', 'DialPatternAction', 'DialPatternStatus', 'DialPatternValidate', 'DialPlan',
-           'DialResponse', 'DirectMessage', 'DirectorySyncStatus', 'DisplayCallqueueAgentSoftkeysObject',
-           'DisplayNameSelection', 'DistinctiveRing', 'DurationMetric', 'EditMessageBody', 'Editability',
-           'Editability1', 'EffectiveBehaviorType', 'EmailCopyOfMessage', 'Emergency', 'EntryAndExitTone',
-           'EntryAndExitTone10', 'ErrorMessageObject', 'ErrorObject', 'Errors', 'Event', 'Event1', 'EventLongDetails',
-           'EventResourceEnum', 'EventTypeEnum', 'EventsApi', 'ExecuteCommandResponse', 'ExpirePasscode',
-           'ExtensionDialing', 'ExtensionStatusObject', 'ExternalCallerIdNamePolicy', 'ExternalTransfer',
-           'FailedAttempts', 'FailureDetails1', 'FaxMessage', 'FeatureAccessCode',
-           'FetchEventForpersonsScheduleResponse', 'Floor', 'Format', 'GenerateExamplePasswordForLocationResponse',
-           'GetAnnouncementFileInfo', 'GetAvailableAgentsFromCallParksResponse',
-           'GetAvailableAgentsFromCallPickupsResponse', 'GetAvailableRecallHuntGroupsFromCallParksResponse',
-           'GetBreakoutSessionObject', 'GetBroadWorksBillingReportResponse', 'GetCallForwardAlwaysSettingObject',
+           'DeleteTranscriptBody', 'DestinationType', 'Device', 'Device1', 'DeviceConfiguration',
+           'DeviceConfigurationsApi', 'DeviceConnectionStatus', 'DeviceObject', 'DeviceOwner', 'DeviceStatus',
+           'DeviceType', 'Devices', 'DevicesApi', 'DialPattern', 'DialPatternAction', 'DialPatternStatus',
+           'DialPatternValidate', 'DialPlan', 'DialResponse', 'DirectMessage', 'DirectorySyncStatus',
+           'DisplayCallqueueAgentSoftkeysObject', 'DisplayNameSelection', 'DistinctiveRing', 'DurationMetric',
+           'EditMessageBody', 'Editability', 'Editability1', 'EffectiveBehaviorType', 'EmailCopyOfMessage',
+           'Emergency', 'EntryAndExitTone', 'EntryAndExitTone10', 'ErrorMessageObject', 'ErrorObject', 'Errors',
+           'Event', 'Event1', 'EventLongDetails', 'EventResourceEnum', 'EventTypeEnum', 'EventsApi',
+           'ExecuteCommandResponse', 'ExpirePasscode', 'ExtensionDialing', 'ExtensionStatusObject',
+           'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts', 'FailureDetails1', 'FaxMessage',
+           'FeatureAccessCode', 'FetchEventForpersonsScheduleResponse', 'Floor', 'Format',
+           'GenerateExamplePasswordForLocationResponse', 'GetAnnouncementFileInfo',
+           'GetAvailableAgentsFromCallParksResponse', 'GetAvailableAgentsFromCallPickupsResponse',
+           'GetAvailableRecallHuntGroupsFromCallParksResponse', 'GetBreakoutSessionObject',
+           'GetBroadWorksBillingReportResponse', 'GetCallForwardAlwaysSettingObject',
            'GetCallForwardingSettingsForAutoAttendantResponse', 'GetCallForwardingSettingsForCallQueueResponse',
            'GetCallForwardingSettingsForHuntGroupResponse', 'GetCallParkSettingsResponse',
            'GetCallRecordingSettingsResponse', 'GetCallRecordingTermsOfServiceSettingsResponse',
@@ -124,9 +125,9 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'GetmeetingRegistrantsDetailInformationResponse', 'GetpersonsPrivacySettingsResponse', 'Greeting',
            'Greeting29', 'GroupsApi', 'HistoricalAnalyticsApi', 'HistoricalDataRelatedToMeetingsResponse',
            'HistoricalDataRelatedToMessagingResponse', 'HolidayScheduleLevel', 'HostProfileCode', 'HostedAgent',
-           'HostedAgentType', 'HostedFeature', 'HotdeskingStatus', 'Hoteling', 'HoursMenuObject',
-           'HuntPolicySelection', 'HuntRoutingTypeSelection', 'HybridClustersApi', 'HybridConnectorsApi',
-           'HydraClassification', 'Incoming', 'Info', 'InputMode', 'Inputs', 'InterceptAnnouncementsGet',
+           'HostedAgentType', 'HostedFeature', 'Hoteling', 'HoursMenuObject', 'HuntPolicySelection',
+           'HuntRoutingTypeSelection', 'HybridClustersApi', 'HybridConnectorsApi', 'HydraClassification',
+           'InProgressDevice', 'Incoming', 'Info', 'InputMode', 'Inputs', 'InterceptAnnouncementsGet',
            'InterceptIncomingGet', 'InterceptIncomingPatch',
            'InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting',
            'InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting', 'InvitationSourceCreateObject',
@@ -148,13 +149,13 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'ListMediaHealthMonitoringToolResultsResponse', 'ListMeetingArchiveSummariesResponse',
            'ListMeetingAttendeeReportsResponse', 'ListMeetingBreakoutSessionsResponse', 'ListMeetingChatsResponse',
            'ListMeetingClosedCaptionSnippetsResponse', 'ListMeetingClosedCaptionsResponse',
-           'ListMeetingInterpretersResponse', 'ListMeetingInviteesResponse', 'ListMeetingPollsResponse',
-           'ListMeetingQAndAResponse', 'ListMeetingRegistrantsResponse', 'ListMeetingSessionTypesResponse',
-           'ListMeetingSurveyResultsResponse', 'ListMeetingTemplatesResponse', 'ListMeetingTrackingCodesResponse',
-           'ListMeetingTranscriptsForComplianceOfficerResponse', 'ListMeetingTranscriptsResponse',
-           'ListMeetingUsageReportsResponse', 'ListMeetingsOfMeetingSeriesResponse', 'ListMeetingsResponse',
-           'ListMembershipsResponse', 'ListMessage', 'ListMessagesResponse', 'ListMessagesResponse1',
-           'ListNetworkTestResultsResponse', 'ListNodeAvailabilityResponse',
+           'ListMeetingInterpretersResponse', 'ListMeetingInviteesResponse', 'ListMeetingParticipantsResponse',
+           'ListMeetingPollsResponse', 'ListMeetingQAndAResponse', 'ListMeetingRegistrantsResponse',
+           'ListMeetingSessionTypesResponse', 'ListMeetingSurveyResultsResponse', 'ListMeetingTemplatesResponse',
+           'ListMeetingTrackingCodesResponse', 'ListMeetingTranscriptsForComplianceOfficerResponse',
+           'ListMeetingTranscriptsResponse', 'ListMeetingUsageReportsResponse', 'ListMeetingsOfMeetingSeriesResponse',
+           'ListMeetingsResponse', 'ListMembershipsResponse', 'ListMessage', 'ListMessagesResponse',
+           'ListMessagesResponse1', 'ListNetworkTestResultsResponse', 'ListNodeAvailabilityResponse',
            'ListOfRecordingAuditReportSummariesResponse', 'ListOfSchedulesForPersonResponse',
            'ListOrganizationsResponse', 'ListOverflowToCloudDetailsResponse', 'ListPeopleResponse',
            'ListReachabilityTestResultsResponse', 'ListRecordingsForAdminOrComplianceOfficerResponse',
@@ -168,20 +169,20 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'ListWholesaleCustomersResponse', 'ListWholesaleSubscribersResponse', 'ListWorkspaceLocationFloorsResponse',
            'ListWorkspaceLocationsResponse', 'ListWorkspacesResponse', 'LocalGateways', 'Location', 'Location16',
            'Location19', 'LocationsApi', 'MHMTestResults', 'MacStatusObject', 'ManagedByObject', 'ManufacturerObject',
-           'Measurement', 'MediaFileType', 'MediaHealthMonitoringResultsCollectionforcluster',
+           'Measurement', 'MediaHealthMonitoringResultsCollectionforcluster',
            'MediaHealthMonitoringResultsCollectionfornode', 'MediaHealthMonitoringResultsCollectionfororganization',
            'MediaHealthMonitoringTestResultsFailure', 'MediaHealthMonitoringclusters',
            'MediaHealthMonitoringforfirstcluster', 'MediaHealthMonitoringsecondnode', 'MediaSessionQuality',
-           'MediaSignallingtestResultFailure', 'MeetingAttendeeReportObject', 'MeetingChatsApi',
-           'MeetingClosedCaptionsApi', 'MeetingInviteesApi', 'MeetingMessagesApi', 'MeetingOptions', 'MeetingPollsApi',
-           'MeetingPreferencesApi', 'MeetingQandAApi', 'MeetingQualitiesApi', 'MeetingRecordingArchiveChat',
-           'MeetingRecordingArchiveParticipant', 'MeetingRecordingArchivePoll',
-           'MeetingRecordingArchivePollAnswerSummary', 'MeetingRecordingArchivePollQuestion',
-           'MeetingRecordingArchivePollRespondent', 'MeetingRecordingArchiveQA', 'MeetingRecordingArchiveQAAnswer',
-           'MeetingRecordingArchiveSystemInfo', 'MeetingRecordingArchiveUser', 'MeetingSeriesObjectForListMeeting',
-           'MeetingSessionTypeObject', 'MeetingTranscriptsApi', 'MeetingType', 'MeetingUsageReportObject',
-           'MeetingsApi', 'MeetingsSummaryReportApi', 'Member', 'Member5', 'MemberObject', 'Membership',
-           'MembershipsApi', 'MessageStorage', 'MessageStorage3', 'MessagesApi', 'MetricName', 'Metrics',
+           'MediaSignallingtestResultFailure', 'MediaType', 'MeetingAttendeeReportObject', 'MeetingChatsApi',
+           'MeetingClosedCaptionsApi', 'MeetingInviteesApi', 'MeetingMessagesApi', 'MeetingOptions',
+           'MeetingParticipantsApi', 'MeetingPollsApi', 'MeetingPreferencesApi', 'MeetingQandAApi',
+           'MeetingQualitiesApi', 'MeetingRecordingArchiveChat', 'MeetingRecordingArchiveParticipant',
+           'MeetingRecordingArchivePoll', 'MeetingRecordingArchivePollAnswerSummary',
+           'MeetingRecordingArchivePollQuestion', 'MeetingRecordingArchivePollRespondent', 'MeetingRecordingArchiveQA',
+           'MeetingRecordingArchiveQAAnswer', 'MeetingRecordingArchiveSystemInfo', 'MeetingRecordingArchiveUser',
+           'MeetingSeriesObjectForListMeeting', 'MeetingSessionTypeObject', 'MeetingTranscriptsApi', 'MeetingType',
+           'MeetingUsageReportObject', 'MeetingsApi', 'MeetingsSummaryReportApi', 'Member', 'Member5', 'MemberObject',
+           'Membership', 'MembershipsApi', 'MessageStorage', 'MessageStorage3', 'MessagesApi', 'MetricName', 'Metrics',
            'ModifyDialPlanBody', 'ModifyNumbersForRouteListResponse', 'ModifyPersonPlaceVirtualLineCallQueueObject',
            'ModifyRouteListBody', 'ModifyScheduleEventListObject', 'ModifyTrunkBody',
            'ModifypersonsApplicationServicesSettingsBody', 'ModifypersonsMonitoringSettingsBody', 'MohMessage',
@@ -193,25 +194,27 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'OnboardingMethodObject', 'Op', 'Op1', 'Operation', 'Option', 'Option1', 'Options',
            'OptionsForTrackingCodeObject', 'OrderBy', 'OrderType', 'Organization', 'OrganizationsApi',
            'OriginatorType', 'Outgoing', 'Overflow', 'OverflowDetails1', 'OverflowtoCloudCollection', 'Owner',
-           'Package', 'Package14', 'Package6', 'Package8', 'ParkResponse', 'ParticipantsByRoles', 'PartyInformation',
-           'Passcode', 'PasswordCriteria', 'PatchMeetingBody', 'PatchMeetingResponse', 'PatchMemberWithOperation',
-           'PbxUser', 'PeopleApi', 'PerClusterConnectivityResult1', 'PerClusterConnectivityResult2',
-           'PerNodeConnectivityResult1', 'PerclusterMediaHealthMonitoringclusters',
+           'Package', 'Package14', 'Package6', 'Package8', 'ParkResponse', 'Participant', 'ParticipantsByRoles',
+           'PartyInformation', 'Passcode', 'PasswordCriteria', 'PatchMeetingBody', 'PatchMeetingResponse',
+           'PatchMemberWithOperation', 'PbxUser', 'PeopleApi', 'PerClusterConnectivityResult1',
+           'PerClusterConnectivityResult2', 'PerNodeConnectivityResult1', 'PerclusterMediaHealthMonitoringclusters',
            'PernodeMediaHealthMonitoringclusters', 'PernodeMediaHealthMonitoringresult', 'Person',
            'PersonalMeetingRoom', 'PhoneLanguage', 'PhoneNumber', 'PhoneNumbers', 'PhoneNumbers7', 'PlaceDevices',
-           'Poll', 'PollResult', 'PostCallQueueCallPolicyObject', 'PostHuntGroupCallPolicyObject',
-           'PostPersonPlaceVirtualLineCallQueueObject', 'PostPersonPlaceVirtualLineHuntGroupObject',
-           'PrecheckBroadworksSubscriberProvisioningResponse', 'ProvisionBroadWorksSubscriberBody',
-           'ProvisionBroadWorksWorkspaceBody', 'ProvisionBroadWorksWorkspaceResponse',
-           'ProvisionWholesaleCustomerBody', 'ProvisionWholesaleCustomerResponse', 'ProvisionWholesaleSubscriberBody',
-           'ProvisioningParameters', 'ProvisioningParameters4', 'PstnNumber', 'PushToTalkAccessType',
-           'PushToTalkConnectionType', 'PutMemberObject', 'PutRecallHuntGroupObject', 'PutSharedLineMemberItem',
-           'QAObject', 'QueryMeetingRegistrantsResponse', 'QueryStatusResponse', 'Question', 'Question1', 'Question8',
-           'QuestionObject', 'QuestionResult', 'QuestionWithAnswersObject', 'ReachabilityTestResultsforcluster',
-           'ReachabilityTestResultsforfirstcluster', 'ReachabilityTestResultsforoneclusteronenode',
-           'ReachabilityTestResultsforsinglecluster', 'ReachabilityTestresultsFailure',
-           'ReachabilityTestresultsStunresults1', 'ReachabilityTestresultsdestinationcluster',
-           'ReachabilityTestresultsfirstnode', 'ReachabilityTestresultsforcluster', 'ReachabilityTestresultsfornode',
+           'Poll', 'PollResult', 'PostCallQueueCallPolicyObject', 'PostHoursMenuObject',
+           'PostHuntGroupCallPolicyObject', 'PostPersonPlaceVirtualLineCallQueueObject',
+           'PostPersonPlaceVirtualLineHuntGroupObject', 'PrecheckBroadworksSubscriberProvisioningResponse',
+           'ProvisionBroadWorksSubscriberBody', 'ProvisionBroadWorksWorkspaceBody',
+           'ProvisionBroadWorksWorkspaceResponse', 'ProvisionWholesaleCustomerBody',
+           'ProvisionWholesaleCustomerResponse', 'ProvisionWholesaleSubscriberBody', 'ProvisioningParameters',
+           'ProvisioningParameters4', 'PstnNumber', 'PushToTalkAccessType', 'PushToTalkConnectionType',
+           'PutMemberObject', 'PutRecallHuntGroupObject', 'PutSharedLineMemberItem', 'QAObject',
+           'QueryMeetingParticipantsWithEmailResponse', 'QueryMeetingRegistrantsResponse', 'QueryStatusResponse',
+           'Question', 'Question1', 'Question8', 'QuestionObject', 'QuestionResult', 'QuestionWithAnswersObject',
+           'ReachabilityTestResultsforcluster', 'ReachabilityTestResultsforfirstcluster',
+           'ReachabilityTestResultsforoneclusteronenode', 'ReachabilityTestResultsforsinglecluster',
+           'ReachabilityTestresultsFailure', 'ReachabilityTestresultsStunresults1',
+           'ReachabilityTestresultsdestinationcluster', 'ReachabilityTestresultsfirstnode',
+           'ReachabilityTestresultsforcluster', 'ReachabilityTestresultsfornode',
            'ReachabilityTestresultsfororganization', 'ReadBargeInSettingsForPersonResponse',
            'ReadCallInterceptSettingsForWorkspaceResponse', 'ReadCallRecordingSettingsForPersonResponse',
            'ReadCallToExtensionLocationsOfRoutingGroupResponse', 'ReadCallWaitingSettingsForPersonResponse',
@@ -257,21 +260,22 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'Sharing', 'SimultaneousInterpretation', 'SimultaneousInterpretation1', 'SingleNodeAvailability',
            'SingleNodeAvailabilityCollection', 'SingleNodeAvailableTimeline', 'SipAddressesType', 'SiteApi',
            'SiteSessionType', 'SiteType', 'Sites', 'SnippetObject', 'SnippetObject1', 'SortBy', 'Source', 'Sources',
-           'SpaceClassificationsApi', 'StandardRegistrationApproveRule', 'StartJobResponse', 'State', 'State6',
-           'State7', 'State9', 'Status', 'Status15', 'Status2', 'Status23', 'Status27', 'Status3', 'Status30',
-           'Status32', 'Status39', 'Status40', 'Status43', 'Status7', 'Status9', 'StepExecutionStatusesObject',
-           'StorageType', 'Subscriber', 'Subscriber1', 'SupportAndConfiguredInfo', 'SupportedDevices',
-           'SurveyResultObject', 'SystemInfoCatalog', 'Team', 'TeamMembership', 'TeamMembershipsApi', 'TeamsApi',
-           'Telephony', 'Telephony6', 'TelephonyConfig', 'TelephonySupport', 'Template', 'TemplateObject',
-           'TemplateType', 'TemporaryDirectDownloadLinks', 'TestCallRoutingResponse', 'TestClustersResult', 'Time',
-           'TrackingCodeItemForCreateMeetingObject', 'TrackingCodesApi', 'TranscriptObject', 'TransportType',
-           'TriggerDirectorySyncForUserResponse', 'TriggerOndemandTestForClusterResponse', 'Trunk', 'TrunkType',
-           'TrunkTypeWithDeviceType', 'Type', 'Type1', 'Type12', 'Type14', 'Type15', 'Type24', 'Type3', 'Type32',
-           'Type34', 'Type37', 'Type48', 'Type49', 'Type54', 'Type61', 'Type68', 'Type7', 'Type72', 'TypeObject',
-           'Unit', 'UnknownExtensionRouteIdentity', 'UnlockedMeetingJoinSecurity', 'UpdateBroadworksWorkspaceBody',
-           'UpdateCallParkResponse', 'UpdateCallPickupResponse', 'UpdateDeviceSettingsBody',
-           'UpdateEventForpersonsScheduleResponse', 'UpdateLocationBody', 'UpdateLocationWebexCallingDetailsBody',
-           'UpdateMeetingBreakoutSessionsResponse', 'UpdateMeetingCommonSettingsConfigurationBody',
+           'SpaceClassificationsApi', 'StandardRegistrationApproveRule', 'StartJobResponse', 'State', 'State10',
+           'State11', 'State13', 'State3', 'State4', 'Status', 'Status15', 'Status2', 'Status23', 'Status27',
+           'Status3', 'Status30', 'Status32', 'Status39', 'Status40', 'Status43', 'Status7', 'Status9',
+           'StepExecutionStatusesObject', 'StorageType', 'Subscriber', 'Subscriber1', 'SupportAndConfiguredInfo',
+           'SupportedDevices', 'SurveyResultObject', 'SystemInfoCatalog', 'Team', 'TeamMembership',
+           'TeamMembershipsApi', 'TeamsApi', 'Telephony', 'Telephony6', 'TelephonyConfig', 'TelephonySupport',
+           'Template', 'TemplateObject', 'TemplateType', 'TemporaryDirectDownloadLinks', 'TestCallRoutingResponse',
+           'TestClustersResult', 'Time', 'TrackingCodeItemForCreateMeetingObject', 'TrackingCodesApi',
+           'TranscriptObject', 'TransportType', 'TriggerDirectorySyncForUserResponse',
+           'TriggerOndemandTestForClusterResponse', 'Trunk', 'TrunkType', 'TrunkTypeWithDeviceType', 'Type', 'Type1',
+           'Type12', 'Type14', 'Type15', 'Type24', 'Type3', 'Type32', 'Type34', 'Type37', 'Type48', 'Type49', 'Type54',
+           'Type61', 'Type68', 'Type7', 'Type72', 'TypeObject', 'Unit', 'UnknownExtensionRouteIdentity',
+           'UnlockedMeetingJoinSecurity', 'UpdateBroadworksWorkspaceBody', 'UpdateCallParkResponse',
+           'UpdateCallPickupResponse', 'UpdateDeviceSettingsBody', 'UpdateEventForpersonsScheduleResponse',
+           'UpdateLocationBody', 'UpdateLocationWebexCallingDetailsBody', 'UpdateMeetingBreakoutSessionsResponse',
+           'UpdateMeetingCommonSettingsConfigurationBody', 'UpdateParticipantResponse',
            'UpdatePersonalMeetingRoomOptionsBody', 'UpdateResourceGroupMembershipBody', 'UpdateScheduleEventResponse',
            'UpdateScheduleResponse', 'UpdateScheduleResponse1',
            'UpdateSelectiveCallForwardingRuleForAutoAttendantResponse',
@@ -282,9 +286,9 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'UtilizationForClusterCollection', 'UtilizationForClusterTrend1', 'UtilizationMetricsT1SJ',
            'ValidateDialPatternResponse', 'ValidateExtensionsResponse',
            'ValidateLocalGatewayFQDNAndDomainForTrunkBody', 'ValidatelistOfMACAddressResponse', 'ValidationRules',
-           'ValidationRulesCollection', 'Video', 'VideoDevices', 'VideoIn', 'VideoMeshApi', 'VirtualExtension',
-           'VlanObject', 'VoiceMailPartyInformation', 'VoiceMessageDetails', 'WaitMessage', 'WaitMode',
-           'WebexCallingDetailedCallHistoryApi', 'WebexCallingOrganizationSettingsApi',
+           'ValidationRulesCollection', 'Video', 'Video4', 'VideoDevices', 'VideoIn', 'VideoMeshApi',
+           'VirtualExtension', 'VlanObject', 'VoiceMailPartyInformation', 'VoiceMessageDetails', 'WaitMessage',
+           'WaitMode', 'WebexCallingDetailedCallHistoryApi', 'WebexCallingOrganizationSettingsApi',
            'WebexCallingPersonSettingsApi', 'WebexCallingVoiceMessagingApi', 'WebexCallingWorkspaceSettingsApi',
            'Webhook', 'WebhooksApi', 'Week', 'WelcomeMessage', 'WholesaleBillingReportsApi', 'WholesaleCustomersApi',
            'WholesaleSubscribersApi', 'WifiNetworkObject', 'Workspace', 'WorkspaceDurationMetricsResponse',
@@ -358,7 +362,7 @@ class AdminAuditEventsApi(ApiChild, base='adminAudit/event'):
     An administrator account with the audit:events_read scope is required to use this API.
     """
 
-    def list_admin_audit_events(self, org_id: str, from_: , to_: , actor_id: str = None, offset: int = None, event_categories: list = None, **params) -> Generator[ListAdminAuditEventsResponse, None, None]:
+    def list_admin_audit_events(self, org_id: str, from_: , to_: , actor_id: str = None, offset: int = None, event_categories: list = None, **params) -> Generator[AuditEvent, None, None]:
         """
         List admin audit events in your organization. Several query parameters are available to filter the response.
         Long result sets will be split into pages.
@@ -387,14 +391,15 @@ class AdminAuditEventsApi(ApiChild, base='adminAudit/event'):
         if event_categories is not None:
             params['eventCategories'] = event_categories
         url = self.ep('s')
-        return self.session.follow_pagination(url=url, model=ListAdminAuditEventsResponse, params=params)
+        return self.session.follow_pagination(url=url, model=AuditEvent, params=params)
 
-    def list_admin_audit_event_categories(self, **params) -> Generator[ListAdminAuditEventCategoriesResponse, None, None]:
+    def list_admin_audit_event_categories(self) -> List[str]:
         """
         Get the list of all admin event categories.
         """
         url = self.ep('Categories')
-        return self.session.follow_pagination(url=url, model=ListAdminAuditEventCategoriesResponse, params=params)
+        data = super().get(url=url)
+        return data["eventCategories"]
 
 class Inputs(ApiModel):
     name: Optional[str]
@@ -510,7 +515,7 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
     identity:tokens_write,identity:tokens_read.
     """
 
-    def list_authorizations_foruser(self, person_id: str, person_email: str, **params) -> Generator[Authorization, None, None]:
+    def list_authorizations_foruser(self, person_id: str, person_email: str) -> list[Authorization]:
         """
         Lists all authorizations for a user. Either personId or personEmail must be provided. This API does not support
         pagination.
@@ -520,10 +525,12 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
         :param person_email: List authorizations for this user email.
         :type person_email: str
         """
+        params = {}
         params['personId'] = person_id
         params['personEmail'] = person_email
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=Authorization, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[Authorization], data["items"])
 
     def delete_authorization(self, authorization_id: str):
         """
@@ -594,6 +601,8 @@ class GetBroadWorksBillingReportResponse(ListReport):
     temp_download_url: Optional[str]
     #: List of errors that occurred during report generation.
     #: Note:
+    #:   * Captures errors that occurred during asynchronous or background report generation, after the request has
+    #:     been accepted and a 202 OK response is returned.
     errors: Optional[list[ReportError]]
 
 
@@ -620,7 +629,7 @@ class BroadWorksBillingReportsApi(ApiChild, base='broadworks/billing/reports'):
     administrator auth token with spark-admin:broadworks_billing_reports_write scope.
     """
 
-    def list_works_billing_reports(self, before: str = None, after: str = None, sort_by: str = None, **params) -> Generator[ListReport, None, None]:
+    def list_works_billing_reports(self, before: str = None, after: str = None, sort_by: str = None) -> list[ListReport]:
         """
         Search for reports. There are a number of filter options which can be combined in a single request.
 
@@ -628,9 +637,10 @@ class BroadWorksBillingReportsApi(ApiChild, base='broadworks/billing/reports'):
         :type before: str
         :param after: Only include billing reports created after this date.
         :type after: str
-        :param sort_by: Sort the reports.
+        :param sort_by: Sort the reports. * Members: id status billingPeriod
         :type sort_by: str
         """
+        params = {}
         if before is not None:
             params['before'] = before
         if after is not None:
@@ -638,7 +648,8 @@ class BroadWorksBillingReportsApi(ApiChild, base='broadworks/billing/reports'):
         if sort_by is not None:
             params['sortBy'] = sort_by
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=ListReport, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[ListReport], data["items"])
 
     def works_billing_report(self, id: str) -> GetBroadWorksBillingReportResponse:
         """
@@ -932,7 +943,7 @@ class BroadWorksEnterprisesApi(ApiChild, base='broadworks/enterprises'):
     administrator auth token with spark-admin:broadworks_enterprises_write scope.
     """
 
-    def list_broad_works_enterprises(self, sp_enterprise_id: str = None, starts_with: str = None, **params) -> Generator[ListBroadWorksEnterprisesResponse, None, None]:
+    def list_broad_works_enterprises(self, sp_enterprise_id: str = None, starts_with: str = None, max: int = None) -> ListBroadWorksEnterprisesResponse:
         """
         List the provisioned enterprises for a Service Provider. This API also lets a Service Provider search for their
         provisioned enterprises on Webex. A search on enterprises can be performed by either a full or partial
@@ -942,13 +953,19 @@ class BroadWorksEnterprisesApi(ApiChild, base='broadworks/enterprises'):
         :type sp_enterprise_id: str
         :param starts_with: The starting string of the enterprise identifiers to match against.
         :type starts_with: str
+        :param max: Limit the number of enterprises returned in the search, up to 1000.
+        :type max: int
         """
+        params = {}
         if sp_enterprise_id is not None:
             params['spEnterpriseId'] = sp_enterprise_id
         if starts_with is not None:
             params['startsWith'] = starts_with
+        if max is not None:
+            params['max'] = max
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=ListBroadWorksEnterprisesResponse, params=params)
+        data = super().get(url=url, params=params)
+        return ListBroadWorksEnterprisesResponse.parse_obj(data)
 
     def update_sync_for_broad_works_enterprise(self, id: str, enable_dir_sync: bool) -> BroadworksDirectorySync:
         """
@@ -1065,6 +1082,10 @@ class Subscriber(UpdateBroadworksWorkspaceBody):
     status: Optional[Status3]
     #: List of errors that occurred during that last attempt to provision/update this subscriber.
     #: Note:
+    #:   * This list captures errors that occurred during asynchronous or background provisioning of the subscriber,
+    #:     after the API has been accepted and 200 OK response returned.
+    #:   * Any errors that occur during initial API request validation will be captured directly in error response with
+    #:     appropriate HTTP status code.
     errors: Optional[list[Errors]]
     #: The date and time the subscriber was provisioned.
     created: Optional[str]
@@ -1889,7 +1910,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             body.is_group_park = is_group_park
         url = self.ep('park')
         data = super().post(url=url, data=body.json())
-        return data["parkedAgainst"]
+        return PartyInformation.parse_obj(data["parkedAgainst"])
 
     def retrieve(self, destination: str = None) -> DialResponse:
         """
@@ -2040,12 +2061,13 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         data = super().post(url=url, data=body.json())
         return DialResponse.parse_obj(data)
 
-    def list_calls(self, **params) -> Generator[Call, None, None]:
+    def list_calls(self) -> list[Call]:
         """
         Get the list of details for all active calls associated with the user.
         """
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=Call, params=params)
+        data = super().get(url=url)
+        return parse_obj_as(list[Call], data["items"])
 
     def call_details(self, call_id: str) -> Call:
         """
@@ -2058,7 +2080,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         data = super().get(url=url)
         return Call.parse_obj(data)
 
-    def list_call_history(self, type_: str = None, **params) -> Generator[ListCallHistoryResponse, None, None]:
+    def list_call_history(self, type_: str = None) -> list[CallHistoryRecord]:
         """
         Get the list of call history records for the user. A maximum of 20 call history records per type (placed,
         missed, received) are returned.
@@ -2067,10 +2089,12 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             retrieved. Possible values: placed, missed, received
         :type type_: str
         """
+        params = {}
         if type_ is not None:
             params['type'] = type_
         url = self.ep('history')
-        return self.session.follow_pagination(url=url, model=ListCallHistoryResponse, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[CallHistoryRecord], data["items"])
 
 class Source(str, Enum):
     #: Current value comes from the schema default.
@@ -2159,7 +2183,7 @@ class DeviceConfigurationsApi(ApiChild, base='deviceConfigurations'):
     scope.
     """
 
-    def list_configurations_for(self, device_id: str, key: str = None, **params) -> Generator[ListDeviceConfigurationsForDeviceResponse, None, None]:
+    def list_configurations_for(self, device_id: str, key: str = None) -> ListDeviceConfigurationsForDeviceResponse:
         """
         Lists all device configurations associated with the given device ID. Administrators can list configurations for
         all devices within an organization.
@@ -2167,14 +2191,24 @@ class DeviceConfigurationsApi(ApiChild, base='deviceConfigurations'):
         :param device_id: List device configurations by device ID.
         :type device_id: str
         :param key: This can optionally be used to filter configurations. Keys are composed of segments. It's possible
-            to use absolute paths, wildcards or ranges.
+            to use absolute paths, wildcards or ranges. * Absolute gives only one configuration as a result.
+            Conference.MaxReceiveCallRate for example gives the Conference MaxReceiveCallRate configuration. *
+            Wildcards (*) can specify multiple configurations with shared segments. Audio.Ultrasound.* for example will
+            filter on all Audio Ultrasound configurations. * Range ([ number ]) can be used to filter numbered
+            segments. FacilityService.Service[1].Name for instance only shows the first FacilityService Service Name
+            configuration, FacilityService.Service[*].Name shows all, FacilityService.Service[1..3].Name shows the
+            first three and FacilityService.Service[2..n].Name shows all starting at 2. Note that RFC 3986 3.2.2 does
+            not allow square brackets in urls outside the host, so to specify range in a configuration key you will
+            need to encode them to %5B for [ and %5D for ].
         :type key: str
         """
+        params = {}
         params['deviceId'] = device_id
         if key is not None:
             params['key'] = key
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=ListDeviceConfigurationsForDeviceResponse, params=params)
+        data = super().get(url=url, params=params)
+        return ListDeviceConfigurationsForDeviceResponse.parse_obj(data)
 
     def update_configurations(self, device_id: str, op: Op = None, path: str = None, value: One of stringOR numberOR boolean = None) -> ListDeviceConfigurationsForDeviceResponse:
         """
@@ -2707,7 +2741,7 @@ class GroupsApi(ApiChild, base='groups'):
         data = super().get(url=url, params=params)
         return CreateGroupResponse.parse_obj(data)
 
-    def list_and_search(self, org_id: str = None, filter: str = None, attributes: str = None, sort_by: str = None, sort_order: str = None, include_members: bool = None, start_index: int = None, count: int = None, **params) -> Generator[ListAndSearchGroupsResponse, None, None]:
+    def list_and_search(self, org_id: str = None, filter: str = None, attributes: str = None, sort_by: str = None, sort_order: str = None, include_members: bool = None, start_index: int = None, count: int = None) -> ListAndSearchGroupsResponse:
         """
         List groups in your organization.
 
@@ -2731,6 +2765,7 @@ class GroupsApi(ApiChild, base='groups'):
         :param count: Specifies the desired number of search results per page.
         :type count: int
         """
+        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if filter is not None:
@@ -2748,7 +2783,8 @@ class GroupsApi(ApiChild, base='groups'):
         if count is not None:
             params['count'] = count
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=ListAndSearchGroupsResponse, params=params)
+        data = super().get(url=url, params=params)
+        return ListAndSearchGroupsResponse.parse_obj(data)
 
     def members(self, group_id: str, start_index: int = None, count: int = None) -> CreateGroupResponse:
         """
@@ -2873,7 +2909,7 @@ class HistoricalAnalyticsApi(ApiChild, base=''):
         data = super().get(url=url, params=params)
         return HistoricalDataRelatedToMessagingResponse.parse_obj(data)
 
-    def historical_data_related_to_meetings(self, site_url: str, from_: str = None, to_: str = None) -> str:
+    def historical_data_related_to_meetings(self, site_url: str, from_: str = None, to_: str = None) -> HistoricalDataRelatedToMeetingsResponse:
         """
         Return aggregates of various metrics, related to meetings, for the siteUrl and over the time range specified by
         the user
@@ -2893,7 +2929,7 @@ class HistoricalAnalyticsApi(ApiChild, base=''):
             params['to'] = to_
         url = self.ep('https://analytics.webexapis.com/v1/analytics/meetingsMetrics/aggregates')
         data = super().get(url=url, params=params)
-        return data["siteUrl"]
+        return HistoricalDataRelatedToMeetingsResponse.parse_obj(data)
 
 class Role(ApiModel):
     #: A unique identifier for the role.
@@ -2923,7 +2959,7 @@ class HybridClustersApi(ApiChild, base='hybrid/clusters'):
     Hybrid Clusters are associated with Resource Groups. See the Resource Groups API for more information.
     """
 
-    def list_clusters(self, org_id: str = None, **params) -> Generator[Cluster, None, None]:
+    def list_clusters(self, org_id: str = None) -> list[Cluster]:
         """
         List hybrid clusters for an organization. If no orgId is specified, the default is the organization of the
         authenticated user.
@@ -2933,10 +2969,12 @@ class HybridClustersApi(ApiChild, base='hybrid/clusters'):
             of the caller will be used.
         :type org_id: str
         """
+        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=Cluster, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[Cluster], data["items"])
 
     def cluster_details(self, hybrid_cluster_id: str, org_id: str = None) -> Cluster:
         """
@@ -2989,6 +3027,10 @@ class Alarm(ApiModel):
     #: The date and time the alarm was raised.
     created: Optional[str]
     #: The severity level of the alarm:
+    #:   * critical
+    #:   * error
+    #:   * warning
+    #:   * alert
     severity: Optional[AlarmSeverity]
     #: The title of the alarm.
     title: Optional[str]
@@ -3008,6 +3050,10 @@ class Connector(ApiModel):
     #: The hostname of the system the connector is running on.
     hostname: Optional[str]
     #: The status of the connector:
+    #:   * operational indicates that the connector is working as it should.
+    #:   * impaired indicates that the connector has problems with one or more dependent components.
+    #:   * outage indicates that the connector is completely non-functional.
+    #:   * maintenanceMode reports the current maintenance mode state of the connector.
     status: Optional[ConnectorStatus]
     #: The date and time the connector was created.
     created: Optional[str]
@@ -3037,7 +3083,7 @@ class HybridConnectorsApi(ApiChild, base='hybrid/connectors'):
     unresolved alarms associated with them.
     """
 
-    def list_connectors(self, org_id: str = None, **params) -> Generator[Connector, None, None]:
+    def list_connectors(self, org_id: str = None) -> list[Connector]:
         """
         List hybrid connectors for an organization. If no orgId is specified, the default is the organization of the
         authenticated user.
@@ -3047,10 +3093,12 @@ class HybridConnectorsApi(ApiChild, base='hybrid/connectors'):
             organization of the caller will be used.
         :type org_id: str
         """
+        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=Connector, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[Connector], data["items"])
 
     def connector_details(self, connector_id: str) -> Connector:
         """
@@ -3098,7 +3146,7 @@ class LicensesApi(ApiChild, base='licenses'):
     To learn about how to allocate Hybrid Services licenses, see the Managing Hybrid Services guide.
     """
 
-    def list_licenses(self, org_id: str = None, **params) -> Generator[License, None, None]:
+    def list_licenses(self, org_id: str = None) -> list[License]:
         """
         List all licenses for a given organization. If no orgId is specified, the default is the organization of the
         authenticated user.
@@ -3107,10 +3155,12 @@ class LicensesApi(ApiChild, base='licenses'):
         :param org_id: List licenses for this organization.
         :type org_id: str
         """
+        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=License, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[License], data["items"])
 
     def license_details(self, license_id: str) -> License:
         """
@@ -3451,7 +3501,7 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
     Closed captions will be available 15 minutes after the meeting is finished.
     """
 
-    def list_closed_captions(self, meeting_id: str, **params) -> Generator[ClosedCaptionObject, None, None]:
+    def list_closed_captions(self, meeting_id: str) -> list[ClosedCaptionObject]:
         """
         Lists closed captions of a finished meeting instance specified by meetingId.
 
@@ -3460,11 +3510,13 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
             or scheduled personal room meetings.
         :type meeting_id: str
         """
+        params = {}
         params['meetingId'] = meeting_id
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=ClosedCaptionObject, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[ClosedCaptionObject], data["items"])
 
-    def list_closed_caption_snippets(self, closed_caption_id: str, meeting_id: str, **params) -> Generator[SnippetObject, None, None]:
+    def list_closed_caption_snippets(self, closed_caption_id: str, meeting_id: str) -> list[SnippetObject]:
         """
         Lists snippets of a meeting closed caption specified by closedCaptionId.
 
@@ -3475,9 +3527,11 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
             or scheduled personal room meetings.
         :type meeting_id: str
         """
+        params = {}
         params['meetingId'] = meeting_id
         url = self.ep(f'{closed_caption_id}/snippets')
-        return self.session.follow_pagination(url=url, model=SnippetObject, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[SnippetObject], data["items"])
 
     def download_closed_caption_snippets(self, closed_caption_id: str, meeting_id: str, format: str = None):
         """
@@ -3499,7 +3553,7 @@ class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):
             params['format'] = format
         url = self.ep(f'{closed_caption_id}/download')
         super().get(url=url, params=params)
-        return
+        return $!$!$!   # this is weird. Check the spec at https://developer.webex.com/docs/api/v1/meeting-closed-captions/download-meeting-closed-caption-snippets
 
 class GetInviteeObject(CoHosts):
     #: Unique identifier for meeting invitee.
@@ -3663,7 +3717,7 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         data = super().post(url=url, data=body.json())
         return GetInviteeObject.parse_obj(data)
 
-    def create_invitees(self, meeting_id: str, host_email: str = None, items: CreateInviteesItemObject = None) -> List[GetInviteeObject]:
+    def create_invitees(self, meeting_id: str, host_email: str = None, items: CreateInviteesItemObject = None) -> list[GetInviteeObject]:
         """
         Invite people to attend a meeting in bulk.
         Identify each invitee by the email address of each item in the items of the request body.
@@ -3692,7 +3746,7 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
             body.items = items
         url = self.ep('bulkInsert')
         data = super().post(url=url, data=body.json())
-        return data["items"]
+        return parse_obj_as(list[GetInviteeObject], data["items"])
 
     def invitee(self, meeting_invitee_id: str, host_email: str = None) -> GetInviteeObject:
         """
@@ -3804,6 +3858,352 @@ class MeetingMessagesApi(ApiChild, base='meeting/messages/{meetingMessageId}'):
         """
         url = self.ep(f'')
         super().delete(url=url)
+        return
+
+class Video(str, Enum):
+    #: The video is turned on.
+    on = 'on'
+    #: The video is turned off.
+    off = 'off'
+
+
+class State3(str, Enum):
+    #: The participant is waiting in the meeting lobby.
+    lobby = 'lobby'
+    #: The participant has joined the meeting.
+    joined = 'joined'
+
+
+class State(State3):
+    #: The participant has left the meeting.
+    end = 'end'
+
+
+class CallType(str, Enum):
+    #: Connect audio by dialing a toll or toll-free phone number provided by the meeting.
+    call_in = 'callIn'
+    #: Connect audio by dialing out a phone number from the meeting.
+    call_back = 'callBack'
+
+
+class AudioType(str, Enum):
+    #: PSTN
+    pstn = 'pstn'
+    #: VoIP
+    voip = 'voip'
+    #: The participant is not connected to audio.
+    inactive = 'inactive'
+
+
+class InProgressDevice(ApiModel):
+    #: An internal ID that is associated with each join.
+    correlation_id: Optional[str]
+    #: The type of device.
+    device_type: Optional[str]
+    #: The audio type that the participant is using.
+    audio_type: Optional[AudioType]
+    #: The time the device joined the meeting. If the field is non-existent or shows 1970-01-01T00:00:00.000Z the
+    #: meeting may be still ongoing and the joinedTime will be filled in after the meeting ended. If you need real-time
+    #: joined events, please refer to the webhooks guide.
+    joined_time: Optional[str]
+    #: The time the device left the meeting, leftTime is the exact moment when a specific device left the meeting. If
+    #: the field is non-existent or shows 1970-01-01T00:00:00.000Z the meeting may be still ongoing and the leftTime
+    #: will be filled in after the meeting ended. If you need real-time left events, please refer to the webhooks
+    #: guide.
+    left_time: Optional[str]
+
+
+class Device1(InProgressDevice):
+    #: The duration in seconds the device stayed in the meeting.
+    duration_second: Optional[int]
+    #: The PSTN call type in which the device joined the meeting.
+    call_type: Optional[CallType]
+    #: The PSTN phone number from which the device joined the meeting. Only compliance officer can retrieve the
+    #: phoneNumber. The meeting host and admin users cannot retrieve it. NOTE: The phoneNumber will be returned after
+    #: the meeting ends; it is not returned while the meeting is in progress.
+    phone_number: Optional[str]
+
+
+class Participant(CoHosts):
+    #: The ID that identifies the meeting and the participant.
+    id: Optional[str]
+    #: The ID that identifies the organization. It only applies to participants of ongoing meetings.
+    org_id: Optional[str]
+    #: Whether or not the participant is the host of the meeting.
+    host: Optional[bool]
+    #: Whether or not the participant has host privilege in the meeting.
+    co_host: Optional[bool]
+    #: Whether or not the participant is the team space moderator. This field returns only if the meeting is associated
+    #: with a Webex space.
+    space_moderator: Optional[bool]
+    #: Whether or not the participant is invited to the meeting.
+    invitee: Optional[bool]
+    #: Whether or not the participant's audio is muted.
+    muted: Optional[bool]
+    #: The time the meeting started.
+    meeting_start_time: Optional[str]
+    #: The status of the participant's video.
+    video: Optional[Video]
+    #: The status of the participant in the meeting.
+    state: Optional[State]
+    #: The time the participant joined the meeting. If the field is non-existent or shows 1970-01-01T00:00:00.000Z the
+    #: meeting may be still ongoing and the joinedTime will be filled in after the meeting ended. If you need real-time
+    #: join events, please refer to the webhooks guide.
+    joined_time: Optional[str]
+    #: The time the participant left the meeting. If the field is non-existent or shows 1970-01-01T00:00:00.000Z the
+    #: meeting may be still ongoing and the leftTime will be filled in after the meeting ended. If you need real-time
+    #: left events, please refer to the webhooks guide.
+    left_time: Optional[str]
+    #: The site URL.
+    site_url: Optional[str]
+    #: A unique identifier for the meeting which the participant belongs to.
+    meeting_id: Optional[str]
+    #: The email address of the host.
+    host_email: Optional[str]
+    devices: Optional[list[Device1]]
+    #: The source ID of the participant. The sourceId is from the Create Invitation Sources API.
+    source_id: Optional[str]
+
+
+class ListMeetingParticipantsResponse(ApiModel):
+    items: Optional[list[Participant]]
+
+
+class QueryMeetingParticipantsWithEmailBody(ApiModel):
+    #: Participants email list
+    #: Possible values: john.andersen@example.com
+    emails: Optional[list[str]]
+
+
+class QueryMeetingParticipantsWithEmailResponse(ApiModel):
+    items: Optional[list[Participant]]
+
+
+class UpdateParticipantBody(ApiModel):
+    #: The value is true or false, and means to mute or unmute the audio of a participant.
+    muted: Optional[bool]
+    #: The value can be true or false. The value of true is to admit a participant to the meeting if the participant is
+    #: in the lobby, No-Op if the participant is not in the lobby or when the value is set to false.
+    admit: Optional[bool]
+    #: The attribute is exclusive and its value can be true or false. The value of true means that the participant will
+    #: be expelled from the meeting, the value of false means No-Op.
+    expel: Optional[bool]
+
+
+class UpdateParticipantResponse(CoHosts):
+    #: The participant ID that identifies the meeting and the participant.
+    id: Optional[str]
+    #: The ID that identifies the organization.
+    org_id: Optional[str]
+    #: Whether or not the participant is the host of the meeting.
+    host: Optional[bool]
+    #: Whether or not the participant has host privilege in the meeting.
+    co_host: Optional[bool]
+    #: Whether or not the participant is the team space moderator. This field returns only if the meeting is associated
+    #: with a Webex space.
+    space_moderator: Optional[bool]
+    #: Whether or not the participant is invited to the meeting.
+    invitee: Optional[bool]
+    #: The status of the participant's video.
+    video: Optional[Video]
+    #: Whether or not the participant's audio is muted.
+    muted: Optional[bool]
+    #: The status of the participant in the meeting.
+    state: Optional[State3]
+    #: The site URL.
+    site_url: Optional[str]
+    #: A unique identifier for the meeting which the participant belongs to.
+    meeting_id: Optional[str]
+    #: The email address of the host.
+    host_email: Optional[str]
+    devices: Optional[list[InProgressDevice]]
+
+
+class AdmitParticipantsBody(ApiModel):
+    #: The ID that identifies the meeting participant.
+    items: Optional[list[ParticipantID]]
+
+
+class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
+    """
+    This API manages meeting participants.
+    Refer to the Meetings API Scopes section of Meetings Overview for scopes required for each API.
+    """
+
+    def list_participants(self, meeting_id: str, site_url: str = None, meeting_start_time_from: str = None, meeting_start_time_to: String = None, host_email: str = None, join_time_from: str = None, join_time_to: str = None, **params) -> Generator[Participant, None, None]:
+        """
+        List all participants in a live or post meeting. The meetingId parameter is required, which is the unique
+        identifier for the meeting.
+        The authenticated user calling this API must either have an Administrator role with the
+        meeting:admin_participants_read scope, or be the meeting host.
+
+        :param meeting_id: The unique identifier for the meeting. Please note that currently meeting ID of a scheduled
+            personal room meeting is not supported for this API.
+        :type meeting_id: str
+        :param site_url: URL of the Webex site from which the API lists meeting participants. If not specified, the API
+            lists meeting participants from the user's preferred site. All available Webex sites and a user's preferred
+            site can be retrieved by the Get Site List API.
+        :type site_url: str
+        :param meeting_start_time_from: meetings start from the specified date and time(exclusive) in any ISO 8601
+            compliant format. If meetingStartTimeFrom is not specified, it equals meetingStartTimeTo minus 1 month; if
+            meetingStartTimeTo is also not specified, the default value for meetingStartTimeFrom is 1 month before
+            current date and time.
+        :type meeting_start_time_from: str
+        :param meeting_start_time_to: meetings start before the specified date and time(exclusive) in any ISO 8601
+            compliant format. If meetingStartTimeTo is not specified, it equals the result of a comparison,
+            meetingStartTimeFrom plus one month and the current time, and the result is the earlier of the two; if
+            meetingStartTimeFrom is also not specified, the default value for meetingStartTimeTo is current date and
+            time minus 1 month.
+        :type meeting_start_time_to: String
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the admin-level scopes, the admin may specify the email of a user in a site they manage
+            and the API will return meeting participants of the meetings that are hosted by that user.
+        :type host_email: str
+        :param join_time_from: The time participants join a meeting starts from the specified date and time (inclusive)
+            in any ISO 8601 compliant format. If joinTimeFrom is not specified, it equals joinTimeTo minus 7 days.
+        :type join_time_from: str
+        :param join_time_to: The time participants join a meeting before the specified date and time (exclusive) in any
+            ISO 8601 compliant format. If joinTimeTo is not specified, it equals joinTimeFrom plus 7 days. The interval
+            between joinTimeFrom and joinTimeTo must be within 90 days.
+        :type join_time_to: str
+        """
+        params['meetingId'] = meeting_id
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        if meeting_start_time_from is not None:
+            params['meetingStartTimeFrom'] = meeting_start_time_from
+        if meeting_start_time_to is not None:
+            params['meetingStartTimeTo'] = meeting_start_time_to
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if join_time_from is not None:
+            params['joinTimeFrom'] = join_time_from
+        if join_time_to is not None:
+            params['joinTimeTo'] = join_time_to
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=Participant, params=params)
+
+    def query_participants_with_email(self, meeting_id: str, site_url: str = None, meeting_start_time_from: str = None, meeting_start_time_to: String = None, host_email: str = None, join_time_from: str = None, join_time_to: str = None, emails: List[str] = None, **params) -> Generator[Participant, None, None]:
+        """
+        Query participants in a live meeting, or after the meeting, using participant's email. The meetingId parameter
+        is the unique identifier for the meeting and is required.
+        The authenticated user calling this API must either have an Administrator role with the
+        meeting:admin_participants_read scope, or be the meeting host.
+
+        :param meeting_id: The unique identifier for the meeting.
+        :type meeting_id: str
+        :param site_url: URL of the Webex site from which the API lists meeting participants. If not specified, the API
+            lists meeting participants from the user's preferred site. All available Webex sites and a user's preferred
+            site can be retrieved by the Get Site List API.
+        :type site_url: str
+        :param meeting_start_time_from: meetings start from the specified date and time(exclusive) in any ISO 8601
+            compliant format. If meetingStartTimeFrom is not specified, it equals meetingStartTimeTo minus 1 month; if
+            meetingStartTimeTo is also not specified, the default value for meetingStartTimeFrom is 1 month before
+            current date and time.
+        :type meeting_start_time_from: str
+        :param meeting_start_time_to: meetings start before the specified date and time(exclusive) in any ISO 8601
+            compliant format. If meetingStartTimeTo is not specified, it equals the result of a comparison,
+            meetingStartTimeFrom plus one month and the current time, and the result is the earlier of the two; if
+            meetingStartTimeFrom is also not specified, the default value for meetingStartTimeTo is current date and
+            time minus 1 month.
+        :type meeting_start_time_to: String
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the admin-level scopes, the admin may specify the email of a user in a site they manage
+            and the API will return meeting participants of the meetings that are hosted by that user.
+        :type host_email: str
+        :param join_time_from: The time participants join a meeting starts from the specified date and time (inclusive)
+            in any ISO 8601 compliant format. If joinTimeFrom is not specified, it equals joinTimeTo minus 7 days.
+        :type join_time_from: str
+        :param join_time_to: The time participants join a meeting before the specified date and time (exclusive) in any
+            ISO 8601 compliant format. If joinTimeTo is not specified, it equals joinTimeFrom plus 7 days. The interval
+            between joinTimeFrom and joinTimeTo must be within 90 days.
+        :type join_time_to: str
+        :param emails: Participants email list Possible values: john.andersen@example.com
+        :type emails: List[str]
+        """
+        params['meetingId'] = meeting_id
+        if site_url is not None:
+            params['siteUrl'] = site_url
+        if meeting_start_time_from is not None:
+            params['meetingStartTimeFrom'] = meeting_start_time_from
+        if meeting_start_time_to is not None:
+            params['meetingStartTimeTo'] = meeting_start_time_to
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        if join_time_from is not None:
+            params['joinTimeFrom'] = join_time_from
+        if join_time_to is not None:
+            params['joinTimeTo'] = join_time_to
+        body = QueryMeetingParticipantsWithEmailBody()
+        if emails is not None:
+            body.emails = emails
+        url = self.ep('query')
+        return self.session.follow_pagination(url=url, model=Participant, params=params, data=body.json())
+
+    def participant_details(self, participant_id: str, host_email: str = None) -> Participant:
+        """
+        Get a meeting participant details of a live or post meeting. The participantId is required to identify the
+        meeting and the participant.
+        The authenticated user calling this API must either have an Administrator role with the
+        meeting:admin_participants_read scope, or be the meeting host.
+
+        :param participant_id: The unique identifier for the meeting and the participant.
+        :type participant_id: str
+        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
+            calling the API has the admin-level scopes, the admin may specify the email of a user in a site they manage
+            and the API will return meeting participants of the meetings that are hosted by that user.
+        :type host_email: str
+        """
+        params = {}
+        if host_email is not None:
+            params['hostEmail'] = host_email
+        url = self.ep(f'{participant_id}')
+        data = super().get(url=url, params=params)
+        return Participant.parse_obj(data)
+
+    def update_participant(self, participant_id: str, muted: bool = None, admit: bool = None, expel: bool = None) -> UpdateParticipantResponse:
+        """
+        To mute, un-mute, expel, or admit a participant in a live meeting. The participantId is required to identify
+        the meeting and the participant.
+        Notes:
+
+        :param participant_id: The unique identifier for the meeting and the participant.
+        :type participant_id: str
+        :param muted: The value is true or false, and means to mute or unmute the audio of a participant.
+        :type muted: bool
+        :param admit: The value can be true or false. The value of true is to admit a participant to the meeting if the
+            participant is in the lobby, No-Op if the participant is not in the lobby or when the value is set to
+            false.
+        :type admit: bool
+        :param expel: The attribute is exclusive and its value can be true or false. The value of true means that the
+            participant will be expelled from the meeting, the value of false means No-Op.
+        :type expel: bool
+        """
+        body = UpdateParticipantBody()
+        if muted is not None:
+            body.muted = muted
+        if admit is not None:
+            body.admit = admit
+        if expel is not None:
+            body.expel = expel
+        url = self.ep(f'{participant_id}')
+        data = super().put(url=url, data=body.json())
+        return UpdateParticipantResponse.parse_obj(data)
+
+    def admit_participants(self, items: List[ParticipantID] = None):
+        """
+        To admit participants into a live meeting in bulk.
+        This API limits the maximum size of items in the request body to 100.
+        Each participantId of items in the request body should have the same prefix of meetingId.
+
+        :param items: The ID that identifies the meeting participant.
+        :type items: List[ParticipantID]
+        """
+        body = AdmitParticipantsBody()
+        if items is not None:
+            body.items = items
+        url = self.ep('admit')
+        super().post(url=url, data=body.json())
         return
 
 class Type1(str, Enum):
@@ -3940,33 +4340,29 @@ class MeetingPollsApi(ApiChild, base='meetings/poll'):
     devsupport@webex.com.
     """
 
-    def list_meeting_polls(self, meeting_id: str, **params) -> Generator[Poll, None, None]:
+    def list_meeting_polls(self, meeting_id: str) -> list[Poll]:
         """
         Lists all the polls and the poll questions in a meeting when ready.
 
         :param meeting_id: A unique identifier for the meeting instance to which the polls belong.
         :type meeting_id: str
         """
+        params = {}
         params['meetingId'] = meeting_id
         url = self.ep('s')
-        return self.session.follow_pagination(url=url, model=Poll, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[Poll], data["items"])
 
-    def meeting_poll_results(self, meeting_id: str, max: int = None) -> List[PollResult]:
+    def meeting_poll_results(self, meeting_id: str, **params) -> Generator[PollResult, None, None]:
         """
         List the meeting polls, the poll's questions, and answers from the meeting when ready.
 
         :param meeting_id: A unique identifier for the meeting instance to which the polls belong.
         :type meeting_id: str
-        :param max: Limit the maximum number of respondents in a meeting in the response, up to 100.
-        :type max: int
         """
-        params = {}
         params['meetingId'] = meeting_id
-        if max is not None:
-            params['max'] = max
         url = self.ep('Results')
-        data = super().get(url=url, params=params)
-        return data["items"]
+        return self.session.follow_pagination(url=url, model=PollResult, params=params)
 
     def list_respondents_of_question(self, poll_id: str, question_id: str, meeting_id: str, **params) -> Generator[Respondent, None, None]:
         """
@@ -4135,7 +4531,7 @@ class VideoDevices(ApiModel):
     is_default: Optional[bool]
 
 
-class Video(ApiModel):
+class Video4(ApiModel):
     #: Array of video devices. This attribute can be modified with the Update Video Options API.
     video_devices: Optional[list[VideoDevices]]
 
@@ -4219,7 +4615,7 @@ class GetMeetingPreferenceDetailsResponse(ApiModel):
     audio: Optional[Audio]
     #: Information for video conferencing systems used to connect to Webex meetings. Note: The Call My Video System
     #: feature is available only if it has been purchased for your site and your administrator has enabled it.
-    video: Optional[Video]
+    video: Optional[Video4]
     #: Meeting scheduling options.
     scheduling_options: Optional[SchedulingOptionsObject]
     #: List of user's Webex meeting sites including default site.
@@ -4862,7 +5258,7 @@ class MeetingQualitiesApi(ApiChild, base=''):
     A rate limit of 1 API call every 5 minutes for the same meeting instance ID applies.
     """
 
-    def meeting_qualities(self, meeting_id: str, max: int = None, offset: int = None) -> List[MediaSessionQuality]:
+    def meeting_qualities(self, meeting_id: str, offset: int = None, **params) -> Generator[MediaSessionQuality, None, None]:
         """
         Get quality data for a meeting, by meetingId. Only organization administrators can retrieve meeting quality
         data.
@@ -4871,20 +5267,14 @@ class MeetingQualitiesApi(ApiChild, base=''):
             the Meeting List API when meetingType=meeting. The id attribute in the Meeting List Response is what is
             needed, for example, e5dba9613a9d455aa49f6ffdafb6e7db_I_191395283063545470.
         :type meeting_id: str
-        :param max: Limit the maximum number of media sessions in the response.
-        :type max: int
         :param offset: Offset from the first result that you want to fetch.
         :type offset: int
         """
-        params = {}
         params['meetingId'] = meeting_id
-        if max is not None:
-            params['max'] = max
         if offset is not None:
             params['offset'] = offset
         url = self.ep('https://analytics.webexapis.com/v1/meeting/qualities')
-        data = super().get(url=url, params=params)
-        return data["items"]
+        return self.session.follow_pagination(url=url, model=MediaSessionQuality, params=params)
 
 class Status7(str, Enum):
     #: Transcript is available.
@@ -5045,7 +5435,7 @@ class MeetingTranscriptsApi(ApiChild, base=''):
             params['hostEmail'] = host_email
         url = self.ep(f'meetingTranscripts/{transcript_id}/download')
         super().get(url=url, params=params)
-        return
+        return $!$!$!   # this is weird. Check the spec at https://developer.webex.com/docs/api/v1/meeting-transcripts/download-a-meeting-transcript
 
     def list_snippets_of_meeting(self, transcript_id: str, **params) -> Generator[SnippetObject1, None, None]:
         """
@@ -5555,7 +5945,7 @@ class MeetingType(str, Enum):
     meeting = 'meeting'
 
 
-class State(str, Enum):
+class State4(str, Enum):
     #: Only applies to a meeting series. Indicates that one or more future scheduled meetings exist for this meeting
     #: series.
     active = 'active'
@@ -5614,7 +6004,7 @@ class MeetingSeriesObjectForListMeeting(ApiModel):
     #: Meeting type.
     meeting_type: Optional[MeetingType]
     #: Meeting state.
-    state: Optional[State]
+    state: Optional[State4]
     #: Time zone of start and end, conforming with the IANA time zone database.
     timezone: Optional[str]
     #: Start time for meeting in ISO 8601 compliant format. If the meetingType of a meeting is meetingSeries, start is
@@ -5784,7 +6174,7 @@ class ScheduledMeetingObject(ApiModel):
     #: Meeting type.
     meeting_type: Optional[MeetingType]
     #: Meeting state.
-    state: Optional[State]
+    state: Optional[State4]
     #: This state only applies to scheduled meeting. Flag identifying whether or not the scheduled meeting has been
     #: modified.
     is_modified: Optional[bool]
@@ -6308,6 +6698,9 @@ class ListMeetingSessionTypesResponse(ApiModel):
 
 
 class UpdateMeetingRegistrationFormBody(ApiModel):
+    #:   * Email address for the meeting host. This parameter is only used if the user or application calling the API
+    #:     has the admin-level scopes. If set, the admin may specify the email of a user in a site they manage and the
+    #:     API will return an update for a meeting that is hosted by that user.
     host_email: Optional[str]
     #: Whether or not a registrant's first name is required for meeting registration. This option must always be true.
     require_first_name: Optional[bool]
@@ -6484,7 +6877,7 @@ class MeetingsApi(ApiChild, base='meetings'):
     Refer to the Meetings API Scopes section of Meetings Overview for scopes required for each API.
     """
 
-    def create(self, title: str = None, agenda: str = None, password: str = None, start: str = None, end: str = None, timezone: str = None, recurrence: str = None, enabled_auto_record_meeting: bool = None, allow_any_user_to_be_co_host: bool = None, enabled_join_before_host: bool = None, enable_connect_audio_before_host: bool = None, join_before_host_minutes: int = None, exclude_password: bool = None, public_meeting: bool = None, reminder_time: int = None, unlocked_meeting_join_security: UnlockedMeetingJoinSecurity = None, session_type_id: int = None, enabled_webcast_view: bool = None, panelist_password: str = None, enable_automatic_lock: bool = None, automatic_lock_minutes: int = None, allow_first_user_to_be_co_host: bool = None, allow_authenticated_devices: bool = None, send_email: bool = None, host_email: str = None, site_url: str = None, meeting_options: MeetingOptions = None, attendee_privileges: AttendeePrivileges = None, integration_tags: List[str] = None, enabled_breakout_sessions: bool = None, tracking_codes: TrackingCodeItemForCreateMeetingObject = None, audio_connection_options: AudioConnectionOptions = None, adhoc: bool = None, room_id: str = None, template_id: str = None, scheduled_type: ScheduledType = None, invitees: InviteeObjectForCreateMeeting = None, registration: Registration = None, simultaneous_interpretation: SimultaneousInterpretation = None, breakout_sessions: BreakoutSessionObject = None) -> bool:
+    def create(self, title: str = None, agenda: str = None, password: str = None, start: str = None, end: str = None, timezone: str = None, recurrence: str = None, enabled_auto_record_meeting: bool = None, allow_any_user_to_be_co_host: bool = None, enabled_join_before_host: bool = None, enable_connect_audio_before_host: bool = None, join_before_host_minutes: int = None, exclude_password: bool = None, public_meeting: bool = None, reminder_time: int = None, unlocked_meeting_join_security: UnlockedMeetingJoinSecurity = None, session_type_id: int = None, enabled_webcast_view: bool = None, panelist_password: str = None, enable_automatic_lock: bool = None, automatic_lock_minutes: int = None, allow_first_user_to_be_co_host: bool = None, allow_authenticated_devices: bool = None, send_email: bool = None, host_email: str = None, site_url: str = None, meeting_options: MeetingOptions = None, attendee_privileges: AttendeePrivileges = None, integration_tags: List[str] = None, enabled_breakout_sessions: bool = None, tracking_codes: TrackingCodeItemForCreateMeetingObject = None, audio_connection_options: AudioConnectionOptions = None, adhoc: bool = None, room_id: str = None, template_id: str = None, scheduled_type: ScheduledType = None, invitees: InviteeObjectForCreateMeeting = None, registration: Registration = None, simultaneous_interpretation: SimultaneousInterpretation = None, breakout_sessions: BreakoutSessionObject = None) -> CreateMeetingResponse:
         """
         Creates a new meeting. Regular users can schedule up to 100 meetings in 24 hours and admin users up to 3000.
 
@@ -6732,7 +7125,7 @@ class MeetingsApi(ApiChild, base='meetings'):
             body.breakout_sessions = breakout_sessions
         url = self.ep()
         data = super().post(url=url, data=body.json())
-        return data["adhoc"]
+        return CreateMeetingResponse.parse_obj(data)
 
     def get(self, meeting_id: str, current: bool = None, host_email: str = None) -> CreateMeetingResponse:
         """
@@ -7380,7 +7773,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         data = super().post(url=url, data=body.json())
         return JoinMeetingResponse.parse_obj(data)
 
-    def list_templates(self, template_type: str = None, locale: str = None, is_default: bool = None, is_standard: bool = None, host_email: str = None, site_url: str = None, **params) -> Generator[TemplateObject, None, None]:
+    def list_templates(self, template_type: str = None, locale: str = None, is_default: bool = None, is_standard: bool = None, host_email: str = None, site_url: str = None) -> list[TemplateObject]:
         """
         Retrieves the list of meeting templates that is available for the authenticated user.
         There are separate lists of meeting templates for different templateType, locale and siteUrl.
@@ -7409,6 +7802,7 @@ class MeetingsApi(ApiChild, base='meetings'):
             user can be retrieved by Get Site List API.
         :type site_url: str
         """
+        params = {}
         if template_type is not None:
             params['templateType'] = template_type
         if locale is not None:
@@ -7422,9 +7816,10 @@ class MeetingsApi(ApiChild, base='meetings'):
         if site_url is not None:
             params['siteUrl'] = site_url
         url = self.ep('templates')
-        return self.session.follow_pagination(url=url, model=TemplateObject, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[TemplateObject], data["items"])
 
-    def template(self, template_id: str, host_email: str = None) -> CreateMeetingBody:
+    def template(self, template_id: str, host_email: str = None) -> GetMeetingTemplateResponse:
         """
         Retrieves details for a meeting template with a specified meeting template ID.
 
@@ -7440,7 +7835,7 @@ class MeetingsApi(ApiChild, base='meetings'):
             params['hostEmail'] = host_email
         url = self.ep(f'templates/{template_id}')
         data = super().get(url=url, params=params)
-        return data["meeting"]
+        return GetMeetingTemplateResponse.parse_obj(data)
 
     def control_status(self, meeting_id: str) -> GetMeetingControlStatusResponse:
         """
@@ -7484,7 +7879,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         data = super().put(url=url, params=params, data=body.json())
         return GetMeetingControlStatusResponse.parse_obj(data)
 
-    def list_session_types(self, host_email: str = None, site_url: str = None, **params) -> Generator[MeetingSessionTypeObject, None, None]:
+    def list_session_types(self, host_email: str = None, site_url: str = None) -> list[MeetingSessionTypeObject]:
         """
         List all the meeting session types enabled for a given user.
 
@@ -7497,12 +7892,14 @@ class MeetingsApi(ApiChild, base='meetings'):
             the user specified in the hostEmail parameter.
         :type site_url: str
         """
+        params = {}
         if host_email is not None:
             params['hostEmail'] = host_email
         if site_url is not None:
             params['siteUrl'] = site_url
         url = self.ep('sessionTypes')
-        return self.session.follow_pagination(url=url, model=MeetingSessionTypeObject, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[MeetingSessionTypeObject], data["items"])
 
     def session_type(self, session_type_id: int, host_email: str = None, site_url: str = None) -> MeetingSessionTypeObject:
         """
@@ -7547,7 +7944,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         :param meeting_id: Unique identifier for the meeting. Does not support meeting IDs for a scheduled personal
             room meeting or an occurrence meeting.
         :type meeting_id: str
-        :param host_email: 
+        :param host_email:   * Email address for the meeting host. This parameter is only used if the user or
+                application calling the API has the admin-level scopes. If set, the admin may specify the email of a
+                user in a site they manage and the API will return an update for a meeting that is hosted by that user.
         :type host_email: str
         :param require_first_name: Whether or not a registrant's first name is required for meeting registration. This
             option must always be true.
@@ -7723,7 +8122,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         data = super().post(url=url, data=body.json())
         return RegisterMeetingRegistrantResponse.parse_obj(data)
 
-    def batch_register_registrants(self, meeting_id: str, items: RegisterMeetingRegistrantBody = None) -> List[RegisterMeetingRegistrantResponse]:
+    def batch_register_registrants(self, meeting_id: str, items: RegisterMeetingRegistrantBody = None) -> list[RegisterMeetingRegistrantResponse]:
         """
         Bulk register new registrants for a meeting.
 
@@ -7737,7 +8136,7 @@ class MeetingsApi(ApiChild, base='meetings'):
             body.items = items
         url = self.ep(f'{meeting_id}/registrants/bulkInsert')
         data = super().post(url=url, data=body.json())
-        return data["items"]
+        return parse_obj_as(list[RegisterMeetingRegistrantResponse], data["items"])
 
     def getmeeting_registrants_detail_information(self, meeting_id: str, registrant_id: str) -> GetmeetingRegistrantsDetailInformationResponse:
         """
@@ -7779,7 +8178,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         url = self.ep(f'{meeting_id}/registrants')
         return self.session.follow_pagination(url=url, model=GetmeetingRegistrantsDetailInformationResponse, params=params)
 
-    def query_registrants(self, meeting_id: str, emails: List[str], max: int = None, status: Status9 = None, order_type: OrderType = None, order_by: OrderBy = None) -> List[GetmeetingRegistrantsDetailInformationResponse]:
+    def query_registrants(self, meeting_id: str, emails: List[str], status: Status9 = None, order_type: OrderType = None, order_by: OrderBy = None, **params) -> Generator[GetmeetingRegistrantsDetailInformationResponse, None, None]:
         """
         Meeting's host and cohost can query the list of registrants for a meeting with a specified meeting ID and
         registrants email.
@@ -7788,8 +8187,6 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type meeting_id: str
         :param emails: List of registrant email addresses. Possible values: bob@example.com
         :type emails: List[str]
-        :param max: Limit the maximum number of registrants in the response, up to 100.
-        :type max: int
         :param status: Registrant's status.
         :type status: Status9
         :param order_type: Sort order for the registrants.
@@ -7797,9 +8194,6 @@ class MeetingsApi(ApiChild, base='meetings'):
         :param order_by: Registrant ordering field. Ordered by registrationTime by default.
         :type order_by: OrderBy
         """
-        params = {}
-        if max is not None:
-            params['max'] = max
         body = QueryMeetingRegistrantsBody()
         if emails is not None:
             body.emails = emails
@@ -7810,8 +8204,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         if order_by is not None:
             body.order_by = order_by
         url = self.ep(f'{meeting_id}/registrants/query')
-        data = super().post(url=url, params=params, data=body.json())
-        return data["items"]
+        return self.session.follow_pagination(url=url, model=GetmeetingRegistrantsDetailInformationResponse, params=params, data=body.json())
 
     def batch_update_registrants_status(self, meeting_id: str, status_op_type: str, send_email: bool = None, registrants: List[Registrants] = None):
         """
@@ -7936,7 +8329,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         data = super().get(url=url, params=params)
         return InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting.parse_obj(data)
 
-    def list_interpreters(self, meeting_id: str, host_email: str = None, **params) -> Generator[InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting, None, None]:
+    def list_interpreters(self, meeting_id: str, host_email: str = None) -> list[InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting]:
         """
         Lists meeting interpreters for a meeting with a specified meetingId.
         This operation can be used for meeting series, scheduled meeting and ended or ongoing meeting instance objects.
@@ -7955,10 +8348,12 @@ class MeetingsApi(ApiChild, base='meetings'):
             site they manage and the API will return interpreters of the meeting that is hosted by that user.
         :type host_email: str
         """
+        params = {}
         if host_email is not None:
             params['hostEmail'] = host_email
         url = self.ep(f'{meeting_id}/interpreters')
-        return self.session.follow_pagination(url=url, model=InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting], data["items"])
 
     def update_interpreter(self, meeting_id: str, interpreter_id: str, language_code1: str, language_code2: str, email: str = None, display_name: str = None, host_email: str = None, send_email: bool = None) -> InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting:
         """
@@ -8029,7 +8424,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         super().delete(url=url, params=params)
         return
 
-    def update_breakout_sessions(self, meeting_id: str, host_email: str = None, send_email: bool = None, items: BreakoutSessionObject = None) -> List[GetBreakoutSessionObject]:
+    def update_breakout_sessions(self, meeting_id: str, host_email: str = None, send_email: bool = None, items: BreakoutSessionObject = None) -> list[GetBreakoutSessionObject]:
         """
         Updates breakout sessions of a meeting with a specified meeting ID. This operation applies to meeting series
         and scheduled meetings.
@@ -8061,9 +8456,9 @@ class MeetingsApi(ApiChild, base='meetings'):
             body.items = items
         url = self.ep(f'{meeting_id}/breakoutSessions')
         data = super().put(url=url, data=body.json())
-        return data["items"]
+        return parse_obj_as(list[GetBreakoutSessionObject], data["items"])
 
-    def list_breakout_sessions(self, meeting_id: str, **params) -> Generator[GetBreakoutSessionObject, None, None]:
+    def list_breakout_sessions(self, meeting_id: str) -> list[GetBreakoutSessionObject]:
         """
         Lists meeting breakout sessions for a meeting with a specified meetingId.
         This operation can be used for meeting series, scheduled meeting and ended or ongoing meeting instance objects.
@@ -8075,7 +8470,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type meeting_id: str
         """
         url = self.ep(f'{meeting_id}/breakoutSessions')
-        return self.session.follow_pagination(url=url, model=GetBreakoutSessionObject, params=params)
+        data = super().get(url=url)
+        return parse_obj_as(list[GetBreakoutSessionObject], data["items"])
 
     def delete_breakout_sessions(self, meeting_id: str, send_email: bool = None):
         """
@@ -8140,7 +8536,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         url = self.ep(f'{meeting_id}/surveyResults')
         return self.session.follow_pagination(url=url, model=SurveyResultObject, params=params)
 
-    def create_invitation_sources(self, meeting_id: str, host_email: str = None, person_id: str = None, items: InvitationSourceCreateObject = None) -> List[InvitationSourceObject]:
+    def create_invitation_sources(self, meeting_id: str, host_email: str = None, person_id: str = None, items: InvitationSourceCreateObject = None) -> list[InvitationSourceObject]:
         """
         Creates one or more invitation sources for a meeting.
 
@@ -8167,9 +8563,9 @@ class MeetingsApi(ApiChild, base='meetings'):
             body.items = items
         url = self.ep(f'{meeting_id}/invitationSources')
         data = super().post(url=url, data=body.json())
-        return data["items"]
+        return parse_obj_as(list[InvitationSourceObject], data["items"])
 
-    def list_invitation_sources(self, meeting_id: str, **params) -> Generator[InvitationSourceObject, None, None]:
+    def list_invitation_sources(self, meeting_id: str) -> list[InvitationSourceObject]:
         """
         Lists invitation sources for a meeting.
 
@@ -8178,9 +8574,10 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type meeting_id: str
         """
         url = self.ep(f'{meeting_id}/invitationSources')
-        return self.session.follow_pagination(url=url, model=InvitationSourceObject, params=params)
+        data = super().get(url=url)
+        return parse_obj_as(list[InvitationSourceObject], data["items"])
 
-    def list_tracking_codes(self, service: str, site_url: str = None, host_email: str = None, **params) -> Generator[OptionsForTrackingCodeObject, None, None]:
+    def list_tracking_codes(self, service: str, site_url: str = None, host_email: str = None) -> ListMeetingTrackingCodesResponse:
         """
         Lists tracking codes on a site by a meeting host. The result indicates which tracking codes and what options
         can be used to create or update a meeting on the specified site.
@@ -8196,13 +8593,15 @@ class MeetingsApi(ApiChild, base='meetings'):
             and the API will return meeting participants of the meetings that are hosted by that user.
         :type host_email: str
         """
+        params = {}
         params['service'] = service
         if site_url is not None:
             params['siteUrl'] = site_url
         if host_email is not None:
             params['hostEmail'] = host_email
         url = self.ep('trackingCodes')
-        return self.session.follow_pagination(url=url, model=OptionsForTrackingCodeObject, params=params)
+        data = super().get(url=url, params=params)
+        return ListMeetingTrackingCodesResponse.parse_obj(data)
 
 class DurationMetric(ApiModel):
     #: Timestamp indicating the start of the aggregation bucket (ISO 8601).
@@ -8706,7 +9105,7 @@ class MessagesApi(ApiChild, base='messages'):
     Just like in the Webex app, you must be a member of the room in order to target it with this API.
     """
 
-    def list(self, room_id: str, parent_id: str = None, mentioned_people: List[str] = None, before: str = None, before_message: str = None, **params) -> Generator[ListMessagesResponse, None, None]:
+    def list(self, room_id: str, parent_id: str = None, mentioned_people: List[str] = None, before: str = None, before_message: str = None, **params) -> Generator[ListMessage, None, None]:
         """
         Lists all messages in a room. Each message will include content attachments if present.
         The list sorts the messages in descending order by creation date.
@@ -8735,9 +9134,9 @@ class MessagesApi(ApiChild, base='messages'):
         if before_message is not None:
             params['beforeMessage'] = before_message
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=ListMessagesResponse, params=params)
+        return self.session.follow_pagination(url=url, model=ListMessage, params=params)
 
-    def list_direct(self, parent_id: str = None, person_id: str = None, person_email: str = None, **params) -> Generator[ListDirectMessagesResponse, None, None]:
+    def list_direct(self, parent_id: str = None, person_id: str = None, person_email: str = None) -> list[DirectMessage]:
         """
         List all messages in a 1:1 (direct) room. Use the personId or personEmail query parameter to specify the room.
         Each message will include content attachments if present.
@@ -8750,6 +9149,7 @@ class MessagesApi(ApiChild, base='messages'):
         :param person_email: List messages in a 1:1 room, by person email.
         :type person_email: str
         """
+        params = {}
         if parent_id is not None:
             params['parentId'] = parent_id
         if person_id is not None:
@@ -8757,7 +9157,8 @@ class MessagesApi(ApiChild, base='messages'):
         if person_email is not None:
             params['personEmail'] = person_email
         url = self.ep('direct')
-        return self.session.follow_pagination(url=url, model=ListDirectMessagesResponse, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[DirectMessage], data["items"])
 
     def create(self, room_id: str = None, text: str = None, markdown: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None, files: List[str] = None, attachments: Attachment = None) -> CreateMessageResponse:
         """
@@ -8888,12 +9289,13 @@ class OrganizationsApi(ApiChild, base='organizations'):
     been granted. The authorizing admin must grant the spark-admin:organizations-write scope.
     """
 
-    def list(self, **params) -> Generator[Organization, None, None]:
+    def list(self) -> list[Organization]:
         """
         List all organizations visible by your account. The results will not be paginated.
         """
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=Organization, params=params)
+        data = super().get(url=url)
+        return parse_obj_as(list[Organization], data["items"])
 
     def details(self, org_id: str) -> Organization:
         """
@@ -9711,7 +10113,7 @@ class RecordingReportApi(ApiChild, base='recordingReport/'):
         url = self.ep('accessSummary')
         return self.session.follow_pagination(url=url, model=RecordingReportSummaryObject, params=params)
 
-    def recording_audit_report_details(self, recording_id: str, host_email: str = None, max: int = None) -> List[RecordingReportObject]:
+    def recording_audit_report_details(self, recording_id: str, host_email: str = None, **params) -> Generator[RecordingReportObject, None, None]:
         """
         Retrieves details for a recording audit report with a specified recording ID.
         Only recording audit report details of meetings hosted by or shared with the authenticated user may be
@@ -9723,19 +10125,12 @@ class RecordingReportApi(ApiChild, base='recordingReport/'):
             calling the API has the admin on-behalf-of scopes. If set, the admin may specify the email of a user in a
             site they manage and the API will return recording details of that user.
         :type host_email: str
-        :param max: Maximum number of recording audit report details to return in a single page. max must be equal to
-            or greater than 1 and equal to or less than 100.
-        :type max: int
         """
-        params = {}
         params['recordingId'] = recording_id
         if host_email is not None:
             params['hostEmail'] = host_email
-        if max is not None:
-            params['max'] = max
         url = self.ep('accessDetail')
-        data = super().get(url=url, params=params)
-        return data["items"]
+        return self.session.follow_pagination(url=url, model=RecordingReportObject, params=params)
 
     def list_meeting_archive_summaries(self, from_: str = None, to_: str = None, site_url: str = None, **params) -> Generator[RecordingAchriveSummaryObject, None, None]:
         """
@@ -9936,7 +10331,7 @@ class RecordingsApi(ApiChild, base=''):
             MP4 or ARF.
         :type format: str
         :param service_type: Recording's service-type. If this item is specified, the API filters recordings by
-            service-type. Valid values:
+            service-type. Valid values: * MeetingCenter * EventCenter * SupportCenter * TrainingCenter
         :type service_type: str
         :param status: Recording's status. If not specified or available, retrieves recordings that are available.
             Otherwise, if specified as deleted, retrieves recordings that have been moved into the recycle bin.
@@ -10001,7 +10396,7 @@ class RecordingsApi(ApiChild, base=''):
             or ARF.
         :type format: str
         :param service_type: Recording's service-type. If specified, the API filters recordings by service-type. Valid
-            values:
+            values: * MeetingCenter * EventCenter * SupportCenter * TrainingCenter
         :type service_type: str
         :param status: Recording's status. If not specified or available, retrieves recordings that are available.
             Otherwise, if specified as deleted, retrieves recordings that have been moved to the recycle bin. Possible
@@ -10029,7 +10424,7 @@ class RecordingsApi(ApiChild, base=''):
         url = self.ep('admin/recordings')
         return self.session.follow_pagination(url=url, model=RecordingObject, params=params)
 
-    def recording_details(self, recording_id: str, host_email: str = None) -> object:
+    def recording_details(self, recording_id: str, host_email: str = None) -> GetRecordingDetailsResponse:
         """
         Retrieves details for a recording with a specified recording ID.
         Only recordings of meetings hosted by or shared with the authenticated user may be retrieved.
@@ -10046,7 +10441,7 @@ class RecordingsApi(ApiChild, base=''):
             params['hostEmail'] = host_email
         url = self.ep(f'recordings/{recording_id}')
         data = super().get(url=url, params=params)
-        return data["temporaryDirectDownloadLinks"]
+        return GetRecordingDetailsResponse.parse_obj(data)
 
     def delete_recording(self, recording_id: str, host_email: str = None, reason: str = None, comment: str = None):
         """
@@ -10221,14 +10616,15 @@ class ReportTemplatesApi(ApiChild, base='report/templates'):
     For more information about Report Templates, see the Admin API guide.
     """
 
-    def list_report_templates(self, **params) -> Generator[Template, None, None]:
+    def list_report_templates(self) -> list[Template]:
         """
         List all the available report templates that can be generated.
         CSV (comma separated value) reports for Webex services are only supported for organizations based in the North
         American region. Organizations based in other regions will return blank CSV files for any Webex reports.
         """
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=Template, params=params)
+        data = super().get(url=url)
+        return parse_obj_as(list[Template], data["Template Attributes"])
 
 class Report(ApiModel):
     #: Unique identifier for the report.
@@ -10286,7 +10682,7 @@ class ReportsApi(ApiChild, base='reports'):
     For more information about Reports, see the Admin API guide.
     """
 
-    def list(self, report_id: str = None, service: str = None, template_id: int = None, from_: str = None, to_: str = None, **params) -> Generator[Report, None, None]:
+    def list(self, report_id: str = None, service: str = None, template_id: int = None, from_: str = None, to_: str = None) -> list[Report]:
         """
         Lists all reports. Use query parameters to filter the response. The parameters are optional. However, from and
         to parameters should be provided together.
@@ -10304,6 +10700,7 @@ class ReportsApi(ApiChild, base='reports'):
         :param to_: List reports that were created before this date.
         :type to_: str
         """
+        params = {}
         if report_id is not None:
             params['reportId'] = report_id
         if service is not None:
@@ -10315,7 +10712,8 @@ class ReportsApi(ApiChild, base='reports'):
         if to_ is not None:
             params['to'] = to_
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=Report, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[Report], data["Report Attributes"])
 
     def create(self, template_id: int, start_date: str = None, end_date: str = None, site_list: str = None) -> str:
         """
@@ -10420,7 +10818,7 @@ class ResourceGroupMembershipsApi(ApiChild, base='resourceGroup/memberships'):
     Managing Hybrid Services guide.
     """
 
-    def list_group_memberships(self, license_id: str = None, person_id: str = None, person_org_id: str = None, status: enum = None, **params) -> Generator[ListResourceGroupMembershipsResponse, None, None]:
+    def list_group_memberships(self, license_id: str = None, person_id: str = None, person_org_id: str = None, status: enum = None, **params) -> Generator[ResourceGroupMembership, None, None]:
         """
         Lists all resource group memberships for an organization.
         Use query parameters to filter the response.
@@ -10443,7 +10841,7 @@ class ResourceGroupMembershipsApi(ApiChild, base='resourceGroup/memberships'):
         if status is not None:
             params['status'] = status
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=ListResourceGroupMembershipsResponse, params=params)
+        return self.session.follow_pagination(url=url, model=ResourceGroupMembership, params=params)
 
     def group_membership_details(self, resource_group_membership_id: str) -> ResourceGroupMembership:
         """
@@ -10513,7 +10911,7 @@ class ResourceGroupsApi(ApiChild, base='resourceGroups'):
     about Resource Groups, see the Managing Hybrid Services guide.
     """
 
-    def list_groups(self, org_id: str = None, **params) -> Generator[ListResourceGroupsResponse, None, None]:
+    def list_groups(self, org_id: str = None) -> list[ResourceGroup]:
         """
         List resource groups.
         Use query parameters to filter the response.
@@ -10522,10 +10920,12 @@ class ResourceGroupsApi(ApiChild, base='resourceGroups'):
             partners) may use this parameter.
         :type org_id: str
         """
+        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=ListResourceGroupsResponse, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[ResourceGroup], data["items"])
 
     def group_details(self, resource_group_id: str) -> ResourceGroup:
         """
@@ -10549,12 +10949,13 @@ class RolesApi(ApiChild, base='roles'):
     resource can be accessed only by an admin and shows only roles relevant to an admin.
     """
 
-    def list_roles(self, **params) -> Generator[Role, None, None]:
+    def list_roles(self) -> list[Role]:
         """
         List all roles.
         """
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=Role, params=params)
+        data = super().get(url=url)
+        return parse_obj_as(list[Role], data["items"])
 
     def role_details(self, role_id: str) -> Role:
         """
@@ -10600,16 +11001,18 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
     Just like in the Webex app, you must be a member of the room in order to list its Room Tabs.
     """
 
-    def list_tabs(self, room_id: str, **params) -> Generator[ListRoomTabsResponse, None, None]:
+    def list_tabs(self, room_id: str) -> list[RoomTab]:
         """
         Lists all Room Tabs of a room specified by the roomId query parameter.
 
         :param room_id: ID of the room for which to list room tabs.
         :type room_id: str
         """
+        params = {}
         params['roomId'] = room_id
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=ListRoomTabsResponse, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[RoomTab], data["items"])
 
     def create_tab(self, room_id: str, content_url: str, display_name: str) -> RoomTab:
         """
@@ -10949,7 +11352,7 @@ class SecurityAuditEventsApi(ApiChild, base='admin/securityAudit/events'):
     NOTE: A maximum of one year of audit events can be returned per request.
     """
 
-    def list_security_audit_events(self, org_id: str, start_time: , end_time: , actor_id: str = None, event_categories: list = None, **params) -> Generator[ListSecurityAuditEventsResponse, None, None]:
+    def list_security_audit_events(self, org_id: str, start_time: , end_time: , actor_id: str = None, event_categories: list = None, **params) -> Generator[AuditEvent, None, None]:
         """
         List security audit events in your organization like sign-in and sign-out.
         Several query parameters are available to filter the response.
@@ -10975,7 +11378,7 @@ class SecurityAuditEventsApi(ApiChild, base='admin/securityAudit/events'):
         if event_categories is not None:
             params['eventCategories'] = event_categories
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=ListSecurityAuditEventsResponse, params=params)
+        return self.session.follow_pagination(url=url, model=AuditEvent, params=params)
 
 class SiteSessionType(ApiModel):
     #: Site URL for the session type.
@@ -11040,7 +11443,7 @@ class SessionTypesApi(ApiChild, base='admin/meeting/'):
     auth token with the meeting:admin_schedule_write or meeting:admin_config_write scope.
     """
 
-    def list_site_types(self, site_url: str = None, **params) -> Generator[SiteSessionType, None, None]:
+    def list_site_types(self, site_url: str = None) -> list[SiteSessionType]:
         """
         List session types for a specific site.
 
@@ -11048,12 +11451,14 @@ class SessionTypesApi(ApiChild, base='admin/meeting/'):
             site for the admin's authorization token used to make the call.
         :type site_url: str
         """
+        params = {}
         if site_url is not None:
             params['siteUrl'] = site_url
         url = self.ep('config/sessionTypes')
-        return self.session.follow_pagination(url=url, model=SiteSessionType, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[SiteSessionType], data["items"])
 
-    def list_user_type(self, site_url: str = None, person_id: str = None, **params) -> Generator[UserSessionTypes, None, None]:
+    def list_user_type(self, site_url: str = None, person_id: str = None) -> list[UserSessionTypes]:
         """
         List session types for a specific user.
 
@@ -11062,12 +11467,14 @@ class SessionTypesApi(ApiChild, base='admin/meeting/'):
         :param person_id: A unique identifier for the user.
         :type person_id: str
         """
+        params = {}
         if site_url is not None:
             params['siteUrl'] = site_url
         if person_id is not None:
             params['personId'] = person_id
         url = self.ep('userconfig/sessionTypes')
-        return self.session.follow_pagination(url=url, model=UserSessionTypes, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[UserSessionTypes], data["items"])
 
     def update_user_types(self, site_url: str, session_type_ids: List[str], person_id: str = None, email: str = None) -> UserSessionTypes:
         """
@@ -11210,7 +11617,7 @@ class SiteApi(ApiChild, base='admin/meeting/config/commonSettings'):
     You can see the elements that constitute the respective RESTful schema in a separate section below.
     """
 
-    def common_settings_configuration(self, site_url: str = None) -> object:
+    def common_settings_configuration(self, site_url: str = None) -> GetMeetingCommonSettingsConfigurationResponse:
         """
         Site administrators can use this API to get a list of functions, options, and privileges that are configured
         for their Webex service sites.
@@ -11225,7 +11632,7 @@ class SiteApi(ApiChild, base='admin/meeting/config/commonSettings'):
             params['siteUrl'] = site_url
         url = self.ep()
         data = super().get(url=url, params=params)
-        return data["telephonyConfig"]
+        return GetMeetingCommonSettingsConfigurationResponse.parse_obj(data)
 
     def update_common_settings_configuration(self, site_options: object = None, default_scheduler_options: DefaultSchedulerOptions = None, schedule_meeting_options: object = None, security_options: SecurityOptions = None) -> GetMeetingCommonSettingsConfigurationResponse:
         """
@@ -11288,12 +11695,13 @@ class SpaceClassificationsApi(ApiChild, base='classifications'):
     classifications.
     """
 
-    def list_classifications(self, **params) -> Generator[HydraClassification, None, None]:
+    def list_classifications(self) -> list[HydraClassification]:
         """
         List all the space classifications configured in your org.
         """
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=HydraClassification, params=params)
+        data = super().get(url=url)
+        return parse_obj_as(list[HydraClassification], data["items"])
 
 class CreateTeamMembershipBody(ApiModel):
     #: The team ID.
@@ -11334,7 +11742,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
     Just like in the Webex app, you must be a member of the team in order to list its memberships or invite people.
     """
 
-    def list_memberships(self, team_id: str, **params) -> Generator[ListTeamMembershipsResponse, None, None]:
+    def list_memberships(self, team_id: str, **params) -> Generator[TeamMembership, None, None]:
         """
         Lists all team memberships for a given team, specified by the teamId query parameter.
         Use query parameters to filter the response.
@@ -11344,7 +11752,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         """
         params['teamId'] = team_id
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=ListTeamMembershipsResponse, params=params)
+        return self.session.follow_pagination(url=url, model=TeamMembership, params=params)
 
     def create_membership(self, team_id: str, person_id: str = None, person_email: str = None, is_moderator: bool = None) -> TeamMembership:
         """
@@ -11599,7 +12007,7 @@ class TrackingCodesApi(ApiChild, base=''):
     meeting:admin_schedule_read scopes.
     """
 
-    def list_codes(self, site_url: str = None, **params) -> Generator[GetTrackingCodeObject, None, None]:
+    def list_codes(self, site_url: str = None) -> list[GetTrackingCodeObject]:
         """
         Lists tracking codes on a site by an admin user.
 
@@ -11608,10 +12016,12 @@ class TrackingCodesApi(ApiChild, base=''):
             sites of a user can be retrieved by the Get Site List API.
         :type site_url: str
         """
+        params = {}
         if site_url is not None:
             params['siteUrl'] = site_url
         url = self.ep('https: //webexapis.com/v1/admin/meeting/config/trackingCodes')
-        return self.session.follow_pagination(url=url, model=GetTrackingCodeObject, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[GetTrackingCodeObject], data["items"])
 
     def code(self, tracking_code_id: str, site_url: str = None) -> GetTrackingCodeObject:
         """
@@ -12523,7 +12933,7 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
     To obtain the Organization ID needed for these APIs, use the Organizations API
     """
 
-    def list_clusters_availability(self, from_: str, to_: str, org_id: str, **params) -> Generator[ListClustersAvailabilityResponse, None, None]:
+    def list_clusters_availability(self, from_: str, to_: str, org_id: str) -> list[ClusterAvailabilityCollection]:
         """
         Returns the availability details for all Video Mesh clusters in an organization.
 
@@ -12535,13 +12945,15 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         :param org_id: The unique ID for the organization.
         :type org_id: str
         """
+        params = {}
         params['from'] = from_
         params['to'] = to_
         params['orgId'] = org_id
         url = self.ep('clusters/availability')
-        return self.session.follow_pagination(url=url, model=ListClustersAvailabilityResponse, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[ClusterAvailabilityCollection], data["items"])
 
-    def cluster_availability(self, cluster_id: str, from_: str, to_: str) -> List[ClusterAvailabilityCollection]:
+    def cluster_availability(self, cluster_id: str, from_: str, to_: str) -> list[ClusterAvailabilityCollection]:
         """
         Returns the availability details of a single Video Mesh cluster in an organization.
 
@@ -12558,9 +12970,9 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         params['to'] = to_
         url = self.ep(f'clusters/availability/{cluster_id}')
         data = super().get(url=url, params=params)
-        return data["items"]
+        return parse_obj_as(list[ClusterAvailabilityCollection], data["items"])
 
-    def list_node_availability(self, from_: str, to_: str, cluster_id: str, **params) -> Generator[ListNodeAvailabilityResponse, None, None]:
+    def list_node_availability(self, from_: str, to_: str, cluster_id: str) -> list[NodeAvailabilityCollection]:
         """
         Returns the availability details of all nodes in a Video Mesh cluster.
 
@@ -12572,13 +12984,15 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         :param cluster_id: The unique Video Mesh cluster ID.
         :type cluster_id: str
         """
+        params = {}
         params['from'] = from_
         params['to'] = to_
         params['clusterId'] = cluster_id
         url = self.ep('nodes/availability')
-        return self.session.follow_pagination(url=url, model=ListNodeAvailabilityResponse, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[NodeAvailabilityCollection], data["items"])
 
-    def node_availability(self, node_id: str, from_: str, to_: str) -> List[SingleNodeAvailabilityCollection]:
+    def node_availability(self, node_id: str, from_: str, to_: str) -> list[SingleNodeAvailabilityCollection]:
         """
         Returns the availability details of a single node in a Video Mesh cluster.
 
@@ -12595,9 +13009,9 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         params['to'] = to_
         url = self.ep(f'nodes/availability/{node_id}')
         data = super().get(url=url, params=params)
-        return data["items"]
+        return parse_obj_as(list[SingleNodeAvailabilityCollection], data["items"])
 
-    def list_media_health_monitoring_tool_results(self, from_: str, to_: str, org_id: str, **params) -> Generator[ListMediaHealthMonitoringToolResultsResponse, None, None]:
+    def list_media_health_monitoring_tool_results(self, from_: str, to_: str, org_id: str) -> list[MediaHealthMonitoringResultsCollectionfororganization]:
         """
         Returns the test results of the Media Health Monitoring Tool tests for an organization.
 
@@ -12609,13 +13023,15 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         :param org_id: The unique Video Mesh organization ID.
         :type org_id: str
         """
+        params = {}
         params['from'] = from_
         params['to'] = to_
         params['orgId'] = org_id
         url = self.ep('mediaHealthMonitor')
-        return self.session.follow_pagination(url=url, model=ListMediaHealthMonitoringToolResultsResponse, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[MediaHealthMonitoringResultsCollectionfororganization], data["items"])
 
-    def list_media_health_monitoring_tool_test_results_v2(self, org_id: str, from_: str, to_: str, trigger_type: str, **params) -> Generator[MediaHealthMonitoringResultsCollectionfororganization, None, None]:
+    def list_media_health_monitoring_tool_test_results_v2(self, org_id: str, from_: str, to_: str, trigger_type: str) -> MediaHealthMonitoringResultsCollectionfororganization:
         """
         Returns the test results of the Media Health Monitoring Tool tests for an organization.
 
@@ -12629,14 +13045,16 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         :param trigger_type: Trigger type. Possible values: OnDemand, Periodic, All
         :type trigger_type: str
         """
+        params = {}
         params['orgId'] = org_id
         params['from'] = from_
         params['to'] = to_
         params['triggerType'] = trigger_type
         url = self.ep('testResults/mediaHealthMonitorTest')
-        return self.session.follow_pagination(url=url, model=MediaHealthMonitoringResultsCollectionfororganization, params=params)
+        data = super().get(url=url, params=params)
+        return MediaHealthMonitoringResultsCollectionfororganization.parse_obj(data)
 
-    def media_health_monitoring_tool_cluster_results(self, from_: str, to_: str, cluster_id: str) -> array[MediaHealthMonitoringResultsCollection for cluster]:
+    def media_health_monitoring_tool_cluster_results(self, from_: str, to_: str, cluster_id: str) -> list[MediaHealthMonitoringResultsCollectionforcluster]:
         """
         Returns the test results of the Media Health Monitoring Tool tests for a single Video Mesh cluster.
 
@@ -12654,7 +13072,7 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         params['clusterId'] = cluster_id
         url = self.ep('mediaHealthMonitor/clusters')
         data = super().get(url=url, params=params)
-        return data["items"]
+        return parse_obj_as(list[MediaHealthMonitoringResultsCollectionforcluster], data["items"])
 
     def media_health_monitoring_tool_test_results_for_clusters_v2(self, cluster_id: str, from_: str, to_: str, trigger_type: str) -> MediaHealthMonitoringResultsCollectionforcluster:
         """
@@ -12679,7 +13097,7 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         data = super().get(url=url, params=params)
         return MediaHealthMonitoringResultsCollectionforcluster.parse_obj(data)
 
-    def media_health_monitoring_tool_node_results(self, from_: str, to_: str, node_id: str) -> array[MediaHealthMonitoringResultsCollection for node]:
+    def media_health_monitoring_tool_node_results(self, from_: str, to_: str, node_id: str) -> list[MediaHealthMonitoringResultsCollectionfornode]:
         """
         Returns the test results of the Media Health Monitoring Tool tests for a single Video Mesh node.
 
@@ -12697,7 +13115,7 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         params['nodeId'] = node_id
         url = self.ep('mediaHealthMonitor/nodes')
         data = super().get(url=url, params=params)
-        return data["items"]
+        return parse_obj_as(list[MediaHealthMonitoringResultsCollectionfornode], data["items"])
 
     def media_health_monitoring_tool_test_results_for_node_v2(self, node_id: str, from_: str, to_: str, trigger_type: str) -> MediaHealthMonitoringResultsCollectionfornode:
         """
@@ -12722,7 +13140,7 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         data = super().get(url=url, params=params)
         return MediaHealthMonitoringResultsCollectionfornode.parse_obj(data)
 
-    def list_overflow_to_cloud_details(self, from_: str, to_: str, org_id: str, **params) -> Generator[ListOverflowToCloudDetailsResponse, None, None]:
+    def list_overflow_to_cloud_details(self, from_: str, to_: str, org_id: str) -> list[OverflowtoCloudCollection]:
         """
         Returns details of overflows to the cloud in an organization.
 
@@ -12734,13 +13152,15 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         :param org_id: The unique Video Mesh organization ID.
         :type org_id: str
         """
+        params = {}
         params['from'] = from_
         params['to'] = to_
         params['orgId'] = org_id
         url = self.ep('cloudOverflow')
-        return self.session.follow_pagination(url=url, model=ListOverflowToCloudDetailsResponse, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[OverflowtoCloudCollection], data["items"])
 
-    def list_cluster_redirect_details(self, from_: str, to_: str, org_id: str, **params) -> Generator[ListClusterRedirectDetailsResponse, None, None]:
+    def list_cluster_redirect_details(self, from_: str, to_: str, org_id: str) -> list[RedirectCollectionForOrg]:
         """
         Returns the redirect details of all Video Mesh clusters in an organization.
 
@@ -12752,13 +13172,15 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         :param org_id: The unique Video Mesh organization ID.
         :type org_id: str
         """
+        params = {}
         params['from'] = from_
         params['to'] = to_
         params['orgId'] = org_id
         url = self.ep('callRedirects')
-        return self.session.follow_pagination(url=url, model=ListClusterRedirectDetailsResponse, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[RedirectCollectionForOrg], data["items"])
 
-    def cluster_redirect_details(self, from_: str, to_: str, cluster_id: str) -> List[RedirectCollectionForCluster]:
+    def cluster_redirect_details(self, from_: str, to_: str, cluster_id: str) -> list[RedirectCollectionForCluster]:
         """
         Returns details of cluster redirects for a single Video Mesh cluster.
 
@@ -12776,9 +13198,9 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         params['clusterId'] = cluster_id
         url = self.ep('clusters/callRedirects')
         data = super().get(url=url, params=params)
-        return data["items"]
+        return parse_obj_as(list[RedirectCollectionForCluster], data["items"])
 
-    def list_clusters_utilization(self, from_: str, to_: str, org_id: str, **params) -> Generator[ListClustersUtilizationResponse, None, None]:
+    def list_clusters_utilization(self, from_: str, to_: str, org_id: str) -> list[ClusterUtilizationCollection]:
         """
         Returns the utilization details of all Video Mesh clusters in an organization.
 
@@ -12790,13 +13212,15 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         :param org_id: The unique ID for the organization.
         :type org_id: str
         """
+        params = {}
         params['from'] = from_
         params['to'] = to_
         params['orgId'] = org_id
         url = self.ep('utilization')
-        return self.session.follow_pagination(url=url, model=ListClustersUtilizationResponse, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[ClusterUtilizationCollection], data["items"])
 
-    def cluster_utilization_details(self, from_: str, to_: str, cluster_id: str) -> List[UtilizationForClusterCollection]:
+    def cluster_utilization_details(self, from_: str, to_: str, cluster_id: str) -> list[UtilizationForClusterCollection]:
         """
         Returns the utilization details for a single Video Mesh cluster.
 
@@ -12814,9 +13238,9 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         params['clusterId'] = cluster_id
         url = self.ep('clusters/utilization')
         data = super().get(url=url, params=params)
-        return data["items"]
+        return parse_obj_as(list[UtilizationForClusterCollection], data["items"])
 
-    def list_reachability_test_results(self, from_: str, to_: str, org_id: str, **params) -> Generator[ListReachabilityTestResultsResponse, None, None]:
+    def list_reachability_test_results(self, from_: str, to_: str, org_id: str) -> list[ReachabilityTestresultsfororganization]:
         """
         Returns the test results of the Reachability tests for an organization.
 
@@ -12828,13 +13252,15 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         :param org_id: The unique ID for the organization.
         :type org_id: str
         """
+        params = {}
         params['from'] = from_
         params['to'] = to_
         params['orgId'] = org_id
         url = self.ep('reachabilityTest')
-        return self.session.follow_pagination(url=url, model=ListReachabilityTestResultsResponse, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[ReachabilityTestresultsfororganization], data["items"])
 
-    def list_reachability_test_results_v2(self, org_id: str, from_: str, to_: str, trigger_type: str, **params) -> Generator[ReachabilityTestresultsfororganization, None, None]:
+    def list_reachability_test_results_v2(self, org_id: str, from_: str, to_: str, trigger_type: str) -> ReachabilityTestresultsfororganization:
         """
         Returns the test results of the Reachability tests for an organization.
 
@@ -12848,14 +13274,16 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         :param trigger_type: Trigger type. Possible values: OnDemand, Periodic, All
         :type trigger_type: str
         """
+        params = {}
         params['orgId'] = org_id
         params['from'] = from_
         params['to'] = to_
         params['triggerType'] = trigger_type
         url = self.ep('testResults/reachabilityTest')
-        return self.session.follow_pagination(url=url, model=ReachabilityTestresultsfororganization, params=params)
+        data = super().get(url=url, params=params)
+        return ReachabilityTestresultsfororganization.parse_obj(data)
 
-    def reachability_test_results_for_cluster(self, from_: str, to_: str, cluster_id: str) -> array[ReachabilityTest results for cluster]:
+    def reachability_test_results_for_cluster(self, from_: str, to_: str, cluster_id: str) -> list[ReachabilityTestresultsforcluster]:
         """
         Returns the test results of the Reachability tests for a single Video Mesh cluster.
 
@@ -12873,7 +13301,7 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         params['clusterId'] = cluster_id
         url = self.ep('reachabilityTest/clusters')
         data = super().get(url=url, params=params)
-        return data["items"]
+        return parse_obj_as(list[ReachabilityTestresultsforcluster], data["items"])
 
     def reachability_test_results_for_cluster_v2(self, cluster_id: str, from_: str, to_: str, trigger_type: str) -> ReachabilityTestresultsforcluster:
         """
@@ -12898,7 +13326,7 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         data = super().get(url=url, params=params)
         return ReachabilityTestresultsforcluster.parse_obj(data)
 
-    def reachability_test_results_for_node(self, from_: str, to_: str, node_id: str) -> array[ReachabilityTest results for node]:
+    def reachability_test_results_for_node(self, from_: str, to_: str, node_id: str) -> list[ReachabilityTestresultsfornode]:
         """
         Returns the test results of the Reachability tests for a single Video Mesh node.
 
@@ -12916,7 +13344,7 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         params['nodeId'] = node_id
         url = self.ep('reachabilityTest/nodes')
         data = super().get(url=url, params=params)
-        return data["items"]
+        return parse_obj_as(list[ReachabilityTestresultsfornode], data["items"])
 
     def reachability_test_results_for_node_v2(self, node_id: str, from_: str, to_: str, trigger_type: str) -> ReachabilityTestresultsfornode:
         """
@@ -12941,18 +13369,20 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         data = super().get(url=url, params=params)
         return ReachabilityTestresultsfornode.parse_obj(data)
 
-    def list_cluster_details(self, org_id: str, **params) -> Generator[ListClusterDetailsResponse, None, None]:
+    def list_cluster_details(self, org_id: str) -> list[ClusterDetailsCollection]:
         """
         Returns the cluster details of all Video Mesh clusters in an organization.
 
         :param org_id: The unique ID for the organization.
         :type org_id: str
         """
+        params = {}
         params['orgId'] = org_id
         url = self.ep('clusters')
-        return self.session.follow_pagination(url=url, model=ListClusterDetailsResponse, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[ClusterDetailsCollection], data["items"])
 
-    def cluster_details(self, cluster_id: str) -> List[ClusterDetailsCollection]:
+    def cluster_details(self, cluster_id: str) -> list[ClusterDetailsCollection]:
         """
         Returns the cluster details for a single Video Mesh cluster.
 
@@ -12961,7 +13391,7 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         """
         url = self.ep(f'clusters/{cluster_id}')
         data = super().get(url=url)
-        return data["items"]
+        return parse_obj_as(list[ClusterDetailsCollection], data["items"])
 
     def trigger_on_demand_test_for_cluster(self, cluster_id: str, type_: Type32 = None, nodes: List[str] = None) -> TriggerOndemandTestForClusterResponse:
         """
@@ -13031,7 +13461,7 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         data = super().get(url=url, params=params)
         return GetTriggeredTestResultsResponse.parse_obj(data)
 
-    def list_network_test_results(self, org_id: str, from_: str, to_: str, trigger_type: str, **params) -> Generator[ListNetworkTestResultsResponse, None, None]:
+    def list_network_test_results(self, org_id: str, from_: str, to_: str, trigger_type: str) -> ListNetworkTestResultsResponse:
         """
         Returns the test results of the Network tests triggered for an organization. The tests listed below are run as
         a part of the Network Test execution on the node.
@@ -13051,12 +13481,14 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
         :param trigger_type: Trigger type. Possible values: OnDemand, Periodic, All
         :type trigger_type: str
         """
+        params = {}
         params['orgId'] = org_id
         params['from'] = from_
         params['to'] = to_
         params['triggerType'] = trigger_type
         url = self.ep('testResults/networkTest')
-        return self.session.follow_pagination(url=url, model=ListNetworkTestResultsResponse, params=params)
+        data = super().get(url=url, params=params)
+        return ListNetworkTestResultsResponse.parse_obj(data)
 
     def network_test_results_for_cluster(self, cluster_id: str, from_: str, to_: str, trigger_type: str) -> GetNetworkTestResultsForClusterResponse:
         """
@@ -13129,6 +13561,17 @@ class CDR(ApiModel):
     #: necessary.
     call_id: Optional[str] = Field(alias='Call ID')
     #: Type of call. For example:
+    #:   * SIP_MEETING
+    #:   * SIP_INTERNATIONAL
+    #:   * SIP_SHORTCODE
+    #:   * SIP_INBOUND
+    #:   * UNKNOWN
+    #:   * SIP_EMERGENCY
+    #:   * SIP_PREMIUM
+    #:   * SIP_ENTERPRISE
+    #:   * SIP_TOLLFREE
+    #:   * SIP_NATIONAL
+    #:   * SIP_MOBILE
     call_type: Optional[str] = Field(alias='Call type')
     #: For incoming calls, the calling line ID of the user. For outgoing calls, it's the calling line ID of the called
     #: party.
@@ -13143,6 +13586,12 @@ class CDR(ApiModel):
     #: the user.
     calling_number: Optional[str] = Field(alias='Calling number')
     #: The type of client that the user (creating this record) is using to make or receive the call. For example:
+    #:   * SIP
+    #:   * WXC_CLIENT
+    #:   * WXC_THIRD_PARTY
+    #:   * TEAMS_WXC_CLIENT
+    #:   * WXC_DEVICE
+    #:   * WXC_SIP_GW
     client_type: Optional[str] = Field(alias='Client type')
     #: The version of the client that the user (creating this record) is using to make or receive the call.
     client_version: Optional[str] = Field(alias='Client version')
@@ -13154,8 +13603,17 @@ class CDR(ApiModel):
     device_mac: Optional[str] = Field(alias='Device MAC')
     #: The keypad digits as dialed by the user, before pre-translations.
     #: This field reports multiple call dial possibilities:
+    #:   * Feature access codes (FAC) used for invoking features such as Last Number Redial or a Call Return.
+    #:   * An extension that got dialed and a mis-dialed keypad digit from a device/app.
+    #:   * When a user must dial an outside access code (for example, 9+) before dialing a number, this access code is
+    #:     also reported, as well as the digits dialed thereafter.
+    #: Note that when pre-translations have no effect, the dialed digits field contains the same data as the called
+    #: number field.
+    #: This field is only used for originating (outgoing) Calls and is not available for terminating (incoming) Calls.
     dialed_digits: Optional[str] = Field(alias='Dialed digits')
     #: Whether the call was inbound or outbound. The possible values are:
+    #:   * ORIGINATING
+    #:   * TERMINATING
     direction: Optional[str]
     #: The length of the call in seconds.
     duration: Optional[int]
@@ -13170,12 +13628,36 @@ class CDR(ApiModel):
     #: A unique identifier for the organization that made the call. This is a unique identifier across Cisco.
     org_uuid: Optional[str] = Field(alias='Org UUID')
     #: Call redirection reason for the original called number. For example:
+    #:   * Unconditional: Call Forward Always (CFA) service, Group night forwarding.
+    #:   * NoAnswer: The party was not available to take the call. CF/busy or Voicemail/busy.
+    #:   * Deflection: Indicates that a call was redirected. Possible causes could be auto attendant transfer, transfer
+    #:     out of a call-center, user’s app/device redirection, direct VM transfer etc..
+    #:   * TimeOfDay: Call scheduled period of automated redirection. CF/selective, group night forwarding.
+    #:   * UserBusy: DND enabled or the user willingly declined the call. CF/busy or voicemail/busy.
+    #:   * FollowMe: Automated redirection to a personal redirecting service.
+    #:   * CallQueue: A call center call to an agent or a user (a member of the call queue).
+    #:   * HuntGroup: A hunt-group-based call to an agent or a user (denotes a member of the hunt group).
+    #:   * Unavailable: To voicemail, when the user has no app or device.
+    #:   * Unrecognized: Unable to determine the reason.
+    #:   * Unknown: Call forward by phone with no reason.
     original_reason: Optional[str] = Field(alias='Original reason')
     #: The operating system that the app was running on, if available.
     os_type: Optional[str] = Field(alias='OS type')
     #: Outbound trunk may be presented in Originating and Terminating records.
     outbound_trunk: Optional[str] = Field(alias='Outbound trunk')
     #: Call Redirection Reason for the redirecting number. For example:
+    #:   * Unconditional: Call Forward Always (CFA) service.
+    #:   * NoAnswer: The party was not available to take the call. CF/busy or Voicemail/busy.
+    #:   * Deflection: Indicates that a call was redirected. Possible causes could be auto attendant transfer, transfer
+    #:     out of a call-center, user’s app/device redirection, direct VM transfer etc..
+    #:   * TimeOfDay: Call scheduled period of automated redirection. CF/Selective.
+    #:   * UserBusy: DND enabled or user willingly declined the call. CF/busy or Voicemail/busy.
+    #:   * FollowMe: Automated redirection to a personal redirecting service.
+    #:   * CallQueue: A call center call to an agent or a user (denotes a member of the call queue).
+    #:   * HuntGroup: A hunt-group-based call to an agent or a user (denotes a member of the hunt group).
+    #:   * Unavailable: To voicemail, when the user has no app or device.
+    #:   * Unrecognized: Unable to determine the reason.
+    #:   * Unknown: Call forward by phone with no reason.
     redirect_reason: Optional[str] = Field(alias='Redirect reason')
     #: When the call has been redirected one or more times, this field reports the last redirecting number. Identifies
     #: who last redirected the call. Only applies to call scenarios such as transfer, call forwarded calls,
@@ -13183,8 +13665,37 @@ class CDR(ApiModel):
     redirecting_number: Optional[str] = Field(alias='Redirecting number')
     #: Indicates a trigger that led to a change in the call presence. The trigger could be for this particular call or
     #: redirected via a different call. For example:
+    #:   * ConsultativeTransfer: While on a call, the call was transferred to another user by announcing it first.
+    #:     meaning the person was given a heads up or asked if they're interested in taking the call and then
+    #:     transferred.
+    #:   * CallForwardSelective: Call Forward as per the defined schedule. Might be based on factors like a specific
+    #:     time, specific callers or to a VM. It always takes precedence over Call Forwarding.
+    #:   * CallForwardAlways: Calls are unconditionally forwarded to a defined phone number or to VM.
+    #:   * CallForwardNoAnswer: The party was not available to take the call.
+    #:   * CallQueue: A call center call to an agent or a user (denotes a member of the call queue).
+    #:   * HuntGroup: A hunt group based call to an agent or a user (denotes a member of the hunt group).
+    #:   * CallPickup: The user part of a pickup group or pickup attempted by this user against a ringing call for a
+    #:     different user or extension.
+    #:   * CalllPark: An ongoing call was parked, assigned with a parked number (not the user’s phone number).
+    #:   * CallParkRetrieve: Call park retrieval attempt by the user, either for a different extension or against the
+    #:     user’s own extension.
+    #:   * Deflection: Indicates that a call was redirected. Possible causes include an auto attendant transfer,
+    #:     transfer out of a call-center, user’s app/device redirection etc..
+    #:   * FaxDeposit: Indicates a FAX was transmitted to the FAX service.
+    #:   * PushNotificationRetrieval: Push notification feature usage indication. Means that a push notification was
+    #:     sent to wake up the client and get ready to receive a call.
+    #:   * BargeIn: Indicates the user barged-in to someone else’s call.
+    #:   * VoiceXMLScriptTermination: Route Point feature usage indication.
+    #:   * AnywhereLocation: Indicates call origination towards the single number reach location.
+    #:   * AnywherePortal: Indicates call origination towards the “user” identified by the single number reach portal.
+    #:   * Unrecognized: Unable to determine the reason.
     related_reason: Optional[str] = Field(alias='Related reason')
     #: Indicates which party released the call first. The possible values are:
+    #:   * Local: Used when the local user has released the call first.
+    #:   * Remote: Used when the far-end party releases the call first.
+    #:   * Unknown: Used when the call has partial information or is unable to gather enough information about the
+    #:     party who released the call. It could be because of situations like force lock or because of a session audit
+    #:     failure.
     releasing_party: Optional[str] = Field(alias='Releasing party')
     #: A unique ID for this particular record. This can be used when processing records to aid in deduplication.
     report_id: Optional[str] = Field(alias='Report ID')
@@ -13211,6 +13722,18 @@ class CDR(ApiModel):
     #: The user who made or received the call.
     user: Optional[str]
     #: The type of user (user or workspace) that made or received the call. For example:
+    #:   * AutomatedAttendantVideo
+    #:   * Anchor
+    #:   * BroadworksAnywhere
+    #:   * VoiceMailRetrieval
+    #:   * LocalGateway
+    #:   * HuntGroup
+    #:   * GroupPaging
+    #:   * User
+    #:   * VoiceMailGroup
+    #:   * CallCenterStandard
+    #:   * VoiceXML
+    #:   * RoutePoint
     user_type: Optional[str] = Field(alias='User type')
     #: A unique identifier for the user associated with the call. This is a unique identifier across Cisco products.
     user_uuid: Optional[str] = Field(alias='User UUID')
@@ -13237,7 +13760,7 @@ class WebexCallingDetailedCallHistoryApi(ApiChild, base=''):
     templates tab, and then in the Webex Calling reports section see Calling Detailed Call History Report.
     """
 
-    def detailed_call_history(self, start_time: str, end_time: str, locations: str = None, max: int = None) -> List[CDR]:
+    def detailed_call_history(self, start_time: str, end_time: str, locations: str = None, **params) -> Generator[CDR, None, None]:
         """
         Provides Webex Calling Detailed Call History data for your organization.
         Results can be filtered with the startTime, endTime and locations request parameters. The startTime and endTime
@@ -13257,20 +13780,13 @@ class WebexCallingDetailedCallHistoryApi(ApiChild, base=''):
         :param locations: Name of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
             provided. Allows you to query reports by location.
         :type locations: str
-        :param max: Limit the maximum number of reports in the response. Range is 1 to 500. When the API has more
-            reports to return than the max value, the API response will be paginated.
-        :type max: int
         """
-        params = {}
         params['startTime'] = start_time
         params['endTime'] = end_time
         if locations is not None:
             params['locations'] = locations
-        if max is not None:
-            params['max'] = max
         url = self.ep('https://analytics.webexapis.com/v1/cdr_feed')
-        data = super().get(url=url, params=params)
-        return data["items"]
+        return self.session.follow_pagination(url=url, model=CDR, params=params)
 
 class ListAutoAttendantObject(Role):
     #: Name of location for auto attendant.
@@ -13308,6 +13824,22 @@ class AlternateNumbersObject(AlternateNumbersWithPattern1):
 class ExtensionDialing(str, Enum):
     enterprise = 'ENTERPRISE'
     group = 'GROUP'
+
+
+class MediaType(str, Enum):
+    #: WMA File Extension.
+    wma = 'WMA'
+    #: WAV File Extension.
+    wav = 'WAV'
+    #: 3GP File Extension.
+    three_gp = '3GP'
+
+
+class AudioFileObject(ApiModel):
+    #: Announcement audio file name.
+    name: Optional[str]
+    #: Announcement audio file media type.
+    media_type: Optional[MediaType]
 
 
 class Greeting(str, Enum):
@@ -13352,13 +13884,18 @@ class KeyConfigurationsObject(ApiModel):
     value: Optional[str]
 
 
-class HoursMenuObject(ApiModel):
+class PostHoursMenuObject(ApiModel):
     #: Greeting type defined for the auto attendant.
     greeting: Optional[Greeting]
     #: Flag to indicate if auto attendant extension is enabled or not.
     extension_enabled: Optional[bool]
     #: Key configurations defined for the auto attendant.
     key_configurations: Optional[KeyConfigurationsObject]
+
+
+class HoursMenuObject(PostHoursMenuObject):
+    #: Announcement Audio File details.
+    audio_file: Optional[AudioFileObject]
 
 
 class FaxMessage(ApiModel):
@@ -13375,33 +13912,6 @@ class GetDetailsForCallParkExtensionResponse(ApiModel):
     extension: Optional[str]
     #: Unique name for the call park extension.
     name: Optional[str]
-
-
-class CreateAutoAttendantBody(GetDetailsForCallParkExtensionResponse):
-    #: Auto attendant phone number. Either phoneNumber or extension is mandatory.
-    phone_number: Optional[str]
-    #: First name defined for an auto attendant.
-    first_name: Optional[str]
-    #: Last name defined for an auto attendant.
-    last_name: Optional[str]
-    #: Alternate numbers defined for the auto attendant.
-    alternate_numbers: Optional[list[AlternateNumbersObject]]
-    #: Language code for the auto attendant.
-    language_code: Optional[str]
-    #: Business hours defined for the auto attendant.
-    business_schedule: Optional[str]
-    #: Holiday defined for the auto attendant.
-    holiday_schedule: Optional[str]
-    #: Extension dialing setting. If the values are not set default will be set as ENTERPRISE.
-    extension_dialing: Optional[ExtensionDialing]
-    #: Name dialing setting. If the values are not set default will be set as ENTERPRISE.
-    name_dialing: Optional[ExtensionDialing]
-    #: Time zone defined for the auto attendant.
-    time_zone: Optional[str]
-    #: Business hours menu defined for the auto attendant.
-    business_hours_menu: Optional[HoursMenuObject]
-    #: After hours menu defined for the auto attendant.
-    after_hours_menu: Optional[HoursMenuObject]
 
 
 class NewNumber(ApiModel):
@@ -14200,7 +14710,7 @@ class DialPatternStatus(ApiModel):
     duplicate_in_list: Optional[str]
 
 
-class State6(DialPatternStatus):
+class State10(DialPatternStatus):
     #: Extension is valid.
     valid = 'VALID'
 
@@ -14209,7 +14719,7 @@ class ExtensionStatusObject(ApiModel):
     #: Unique extension which will be validated at the location level.
     extension: Optional[str]
     #: State of the extension after it was validated.
-    state: Optional[State6]
+    state: Optional[State10]
     #: Error code of the state in case extension is not valid.
     error_code: Optional[int]
     #: Message assigned to the error code.
@@ -14367,7 +14877,7 @@ class UpdateLocationWebexCallingDetailsBody(ApiModel):
     routing_prefix: Optional[str]
 
 
-class CallType(str, Enum):
+class CallType3(str, Enum):
     #: Controls calls within your own company.
     internal_call = 'INTERNAL_CALL'
     #: Controls calls to a telephone number that is billed for all arriving calls instead of incurring charges to the
@@ -14412,7 +14922,7 @@ class Action9(str, Enum):
 
 class CallingPermissionObject(ApiModel):
     #: Below are the call type values.
-    call_type: Optional[CallType]
+    call_type: Optional[CallType3]
     #: Allows to configure settings for each call type.
     action: Optional[Action9]
     #: If enabled, allow the person to transfer or forward internal calls.
@@ -14459,7 +14969,7 @@ class CreatenewPagingGroupBody(GetDetailsForCallParkExtensionResponse):
     targets: Optional[list[str]]
 
 
-class State7(str, Enum):
+class State11(str, Enum):
     #: Active state.
     active = 'ACTIVE'
     #: Inactive state
@@ -14470,7 +14980,7 @@ class AddPhoneNumbersTolocationBody(ApiModel):
     #: List of phone numbers that need to be added.
     phone_numbers: Optional[list[str]]
     #: State of the phone numbers.
-    state: Optional[State7]
+    state: Optional[State11]
 
 
 class Owner(ApiModel):
@@ -15087,20 +15597,11 @@ class Action15(Action11):
     announcement = 'ANNOUNCEMENT'
 
 
-class MediaFileType(str, Enum):
-    #: WMA File Extension.
-    wma = 'WMA'
-    #: WAV File Extension.
-    wav = 'WAV'
-    #: 3GP File Extension.
-    three_gp = '3GP'
-
-
 class CallQueueAudioFilesObject(ApiModel):
     #: Name of the file.
     file_name: Optional[str]
     #: Media Type of the audio file.
-    media_file_type: Optional[MediaFileType]
+    media_file_type: Optional[MediaType]
 
 
 class GetDetailsForCallQueueStrandedCallsResponse(ApiModel):
@@ -15661,7 +16162,7 @@ class DectDeviceList(ApiModel):
     number_of_registrations_supported: Optional[int]
 
 
-class State9(str, Enum):
+class State13(str, Enum):
     #: The requested MAC address is available.
     available = 'AVAILABLE'
     #: The requested MAC address is unavailable.
@@ -15676,7 +16177,7 @@ class MacStatusObject(ApiModel):
     #: MAC address.
     mac: Optional[str]
     #: State of the MAC address.
-    state: Optional[State9]
+    state: Optional[State13]
     #: MAC address validation error code.
     error_code: Optional[int]
     #: Provides a status message about the MAC address.
@@ -15762,9 +16263,63 @@ class GetDetailsForAutoAttendantResponse(FaxMessage):
     after_hours_menu: Optional[HoursMenuObject]
 
 
+class CreateAutoAttendantBody(GetDetailsForCallParkExtensionResponse):
+    #: Auto attendant phone number. Either phoneNumber or extension is mandatory.
+    phone_number: Optional[str]
+    #: First name defined for an auto attendant.
+    first_name: Optional[str]
+    #: Last name defined for an auto attendant.
+    last_name: Optional[str]
+    #: Alternate numbers defined for the auto attendant.
+    alternate_numbers: Optional[list[AlternateNumbersObject]]
+    #: Language code for the auto attendant.
+    language_code: Optional[str]
+    #: Business hours defined for the auto attendant.
+    business_schedule: Optional[str]
+    #: Holiday defined for the auto attendant.
+    holiday_schedule: Optional[str]
+    #: Extension dialing setting. If the values are not set default will be set as ENTERPRISE.
+    extension_dialing: Optional[ExtensionDialing]
+    #: Name dialing setting. If the values are not set default will be set as ENTERPRISE.
+    name_dialing: Optional[ExtensionDialing]
+    #: Time zone defined for the auto attendant.
+    time_zone: Optional[str]
+    #: Business hours menu defined for the auto attendant.
+    business_hours_menu: Optional[PostHoursMenuObject]
+    #: After hours menu defined for the auto attendant.
+    after_hours_menu: Optional[PostHoursMenuObject]
+
+
 class CreateAutoAttendantResponse(ApiModel):
     #: ID of the newly created auto attendant.
     id: Optional[str]
+
+
+class UpdateAutoAttendantBody(GetDetailsForCallParkExtensionResponse):
+    #: Auto attendant phone number. Either phoneNumber or extension is mandatory.
+    phone_number: Optional[str]
+    #: First name defined for an auto attendant.
+    first_name: Optional[str]
+    #: Last name defined for an auto attendant.
+    last_name: Optional[str]
+    #: Alternate numbers defined for the auto attendant.
+    alternate_numbers: Optional[list[AlternateNumbersObject]]
+    #: Language code for the auto attendant.
+    language_code: Optional[str]
+    #: Business hours defined for the auto attendant.
+    business_schedule: Optional[str]
+    #: Holiday defined for the auto attendant.
+    holiday_schedule: Optional[str]
+    #: Extension dialing setting. If the values are not set default will be set as ENTERPRISE.
+    extension_dialing: Optional[ExtensionDialing]
+    #: Name dialing setting. If the values are not set default will be set as ENTERPRISE.
+    name_dialing: Optional[ExtensionDialing]
+    #: Time zone defined for the auto attendant.
+    time_zone: Optional[str]
+    #: Business hours menu defined for the auto attendant.
+    business_hours_menu: Optional[HoursMenuObject]
+    #: After hours menu defined for the auto attendant.
+    after_hours_menu: Optional[HoursMenuObject]
 
 
 class GetCallForwardingSettingsForAutoAttendantResponse(ApiModel):
@@ -16983,7 +17538,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().post(url=url, params=params, data=body.json())
         return
 
-    def read_list_of_auto_attendants(self, org_id: str = None, location_id: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None) -> List[ListAutoAttendantObject]:
+    def read_list_of_auto_attendants(self, org_id: str = None, location_id: str = None, name: str = None, phone_number: str = None, **params) -> Generator[ListAutoAttendantObject, None, None]:
         """
         List all Auto Attendants for the organization.
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
@@ -16995,31 +17550,21 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param location_id: Return the list of auto attendants for this location.
         :type location_id: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param name: Only return auto attendants with the matching name.
         :type name: str
         :param phone_number: Only return auto attendants with the matching phone number.
         :type phone_number: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         url = self.ep('autoAttendants')
-        data = super().get(url=url, params=params)
-        return data["autoAttendants"]
+        return self.session.follow_pagination(url=url, model=ListAutoAttendantObject, item_key='autoAttendants', params=params)
 
     def details_for_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None) -> GetDetailsForAutoAttendantResponse:
         """
@@ -17043,7 +17588,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().get(url=url, params=params)
         return GetDetailsForAutoAttendantResponse.parse_obj(data)
 
-    def create_auto_attendant(self, location_id: str, business_schedule: str, business_hours_menu: HoursMenuObject, after_hours_menu: HoursMenuObject, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, first_name: str = None, last_name: str = None, alternate_numbers: AlternateNumbersObject = None, language_code: str = None, holiday_schedule: str = None, extension_dialing: ExtensionDialing = None, name_dialing: ExtensionDialing = None, time_zone: str = None) -> str:
+    def create_auto_attendant(self, location_id: str, business_schedule: str, business_hours_menu: PostHoursMenuObject, after_hours_menu: PostHoursMenuObject, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, first_name: str = None, last_name: str = None, alternate_numbers: AlternateNumbersObject = None, language_code: str = None, holiday_schedule: str = None, extension_dialing: ExtensionDialing = None, name_dialing: ExtensionDialing = None, time_zone: str = None) -> str:
         """
         Create new Auto Attendant for the given location.
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
@@ -17056,9 +17601,9 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param business_schedule: Business hours defined for the auto attendant.
         :type business_schedule: str
         :param business_hours_menu: Business hours menu defined for the auto attendant.
-        :type business_hours_menu: HoursMenuObject
+        :type business_hours_menu: PostHoursMenuObject
         :param after_hours_menu: After hours menu defined for the auto attendant.
-        :type after_hours_menu: HoursMenuObject
+        :type after_hours_menu: PostHoursMenuObject
         :param org_id: Create the auto attendant for this organization.
         :type org_id: str
         :param extension: The extension for the call park extension.
@@ -17121,7 +17666,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
-    def update_auto_attendant(self, location_id: str, auto_attendant_id: str, business_schedule: str, business_hours_menu: HoursMenuObject, after_hours_menu: HoursMenuObject, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, first_name: str = None, last_name: str = None, alternate_numbers: AlternateNumbersObject = None, language_code: str = None, holiday_schedule: str = None, extension_dialing: ExtensionDialing = None, name_dialing: ExtensionDialing = None, time_zone: str = None):
+    def update_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, first_name: str = None, last_name: str = None, alternate_numbers: AlternateNumbersObject = None, language_code: str = None, business_schedule: str = None, holiday_schedule: str = None, extension_dialing: ExtensionDialing = None, name_dialing: ExtensionDialing = None, time_zone: str = None, business_hours_menu: HoursMenuObject = None, after_hours_menu: HoursMenuObject = None):
         """
         Update the designated Auto Attendant.
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
@@ -17133,12 +17678,6 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param auto_attendant_id: Update an auto attendant with the matching ID.
         :type auto_attendant_id: str
-        :param business_schedule: Business hours defined for the auto attendant.
-        :type business_schedule: str
-        :param business_hours_menu: Business hours menu defined for the auto attendant.
-        :type business_hours_menu: HoursMenuObject
-        :param after_hours_menu: After hours menu defined for the auto attendant.
-        :type after_hours_menu: HoursMenuObject
         :param org_id: Update an auto attendant from this organization.
         :type org_id: str
         :param extension: The extension for the call park extension.
@@ -17155,6 +17694,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type alternate_numbers: AlternateNumbersObject
         :param language_code: Language code for the auto attendant.
         :type language_code: str
+        :param business_schedule: Business hours defined for the auto attendant.
+        :type business_schedule: str
         :param holiday_schedule: Holiday defined for the auto attendant.
         :type holiday_schedule: str
         :param extension_dialing: Extension dialing setting. If the values are not set default will be set as
@@ -17164,17 +17705,15 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type name_dialing: ExtensionDialing
         :param time_zone: Time zone defined for the auto attendant.
         :type time_zone: str
+        :param business_hours_menu: Business hours menu defined for the auto attendant.
+        :type business_hours_menu: HoursMenuObject
+        :param after_hours_menu: After hours menu defined for the auto attendant.
+        :type after_hours_menu: HoursMenuObject
         """
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = CreateAutoAttendantBody()
-        if business_schedule is not None:
-            body.business_schedule = business_schedule
-        if business_hours_menu is not None:
-            body.business_hours_menu = business_hours_menu
-        if after_hours_menu is not None:
-            body.after_hours_menu = after_hours_menu
+        body = UpdateAutoAttendantBody()
         if extension is not None:
             body.extension = extension
         if name is not None:
@@ -17189,6 +17728,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             body.alternate_numbers = alternate_numbers
         if language_code is not None:
             body.language_code = language_code
+        if business_schedule is not None:
+            body.business_schedule = business_schedule
         if holiday_schedule is not None:
             body.holiday_schedule = holiday_schedule
         if extension_dialing is not None:
@@ -17197,6 +17738,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             body.name_dialing = name_dialing
         if time_zone is not None:
             body.time_zone = time_zone
+        if business_hours_menu is not None:
+            body.business_hours_menu = business_hours_menu
+        if after_hours_menu is not None:
+            body.after_hours_menu = after_hours_menu
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
         super().put(url=url, params=params, data=body.json())
         return
@@ -17242,7 +17787,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding')
         data = super().get(url=url, params=params)
-        return data["callForwarding"]
+        return AutoAttendantCallForwardSettingsDetailsObject.parse_obj(data["callForwarding"])
 
     def update_forwarding_settings_for_auto_attendant(self, location_id: str, auto_attendant_id: str, call_forwarding: AutoAttendantCallForwardSettingsModifyDetailsObject, org_id: str = None):
         """
@@ -17326,7 +17871,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
-    def selective_forwarding_rule_for_auto_attendant(self, location_id: str, auto_attendant_id: str, rule_id: str, org_id: str = None) -> str:
+    def selective_forwarding_rule_for_auto_attendant(self, location_id: str, auto_attendant_id: str, rule_id: str, org_id: str = None) -> GetSelectiveCallForwardingRuleForAutoAttendantResponse:
         """
         Retrieve a Selective Call Forwarding Rule's settings for the designated Auto Attendant.
         A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the
@@ -17351,7 +17896,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/selectiveRules/{rule_id}')
         data = super().get(url=url, params=params)
-        return data["id"]
+        return GetSelectiveCallForwardingRuleForAutoAttendantResponse.parse_obj(data)
 
     def update_selective_forwarding_rule_for_auto_attendant(self, location_id: str, auto_attendant_id: str, rule_id: str, name: str, forward_to: CallForwardSelectiveForwardToObject, calls_from: CallForwardSelectiveCallsFromObject, org_id: str = None, enabled: bool = None, business_schedule: str = None, holiday_schedule: str = None, calls_to: CallForwardSelectiveCallsToObject = None) -> str:
         """
@@ -17439,7 +17984,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().delete(url=url, params=params)
         return
 
-    def read_list_of_parks(self, location_id: str, org_id: str = None, max: int = None, start: int = None, order: str = None, name: str = None) -> List[ListCallParkObject]:
+    def read_list_of_parks(self, location_id: str, org_id: str = None, order: str = None, name: str = None, **params) -> Generator[ListCallParkObject, None, None]:
         """
         List all Call Parks for the organization.
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
@@ -17451,29 +17996,19 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: List call parks for this organization.
         :type org_id: str
-        :param max: Limit the number of call parks returned to this maximum count. Default is 2000.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching call parks. Default is 0.
-        :type start: int
         :param order: Sort the list of call parks by name, either ASC or DSC. Default is ASC.
         :type order: str
         :param name: Return the list of call parks that contains the given name. The maximum length is 80.
         :type name: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         if name is not None:
             params['name'] = name
         url = self.ep(f'locations/{location_id}/callParks')
-        data = super().get(url=url, params=params)
-        return data["callParks"]
+        return self.session.follow_pagination(url=url, model=ListCallParkObject, item_key='callParks', params=params)
 
     def create_park(self, location_id: str, name: str, recall: PutRecallHuntGroupObject, org_id: str = None, agents: List[str] = None) -> str:
         """
@@ -17587,7 +18122,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().put(url=url, params=params, data=body.json())
         return data["id"]
 
-    def available_agents_from_parks(self, location_id: str, org_id: str = None, call_park_name: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None, order: str = None) -> List[GetPersonPlaceVirtualLineCallParksObject]:
+    def available_agents_from_parks(self, location_id: str, org_id: str = None, call_park_name: str = None, name: str = None, phone_number: str = None, order: str = None, **params) -> Generator[GetPersonPlaceVirtualLineCallParksObject, None, None]:
         """
         Retrieve available agents from call parks for a given location.
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
@@ -17600,10 +18135,6 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param call_park_name: Only return available agents from call parks with the matching name.
         :type call_park_name: str
-        :param max: Limit the number of available agents returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching available agents.
-        :type start: int
         :param name: Only return available agents with the matching name.
         :type name: str
         :param phone_number: Only return available agents with the matching primary number.
@@ -17613,15 +18144,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             The maximum supported sort order value is 3.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if call_park_name is not None:
             params['callParkName'] = call_park_name
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if phone_number is not None:
@@ -17629,10 +18155,9 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         if order is not None:
             params['order'] = order
         url = self.ep(f'locations/{location_id}/callParks/availableUsers')
-        data = super().get(url=url, params=params)
-        return data["agents"]
+        return self.session.follow_pagination(url=url, model=GetPersonPlaceVirtualLineCallParksObject, item_key='agents', params=params)
 
-    def available_recall_hunt_groups_from_parks(self, location_id: str, org_id: str = None, max: int = None, start: int = None, name: str = None, order: str = None) -> List[Role]:
+    def available_recall_hunt_groups_from_parks(self, location_id: str, org_id: str = None, name: str = None, order: str = None, **params) -> Generator[Role, None, None]:
         """
         Retrieve available recall hunt groups from call parks for a given location.
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
@@ -17643,30 +18168,20 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: Return the available recall hunt groups for this organization.
         :type org_id: str
-        :param max: Limit the number of available recall hunt groups returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching available recall hunt groups.
-        :type start: int
         :param name: Only return available recall hunt groups with the matching name.
         :type name: str
         :param order: Order the available recall hunt groups according to the designated fields. Available sort fields:
             lname.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if order is not None:
             params['order'] = order
         url = self.ep(f'locations/{location_id}/callParks/availableRecallHuntGroups')
-        data = super().get(url=url, params=params)
-        return data["huntGroups"]
+        return self.session.follow_pagination(url=url, model=Role, item_key='huntGroups', params=params)
 
     def park_settings(self, location_id: str, org_id: str = None) -> GetCallParkSettingsResponse:
         """
@@ -17715,7 +18230,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def read_list_of_park_extensions(self, org_id: str = None, max: int = None, start: int = None, extension: str = None, name: str = None, location_id: str = None, location_name: str = None, order: str = None) -> List[ListCallParkExtensionObject]:
+    def read_list_of_park_extensions(self, org_id: str = None, extension: str = None, name: str = None, location_id: str = None, location_name: str = None, order: str = None, **params) -> Generator[ListCallParkExtensionObject, None, None]:
         """
         List all Call Park Extensions for the organization.
         The Call Park service, enabled for all users by default, allows a user to park a call against an available
@@ -17726,10 +18241,6 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param org_id: List call park extensions for this organization.
         :type org_id: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param extension: Only return call park extensions with the matching extension.
         :type extension: str
         :param name: Only return call park extensions with the matching name.
@@ -17742,13 +18253,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             callParkExtension, callParkExtensionName, callParkExtensionExternalId.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if extension is not None:
             params['extension'] = extension
         if name is not None:
@@ -17760,8 +18266,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         if order is not None:
             params['order'] = order
         url = self.ep('callParkExtensions')
-        data = super().get(url=url, params=params)
-        return data["callParkExtensions"]
+        return self.session.follow_pagination(url=url, model=ListCallParkExtensionObject, item_key='callParkExtensions', params=params)
 
     def details_for_park_extension(self, location_id: str, call_park_extension_id: str, org_id: str = None) -> GetDetailsForCallParkExtensionResponse:
         """
@@ -17874,7 +18379,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def read_list_of_pickups(self, location_id: str, org_id: str = None, max: int = None, start: int = None, order: str = None, name: str = None) -> List[ListCallParkObject]:
+    def read_list_of_pickups(self, location_id: str, org_id: str = None, order: str = None, name: str = None, **params) -> Generator[ListCallParkObject, None, None]:
         """
         List all Call Pickups for the organization.
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
@@ -17886,29 +18391,19 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: List call pickups for this organization.
         :type org_id: str
-        :param max: Limit the number of call pickups returned to this maximum count. Default is 2000.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching call pickups. Default is 0.
-        :type start: int
         :param order: Sort the list of call pickups by name, either ASC or DSC. Default is ASC.
         :type order: str
         :param name: Return the list of call pickups that contains the given name. The maximum length is 80.
         :type name: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         if name is not None:
             params['name'] = name
         url = self.ep(f'locations/{location_id}/callPickups')
-        data = super().get(url=url, params=params)
-        return data["callPickups"]
+        return self.session.follow_pagination(url=url, model=ListCallParkObject, item_key='callPickups', params=params)
 
     def create_pickup(self, location_id: str, name: str, org_id: str = None, agents: List[str] = None) -> str:
         """
@@ -17961,7 +18456,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().delete(url=url, params=params)
         return
 
-    def details_for_pickup(self, location_id: str, call_pickup_id: str, org_id: str = None) -> List[GetPersonPlaceVirtualLineCallPickupObject]:
+    def details_for_pickup(self, location_id: str, call_pickup_id: str, org_id: str = None) -> GetDetailsForCallPickupResponse:
         """
         Retrieve Call Pickup details.
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
@@ -17981,7 +18476,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/callPickups/{call_pickup_id}')
         data = super().get(url=url, params=params)
-        return data["agents"]
+        return GetDetailsForCallPickupResponse.parse_obj(data)
 
     def update_pickup(self, location_id: str, call_pickup_id: str, name: str, org_id: str = None, agents: List[str] = None) -> str:
         """
@@ -18014,7 +18509,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().put(url=url, params=params, data=body.json())
         return data["id"]
 
-    def available_agents_from_pickups(self, location_id: str, org_id: str = None, call_pickup_name: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None, order: str = None) -> List[GetPersonPlaceVirtualLineCallPickupObject]:
+    def available_agents_from_pickups(self, location_id: str, org_id: str = None, call_pickup_name: str = None, name: str = None, phone_number: str = None, order: str = None, **params) -> Generator[GetPersonPlaceVirtualLineCallPickupObject, None, None]:
         """
         Retrieve available agents from call pickups for a given location.
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
@@ -18027,10 +18522,6 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param call_pickup_name: Only return available agents from call pickups with the matching name.
         :type call_pickup_name: str
-        :param max: Limit the number of available agents returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching available agents.
-        :type start: int
         :param name: Only return available agents with the matching name.
         :type name: str
         :param phone_number: Only return available agents with the matching primary number.
@@ -18039,15 +18530,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             separated sort order fields may be specified. Available sort fields: fname, lname, extension, number.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if call_pickup_name is not None:
             params['callPickupName'] = call_pickup_name
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if phone_number is not None:
@@ -18055,10 +18541,9 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         if order is not None:
             params['order'] = order
         url = self.ep(f'locations/{location_id}/callPickups/availableUsers')
-        data = super().get(url=url, params=params)
-        return data["agents"]
+        return self.session.follow_pagination(url=url, model=GetPersonPlaceVirtualLineCallPickupObject, item_key='agents', params=params)
 
-    def read_list_of_queues(self, org_id: str = None, location_id: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None) -> List[ListCallQueueObject]:
+    def read_list_of_queues(self, org_id: str = None, location_id: str = None, name: str = None, phone_number: str = None, **params) -> Generator[ListCallQueueObject, None, None]:
         """
         List all Call Queues for the organization.
         Call queues temporarily hold calls in the cloud when all agents, which
@@ -18075,31 +18560,21 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param location_id: Only return call queues with matching location ID.
         :type location_id: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param name: Only return call queues with the matching name.
         :type name: str
         :param phone_number: Only return call queues with matching primary phone number or extension.
         :type phone_number: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         url = self.ep('queues')
-        data = super().get(url=url, params=params)
-        return data["queues"]
+        return self.session.follow_pagination(url=url, model=ListCallQueueObject, item_key='queues', params=params)
 
     def create_queue(self, location_id: str, call_policies: PostCallQueueCallPolicyObject, queue_settings: CallQueueQueueSettingsObject, agents: PostPersonPlaceVirtualLineCallQueueObject, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, language_code: str = None, first_name: str = None, last_name: str = None, time_zone: str = None, allow_agent_join_enabled: bool = None, phone_number_for_outgoing_calls_enabled: bool = None) -> str:
         """
@@ -18324,7 +18799,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def read_list_of_queue_announcement_files(self, location_id: str, queue_id: str, org_id: str = None) -> List[GetAnnouncementFileInfo]:
+    def read_list_of_queue_announcement_files(self, location_id: str, queue_id: str, org_id: str = None) -> list[GetAnnouncementFileInfo]:
         """
         List file info for all Call Queue announcement files associated with this Call Queue.
         Call Queue announcement files contain messages and music that callers hear while waiting in the queue. A call
@@ -18346,7 +18821,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/announcements')
         data = super().get(url=url, params=params)
-        return data["announcements"]
+        return parse_obj_as(list[GetAnnouncementFileInfo], data["announcements"])
 
     def delete_queue_announcement_file(self, location_id: str, queue_id: str, file_name: str, org_id: str = None):
         """
@@ -18372,7 +18847,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().delete(url=url, params=params)
         return
 
-    def forwarding_settings_for_queue(self, location_id: str, queue_id: str, org_id: str = None) -> object:
+    def forwarding_settings_for_queue(self, location_id: str, queue_id: str, org_id: str = None) -> CallForwarding:
         """
         Retrieve Call Forwarding settings for the designated Call Queue including the list of call forwarding rules.
         Retrieving call forwarding settings for a call queue requires a full or read-only administrator auth token with
@@ -18390,7 +18865,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding')
         data = super().get(url=url, params=params)
-        return data["callForwarding"]
+        return CallForwarding.parse_obj(data["callForwarding"])
 
     def update_forwarding_settings_for_queue(self, location_id: str, queue_id: str, org_id: str = None, call_forwarding: CallForwarding1 = None):
         """
@@ -18473,7 +18948,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
-    def selective_forwarding_rule_for_queue(self, location_id: str, queue_id: str, rule_id: str, org_id: str = None) -> str:
+    def selective_forwarding_rule_for_queue(self, location_id: str, queue_id: str, rule_id: str, org_id: str = None) -> GetSelectiveCallForwardingRuleForCallQueueResponse:
         """
         Retrieve a Selective Call Forwarding Rule's settings for the designated Call Queue.
         A selective call forwarding rule for a call queue allows calls to be forwarded or not forwarded to the
@@ -18497,7 +18972,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/selectiveRules/{rule_id}')
         data = super().get(url=url, params=params)
-        return data["id"]
+        return GetSelectiveCallForwardingRuleForCallQueueResponse.parse_obj(data)
 
     def update_selective_forwarding_rule_for_queue(self, location_id: str, queue_id: str, rule_id: str, name: str, calls_from: CallsFrom, calls_to: CallsTo, org_id: str = None, enabled: bool = None, holiday_schedule: str = None, business_schedule: str = None, forward_to: CallForwardSelectiveForwardToObject = None) -> str:
         """
@@ -18750,7 +19225,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().post(url=url, params=params, data=body.json())
         return ValidateExtensionsResponse.parse_obj(data)
 
-    def read_list_of_hunt_groups(self, org_id: str = None, location_id: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None) -> List[ListCallQueueObject]:
+    def read_list_of_hunt_groups(self, org_id: str = None, location_id: str = None, name: str = None, phone_number: str = None, **params) -> Generator[ListCallQueueObject, None, None]:
         """
         List all calling Hunt Groups for the organization.
         Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
@@ -18762,31 +19237,21 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param location_id: Only return hunt groups with matching location ID.
         :type location_id: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param name: Only return hunt groups with the matching name.
         :type name: str
         :param phone_number: Only return hunt groups with the matching primary phone number or extension.
         :type phone_number: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         url = self.ep('huntGroups')
-        data = super().get(url=url, params=params)
-        return data["huntGroups"]
+        return self.session.follow_pagination(url=url, model=ListCallQueueObject, item_key='huntGroups', params=params)
 
     def create_hunt_group(self, location_id: str, name: str, call_policies: PostHuntGroupCallPolicyObject, agents: PostPersonPlaceVirtualLineHuntGroupObject, org_id: str = None, enabled: bool = None, phone_number: str = None, extension: int = None, language_code: str = None, first_name: str = None, last_name: str = None, time_zone: str = None) -> str:
         """
@@ -18973,7 +19438,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def forwarding_settings_for_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None) -> object:
+    def forwarding_settings_for_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None) -> CallForwarding:
         """
         Retrieve Call Forwarding settings for the designated Hunt Group including the list of call forwarding rules.
         Retrieving call forwarding settings for a hunt group requires a full or read-only administrator auth token with
@@ -18991,7 +19456,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding')
         data = super().get(url=url, params=params)
-        return data["callForwarding"]
+        return CallForwarding.parse_obj(data["callForwarding"])
 
     def update_forwarding_settings_for_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None, call_forwarding: CallForwarding1 = None):
         """
@@ -19384,7 +19849,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().post(url=url, params=params, data=body.json())
         return data["exampleSipPassword"]
 
-    def location_outgoing_permission(self, location_id: str, org_id: str = None) -> List[CallingPermissionObject]:
+    def location_outgoing_permission(self, location_id: str, org_id: str = None) -> list[CallingPermissionObject]:
         """
         Retrieve the location's outgoing call settings.
         A location's outgoing call settings allow you to determine the types of calls the people/workspaces at the
@@ -19403,7 +19868,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/outgoingPermission')
         data = super().get(url=url, params=params)
-        return data["callingPermissions"]
+        return parse_obj_as(list[CallingPermissionObject], data["callingPermissions"])
 
     def update_location_outgoing_permission(self, location_id: str, org_id: str = None, calling_permissions: CallingPermissionObject = None):
         """
@@ -19486,7 +19951,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def outgoing_permission_location_access_code(self, location_id: str, org_id: str = None) -> object:
+    def outgoing_permission_location_access_code(self, location_id: str, org_id: str = None) -> ReportError:
         """
         Retrieve access codes details for a customer location.
         Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
@@ -19503,7 +19968,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/outgoingPermission/accessCodes')
         data = super().get(url=url, params=params)
-        return data["accessCodes"]
+        return ReportError.parse_obj(data["accessCodes"])
 
     def create_outgoing_permissionnew_access_code_forcustomer_location(self, location_id: str, org_id: str = None, access_codes: ReportError = None):
         """
@@ -19553,7 +20018,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def read_list_of_paging_groups(self, org_id: str = None, max: int = None, start: int = None, location_id: str = None, name: str = None, phone_number: str = None) -> List[ListAutoAttendantObject]:
+    def read_list_of_paging_groups(self, org_id: str = None, location_id: str = None, name: str = None, phone_number: str = None, **params) -> Generator[ListAutoAttendantObject, None, None]:
         """
         List all Paging Groups for the organization.
         Group Paging allows a person to place a one-way call or group page to up to 75 people and/or workspaces by
@@ -19564,10 +20029,6 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param org_id: List paging groups for this organization.
         :type org_id: str
-        :param max: Limit the number of objects returned to this maximum count. Default is 2000
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects. Default is 0
-        :type start: int
         :param location_id: Return only paging groups with matching location ID. Default is all locations
         :type location_id: str
         :param name: Return only paging groups with the matching name.
@@ -19575,13 +20036,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param phone_number: Return only paging groups with matching primary phone number or extension.
         :type phone_number: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if location_id is not None:
             params['locationId'] = location_id
         if name is not None:
@@ -19589,8 +20045,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         url = self.ep('paging')
-        data = super().get(url=url, params=params)
-        return data["locationPaging"]
+        return self.session.follow_pagination(url=url, model=ListAutoAttendantObject, item_key='locationPaging', params=params)
 
     def createnew_paging_group(self, location_id: str, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, language_code: str = None, first_name: str = None, last_name: str = None, originator_caller_id_enabled: bool = None, originators: List[str] = None, targets: List[str] = None) -> str:
         """
@@ -19774,7 +20229,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def add_phone_numbers_tolocation(self, location_id: str, phone_numbers: List[str], state: State7, org_id: str = None):
+    def add_phone_numbers_tolocation(self, location_id: str, phone_numbers: List[str], state: State11, org_id: str = None):
         """
         Adds a specified set of phone numbers to a location for an organization.
         Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
@@ -19788,7 +20243,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param phone_numbers: List of phone numbers that need to be added.
         :type phone_numbers: List[str]
         :param state: State of the phone numbers.
-        :type state: State7
+        :type state: State11
         :param org_id: Organization of the Route Group.
         :type org_id: str
         """
@@ -19830,7 +20285,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def remove_phone_numbers_fromlocation(self, location_id: str, phone_numbers: List[str], state: State7, org_id: str = None):
+    def remove_phone_numbers_fromlocation(self, location_id: str, phone_numbers: List[str], state: State11, org_id: str = None):
         """
         Remove the specified set of phone numbers from a location for an organization.
         Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
@@ -19844,7 +20299,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param phone_numbers: List of phone numbers that need to be added.
         :type phone_numbers: List[str]
         :param state: State of the phone numbers.
-        :type state: State7
+        :type state: State11
         :param org_id: Organization of the Route Group.
         :type org_id: str
         """
@@ -19946,7 +20401,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['restrictedNonGeoNumbers'] = restricted_non_geo_numbers
         url = self.ep('numbers')
         data = super().get(url=url, params=params)
-        return data["phoneNumbers"]
+        return NumberListGetObject.parse_obj(data["phoneNumbers"])
 
     def list_manage_numbers_jobs(self, org_id: str = None, **params) -> Generator[StartJobResponse, None, None]:
         """
@@ -20075,7 +20530,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         url = self.ep(f'jobs/numbers/manageNumbers/{job_id}/errors')
         return self.session.follow_pagination(url=url, model=ItemObject, params=params)
 
-    def private_network_connect(self, location_id: str, org_id: str = None) -> enum:
+    def private_network_connect(self, location_id: str, org_id: str = None) -> NetworkConnectionType:
         """
         Retrieve the location's network connection type.
         Network Connection Type determines if the location's network connection is public or private.
@@ -20092,7 +20547,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/privateNetworkConnect')
         data = super().get(url=url, params=params)
-        return data["networkConnectionType"]
+        return NetworkConnectionType.parse_obj(data["networkConnectionType"])
 
     def update_private_network_connect(self, location_id: str, network_connection_type: NetworkConnectionType, org_id: str = None):
         """
@@ -20118,7 +20573,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def read_list_of_routing_choices(self, org_id: str = None, route_group_name: str = None, trunk_name: str = None, max: int = None, start: int = None, order: str = None) -> List[RouteIdentity]:
+    def read_list_of_routing_choices(self, org_id: str = None, route_group_name: str = None, trunk_name: str = None, order: str = None, **params) -> Generator[RouteIdentity, None, None]:
         """
         List all Routes for the organization.
         Trunk and Route Group qualify as Route. Trunks and Route Groups provide you the ability to configure Webex
@@ -20133,32 +20588,22 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type route_group_name: str
         :param trunk_name: Return the list of route identities matching the Trunk name..
         :type trunk_name: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the route identities according to the designated fields. Available sort fields: routeName,
             routeType.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if route_group_name is not None:
             params['routeGroupName'] = route_group_name
         if trunk_name is not None:
             params['trunkName'] = trunk_name
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep('routeChoices')
-        data = super().get(url=url, params=params)
-        return data["routeIdentities"]
+        return self.session.follow_pagination(url=url, model=RouteIdentity, item_key='routeIdentities', params=params)
 
-    def read_list_of_schedules(self, location_id: str, org_id: str = None, type_: str = None, max: int = None, start: int = None, name: str = None) -> List[ListScheduleObject]:
+    def read_list_of_schedules(self, location_id: str, org_id: str = None, type_: str = None, name: str = None, **params) -> Generator[ListScheduleObject, None, None]:
         """
         List all schedules for the given location of the organization.
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
@@ -20170,29 +20615,20 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: List schedules for this organization.
         :type org_id: str
-        :param type_: Type of the schedule.
+        :param type_: Type of the schedule. * businessHours - Business hours schedule type. * holidays - Holidays
+            schedule type.
         :type type_: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param name: Only return schedules with the matching name.
         :type name: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if type_ is not None:
             params['type'] = type_
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         url = self.ep(f'locations/{location_id}/schedules')
-        data = super().get(url=url, params=params)
-        return data["schedules"]
+        return self.session.follow_pagination(url=url, model=ListScheduleObject, item_key='schedules', params=params)
 
     def details_for_schedule(self, location_id: str, type_: str, schedule_id: str, org_id: str = None) -> GetDetailsForScheduleResponse:
         """
@@ -20204,7 +20640,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param location_id: Retrieve schedule details in this location.
         :type location_id: str
-        :param type_: Type of the schedule.
+        :param type_: Type of the schedule. * businessHours - Business hours schedule type. * holidays - Holidays
+            schedule type.
         :type type_: str
         :param schedule_id: Retrieve the schedule with the matching ID.
         :type schedule_id: str
@@ -20262,7 +20699,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param location_id: Location in which this schedule exists.
         :type location_id: str
-        :param type_: Type of schedule.
+        :param type_: Type of schedule. * businessHours - Business hours schedule type. * holidays - Holidays schedule
+            type.
         :type type_: str
         :param schedule_id: Update schedule with the matching ID.
         :type schedule_id: str
@@ -20295,7 +20733,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param location_id: Location from which to delete a schedule.
         :type location_id: str
-        :param type_: Type of the schedule.
+        :param type_: Type of the schedule. * businessHours - Business hours schedule type. * holidays - Holidays
+            schedule type.
         :type type_: str
         :param schedule_id: Delete the schedule with the matching ID.
         :type schedule_id: str
@@ -20319,7 +20758,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param location_id: Retrieve schedule event details in this location.
         :type location_id: str
-        :param type_: Type of schedule.
+        :param type_: Type of schedule. * businessHours - Business hours schedule type. * holidays - Holidays schedule
+            type.
         :type type_: str
         :param schedule_id: Retrieve the schedule event with the matching schedule ID.
         :type schedule_id: str
@@ -20345,7 +20785,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param location_id: Create the schedule for this location.
         :type location_id: str
-        :param type_: Type of schedule.
+        :param type_: Type of schedule. * businessHours - Business hours schedule type. * holidays - Holidays schedule
+            type.
         :type type_: str
         :param schedule_id: Create event for a given schedule ID.
         :type schedule_id: str
@@ -20400,7 +20841,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param location_id: Location in which this schedule event exists.
         :type location_id: str
-        :param type_: Type of schedule.
+        :param type_: Type of schedule. * businessHours - Business hours schedule type. * holidays - Holidays schedule
+            type.
         :type type_: str
         :param schedule_id: Update schedule event with the matching schedule ID.
         :type schedule_id: str
@@ -20456,7 +20898,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param location_id: Location from which to delete a schedule.
         :type location_id: str
-        :param type_: Type of schedule.
+        :param type_: Type of schedule. * businessHours - Business hours schedule type. * holidays - Holidays schedule
+            type.
         :type type_: str
         :param schedule_id: Delete the schedule with the matching ID.
         :type schedule_id: str
@@ -20472,7 +20915,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().delete(url=url, params=params)
         return
 
-    def read_list_of_virtual_lines(self, org_id: str = None, location_id: List[str] = None, max: int = None, start: int = None, id: List[str] = None, owner_name: List[str] = None, phone_number: List[str] = None, location_name: List[str] = None, order: List[str] = None, has_device_assigned: bool = None, has_extension_assigned: bool = None, has_dn_assigned: bool = None) -> List[ListVirtualLineObject]:
+    def read_list_of_virtual_lines(self, org_id: str = None, location_id: List[str] = None, id: List[str] = None, owner_name: List[str] = None, phone_number: List[str] = None, location_name: List[str] = None, order: List[str] = None, has_device_assigned: bool = None, has_extension_assigned: bool = None, has_dn_assigned: bool = None, **params) -> Generator[ListVirtualLineObject, None, None]:
         """
         List all Virtual Lines for the organization.
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
@@ -20485,10 +20928,6 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param location_id: Return the list of virtual lines matching these location ids. Example for multiple values -
             ?locationId=locId1&locationId=locId2.
         :type location_id: List[str]
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param id: Return the list of virtual lines matching these virtualLineIds. Example for multiple values -
             ?id=id1&id=id2.
         :type id: List[str]
@@ -20515,15 +20954,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             assigned.
         :type has_dn_assigned: bool
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if id is not None:
             params['id'] = id
         if owner_name is not None:
@@ -20541,8 +20975,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         if has_dn_assigned is not None:
             params['hasDnAssigned'] = has_dn_assigned
         url = self.ep('virtualLines')
-        data = super().get(url=url, params=params)
-        return data["virtualLines"]
+        return self.session.follow_pagination(url=url, model=ListVirtualLineObject, item_key='virtualLines', params=params)
 
     def voicemail_settings(self, org_id: str = None) -> GetVoicemailSettingsResponse:
         """
@@ -20867,7 +21300,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         url = self.ep('voicemailGroups')
-        return self.session.follow_pagination(url=url, model=GetVoicemailGroupObject, params=params)
+        return self.session.follow_pagination(url=url, model=GetVoicemailGroupObject, item_key='voicemailGroups', params=params)
 
     def location_voicemail_group(self, location_id: str, voicemail_group_id: str, org_id: str = None) -> GetLocationVoicemailGroupResponse:
         """
@@ -21062,7 +21495,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().delete(url=url, params=params)
         return
 
-    def read_list_of_uc_manager_profiles(self, org_id: str = None) -> List[Role]:
+    def read_list_of_uc_manager_profiles(self, org_id: str = None) -> list[Role]:
         """
         List all calling UC Manager Profiles for the organization.
         UC Manager Profiles are applicable if your organization uses Jabber in Team Messaging mode or Calling in Webex
@@ -21081,9 +21514,9 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep('callingProfiles')
         data = super().get(url=url, params=params)
-        return data["callingProfiles"]
+        return parse_obj_as(list[Role], data["callingProfiles"])
 
-    def read_list_of_dial_patterns(self, dial_plan_id: str, org_id: str = None, dial_pattern: str = None, max: int = None, start: int = None, order: str = None) -> List[str]:
+    def read_list_of_dial_patterns(self, dial_plan_id: str, org_id: str = None, dial_pattern: str = None, order: str = None, **params) -> Generator[str, None, None]:
         """
         List all Dial Patterns for the organization.
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
@@ -21102,27 +21535,17 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             optional wildcard characters. Valid wildcard characters are ! (matches any sequence of digits) and X
             (matches a single digit, 0-9). The ! wildcard can only occur once at the end and only in an E.164 pattern
         :type dial_pattern: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the dial patterns according to the designated fields. Available sort fields: dialPattern.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if dial_pattern is not None:
             params['dialPattern'] = dial_pattern
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep(f'premisePstn/dialPlans/{dial_plan_id}/dialPatterns')
-        data = super().get(url=url, params=params)
-        return data["dialPatterns"]
+        return self.session.follow_pagination(url=url, model=str, item_key='dialPatterns', params=params)
 
     def modify_dial_patterns(self, dial_plan_id: str, org_id: str = None, dial_patterns: DialPattern = None, delete_all_dial_patterns: bool = None):
         """
@@ -21183,7 +21606,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().post(url=url, params=params, data=body.json())
         return ValidateDialPatternResponse.parse_obj(data)
 
-    def read_list_of_dial_plans(self, org_id: str = None, dial_plan_name: str = None, route_group_name: str = None, trunk_name: str = None, max: int = None, start: int = None, order: str = None) -> List[DialPlan]:
+    def read_list_of_dial_plans(self, org_id: str = None, dial_plan_name: str = None, route_group_name: str = None, trunk_name: str = None, order: str = None, **params) -> Generator[DialPlan, None, None]:
         """
         List all Dial Plans for the organization.
         Dial plans route calls to on-premises destinations by use of the trunks or route groups with which the dial
@@ -21200,15 +21623,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type route_group_name: str
         :param trunk_name: Return the list of dial plans matching the Trunk name..
         :type trunk_name: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the dial plans according to the designated fields. Available sort fields: name, routeName,
             routeType. Sort order is ascending by default
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if dial_plan_name is not None:
@@ -21217,15 +21635,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['routeGroupName'] = route_group_name
         if trunk_name is not None:
             params['trunkName'] = trunk_name
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep('premisePstn/dialPlans')
-        data = super().get(url=url, params=params)
-        return data["dialPlans"]
+        return self.session.follow_pagination(url=url, model=DialPlan, item_key='dialPlans', params=params)
 
     def create_dial_plan(self, name: str, route_id: str, route_type: RouteType, org_id: str = None, dial_patterns: List[str] = None) -> str:
         """
@@ -21265,7 +21678,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
-    def dial_plan(self, dial_plan_id: str, org_id: str = None) -> Role:
+    def dial_plan(self, dial_plan_id: str, org_id: str = None) -> GetDialPlanResponse:
         """
         Get a Dial Plan for the organization.
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
@@ -21286,7 +21699,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/dialPlans/{dial_plan_id}')
         data = super().get(url=url, params=params)
-        return data["customer"]
+        return GetDialPlanResponse.parse_obj(data)
 
     def modify_dial_plan(self, dial_plan_id: str, name: str, route_id: str, route_type: RouteType, org_id: str = None):
         """
@@ -21380,7 +21793,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().post(url=url, params=params, data=body.json())
         return
 
-    def read_list_of_trunks(self, org_id: str = None, name: List[str] = None, location_name: List[str] = None, trunk_type: str = None, max: int = None, start: int = None, order: str = None) -> List[Trunk]:
+    def read_list_of_trunks(self, org_id: str = None, name: List[str] = None, location_name: List[str] = None, trunk_type: str = None, order: str = None, **params) -> Generator[Trunk, None, None]:
         """
         List all Trunks for the organization.
         A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
@@ -21398,15 +21811,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_name: List[str]
         :param trunk_type: Return the list of trunks matching the trunk type.
         :type trunk_type: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the trunks according to the designated fields. Available sort fields: name, locationName.
             Sort order is ascending by default
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if name is not None:
@@ -21415,15 +21823,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['locationName'] = location_name
         if trunk_type is not None:
             params['trunkType'] = trunk_type
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep('premisePstn/trunks')
-        data = super().get(url=url, params=params)
-        return data["trunks"]
+        return self.session.follow_pagination(url=url, model=Trunk, item_key='trunks', params=params)
 
     def create_trunk(self, name: str, password: str, location_id: str, trunk_type: TrunkType, org_id: str = None, dual_identity_support_enabled: bool = None, max_concurrent_calls: int = None, device_type: str = None, address: str = None, domain: str = None, port: int = None) -> str:
         """
@@ -21566,7 +21969,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().delete(url=url, params=params)
         return
 
-    def read_list_of_trunk_types(self, org_id: str = None) -> List[TrunkTypeWithDeviceType]:
+    def read_list_of_trunk_types(self, org_id: str = None) -> list[TrunkTypeWithDeviceType]:
         """
         List all Trunk Types with Device Types for the organization.
         A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
@@ -21585,9 +21988,9 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep('premisePstn/trunks/trunkTypes')
         data = super().get(url=url, params=params)
-        return data["trunkTypes"]
+        return parse_obj_as(list[TrunkTypeWithDeviceType], data["trunkTypes"])
 
-    def read_list_of_routing_groups(self, org_id: str = None, name: str = None, max: int = None, start: int = None, order: str = None) -> List[RouteGroup]:
+    def read_list_of_routing_groups(self, org_id: str = None, name: str = None, order: str = None, **params) -> Generator[RouteGroup, None, None]:
         """
         List all Route Groups for an organization. A Route Group is a group of trunks that allows further scale and
         redundancy with the connection to the premises.
@@ -21598,27 +22001,17 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param name: Return the list of route groups matching the Route group name..
         :type name: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the route groups according to designated fields. Available sort orders are asc and desc.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if name is not None:
             params['name'] = name
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep('premisePstn/routeGroups')
-        data = super().get(url=url, params=params)
-        return data["routeGroups"]
+        return self.session.follow_pagination(url=url, model=RouteGroup, item_key='routeGroups', params=params)
 
     def create_route_group_for_organization(self, name: str, local_gateways: LocalGateways, org_id: str = None) -> str:
         """
@@ -21647,7 +22040,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
-    def read_route_group_for_organization(self, route_group_id: str, org_id: str = None) -> Organization:
+    def read_route_group_for_organization(self, route_group_id: str, org_id: str = None) -> ReadRouteGroupForOrganizationResponse:
         """
         Reads a Route Group for the organization based on id.
         A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the
@@ -21665,7 +22058,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}')
         data = super().get(url=url, params=params)
-        return data["organization"]
+        return ReadRouteGroupForOrganizationResponse.parse_obj(data)
 
     def modify_route_group_for_organization(self, route_group_id: str, name: str, local_gateways: LocalGateways, org_id: str = None):
         """
@@ -21741,7 +22134,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().get(url=url, params=params)
         return ReadUsageOfRoutingGroupResponse.parse_obj(data)
 
-    def read_to_extension_locations_of_routing_group(self, route_group_id: str, org_id: str = None, location_name: str = None, max: int = None, start: int = None, order: str = None) -> List[Location]:
+    def read_to_extension_locations_of_routing_group(self, route_group_id: str, org_id: str = None, location_name: str = None, order: str = None, **params) -> Generator[Role, None, None]:
         """
         List "Call to" on-premises Extension Locations for a specific route group. Users within these locations are
         registered to a PBX which allows you to route unknown extensions (calling number length of 2-6 digits) to the
@@ -21755,29 +22148,19 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param location_name: Return the list of locations matching the location name.
         :type location_name: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the locations according to designated fields. Available sort orders are asc, and desc.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_name is not None:
             params['locationName'] = location_name
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}/usageCallToExtension')
-        data = super().get(url=url, params=params)
-        return data["locations"]
+        return self.session.follow_pagination(url=url, model=Role, item_key='locations', params=params)
 
-    def read_dial_plan_locations_of_routing_group(self, route_group_id: str, org_id: str = None, location_name: str = None, max: int = None, start: int = None, order: str = None) -> List[Location]:
+    def read_dial_plan_locations_of_routing_group(self, route_group_id: str, org_id: str = None, location_name: str = None, order: str = None, **params) -> Generator[Role, None, None]:
         """
         List Dial Plan Locations for a specific route group.
         Dial Plans allow you to route calls to on-premises destinations by use of trunks or route groups. They are
@@ -21793,29 +22176,19 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param location_name: Return the list of locations matching the location name.
         :type location_name: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the locations according to designated fields. Available sort orders are asc, and desc.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_name is not None:
             params['locationName'] = location_name
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}/usageDialPlan')
-        data = super().get(url=url, params=params)
-        return data["locations"]
+        return self.session.follow_pagination(url=url, model=Role, item_key='locations', params=params)
 
-    def read_pstn_connection_locations_of_routing_group(self, route_group_id: str, org_id: str = None, location_name: str = None, max: int = None, start: int = None, order: str = None) -> List[Location]:
+    def read_pstn_connection_locations_of_routing_group(self, route_group_id: str, org_id: str = None, location_name: str = None, order: str = None, **params) -> Generator[Role, None, None]:
         """
         List PSTN Connection Locations for a specific route group. This solution lets you configure users to use Cloud
         PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
@@ -21828,29 +22201,19 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param location_name: Return the list of locations matching the location name.
         :type location_name: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the locations according to designated fields. Available sort orders are asc, and desc.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_name is not None:
             params['locationName'] = location_name
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}/usagePstnConnection')
-        data = super().get(url=url, params=params)
-        return data["locations"]
+        return self.session.follow_pagination(url=url, model=Role, item_key='locations', params=params)
 
-    def read_route_lists_of_routing_group(self, route_group_id: str, org_id: str = None, name: str = None, max: int = None, start: int = None, order: str = None) -> List[RouteGroupUsageRouteListGet]:
+    def read_route_lists_of_routing_group(self, route_group_id: str, org_id: str = None, name: str = None, order: str = None, **params) -> Generator[RouteGroupUsageRouteListGet, None, None]:
         """
         List Route Lists for a specific route group. Route Lists are a list of numbers that can be reached via a Route
         Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
@@ -21863,29 +22226,19 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param name: Return the list of locations matching the location name.
         :type name: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the locations according to designated fields. Available sort orders are asc, and desc.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if name is not None:
             params['name'] = name
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}/usageRouteList')
-        data = super().get(url=url, params=params)
-        return data["routeGroupUsageRouteListGet"]
+        return self.session.follow_pagination(url=url, model=RouteGroupUsageRouteListGet, item_key='routeGroupUsageRouteListGet', params=params)
 
-    def read_list_of_route_lists(self, org_id: str = None, name: List[str] = None, location_id: List[str] = None, max: int = None, start: int = None, order: str = None) -> List[RouteList]:
+    def read_list_of_route_lists(self, org_id: str = None, name: List[str] = None, location_id: List[str] = None, order: str = None, **params) -> Generator[RouteList, None, None]:
         """
         List all Route Lists for the organization.
         A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
@@ -21899,30 +22252,20 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type name: List[str]
         :param location_id: Return the list of Route Lists matching the location id.
         :type location_id: List[str]
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the Route List according to the designated fields. Available sort fields are name, and
             locationId. Sort order is ascending by default
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if name is not None:
             params['name'] = name
         if location_id is not None:
             params['locationId'] = location_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep('premisePstn/routeLists')
-        data = super().get(url=url, params=params)
-        return data["routeLists"]
+        return self.session.follow_pagination(url=url, model=RouteList, item_key='routeLists', params=params)
 
     def create_route_list(self, location_id: str, org_id: str = None, name: str = None, route_group_id: str = None) -> str:
         """
@@ -22024,7 +22367,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def modify_numbers_for_route_list(self, route_list_id: str, org_id: str = None, numbers: RouteListNumberPatch = None, delete_all_numbers: bool = None) -> List[RouteListNumberPatchResponse]:
+    def modify_numbers_for_route_list(self, route_list_id: str, org_id: str = None, numbers: RouteListNumberPatch = None, delete_all_numbers: bool = None) -> list[RouteListNumberPatchResponse]:
         """
         Modify numbers for a specific Route List of a Customer.
         A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
@@ -22052,7 +22395,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             body.delete_all_numbers = delete_all_numbers
         url = self.ep(f'premisePstn/routeLists/{route_list_id}/numbers')
         data = super().put(url=url, params=params, data=body.json())
-        return data["numberStatus"]
+        return parse_obj_as(list[RouteListNumberPatchResponse], data["numberStatus"])
 
     def numbers_assigned_to_route_list(self, route_list_id: str, org_id: str = None, max: int = None, start: int = None, order: str = None, number: str = None) -> str:
         """
@@ -22090,7 +22433,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().get(url=url, params=params)
         return data["phoneNumbers"]
 
-    def local_gateway_to_on_premises_extension_usage_for_trunk(self, trunk_id: str, org_id: str = None, max: int = None, start: int = None, order: str = None, name: List[str] = None) -> Location:
+    def local_gateway_to_on_premises_extension_usage_for_trunk(self, trunk_id: str, org_id: str = None, max: int = None, start: int = None, order: str = None, name: List[str] = None) -> Role:
         """
         Get local gateway call to on-premises extension usage for a trunk.
         A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
@@ -22127,9 +22470,9 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['name'] = name
         url = self.ep(f'premisePstn/trunks/{trunk_id}/usageCallToExtension')
         data = super().get(url=url, params=params)
-        return data["location"]
+        return Role.parse_obj(data["location"])
 
-    def local_gateway_dial_plan_usage_for_trunk(self, trunk_id: str, org_id: str = None, max: int = None, start: int = None, order: str = None, name: List[str] = None) -> List[Role]:
+    def local_gateway_dial_plan_usage_for_trunk(self, trunk_id: str, org_id: str = None, order: str = None, name: List[str] = None, **params) -> Generator[Role, None, None]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
         A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
@@ -22143,32 +22486,22 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type trunk_id: str
         :param org_id: Organization to which the trunk belongs.
         :type org_id: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the trunks according to the designated fields. Available sort fields are name, and
             locationName. Sort order is ascending by default
         :type order: str
         :param name: Return the list of trunks matching the local gateway names
         :type name: List[str]
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         if name is not None:
             params['name'] = name
         url = self.ep(f'premisePstn/trunks/{trunk_id}/usageDialPlan')
-        data = super().get(url=url, params=params)
-        return data["dialPlans"]
+        return self.session.follow_pagination(url=url, model=Role, item_key='dialPlans', params=params)
 
-    def locations_using_local_gateway_as_pstn_connection_routing(self, trunk_id: str, org_id: str = None) -> Location:
+    def locations_using_local_gateway_as_pstn_connection_routing(self, trunk_id: str, org_id: str = None) -> Role:
         """
         Get Locations Using the Local Gateway as PSTN Connection Routing.
         A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
@@ -22188,9 +22521,9 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/trunks/{trunk_id}/usagePstnConnection')
         data = super().get(url=url, params=params)
-        return data["location"]
+        return Role.parse_obj(data["location"])
 
-    def route_groups_using_local_gateway(self, trunk_id: str, org_id: str = None) -> List[RouteGroup]:
+    def route_groups_using_local_gateway(self, trunk_id: str, org_id: str = None) -> list[RouteGroup]:
         """
         Get Route Groups Using the Local Gateway.
         A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
@@ -22210,7 +22543,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/trunks/{trunk_id}/usageRouteGroup')
         data = super().get(url=url, params=params)
-        return data["routeGroup"]
+        return parse_obj_as(list[RouteGroup], data["routeGroup"])
 
     def local_gateway_usage_count(self, trunk_id: str, org_id: str = None) -> GetLocalGatewayUsageCountResponse:
         """
@@ -22588,7 +22921,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def search_members(self, device_id: str, location_id: str, org_id: str = None, start: int = None, max: int = None, member_name: str = None, phone_number: str = None, extension: str = None) -> List[SearchMemberObject]:
+    def search_members(self, device_id: str, location_id: str, org_id: str = None, member_name: str = None, phone_number: str = None, extension: str = None, **params) -> Generator[SearchMemberObject, None, None]:
         """
         Search members that can be assigned to the device.
         A device member can be either a person or a workspace. A admin can access the list of member details, modify
@@ -22602,10 +22935,6 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: Retrieves the list of available members on the device in this organization.
         :type org_id: str
-        :param start: Specifies the offset from the first result that you want to fetch.
-        :type start: int
-        :param max: Specifies the maximum number of records that you want to fetch.
-        :type max: int
         :param member_name: Search (Contains) numbers based on member name.
         :type member_name: str
         :param phone_number: Search (Contains) based on number.
@@ -22613,14 +22942,9 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param extension: Search (Contains) based on extension.
         :type extension: str
         """
-        params = {}
         params['locationId'] = location_id
         if org_id is not None:
             params['orgId'] = org_id
-        if start is not None:
-            params['start'] = start
-        if max is not None:
-            params['max'] = max
         if member_name is not None:
             params['memberName'] = member_name
         if phone_number is not None:
@@ -22628,8 +22952,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         if extension is not None:
             params['extension'] = extension
         url = self.ep(f'devices/{device_id}/availableMembers')
-        data = super().get(url=url, params=params)
-        return data["members"]
+        return self.session.follow_pagination(url=url, model=SearchMemberObject, item_key='members', params=params)
 
     def apply_changes_forspecific_device(self, device_id: str, org_id: str = None):
         """
@@ -22791,7 +23114,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def read_list_of_supported_devices(self, org_id: str = None) -> List[DeviceObject]:
+    def read_list_of_supported_devices(self, org_id: str = None) -> list[DeviceObject]:
         """
         Gets the list of supported devices for an organization.
         Retrieving this list requires a full or read-only administrator auth token with a scope of
@@ -22805,7 +23128,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep('supportedDevices')
         data = super().get(url=url, params=params)
-        return data["devices"]
+        return parse_obj_as(list[DeviceObject], data["devices"])
 
     def readdevice_override_settings_fororganization(self, org_id: str = None) -> ReaddeviceOverrideSettingsFororganizationResponse:
         """
@@ -22823,7 +23146,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().get(url=url, params=params)
         return ReaddeviceOverrideSettingsFororganizationResponse.parse_obj(data)
 
-    def read_dect_device_type_list(self, org_id: str = None) -> List[DectDeviceList]:
+    def read_dect_device_type_list(self, org_id: str = None) -> list[DectDeviceList]:
         """
         Get DECT device type list with base stations and line ports supported count. This is a static list.
         Retrieving this list requires a full or read-only administrator auth token with a scope of
@@ -22837,7 +23160,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep('devices/dects/supportedDevices')
         data = super().get(url=url, params=params)
-        return data["devices"]
+        return parse_obj_as(list[DectDeviceList], data["devices"])
 
     def validatelist_of_mac_address(self, macs: List[str], org_id: str = None) -> ValidatelistOfMACAddressResponse:
         """
@@ -23674,7 +23997,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
     own settings.
     """
 
-    def search_shared_line_appearance_members(self, person_id: str, application_id: str, extension: str = None, name: str = None, max: int = None, start: int = None, location: str = None, number: str = None, order: str = None) -> List[AvailableSharedLineMemberItem]:
+    def search_shared_line_appearance_members(self, person_id: str, application_id: str, extension: str = None, name: str = None, max: int = None, start: int = None, location: str = None, number: str = None, order: str = None) -> list[AvailableSharedLineMemberItem]:
         """
         Get members available for shared-line assignment to a Webex Calling Apps Desktop device.
         This API requires a full or user administrator auth token with the spark-admin:people_read scope.
@@ -23715,7 +24038,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             body.order = order
         url = self.ep(f'telephony/config/people/{person_id}/applications/{application_id}/availableMembers')
         data = super().get(url=url, data=body.json())
-        return data["members"]
+        return parse_obj_as(list[AvailableSharedLineMemberItem], data["members"])
 
     def shared_line_appearance_members(self, person_id: str, application_id: str) -> GetSharedLineAppearanceMembersResponse:
         """
@@ -23750,7 +24073,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         super().put(url=url, data=body.json())
         return
 
-    def read_persons_calling_behavior(self, person_id: str, org_id: str = None) -> enum:
+    def read_persons_calling_behavior(self, person_id: str, org_id: str = None) -> ReadPersonsCallingBehaviorResponse:
         """
         Retrieves the calling behavior and UC Manager Profile settings for the person which includes overall calling
         behavior and calling UC Manager Profile ID.
@@ -23775,7 +24098,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/features/callingBehavior')
         data = super().get(url=url, params=params)
-        return data["effectiveBehaviorType"]
+        return ReadPersonsCallingBehaviorResponse.parse_obj(data)
 
     def configurepersons_calling_behavior(self, person_id: str, org_id: str = None, behavior_type: BehaviorType = None, profile_id: str = None):
         """
@@ -24365,7 +24688,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         if type_ is not None:
             params['type'] = type_
         url = self.ep(f'people/{person_id}/features/schedules')
-        return self.session.follow_pagination(url=url, model=ScheduleShortDetails, params=params)
+        return self.session.follow_pagination(url=url, model=ScheduleShortDetails, item_key='schedules', params=params)
 
     def create_schedule_for_person(self, person_id: str, name: str, type_: Type54, org_id: str = None, events: EventLongDetails = None) -> str:
         """
@@ -24403,7 +24726,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
-    def schedule_details(self, person_id: str, schedule_type: Type54, schedule_id: str, org_id: str = None) -> List[EventLongDetails]:
+    def schedule_details(self, person_id: str, schedule_type: Type54, schedule_id: str, org_id: str = None) -> GetScheduleDetailsResponse:
         """
         Retrieve a schedule by its schedule ID.
         Schedules are used to support calling features and can be defined at the location or person level.
@@ -24428,7 +24751,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/features/schedules/{schedule_type}/{schedule_id}')
         data = super().get(url=url, params=params)
-        return data["events"]
+        return GetScheduleDetailsResponse.parse_obj(data)
 
     def update_schedule(self, person_id: str, schedule_type: Type54, schedule_id: str, name: str, type_: Type54, new_name: str, org_id: str = None, events: EventLongDetails = None) -> str:
         """
@@ -24501,7 +24824,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         super().delete(url=url, params=params)
         return
 
-    def fetch_event_forpersons_schedule(self, person_id: str, schedule_type: Type54, schedule_id: str, event_id: str, org_id: str = None) -> str:
+    def fetch_event_forpersons_schedule(self, person_id: str, schedule_type: Type54, schedule_id: str, event_id: str, org_id: str = None) -> FetchEventForpersonsScheduleResponse:
         """
         People can use shared location schedules or define personal schedules containing events.
         businessHours schedules allow you to apply specific call settings at different times of the day or week by
@@ -24527,7 +24850,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/features/schedules/{schedule_type}/{schedule_id}/events/{event_id}')
         data = super().get(url=url, params=params)
-        return data["id"]
+        return FetchEventForpersonsScheduleResponse.parse_obj(data)
 
     def add_new_event_for_persons_schedule(self, person_id: str, schedule_type: Type54, schedule_id: str, name: str, start_date: str, end_date: str, start_time: str, end_time: str, org_id: str = None, all_day_enabled: bool = None, recurrence: Recurrence = None) -> str:
         """
@@ -24803,7 +25126,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         data = super().get(url=url, params=params)
         return GetListOfPhoneNumbersForPersonResponse.parse_obj(data)
 
-    def retrievepersons_application_services(self, person_id: str, org_id: str = None) -> int:
+    def retrievepersons_application_services(self, person_id: str, org_id: str = None) -> RetrievepersonsApplicationServicesSettingsResponse:
         """
         Application services let you determine the ringing behavior for calls made to people in certain scenarios. You
         can also specify which devices can download the Webex Calling app.
@@ -24821,7 +25144,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/features/applications')
         data = super().get(url=url, params=params)
-        return data["availableLineCount"]
+        return RetrievepersonsApplicationServicesSettingsResponse.parse_obj(data)
 
     def modifypersons_application_services(self, person_id: str, org_id: str = None, ring_devices_for_click_to_dial_calls_enabled: bool = None, ring_devices_for_group_page_enabled: bool = None, ring_devices_for_call_park_enabled: bool = None, browser_client_enabled: bool = None, desktop_client_enabled: bool = None, tablet_client_enabled: bool = None, mobile_client_enabled: bool = None):
         """
@@ -24932,7 +25255,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def retrieve_executive_assistant_for_person(self, person_id: str, org_id: str = None) -> enum:
+    def retrieve_executive_assistant_for_person(self, person_id: str, org_id: str = None) -> Type61:
         """
         Retrieve the executive assistant settings for the specified personId.
         People with the executive service enabled, can select from a pool of assistants who have been assigned the
@@ -24952,7 +25275,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/features/executiveAssistant')
         data = super().get(url=url, params=params)
-        return data["type"]
+        return Type61.parse_obj(data["type"])
 
     def modify_executive_assistant_for_person(self, person_id: str, org_id: str = None, type_: Type61 = None):
         """
@@ -25305,7 +25628,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def retrieve_list_of_call_queue_caller_id_information(self, person_id: str) -> List[CallQueueObject]:
+    def retrieve_list_of_call_queue_caller_id_information(self, person_id: str) -> list[CallQueueObject]:
         """
         Retrieve the list of the person's available call queues and the associated Caller ID information.
         If the Agent is to enable queueCallerIdEnabled, they must choose which queue to use as the source for outgoing
@@ -25319,7 +25642,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         """
         url = self.ep(f'telephony/config/people/{person_id}/queues/availableCallerIds')
         data = super().get(url=url)
-        return data["availableQueues"]
+        return parse_obj_as(list[CallQueueObject], data["availableQueues"])
 
     def retrieve_call_queue_agents_caller_id_information(self, person_id: str) -> RetrieveCallQueueAgentsCallerIDInformationResponse:
         """
@@ -25425,12 +25748,13 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
         data = super().get(url=url)
         return GetMessageSummaryResponse.parse_obj(data)
 
-    def list(self, **params) -> Generator[VoiceMessageDetails, None, None]:
+    def list(self) -> list[VoiceMessageDetails]:
         """
         Get the list of all voicemail messages for the user.
         """
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=VoiceMessageDetails, params=params)
+        data = super().get(url=url)
+        return parse_obj_as(list[VoiceMessageDetails], data["items"])
 
     def delete(self, message_id: str):
         """
@@ -25705,7 +26029,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             params['orgId'] = org_id
         url = self.ep(f'callForwarding')
         data = super().get(url=url, params=params)
-        return data["callForwarding"]
+        return CallForwardingPlaceSettingGet.parse_obj(data["callForwarding"])
 
     def modify_call_forwarding_settings_for(self, workspace_id: str, call_forwarding: CallForwardingPlaceSettingPatch, org_id: str = None):
         """
@@ -25916,7 +26240,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         super().put(url=url, params=params, data=body.json())
         return
 
-    def list_numbers_associated_withspecific(self, workspace_id: str, attributes: , body: , org_id: str = None, **params):
+    def list_numbers_associated_withspecific(self, workspace_id: str, attributes: , body: , org_id: str = None):
         """
         List the PSTN phone numbers associated with a specific workspace, by ID, within the organization. Also shows
         the location and organization associated with the workspace.
@@ -25925,7 +26249,11 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
 
         :param workspace_id: List numbers for this workspace.
         :type workspace_id: str
-        :param attributes: 
+        :param attributes:   * phoneNumbers (array[PhoneNumbers], fixed-type, required) - Array of numbers
+                (primary/alternate). * workspace (workspace, fixed-type, required) - Workspace object having a unique
+                identifier for the Workspace. * location (location, fixed-type, required) - Location object having a
+                unique identifier for the location and its name. * organization (organization, fixed-type, required) -
+                Organization object having a unique identifier for the organization and its name.
         :type attributes: 
         :param body: { "phoneNumbers": [ { "external": "+12055550001", "extension": "12211", "primary": true }, {
             "external": "+12055550002", "extension": "122", "primary": false } ], "workspace": { "id":
@@ -25939,12 +26267,14 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             can use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
+        params = {}
         params['Attributes'] = attributes
         params['Body'] = body
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'numbers')
-        return !$!!$!$       # documentation at https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace is missing return type
+        super().get(url=url, params=params)
+        return $!$!$!   # this is weird. Check the spec at https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace
 
     def retrieve_incoming_permission_settings_for(self, workspace_id: str, org_id: str = None) -> ReadIncomingPermissionSettingsForPersonResponse:
         """
@@ -26061,7 +26391,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         super().put(url=url, params=params, data=body.json())
         return
 
-    def retrieve_access_codes_for(self, workspace_id: str, org_id: str = None) -> List[ReportError]:
+    def retrieve_access_codes_for(self, workspace_id: str, org_id: str = None) -> list[ReportError]:
         """
         Retrieve Access codes for a Workspace.
         Access codes are used to bypass permissions.
@@ -26080,7 +26410,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             params['orgId'] = org_id
         url = self.ep(f'outgoingPermission/accessCodes')
         data = super().get(url=url, params=params)
-        return data["accessCodes"]
+        return parse_obj_as(list[ReportError], data["accessCodes"])
 
     def modify_access_codes_for(self, workspace_id: str, org_id: str = None, delete_codes: List[str] = None):
         """
@@ -26496,6 +26826,8 @@ class GetWholesaleBillingReportResponse(ListReport1):
     temp_download_url: Optional[str]
     #: List of errors that occurred during report generation.
     #: Note:
+    #:   * This list captures errors that occurred during asynchronous or background report generation, after the
+    #:     request has been accepted and 202 OK response returned.
     errors: Optional[list[ReportError]]
 
 
@@ -26559,7 +26891,7 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
         data = super().get(url=url)
         return GetWholesaleBillingReportResponse.parse_obj(data)
 
-    def create_billing_report(self, billing_start_date: str, billing_end_date: str, type_: Type68 = None) -> str:
+    def create_billing_report(self, billing_start_date: str, billing_end_date: str, type_: Type68 = None) -> CreateWholesaleBillingReportResponse:
         """
         This API generates a wholesale billing reconciliation report.
 
@@ -26579,7 +26911,7 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
             body.type_ = type_
         url = self.ep()
         data = super().post(url=url, data=body.json())
-        return data["id"]
+        return CreateWholesaleBillingReportResponse.parse_obj(data)
 
     def delete_billing_report(self, id: str):
         """
@@ -26650,9 +26982,17 @@ class Package6(ApiModel):
     status: Optional[Status40]
     #: List of warnings that occurred during that last attempt to provision/update this customer.
     #: Note:
+    #:   * This list captures errors that occurred during asynchronous or background provisioning of the customer,
+    #:     after the API has been accepted and 202 response returned.
+    #:   * Any errors that occur during initial API request validation will be captured directly in error response with
+    #:     appropriate HTTP status code.
     warnings: Optional[list[Errors]]
     #: List of errors that occurred during that last attempt to provision/update this customer.
     #: Note:
+    #:   * This list captures errors that occurred during asynchronous or background provisioning of the customer,
+    #:     after the API has been accepted and 202 response returned.
+    #:   * Any errors that occur during initial API request validation will be captured directly in error response with
+    #:     appropriate HTTP status code.
     errors: Optional[list[Errors]]
 
 
@@ -26677,6 +27017,10 @@ class Customer2(ApiModel):
     resource_details: Optional[ResourceDetails]
     #: List of errors that occurred during that last attempt to provision/update this customer.
     #: Note:
+    #:   * This list captures errors that occurred during asynchronous or background provisioning of the customer,
+    #:     after the API has been accepted and 202 response returned.
+    #:   * Any errors that occur during initial API request validation will be captured directly in error response with
+    #:     appropriate HTTP status code.
     errors: Optional[list[Errors]]
 
 
@@ -26976,6 +27320,9 @@ class Subscriber1(ApiModel):
     status: Optional[Status43]
     #: List of errors that occurred during that last attempt to provision/update this subscriber.
     #: Note:
+    #:   * This list captures errors that occurred during provisioning of the subscriber.
+    #:   * Any errors that occur during initial API request validation will be captured directly in error response with
+    #:     appropriate HTTP status code.
     errors: Optional[list[Errors]]
     #: The date and time the subscriber was provisioned.
     created: Optional[str]
@@ -27251,7 +27598,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
     documentation for the relevant endpoints.
     """
 
-    def list_locations(self, display_name: str = None, address: str = None, country_code: str = None, city_name: str = None, **params) -> Generator[Location19, None, None]:
+    def list_locations(self, display_name: str = None, address: str = None, country_code: str = None, city_name: str = None) -> list[Location19]:
         """
         List workspace locations.
 
@@ -27264,6 +27611,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :param city_name: Location city name.
         :type city_name: str
         """
+        params = {}
         if display_name is not None:
             params['displayName'] = display_name
         if address is not None:
@@ -27273,7 +27621,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         if city_name is not None:
             params['cityName'] = city_name
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=Location19, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[Location19], data["items"])
 
     def create_location(self, display_name: str, address: str, country_code: str, latitude: int, longitude: int, city_name: str = None, notes: str = None) -> Location19:
         """
@@ -27384,7 +27733,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         super().delete(url=url)
         return
 
-    def list_location_floors(self, location_id: str, **params) -> Generator[Floor, None, None]:
+    def list_location_floors(self, location_id: str) -> list[Floor]:
         """
         List workspace location floors.
 
@@ -27392,7 +27741,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type location_id: str
         """
         url = self.ep(f'{location_id}/floors')
-        return self.session.follow_pagination(url=url, model=Floor, params=params)
+        data = super().get(url=url)
+        return parse_obj_as(list[Floor], data["items"])
 
     def create_location_floor(self, location_id: str, floor_number: int, display_name: str = None) -> Floor:
         """
@@ -27693,13 +28043,6 @@ class Calendar1(ApiModel):
     email_address: Optional[str]
 
 
-class HotdeskingStatus(str, Enum):
-    #: Workspace supports hotdesking.
-    on = 'on'
-    #: Workspace does not support hotdesking.
-    off = 'off'
-
-
 class UpdateWorkspaceBody(ApiModel):
     #: A friendly name for the workspace.
     display_name: Optional[str]
@@ -27723,7 +28066,7 @@ class UpdateWorkspaceBody(ApiModel):
     #: Notes associated to the workspace.
     notes: Optional[str]
     #: Hot desking status of the workspace.
-    hotdesking_status: Optional[HotdeskingStatus]
+    hotdesking_status: Optional[Video]
 
 
 class Workspace(UpdateWorkspaceBody):
@@ -27836,7 +28179,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Workspace, params=params)
 
-    def create(self, display_name: str, workspace_location_id: str = None, floor_id: str = None, capacity: int = None, type_: Type72 = None, calendar: Calendar1 = None, sip_address: str = None, calling: object = None, notes: str = None, hotdesking_status: HotdeskingStatus = None, org_id: str = None) -> Workspace:
+    def create(self, display_name: str, workspace_location_id: str = None, floor_id: str = None, capacity: int = None, type_: Type72 = None, calendar: Calendar1 = None, sip_address: str = None, calling: object = None, notes: str = None, hotdesking_status: Video = None, org_id: str = None) -> Workspace:
         """
         Create a workspace.
         The workspaceLocationId, floorId, capacity, type, notes and hotdeskingStatus parameters are optional, and
@@ -27866,7 +28209,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :param notes: Notes associated to the workspace.
         :type notes: str
         :param hotdesking_status: Hot desking status of the workspace.
-        :type hotdesking_status: HotdeskingStatus
+        :type hotdesking_status: Video
         :param org_id: OrgId associated with the workspace. Only admin users of another organization (such as partners)
             may use this parameter.
         :type org_id: str
@@ -27911,7 +28254,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         data = super().get(url=url)
         return Workspace.parse_obj(data)
 
-    def update(self, workspace_id: str, display_name: str, workspace_location_id: str = None, floor_id: str = None, capacity: int = None, type_: Type72 = None, calendar: Calendar1 = None, sip_address: str = None, calling: object = None, notes: str = None, hotdesking_status: HotdeskingStatus = None) -> Workspace:
+    def update(self, workspace_id: str, display_name: str, workspace_location_id: str = None, floor_id: str = None, capacity: int = None, type_: Type72 = None, calendar: Calendar1 = None, sip_address: str = None, calling: object = None, notes: str = None, hotdesking_status: Video = None) -> Workspace:
         """
         Updates details for a workspace by ID.
         Specify the workspace ID in the workspaceId parameter in the URI. Include all details for the workspace that
@@ -27947,7 +28290,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :param notes: Notes associated to the workspace.
         :type notes: str
         :param hotdesking_status: Hot desking status of the workspace.
-        :type hotdesking_status: HotdeskingStatus
+        :type hotdesking_status: Video
         """
         body = UpdateWorkspaceBody()
         if display_name is not None:
@@ -28001,7 +28344,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         """
         url = self.ep(f'{workspace_id}/capabilities')
         data = super().get(url=url)
-        return data["capabilities"]
+        return CapabilityMap.parse_obj(data["capabilities"])
 
 class Audio1(ApiModel):
     volume: Optional[int]
@@ -28085,7 +28428,7 @@ class xAPIApi(ApiChild, base='xapi/'):
         data = super().get(url=url, params=params)
         return QueryStatusResponse.parse_obj(data)
 
-    def execute_command(self, command_name: str, device_id: str, arguments: object, body: Body6 = None) -> object:
+    def execute_command(self, command_name: str, device_id: str, arguments: object, body: Body6 = None) -> ExecuteCommandResponse:
         """
         Executes a command on the Webex RoomOS Device. Specify the command to execute in the commandName URI parameter.
         See the xAPI section of the Device Developers Guide for a description of command expressions.
@@ -28109,4 +28452,4 @@ class xAPIApi(ApiChild, base='xapi/'):
             body.body = body
         url = self.ep(f'command/{command_name}')
         data = super().post(url=url, data=body.json())
-        return data["arguments"]
+        return ExecuteCommandResponse.parse_obj(data)

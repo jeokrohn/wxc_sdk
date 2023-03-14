@@ -166,7 +166,7 @@ class MessagesApi(ApiChild, base='messages'):
     Just like in the Webex app, you must be a member of the room in order to target it with this API.
     """
 
-    def list(self, room_id: str, parent_id: str = None, mentioned_people: List[str] = None, before: str = None, before_message: str = None, **params) -> Generator[ListMessagesResponse, None, None]:
+    def list(self, room_id: str, parent_id: str = None, mentioned_people: List[str] = None, before: str = None, before_message: str = None, **params) -> Generator[ListMessage, None, None]:
         """
         Lists all messages in a room. Each message will include content attachments if present.
         The list sorts the messages in descending order by creation date.
@@ -195,9 +195,9 @@ class MessagesApi(ApiChild, base='messages'):
         if before_message is not None:
             params['beforeMessage'] = before_message
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=ListMessagesResponse, params=params)
+        return self.session.follow_pagination(url=url, model=ListMessage, params=params)
 
-    def list_direct(self, parent_id: str = None, person_id: str = None, person_email: str = None, **params) -> Generator[ListDirectMessagesResponse, None, None]:
+    def list_direct(self, parent_id: str = None, person_id: str = None, person_email: str = None) -> list[DirectMessage]:
         """
         List all messages in a 1:1 (direct) room. Use the personId or personEmail query parameter to specify the room.
         Each message will include content attachments if present.
@@ -210,6 +210,7 @@ class MessagesApi(ApiChild, base='messages'):
         :param person_email: List messages in a 1:1 room, by person email.
         :type person_email: str
         """
+        params = {}
         if parent_id is not None:
             params['parentId'] = parent_id
         if person_id is not None:
@@ -217,7 +218,8 @@ class MessagesApi(ApiChild, base='messages'):
         if person_email is not None:
             params['personEmail'] = person_email
         url = self.ep('direct')
-        return self.session.follow_pagination(url=url, model=ListDirectMessagesResponse, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[DirectMessage], data["items"])
 
     def create(self, room_id: str = None, text: str = None, markdown: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None, files: List[str] = None, attachments: Attachment = None) -> CreateMessageResponse:
         """

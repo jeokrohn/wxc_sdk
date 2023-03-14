@@ -153,7 +153,7 @@ class TrackingCodesApi(ApiChild, base=''):
     meeting:admin_schedule_read scopes.
     """
 
-    def list_codes(self, site_url: str = None, **params) -> Generator[GetTrackingCodeObject, None, None]:
+    def list_codes(self, site_url: str = None) -> list[GetTrackingCodeObject]:
         """
         Lists tracking codes on a site by an admin user.
 
@@ -162,10 +162,12 @@ class TrackingCodesApi(ApiChild, base=''):
             sites of a user can be retrieved by the Get Site List API.
         :type site_url: str
         """
+        params = {}
         if site_url is not None:
             params['siteUrl'] = site_url
         url = self.ep('https: //webexapis.com/v1/admin/meeting/config/trackingCodes')
-        return self.session.follow_pagination(url=url, model=GetTrackingCodeObject, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[GetTrackingCodeObject], data["items"])
 
     def code(self, tracking_code_id: str, site_url: str = None) -> GetTrackingCodeObject:
         """

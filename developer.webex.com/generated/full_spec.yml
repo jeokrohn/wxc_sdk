@@ -1,4 +1,4 @@
-# command: developer.webex.com/read_api_spec.py --no_ignore -s "Full API Reference" -f developer.webex.com/full_spec.yml
+# command: developer.webex.com/read_api_spec.py --no_ignore -s "Full API Reference" -f developer.webex.com/generated/full_spec.yml
 docs:
   Admin Audit Events:
     doc: 'Admin Audit Events are available to full administrators for certain events
@@ -609,7 +609,9 @@ docs:
           param_object: []
           type: string
           type_spec: null
-        - doc: Sort the reports.
+        - doc: 'Sort the reports.
+
+            * Members: id status billingPeriod'
           name: sortBy
           param_attrs: []
           param_object: []
@@ -723,7 +725,11 @@ docs:
           type_spec: null
         - doc: 'List of errors that occurred during report generation.
 
-            Note:'
+            Note:
+
+            * Captures errors that occurred during asynchronous or background report
+            generation, after the request has been accepted and a  202 OK  response
+            is returned.'
           name: errors
           param_attrs:
           - doc: The error code itself.
@@ -1889,7 +1895,11 @@ docs:
             type: enum
             type_spec: null
           - doc: "List of errors that occurred during that last attempt to provision/update\
-              \ this subscriber.\n Note:"
+              \ this subscriber.\n Note:\n* This list captures errors that occurred\
+              \ during  asynchronous or background  provisioning of the subscriber,\
+              \  after  the API has been accepted and 200 OK response returned.\n\
+              * Any errors that occur during initial API request validation will be\
+              \ captured directly in error response with appropriate HTTP status code."
             name: errors
             param_attrs:
             - doc: An error code that identifies the reason for the error.
@@ -2202,7 +2212,11 @@ docs:
           type: enum
           type_spec: null
         - doc: "List of errors that occurred during that last attempt to provision/update\
-            \ this subscriber.\n Note:"
+            \ this subscriber.\n Note:\n* This list captures errors that occurred\
+            \ during  asynchronous or background  provisioning of the subscriber,\
+            \  after  the API has been accepted and 200 OK response returned.\n* Any\
+            \ errors that occur during initial API request validation will be captured\
+            \ directly in error response with appropriate HTTP status code."
           name: errors
           param_attrs:
           - doc: An error code that identifies the reason for the error.
@@ -2398,7 +2412,11 @@ docs:
           type: enum
           type_spec: null
         - doc: "List of errors that occurred during that last attempt to provision/update\
-            \ this subscriber.\n Note:"
+            \ this subscriber.\n Note:\n* This list captures errors that occurred\
+            \ during  asynchronous or background  provisioning of the subscriber,\
+            \  after  the API has been accepted and 200 OK response returned.\n* Any\
+            \ errors that occur during initial API request validation will be captured\
+            \ directly in error response with appropriate HTTP status code."
           name: errors
           param_attrs:
           - doc: An error code that identifies the reason for the error.
@@ -2655,7 +2673,11 @@ docs:
           type: enum
           type_spec: null
         - doc: "List of errors that occurred during that last attempt to provision/update\
-            \ this subscriber.\n Note:"
+            \ this subscriber.\n Note:\n* This list captures errors that occurred\
+            \ during  asynchronous or background  provisioning of the subscriber,\
+            \  after  the API has been accepted and 200 OK response returned.\n* Any\
+            \ errors that occur during initial API request validation will be captured\
+            \ directly in error response with appropriate HTTP status code."
           name: errors
           param_attrs:
           - doc: An error code that identifies the reason for the error.
@@ -4564,8 +4586,21 @@ docs:
           param_object: []
           type: string
           type_spec: required
-        - doc: This can optionally be used to filter configurations. Keys are composed
-            of segments. It's possible to use absolute paths, wildcards or ranges.
+        - doc: 'This can optionally be used to filter configurations. Keys are composed
+            of segments. It''s possible to use absolute paths, wildcards or ranges.
+
+            * Absolute  gives only one configuration as a result.  Conference.MaxReceiveCallRate  for
+            example gives the Conference  MaxReceiveCallRate  configuration.
+
+            * Wildcards  (*) can specify multiple configurations with shared segments.  Audio.Ultrasound.*  for
+            example will filter on all Audio Ultrasound configurations.
+
+            * Range  ([ number ]) can be used to filter numbered segments.  FacilityService.Service[1].Name  for
+            instance only shows the first  FacilityService  Service Name configuration,  FacilityService.Service[*].Name  shows
+            all,  FacilityService.Service[1..3].Name  shows the first three and  FacilityService.Service[2..n].Name  shows
+            all starting at 2. Note that  RFC 3986 3.2.2  does not allow square brackets
+            in urls outside the host, so to specify range in a configuration key you
+            will need to encode them to %5B for [ and %5D for ].'
           name: key
           param_attrs: []
           param_object: []
@@ -7307,7 +7342,17 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: 'The status of the connector:'
+          - doc: 'The status of the connector:
+
+              * operational  indicates that the connector is working as it should.
+
+              * impaired  indicates that the connector has problems with one or more
+              dependent components.
+
+              * outage  indicates that the connector is completely non-functional.
+
+              * maintenanceMode  reports the current maintenance mode state of the
+              connector.'
             name: status
             param_attrs:
             - doc: ''
@@ -7430,7 +7475,15 @@ docs:
               param_object: []
               type: string
               type_spec: null
-            - doc: 'The severity level of the alarm:'
+            - doc: 'The severity level of the alarm:
+
+                * critical
+
+                * error
+
+                * warning
+
+                * alert'
               name: severity
               param_attrs:
               - doc: ''
@@ -7520,7 +7573,16 @@ docs:
           param_object: []
           type: string
           type_spec: null
-        - doc: 'The status of the connector:'
+        - doc: 'The status of the connector:
+
+            * operational  indicates that the connector is working as it should.
+
+            * impaired  indicates that the connector has problems with one or more
+            dependent components.
+
+            * outage  indicates that the connector is completely non-functional.
+
+            * maintenanceMode  reports the current maintenance mode state of the connector.'
           name: status
           param_attrs:
           - doc: ''
@@ -7643,7 +7705,15 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: 'The severity level of the alarm:'
+          - doc: 'The severity level of the alarm:
+
+              * critical
+
+              * error
+
+              * warning
+
+              * alert'
             name: severity
             param_attrs:
             - doc: ''
@@ -9287,6 +9357,1198 @@ docs:
           param_object: []
           type: string
           type_spec: required
+  Meeting Participants:
+    doc: 'This API manages meeting participants.
+
+      Refer to the Meetings API Scopes section of Meetings Overview for scopes required
+      for each API.'
+    header: Meeting Participants
+    methods:
+    - doc: 'List all participants in a live or post meeting. The meetingId parameter
+        is required, which is the unique identifier for the meeting.
+
+        The authenticated user calling this API must either have an Administrator
+        role with the meeting:admin_participants_read scope, or be the meeting host.'
+      documentation:
+        doc: List Meeting Participants
+        doc_link: https://developer.webex.com/docs/api/v1/meeting-participants/list-meeting-participants
+        endpoint: https://webexapis.com/v1/meetingParticipants
+        http_method: GET
+      header: List Meeting Participants
+      parameters_and_response:
+        Query Parameters:
+        - doc: The unique identifier for the meeting. Please note that currently meeting
+            ID of a scheduled personal room meeting is not supported for this API.
+          name: meetingId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: URL of the Webex site from which the API lists meeting participants.
+            If not specified, the API lists meeting participants from the user's preferred
+            site. All available Webex sites and a user's preferred site can be retrieved
+            by the Get Site List API.
+          name: siteUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: meetings start from the specified date and time(exclusive) in any ISO
+            8601 compliant format. If meetingStartTimeFrom is not specified, it equals
+            meetingStartTimeTo minus 1 month; if meetingStartTimeTo is also not specified,
+            the default value for meetingStartTimeFrom is 1 month before current date
+            and time.
+          name: meetingStartTimeFrom
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: meetings start before the specified date and time(exclusive) in any
+            ISO 8601 compliant format. If meetingStartTimeTo is not specified, it
+            equals the result of a comparison, meetingStartTimeFrom plus one month
+            and the current time, and the result is the earlier of the two; if meetingStartTimeFrom
+            is also not specified, the default value for meetingStartTimeTo is current
+            date and time minus 1 month.
+          name: meetingStartTimeTo
+          param_attrs: []
+          param_object: []
+          type: String
+          type_spec: null
+        - doc: Limit the maximum number of participants in the response, up to 100.
+          name: max
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Email address for the meeting host. This parameter is only used if
+            the user or application calling the API has the admin-level scopes, the
+            admin may specify the email of a user in a site they manage and the API
+            will return meeting participants of the meetings that are hosted by that
+            user.
+          name: hostEmail
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The time participants join a meeting starts from the specified date
+            and time (inclusive) in any ISO 8601 compliant format. If joinTimeFrom
+            is not specified, it equals joinTimeTo minus 7 days.
+          name: joinTimeFrom
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The time participants join a meeting before the specified date and
+            time (exclusive) in any ISO 8601 compliant format. If joinTimeTo is not
+            specified, it equals joinTimeFrom plus 7 days. The interval between joinTimeFrom
+            and joinTimeTo must be within 90 days.
+          name: joinTimeTo
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: ''
+          name: items
+          param_attrs:
+          - doc: The ID that identifies the meeting and the participant.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The ID that identifies the organization. It only applies to participants
+              of ongoing meetings.
+            name: orgId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Whether or not the participant is the host of the meeting.
+            name: host
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Whether or not the participant has host privilege in the meeting.
+            name: coHost
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Whether or not the participant is the team space moderator. This
+              field returns only if the meeting is associated with a Webex space.
+            name: spaceModerator
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: The email address of the participant.
+            name: email
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The name of the participant.
+            name: displayName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Whether or not the participant is invited to the meeting.
+            name: invitee
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Whether or not the participant's audio is muted.
+            name: muted
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: The time the meeting started.
+            name: meetingStartTime
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The status of the participant's video.
+            name: video
+            param_attrs:
+            - doc: The video is turned on.
+              name: 'on'
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The video is turned off.
+              name: 'off'
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: The status of the participant in the meeting.
+            name: state
+            param_attrs:
+            - doc: The participant is waiting in the meeting lobby.
+              name: lobby
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The participant has left the meeting.
+              name: end
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The participant has joined the meeting.
+              name: joined
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: The time the participant joined the meeting. If the field is non-existent
+              or shows 1970-01-01T00:00:00.000Z the meeting may be still ongoing and
+              the joinedTime will be filled in after the meeting ended. If you need
+              real-time join events, please refer to the webhooks guide.
+            name: joinedTime
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The time the participant left the meeting. If the field is non-existent
+              or shows 1970-01-01T00:00:00.000Z the meeting may be still ongoing and
+              the leftTime will be filled in after the meeting ended. If you need
+              real-time left events, please refer to the webhooks guide.
+            name: leftTime
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The site URL.
+            name: siteUrl
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A unique identifier for the meeting which the participant belongs
+              to.
+            name: meetingId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The email address of the host.
+            name: hostEmail
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: devices
+            param_attrs:
+            - doc: An internal ID that is associated with each join.
+              name: correlationId
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The type of the device.
+              name: deviceType
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The audio type that the participant is using.
+              name: audioType
+              param_attrs:
+              - doc: PSTN
+                name: pstn
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: VoIP
+                name: voip
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: The participant is not connected to audio.
+                name: inactive
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            - doc: The time the device joined the meeting. If the field is non-existent
+                or shows 1970-01-    01T00:00:00.000Z the meeting may be still ongoing
+                and the joinedTime will be filled in after the meeting ended. If you
+                need real-time joined     events, please refer to the webhooks guide.
+              name: joinedTime
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The time the device left the meeting, leftTime is the exact moment
+                when a specific devi    ce left the meeting. If the field is non-existent
+                or shows 1970-01-01T00:00:00.000Z the meeting may be still ongoing
+                and the leftTime will     be filled in after the meeting ended. If
+                you need real-time left events, please refer to the webhooks guide.
+              name: leftTime
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The duration in seconds the device stayed in the meeting.
+              name: durationSecond
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: null
+            - doc: The PSTN call type in which the device joined the meeting.
+              name: callType
+              param_attrs:
+              - doc: Connect audio by dialing a toll or toll-free phone number provided
+                  by the meeting.
+                name: callIn
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Connect audio by dialing out a phone number from the meeting.
+                name: callBack
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            - doc: 'The PSTN phone number from which the device joined the meeting.
+                Only compliance officer can retrieve the phoneNumber. The meeting
+                host and admin users cannot retrieve it. NOTE: The phoneNumber will
+                be returned after the meeting ends; it is not returned while the meeting
+                is in progress.'
+              name: phoneNumber
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: array[Device]
+            type_spec: null
+          - doc: The source ID of the participant. The sourceId is from the Create
+              Invitation Sources API.
+            name: sourceId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[Participant]
+          type_spec: null
+    - doc: 'Query participants in a live meeting, or after the meeting, using participant''s
+        email. The meetingId parameter is the unique identifier for the meeting and
+        is required.
+
+        The authenticated user calling this API must either have an Administrator
+        role with the meeting:admin_participants_read scope, or be the meeting host.'
+      documentation:
+        doc: Query Meeting Participants with Email
+        doc_link: https://developer.webex.com/docs/api/v1/meeting-participants/query-meeting-participants-with-email
+        endpoint: https://webexapis.com/v1/meetingParticipants/query
+        http_method: POST
+      header: Query Meeting Participants with Email
+      parameters_and_response:
+        Body Parameters:
+        - doc: 'Participants email list
+
+            Possible values: john.andersen@example.com'
+          name: emails
+          param_attrs: []
+          param_object: []
+          type: array[string]
+          type_spec: null
+        Query Parameters:
+        - doc: The unique identifier for the meeting.
+          name: meetingId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: URL of the Webex site from which the API lists meeting participants.
+            If not specified, the API lists meeting participants from the user's preferred
+            site. All available Webex sites and a user's preferred site can be retrieved
+            by the Get Site List API.
+          name: siteUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: meetings start from the specified date and time(exclusive) in any ISO
+            8601 compliant format. If meetingStartTimeFrom is not specified, it equals
+            meetingStartTimeTo minus 1 month; if meetingStartTimeTo is also not specified,
+            the default value for meetingStartTimeFrom is 1 month before current date
+            and time.
+          name: meetingStartTimeFrom
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: meetings start before the specified date and time(exclusive) in any
+            ISO 8601 compliant format. If meetingStartTimeTo is not specified, it
+            equals the result of a comparison, meetingStartTimeFrom plus one month
+            and the current time, and the result is the earlier of the two; if meetingStartTimeFrom
+            is also not specified, the default value for meetingStartTimeTo is current
+            date and time minus 1 month.
+          name: meetingStartTimeTo
+          param_attrs: []
+          param_object: []
+          type: String
+          type_spec: null
+        - doc: Limit the maximum number of participants in the response, up to 1000.
+          name: max
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Email address for the meeting host. This parameter is only used if
+            the user or application calling the API has the admin-level scopes, the
+            admin may specify the email of a user in a site they manage and the API
+            will return meeting participants of the meetings that are hosted by that
+            user.
+          name: hostEmail
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The time participants join a meeting starts from the specified date
+            and time (inclusive) in any ISO 8601 compliant format. If joinTimeFrom
+            is not specified, it equals joinTimeTo minus 7 days.
+          name: joinTimeFrom
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The time participants join a meeting before the specified date and
+            time (exclusive) in any ISO 8601 compliant format. If joinTimeTo is not
+            specified, it equals joinTimeFrom plus 7 days. The interval between joinTimeFrom
+            and joinTimeTo must be within 90 days.
+          name: joinTimeTo
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: ''
+          name: items
+          param_attrs:
+          - doc: The ID that identifies the meeting and the participant.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The ID that identifies the organization. It only applies to participants
+              of ongoing meetings.
+            name: orgId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Whether or not the participant is the host of the meeting.
+            name: host
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Whether or not the participant has host privilege in the meeting.
+            name: coHost
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Whether or not the participant is the team space moderator. This
+              field returns only if the meeting is associated with a Webex space.
+            name: spaceModerator
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: The email address of the participant.
+            name: email
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The name of the participant.
+            name: displayName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Whether or not the participant is invited to the meeting.
+            name: invitee
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Whether or not the participant's audio is muted.
+            name: muted
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: The time the meeting started.
+            name: meetingStartTime
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The status of the participant's video.
+            name: video
+            param_attrs:
+            - doc: The video is turned on.
+              name: 'on'
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The video is turned off.
+              name: 'off'
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: The status of the participant in the meeting.
+            name: state
+            param_attrs:
+            - doc: The participant is waiting in the meeting lobby.
+              name: lobby
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The participant has left the meeting.
+              name: end
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The participant has joined the meeting.
+              name: joined
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: The time the participant joined the meeting. If the field is non-existent
+              or shows 1970-01-01T00:00:00.000Z the meeting may be still ongoing and
+              the joinedTime will be filled in after the meeting ended. If you need
+              real-time join events, please refer to the webhooks guide.
+            name: joinedTime
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The time the participant left the meeting. If the field is non-existent
+              or shows 1970-01-01T00:00:00.000Z the meeting may be still ongoing and
+              the leftTime will be filled in after the meeting ended. If you need
+              real-time left events, please refer to the webhooks guide.
+            name: leftTime
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The site URL.
+            name: siteUrl
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A unique identifier for the meeting which the participant belongs
+              to.
+            name: meetingId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The email address of the host.
+            name: hostEmail
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: ''
+            name: devices
+            param_attrs:
+            - doc: An internal ID that is associated with each join.
+              name: correlationId
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The type of the device.
+              name: deviceType
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The audio type that the participant is using.
+              name: audioType
+              param_attrs:
+              - doc: PSTN
+                name: pstn
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: VoIP
+                name: voip
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: The participant is not connected to audio.
+                name: inactive
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            - doc: The time the device joined the meeting. If the field is non-existent
+                or shows 1970-01-    01T00:00:00.000Z the meeting may be still ongoing
+                and the joinedTime will be filled in after the meeting ended. If you
+                need real-time joined     events, please refer to the webhooks guide.
+              name: joinedTime
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The time the device left the meeting, leftTime is the exact moment
+                when a specific devi    ce left the meeting. If the field is non-existent
+                or shows 1970-01-01T00:00:00.000Z the meeting may be still ongoing
+                and the leftTime will     be filled in after the meeting ended. If
+                you need real-time left events, please refer to the webhooks guide.
+              name: leftTime
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The duration in seconds the device stayed in the meeting.
+              name: durationSecond
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: null
+            - doc: The PSTN call type in which the device joined the meeting.
+              name: callType
+              param_attrs:
+              - doc: Connect audio by dialing a toll or toll-free phone number provided
+                  by the meeting.
+                name: callIn
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Connect audio by dialing out a phone number from the meeting.
+                name: callBack
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            - doc: 'The PSTN phone number from which the device joined the meeting.
+                Only compliance officer can retrieve the phoneNumber. The meeting
+                host and admin users cannot retrieve it. NOTE: The phoneNumber will
+                be returned after the meeting ends; it is not returned while the meeting
+                is in progress.'
+              name: phoneNumber
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: array[Device]
+            type_spec: null
+          - doc: The source ID of the participant. The sourceId is from the Create
+              Invitation Sources API.
+            name: sourceId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[Participant]
+          type_spec: null
+    - doc: 'Get a meeting participant details of a live or post meeting. The participantId
+        is required to identify the meeting and the participant.
+
+        The authenticated user calling this API must either have an Administrator
+        role with the meeting:admin_participants_read scope, or be the meeting host.'
+      documentation:
+        doc: Get Meeting Participant Details
+        doc_link: https://developer.webex.com/docs/api/v1/meeting-participants/get-meeting-participant-details
+        endpoint: https://webexapis.com/v1/meetingParticipants/{participantId}
+        http_method: GET
+      header: Get Meeting Participant Details
+      parameters_and_response:
+        Query Parameters:
+        - doc: Email address for the meeting host. This parameter is only used if
+            the user or application calling the API has the admin-level scopes, the
+            admin may specify the email of a user in a site they manage and the API
+            will return meeting participants of the meetings that are hosted by that
+            user.
+          name: hostEmail
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: The ID that identifies the meeting and the participant.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID that identifies the organization. It only applies to participants
+            of ongoing meetings.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Whether or not the participant is the host of the meeting.
+          name: host
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Whether or not the participant has host privilege in the meeting.
+          name: coHost
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Whether or not the participant is the team space moderator. This field
+            returns only if the meeting is associated with a Webex space.
+          name: spaceModerator
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The email address of the participant.
+          name: email
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The name of the participant.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Whether or not the participant is invited to the meeting.
+          name: invitee
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Whether or not the participant's audio is muted.
+          name: muted
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The time the meeting started.
+          name: meetingStartTime
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The status of the participant's video.
+          name: video
+          param_attrs:
+          - doc: The video is turned on.
+            name: 'on'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The video is turned off.
+            name: 'off'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The status of the participant in the meeting.
+          name: state
+          param_attrs:
+          - doc: The participant is waiting in the meeting lobby.
+            name: lobby
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The participant has left the meeting.
+            name: end
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The participant has joined the meeting.
+            name: joined
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The time the participant joined the meeting. If the field is non-existent
+            or shows 1970-01-01T00:00:00.000Z the meeting may be still ongoing and
+            the joinedTime will be filled in after the meeting ended. If you need
+            real-time join events, please refer to the webhooks guide.
+          name: joinedTime
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The time the participant left the meeting. If the field is non-existent
+            or shows 1970-01-01T00:00:00.000Z the meeting may be still ongoing and
+            the leftTime will be filled in after the meeting ended. If you need real-time
+            left events, please refer to the webhooks guide.
+          name: leftTime
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The site URL.
+          name: siteUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A unique identifier for the meeting which the participant belongs to.
+          name: meetingId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The email address of the host.
+          name: hostEmail
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: ''
+          name: devices
+          param_attrs:
+          - doc: An internal ID that is associated with each join.
+            name: correlationId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The type of the device.
+            name: deviceType
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The audio type that the participant is using.
+            name: audioType
+            param_attrs:
+            - doc: PSTN
+              name: pstn
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: VoIP
+              name: voip
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The participant is not connected to audio.
+              name: inactive
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: The time the device joined the meeting. If the field is non-existent
+              or shows 1970-01-    01T00:00:00.000Z the meeting may be still ongoing
+              and the joinedTime will be filled in after the meeting ended. If you
+              need real-time joined     events, please refer to the webhooks guide.
+            name: joinedTime
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The time the device left the meeting, leftTime is the exact moment
+              when a specific devi    ce left the meeting. If the field is non-existent
+              or shows 1970-01-01T00:00:00.000Z the meeting may be still ongoing and
+              the leftTime will     be filled in after the meeting ended. If you need
+              real-time left events, please refer to the webhooks guide.
+            name: leftTime
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The duration in seconds the device stayed in the meeting.
+            name: durationSecond
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: The PSTN call type in which the device joined the meeting.
+            name: callType
+            param_attrs:
+            - doc: Connect audio by dialing a toll or toll-free phone number provided
+                by the meeting.
+              name: callIn
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Connect audio by dialing out a phone number from the meeting.
+              name: callBack
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: 'The PSTN phone number from which the device joined the meeting.
+              Only compliance officer can retrieve the phoneNumber. The meeting host
+              and admin users cannot retrieve it. NOTE: The phoneNumber will be returned
+              after the meeting ends; it is not returned while the meeting is in progress.'
+            name: phoneNumber
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[Device]
+          type_spec: null
+        - doc: The source ID of the participant. The sourceId is from the Create Invitation
+            Sources API.
+          name: sourceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: The unique identifier for the meeting and the participant.
+          name: participantId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'To mute, un-mute, expel, or admit a participant in a live meeting. The
+        participantId is required to identify the meeting and the participant.
+
+        Notes:'
+      documentation:
+        doc: Update a Participant
+        doc_link: https://developer.webex.com/docs/api/v1/meeting-participants/update-a-participant
+        endpoint: https://webexapis.com/v1/meetingParticipants/{participantId}
+        http_method: PUT
+      header: Update a Participant
+      parameters_and_response:
+        Body Parameters:
+        - doc: The value is true or false, and means to mute or unmute the audio of
+            a participant.
+          name: muted
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The value can be true or false. The value of true is to admit a participant
+            to the meeting if the participant is in the lobby, No-Op if the participant
+            is not in the lobby or when the value is set to false.
+          name: admit
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The attribute is exclusive and its value can be true or false. The
+            value of true means that the participant will be expelled from the meeting,
+            the value of false means No-Op.
+          name: expel
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        Response Properties:
+        - doc: The participant ID that identifies the meeting and the participant.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The ID that identifies the organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Whether or not the participant is the host of the meeting.
+          name: host
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Whether or not the participant has host privilege in the meeting.
+          name: coHost
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Whether or not the participant is the team space moderator. This field
+            returns only if the meeting is associated with a Webex space.
+          name: spaceModerator
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The email address of the participant.
+          name: email
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The name of the participant.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Whether or not the participant is invited to the meeting.
+          name: invitee
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The status of the participant's video.
+          name: video
+          param_attrs:
+          - doc: The video is turned on.
+            name: 'on'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The video is turned off.
+            name: 'off'
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: Whether or not the participant's audio is muted.
+          name: muted
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: The status of the participant in the meeting.
+          name: state
+          param_attrs:
+          - doc: The participant is waiting in the meeting lobby.
+            name: lobby
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The participant has joined the meeting.
+            name: joined
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: enum
+          type_spec: null
+        - doc: The site URL.
+          name: siteUrl
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: A unique identifier for the meeting which the participant belongs to.
+          name: meetingId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The email address of the host.
+          name: hostEmail
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: ''
+          name: devices
+          param_attrs:
+          - doc: An internal ID that is associated with each join.
+            name: correlationId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The type of device.
+            name: deviceType
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The audio type that the participant is using.
+            name: audioType
+            param_attrs:
+            - doc: PSTN
+              name: pstn
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: VoIP
+              name: voip
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: The participant is not connected to audio.
+              name: inactive
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: The time the device joined the meeting. If the field is non-existent
+              or shows 1970-01-01T00:00:00.000Z the meeting may be still ongoing and
+              the joinedTime will be filled in after the meeting ended. If you need
+              real-time joined events, please refer to the webhooks guide.
+            name: joinedTime
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The time the device left the meeting, leftTime is the exact moment
+              when a specific device left the meeting. If the field is non-existent
+              or shows 1970-01-01T00:00:00.000Z the meeting may be still ongoing and
+              the leftTime will be filled in after the meeting ended. If you need
+              real-time left events, please refer to the webhooks guide.
+            name: leftTime
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[InProgressDevice]
+          type_spec: null
+        URI Parameters:
+        - doc: The unique identifier for the meeting and the participant.
+          name: participantId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'To admit participants into a live meeting in bulk.
+
+        This API limits the maximum size of items in the request body to 100.
+
+        Each participantId of items in the request body should have the same prefix
+        of meetingId.'
+      documentation:
+        doc: Admit Participants
+        doc_link: https://developer.webex.com/docs/api/v1/meeting-participants/admit-participants
+        endpoint: https://webexapis.com/v1/meetingParticipants/admit
+        http_method: POST
+      header: Admit Participants
+      parameters_and_response:
+        Body Parameters:
+        - doc: '
+
+            The ID that identifies the meeting participant.'
+          name: items
+          param_attrs: []
+          param_object: []
+          type: array[ParticipantID]
+          type_spec: null
   Meeting Polls:
     doc: 'As a presenter, you can use a poll to create and share questionnaires. Polls
       can be useful for gathering feedback, taking votes, or testing knowledge.
@@ -24812,7 +26074,11 @@ docs:
       header: Update Meeting Registration Form
       parameters_and_response:
         Body Parameters:
-        - doc: ''
+        - doc: '* Email address for the meeting host. This parameter is only used
+            if the user or application calling the API has the admin-level scopes.
+            If set, the admin may specify the email of a user in a site they manage
+            and the API will return an update for a meeting that is hosted by that
+            user.'
           name: hostEmail
           param_attrs: []
           param_object: []
@@ -34034,7 +35300,15 @@ docs:
           type: string
           type_spec: null
         - doc: 'Recording''s service-type. If this item is specified, the API filters
-            recordings by service-type. Valid values:'
+            recordings by service-type. Valid values:
+
+            * MeetingCenter
+
+            * EventCenter
+
+            * SupportCenter
+
+            * TrainingCenter'
           name: serviceType
           param_attrs: []
           param_object: []
@@ -34311,7 +35585,15 @@ docs:
           type: string
           type_spec: null
         - doc: 'Recording''s service-type. If specified, the API filters recordings
-            by service-type. Valid values:'
+            by service-type. Valid values:
+
+            * MeetingCenter
+
+            * EventCenter
+
+            * SupportCenter
+
+            * TrainingCenter'
           name: serviceType
           param_attrs: []
           param_object: []
@@ -44431,7 +45713,29 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: 'Type of call. For example:'
+          - doc: 'Type of call. For example:
+
+              * SIP_MEETING
+
+              * SIP_INTERNATIONAL
+
+              * SIP_SHORTCODE
+
+              * SIP_INBOUND
+
+              * UNKNOWN
+
+              * SIP_EMERGENCY
+
+              * SIP_PREMIUM
+
+              * SIP_ENTERPRISE
+
+              * SIP_TOLLFREE
+
+              * SIP_NATIONAL
+
+              * SIP_MOBILE'
             name: Call type
             param_attrs: []
             param_object: []
@@ -44466,7 +45770,19 @@ docs:
             type: string
             type_spec: null
           - doc: 'The type of client that the user (creating this record) is using
-              to make or receive the call. For example:'
+              to make or receive the call. For example:
+
+              * SIP
+
+              * WXC_CLIENT
+
+              * WXC_THIRD_PARTY
+
+              * TEAMS_WXC_CLIENT
+
+              * WXC_DEVICE
+
+              * WXC_SIP_GW'
             name: Client type
             param_attrs: []
             param_object: []
@@ -44499,13 +45815,26 @@ docs:
             type: string
             type_spec: null
           - doc: "The keypad digits as dialed by the user, before pre-translations.\
-              \ \nThis field reports multiple call dial possibilities:"
+              \ \nThis field reports multiple call dial possibilities:\n* Feature\
+              \ access codes (FAC) used for invoking features such as Last Number\
+              \ Redial or a Call Return.\n* An extension that got dialed and a mis-dialed\
+              \ keypad digit from a device/app.\n* When a user must dial an outside\
+              \ access code (for example, 9+) before dialing a number, this access\
+              \ code is also reported, as well as the digits dialed thereafter. \n\
+              Note that when pre-translations have no effect, the dialed digits field\
+              \ contains the same data as the called number field. \nThis field is\
+              \ only used for originating (outgoing) Calls and is not available for\
+              \ terminating (incoming) Calls."
             name: Dialed digits
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
-          - doc: 'Whether the call was inbound or outbound. The possible values are:'
+          - doc: 'Whether the call was inbound or outbound. The possible values are:
+
+              * ORIGINATING
+
+              * TERMINATING'
             name: Direction
             param_attrs: []
             param_object: []
@@ -44549,7 +45878,21 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: 'Call redirection reason for the original called number. For example:'
+          - doc: "Call redirection reason for the original called number. For example:\n\
+              * Unconditional: Call Forward Always (CFA) service, Group night forwarding.\n\
+              * NoAnswer: The party was not available to take the call. CF/busy or\
+              \ Voicemail/busy.\n* Deflection: Indicates that a call was redirected.\
+              \ Possible causes could be auto attendant transfer, transfer out of\
+              \ a call-center, user\u2019s app/device redirection, direct VM transfer\
+              \ etc..\n* TimeOfDay: Call scheduled period of automated redirection.\
+              \ CF/selective, group night forwarding.\n* UserBusy: DND enabled or\
+              \ the user willingly declined the call. CF/busy or voicemail/busy.\n\
+              * FollowMe: Automated redirection to a personal redirecting service.\n\
+              * CallQueue: A call center call to an agent or a user (a member of the\
+              \ call queue).\n* HuntGroup: A hunt-group-based call to an agent or\
+              \ a user (denotes a member of the hunt group).\n* Unavailable: To voicemail,\
+              \ when the user has no app or device.\n* Unrecognized: Unable to determine\
+              \ the reason.\n* Unknown: Call forward by phone with no reason."
             name: Original reason
             param_attrs: []
             param_object: []
@@ -44567,7 +45910,21 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: 'Call Redirection Reason for the redirecting number. For example:'
+          - doc: "Call Redirection Reason for the redirecting number. For example:\n\
+              * Unconditional: Call Forward Always (CFA) service.\n* NoAnswer: The\
+              \ party was not available to take the call. CF/busy or Voicemail/busy.\n\
+              * Deflection: Indicates that a call was redirected. Possible causes\
+              \ could be auto attendant transfer, transfer out of a call-center, user\u2019\
+              s app/device redirection, direct VM transfer etc..\n* TimeOfDay: Call\
+              \ scheduled period of automated redirection. CF/Selective.\n* UserBusy:\
+              \ DND enabled or user willingly declined the call. CF/busy or Voicemail/busy.\n\
+              * FollowMe: Automated redirection to a personal redirecting service.\n\
+              * CallQueue: A call center call to an agent or a user (denotes a member\
+              \ of the call queue).\n* HuntGroup: A hunt-group-based call to an agent\
+              \ or a user (denotes a member of the hunt group).\n* Unavailable: To\
+              \ voicemail, when the user has no app or device.\n* Unrecognized: Unable\
+              \ to determine the reason.\n* Unknown: Call forward by phone with no\
+              \ reason."
             name: Redirect reason
             param_attrs: []
             param_object: []
@@ -44582,16 +45939,52 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: 'Indicates a trigger that led to a change in the call presence. The
-              trigger could be for this particular call or redirected via a different
-              call. For example:'
+          - doc: "Indicates a trigger that led to a change in the call presence. The\
+              \ trigger could be for this particular call or redirected via a different\
+              \ call. For example:\n* ConsultativeTransfer: While on a call, the call\
+              \ was transferred to another user by announcing it first. meaning the\
+              \ person was given a heads up or asked if they're interested in taking\
+              \ the call and then transferred.\n* CallForwardSelective: Call Forward\
+              \ as per the defined schedule. Might be based on factors like a specific\
+              \ time, specific callers or to a VM. It always takes precedence over\
+              \ Call Forwarding.\n* CallForwardAlways: Calls are unconditionally forwarded\
+              \ to a defined phone number or to VM.\n* CallForwardNoAnswer: The party\
+              \ was not available to take the call.\n* CallQueue: A call center call\
+              \ to an agent or a user (denotes a member of the call queue).\n* HuntGroup:\
+              \ A hunt group based call to an agent or a user (denotes a member of\
+              \ the hunt group).\n* CallPickup: The user part of a pickup group or\
+              \ pickup attempted by this user against a ringing call for a different\
+              \ user or extension.\n* CalllPark: An ongoing call was parked, assigned\
+              \ with a parked number (not the user\u2019s phone number).\n* CallParkRetrieve:\
+              \ Call park retrieval attempt by the user, either for a different extension\
+              \ or against the user\u2019s own extension.\n* Deflection: Indicates\
+              \ that a call was redirected. Possible causes include an auto attendant\
+              \ transfer, transfer out of a call-center, user\u2019s app/device redirection\
+              \ etc..\n* FaxDeposit: Indicates a FAX was transmitted to the FAX service.\n\
+              * PushNotificationRetrieval: Push notification feature usage indication.\
+              \ Means that a push notification was sent to wake up the client and\
+              \ get ready to receive a call.\n* BargeIn: Indicates the user barged-in\
+              \ to someone else\u2019s call.\n* VoiceXMLScriptTermination: Route Point\
+              \ feature usage indication.\n* AnywhereLocation: Indicates call origination\
+              \ towards the single number reach location.\n* AnywherePortal: Indicates\
+              \ call origination towards the \u201Cuser\u201D identified by the single\
+              \ number reach portal.\n* Unrecognized: Unable to determine the reason."
             name: Related reason
             param_attrs: []
             param_object: []
             type: string
             type_spec: null
           - doc: 'Indicates which party released the call first. The possible values
-              are:'
+              are:
+
+              * Local: Used when the local user has released the call first.
+
+              * Remote: Used when the far-end party releases the call first.
+
+              * Unknown: Used when the call has partial information or is unable to
+              gather enough information about the party who released the call. It
+              could be because of situations like force lock or because of a session
+              audit failure.'
             name: Releasing party
             param_attrs: []
             param_object: []
@@ -44668,7 +46061,31 @@ docs:
             type: string
             type_spec: null
           - doc: 'The type of user (user or workspace) that made or received the call.
-              For example:'
+              For example:
+
+              * AutomatedAttendantVideo
+
+              * Anchor
+
+              * BroadworksAnywhere
+
+              * VoiceMailRetrieval
+
+              * LocalGateway
+
+              * HuntGroup
+
+              * GroupPaging
+
+              * User
+
+              * VoiceMailGroup
+
+              * CallCenterStandard
+
+              * VoiceXML
+
+              * RoutePoint'
             name: User type
             param_attrs: []
             param_object: []
@@ -45065,6 +46482,42 @@ docs:
             param_object: []
             type: boolean
             type_spec: null
+          - doc: Announcement Audio File details.
+            name: audioFile
+            param_attrs:
+            - doc: Announcement audio file name.
+              name: name
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Announcement audio file media type.
+              name: mediaType
+              param_attrs:
+              - doc: WMA File Extension.
+                name: WMA
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: WAV File Extension.
+                name: WAV
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: 3GP File Extension.
+                name: 3GP
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            param_object: []
+            type: AudioFileObject
+            type_spec: null
           - doc: Key configurations defined for the auto attendant.
             name: keyConfigurations
             param_attrs:
@@ -45244,6 +46697,42 @@ docs:
             param_attrs: []
             param_object: []
             type: boolean
+            type_spec: null
+          - doc: Announcement Audio File details.
+            name: audioFile
+            param_attrs:
+            - doc: Announcement audio file name.
+              name: name
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Announcement audio file media type.
+              name: mediaType
+              param_attrs:
+              - doc: WMA File Extension.
+                name: WMA
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: WAV File Extension.
+                name: WAV
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: 3GP File Extension.
+                name: 3GP
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            param_object: []
+            type: AudioFileObject
             type_spec: null
           - doc: Key configurations defined for the auto attendant.
             name: keyConfigurations
@@ -45744,7 +47233,7 @@ docs:
             type: KeyConfigurationsObject
             type_spec: required
           param_object: []
-          type: HoursMenuObject
+          type: PostHoursMenuObject
           type_spec: required
         - doc: After hours menu defined for the auto attendant.
           name: afterHoursMenu
@@ -45924,7 +47413,7 @@ docs:
             type: KeyConfigurationsObject
             type_spec: required
           param_object: []
-          type: HoursMenuObject
+          type: PostHoursMenuObject
           type_spec: required
         Query Parameters:
         - doc: Create the auto attendant for this organization.
@@ -46129,6 +47618,42 @@ docs:
             param_object: []
             type: boolean
             type_spec: required
+          - doc: Announcement Audio File details.
+            name: audioFile
+            param_attrs:
+            - doc: Announcement audio file name.
+              name: name
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: required
+            - doc: Announcement audio file media type.
+              name: mediaType
+              param_attrs:
+              - doc: WMA File Extension.
+                name: WMA
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: WAV File Extension.
+                name: WAV
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: 3GP File Extension.
+                name: 3GP
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: required
+            param_object: []
+            type: AudioFileObject
+            type_spec: null
           - doc: Key configurations defined for the auto attendant.
             name: keyConfigurations
             param_attrs:
@@ -46309,6 +47834,42 @@ docs:
             param_object: []
             type: boolean
             type_spec: required
+          - doc: Announcement Audio File details.
+            name: audioFile
+            param_attrs:
+            - doc: Announcement audio file name.
+              name: name
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: required
+            - doc: Announcement audio file media type.
+              name: mediaType
+              param_attrs:
+              - doc: WMA File Extension.
+                name: WMA
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: WAV File Extension.
+                name: WAV
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: 3GP File Extension.
+                name: 3GP
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: required
+            param_object: []
+            type: AudioFileObject
+            type_spec: null
           - doc: Key configurations defined for the auto attendant.
             name: keyConfigurations
             param_attrs:
@@ -59628,7 +61189,11 @@ docs:
           param_object: []
           type: string
           type_spec: null
-        - doc: Type of the schedule.
+        - doc: 'Type of the schedule.
+
+            * businessHours  - Business hours schedule type.
+
+            * holidays  - Holidays schedule type.'
           name: type
           param_attrs: []
           param_object: []
@@ -60140,7 +61705,11 @@ docs:
           param_object: []
           type: string
           type_spec: required
-        - doc: Type of the schedule.
+        - doc: 'Type of the schedule.
+
+            * businessHours  - Business hours schedule type.
+
+            * holidays  - Holidays schedule type.'
           name: type
           param_attrs: []
           param_object: []
@@ -60998,7 +62567,11 @@ docs:
           param_object: []
           type: string
           type_spec: required
-        - doc: Type of schedule.
+        - doc: 'Type of schedule.
+
+            * businessHours  - Business hours schedule type.
+
+            * holidays  - Holidays schedule type.'
           name: type
           param_attrs: []
           param_object: []
@@ -61039,7 +62612,11 @@ docs:
           param_object: []
           type: string
           type_spec: required
-        - doc: Type of the schedule.
+        - doc: 'Type of the schedule.
+
+            * businessHours  - Business hours schedule type.
+
+            * holidays  - Holidays schedule type.'
           name: type
           param_attrs: []
           param_object: []
@@ -61447,7 +63024,11 @@ docs:
           param_object: []
           type: string
           type_spec: required
-        - doc: Type of schedule.
+        - doc: 'Type of schedule.
+
+            * businessHours  - Business hours schedule type.
+
+            * holidays  - Holidays schedule type.'
           name: type
           param_attrs: []
           param_object: []
@@ -61863,7 +63444,11 @@ docs:
           param_object: []
           type: string
           type_spec: required
-        - doc: Type of schedule.
+        - doc: 'Type of schedule.
+
+            * businessHours  - Business hours schedule type.
+
+            * holidays  - Holidays schedule type.'
           name: type
           param_attrs: []
           param_object: []
@@ -62276,7 +63861,11 @@ docs:
           param_object: []
           type: string
           type_spec: required
-        - doc: Type of schedule.
+        - doc: 'Type of schedule.
+
+            * businessHours  - Business hours schedule type.
+
+            * holidays  - Holidays schedule type.'
           name: type
           param_attrs: []
           param_object: []
@@ -62323,7 +63912,11 @@ docs:
           param_object: []
           type: string
           type_spec: required
-        - doc: Type of schedule.
+        - doc: 'Type of schedule.
+
+            * businessHours  - Business hours schedule type.
+
+            * holidays  - Holidays schedule type.'
           name: type
           param_attrs: []
           param_object: []
@@ -81802,7 +83395,17 @@ docs:
           param_object: []
           type: string
           type_spec: null
-        - doc: ''
+        - doc: '* phoneNumbers (array[PhoneNumbers], fixed-type, required) - Array
+            of numbers (primary/alternate).
+
+            * workspace (workspace, fixed-type, required) - Workspace object having
+            a unique identifier for the Workspace.
+
+            * location (location, fixed-type, required) - Location object having a
+            unique identifier for the location and its name.
+
+            * organization (organization, fixed-type, required) - Organization object
+            having a unique identifier for the organization and its name.'
           name: Attributes
           param_attrs: []
           param_object: []
@@ -84075,7 +85678,11 @@ docs:
           type_spec: null
         - doc: 'List of errors that occurred during report generation.
 
-            Note:'
+            Note:
+
+            * This list captures errors that occurred during asynchronous or background
+            report generation, after the request has been accepted and 202 OK response
+            returned.'
           name: errors
           param_attrs:
           - doc: An error code that identifies the reason for the error.
@@ -84456,7 +86063,12 @@ docs:
                 type: enum
                 type_spec: null
               - doc: "List of warnings that occurred during that last attempt to provision/update\
-                  \ this customer.\n Note:"
+                  \ this customer.\n Note:\n* This list captures errors that occurred\
+                  \ during  asynchronous or background  provisioning of the customer,\
+                  \  after  the API has been accepted and 202 response returned.\n\
+                  * Any errors that occur during initial API request validation will\
+                  \ be captured directly in error response with appropriate HTTP status\
+                  \ code."
                 name: warnings
                 param_attrs:
                 - doc: An error code that identifies the reason for the error
@@ -84475,7 +86087,12 @@ docs:
                 type: array[Error]
                 type_spec: null
               - doc: "List of errors that occurred during that last attempt to provision/update\
-                  \ this customer.\n Note:"
+                  \ this customer.\n Note:\n* This list captures errors that occurred\
+                  \ during  asynchronous or background  provisioning of the customer,\
+                  \  after  the API has been accepted and 202 response returned.\n\
+                  * Any errors that occur during initial API request validation will\
+                  \ be captured directly in error response with appropriate HTTP status\
+                  \ code."
                 name: errors
                 param_attrs:
                 - doc: An error code that identifies the reason for the error
@@ -84500,7 +86117,11 @@ docs:
             type: ResourceDetails
             type_spec: null
           - doc: "List of errors that occurred during that last attempt to provision/update\
-              \ this customer.\n Note:"
+              \ this customer.\n Note:\n* This list captures errors that occurred\
+              \ during  asynchronous or background  provisioning of the customer,\
+              \  after  the API has been accepted and 202 response returned.\n* Any\
+              \ errors that occur during initial API request validation will be captured\
+              \ directly in error response with appropriate HTTP status code."
             name: errors
             param_attrs:
             - doc: An error code that identifies the reason for the error
@@ -84984,7 +86605,12 @@ docs:
               type: enum
               type_spec: null
             - doc: "List of warnings that occurred during that last attempt to provision/update\
-                \ this customer.\n Note:"
+                \ this customer.\n Note:\n* This list captures errors that occurred\
+                \ during  asynchronous or background  provisioning of the customer,\
+                \  after  the API has been accepted and 202 response returned.\n*\
+                \ Any errors that occur during initial API request validation will\
+                \ be captured directly in error response with appropriate HTTP status\
+                \ code."
               name: warnings
               param_attrs:
               - doc: An error code that identifies the reason for the error
@@ -85003,7 +86629,12 @@ docs:
               type: array[Error]
               type_spec: null
             - doc: "List of errors that occurred during that last attempt to provision/update\
-                \ this customer.\n Note:"
+                \ this customer.\n Note:\n* This list captures errors that occurred\
+                \ during  asynchronous or background  provisioning of the customer,\
+                \  after  the API has been accepted and 202 response returned.\n*\
+                \ Any errors that occur during initial API request validation will\
+                \ be captured directly in error response with appropriate HTTP status\
+                \ code."
               name: errors
               param_attrs:
               - doc: An error code that identifies the reason for the error
@@ -85028,7 +86659,11 @@ docs:
           type: ResourceDetails
           type_spec: null
         - doc: "List of errors that occurred during that last attempt to provision/update\
-            \ this customer.\n Note:"
+            \ this customer.\n Note:\n* This list captures errors that occurred during\
+            \  asynchronous or background  provisioning of the customer,  after  the\
+            \ API has been accepted and 202 response returned.\n* Any errors that\
+            \ occur during initial API request validation will be captured directly\
+            \ in error response with appropriate HTTP status code."
           name: errors
           param_attrs:
           - doc: An error code that identifies the reason for the error
@@ -85780,7 +87415,10 @@ docs:
             type: enum
             type_spec: null
           - doc: "List of errors that occurred during that last attempt to provision/update\
-              \ this subscriber.\n Note:"
+              \ this subscriber.\n Note:\n* This list captures errors that occurred\
+              \ during provisioning of the subscriber.\n* Any errors that occur during\
+              \ initial API request validation will be captured directly in error\
+              \ response with appropriate HTTP status code."
             name: errors
             param_attrs:
             - doc: An error code that identifies the reason for the error.
@@ -86026,7 +87664,10 @@ docs:
           type: enum
           type_spec: null
         - doc: "List of errors that occurred during that last attempt to provision/update\
-            \ this subscriber.\n Note:"
+            \ this subscriber.\n Note:\n* This list captures errors that occurred\
+            \ during provisioning of the subscriber.\n* Any errors that occur during\
+            \ initial API request validation will be captured directly in error response\
+            \ with appropriate HTTP status code."
           name: errors
           param_attrs:
           - doc: An error code that identifies the reason for the error.
@@ -86182,7 +87823,10 @@ docs:
           type: enum
           type_spec: null
         - doc: "List of errors that occurred during that last attempt to provision/update\
-            \ this subscriber.\n Note:"
+            \ this subscriber.\n Note:\n* This list captures errors that occurred\
+            \ during provisioning of the subscriber.\n* Any errors that occur during\
+            \ initial API request validation will be captured directly in error response\
+            \ with appropriate HTTP status code."
           name: errors
           param_attrs:
           - doc: An error code that identifies the reason for the error.
@@ -86404,7 +88048,10 @@ docs:
           type: enum
           type_spec: null
         - doc: "List of errors that occurred during that last attempt to provision/update\
-            \ this subscriber.\n Note:"
+            \ this subscriber.\n Note:\n* This list captures errors that occurred\
+            \ during provisioning of the subscriber.\n* Any errors that occur during\
+            \ initial API request validation will be captured directly in error response\
+            \ with appropriate HTTP status code."
           name: errors
           param_attrs:
           - doc: An error code that identifies the reason for the error.

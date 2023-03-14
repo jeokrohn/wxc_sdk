@@ -6,7 +6,7 @@ from collections.abc import Generator, Iterable
 from dataclasses import dataclass, field
 from io import StringIO
 from itertools import chain
-from typing import Union, Optional, NamedTuple, ClassVar
+from typing import Union, Optional, NamedTuple, ClassVar, overload
 
 from bs4 import BeautifulSoup, ResultSet, Tag
 from inflection import underscore
@@ -68,7 +68,17 @@ def div_repr(d) -> str:
     return f'<div{class_str}>'
 
 
-def python_type(type_str: str, for_list: bool = False) -> str:
+@overload
+def python_type(type_str: str) -> str:
+    ...
+
+
+@overload
+def python_type(type_str: str, for_list: bool) -> tuple[str, str]:
+    ...
+
+
+def python_type(type_str: str, for_list: bool = False) -> Union[str, tuple[str, str]]:
     """
     Transform a type description from developer.cisco.com to a type that can be used in Python code
 
@@ -97,9 +107,17 @@ def python_type(type_str: str, for_list: bool = False) -> str:
         assert referenced_class
         list_attr = next((a
                           for a in referenced_class.attributes
-                          if a.param_class and re.match(r'array\[\w+]', a.type)), None)
+                          if (m := re.match(r'array\[(.+)]', a.type))), None)
         if list_attr:
-            return python_type(list_attr.param_class.name)
+            if list_attr.param_class:
+                # if we have a class then the name of the class
+                array_base_type_name = list_attr.param_class.name
+            else:
+                # ... else whatever (basic) type was provided
+                array_base_type_name = m.group(1)
+            return list_attr.name, python_type(array_base_type_name)
+        else:
+            raise KeyError(f'Oops, no "array" attribute, but we are supposed to get a type_name for a list: {type_str}')
 
     return type_str
 
@@ -185,7 +203,7 @@ class Parameter(BaseModel):
         return super().dict(exclude={'param_class'}, **kwargs)
 
 
-def break_lines(line: str, line_start: str, first_line_prefix: str=None) -> Generator[str, None, None]:
+def break_lines(line: str, line_start: str, first_line_prefix: str = None) -> Generator[str, None, None]:
     """
     Break line in multiple lines (max 120 chars) if needed
     :param line:
@@ -317,6 +335,9 @@ class Class:
         """
 
         def type_for_source(a: Parameter) -> str:
+            """
+            type string for Python source for given parameter
+            """
             if a.param_class:
                 if a.type.startswith('array'):
                     return f'list[{python_type(a.param_class._name)}]'
@@ -514,6 +535,24 @@ class MethodDetails(BaseModel):
         for pr_key in self.parameters_and_response:
             for p in self.parameters_and_response[pr_key]:
                 yield from p.attributes(path=f'{path}/{self.header}/{pr_key}')
+
+    @property
+    def is_paginated(self) -> bool:
+        """
+        determine whether the method requires pagination
+
+        requires pagination if:
+            * 1st attribute returned is an array of something
+            * has "max" query parameters
+        """
+        response_attributes = self.parameters_and_response.get('Response Properties')
+        if not response_attributes:
+            return False
+        if not response_attributes[0].type.startswith('array['):
+            return False
+        p_names = set(p.name
+                      for p in self.parameters_and_response.get('Query Parameters', []))
+        return 'max' in p_names
 
 
 class SectionAndMethodDetails(NamedTuple):
@@ -1165,8 +1204,8 @@ class DevWebexComScraper:
                         else:
                             break
                     return
-                new_doc = '\n'.join(doc_lines_from_p_spec())
 
+                new_doc = '\n'.join(doc_lines_from_p_spec())
 
                 doc_paragraphs = p_spec_div.find_all('p', recursive=False)
                 doc = '\n'.join(map(lambda p: p.text, doc_paragraphs))
