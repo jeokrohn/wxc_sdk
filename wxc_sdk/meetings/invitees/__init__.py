@@ -1,8 +1,8 @@
 from collections.abc import Generator
 from typing import List, Optional
 
-from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from ...api_child import ApiChild
+from ...base import ApiModel
 
 __all__ = ['CreateInviteesItem', 'Invitee', 'MeetingInviteesApi']
 

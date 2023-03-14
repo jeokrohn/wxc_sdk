@@ -3,8 +3,8 @@ __all__ = ['ClosedCaption', 'CCSnippet', 'MeetingClosedCaptionsApi']
 from collections.abc import Generator
 from typing import Optional
 
-from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from ...api_child import ApiChild
+from ...base import ApiModel
 
 
 class ClosedCaption(ApiModel):

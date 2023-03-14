@@ -6,9 +6,9 @@ from typing import Optional
 
 from pydantic import parse_obj_as
 
-from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
-from wxc_sdk.base import SafeEnum as Enum
+from ...api_child import ApiChild
+from ...base import ApiModel
+from ...base import SafeEnum as Enum
 
 __all__ = ['Audio', 'CallInNumber', 'CoHost', 'DefaultAudioType', 'MeetingPreferenceDetails',
            'PersonalMeetingRoomOptions', 'VideoOptions', 'Link',

@@ -13,4 +13,4 @@
 ./developer.webex.com/classes.py developer.webex.com/generated/meetings.yml --section "Meeting Qualities" -o developer.webex.com/generated/meeting_qualities_auto.py
 ./developer.webex.com/classes.py developer.webex.com/generated/meetings.yml --section "Meeting Transcripts" -o developer.webex.com/generated/meeting_transcripts_auto.py
 ./developer.webex.com/classes.py developer.webex.com/generated/meetings.yml --section "Meeting Summary Report" -o developer.webex.com/generated/meeting_summary_report_auto.py
-./developer.webex.com/classes.py developer.webex.com/generated/meetings.yml -o developer.webex.com/generated/meetings_auto.py
+./developer.webex.com/classes.py developer.webex.com/generated/meetings.yml --section "Meetings" -o developer.webex.com/generated/meetings_meetings_auto.py
