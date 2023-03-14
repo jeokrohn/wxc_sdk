@@ -406,7 +406,7 @@ class RestSession(Session):
         def noop(x):
             return x
 
-        if model is None:
+        if not isinstance(model, ApiModel):
             model = noop
         else:
             model = model.parse_obj
