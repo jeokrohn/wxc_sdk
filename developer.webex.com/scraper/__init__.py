@@ -20,10 +20,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from yaml import safe_load, safe_dump
 
-# foo !!!
-
 __all__ = ['MethodDoc', 'SectionDoc', 'AttributeInfo', 'Parameter', 'MethodDetails', 'DocMethodDetails',
-           'DevWebexComScraper', 'Credentials', 'SectionAndMethodDetails', 'Class', 'python_type', 'SectionDetails']
+           'DevWebexComScraper', 'Credentials', 'SectionAndMethodDetails', 'Class', 'python_type', 'SectionDetails',
+           'break_lines']
 
 # "Standard" menu titles we want to ignore when pull method details from submenus on the left
 IGNORE_MENUS = {
