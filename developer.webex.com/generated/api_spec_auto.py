@@ -631,7 +631,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             body.is_group_park = is_group_park
         url = self.ep('park')
         data = super().post(url=url, data=body.json())
-        return data["parkedAgainst"]
+        return PartyInformation.parse_obj(data["parkedAgainst"])
 
     def retrieve(self, destination: str = None) -> DialResponse:
         """
@@ -782,12 +782,13 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         data = super().post(url=url, data=body.json())
         return DialResponse.parse_obj(data)
 
-    def list_calls(self, **params) -> Generator[Call, None, None]:
+    def list_calls(self) -> list[Call]:
         """
         Get the list of details for all active calls associated with the user.
         """
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=Call, params=params)
+        data = super().get(url=url)
+        return parse_obj_as(list[Call], data["items"])
 
     def call_details(self, call_id: str) -> Call:
         """
@@ -800,7 +801,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         data = super().get(url=url)
         return Call.parse_obj(data)
 
-    def list_call_history(self, type_: str = None, **params) -> Generator[ListCallHistoryResponse, None, None]:
+    def list_call_history(self, type_: str = None) -> list[CallHistoryRecord]:
         """
         Get the list of call history records for the user. A maximum of 20 call history records per type (placed,
         missed, received) are returned.
@@ -809,10 +810,12 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             retrieved. Possible values: placed, missed, received
         :type type_: str
         """
+        params = {}
         if type_ is not None:
             params['type'] = type_
         url = self.ep('history')
-        return self.session.follow_pagination(url=url, model=ListCallHistoryResponse, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[CallHistoryRecord], data["items"])
 
 class Address(ApiModel):
     #: Address 1
@@ -1692,7 +1695,7 @@ class WebexCallingDetailedCallHistoryApi(ApiChild, base=''):
     templates tab, and then in the Webex Calling reports section see Calling Detailed Call History Report.
     """
 
-    def detailed_call_history(self, start_time: str, end_time: str, locations: str = None, max: int = None) -> List[CDR]:
+    def detailed_call_history(self, start_time: str, end_time: str, locations: str = None, **params) -> Generator[CDR, None, None]:
         """
         Provides Webex Calling Detailed Call History data for your organization.
         Results can be filtered with the startTime, endTime and locations request parameters. The startTime and endTime
@@ -1712,20 +1715,13 @@ class WebexCallingDetailedCallHistoryApi(ApiChild, base=''):
         :param locations: Name of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
             provided. Allows you to query reports by location.
         :type locations: str
-        :param max: Limit the maximum number of reports in the response. Range is 1 to 500. When the API has more
-            reports to return than the max value, the API response will be paginated.
-        :type max: int
         """
-        params = {}
         params['startTime'] = start_time
         params['endTime'] = end_time
         if locations is not None:
             params['locations'] = locations
-        if max is not None:
-            params['max'] = max
         url = self.ep('https://analytics.webexapis.com/v1/cdr_feed')
-        data = super().get(url=url, params=params)
-        return data["items"]
+        return self.session.follow_pagination(url=url, model=CDR, params=params)
 
 class ListAutoAttendantObject(GetAvailableRecallHuntGroupsObject):
     #: Name of location for auto attendant.
@@ -5507,7 +5503,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().post(url=url, params=params, data=body.json())
         return
 
-    def read_list_of_auto_attendants(self, org_id: str = None, location_id: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None) -> List[ListAutoAttendantObject]:
+    def read_list_of_auto_attendants(self, org_id: str = None, location_id: str = None, name: str = None, phone_number: str = None, **params) -> Generator[ListAutoAttendantObject, None, None]:
         """
         List all Auto Attendants for the organization.
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
@@ -5519,31 +5515,21 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param location_id: Return the list of auto attendants for this location.
         :type location_id: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param name: Only return auto attendants with the matching name.
         :type name: str
         :param phone_number: Only return auto attendants with the matching phone number.
         :type phone_number: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         url = self.ep('autoAttendants')
-        data = super().get(url=url, params=params)
-        return data["autoAttendants"]
+        return self.session.follow_pagination(url=url, model=ListAutoAttendantObject, item_key='autoAttendants', params=params)
 
     def details_for_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None) -> GetDetailsForAutoAttendantResponse:
         """
@@ -5766,7 +5752,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding')
         data = super().get(url=url, params=params)
-        return data["callForwarding"]
+        return AutoAttendantCallForwardSettingsDetailsObject.parse_obj(data["callForwarding"])
 
     def update_forwarding_settings_for_auto_attendant(self, location_id: str, auto_attendant_id: str, call_forwarding: AutoAttendantCallForwardSettingsModifyDetailsObject, org_id: str = None):
         """
@@ -5850,7 +5836,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
-    def selective_forwarding_rule_for_auto_attendant(self, location_id: str, auto_attendant_id: str, rule_id: str, org_id: str = None) -> str:
+    def selective_forwarding_rule_for_auto_attendant(self, location_id: str, auto_attendant_id: str, rule_id: str, org_id: str = None) -> GetSelectiveCallForwardingRuleForAutoAttendantResponse:
         """
         Retrieve a Selective Call Forwarding Rule's settings for the designated Auto Attendant.
         A selective call forwarding rule for an auto attendant allows calls to be forwarded or not forwarded to the
@@ -5875,7 +5861,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/selectiveRules/{rule_id}')
         data = super().get(url=url, params=params)
-        return data["id"]
+        return GetSelectiveCallForwardingRuleForAutoAttendantResponse.parse_obj(data)
 
     def update_selective_forwarding_rule_for_auto_attendant(self, location_id: str, auto_attendant_id: str, rule_id: str, name: str, forward_to: CallForwardSelectiveForwardToObject, calls_from: CallForwardSelectiveCallsFromObject, org_id: str = None, enabled: bool = None, business_schedule: str = None, holiday_schedule: str = None, calls_to: CallForwardSelectiveCallsToObject = None) -> str:
         """
@@ -5963,7 +5949,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().delete(url=url, params=params)
         return
 
-    def read_list_of_parks(self, location_id: str, org_id: str = None, max: int = None, start: int = None, order: str = None, name: str = None) -> List[ListCallParkObject]:
+    def read_list_of_parks(self, location_id: str, org_id: str = None, order: str = None, name: str = None, **params) -> Generator[ListCallParkObject, None, None]:
         """
         List all Call Parks for the organization.
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
@@ -5975,29 +5961,19 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: List call parks for this organization.
         :type org_id: str
-        :param max: Limit the number of call parks returned to this maximum count. Default is 2000.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching call parks. Default is 0.
-        :type start: int
         :param order: Sort the list of call parks by name, either ASC or DSC. Default is ASC.
         :type order: str
         :param name: Return the list of call parks that contains the given name. The maximum length is 80.
         :type name: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         if name is not None:
             params['name'] = name
         url = self.ep(f'locations/{location_id}/callParks')
-        data = super().get(url=url, params=params)
-        return data["callParks"]
+        return self.session.follow_pagination(url=url, model=ListCallParkObject, item_key='callParks', params=params)
 
     def create_park(self, location_id: str, name: str, recall: PutRecallHuntGroupObject, org_id: str = None, agents: List[str] = None) -> str:
         """
@@ -6111,7 +6087,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().put(url=url, params=params, data=body.json())
         return data["id"]
 
-    def available_agents_from_parks(self, location_id: str, org_id: str = None, call_park_name: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None, order: str = None) -> List[GetPersonPlaceVirtualLineCallParksObject]:
+    def available_agents_from_parks(self, location_id: str, org_id: str = None, call_park_name: str = None, name: str = None, phone_number: str = None, order: str = None, **params) -> Generator[GetPersonPlaceVirtualLineCallParksObject, None, None]:
         """
         Retrieve available agents from call parks for a given location.
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
@@ -6124,10 +6100,6 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param call_park_name: Only return available agents from call parks with the matching name.
         :type call_park_name: str
-        :param max: Limit the number of available agents returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching available agents.
-        :type start: int
         :param name: Only return available agents with the matching name.
         :type name: str
         :param phone_number: Only return available agents with the matching primary number.
@@ -6137,15 +6109,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             The maximum supported sort order value is 3.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if call_park_name is not None:
             params['callParkName'] = call_park_name
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if phone_number is not None:
@@ -6153,10 +6120,9 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         if order is not None:
             params['order'] = order
         url = self.ep(f'locations/{location_id}/callParks/availableUsers')
-        data = super().get(url=url, params=params)
-        return data["agents"]
+        return self.session.follow_pagination(url=url, model=GetPersonPlaceVirtualLineCallParksObject, item_key='agents', params=params)
 
-    def available_recall_hunt_groups_from_parks(self, location_id: str, org_id: str = None, max: int = None, start: int = None, name: str = None, order: str = None) -> List[GetAvailableRecallHuntGroupsObject]:
+    def available_recall_hunt_groups_from_parks(self, location_id: str, org_id: str = None, name: str = None, order: str = None, **params) -> Generator[GetAvailableRecallHuntGroupsObject, None, None]:
         """
         Retrieve available recall hunt groups from call parks for a given location.
         Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
@@ -6167,30 +6133,20 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: Return the available recall hunt groups for this organization.
         :type org_id: str
-        :param max: Limit the number of available recall hunt groups returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching available recall hunt groups.
-        :type start: int
         :param name: Only return available recall hunt groups with the matching name.
         :type name: str
         :param order: Order the available recall hunt groups according to the designated fields. Available sort fields:
             lname.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if order is not None:
             params['order'] = order
         url = self.ep(f'locations/{location_id}/callParks/availableRecallHuntGroups')
-        data = super().get(url=url, params=params)
-        return data["huntGroups"]
+        return self.session.follow_pagination(url=url, model=GetAvailableRecallHuntGroupsObject, item_key='huntGroups', params=params)
 
     def park_settings(self, location_id: str, org_id: str = None) -> GetCallParkSettingsResponse:
         """
@@ -6239,7 +6195,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def read_list_of_park_extensions(self, org_id: str = None, max: int = None, start: int = None, extension: str = None, name: str = None, location_id: str = None, location_name: str = None, order: str = None) -> List[ListCallParkExtensionObject]:
+    def read_list_of_park_extensions(self, org_id: str = None, extension: str = None, name: str = None, location_id: str = None, location_name: str = None, order: str = None, **params) -> Generator[ListCallParkExtensionObject, None, None]:
         """
         List all Call Park Extensions for the organization.
         The Call Park service, enabled for all users by default, allows a user to park a call against an available
@@ -6250,10 +6206,6 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param org_id: List call park extensions for this organization.
         :type org_id: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param extension: Only return call park extensions with the matching extension.
         :type extension: str
         :param name: Only return call park extensions with the matching name.
@@ -6266,13 +6218,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             callParkExtension, callParkExtensionName, callParkExtensionExternalId.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if extension is not None:
             params['extension'] = extension
         if name is not None:
@@ -6284,8 +6231,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         if order is not None:
             params['order'] = order
         url = self.ep('callParkExtensions')
-        data = super().get(url=url, params=params)
-        return data["callParkExtensions"]
+        return self.session.follow_pagination(url=url, model=ListCallParkExtensionObject, item_key='callParkExtensions', params=params)
 
     def details_for_park_extension(self, location_id: str, call_park_extension_id: str, org_id: str = None) -> GetDetailsForCallParkExtensionResponse:
         """
@@ -6398,7 +6344,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def read_list_of_pickups(self, location_id: str, org_id: str = None, max: int = None, start: int = None, order: str = None, name: str = None) -> List[ListCallParkObject]:
+    def read_list_of_pickups(self, location_id: str, org_id: str = None, order: str = None, name: str = None, **params) -> Generator[ListCallParkObject, None, None]:
         """
         List all Call Pickups for the organization.
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
@@ -6410,29 +6356,19 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: List call pickups for this organization.
         :type org_id: str
-        :param max: Limit the number of call pickups returned to this maximum count. Default is 2000.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching call pickups. Default is 0.
-        :type start: int
         :param order: Sort the list of call pickups by name, either ASC or DSC. Default is ASC.
         :type order: str
         :param name: Return the list of call pickups that contains the given name. The maximum length is 80.
         :type name: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         if name is not None:
             params['name'] = name
         url = self.ep(f'locations/{location_id}/callPickups')
-        data = super().get(url=url, params=params)
-        return data["callPickups"]
+        return self.session.follow_pagination(url=url, model=ListCallParkObject, item_key='callPickups', params=params)
 
     def create_pickup(self, location_id: str, name: str, org_id: str = None, agents: List[str] = None) -> str:
         """
@@ -6485,7 +6421,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().delete(url=url, params=params)
         return
 
-    def details_for_pickup(self, location_id: str, call_pickup_id: str, org_id: str = None) -> List[GetPersonPlaceVirtualLineCallPickupObject]:
+    def details_for_pickup(self, location_id: str, call_pickup_id: str, org_id: str = None) -> GetDetailsForCallPickupResponse:
         """
         Retrieve Call Pickup details.
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
@@ -6505,7 +6441,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/callPickups/{call_pickup_id}')
         data = super().get(url=url, params=params)
-        return data["agents"]
+        return GetDetailsForCallPickupResponse.parse_obj(data)
 
     def update_pickup(self, location_id: str, call_pickup_id: str, name: str, org_id: str = None, agents: List[str] = None) -> str:
         """
@@ -6538,7 +6474,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().put(url=url, params=params, data=body.json())
         return data["id"]
 
-    def available_agents_from_pickups(self, location_id: str, org_id: str = None, call_pickup_name: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None, order: str = None) -> List[GetPersonPlaceVirtualLineCallPickupObject]:
+    def available_agents_from_pickups(self, location_id: str, org_id: str = None, call_pickup_name: str = None, name: str = None, phone_number: str = None, order: str = None, **params) -> Generator[GetPersonPlaceVirtualLineCallPickupObject, None, None]:
         """
         Retrieve available agents from call pickups for a given location.
         Call Pickup enables a user (agent) to answer any ringing line within their pickup group.
@@ -6551,10 +6487,6 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param call_pickup_name: Only return available agents from call pickups with the matching name.
         :type call_pickup_name: str
-        :param max: Limit the number of available agents returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching available agents.
-        :type start: int
         :param name: Only return available agents with the matching name.
         :type name: str
         :param phone_number: Only return available agents with the matching primary number.
@@ -6563,15 +6495,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             separated sort order fields may be specified. Available sort fields: fname, lname, extension, number.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if call_pickup_name is not None:
             params['callPickupName'] = call_pickup_name
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if phone_number is not None:
@@ -6579,10 +6506,9 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         if order is not None:
             params['order'] = order
         url = self.ep(f'locations/{location_id}/callPickups/availableUsers')
-        data = super().get(url=url, params=params)
-        return data["agents"]
+        return self.session.follow_pagination(url=url, model=GetPersonPlaceVirtualLineCallPickupObject, item_key='agents', params=params)
 
-    def read_list_of_queues(self, org_id: str = None, location_id: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None) -> List[ListCallQueueObject]:
+    def read_list_of_queues(self, org_id: str = None, location_id: str = None, name: str = None, phone_number: str = None, **params) -> Generator[ListCallQueueObject, None, None]:
         """
         List all Call Queues for the organization.
         Call queues temporarily hold calls in the cloud when all agents, which
@@ -6599,31 +6525,21 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param location_id: Only return call queues with matching location ID.
         :type location_id: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param name: Only return call queues with the matching name.
         :type name: str
         :param phone_number: Only return call queues with matching primary phone number or extension.
         :type phone_number: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         url = self.ep('queues')
-        data = super().get(url=url, params=params)
-        return data["queues"]
+        return self.session.follow_pagination(url=url, model=ListCallQueueObject, item_key='queues', params=params)
 
     def create_queue(self, location_id: str, call_policies: PostCallQueueCallPolicyObject, queue_settings: CallQueueQueueSettingsObject, agents: PostPersonPlaceVirtualLineCallQueueObject, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, language_code: str = None, first_name: str = None, last_name: str = None, time_zone: str = None, allow_agent_join_enabled: bool = None, phone_number_for_outgoing_calls_enabled: bool = None) -> str:
         """
@@ -6848,7 +6764,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def read_list_of_queue_announcement_files(self, location_id: str, queue_id: str, org_id: str = None) -> List[GetAnnouncementFileInfo]:
+    def read_list_of_queue_announcement_files(self, location_id: str, queue_id: str, org_id: str = None) -> list[GetAnnouncementFileInfo]:
         """
         List file info for all Call Queue announcement files associated with this Call Queue.
         Call Queue announcement files contain messages and music that callers hear while waiting in the queue. A call
@@ -6870,7 +6786,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/announcements')
         data = super().get(url=url, params=params)
-        return data["announcements"]
+        return parse_obj_as(list[GetAnnouncementFileInfo], data["announcements"])
 
     def delete_queue_announcement_file(self, location_id: str, queue_id: str, file_name: str, org_id: str = None):
         """
@@ -6896,7 +6812,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().delete(url=url, params=params)
         return
 
-    def forwarding_settings_for_queue(self, location_id: str, queue_id: str, org_id: str = None) -> object:
+    def forwarding_settings_for_queue(self, location_id: str, queue_id: str, org_id: str = None) -> CallForwarding:
         """
         Retrieve Call Forwarding settings for the designated Call Queue including the list of call forwarding rules.
         Retrieving call forwarding settings for a call queue requires a full or read-only administrator auth token with
@@ -6914,7 +6830,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding')
         data = super().get(url=url, params=params)
-        return data["callForwarding"]
+        return CallForwarding.parse_obj(data["callForwarding"])
 
     def update_forwarding_settings_for_queue(self, location_id: str, queue_id: str, org_id: str = None, call_forwarding: CallForwarding1 = None):
         """
@@ -6997,7 +6913,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
-    def selective_forwarding_rule_for_queue(self, location_id: str, queue_id: str, rule_id: str, org_id: str = None) -> str:
+    def selective_forwarding_rule_for_queue(self, location_id: str, queue_id: str, rule_id: str, org_id: str = None) -> GetSelectiveCallForwardingRuleForCallQueueResponse:
         """
         Retrieve a Selective Call Forwarding Rule's settings for the designated Call Queue.
         A selective call forwarding rule for a call queue allows calls to be forwarded or not forwarded to the
@@ -7021,7 +6937,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/selectiveRules/{rule_id}')
         data = super().get(url=url, params=params)
-        return data["id"]
+        return GetSelectiveCallForwardingRuleForCallQueueResponse.parse_obj(data)
 
     def update_selective_forwarding_rule_for_queue(self, location_id: str, queue_id: str, rule_id: str, name: str, calls_from: CallsFrom, calls_to: CallsTo, org_id: str = None, enabled: bool = None, holiday_schedule: str = None, business_schedule: str = None, forward_to: CallForwardSelectiveForwardToObject = None) -> str:
         """
@@ -7274,7 +7190,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().post(url=url, params=params, data=body.json())
         return ValidateExtensionsResponse.parse_obj(data)
 
-    def read_list_of_hunt_groups(self, org_id: str = None, location_id: str = None, max: int = None, start: int = None, name: str = None, phone_number: str = None) -> List[ListCallQueueObject]:
+    def read_list_of_hunt_groups(self, org_id: str = None, location_id: str = None, name: str = None, phone_number: str = None, **params) -> Generator[ListCallQueueObject, None, None]:
         """
         List all calling Hunt Groups for the organization.
         Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
@@ -7286,31 +7202,21 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param location_id: Only return hunt groups with matching location ID.
         :type location_id: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param name: Only return hunt groups with the matching name.
         :type name: str
         :param phone_number: Only return hunt groups with the matching primary phone number or extension.
         :type phone_number: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         url = self.ep('huntGroups')
-        data = super().get(url=url, params=params)
-        return data["huntGroups"]
+        return self.session.follow_pagination(url=url, model=ListCallQueueObject, item_key='huntGroups', params=params)
 
     def create_hunt_group(self, location_id: str, name: str, call_policies: PostHuntGroupCallPolicyObject, agents: PostPersonPlaceVirtualLineHuntGroupObject, org_id: str = None, enabled: bool = None, phone_number: str = None, extension: int = None, language_code: str = None, first_name: str = None, last_name: str = None, time_zone: str = None) -> str:
         """
@@ -7498,7 +7404,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def forwarding_settings_for_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None) -> object:
+    def forwarding_settings_for_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None) -> CallForwarding:
         """
         Retrieve Call Forwarding settings for the designated Hunt Group including the list of call forwarding rules.
         Retrieving call forwarding settings for a hunt group requires a full or read-only administrator auth token with
@@ -7516,7 +7422,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding')
         data = super().get(url=url, params=params)
-        return data["callForwarding"]
+        return CallForwarding.parse_obj(data["callForwarding"])
 
     def update_forwarding_settings_for_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None, call_forwarding: CallForwarding1 = None):
         """
@@ -7909,7 +7815,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().post(url=url, params=params, data=body.json())
         return data["exampleSipPassword"]
 
-    def location_outgoing_permission(self, location_id: str, org_id: str = None) -> List[CallingPermissionObject]:
+    def location_outgoing_permission(self, location_id: str, org_id: str = None) -> list[CallingPermissionObject]:
         """
         Retrieve the location's outgoing call settings.
         A location's outgoing call settings allow you to determine the types of calls the people/workspaces at the
@@ -7928,7 +7834,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/outgoingPermission')
         data = super().get(url=url, params=params)
-        return data["callingPermissions"]
+        return parse_obj_as(list[CallingPermissionObject], data["callingPermissions"])
 
     def update_location_outgoing_permission(self, location_id: str, org_id: str = None, calling_permissions: CallingPermissionObject = None):
         """
@@ -8011,7 +7917,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def outgoing_permission_location_access_code(self, location_id: str, org_id: str = None) -> object:
+    def outgoing_permission_location_access_code(self, location_id: str, org_id: str = None) -> AccessCodes:
         """
         Retrieve access codes details for a customer location.
         Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
@@ -8028,7 +7934,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/outgoingPermission/accessCodes')
         data = super().get(url=url, params=params)
-        return data["accessCodes"]
+        return AccessCodes.parse_obj(data["accessCodes"])
 
     def create_outgoing_permissionnew_access_code_forcustomer_location(self, location_id: str, org_id: str = None, access_codes: AccessCodes = None):
         """
@@ -8078,7 +7984,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def read_list_of_paging_groups(self, org_id: str = None, max: int = None, start: int = None, location_id: str = None, name: str = None, phone_number: str = None) -> List[ListAutoAttendantObject]:
+    def read_list_of_paging_groups(self, org_id: str = None, location_id: str = None, name: str = None, phone_number: str = None, **params) -> Generator[ListAutoAttendantObject, None, None]:
         """
         List all Paging Groups for the organization.
         Group Paging allows a person to place a one-way call or group page to up to 75 people and/or workspaces by
@@ -8089,10 +7995,6 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param org_id: List paging groups for this organization.
         :type org_id: str
-        :param max: Limit the number of objects returned to this maximum count. Default is 2000
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects. Default is 0
-        :type start: int
         :param location_id: Return only paging groups with matching location ID. Default is all locations
         :type location_id: str
         :param name: Return only paging groups with the matching name.
@@ -8100,13 +8002,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param phone_number: Return only paging groups with matching primary phone number or extension.
         :type phone_number: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if location_id is not None:
             params['locationId'] = location_id
         if name is not None:
@@ -8114,8 +8011,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         url = self.ep('paging')
-        data = super().get(url=url, params=params)
-        return data["locationPaging"]
+        return self.session.follow_pagination(url=url, model=ListAutoAttendantObject, item_key='locationPaging', params=params)
 
     def createnew_paging_group(self, location_id: str, org_id: str = None, extension: str = None, name: str = None, phone_number: str = None, language_code: str = None, first_name: str = None, last_name: str = None, originator_caller_id_enabled: bool = None, originators: List[str] = None, targets: List[str] = None) -> str:
         """
@@ -8471,7 +8367,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['restrictedNonGeoNumbers'] = restricted_non_geo_numbers
         url = self.ep('numbers')
         data = super().get(url=url, params=params)
-        return data["phoneNumbers"]
+        return NumberListGetObject.parse_obj(data["phoneNumbers"])
 
     def list_manage_numbers_jobs(self, org_id: str = None, **params) -> Generator[StartJobResponse, None, None]:
         """
@@ -8600,7 +8496,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         url = self.ep(f'jobs/numbers/manageNumbers/{job_id}/errors')
         return self.session.follow_pagination(url=url, model=ItemObject, params=params)
 
-    def private_network_connect(self, location_id: str, org_id: str = None) -> enum:
+    def private_network_connect(self, location_id: str, org_id: str = None) -> NetworkConnectionType:
         """
         Retrieve the location's network connection type.
         Network Connection Type determines if the location's network connection is public or private.
@@ -8617,7 +8513,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/privateNetworkConnect')
         data = super().get(url=url, params=params)
-        return data["networkConnectionType"]
+        return NetworkConnectionType.parse_obj(data["networkConnectionType"])
 
     def update_private_network_connect(self, location_id: str, network_connection_type: NetworkConnectionType, org_id: str = None):
         """
@@ -8643,7 +8539,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def read_list_of_routing_choices(self, org_id: str = None, route_group_name: str = None, trunk_name: str = None, max: int = None, start: int = None, order: str = None) -> List[RouteIdentity]:
+    def read_list_of_routing_choices(self, org_id: str = None, route_group_name: str = None, trunk_name: str = None, order: str = None, **params) -> Generator[RouteIdentity, None, None]:
         """
         List all Routes for the organization.
         Trunk and Route Group qualify as Route. Trunks and Route Groups provide you the ability to configure Webex
@@ -8658,32 +8554,22 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type route_group_name: str
         :param trunk_name: Return the list of route identities matching the Trunk name..
         :type trunk_name: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the route identities according to the designated fields. Available sort fields: routeName,
             routeType.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if route_group_name is not None:
             params['routeGroupName'] = route_group_name
         if trunk_name is not None:
             params['trunkName'] = trunk_name
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep('routeChoices')
-        data = super().get(url=url, params=params)
-        return data["routeIdentities"]
+        return self.session.follow_pagination(url=url, model=RouteIdentity, item_key='routeIdentities', params=params)
 
-    def read_list_of_schedules(self, location_id: str, org_id: str = None, type_: str = None, max: int = None, start: int = None, name: str = None) -> List[ListScheduleObject]:
+    def read_list_of_schedules(self, location_id: str, org_id: str = None, type_: str = None, name: str = None, **params) -> Generator[ListScheduleObject, None, None]:
         """
         List all schedules for the given location of the organization.
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
@@ -8698,27 +8584,17 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param type_: Type of the schedule. * businessHours - Business hours schedule type. * holidays - Holidays
             schedule type.
         :type type_: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param name: Only return schedules with the matching name.
         :type name: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if type_ is not None:
             params['type'] = type_
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if name is not None:
             params['name'] = name
         url = self.ep(f'locations/{location_id}/schedules')
-        data = super().get(url=url, params=params)
-        return data["schedules"]
+        return self.session.follow_pagination(url=url, model=ListScheduleObject, item_key='schedules', params=params)
 
     def details_for_schedule(self, location_id: str, type_: str, schedule_id: str, org_id: str = None) -> GetDetailsForScheduleResponse:
         """
@@ -9005,7 +8881,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().delete(url=url, params=params)
         return
 
-    def read_list_of_virtual_lines(self, org_id: str = None, location_id: List[str] = None, max: int = None, start: int = None, id: List[str] = None, owner_name: List[str] = None, phone_number: List[str] = None, location_name: List[str] = None, order: List[str] = None, has_device_assigned: bool = None, has_extension_assigned: bool = None, has_dn_assigned: bool = None) -> List[ListVirtualLineObject]:
+    def read_list_of_virtual_lines(self, org_id: str = None, location_id: List[str] = None, id: List[str] = None, owner_name: List[str] = None, phone_number: List[str] = None, location_name: List[str] = None, order: List[str] = None, has_device_assigned: bool = None, has_extension_assigned: bool = None, has_dn_assigned: bool = None, **params) -> Generator[ListVirtualLineObject, None, None]:
         """
         List all Virtual Lines for the organization.
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
@@ -9018,10 +8894,6 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param location_id: Return the list of virtual lines matching these location ids. Example for multiple values -
             ?locationId=locId1&locationId=locId2.
         :type location_id: List[str]
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param id: Return the list of virtual lines matching these virtualLineIds. Example for multiple values -
             ?id=id1&id=id2.
         :type id: List[str]
@@ -9048,15 +8920,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             assigned.
         :type has_dn_assigned: bool
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_id is not None:
             params['locationId'] = location_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if id is not None:
             params['id'] = id
         if owner_name is not None:
@@ -9074,8 +8941,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         if has_dn_assigned is not None:
             params['hasDnAssigned'] = has_dn_assigned
         url = self.ep('virtualLines')
-        data = super().get(url=url, params=params)
-        return data["virtualLines"]
+        return self.session.follow_pagination(url=url, model=ListVirtualLineObject, item_key='virtualLines', params=params)
 
     def voicemail_settings(self, org_id: str = None) -> GetVoicemailSettingsResponse:
         """
@@ -9400,7 +9266,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         url = self.ep('voicemailGroups')
-        return self.session.follow_pagination(url=url, model=GetVoicemailGroupObject, params=params)
+        return self.session.follow_pagination(url=url, model=GetVoicemailGroupObject, item_key='voicemailGroups', params=params)
 
     def location_voicemail_group(self, location_id: str, voicemail_group_id: str, org_id: str = None) -> GetLocationVoicemailGroupResponse:
         """
@@ -9595,7 +9461,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().delete(url=url, params=params)
         return
 
-    def read_list_of_uc_manager_profiles(self, org_id: str = None) -> List[GetAvailableRecallHuntGroupsObject]:
+    def read_list_of_uc_manager_profiles(self, org_id: str = None) -> list[GetAvailableRecallHuntGroupsObject]:
         """
         List all calling UC Manager Profiles for the organization.
         UC Manager Profiles are applicable if your organization uses Jabber in Team Messaging mode or Calling in Webex
@@ -9614,9 +9480,9 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep('callingProfiles')
         data = super().get(url=url, params=params)
-        return data["callingProfiles"]
+        return parse_obj_as(list[GetAvailableRecallHuntGroupsObject], data["callingProfiles"])
 
-    def read_list_of_dial_patterns(self, dial_plan_id: str, org_id: str = None, dial_pattern: str = None, max: int = None, start: int = None, order: str = None) -> List[str]:
+    def read_list_of_dial_patterns(self, dial_plan_id: str, org_id: str = None, dial_pattern: str = None, order: str = None, **params) -> Generator[str, None, None]:
         """
         List all Dial Patterns for the organization.
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
@@ -9635,27 +9501,17 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             optional wildcard characters. Valid wildcard characters are ! (matches any sequence of digits) and X
             (matches a single digit, 0-9). The ! wildcard can only occur once at the end and only in an E.164 pattern
         :type dial_pattern: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the dial patterns according to the designated fields. Available sort fields: dialPattern.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if dial_pattern is not None:
             params['dialPattern'] = dial_pattern
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep(f'premisePstn/dialPlans/{dial_plan_id}/dialPatterns')
-        data = super().get(url=url, params=params)
-        return data["dialPatterns"]
+        return self.session.follow_pagination(url=url, model=str, item_key='dialPatterns', params=params)
 
     def modify_dial_patterns(self, dial_plan_id: str, org_id: str = None, dial_patterns: DialPattern = None, delete_all_dial_patterns: bool = None):
         """
@@ -9716,7 +9572,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().post(url=url, params=params, data=body.json())
         return ValidateDialPatternResponse.parse_obj(data)
 
-    def read_list_of_dial_plans(self, org_id: str = None, dial_plan_name: str = None, route_group_name: str = None, trunk_name: str = None, max: int = None, start: int = None, order: str = None) -> List[DialPlan]:
+    def read_list_of_dial_plans(self, org_id: str = None, dial_plan_name: str = None, route_group_name: str = None, trunk_name: str = None, order: str = None, **params) -> Generator[DialPlan, None, None]:
         """
         List all Dial Plans for the organization.
         Dial plans route calls to on-premises destinations by use of the trunks or route groups with which the dial
@@ -9733,15 +9589,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type route_group_name: str
         :param trunk_name: Return the list of dial plans matching the Trunk name..
         :type trunk_name: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the dial plans according to the designated fields. Available sort fields: name, routeName,
             routeType. Sort order is ascending by default
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if dial_plan_name is not None:
@@ -9750,15 +9601,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['routeGroupName'] = route_group_name
         if trunk_name is not None:
             params['trunkName'] = trunk_name
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep('premisePstn/dialPlans')
-        data = super().get(url=url, params=params)
-        return data["dialPlans"]
+        return self.session.follow_pagination(url=url, model=DialPlan, item_key='dialPlans', params=params)
 
     def create_dial_plan(self, name: str, route_id: str, route_type: RouteType, org_id: str = None, dial_patterns: List[str] = None) -> str:
         """
@@ -9798,7 +9644,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
-    def dial_plan(self, dial_plan_id: str, org_id: str = None) -> GetAvailableRecallHuntGroupsObject:
+    def dial_plan(self, dial_plan_id: str, org_id: str = None) -> GetDialPlanResponse:
         """
         Get a Dial Plan for the organization.
         Dial plans route calls to on-premises destinations by use of trunks or route groups.
@@ -9819,7 +9665,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/dialPlans/{dial_plan_id}')
         data = super().get(url=url, params=params)
-        return data["customer"]
+        return GetDialPlanResponse.parse_obj(data)
 
     def modify_dial_plan(self, dial_plan_id: str, name: str, route_id: str, route_type: RouteType, org_id: str = None):
         """
@@ -9913,7 +9759,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().post(url=url, params=params, data=body.json())
         return
 
-    def read_list_of_trunks(self, org_id: str = None, name: List[str] = None, location_name: List[str] = None, trunk_type: str = None, max: int = None, start: int = None, order: str = None) -> List[Trunk]:
+    def read_list_of_trunks(self, org_id: str = None, name: List[str] = None, location_name: List[str] = None, trunk_type: str = None, order: str = None, **params) -> Generator[Trunk, None, None]:
         """
         List all Trunks for the organization.
         A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
@@ -9931,15 +9777,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_name: List[str]
         :param trunk_type: Return the list of trunks matching the trunk type.
         :type trunk_type: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the trunks according to the designated fields. Available sort fields: name, locationName.
             Sort order is ascending by default
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if name is not None:
@@ -9948,15 +9789,10 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['locationName'] = location_name
         if trunk_type is not None:
             params['trunkType'] = trunk_type
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep('premisePstn/trunks')
-        data = super().get(url=url, params=params)
-        return data["trunks"]
+        return self.session.follow_pagination(url=url, model=Trunk, item_key='trunks', params=params)
 
     def create_trunk(self, name: str, password: str, location_id: str, trunk_type: TrunkType, org_id: str = None, dual_identity_support_enabled: bool = None, max_concurrent_calls: int = None, device_type: str = None, address: str = None, domain: str = None, port: int = None) -> str:
         """
@@ -10099,7 +9935,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().delete(url=url, params=params)
         return
 
-    def read_list_of_trunk_types(self, org_id: str = None) -> List[TrunkTypeWithDeviceType]:
+    def read_list_of_trunk_types(self, org_id: str = None) -> list[TrunkTypeWithDeviceType]:
         """
         List all Trunk Types with Device Types for the organization.
         A Trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
@@ -10118,9 +9954,9 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep('premisePstn/trunks/trunkTypes')
         data = super().get(url=url, params=params)
-        return data["trunkTypes"]
+        return parse_obj_as(list[TrunkTypeWithDeviceType], data["trunkTypes"])
 
-    def read_list_of_routing_groups(self, org_id: str = None, name: str = None, max: int = None, start: int = None, order: str = None) -> List[RouteGroup]:
+    def read_list_of_routing_groups(self, org_id: str = None, name: str = None, order: str = None, **params) -> Generator[RouteGroup, None, None]:
         """
         List all Route Groups for an organization. A Route Group is a group of trunks that allows further scale and
         redundancy with the connection to the premises.
@@ -10131,27 +9967,17 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param name: Return the list of route groups matching the Route group name..
         :type name: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the route groups according to designated fields. Available sort orders are asc and desc.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if name is not None:
             params['name'] = name
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep('premisePstn/routeGroups')
-        data = super().get(url=url, params=params)
-        return data["routeGroups"]
+        return self.session.follow_pagination(url=url, model=RouteGroup, item_key='routeGroups', params=params)
 
     def create_route_group_for_organization(self, name: str, local_gateways: LocalGateways, org_id: str = None) -> str:
         """
@@ -10180,7 +10006,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
-    def read_route_group_for_organization(self, route_group_id: str, org_id: str = None) -> GetAvailableRecallHuntGroupsObject:
+    def read_route_group_for_organization(self, route_group_id: str, org_id: str = None) -> ReadRouteGroupForOrganizationResponse:
         """
         Reads a Route Group for the organization based on id.
         A Route Group is a collection of trunks that allows further scale and redundancy with the connection to the
@@ -10198,7 +10024,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}')
         data = super().get(url=url, params=params)
-        return data["organization"]
+        return ReadRouteGroupForOrganizationResponse.parse_obj(data)
 
     def modify_route_group_for_organization(self, route_group_id: str, name: str, local_gateways: LocalGateways, org_id: str = None):
         """
@@ -10274,7 +10100,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().get(url=url, params=params)
         return ReadUsageOfRoutingGroupResponse.parse_obj(data)
 
-    def read_to_extension_locations_of_routing_group(self, route_group_id: str, org_id: str = None, location_name: str = None, max: int = None, start: int = None, order: str = None) -> List[Location]:
+    def read_to_extension_locations_of_routing_group(self, route_group_id: str, org_id: str = None, location_name: str = None, order: str = None, **params) -> Generator[GetAvailableRecallHuntGroupsObject, None, None]:
         """
         List "Call to" on-premises Extension Locations for a specific route group. Users within these locations are
         registered to a PBX which allows you to route unknown extensions (calling number length of 2-6 digits) to the
@@ -10288,29 +10114,19 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param location_name: Return the list of locations matching the location name.
         :type location_name: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the locations according to designated fields. Available sort orders are asc, and desc.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_name is not None:
             params['locationName'] = location_name
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}/usageCallToExtension')
-        data = super().get(url=url, params=params)
-        return data["locations"]
+        return self.session.follow_pagination(url=url, model=GetAvailableRecallHuntGroupsObject, item_key='locations', params=params)
 
-    def read_dial_plan_locations_of_routing_group(self, route_group_id: str, org_id: str = None, location_name: str = None, max: int = None, start: int = None, order: str = None) -> List[Location]:
+    def read_dial_plan_locations_of_routing_group(self, route_group_id: str, org_id: str = None, location_name: str = None, order: str = None, **params) -> Generator[GetAvailableRecallHuntGroupsObject, None, None]:
         """
         List Dial Plan Locations for a specific route group.
         Dial Plans allow you to route calls to on-premises destinations by use of trunks or route groups. They are
@@ -10326,29 +10142,19 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param location_name: Return the list of locations matching the location name.
         :type location_name: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the locations according to designated fields. Available sort orders are asc, and desc.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_name is not None:
             params['locationName'] = location_name
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}/usageDialPlan')
-        data = super().get(url=url, params=params)
-        return data["locations"]
+        return self.session.follow_pagination(url=url, model=GetAvailableRecallHuntGroupsObject, item_key='locations', params=params)
 
-    def read_pstn_connection_locations_of_routing_group(self, route_group_id: str, org_id: str = None, location_name: str = None, max: int = None, start: int = None, order: str = None) -> List[Location]:
+    def read_pstn_connection_locations_of_routing_group(self, route_group_id: str, org_id: str = None, location_name: str = None, order: str = None, **params) -> Generator[GetAvailableRecallHuntGroupsObject, None, None]:
         """
         List PSTN Connection Locations for a specific route group. This solution lets you configure users to use Cloud
         PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
@@ -10361,29 +10167,19 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param location_name: Return the list of locations matching the location name.
         :type location_name: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the locations according to designated fields. Available sort orders are asc, and desc.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if location_name is not None:
             params['locationName'] = location_name
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}/usagePstnConnection')
-        data = super().get(url=url, params=params)
-        return data["locations"]
+        return self.session.follow_pagination(url=url, model=GetAvailableRecallHuntGroupsObject, item_key='locations', params=params)
 
-    def read_route_lists_of_routing_group(self, route_group_id: str, org_id: str = None, name: str = None, max: int = None, start: int = None, order: str = None) -> List[RouteGroupUsageRouteListGet]:
+    def read_route_lists_of_routing_group(self, route_group_id: str, org_id: str = None, name: str = None, order: str = None, **params) -> Generator[RouteGroupUsageRouteListGet, None, None]:
         """
         List Route Lists for a specific route group. Route Lists are a list of numbers that can be reached via a Route
         Group. It can be used to provide cloud PSTN connectivity to Webex Calling Dedicated Instance.
@@ -10396,29 +10192,19 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param name: Return the list of locations matching the location name.
         :type name: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the locations according to designated fields. Available sort orders are asc, and desc.
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if name is not None:
             params['name'] = name
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}/usageRouteList')
-        data = super().get(url=url, params=params)
-        return data["routeGroupUsageRouteListGet"]
+        return self.session.follow_pagination(url=url, model=RouteGroupUsageRouteListGet, item_key='routeGroupUsageRouteListGet', params=params)
 
-    def read_list_of_route_lists(self, org_id: str = None, name: List[str] = None, location_id: List[str] = None, max: int = None, start: int = None, order: str = None) -> List[RouteList]:
+    def read_list_of_route_lists(self, org_id: str = None, name: List[str] = None, location_id: List[str] = None, order: str = None, **params) -> Generator[RouteList, None, None]:
         """
         List all Route Lists for the organization.
         A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
@@ -10432,30 +10218,20 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type name: List[str]
         :param location_id: Return the list of Route Lists matching the location id.
         :type location_id: List[str]
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the Route List according to the designated fields. Available sort fields are name, and
             locationId. Sort order is ascending by default
         :type order: str
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if name is not None:
             params['name'] = name
         if location_id is not None:
             params['locationId'] = location_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         url = self.ep('premisePstn/routeLists')
-        data = super().get(url=url, params=params)
-        return data["routeLists"]
+        return self.session.follow_pagination(url=url, model=RouteList, item_key='routeLists', params=params)
 
     def create_route_list(self, location_id: str, org_id: str = None, name: str = None, route_group_id: str = None) -> str:
         """
@@ -10557,7 +10333,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def modify_numbers_for_route_list(self, route_list_id: str, org_id: str = None, numbers: RouteListNumberPatch = None, delete_all_numbers: bool = None) -> List[RouteListNumberPatchResponse]:
+    def modify_numbers_for_route_list(self, route_list_id: str, org_id: str = None, numbers: RouteListNumberPatch = None, delete_all_numbers: bool = None) -> list[RouteListNumberPatchResponse]:
         """
         Modify numbers for a specific Route List of a Customer.
         A Route List is a list of numbers that can be reached via a Route Group. It can be used to provide cloud PSTN
@@ -10585,7 +10361,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             body.delete_all_numbers = delete_all_numbers
         url = self.ep(f'premisePstn/routeLists/{route_list_id}/numbers')
         data = super().put(url=url, params=params, data=body.json())
-        return data["numberStatus"]
+        return parse_obj_as(list[RouteListNumberPatchResponse], data["numberStatus"])
 
     def numbers_assigned_to_route_list(self, route_list_id: str, org_id: str = None, max: int = None, start: int = None, order: str = None, number: str = None) -> str:
         """
@@ -10623,7 +10399,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().get(url=url, params=params)
         return data["phoneNumbers"]
 
-    def local_gateway_to_on_premises_extension_usage_for_trunk(self, trunk_id: str, org_id: str = None, max: int = None, start: int = None, order: str = None, name: List[str] = None) -> Location:
+    def local_gateway_to_on_premises_extension_usage_for_trunk(self, trunk_id: str, org_id: str = None, max: int = None, start: int = None, order: str = None, name: List[str] = None) -> GetAvailableRecallHuntGroupsObject:
         """
         Get local gateway call to on-premises extension usage for a trunk.
         A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
@@ -10660,9 +10436,9 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['name'] = name
         url = self.ep(f'premisePstn/trunks/{trunk_id}/usageCallToExtension')
         data = super().get(url=url, params=params)
-        return data["location"]
+        return GetAvailableRecallHuntGroupsObject.parse_obj(data["location"])
 
-    def local_gateway_dial_plan_usage_for_trunk(self, trunk_id: str, org_id: str = None, max: int = None, start: int = None, order: str = None, name: List[str] = None) -> List[GetAvailableRecallHuntGroupsObject]:
+    def local_gateway_dial_plan_usage_for_trunk(self, trunk_id: str, org_id: str = None, order: str = None, name: List[str] = None, **params) -> Generator[GetAvailableRecallHuntGroupsObject, None, None]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
         A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
@@ -10676,32 +10452,22 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type trunk_id: str
         :param org_id: Organization to which the trunk belongs.
         :type org_id: str
-        :param max: Limit the number of objects returned to this maximum count.
-        :type max: int
-        :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: int
         :param order: Order the trunks according to the designated fields. Available sort fields are name, and
             locationName. Sort order is ascending by default
         :type order: str
         :param name: Return the list of trunks matching the local gateway names
         :type name: List[str]
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        if max is not None:
-            params['max'] = max
-        if start is not None:
-            params['start'] = start
         if order is not None:
             params['order'] = order
         if name is not None:
             params['name'] = name
         url = self.ep(f'premisePstn/trunks/{trunk_id}/usageDialPlan')
-        data = super().get(url=url, params=params)
-        return data["dialPlans"]
+        return self.session.follow_pagination(url=url, model=GetAvailableRecallHuntGroupsObject, item_key='dialPlans', params=params)
 
-    def locations_using_local_gateway_as_pstn_connection_routing(self, trunk_id: str, org_id: str = None) -> Location:
+    def locations_using_local_gateway_as_pstn_connection_routing(self, trunk_id: str, org_id: str = None) -> GetAvailableRecallHuntGroupsObject:
         """
         Get Locations Using the Local Gateway as PSTN Connection Routing.
         A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
@@ -10721,9 +10487,9 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/trunks/{trunk_id}/usagePstnConnection')
         data = super().get(url=url, params=params)
-        return data["location"]
+        return GetAvailableRecallHuntGroupsObject.parse_obj(data["location"])
 
-    def route_groups_using_local_gateway(self, trunk_id: str, org_id: str = None) -> List[RouteGroup]:
+    def route_groups_using_local_gateway(self, trunk_id: str, org_id: str = None) -> list[RouteGroup]:
         """
         Get Route Groups Using the Local Gateway.
         A trunk is a connection between Webex Calling and the premises, which terminates on the premises with a local
@@ -10743,7 +10509,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/trunks/{trunk_id}/usageRouteGroup')
         data = super().get(url=url, params=params)
-        return data["routeGroup"]
+        return parse_obj_as(list[RouteGroup], data["routeGroup"])
 
     def local_gateway_usage_count(self, trunk_id: str, org_id: str = None) -> GetLocalGatewayUsageCountResponse:
         """
@@ -11121,7 +10887,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def search_members(self, device_id: str, location_id: str, org_id: str = None, start: int = None, max: int = None, member_name: str = None, phone_number: str = None, extension: str = None) -> List[SearchMemberObject]:
+    def search_members(self, device_id: str, location_id: str, org_id: str = None, member_name: str = None, phone_number: str = None, extension: str = None, **params) -> Generator[SearchMemberObject, None, None]:
         """
         Search members that can be assigned to the device.
         A device member can be either a person or a workspace. A admin can access the list of member details, modify
@@ -11135,10 +10901,6 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: Retrieves the list of available members on the device in this organization.
         :type org_id: str
-        :param start: Specifies the offset from the first result that you want to fetch.
-        :type start: int
-        :param max: Specifies the maximum number of records that you want to fetch.
-        :type max: int
         :param member_name: Search (Contains) numbers based on member name.
         :type member_name: str
         :param phone_number: Search (Contains) based on number.
@@ -11146,14 +10908,9 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param extension: Search (Contains) based on extension.
         :type extension: str
         """
-        params = {}
         params['locationId'] = location_id
         if org_id is not None:
             params['orgId'] = org_id
-        if start is not None:
-            params['start'] = start
-        if max is not None:
-            params['max'] = max
         if member_name is not None:
             params['memberName'] = member_name
         if phone_number is not None:
@@ -11161,8 +10918,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         if extension is not None:
             params['extension'] = extension
         url = self.ep(f'devices/{device_id}/availableMembers')
-        data = super().get(url=url, params=params)
-        return data["members"]
+        return self.session.follow_pagination(url=url, model=SearchMemberObject, item_key='members', params=params)
 
     def apply_changes_forspecific_device(self, device_id: str, org_id: str = None):
         """
@@ -11324,7 +11080,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def read_list_of_supported_devices(self, org_id: str = None) -> List[DeviceObject]:
+    def read_list_of_supported_devices(self, org_id: str = None) -> list[DeviceObject]:
         """
         Gets the list of supported devices for an organization.
         Retrieving this list requires a full or read-only administrator auth token with a scope of
@@ -11338,7 +11094,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep('supportedDevices')
         data = super().get(url=url, params=params)
-        return data["devices"]
+        return parse_obj_as(list[DeviceObject], data["devices"])
 
     def readdevice_override_settings_fororganization(self, org_id: str = None) -> ReaddeviceOverrideSettingsFororganizationResponse:
         """
@@ -11356,7 +11112,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().get(url=url, params=params)
         return ReaddeviceOverrideSettingsFororganizationResponse.parse_obj(data)
 
-    def read_dect_device_type_list(self, org_id: str = None) -> List[DectDeviceList]:
+    def read_dect_device_type_list(self, org_id: str = None) -> list[DectDeviceList]:
         """
         Get DECT device type list with base stations and line ports supported count. This is a static list.
         Retrieving this list requires a full or read-only administrator auth token with a scope of
@@ -11370,7 +11126,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep('devices/dects/supportedDevices')
         data = super().get(url=url, params=params)
-        return data["devices"]
+        return parse_obj_as(list[DectDeviceList], data["devices"])
 
     def validatelist_of_mac_address(self, macs: List[str], org_id: str = None) -> ValidatelistOfMACAddressResponse:
         """
@@ -12205,7 +11961,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
     own settings.
     """
 
-    def search_shared_line_appearance_members(self, person_id: str, application_id: str, extension: str = None, name: str = None, max: int = None, start: int = None, location: str = None, number: str = None, order: str = None) -> List[AvailableSharedLineMemberItem]:
+    def search_shared_line_appearance_members(self, person_id: str, application_id: str, extension: str = None, name: str = None, max: int = None, start: int = None, location: str = None, number: str = None, order: str = None) -> list[AvailableSharedLineMemberItem]:
         """
         Get members available for shared-line assignment to a Webex Calling Apps Desktop device.
         This API requires a full or user administrator auth token with the spark-admin:people_read scope.
@@ -12246,7 +12002,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             body.order = order
         url = self.ep(f'telephony/config/people/{person_id}/applications/{application_id}/availableMembers')
         data = super().get(url=url, data=body.json())
-        return data["members"]
+        return parse_obj_as(list[AvailableSharedLineMemberItem], data["members"])
 
     def shared_line_appearance_members(self, person_id: str, application_id: str) -> GetSharedLineAppearanceMembersResponse:
         """
@@ -12281,7 +12037,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         super().put(url=url, data=body.json())
         return
 
-    def read_persons_calling_behavior(self, person_id: str, org_id: str = None) -> enum:
+    def read_persons_calling_behavior(self, person_id: str, org_id: str = None) -> ReadPersonsCallingBehaviorResponse:
         """
         Retrieves the calling behavior and UC Manager Profile settings for the person which includes overall calling
         behavior and calling UC Manager Profile ID.
@@ -12306,7 +12062,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/features/callingBehavior')
         data = super().get(url=url, params=params)
-        return data["effectiveBehaviorType"]
+        return ReadPersonsCallingBehaviorResponse.parse_obj(data)
 
     def configurepersons_calling_behavior(self, person_id: str, org_id: str = None, behavior_type: BehaviorType = None, profile_id: str = None):
         """
@@ -12896,7 +12652,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         if type_ is not None:
             params['type'] = type_
         url = self.ep(f'people/{person_id}/features/schedules')
-        return self.session.follow_pagination(url=url, model=ScheduleShortDetails, params=params)
+        return self.session.follow_pagination(url=url, model=ScheduleShortDetails, item_key='schedules', params=params)
 
     def create_schedule_for_person(self, person_id: str, name: str, type_: Type25, org_id: str = None, events: EventLongDetails = None) -> str:
         """
@@ -12934,7 +12690,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
-    def schedule_details(self, person_id: str, schedule_type: Type25, schedule_id: str, org_id: str = None) -> List[EventLongDetails]:
+    def schedule_details(self, person_id: str, schedule_type: Type25, schedule_id: str, org_id: str = None) -> GetScheduleDetailsResponse:
         """
         Retrieve a schedule by its schedule ID.
         Schedules are used to support calling features and can be defined at the location or person level.
@@ -12959,7 +12715,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/features/schedules/{schedule_type}/{schedule_id}')
         data = super().get(url=url, params=params)
-        return data["events"]
+        return GetScheduleDetailsResponse.parse_obj(data)
 
     def update_schedule(self, person_id: str, schedule_type: Type25, schedule_id: str, name: str, type_: Type25, new_name: str, org_id: str = None, events: EventLongDetails = None) -> str:
         """
@@ -13032,7 +12788,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         super().delete(url=url, params=params)
         return
 
-    def fetch_event_forpersons_schedule(self, person_id: str, schedule_type: Type25, schedule_id: str, event_id: str, org_id: str = None) -> str:
+    def fetch_event_forpersons_schedule(self, person_id: str, schedule_type: Type25, schedule_id: str, event_id: str, org_id: str = None) -> FetchEventForpersonsScheduleResponse:
         """
         People can use shared location schedules or define personal schedules containing events.
         businessHours schedules allow you to apply specific call settings at different times of the day or week by
@@ -13058,7 +12814,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/features/schedules/{schedule_type}/{schedule_id}/events/{event_id}')
         data = super().get(url=url, params=params)
-        return data["id"]
+        return FetchEventForpersonsScheduleResponse.parse_obj(data)
 
     def add_new_event_for_persons_schedule(self, person_id: str, schedule_type: Type25, schedule_id: str, name: str, start_date: str, end_date: str, start_time: str, end_time: str, org_id: str = None, all_day_enabled: bool = None, recurrence: Recurrence = None) -> str:
         """
@@ -13334,7 +13090,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         data = super().get(url=url, params=params)
         return GetListOfPhoneNumbersForPersonResponse.parse_obj(data)
 
-    def retrievepersons_application_services(self, person_id: str, org_id: str = None) -> int:
+    def retrievepersons_application_services(self, person_id: str, org_id: str = None) -> RetrievepersonsApplicationServicesSettingsResponse:
         """
         Application services let you determine the ringing behavior for calls made to people in certain scenarios. You
         can also specify which devices can download the Webex Calling app.
@@ -13352,7 +13108,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/features/applications')
         data = super().get(url=url, params=params)
-        return data["availableLineCount"]
+        return RetrievepersonsApplicationServicesSettingsResponse.parse_obj(data)
 
     def modifypersons_application_services(self, person_id: str, org_id: str = None, ring_devices_for_click_to_dial_calls_enabled: bool = None, ring_devices_for_group_page_enabled: bool = None, ring_devices_for_call_park_enabled: bool = None, browser_client_enabled: bool = None, desktop_client_enabled: bool = None, tablet_client_enabled: bool = None, mobile_client_enabled: bool = None):
         """
@@ -13463,7 +13219,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def retrieve_executive_assistant_for_person(self, person_id: str, org_id: str = None) -> enum:
+    def retrieve_executive_assistant_for_person(self, person_id: str, org_id: str = None) -> Type32:
         """
         Retrieve the executive assistant settings for the specified personId.
         People with the executive service enabled, can select from a pool of assistants who have been assigned the
@@ -13483,7 +13239,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/features/executiveAssistant')
         data = super().get(url=url, params=params)
-        return data["type"]
+        return Type32.parse_obj(data["type"])
 
     def modify_executive_assistant_for_person(self, person_id: str, org_id: str = None, type_: Type32 = None):
         """
@@ -13836,7 +13592,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def retrieve_list_of_call_queue_caller_id_information(self, person_id: str) -> List[CallQueueObject]:
+    def retrieve_list_of_call_queue_caller_id_information(self, person_id: str) -> list[CallQueueObject]:
         """
         Retrieve the list of the person's available call queues and the associated Caller ID information.
         If the Agent is to enable queueCallerIdEnabled, they must choose which queue to use as the source for outgoing
@@ -13850,7 +13606,7 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         """
         url = self.ep(f'telephony/config/people/{person_id}/queues/availableCallerIds')
         data = super().get(url=url)
-        return data["availableQueues"]
+        return parse_obj_as(list[CallQueueObject], data["availableQueues"])
 
     def retrieve_call_queue_agents_caller_id_information(self, person_id: str) -> RetrieveCallQueueAgentsCallerIDInformationResponse:
         """
@@ -13956,12 +13712,13 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
         data = super().get(url=url)
         return GetMessageSummaryResponse.parse_obj(data)
 
-    def list(self, **params) -> Generator[VoiceMessageDetails, None, None]:
+    def list(self) -> list[VoiceMessageDetails]:
         """
         Get the list of all voicemail messages for the user.
         """
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=VoiceMessageDetails, params=params)
+        data = super().get(url=url)
+        return parse_obj_as(list[VoiceMessageDetails], data["items"])
 
     def delete(self, message_id: str):
         """
@@ -14240,7 +13997,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             params['orgId'] = org_id
         url = self.ep(f'callForwarding')
         data = super().get(url=url, params=params)
-        return data["callForwarding"]
+        return CallForwardingPlaceSettingGet.parse_obj(data["callForwarding"])
 
     def modify_call_forwarding_settings_for(self, workspace_id: str, call_forwarding: CallForwardingPlaceSettingPatch, org_id: str = None):
         """
@@ -14451,7 +14208,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         super().put(url=url, params=params, data=body.json())
         return
 
-    def list_numbers_associated_withspecific(self, workspace_id: str, attributes: , body: , org_id: str = None, **params):
+    def list_numbers_associated_withspecific(self, workspace_id: str, attributes: , body: , org_id: str = None):
         """
         List the PSTN phone numbers associated with a specific workspace, by ID, within the organization. Also shows
         the location and organization associated with the workspace.
@@ -14478,12 +14235,14 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             can use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
+        params = {}
         params['Attributes'] = attributes
         params['Body'] = body
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'numbers')
-        return !$!!$!$       # documentation at https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace is missing return type
+        super().get(url=url, params=params)
+        return $!$!$!   # this is weird. Check the spec at https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace
 
     def retrieve_incoming_permission_settings_for(self, workspace_id: str, org_id: str = None) -> ReadIncomingPermissionSettingsForPersonResponse:
         """
@@ -14600,7 +14359,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         super().put(url=url, params=params, data=body.json())
         return
 
-    def retrieve_access_codes_for(self, workspace_id: str, org_id: str = None) -> List[AccessCodes]:
+    def retrieve_access_codes_for(self, workspace_id: str, org_id: str = None) -> list[AccessCodes]:
         """
         Retrieve Access codes for a Workspace.
         Access codes are used to bypass permissions.
@@ -14619,7 +14378,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             params['orgId'] = org_id
         url = self.ep(f'outgoingPermission/accessCodes')
         data = super().get(url=url, params=params)
-        return data["accessCodes"]
+        return parse_obj_as(list[AccessCodes], data["accessCodes"])
 
     def modify_access_codes_for(self, workspace_id: str, org_id: str = None, delete_codes: List[str] = None):
         """
