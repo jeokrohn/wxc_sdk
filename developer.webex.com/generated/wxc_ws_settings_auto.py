@@ -440,6 +440,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-call-forwarding-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -463,6 +465,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-call-forwarding-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -488,6 +492,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-call-waiting-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -512,6 +518,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :type org_id: str
         :param enabled: Call Waiting state.
         :type enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-call-waiting-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -536,6 +544,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-caller-id-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -576,6 +586,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :param location_external_caller_id_name: External Caller Name, which will be shown if External Caller ID Name
             is OTHER.
         :type location_external_caller_id_name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-caller-id-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -616,6 +628,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-monitoring-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -643,6 +657,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :type enable_call_park_notification: bool
         :param monitored_elements: Array of ID strings of monitored elements.
         :type monitored_elements: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-monitoring-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -682,6 +698,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
             can use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace
         """
         params = {}
         params['Attributes'] = attributes
@@ -706,6 +724,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-incoming-permission-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -736,6 +756,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :type internal_calls_enabled: bool
         :param collect_calls_enabled: Flag to indicate if workspace can receive collect calls.
         :type collect_calls_enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-incoming-permission-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -767,6 +789,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-outgoing-permission-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -793,6 +817,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :type use_custom_enabled: bool
         :param calling_permissions: Workspace's list of outgoing permissions.
         :type calling_permissions: CallingPermission
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-outgoing-permission-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -819,6 +845,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-access-codes-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -842,6 +870,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :type org_id: str
         :param delete_codes: Indicates access codes to delete.
         :type delete_codes: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-access-codes-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -870,6 +900,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :type code: str
         :param description: Indicates the description of the access code.
         :type description: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/create-access-codes-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -899,6 +931,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/read-call-intercept-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -929,6 +963,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :type incoming: InterceptIncomingPatch
         :param outgoing: Settings related to how outgoing calls are handled when the intercept feature is enabled.
         :type outgoing: InterceptOutGoingGet
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/configure-call-intercept-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -959,6 +995,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-transfer-numbers-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -991,6 +1029,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :param auto_transfer_number3: When calling a specific call type, this workspace will be automatically
             transferred to another number.
         :type auto_transfer_number3: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-transfer-numbers-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:

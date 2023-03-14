@@ -63,6 +63,8 @@ class AttachmentActionsApi(ApiChild, base='attachment/actions'):
         :type message_id: str
         :param inputs: The attachment action's inputs.
         :type inputs: Inputs
+
+        documentation: https://developer.webex.com/docs/api/v1/attachment-actions/create-an-attachment-action
         """
         body = CreateAttachmentActionBody()
         if type_ is not None:
@@ -82,6 +84,8 @@ class AttachmentActionsApi(ApiChild, base='attachment/actions'):
 
         :param id: A unique identifier for the attachment action.
         :type id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/attachment-actions/get-attachment-action-details
         """
         url = self.ep(f'{id}')
         data = super().get(url=url)
@@ -197,6 +201,8 @@ class EventsApi(ApiChild, base='events'):
         :param to_: List events which occurred before a specific date and time. If unspecified, or set to a time in the
             future, lists events up to the present.
         :type to_: str
+
+        documentation: https://developer.webex.com/docs/api/v1/events/list-events
         """
         if resource is not None:
             params['resource'] = resource
@@ -218,6 +224,8 @@ class EventsApi(ApiChild, base='events'):
 
         :param event_id: The unique identifier for the event.
         :type event_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/events/get-event-details
         """
         url = self.ep(f'{event_id}')
         data = super().get(url=url)
@@ -297,6 +305,8 @@ class MembershipsApi(ApiChild, base='memberships'):
         :param person_email: List memberships associated with a person, by email address. The roomId parameter is
             required when using this parameter.
         :type person_email: str
+
+        documentation: https://developer.webex.com/docs/api/v1/memberships/list-memberships
         """
         if room_id is not None:
             params['roomId'] = room_id
@@ -319,6 +329,8 @@ class MembershipsApi(ApiChild, base='memberships'):
         :type person_email: str
         :param is_moderator: Whether or not the participant is a room moderator.
         :type is_moderator: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/memberships/create-a-membership
         """
         body = CreateMembershipBody()
         if room_id is not None:
@@ -340,6 +352,8 @@ class MembershipsApi(ApiChild, base='memberships'):
 
         :param membership_id: The unique identifier for the membership.
         :type membership_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/memberships/get-membership-details
         """
         url = self.ep(f'{membership_id}')
         data = super().get(url=url)
@@ -357,6 +371,8 @@ class MembershipsApi(ApiChild, base='memberships'):
         :param is_room_hidden: When set to true, hides direct spaces in the teams client. Any new message will make the
             room visible again.
         :type is_room_hidden: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/memberships/update-a-membership
         """
         body = UpdateMembershipBody()
         if is_moderator is not None:
@@ -376,6 +392,8 @@ class MembershipsApi(ApiChild, base='memberships'):
 
         :param membership_id: The unique identifier for the membership.
         :type membership_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/memberships/delete-a-membership
         """
         url = self.ep(f'{membership_id}')
         super().delete(url=url)
@@ -546,6 +564,8 @@ class MessagesApi(ApiChild, base='messages'):
         :type before: str
         :param before_message: List messages sent before a message, by ID.
         :type before_message: str
+
+        documentation: https://developer.webex.com/docs/api/v1/messages/list-messages
         """
         params['roomId'] = room_id
         if parent_id is not None:
@@ -571,6 +591,8 @@ class MessagesApi(ApiChild, base='messages'):
         :type person_id: str
         :param person_email: List messages in a 1:1 room, by person email.
         :type person_email: str
+
+        documentation: https://developer.webex.com/docs/api/v1/messages/list-direct-messages
         """
         params = {}
         if parent_id is not None:
@@ -612,6 +634,8 @@ class MessagesApi(ApiChild, base='messages'):
         :param attachments: Content attachments to attach to the message. Only one card per message is supported. See
             the Cards Guide for more information.
         :type attachments: Attachment
+
+        documentation: https://developer.webex.com/docs/api/v1/messages/create-a-message
         """
         body = CreateMessageBody()
         if room_id is not None:
@@ -663,6 +687,8 @@ class MessagesApi(ApiChild, base='messages'):
         :param markdown: The message, in Markdown format. If this attribute is set ensure that the request does NOT
             contain an html attribute.
         :type markdown: str
+
+        documentation: https://developer.webex.com/docs/api/v1/messages/edit-a-message
         """
         body = EditMessageBody()
         if room_id is not None:
@@ -682,6 +708,8 @@ class MessagesApi(ApiChild, base='messages'):
 
         :param message_id: The unique identifier for the message.
         :type message_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/messages/get-message-details
         """
         url = self.ep(f'{message_id}')
         data = super().get(url=url)
@@ -694,6 +722,8 @@ class MessagesApi(ApiChild, base='messages'):
 
         :param message_id: The unique identifier for the message.
         :type message_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/messages/delete-a-message
         """
         url = self.ep(f'{message_id}')
         super().delete(url=url)
@@ -905,6 +935,8 @@ class PeopleApi(ApiChild, base='people'):
         :type calling_data: bool
         :param location_id: List people present in this location.
         :type location_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/people/list-people
         """
         if email is not None:
             params['email'] = email
@@ -980,6 +1012,8 @@ class PeopleApi(ApiChild, base='people'):
         :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the
             sitename (eg: mysite.webex.com#attendee) Possible values: mysite.webex.com#attendee
         :type site_urls: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/people/create-a-person
         """
         params = {}
         if calling_data is not None:
@@ -1037,6 +1071,8 @@ class PeopleApi(ApiChild, base='people'):
         :type person_id: str
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/people/get-person-details
         """
         params = {}
         if calling_data is not None:
@@ -1116,6 +1152,8 @@ class PeopleApi(ApiChild, base='people'):
         :param login_enabled: Whether or not the user is allowed to use Webex. This property is only accessible if the
             authenticated user is an admin user for the person's organization.
         :type login_enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/people/update-a-person
         """
         params = {}
         if calling_data is not None:
@@ -1172,6 +1210,8 @@ class PeopleApi(ApiChild, base='people'):
 
         :param person_id: A unique identifier for the person.
         :type person_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/people/delete-a-person
         """
         url = self.ep(f'{person_id}')
         super().delete(url=url)
@@ -1186,6 +1226,8 @@ class PeopleApi(ApiChild, base='people'):
 
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/people/get-my-own-details
         """
         params = {}
         if calling_data is not None:
@@ -1232,6 +1274,8 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
 
         :param room_id: ID of the room for which to list room tabs.
         :type room_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/room-tabs/list-room-tabs
         """
         params = {}
         params['roomId'] = room_id
@@ -1249,6 +1293,8 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         :type content_url: str
         :param display_name: User-friendly name for the room tab.
         :type display_name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/room-tabs/create-a-room-tab
         """
         body = CreateRoomTabBody()
         if room_id is not None:
@@ -1267,6 +1313,8 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
 
         :param id: The unique identifier for the Room Tab.
         :type id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/room-tabs/get-room-tab-details
         """
         url = self.ep(f'{id}')
         data = super().get(url=url)
@@ -1284,6 +1332,8 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         :type content_url: str
         :param display_name: User-friendly name for the room tab.
         :type display_name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/room-tabs/update-a-room-tab
         """
         body = CreateRoomTabBody()
         if room_id is not None:
@@ -1302,6 +1352,8 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
 
         :param id: The unique identifier for the Room Tab to delete.
         :type id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/room-tabs/delete-a-room-tab
         """
         url = self.ep(f'{id}')
         super().delete(url=url)
@@ -1410,6 +1462,8 @@ class RoomsApi(ApiChild, base='rooms'):
         :param sort_by: Sort results. Cannot be set in combination with orgPublicSpaces. Possible values: id,
             lastactivity, created
         :type sort_by: str
+
+        documentation: https://developer.webex.com/docs/api/v1/rooms/list-rooms
         """
         if team_id is not None:
             params['teamId'] = team_id
@@ -1451,6 +1505,8 @@ class RoomsApi(ApiChild, base='rooms'):
         :type description: str
         :param is_announcement_only: Sets the space into announcement Mode.
         :type is_announcement_only: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/rooms/create-a-room
         """
         body = CreateRoomBody()
         if title is not None:
@@ -1479,6 +1535,8 @@ class RoomsApi(ApiChild, base='rooms'):
 
         :param room_id: The unique identifier for the room.
         :type room_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/rooms/get-room-details
         """
         url = self.ep(f'{room_id}')
         data = super().get(url=url)
@@ -1492,6 +1550,8 @@ class RoomsApi(ApiChild, base='rooms'):
 
         :param room_id: The unique identifier for the room.
         :type room_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/rooms/get-room-meeting-details
         """
         url = self.ep(f'{room_id}/meetingInfo')
         data = super().get(url=url)
@@ -1527,6 +1587,8 @@ class RoomsApi(ApiChild, base='rooms'):
         :param is_read_only: A compliance officer can set a direct room as read-only, which will disallow any new
             information exchanges in this space, while maintaing historical data.
         :type is_read_only: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/rooms/update-a-room
         """
         body = UpdateRoomBody()
         if title is not None:
@@ -1559,6 +1621,8 @@ class RoomsApi(ApiChild, base='rooms'):
 
         :param room_id: The unique identifier for the room.
         :type room_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/rooms/delete-a-room
         """
         url = self.ep(f'{room_id}')
         super().delete(url=url)
@@ -1610,6 +1674,8 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
 
         :param team_id: List memberships for a team, by ID.
         :type team_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/team-memberships/list-team-memberships
         """
         params['teamId'] = team_id
         url = self.ep()
@@ -1627,6 +1693,8 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         :type person_email: str
         :param is_moderator: Whether or not the participant is a team moderator.
         :type is_moderator: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/team-memberships/create-a-team-membership
         """
         body = CreateTeamMembershipBody()
         if team_id is not None:
@@ -1648,6 +1716,8 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
 
         :param membership_id: The unique identifier for the team membership.
         :type membership_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/team-memberships/get-team-membership-details
         """
         url = self.ep(f'{membership_id}')
         data = super().get(url=url)
@@ -1662,6 +1732,8 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         :type membership_id: str
         :param is_moderator: Whether or not the participant is a team moderator.
         :type is_moderator: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/team-memberships/update-a-team-membership
         """
         body = UpdateTeamMembershipBody()
         if is_moderator is not None:
@@ -1679,6 +1751,8 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
 
         :param membership_id: The unique identifier for the team membership.
         :type membership_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/team-memberships/delete-a-team-membership
         """
         url = self.ep(f'{membership_id}')
         super().delete(url=url)
@@ -1714,6 +1788,8 @@ class TeamsApi(ApiChild, base='teams'):
     def list(self, **params) -> Generator[Team, None, None]:
         """
         Lists teams to which the authenticated user belongs.
+
+        documentation: https://developer.webex.com/docs/api/v1/teams/list-teams
         """
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Team, params=params)
@@ -1728,6 +1804,8 @@ class TeamsApi(ApiChild, base='teams'):
         :type name: str
         :param description: The teams description.
         :type description: str
+
+        documentation: https://developer.webex.com/docs/api/v1/teams/create-a-team
         """
         body = CreateTeamBody()
         if name is not None:
@@ -1747,6 +1825,8 @@ class TeamsApi(ApiChild, base='teams'):
         :type team_id: str
         :param description: The teams description.
         :type description: str
+
+        documentation: https://developer.webex.com/docs/api/v1/teams/get-team-details
         """
         params = {}
         if description is not None:
@@ -1766,6 +1846,8 @@ class TeamsApi(ApiChild, base='teams'):
         :type name: str
         :param description: The teams description.
         :type description: str
+
+        documentation: https://developer.webex.com/docs/api/v1/teams/update-a-team
         """
         body = CreateTeamBody()
         if name is not None:
@@ -1783,6 +1865,8 @@ class TeamsApi(ApiChild, base='teams'):
 
         :param team_id: The unique identifier for the team.
         :type team_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/teams/delete-a-team
         """
         url = self.ep(f'{team_id}')
         super().delete(url=url)
@@ -1879,6 +1963,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
 
         :param owned_by: Limit the result list to org wide webhooks. Only allowed value is org.
         :type owned_by: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webhooks/list-webhooks
         """
         if owned_by is not None:
             params['ownedBy'] = owned_by
@@ -1906,6 +1992,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :param owned_by: Specified when creating an org/admin level webhook. Supported for meetings, recordings,
             meetingParticipants, and meetingTranscripts resources.
         :type owned_by: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webhooks/create-a-webhook
         """
         body = CreateWebhookBody()
         if name is not None:
@@ -1933,6 +2021,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
 
         :param webhook_id: The unique identifier for the webhook.
         :type webhook_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webhooks/get-webhook-details
         """
         url = self.ep(f'{webhook_id}')
         data = super().get(url=url)
@@ -1959,6 +2049,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :type owned_by: str
         :param status: The status of the webhook. Use "active" to reactivate a disabled webhook.
         :type status: Status5
+
+        documentation: https://developer.webex.com/docs/api/v1/webhooks/update-a-webhook
         """
         body = UpdateWebhookBody()
         if name is not None:
@@ -1982,6 +2074,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
 
         :param webhook_id: The unique identifier for the webhook.
         :type webhook_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webhooks/delete-a-webhook
         """
         url = self.ep(f'{webhook_id}')
         super().delete(url=url)

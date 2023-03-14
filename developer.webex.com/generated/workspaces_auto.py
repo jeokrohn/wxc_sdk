@@ -165,6 +165,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type calling: str
         :param calendar: List workspaces by calendar type. Possible values: none, google, microsoft
         :type calendar: str
+
+        documentation: https://developer.webex.com/docs/api/v1/workspaces/list-workspaces
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -219,6 +221,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :param org_id: OrgId associated with the workspace. Only admin users of another organization (such as partners)
             may use this parameter.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/workspaces/create-a-workspace
         """
         body = CreateWorkspaceBody()
         if display_name is not None:
@@ -255,6 +259,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/workspaces/get-workspace-details
         """
         url = self.ep(f'{workspace_id}')
         data = super().get(url=url)
@@ -297,6 +303,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type notes: str
         :param hotdesking_status: Hot desking status of the workspace.
         :type hotdesking_status: HotdeskingStatus
+
+        documentation: https://developer.webex.com/docs/api/v1/workspaces/update-a-workspace
         """
         body = UpdateWorkspaceBody()
         if display_name is not None:
@@ -331,6 +339,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/workspaces/delete-a-workspace
         """
         url = self.ep(f'{workspace_id}')
         super().delete(url=url)
@@ -347,6 +357,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/workspaces/get-workspace-capabilities
         """
         url = self.ep(f'{workspace_id}/capabilities')
         data = super().get(url=url)

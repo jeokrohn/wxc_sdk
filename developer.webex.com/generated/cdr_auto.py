@@ -242,6 +242,8 @@ class WebexCallingDetailedCallHistoryApi(ApiChild, base=''):
         :param locations: Name of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
             provided. Allows you to query reports by location.
         :type locations: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-detailed-call-history/get-detailed-call-history
         """
         params['startTime'] = start_time
         params['endTime'] = end_time

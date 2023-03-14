@@ -56,6 +56,8 @@ class ReportTemplatesApi(ApiChild, base='report/templates'):
         List all the available report templates that can be generated.
         CSV (comma separated value) reports for Webex services are only supported for organizations based in the North
         American region. Organizations based in other regions will return blank CSV files for any Webex reports.
+
+        documentation: https://developer.webex.com/docs/api/v1/report-templates/list-report-templates
         """
         url = self.ep()
         data = super().get(url=url)
@@ -134,6 +136,8 @@ class ReportsApi(ApiChild, base='reports'):
         :type from_: str
         :param to_: List reports that were created before this date.
         :type to_: str
+
+        documentation: https://developer.webex.com/docs/api/v1/reports/list-reports
         """
         params = {}
         if report_id is not None:
@@ -168,6 +172,8 @@ class ReportsApi(ApiChild, base='reports'):
         :type end_date: str
         :param site_list: Sites belonging to user's organization. This attribute is needed for site-based templates.
         :type site_list: str
+
+        documentation: https://developer.webex.com/docs/api/v1/reports/create-a-report
         """
         body = CreateReportBody()
         if template_id is not None:
@@ -191,6 +197,8 @@ class ReportsApi(ApiChild, base='reports'):
 
         :param report_id: The unique identifier for the report.
         :type report_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/reports/get-report-details
         """
         url = self.ep(f'{report_id}')
         data = super().get(url=url)
@@ -205,6 +213,8 @@ class ReportsApi(ApiChild, base='reports'):
 
         :param report_id: The unique identifier for the report.
         :type report_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/reports/delete-a-report
         """
         url = self.ep(f'{report_id}')
         super().delete(url=url)

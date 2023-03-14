@@ -120,6 +120,8 @@ class EventsApi(ApiChild, base='events'):
         :param to_: List events which occurred before a specific date and time. If unspecified, or set to a time in the
             future, lists events up to the present.
         :type to_: str
+
+        documentation: https://developer.webex.com/docs/api/v1/events/list-events
         """
         if resource is not None:
             params['resource'] = resource
@@ -141,6 +143,8 @@ class EventsApi(ApiChild, base='events'):
 
         :param event_id: The unique identifier for the event.
         :type event_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/events/get-event-details
         """
         url = self.ep(f'{event_id}')
         data = super().get(url=url)

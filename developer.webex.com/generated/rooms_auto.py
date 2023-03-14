@@ -120,6 +120,8 @@ class RoomsApi(ApiChild, base='rooms'):
         :param sort_by: Sort results. Cannot be set in combination with orgPublicSpaces. Possible values: id,
             lastactivity, created
         :type sort_by: str
+
+        documentation: https://developer.webex.com/docs/api/v1/rooms/list-rooms
         """
         if team_id is not None:
             params['teamId'] = team_id
@@ -161,6 +163,8 @@ class RoomsApi(ApiChild, base='rooms'):
         :type description: str
         :param is_announcement_only: Sets the space into announcement Mode.
         :type is_announcement_only: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/rooms/create-a-room
         """
         body = CreateRoomBody()
         if title is not None:
@@ -189,6 +193,8 @@ class RoomsApi(ApiChild, base='rooms'):
 
         :param room_id: The unique identifier for the room.
         :type room_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/rooms/get-room-details
         """
         url = self.ep(f'{room_id}')
         data = super().get(url=url)
@@ -202,6 +208,8 @@ class RoomsApi(ApiChild, base='rooms'):
 
         :param room_id: The unique identifier for the room.
         :type room_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/rooms/get-room-meeting-details
         """
         url = self.ep(f'{room_id}/meetingInfo')
         data = super().get(url=url)
@@ -237,6 +245,8 @@ class RoomsApi(ApiChild, base='rooms'):
         :param is_read_only: A compliance officer can set a direct room as read-only, which will disallow any new
             information exchanges in this space, while maintaing historical data.
         :type is_read_only: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/rooms/update-a-room
         """
         body = UpdateRoomBody()
         if title is not None:
@@ -269,6 +279,8 @@ class RoomsApi(ApiChild, base='rooms'):
 
         :param room_id: The unique identifier for the room.
         :type room_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/rooms/delete-a-room
         """
         url = self.ep(f'{room_id}')
         super().delete(url=url)

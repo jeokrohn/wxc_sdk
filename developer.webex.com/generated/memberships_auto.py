@@ -84,6 +84,8 @@ class MembershipsApi(ApiChild, base='memberships'):
         :param person_email: List memberships associated with a person, by email address. The roomId parameter is
             required when using this parameter.
         :type person_email: str
+
+        documentation: https://developer.webex.com/docs/api/v1/memberships/list-memberships
         """
         if room_id is not None:
             params['roomId'] = room_id
@@ -106,6 +108,8 @@ class MembershipsApi(ApiChild, base='memberships'):
         :type person_email: str
         :param is_moderator: Whether or not the participant is a room moderator.
         :type is_moderator: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/memberships/create-a-membership
         """
         body = CreateMembershipBody()
         if room_id is not None:
@@ -127,6 +131,8 @@ class MembershipsApi(ApiChild, base='memberships'):
 
         :param membership_id: The unique identifier for the membership.
         :type membership_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/memberships/get-membership-details
         """
         url = self.ep(f'{membership_id}')
         data = super().get(url=url)
@@ -144,6 +150,8 @@ class MembershipsApi(ApiChild, base='memberships'):
         :param is_room_hidden: When set to true, hides direct spaces in the teams client. Any new message will make the
             room visible again.
         :type is_room_hidden: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/memberships/update-a-membership
         """
         body = UpdateMembershipBody()
         if is_moderator is not None:
@@ -163,6 +171,8 @@ class MembershipsApi(ApiChild, base='memberships'):
 
         :param membership_id: The unique identifier for the membership.
         :type membership_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/memberships/delete-a-membership
         """
         url = self.ep(f'{membership_id}')
         super().delete(url=url)

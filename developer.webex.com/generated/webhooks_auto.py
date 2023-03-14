@@ -116,6 +116,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
 
         :param owned_by: Limit the result list to org wide webhooks. Only allowed value is org.
         :type owned_by: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webhooks/list-webhooks
         """
         if owned_by is not None:
             params['ownedBy'] = owned_by
@@ -143,6 +145,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :param owned_by: Specified when creating an org/admin level webhook. Supported for meetings, recordings,
             meetingParticipants, and meetingTranscripts resources.
         :type owned_by: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webhooks/create-a-webhook
         """
         body = CreateWebhookBody()
         if name is not None:
@@ -170,6 +174,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
 
         :param webhook_id: The unique identifier for the webhook.
         :type webhook_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webhooks/get-webhook-details
         """
         url = self.ep(f'{webhook_id}')
         data = super().get(url=url)
@@ -196,6 +202,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :type owned_by: str
         :param status: The status of the webhook. Use "active" to reactivate a disabled webhook.
         :type status: Status
+
+        documentation: https://developer.webex.com/docs/api/v1/webhooks/update-a-webhook
         """
         body = UpdateWebhookBody()
         if name is not None:
@@ -219,6 +227,8 @@ class WebhooksApi(ApiChild, base='webhooks'):
 
         :param webhook_id: The unique identifier for the webhook.
         :type webhook_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webhooks/delete-a-webhook
         """
         url = self.ep(f'{webhook_id}')
         super().delete(url=url)

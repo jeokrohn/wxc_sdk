@@ -82,6 +82,8 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
     def summary(self) -> GetMessageSummaryResponse:
         """
         Get a summary of the voicemail messages for the user.
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-voice-messaging/get-message-summary
         """
         url = self.ep('summary')
         data = super().get(url=url)
@@ -90,6 +92,8 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
     def list(self) -> list[VoiceMessageDetails]:
         """
         Get the list of all voicemail messages for the user.
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-voice-messaging/list-messages
         """
         url = self.ep()
         data = super().get(url=url)
@@ -101,6 +105,8 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
 
         :param message_id: The message identifer of the voicemail message to delete
         :type message_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-voice-messaging/delete-message
         """
         url = self.ep(f'{message_id}')
         super().delete(url=url)
@@ -115,6 +121,8 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
         :param message_id: The voicemail message identifier of the message to mark as read. If the messageId is not
             provided, then all voicemail messages for the user are marked as read.
         :type message_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-voice-messaging/mark-as-read
         """
         body = MarkAsReadBody()
         if message_id is not None:
@@ -132,6 +140,8 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
         :param message_id: The voicemail message identifier of the message to mark as unread. If the messageId is not
             provided, then all voicemail messages for the user are marked as unread.
         :type message_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-voice-messaging/mark-as-unread
         """
         body = MarkAsUnreadBody()
         if message_id is not None:

@@ -40,6 +40,8 @@ class TeamsApi(ApiChild, base='teams'):
     def list(self, **params) -> Generator[Team, None, None]:
         """
         Lists teams to which the authenticated user belongs.
+
+        documentation: https://developer.webex.com/docs/api/v1/teams/list-teams
         """
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Team, params=params)
@@ -54,6 +56,8 @@ class TeamsApi(ApiChild, base='teams'):
         :type name: str
         :param description: The teams description.
         :type description: str
+
+        documentation: https://developer.webex.com/docs/api/v1/teams/create-a-team
         """
         body = CreateTeamBody()
         if name is not None:
@@ -73,6 +77,8 @@ class TeamsApi(ApiChild, base='teams'):
         :type team_id: str
         :param description: The teams description.
         :type description: str
+
+        documentation: https://developer.webex.com/docs/api/v1/teams/get-team-details
         """
         params = {}
         if description is not None:
@@ -92,6 +98,8 @@ class TeamsApi(ApiChild, base='teams'):
         :type name: str
         :param description: The teams description.
         :type description: str
+
+        documentation: https://developer.webex.com/docs/api/v1/teams/update-a-team
         """
         body = CreateTeamBody()
         if name is not None:
@@ -109,6 +117,8 @@ class TeamsApi(ApiChild, base='teams'):
 
         :param team_id: The unique identifier for the team.
         :type team_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/teams/delete-a-team
         """
         url = self.ep(f'{team_id}')
         super().delete(url=url)

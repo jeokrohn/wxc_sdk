@@ -326,6 +326,8 @@ class BroadWorksEnterprisesWithDeleteOrgImprovementsApi(ApiChild, base='broadwor
         :type starts_with: str
         :param max: Limit the number of enterprises returned in the search, up to 1000.
         :type max: int
+
+        documentation: https://developer.webex.com/docs/api/v1/broadworks-enterprises-with-delete-org-improvements/list-broadworks-enterprises
         """
         params = {}
         if sp_enterprise_id is not None:
@@ -346,6 +348,8 @@ class BroadWorksEnterprisesWithDeleteOrgImprovementsApi(ApiChild, base='broadwor
         :type id: str
         :param enable_dir_sync: The toggle to enable/disable directory sync.
         :type enable_dir_sync: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/broadworks-enterprises-with-delete-org-improvements/update-directory-sync-for-a-broadworks-enterprise
         """
         body = UpdateDirectorySyncForBroadWorksEnterpriseBody()
         if enable_dir_sync is not None:
@@ -364,6 +368,8 @@ class BroadWorksEnterprisesWithDeleteOrgImprovementsApi(ApiChild, base='broadwor
         :param sync_status: At this time, the only option allowed for this attribute is SYNC_NOW which will trigger the
             directory sync for the BroadWorks enterprise.
         :type sync_status: str
+
+        documentation: https://developer.webex.com/docs/api/v1/broadworks-enterprises-with-delete-org-improvements/trigger-directory-sync-for-an-enterprise
         """
         body = TriggerDirectorySyncForEnterpriseBody()
         if sync_status is not None:
@@ -379,6 +385,8 @@ class BroadWorksEnterprisesWithDeleteOrgImprovementsApi(ApiChild, base='broadwor
 
         :param id: A unique identifier for the enterprise in question.
         :type id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/broadworks-enterprises-with-delete-org-improvements/get-directory-sync-status-for-an-enterprise
         """
         url = self.ep(f'{id}/broadworksDirectorySync')
         data = super().get(url=url)
@@ -393,6 +401,8 @@ class BroadWorksEnterprisesWithDeleteOrgImprovementsApi(ApiChild, base='broadwor
         :type id: str
         :param user_id: The user ID of the Broadworks user to be synced (A non-webex user).
         :type user_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/broadworks-enterprises-with-delete-org-improvements/trigger-directory-sync-for-a-user
         """
         body = TriggerDirectorySyncForUserBody()
         if user_id is not None:
@@ -704,6 +714,8 @@ class BroadWorksVirtualOn-NetRangeExtensionsApi(ApiChild, base='telephony/config
         :type org_id: str
         :param originator_number: Only used when originatorType is TRUNK. This element could be a phone number or URI.
         :type originator_number: str
+
+        documentation: https://developer.webex.com/docs/api/v1/broadworks-virtual-on-net-range-extensions/test-call-routing
         """
         params = {}
         if org_id is not None:
@@ -778,6 +790,8 @@ class BroadWorksWorkspacesApi(ApiChild, base='broadworks/workspaces'):
         :type primary_phone_number: str
         :param extension: The extension number configured against the workspace on BroadWorks.
         :type extension: str
+
+        documentation: https://developer.webex.com/docs/api/v1/broadworks-workspaces/provision-a-broadworks-workspace
         """
         body = ProvisionBroadWorksWorkspaceBody()
         if provisioning_id is not None:
@@ -809,6 +823,8 @@ class BroadWorksWorkspacesApi(ApiChild, base='broadworks/workspaces'):
         :type primary_phone_number: str
         :param extension: The extension number configured against the workspace on BroadWorks.
         :type extension: str
+
+        documentation: https://developer.webex.com/docs/api/v1/broadworks-workspaces/update-a-broadworks-workspace
         """
         body = UpdateBroadworksWorkspaceBody()
         if user_id is not None:
@@ -828,6 +844,8 @@ class BroadWorksWorkspacesApi(ApiChild, base='broadworks/workspaces'):
 
         :param workspace_id: A unique Cisco identifier for the workspace.
         :type workspace_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/broadworks-workspaces/remove-a-broadworks-workspace
         """
         url = self.ep(f'{workspace_id}')
         super().delete(url=url)
@@ -1143,6 +1161,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             destination include: 1234, 2223334444, +12223334444, *73, tel:+12223334444, user@company.domain, and
             sip:user@company.domain.
         :type destination: str
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/dial
         """
         body = DialBody()
         if destination is not None:
@@ -1157,6 +1177,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
         :param call_id: The call identifier of the call to be answered.
         :type call_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/answer
         """
         body = AnswerBody()
         if call_id is not None:
@@ -1174,6 +1196,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param action: The rejection action to apply to the call. The busy action is applied if no specific action is
             provided.
         :type action: RejectActionEnum
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/reject
         """
         body = RejectBody()
         if call_id is not None:
@@ -1190,6 +1214,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
         :param call_id: The call identifier of the call to hangup.
         :type call_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/hangup
         """
         body = HangupBody()
         if call_id is not None:
@@ -1204,6 +1230,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
         :param call_id: The call identifier of the call to hold.
         :type call_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/hold
         """
         body = HoldBody()
         if call_id is not None:
@@ -1218,6 +1246,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
         :param call_id: The call identifier of the call to resume.
         :type call_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/resume
         """
         body = ResumeBody()
         if call_id is not None:
@@ -1240,6 +1270,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             call is diverted to the user's own voicemail. If a destination is specified, the call is diverted to the
             specified user's voicemail.
         :type to_voicemail: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/divert
         """
         body = DivertBody()
         if call_id is not None:
@@ -1277,6 +1309,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             for destination include: 1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain,
             sip:user@company.domain. This parameter is mandatory if callId1 is provided and callId2 is not provided.
         :type destination: str
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/transfer
         """
         body = TransferBody()
         if call_id1 is not None:
@@ -1303,6 +1337,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param is_group_park: If set totrue, the call is parked against an automatically selected member of the user's
             call park group and the destination parameter is ignored.
         :type is_group_park: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/park
         """
         body = ParkBody()
         if call_id is not None:
@@ -1326,6 +1362,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             user is retrieved. The destination can be digits or a URI. Some examples for destination include: 1234,
             2223334444, +12223334444, *73, tel:+12223334444, user@company.domain, sip:user@company.domain
         :type destination: str
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/retrieve
         """
         body = RetrieveBody()
         if destination is not None:
@@ -1341,6 +1379,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
         :param call_id: The call identifier of the call to start recording.
         :type call_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/start-recording
         """
         body = StartRecordingBody()
         if call_id is not None:
@@ -1356,6 +1396,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
         :param call_id: The call identifier of the call to stop recording.
         :type call_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/stop-recording
         """
         body = StopRecordingBody()
         if call_id is not None:
@@ -1371,6 +1413,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
         :param call_id: The call identifier of the call to pause recording.
         :type call_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/pause-recording
         """
         body = PauseRecordingBody()
         if call_id is not None:
@@ -1386,6 +1430,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
         :param call_id: The call identifier of the call to resume recording.
         :type call_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/resume-recording
         """
         body = ResumeRecordingBody()
         if call_id is not None:
@@ -1405,6 +1451,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             “1,234”, the DTMF 1 digit is initially sent. After a pause, the DTMF 2, 3, and 4 digits are sent
             successively.
         :type dtmf: str
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/transmit-dtmf
         """
         body = TransmitDTMFBody()
         if call_id is not None:
@@ -1422,6 +1470,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
         :param call_id: The call identifier of the call to push.
         :type call_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/push
         """
         body = PushBody()
         if call_id is not None:
@@ -1440,6 +1490,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             user's call pickup group is picked up. The target can be digits or a URI. Some examples for target include:
             1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain
         :type target: str
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/pickup
         """
         body = PickupBody()
         if target is not None:
@@ -1456,6 +1508,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param target: Identifies the user to barge-in on. The target can be digits or a URI. Some examples for target
             include: 1234, 2223334444, +12223334444, tel:+12223334444, user@company.domain, sip:user@company.domain
         :type target: str
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/barge-in
         """
         body = BargeInBody()
         if target is not None:
@@ -1467,6 +1521,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
     def list_calls(self) -> list[Call]:
         """
         Get the list of details for all active calls associated with the user.
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/list-calls
         """
         url = self.ep()
         data = super().get(url=url)
@@ -1478,6 +1534,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
         :param call_id: The call identifier of the call.
         :type call_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/get-call-details
         """
         url = self.ep(f'{call_id}')
         data = super().get(url=url)
@@ -1491,6 +1549,8 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :param type_: The type of call history records to retrieve. If not specified, then all call history records are
             retrieved. Possible values: placed, missed, received
         :type type_: str
+
+        documentation: https://developer.webex.com/docs/api/v1/call-controls/list-call-history
         """
         params = {}
         if type_ is not None:
@@ -1568,6 +1628,8 @@ class LocationsApi(ApiChild, base='locations'):
         :param org_id: List locations in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/locations/list-locations
         """
         if name is not None:
             params['name'] = name
@@ -1586,6 +1648,8 @@ class LocationsApi(ApiChild, base='locations'):
         :type location_id: str
         :param org_id: Get location common attributes for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/locations/get-location-details
         """
         params = {}
         if org_id is not None:
@@ -1612,6 +1676,8 @@ class LocationsApi(ApiChild, base='locations'):
         :type preferred_language: str
         :param address: The address of the location.
         :type address: Address
+
+        documentation: https://developer.webex.com/docs/api/v1/locations/create-a-location
         """
         params = {}
         if org_id is not None:
@@ -1649,6 +1715,8 @@ class LocationsApi(ApiChild, base='locations'):
         :type preferred_language: str
         :param address: The address of the location.
         :type address: Address
+
+        documentation: https://developer.webex.com/docs/api/v1/locations/update-a-location
         """
         params = {}
         if org_id is not None:
@@ -1869,6 +1937,8 @@ class PeopleApi(ApiChild, base='people'):
         :type calling_data: bool
         :param location_id: List people present in this location.
         :type location_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/people/list-people
         """
         if email is not None:
             params['email'] = email
@@ -1944,6 +2014,8 @@ class PeopleApi(ApiChild, base='people'):
         :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the
             sitename (eg: mysite.webex.com#attendee) Possible values: mysite.webex.com#attendee
         :type site_urls: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/people/create-a-person
         """
         params = {}
         if calling_data is not None:
@@ -2001,6 +2073,8 @@ class PeopleApi(ApiChild, base='people'):
         :type person_id: str
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/people/get-person-details
         """
         params = {}
         if calling_data is not None:
@@ -2080,6 +2154,8 @@ class PeopleApi(ApiChild, base='people'):
         :param login_enabled: Whether or not the user is allowed to use Webex. This property is only accessible if the
             authenticated user is an admin user for the person's organization.
         :type login_enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/people/update-a-person
         """
         params = {}
         if calling_data is not None:
@@ -2136,6 +2212,8 @@ class PeopleApi(ApiChild, base='people'):
 
         :param person_id: A unique identifier for the person.
         :type person_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/people/delete-a-person
         """
         url = self.ep(f'{person_id}')
         super().delete(url=url)
@@ -2150,6 +2228,8 @@ class PeopleApi(ApiChild, base='people'):
 
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/people/get-my-own-details
         """
         params = {}
         if calling_data is not None:
@@ -2390,6 +2470,8 @@ class WebexCallingDetailedCallHistoryApi(ApiChild, base=''):
         :param locations: Name of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
             provided. Allows you to query reports by location.
         :type locations: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-detailed-call-history/get-detailed-call-history
         """
         params['startTime'] = start_time
         params['endTime'] = end_time
@@ -5928,6 +6010,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type agent_enabled: bool
         :param service_enabled: Set to true to change announcement language for existing feature configurations.
         :type service_enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/change-announcement-language
         """
         params = {}
         if org_id is not None:
@@ -5959,6 +6043,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type name: str
         :param phone_number: Only return auto attendants with the matching phone number.
         :type phone_number: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-auto-attendants
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -5985,6 +6071,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type auto_attendant_id: str
         :param org_id: Retrieve auto attendant details from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-an-auto-attendant
         """
         params = {}
         if org_id is not None:
@@ -6034,6 +6122,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type name_dialing: ExtensionDialing
         :param time_zone: Time zone defined for the auto attendant.
         :type time_zone: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-an-auto-attendant
         """
         params = {}
         if org_id is not None:
@@ -6114,6 +6204,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type business_hours_menu: HoursMenuObject
         :param after_hours_menu: After hours menu defined for the auto attendant.
         :type after_hours_menu: HoursMenuObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-an-auto-attendant
         """
         params = {}
         if org_id is not None:
@@ -6165,6 +6257,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type auto_attendant_id: str
         :param org_id: Delete the auto attendant from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-an-auto-attendant
         """
         params = {}
         if org_id is not None:
@@ -6186,6 +6280,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type auto_attendant_id: str
         :param org_id: Retrieve auto attendant forwarding settings from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-call-forwarding-settings-for-an-auto-attendant
         """
         params = {}
         if org_id is not None:
@@ -6208,6 +6304,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type call_forwarding: AutoAttendantCallForwardSettingsModifyDetailsObject
         :param org_id: Update auto attendant forwarding settings from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-call-forwarding-settings-for-an-auto-attendant
         """
         params = {}
         if org_id is not None:
@@ -6253,6 +6351,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type holiday_schedule: str
         :param calls_to: Settings related to the rule matching based on the destination number.
         :type calls_to: CallForwardSelectiveCallsToObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-a-selective-call-forwarding-rule-for-an-auto-attendant
         """
         params = {}
         if org_id is not None:
@@ -6295,6 +6395,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type rule_id: str
         :param org_id: Retrieve auto attendant rule settings for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-selective-call-forwarding-rule-for-an-auto-attendant
         """
         params = {}
         if org_id is not None:
@@ -6339,6 +6441,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type holiday_schedule: str
         :param calls_to: Settings related to the rule matching based on the destination number.
         :type calls_to: CallForwardSelectiveCallsToObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-selective-call-forwarding-rule-for-an-auto-attendant
         """
         params = {}
         if org_id is not None:
@@ -6381,6 +6485,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type rule_id: str
         :param org_id: Delete auto attendant rule from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-a-selective-call-forwarding-rule-for-an-auto-attendant
         """
         params = {}
         if org_id is not None:
@@ -6405,6 +6511,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type order: str
         :param name: Return the list of call parks that contains the given name. The maximum length is 80.
         :type name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-call-parks
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -6433,6 +6541,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param agents: An Array of ID strings of people, workspaces and virtual lines that are added to call pickup.
         :type agents: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-a-call-park
         """
         params = {}
         if org_id is not None:
@@ -6462,6 +6572,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type call_park_id: str
         :param org_id: Delete the call park from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-a-call-park
         """
         params = {}
         if org_id is not None:
@@ -6484,6 +6596,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type call_park_id: str
         :param org_id: Retrieve call park settings from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-call-park
         """
         params = {}
         if org_id is not None:
@@ -6512,6 +6626,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param agents: An Array of ID strings of people, workspaces and virtual lines that are added to call pickup.
         :type agents: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-a-call-park
         """
         params = {}
         if org_id is not None:
@@ -6548,6 +6664,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             separated sort order fields may be specified. Available sort fields: fname, lname, number and extension.
             The maximum supported sort order value is 3.
         :type order: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-available-agents-from-call-parks
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -6578,6 +6696,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param order: Order the available recall hunt groups according to the designated fields. Available sort fields:
             lname.
         :type order: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-available-recall-hunt-groups-from-call-parks
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -6599,6 +6719,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: Return the call park settings for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-call-park-settings
         """
         params = {}
         if org_id is not None:
@@ -6622,6 +6744,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type call_park_recall: PutRecallHuntGroupObject
         :param call_park_settings: Setting controlling call park behavior.
         :type call_park_settings: CallParkSettingsObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-call-park-settings
         """
         params = {}
         if org_id is not None:
@@ -6657,6 +6781,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param order: Order the available agents according to the designated fields. Available sort fields: groupName,
             callParkExtension, callParkExtensionName, callParkExtensionExternalId.
         :type order: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-call-park-extensions
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -6688,6 +6814,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type call_park_extension_id: str
         :param org_id: Retrieve call park extension details from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-call-park-extension
         """
         params = {}
         if org_id is not None:
@@ -6714,6 +6842,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type extension: str
         :param name: Unique name for the call park extension.
         :type name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-a-call-park-extension
         """
         params = {}
         if org_id is not None:
@@ -6743,6 +6873,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type call_park_extension_id: str
         :param org_id: Delete the call park extension from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-a-call-park-extension
         """
         params = {}
         if org_id is not None:
@@ -6771,6 +6903,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type extension: str
         :param name: Unique name for the call park extension.
         :type name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-a-call-park-extension
         """
         params = {}
         if org_id is not None:
@@ -6800,6 +6934,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type order: str
         :param name: Return the list of call pickups that contains the given name. The maximum length is 80.
         :type name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-call-pickups
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -6826,6 +6962,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param agents: An Array of ID strings of people, workspaces and virtual lines that are added to call pickup.
         :type agents: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-a-call-pickup
         """
         params = {}
         if org_id is not None:
@@ -6853,6 +6991,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type call_pickup_id: str
         :param org_id: Delete the call pickup from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-a-call-pickup
         """
         params = {}
         if org_id is not None:
@@ -6875,6 +7015,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type call_pickup_id: str
         :param org_id: Retrieve call pickup settings from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-call-pickup
         """
         params = {}
         if org_id is not None:
@@ -6901,6 +7043,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param agents: An Array of ID strings of people, workspaces and virtual lines that are added to call pickup.
         :type agents: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-a-call-pickup
         """
         params = {}
         if org_id is not None:
@@ -6934,6 +7078,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param order: Order the available agents according to the designated fields. Up to three vertical bar (|)
             separated sort order fields may be specified. Available sort fields: fname, lname, extension, number.
         :type order: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-available-agents-from-call-pickups
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -6969,6 +7115,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type name: str
         :param phone_number: Only return call queues with matching primary phone number or extension.
         :type phone_number: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-call-queues
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -7024,6 +7172,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param phone_number_for_outgoing_calls_enabled: When true, indicates that the agent's configuration allows them
             to use the queue's Caller ID for outgoing calls.
         :type phone_number_for_outgoing_calls_enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-a-call-queue
         """
         params = {}
         if org_id is not None:
@@ -7076,6 +7226,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type queue_id: str
         :param org_id: Delete the call queue from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-a-call-queue
         """
         params = {}
         if org_id is not None:
@@ -7103,6 +7255,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type queue_id: str
         :param org_id: Retrieve call queue settings from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-call-queue
         """
         params = {}
         if org_id is not None:
@@ -7165,6 +7319,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param phone_number_for_outgoing_calls_enabled: When true, indicates that the agent's configuration allows them
             to use the queue's Caller ID for outgoing calls.
         :type phone_number_for_outgoing_calls_enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-a-call-queue
         """
         params = {}
         if org_id is not None:
@@ -7220,6 +7376,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type queue_id: str
         :param org_id: Retrieve announcement files for a call queue from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-call-queue-announcement-files
         """
         params = {}
         if org_id is not None:
@@ -7244,6 +7402,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type file_name: str
         :param org_id: Delete call queue announcement from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-a-call-queue-announcement-file
         """
         params = {}
         if org_id is not None:
@@ -7264,6 +7424,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type queue_id: str
         :param org_id: Retrieve call queue forwarding settings from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-call-forwarding-settings-for-a-call-queue
         """
         params = {}
         if org_id is not None:
@@ -7286,6 +7448,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param call_forwarding: Settings related to Always, Busy, and No Answer call forwarding.
         :type call_forwarding: CallForwarding1
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-call-forwarding-settings-for-a-call-queue
         """
         params = {}
         if org_id is not None:
@@ -7330,6 +7494,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param forward_to: Controls what happens when the rule matches including the destination number for the call
             forwarding.
         :type forward_to: CallForwardSelectiveForwardToObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-a-selective-call-forwarding-rule-for-a-call-queue
         """
         params = {}
         if org_id is not None:
@@ -7371,6 +7537,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type rule_id: str
         :param org_id: Retrieve call queue rule settings for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-selective-call-forwarding-rule-for-a-call-queue
         """
         params = {}
         if org_id is not None:
@@ -7414,6 +7582,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param forward_to: Controls what happens when the rule matches including the destination number for the call
             forwarding.
         :type forward_to: CallForwardSelectiveForwardToObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-a-selective-call-forwarding-rule-for-a-call-queue
         """
         params = {}
         if org_id is not None:
@@ -7455,6 +7625,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type rule_id: str
         :param org_id: Delete call queue rule from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-a-selective-call-forwarding-rule-for-a-call-queue
         """
         params = {}
         if org_id is not None:
@@ -7472,6 +7644,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param org_id: Retrieve call recording settings from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-call-recording-settings
         """
         params = {}
         if org_id is not None:
@@ -7492,6 +7666,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type enabled: bool
         :param org_id: Retrieve call recording settings from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-call-recording-settings
         """
         params = {}
         if org_id is not None:
@@ -7514,6 +7690,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type vendor_id: str
         :param org_id: Retrieve call recording terms of service details from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-call-recording-terms-of-service-settings
         """
         params = {}
         if org_id is not None:
@@ -7535,6 +7713,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type terms_of_service_enabled: bool
         :param org_id: Update call recording terms of service settings from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-call-recording-terms-of-service-settings
         """
         params = {}
         if org_id is not None:
@@ -7569,6 +7749,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param originator_number: Only used when originatorType is TRUNK. This element could be a phone number or URI.
         :type originator_number: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/test-call-routing
         """
         params = {}
         if org_id is not None:
@@ -7596,6 +7778,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param extensions: Array of Strings of IDs of the Extensions. Possible values: 12345, 3456
         :type extensions: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/validate-the-list-of-extensions
         """
         params = {}
         if org_id is not None:
@@ -7619,6 +7803,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type extensions: List[str]
         :param org_id: Validate extensions for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/validate-extensions
         """
         params = {}
         if org_id is not None:
@@ -7646,6 +7832,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type name: str
         :param phone_number: Only return hunt groups with the matching primary phone number or extension.
         :type phone_number: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-hunt-groups
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -7691,6 +7879,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type last_name: str
         :param time_zone: Time zone for the hunt group.
         :type time_zone: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-a-hunt-group
         """
         params = {}
         if org_id is not None:
@@ -7734,6 +7924,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type hunt_group_id: str
         :param org_id: Delete the hunt group from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-a-hunt-group
         """
         params = {}
         if org_id is not None:
@@ -7756,6 +7948,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type hunt_group_id: str
         :param org_id: Retrieve hunt group settings from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-hunt-group
         """
         params = {}
         if org_id is not None:
@@ -7809,6 +8003,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type call_policies: PostHuntGroupCallPolicyObject
         :param agents: People, workspaces and virtual lines that are eligible to receive calls.
         :type agents: PostPersonPlaceVirtualLineHuntGroupObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-a-hunt-group
         """
         params = {}
         if org_id is not None:
@@ -7856,6 +8052,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type hunt_group_id: str
         :param org_id: Retrieve hunt group forwarding settings from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-call-forwarding-settings-for-a-hunt-group
         """
         params = {}
         if org_id is not None:
@@ -7878,6 +8076,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param call_forwarding: Settings related to Always, Busy, and No Answer call forwarding.
         :type call_forwarding: CallForwarding1
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-call-forwarding-settings-for-a-hunt-group
         """
         params = {}
         if org_id is not None:
@@ -7922,6 +8122,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param forward_to: Controls what happens when the rule matches including the destination number for the call
             forwarding.
         :type forward_to: CallForwardSelectiveForwardToObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-a-selective-call-forwarding-rule-for-a-hunt-group
         """
         params = {}
         if org_id is not None:
@@ -7963,6 +8165,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type rule_id: str
         :param org_id: Retrieve hunt group rule settings for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-selective-call-forwarding-rule-for-a-hunt-group
         """
         params = {}
         if org_id is not None:
@@ -8006,6 +8210,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param forward_to: Controls what happens when the rule matches including the destination number for the call
             forwarding.
         :type forward_to: CallForwardSelectiveForwardToObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-a-selective-call-forwarding-rule-for-a-hunt-group
         """
         params = {}
         if org_id is not None:
@@ -8047,6 +8253,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type rule_id: str
         :param org_id: Delete hunt group rule from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-a-selective-call-forwarding-rule-for-a-hunt-group
         """
         params = {}
         if org_id is not None:
@@ -8067,6 +8275,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: Retrieve intercept location details for a customer location.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-location-intercept
         """
         params = {}
         if org_id is not None:
@@ -8094,6 +8304,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type incoming: Incoming
         :param outgoing: Outbound Call details
         :type outgoing: Outgoing
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/put-location-intercept
         """
         params = {}
         if org_id is not None:
@@ -8121,6 +8333,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: List route identities for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-internal-dialing-configuration-for-a-location
         """
         params = {}
         if org_id is not None:
@@ -8146,6 +8360,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type enable_unknown_extension_route_policy: bool
         :param unknown_extension_route_identity: Type associated with the identity.
         :type unknown_extension_route_identity: UnknownExtensionRouteIdentity
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/modify-the-internal-dialing-configuration-for-a-location
         """
         params = {}
         if org_id is not None:
@@ -8170,6 +8386,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: Retrieve Webex Calling location attributes for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-location-webex-calling-details
         """
         params = {}
         if org_id is not None:
@@ -8206,6 +8424,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param routing_prefix: Must dial a prefix when calling between locations having same extension within same
             location; should be numeric.
         :type routing_prefix: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-location-webex-calling-details
         """
         params = {}
         if org_id is not None:
@@ -8244,6 +8464,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param generate: password settings array. SIP password setting
         :type generate: List[PasswordGenerate]
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/generate-example-password-for-location
         """
         params = {}
         if org_id is not None:
@@ -8268,6 +8490,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: Retrieve outgoing call settings for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-location-outgoing-permission
         """
         params = {}
         if org_id is not None:
@@ -8290,6 +8514,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param calling_permissions: Array specifying the subset of calling permissions to be updated.
         :type calling_permissions: CallingPermissionObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-location-outgoing-permission
         """
         params = {}
         if org_id is not None:
@@ -8313,6 +8539,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: Retrieve auto transfer number for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-outgoing-permission-auto-transfer-number
         """
         params = {}
         if org_id is not None:
@@ -8342,6 +8570,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param auto_transfer_number3: Calls placed meeting the criteria in an outbound rule whose action is
             TRANSFER_NUMBER_3 will be transferred to this number.
         :type auto_transfer_number3: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/put-outgoing-permission-auto-transfer-number
         """
         params = {}
         if org_id is not None:
@@ -8368,6 +8598,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: Retrieve access codes details for a customer location.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-outgoing-permission-location-access-code
         """
         params = {}
         if org_id is not None:
@@ -8389,6 +8621,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param access_codes: Access code details
         :type access_codes: AccessCodes
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-outgoing-permission-a-new-access-code-for-a-customer-location
         """
         params = {}
         if org_id is not None:
@@ -8413,6 +8647,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type delete_codes: List[str]
         :param org_id: Deletes the access code details for a customer location.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-outgoing-permission-access-code-location
         """
         params = {}
         if org_id is not None:
@@ -8441,6 +8677,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type name: str
         :param phone_number: Return only paging groups with matching primary phone number or extension.
         :type phone_number: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-paging-groups
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -8490,6 +8728,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param targets: An array of people, workspaces and virtual lines IDs will add to a paging group as paging call
             targets.
         :type targets: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-a-new-paging-group
         """
         params = {}
         if org_id is not None:
@@ -8532,6 +8772,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type paging_id: str
         :param org_id: Delete the paging group from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-a-paging-group
         """
         params = {}
         if org_id is not None:
@@ -8556,6 +8798,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type paging_id: str
         :param org_id: Retrieve paging group settings from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-paging-group
         """
         params = {}
         if org_id is not None:
@@ -8606,6 +8850,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type targets: List[str]
         :param enabled: Whether or not the paging group is enabled.
         :type enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-a-paging-group
         """
         params = {}
         if org_id is not None:
@@ -8652,6 +8898,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type state: State1
         :param org_id: Organization of the Route Group.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/add-phone-numbers-to-a-location
         """
         params = {}
         if org_id is not None:
@@ -8680,6 +8928,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type phone_numbers: List[str]
         :param org_id: Organization of the Route Group.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/activate-phone-numbers-in-a-location
         """
         params = {}
         if org_id is not None:
@@ -8708,6 +8958,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type state: State1
         :param org_id: Organization of the Route Group.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/remove-phone-numbers-from-a-location
         """
         params = {}
         if org_id is not None:
@@ -8769,6 +9021,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type toll_free_numbers: bool
         :param restricted_non_geo_numbers: Returns the list of restricted non geographical numbers.
         :type restricted_non_geo_numbers: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-phone-numbers-for-an-organization-with-given-criterias
         """
         params = {}
         if org_id is not None:
@@ -8820,6 +9074,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param org_id: Retrieve list of Manage Number jobs for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/list-manage-numbers-jobs
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -8842,6 +9098,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type target_location_id: str
         :param number_list: Indicates the numbers to be moved from source to target locations.
         :type number_list: NumberItem
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/initiate-move-number-jobs
         """
         body = InitiateMoveNumberJobsBody()
         if operation is not None:
@@ -8862,6 +9120,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param job_id: Retrieve job details for this jobId.
         :type job_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-manage-numbers-job-status
         """
         url = self.ep(f'jobs/numbers/manageNumbers/{job_id}')
         data = super().get(url=url)
@@ -8876,6 +9136,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type job_id: str
         :param org_id: Pause the Manage Numbers job for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/pause-the-manage-numbers-job
         """
         params = {}
         if org_id is not None:
@@ -8893,6 +9155,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type job_id: str
         :param org_id: Resume the Manage Numbers job for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/resume-the-manage-numbers-job
         """
         params = {}
         if org_id is not None:
@@ -8910,6 +9174,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type job_id: str
         :param org_id: Abandon the Manage Numbers job for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/abandon-the-manage-numbers-job
         """
         params = {}
         if org_id is not None:
@@ -8930,6 +9196,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type job_id: str
         :param org_id: Retrieve list of jobs for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/list-manage-numbers-job-errors
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -8947,6 +9215,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: Retrieve the network connection type for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-private-network-connect
         """
         params = {}
         if org_id is not None:
@@ -8968,6 +9238,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type network_connection_type: NetworkConnectionType
         :param org_id: Update network connection type for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-private-network-connect
         """
         params = {}
         if org_id is not None:
@@ -8997,6 +9269,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param order: Order the route identities according to the designated fields. Available sort fields: routeName,
             routeType.
         :type order: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-routing-choices
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -9026,6 +9300,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type type_: str
         :param name: Only return schedules with the matching name.
         :type name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-schedules
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -9053,6 +9329,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type schedule_id: str
         :param org_id: Retrieve schedule details from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-schedule
         """
         params = {}
         if org_id is not None:
@@ -9079,6 +9357,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param events: List of schedule events.
         :type events: ScheduleEventObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-a-schedule
         """
         params = {}
         if org_id is not None:
@@ -9116,6 +9396,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param events: List of schedule events.
         :type events: ModifyScheduleEventListObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-a-schedule
         """
         params = {}
         if org_id is not None:
@@ -9146,6 +9428,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type schedule_id: str
         :param org_id: Delete the schedule from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-a-schedule
         """
         params = {}
         if org_id is not None:
@@ -9173,6 +9457,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type event_id: str
         :param org_id: Retrieve schedule event details from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-schedule-event
         """
         params = {}
         if org_id is not None:
@@ -9213,6 +9499,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type all_day_enabled: bool
         :param recurrence: Recurrence definition.
         :type recurrence: RecurrenceObject1
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-a-schedule-event
         """
         params = {}
         if org_id is not None:
@@ -9271,6 +9559,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type all_day_enabled: bool
         :param recurrence: Recurrence definition.
         :type recurrence: RecurrenceObject1
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-a-schedule-event
         """
         params = {}
         if org_id is not None:
@@ -9313,6 +9603,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type event_id: str
         :param org_id: Delete the schedule from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-a-schedule-event
         """
         params = {}
         if org_id is not None:
@@ -9359,6 +9651,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             Dn. When not explicitly specified, the default includes both virtual lines with a Dn assigned and not
             assigned.
         :type has_dn_assigned: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-virtual-lines
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -9393,6 +9687,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param org_id: Retrieve voicemail settings for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-voicemail-settings
         """
         params = {}
         if org_id is not None:
@@ -9421,6 +9717,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param voice_message_forwarding_enabled: When enabled, people in the organization can configure the email
             forwarding of voicemails.
         :type voice_message_forwarding_enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-voicemail-settings
         """
         params = {}
         if org_id is not None:
@@ -9448,6 +9746,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param org_id: Retrieve voicemail rules for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-voicemail-rules
         """
         params = {}
         if org_id is not None:
@@ -9478,6 +9778,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type change_passcode: ExpirePasscode
         :param block_previous_passcodes: Settings for previous passcode usage.
         :type block_previous_passcodes: BlockPreviousPasscodes
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-voicemail-rules
         """
         params = {}
         if org_id is not None:
@@ -9508,6 +9810,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: Retrieve voicemail settings for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-location-voicemail
         """
         params = {}
         if org_id is not None:
@@ -9529,6 +9833,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type voicemail_transcription_enabled: bool
         :param org_id: Update voicemail settings for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-location-voicemail
         """
         params = {}
         if org_id is not None:
@@ -9552,6 +9858,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: Organization to which the voice portal belongs.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-voiceportal
         """
         params = {}
         if org_id is not None:
@@ -9586,6 +9894,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type last_name: str
         :param passcode: Voice Portal Admin Passcode.
         :type passcode: Passcode
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-voiceportal
         """
         params = {}
         if org_id is not None:
@@ -9621,6 +9931,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: Retrieve voice portal passcode rules for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-voiceportal-passcode-rule
         """
         params = {}
         if org_id is not None:
@@ -9640,6 +9952,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: Retrieve music on hold settings for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-music-on-hold
         """
         params = {}
         if org_id is not None:
@@ -9665,6 +9979,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type call_park_enabled: bool
         :param greeting: Greeting type for the location.
         :type greeting: Greeting29
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-music-on-hold
         """
         params = {}
         if org_id is not None:
@@ -9696,6 +10012,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type name: str
         :param phone_number: Search (Contains) based on number or extension
         :type phone_number: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/list-voicemailgroup
         """
         if location_id is not None:
             params['locationId'] = location_id
@@ -9722,6 +10040,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type voicemail_group_id: str
         :param org_id: Retrieve voicemail group details for a customer location.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-location-voicemail-group
         """
         params = {}
         if org_id is not None:
@@ -9774,6 +10094,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type transfer_to_number: NewNumber
         :param email_copy_of_message: Message copy information
         :type email_copy_of_message: EmailCopyOfMessage
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/modify-location-voicemail-group
         """
         params = {}
         if org_id is not None:
@@ -9848,6 +10170,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type first_name: str
         :param last_name: Set voicemail group called ID last name.
         :type last_name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-a-new-voicemail-group-for-a-location
         """
         params = {}
         if org_id is not None:
@@ -9893,6 +10217,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type voicemail_group_id: str
         :param org_id: Delete the voicemail group from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-a-voicemail-group-for-a-location
         """
         params = {}
         if org_id is not None:
@@ -9914,6 +10240,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param org_id: List manager profiles in this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-uc-manager-profiles
         """
         params = {}
         if org_id is not None:
@@ -9943,6 +10271,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type dial_pattern: str
         :param order: Order the dial patterns according to the designated fields. Available sort fields: dialPattern.
         :type order: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-dial-patterns
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -9973,6 +10303,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type dial_patterns: DialPattern
         :param delete_all_dial_patterns: Delete all the dial patterns for a dial plan.
         :type delete_all_dial_patterns: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/modify-dial-patterns
         """
         params = {}
         if org_id is not None:
@@ -10001,6 +10333,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type dial_patterns: List[str]
         :param org_id: Organization to which dial plan belongs.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/validate-a-dial-pattern
         """
         params = {}
         if org_id is not None:
@@ -10032,6 +10366,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param order: Order the dial plans according to the designated fields. Available sort fields: name, routeName,
             routeType. Sort order is ascending by default
         :type order: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-dial-plans
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -10067,6 +10403,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param dial_patterns: An Array of dial patterns. Possible values: +5555,+5556
         :type dial_patterns: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-a-dial-plan
         """
         params = {}
         if org_id is not None:
@@ -10099,6 +10437,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type dial_plan_id: str
         :param org_id: Organization to which dial plan belongs.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-a-dial-plan
         """
         params = {}
         if org_id is not None:
@@ -10128,6 +10468,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type route_type: RouteType
         :param org_id: Organization to which dial plan belongs.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/modify-a-dial-plan
         """
         params = {}
         if org_id is not None:
@@ -10158,6 +10500,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type dial_plan_id: str
         :param org_id: Organization to which dial plan belongs.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-a-dial-plan
         """
         params = {}
         if org_id is not None:
@@ -10184,6 +10528,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type domain: str
         :param port: FQDN port of the trunk.
         :type port: int
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/validate-local-gateway-fqdn-and-domain-for-a-trunk
         """
         params = {}
         if org_id is not None:
@@ -10220,6 +10566,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param order: Order the trunks according to the designated fields. Available sort fields: name, locationName.
             Sort order is ascending by default
         :type order: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-trunks
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -10265,6 +10613,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type domain: str
         :param port: FQDN port. Required to create a static certificate-based trunk.
         :type port: int
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-a-trunk
         """
         params = {}
         if org_id is not None:
@@ -10308,6 +10658,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type trunk_id: str
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-a-trunk
         """
         params = {}
         if org_id is not None:
@@ -10337,6 +10689,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type dual_identity_support_enabled: bool
         :param max_concurrent_calls: Max Concurrent call. Required to create a static certificate-based trunk.
         :type max_concurrent_calls: int
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/modify-a-trunk
         """
         params = {}
         if org_id is not None:
@@ -10367,6 +10721,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type trunk_id: str
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-a-trunk
         """
         params = {}
         if org_id is not None:
@@ -10388,6 +10744,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param org_id: Organization to which the trunk types belong.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-trunk-types
         """
         params = {}
         if org_id is not None:
@@ -10409,6 +10767,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type name: str
         :param order: Order the route groups according to designated fields. Available sort orders are asc and desc.
         :type order: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-routing-groups
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -10433,6 +10793,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type local_gateways: LocalGateways
         :param org_id: Organization to which the Route Group belongs.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-route-group-for-a-organization
         """
         params = {}
         if org_id is not None:
@@ -10458,6 +10820,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type route_group_id: str
         :param org_id: Organization of the Route Group.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-a-route-group-for-a-organization
         """
         params = {}
         if org_id is not None:
@@ -10482,6 +10846,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type local_gateways: LocalGateways
         :param org_id: Organization of the Route Group.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/modify-a-route-group-for-a-organization
         """
         params = {}
         if org_id is not None:
@@ -10507,6 +10873,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type route_group_id: str
         :param org_id: Organization of the Route Group.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/remove-a-route-group-from-an-organization
         """
         params = {}
         if org_id is not None:
@@ -10532,6 +10900,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type route_group_id: str
         :param org_id: Organization associated with the specific route group.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-usage-of-a-routing-group
         """
         params = {}
         if org_id is not None:
@@ -10556,6 +10926,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_name: str
         :param order: Order the locations according to designated fields. Available sort orders are asc, and desc.
         :type order: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-call-to-extension-locations-of-a-routing-group
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -10584,6 +10956,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_name: str
         :param order: Order the locations according to designated fields. Available sort orders are asc, and desc.
         :type order: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-dial-plan-locations-of-a-routing-group
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -10609,6 +10983,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_name: str
         :param order: Order the locations according to designated fields. Available sort orders are asc, and desc.
         :type order: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-pstn-connection-locations-of-a-routing-group
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -10634,6 +11010,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type name: str
         :param order: Order the locations according to designated fields. Available sort orders are asc, and desc.
         :type order: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-route-lists-of-a-routing-group
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -10661,6 +11039,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param order: Order the Route List according to the designated fields. Available sort fields are name, and
             locationId. Sort order is ascending by default
         :type order: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-route-lists
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -10689,6 +11069,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type name: str
         :param route_group_id: New route group ID.
         :type route_group_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-a-route-list
         """
         params = {}
         if org_id is not None:
@@ -10716,6 +11098,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type route_list_id: str
         :param org_id: Organization to which the Route List belongs.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-a-route-list
         """
         params = {}
         if org_id is not None:
@@ -10736,6 +11120,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type route_list_id: str
         :param org_id: Organization to which the Route List belongs.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-a-route-list
         """
         params = {}
         if org_id is not None:
@@ -10760,6 +11146,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type name: str
         :param route_group_id: New route group ID.
         :type route_group_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/modify-a-route-list
         """
         params = {}
         if org_id is not None:
@@ -10790,6 +11178,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param delete_all_numbers: If present, the numbers array is ignored and all numbers in the route list are
             deleted.
         :type delete_all_numbers: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/modify-numbers-for-route-list
         """
         params = {}
         if org_id is not None:
@@ -10823,6 +11213,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type order: str
         :param number: Number assigned to the route list.
         :type number: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-numbers-assigned-to-a-route-list
         """
         params = {}
         if org_id is not None:
@@ -10862,6 +11254,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type order: str
         :param name: Return the list of trunks matching the local gateway names
         :type name: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-local-gateway-call-to-on-premises-extension-usage-for-a-trunk
         """
         params = {}
         if org_id is not None:
@@ -10897,6 +11291,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type order: str
         :param name: Return the list of trunks matching the local gateway names
         :type name: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-local-gateway-dial-plan-usage-for-a-trunk
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -10921,6 +11317,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type trunk_id: str
         :param org_id: Organization to which the trunk belongs.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-locations-using-the-local-gateway-as-pstn-connection-routing
         """
         params = {}
         if org_id is not None:
@@ -10943,6 +11341,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type trunk_id: str
         :param org_id: Organization to which the trunk belongs.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-route-groups-using-the-local-gateway
         """
         params = {}
         if org_id is not None:
@@ -10965,6 +11365,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type trunk_id: str
         :param org_id: Organization to which the trunk belongs.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-local-gateway-usage-count
         """
         params = {}
         if org_id is not None:
@@ -10986,6 +11388,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type queue_id: str
         :param org_id: Retrieve call queue settings from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-call-queue-holiday-service
         """
         params = {}
         if org_id is not None:
@@ -11027,6 +11431,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param holiday_schedule_name: Name of the schedule configured for a holiday service as one of from
             holidaySchedules list.
         :type holiday_schedule_name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-a-call-queue-holiday-service
         """
         params = {}
         if org_id is not None:
@@ -11066,6 +11472,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type queue_id: str
         :param org_id: Retrieve call queue night service settings from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-call-queue-night-service
         """
         params = {}
         if org_id is not None:
@@ -11117,6 +11525,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type business_hours_level: HolidayScheduleLevel
         :param manual_audio_files: List Of pre-configured Audio Files.
         :type manual_audio_files: CallQueueAudioFilesObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-a-call-queue-night-service
         """
         params = {}
         if org_id is not None:
@@ -11163,6 +11573,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type queue_id: str
         :param org_id: Retrieve call queue settings from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-call-queue-forced-forward
         """
         params = {}
         if org_id is not None:
@@ -11198,6 +11610,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type audio_message_selection: Greeting
         :param audio_files: List of Announcement Audio Files when audioMessageSelection is CUSTOM.
         :type audio_files: CallQueueAudioFilesObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-a-call-queue-forced-forward-service
         """
         params = {}
         if org_id is not None:
@@ -11233,6 +11647,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type queue_id: str
         :param org_id: Retrieve call queue settings from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-details-for-a-call-queue-stranded-calls
         """
         params = {}
         if org_id is not None:
@@ -11263,6 +11679,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type audio_message_selection: Greeting
         :param audio_files: List of Announcement Audio Files when audioMessageSelection is CUSTOM.
         :type audio_files: CallQueueAudioFilesObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-a-call-queue-stranded-calls-service
         """
         params = {}
         if org_id is not None:
@@ -11293,6 +11711,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type device_id: str
         :param org_id: Retrieves the list of all members of the device in this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-device-members
         """
         params = {}
         if org_id is not None:
@@ -11316,6 +11736,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param members: If the member's list is missing then all the users are removed except the primary user.
         :type members: PutMemberObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-members-on-the-device
         """
         params = {}
         if org_id is not None:
@@ -11347,6 +11769,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type phone_number: str
         :param extension: Search (Contains) based on extension.
         :type extension: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/search-members
         """
         params['locationId'] = location_id
         if org_id is not None:
@@ -11370,6 +11794,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type device_id: str
         :param org_id: Apply changes for a device in this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/apply-changes-for-a-specific-device
         """
         params = {}
         if org_id is not None:
@@ -11391,6 +11817,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type device_model: str
         :param org_id: Settings on the device in this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-device-settings
         """
         params = {}
         params['deviceModel'] = device_model
@@ -11419,6 +11847,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type org_id: str
         :param device_model: Device model name.
         :type device_model: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-device-settings
         """
         params = {}
         if org_id is not None:
@@ -11443,6 +11873,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_id: str
         :param org_id: Organization in which the device resides.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-location-device-settings
         """
         params = {}
         if org_id is not None:
@@ -11460,6 +11892,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type person_id: str
         :param org_id: Organization to which the person belongs.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-user-devices
         """
         params = {}
         if org_id is not None:
@@ -11477,6 +11911,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type workspace_id: str
         :param org_id: Organization to which the workspace belongs.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-workspace-devices
         """
         params = {}
         if org_id is not None:
@@ -11505,6 +11941,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type limit_guest_use: bool
         :param guest_hours_limit: Time Limit in hours until hoteling is enabled. Mandatory if limitGuestUse is enabled.
         :type guest_hours_limit: int
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/modify-workspace-devices
         """
         params = {}
         if org_id is not None:
@@ -11528,6 +11966,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param org_id: List supported devices for an organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-supported-devices
         """
         params = {}
         if org_id is not None:
@@ -11544,6 +11984,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param org_id: List supported devices for an organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-device-override-settings-for-a-organization
         """
         params = {}
         if org_id is not None:
@@ -11560,6 +12002,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param org_id: 
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-dect-device-type-list
         """
         params = {}
         if org_id is not None:
@@ -11578,6 +12022,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type macs: List[str]
         :param org_id: Validate the mac address(es) for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/validate-a-list-of-mac-address
         """
         params = {}
         if org_id is not None:
@@ -11614,6 +12060,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type location_customizations_enabled: bool
         :param customizations: Indicates the settings for ATA devices, DECT devices and MPP devices.
         :type customizations: CustomizationObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/change-device-settings-across-organization-or-location-job
         """
         params = {}
         if org_id is not None:
@@ -11639,6 +12087,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param org_id: Retrieve list of 'calldevicesettings' jobs for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/list-change-device-settings-jobs
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -11654,6 +12104,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
 
         :param job_id: Retrieve job details for this jobId.
         :type job_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-change-device-settings-job-status
         """
         url = self.ep(f'jobs/devices/callDeviceSettings/{job_id}')
         data = super().get(url=url)
@@ -11670,6 +12122,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :type job_id: str
         :param org_id: Retrieve list of jobs for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/list-change-device-settings-job-errors
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -11723,6 +12177,8 @@ class WebexCallingOrganizationSettingsWithLocationReceptionistDirectoriesApi(Api
         :type org_id: str
         :param name: Receptionist Contact Directory name.
         :type name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-location-receptionist-directories/create-a-receptionist-contact-directory
         """
         params = {}
         if org_id is not None:
@@ -11747,6 +12203,8 @@ class WebexCallingOrganizationSettingsWithLocationReceptionistDirectoriesApi(Api
         :type location_id: str
         :param org_id: List Receptionist Contact Directories for this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-location-receptionist-directories/read-list-of-receptionist-contact-directories
         """
         params = {}
         if org_id is not None:
@@ -11768,6 +12226,8 @@ class WebexCallingOrganizationSettingsWithLocationReceptionistDirectoriesApi(Api
         :type directory_id: optional
         :param org_id: Delete a Receptionist Contact Directory from this organization.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings-with-location-receptionist-directories/delete-a-receptionist-contact-directory
         """
         params = {}
         if org_id is not None:
@@ -12534,6 +12994,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :type number: str
         :param order: Sort by first name (fname) or last name (lname).
         :type order: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/search-shared-line-appearance-members
         """
         body = SearchSharedLineAppearanceMembersBody()
         if extension is not None:
@@ -12563,6 +13025,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :type person_id: str
         :param application_id: A unique identifier for the application.
         :type application_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/get-shared-line-appearance-members
         """
         url = self.ep(f'telephony/config/people/{person_id}/applications/{application_id}/members')
         data = super().get(url=url)
@@ -12579,6 +13043,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :type application_id: str
         :param members: 
         :type members: PutSharedLineMemberItem
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/put-shared-line-appearance-members
         """
         body = PutSharedLineAppearanceMembersBody()
         if members is not None:
@@ -12606,6 +13072,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/read-person's-calling-behavior
         """
         params = {}
         if org_id is not None:
@@ -12639,6 +13107,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :param profile_id: The UC Manager Profile ID. Specifying null results in the organizational default being
             applied.
         :type profile_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/configure-a-person's-calling-behavior
         """
         params = {}
         if org_id is not None:
@@ -12666,6 +13136,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/read-barge-in-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -12693,6 +13165,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :param tone_enabled: Indicates that a stutter dial tone will be played when a person is barging in on the
             active call.
         :type tone_enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/configure-barge-in-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -12722,6 +13196,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/read-forwarding-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -12752,6 +13228,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             connected to the network for any reason, such as power outage, failed Internet connection, or wiring
             problem.
         :type business_continuity: BusinessContinuity
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/configure-call-forwarding-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -12780,6 +13258,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/read-call-intercept-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -12810,6 +13290,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :type incoming: Incoming
         :param outgoing: Outbound Call details
         :type outgoing: Outgoing
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/configure-call-intercept-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -12839,6 +13321,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/configure-call-intercept-greeting-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -12860,6 +13344,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/read-call-recording-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -12895,6 +13381,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :type notification: object
         :param repeat: Beep sound plays periodically.
         :type repeat: Repeat
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/configure-call-recording-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -12928,6 +13416,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/read-caller-id-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -12967,6 +13457,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :param custom_external_caller_id_name: Person's custom External Caller ID last name. Characters of %, +, ``, "
             and Unicode characters are not allowed.
         :type custom_external_caller_id_name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/configure-caller-id-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -13004,6 +13496,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/read-do-not-disturb-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -13031,6 +13525,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :param ring_splash_enabled: Enables a Ring Reminder to play a brief tone on your desktop phone when you receive
             incoming calls.
         :type ring_splash_enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/configure-do-not-disturb-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -13060,6 +13556,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/read-voicemail-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -13103,6 +13601,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :type message_storage: MessageStorage3
         :param fax_message: 
         :type fax_message: FaxMessage
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/configure-voicemail-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -13144,6 +13644,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/configure-busy-voicemail-greeting-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -13166,6 +13668,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/configure-no-answer-voicemail-greeting-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -13194,6 +13698,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :type name: str
         :param type_: Specifies the schedule event type to be matched on the given type.
         :type type_: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/list-of-schedules-for-a-person
         """
         if org_id is not None:
             params['orgId'] = org_id
@@ -13225,6 +13731,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :type org_id: str
         :param events: Indicates a list of events.
         :type events: EventLongDetails
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/create-schedule-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -13259,6 +13767,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/get-a-schedule-details
         """
         params = {}
         if org_id is not None:
@@ -13294,6 +13804,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :type org_id: str
         :param events: Indicates a list of events.
         :type events: EventLongDetails
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/update-a-schedule
         """
         params = {}
         if org_id is not None:
@@ -13330,6 +13842,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/delete-a-schedule
         """
         params = {}
         if org_id is not None:
@@ -13358,6 +13872,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/fetch-event-for-a-person's-schedule
         """
         params = {}
         if org_id is not None:
@@ -13402,6 +13918,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :type all_day_enabled: bool
         :param recurrence: Recurrance scheme for an event.
         :type recurrence: Recurrence
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/add-a-new-event-for-person's-schedule
         """
         params = {}
         if org_id is not None:
@@ -13465,6 +13983,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :type all_day_enabled: bool
         :param recurrence: Recurrance scheme for an event.
         :type recurrence: Recurrence
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/update-an-event-for-a-person's-schedule
         """
         params = {}
         if org_id is not None:
@@ -13510,6 +14030,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/delete-an-event-for-a-person's-schedule
         """
         params = {}
         if org_id is not None:
@@ -13532,6 +14054,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/read-call-waiting-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -13556,6 +14080,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/configure-call-waiting-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -13581,6 +14107,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/retrieve-a-person's-monitoring-settings
         """
         params = {}
         if org_id is not None:
@@ -13607,6 +14135,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/modify-a-person's-monitoring-settings
         """
         params = {}
         if org_id is not None:
@@ -13632,6 +14162,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/get-a-list-of-phone-numbers-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -13652,6 +14184,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/retrieve-a-person's-application-services-settings
         """
         params = {}
         if org_id is not None:
@@ -13687,6 +14221,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :type tablet_client_enabled: bool
         :param mobile_client_enabled: Indicates that the mobile Webex Calling application is enabled for use.
         :type mobile_client_enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/modify-a-person's-application-services-settings
         """
         params = {}
         if org_id is not None:
@@ -13723,6 +14259,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/get-a-person's-privacy-settings
         """
         params = {}
         if org_id is not None:
@@ -13752,6 +14290,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :type enable_phone_status_directory_privacy: bool
         :param monitoring_agents: List of monitoring person IDs.
         :type monitoring_agents: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/configure-a-person's-privacy-settings
         """
         params = {}
         if org_id is not None:
@@ -13783,6 +14323,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/retrieve-executive-assistant-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -13807,6 +14349,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :type org_id: str
         :param type_: executive assistant type
         :type type_: Type32
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/modify-executive-assistant-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -13831,6 +14375,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/read-receptionist-client-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -13857,6 +14403,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :param monitored_members: List of members' unique identifiers to monitor. Possible values:
             Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC04NmE5MDgxYWFkNmE
         :type monitored_members: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/configure-receptionist-client-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -13883,6 +14431,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/read-push-to-talk-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -13913,6 +14463,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :param members: List of people that are allowed or disallowed to interact using the Push-to-Talk feature.
             Possible values: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC04NmE5MDgxYWFkNmE
         :type members: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/configure-push-to-talk-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -13943,6 +14495,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/read-hoteling-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -13966,6 +14520,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/configure-hoteling-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -13992,6 +14548,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/reset-voicemail-pin
         """
         params = {}
         if org_id is not None:
@@ -14013,6 +14571,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/read-incoming-permission-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -14043,6 +14603,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :type internal_calls_enabled: bool
         :param collect_calls_enabled: Collect calls are allowed to be received.
         :type collect_calls_enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/configure-incoming-permission-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -14073,6 +14635,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/retrieve-a-person's-outgoing-calling-permissions-settings
         """
         params = {}
         if org_id is not None:
@@ -14099,6 +14663,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :type use_custom_enabled: bool
         :param calling_permissions: Specifies the outbound calling permissions settings.
         :type calling_permissions: CallingPermissions
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/modify-a-person's-outgoing-calling-permissions-settings
         """
         params = {}
         if org_id is not None:
@@ -14129,6 +14695,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :type org_id: str
         :param enable_distinctive_ring_pattern: Enables a distinctive ring pattern for the person.
         :type enable_distinctive_ring_pattern: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/assign-or-unassign-numbers-to-a-person
         """
         params = {}
         if org_id is not None:
@@ -14153,6 +14721,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/retrieve-list-of-call-queue-caller-id-information
         """
         url = self.ep(f'telephony/config/people/{person_id}/queues/availableCallerIds')
         data = super().get(url=url)
@@ -14169,6 +14739,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/retrieve-a-call-queue-agent's-caller-id-information
         """
         url = self.ep(f'telephony/config/people/{person_id}/queues/callerId')
         data = super().get(url=url)
@@ -14190,6 +14762,8 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         :param selected_queue: Indicates agent's choice of using this queue's Caller ID for outgoing calls. It is empty
             object when queueCallerIdEnabled is false. When queueCallerIdEnabled is true this data must be populated.
         :type selected_queue: GetAvailableRecallHuntGroupsObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/modify-a-call-queue-agent's-caller-id-information
         """
         body = ModifyCallQueueAgentsCallerIDInformationBody()
         if queue_caller_id_enabled is not None:
@@ -14243,6 +14817,8 @@ class WebexCallingPersonSettingsWithSharedLineApi(ApiChild, base='telephony/conf
         :type number: str
         :param order: Sort by first name (fname) or last name (lname).
         :type order: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-shared-line/search-shared-line-appearance-members
         """
         body = SearchSharedLineAppearanceMembersBody()
         if extension is not None:
@@ -14272,6 +14848,8 @@ class WebexCallingPersonSettingsWithSharedLineApi(ApiChild, base='telephony/conf
         :type person_id: str
         :param application_id: A unique identifier for the application.
         :type application_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-shared-line/get-shared-line-appearance-members
         """
         url = self.ep(f'members')
         data = super().get(url=url)
@@ -14288,6 +14866,8 @@ class WebexCallingPersonSettingsWithSharedLineApi(ApiChild, base='telephony/conf
         :type application_id: str
         :param members: 
         :type members: PutSharedLineMemberItem1
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-shared-line/put-shared-line-appearance-members
         """
         body = PutSharedLineAppearanceMembersBody1()
         if members is not None:
@@ -14331,6 +14911,8 @@ class WebexCallingPersonSettingswithCallBridgeFeatureApi(ApiChild, base='telepho
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-call-bridge-feature/read-call-bridge-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -14353,6 +14935,8 @@ class WebexCallingPersonSettingswithCallBridgeFeatureApi(ApiChild, base='telepho
         :param warning_tone_enabled: Set to enable or disable a stutter dial tone being played to all the participants
             when a person is bridged on the active shared line call.
         :type warning_tone_enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-call-bridge-feature/configure-call-bridge-settings-for-a-person
         """
         params = {}
         if org_id is not None:
@@ -14586,6 +15170,8 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/retrieve-call-forwarding-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -14609,6 +15195,8 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/modify-call-forwarding-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -14634,6 +15222,8 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/retrieve-call-waiting-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -14658,6 +15248,8 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         :type org_id: str
         :param enabled: Call Waiting state.
         :type enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/modify-call-waiting-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -14682,6 +15274,8 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/retrieve-caller-id-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -14722,6 +15316,8 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         :param location_external_caller_id_name: External Caller Name, which will be shown if External Caller ID Name
             is OTHER.
         :type location_external_caller_id_name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/modify-caller-id-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -14762,6 +15358,8 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/retrieve-monitoring-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -14790,6 +15388,8 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/modify-monitoring-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -14817,6 +15417,8 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/retrieve-incoming-permission-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -14848,6 +15450,8 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         :type internal_calls_enabled: bool
         :param collect_calls_enabled: Collect calls are allowed to be received.
         :type collect_calls_enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/modify-incoming-permission-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -14879,6 +15483,8 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/retrieve-outgoing-permission-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -14905,6 +15511,8 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         :type use_custom_enabled: bool
         :param calling_permissions: Workspace's list of outgoing permissions.
         :type calling_permissions: CallingPermissionObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/modify-outgoing-permission-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -14931,6 +15539,8 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/retrieve-access-codes-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -14954,6 +15564,8 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         :type org_id: str
         :param delete_codes: Indicates access codes to delete.
         :type delete_codes: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/modify-access-codes-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -14982,6 +15594,8 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         :type code: str
         :param description: Access code description.
         :type description: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/create-access-codes-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15011,6 +15625,8 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/read-call-intercept-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15041,6 +15657,8 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         :type incoming: InterceptIncomingPatch
         :param outgoing: Settings related to how outgoing calls are handled when the intercept feature is enabled.
         :type outgoing: Outgoing
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/configure-call-intercept-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15071,6 +15689,8 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/retrieve-transfer-numbers-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15103,6 +15723,8 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         :param auto_transfer_number3: Calls placed meeting the criteria in an outbound rule whose action is
             TRANSFER_NUMBER_3 will be transferred to this number.
         :type auto_transfer_number3: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-calling-behavior/modify-transfer-numbers-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15175,6 +15797,8 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
     def summary(self) -> GetMessageSummaryResponse:
         """
         Get a summary of the voicemail messages for the user.
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-voice-messaging/get-message-summary
         """
         url = self.ep('summary')
         data = super().get(url=url)
@@ -15183,6 +15807,8 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
     def list(self) -> list[VoiceMessageDetails]:
         """
         Get the list of all voicemail messages for the user.
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-voice-messaging/list-messages
         """
         url = self.ep()
         data = super().get(url=url)
@@ -15194,6 +15820,8 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
 
         :param message_id: The message identifer of the voicemail message to delete
         :type message_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-voice-messaging/delete-message
         """
         url = self.ep(f'{message_id}')
         super().delete(url=url)
@@ -15208,6 +15836,8 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
         :param message_id: The voicemail message identifier of the message to mark as read. If the messageId is not
             provided, then all voicemail messages for the user are marked as read.
         :type message_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-voice-messaging/mark-as-read
         """
         body = MarkAsReadBody()
         if message_id is not None:
@@ -15225,6 +15855,8 @@ class WebexCallingVoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
         :param message_id: The voicemail message identifier of the message to mark as unread. If the messageId is not
             provided, then all voicemail messages for the user are marked as unread.
         :type message_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-voice-messaging/mark-as-unread
         """
         body = MarkAsUnreadBody()
         if message_id is not None:
@@ -15293,6 +15925,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-call-forwarding-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15316,6 +15950,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-call-forwarding-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15341,6 +15977,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-call-waiting-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15365,6 +16003,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :type org_id: str
         :param enabled: Call Waiting state.
         :type enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-call-waiting-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15389,6 +16029,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-caller-id-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15429,6 +16071,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :param location_external_caller_id_name: External Caller Name, which will be shown if External Caller ID Name
             is OTHER.
         :type location_external_caller_id_name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-caller-id-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15469,6 +16113,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-monitoring-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15497,6 +16143,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-monitoring-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15536,6 +16184,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
             can use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace
         """
         params = {}
         params['Attributes'] = attributes
@@ -15560,6 +16210,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-incoming-permission-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15591,6 +16243,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :type internal_calls_enabled: bool
         :param collect_calls_enabled: Collect calls are allowed to be received.
         :type collect_calls_enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-incoming-permission-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15622,6 +16276,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-outgoing-permission-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15648,6 +16304,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :type use_custom_enabled: bool
         :param calling_permissions: Workspace's list of outgoing permissions.
         :type calling_permissions: CallingPermissionObject
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-outgoing-permission-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15674,6 +16332,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-access-codes-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15697,6 +16357,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :type org_id: str
         :param delete_codes: Indicates access codes to delete.
         :type delete_codes: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-access-codes-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15725,6 +16387,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :type code: str
         :param description: Access code description.
         :type description: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/create-access-codes-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15754,6 +16418,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/read-call-intercept-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15784,6 +16450,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :type incoming: InterceptIncomingPatch
         :param outgoing: Settings related to how outgoing calls are handled when the intercept feature is enabled.
         :type outgoing: Outgoing
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/configure-call-intercept-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15814,6 +16482,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             organization (such as partners) may use this parameter as the default is the same organization as the token
             used to access API.
         :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/retrieve-transfer-numbers-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15846,6 +16516,8 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         :param auto_transfer_number3: Calls placed meeting the criteria in an outbound rule whose action is
             TRANSFER_NUMBER_3 will be transferred to this number.
         :type auto_transfer_number3: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-transfer-numbers-settings-for-a-workspace
         """
         params = {}
         if org_id is not None:
@@ -15901,6 +16573,8 @@ class WebexforBroadworksphonelistsyncApi(ApiChild, base='broadworks/enterprises'
         :type starts_with: str
         :param max: Limit the number of enterprises returned in the search, up to 1000.
         :type max: int
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-for-broadworks-phone-list-sync/list-broadworks-enterprises
         """
         params = {}
         if sp_enterprise_id is not None:
@@ -15922,6 +16596,8 @@ class WebexforBroadworksphonelistsyncApi(ApiChild, base='broadworks/enterprises'
         :type id: str
         :param enable_dir_sync: The toggle to enable/disable directory sync.
         :type enable_dir_sync: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-for-broadworks-phone-list-sync/update-directory-sync-for-a-broadworks-enterprise
         """
         body = UpdateDirectorySyncForBroadWorksEnterpriseBody1()
         if enable_dir_sync is not None:
@@ -15940,6 +16616,8 @@ class WebexforBroadworksphonelistsyncApi(ApiChild, base='broadworks/enterprises'
         :param sync_status: At this time, the only option allowed for this attribute is SYNC_NOW which will trigger the
             directory sync for the BroadWorks enterprise.
         :type sync_status: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-for-broadworks-phone-list-sync/trigger-directory-sync-for-an-enterprise
         """
         body = TriggerDirectorySyncForEnterpriseBody1()
         if sync_status is not None:
@@ -15955,6 +16633,8 @@ class WebexforBroadworksphonelistsyncApi(ApiChild, base='broadworks/enterprises'
 
         :param id: A unique identifier for the enterprise in question.
         :type id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-for-broadworks-phone-list-sync/get-directory-sync-status-for-an-enterprise
         """
         url = self.ep(f'{id}/broadworksDirectorySync')
         data = super().get(url=url)
@@ -16047,6 +16727,8 @@ class WholesaleBillingReportswithSubPartnersApi(ApiChild, base='wholesale/billin
         :type status: str
         :param sub_partner_org_id: The Organization ID of the sub partner on Cisco Webex.
         :type sub_partner_org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/wholesale-billing-reports-with-sub-partners/list-wholesale-billing-reports
         """
         if billing_start_date is not None:
             params['billingStartDate'] = billing_start_date
@@ -16069,6 +16751,8 @@ class WholesaleBillingReportswithSubPartnersApi(ApiChild, base='wholesale/billin
 
         :param id: A unique identifier for the report being requested.
         :type id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/wholesale-billing-reports-with-sub-partners/get-a-wholesale-billing-report
         """
         url = self.ep(f'{id}')
         data = super().get(url=url)
@@ -16086,6 +16770,8 @@ class WholesaleBillingReportswithSubPartnersApi(ApiChild, base='wholesale/billin
         :type type_: str
         :param sub_partner_org_id: The Organization ID of the sub partner on Cisco Webex.
         :type sub_partner_org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/wholesale-billing-reports-with-sub-partners/create-a-wholesale-billing-report
         """
         body = CreateWholesaleBillingReportBody()
         if billing_start_date is not None:
@@ -16106,6 +16792,8 @@ class WholesaleBillingReportswithSubPartnersApi(ApiChild, base='wholesale/billin
 
         :param id: A unique report ID that corresponds to a billing report.
         :type id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/wholesale-billing-reports-with-sub-partners/delete-a-wholesale-billing-report
         """
         url = self.ep(f'{id}')
         super().delete(url=url)

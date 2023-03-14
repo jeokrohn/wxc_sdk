@@ -56,6 +56,8 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
 
         :param team_id: List memberships for a team, by ID.
         :type team_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/team-memberships/list-team-memberships
         """
         params['teamId'] = team_id
         url = self.ep()
@@ -73,6 +75,8 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         :type person_email: str
         :param is_moderator: Whether or not the participant is a team moderator.
         :type is_moderator: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/team-memberships/create-a-team-membership
         """
         body = CreateTeamMembershipBody()
         if team_id is not None:
@@ -94,6 +98,8 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
 
         :param membership_id: The unique identifier for the team membership.
         :type membership_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/team-memberships/get-team-membership-details
         """
         url = self.ep(f'{membership_id}')
         data = super().get(url=url)
@@ -108,6 +114,8 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         :type membership_id: str
         :param is_moderator: Whether or not the participant is a team moderator.
         :type is_moderator: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/team-memberships/update-a-team-membership
         """
         body = UpdateTeamMembershipBody()
         if is_moderator is not None:
@@ -125,6 +133,8 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
 
         :param membership_id: The unique identifier for the team membership.
         :type membership_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/team-memberships/delete-a-team-membership
         """
         url = self.ep(f'{membership_id}')
         super().delete(url=url)

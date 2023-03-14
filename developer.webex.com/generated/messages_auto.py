@@ -184,6 +184,8 @@ class MessagesApi(ApiChild, base='messages'):
         :type before: str
         :param before_message: List messages sent before a message, by ID.
         :type before_message: str
+
+        documentation: https://developer.webex.com/docs/api/v1/messages/list-messages
         """
         params['roomId'] = room_id
         if parent_id is not None:
@@ -209,6 +211,8 @@ class MessagesApi(ApiChild, base='messages'):
         :type person_id: str
         :param person_email: List messages in a 1:1 room, by person email.
         :type person_email: str
+
+        documentation: https://developer.webex.com/docs/api/v1/messages/list-direct-messages
         """
         params = {}
         if parent_id is not None:
@@ -250,6 +254,8 @@ class MessagesApi(ApiChild, base='messages'):
         :param attachments: Content attachments to attach to the message. Only one card per message is supported. See
             the Cards Guide for more information.
         :type attachments: Attachment
+
+        documentation: https://developer.webex.com/docs/api/v1/messages/create-a-message
         """
         body = CreateMessageBody()
         if room_id is not None:
@@ -301,6 +307,8 @@ class MessagesApi(ApiChild, base='messages'):
         :param markdown: The message, in Markdown format. If this attribute is set ensure that the request does NOT
             contain an html attribute.
         :type markdown: str
+
+        documentation: https://developer.webex.com/docs/api/v1/messages/edit-a-message
         """
         body = EditMessageBody()
         if room_id is not None:
@@ -320,6 +328,8 @@ class MessagesApi(ApiChild, base='messages'):
 
         :param message_id: The unique identifier for the message.
         :type message_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/messages/get-message-details
         """
         url = self.ep(f'{message_id}')
         data = super().get(url=url)
@@ -332,6 +342,8 @@ class MessagesApi(ApiChild, base='messages'):
 
         :param message_id: The unique identifier for the message.
         :type message_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/messages/delete-a-message
         """
         url = self.ep(f'{message_id}')
         super().delete(url=url)

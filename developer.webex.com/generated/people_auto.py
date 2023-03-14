@@ -214,6 +214,8 @@ class PeopleApi(ApiChild, base='people'):
         :type calling_data: bool
         :param location_id: List people present in this location.
         :type location_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/people/list-people
         """
         if email is not None:
             params['email'] = email
@@ -289,6 +291,8 @@ class PeopleApi(ApiChild, base='people'):
         :param site_urls: One or several site names where this user has an attendee role. Append #attendee to the
             sitename (eg: mysite.webex.com#attendee) Possible values: mysite.webex.com#attendee
         :type site_urls: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/people/create-a-person
         """
         params = {}
         if calling_data is not None:
@@ -346,6 +350,8 @@ class PeopleApi(ApiChild, base='people'):
         :type person_id: str
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/people/get-person-details
         """
         params = {}
         if calling_data is not None:
@@ -425,6 +431,8 @@ class PeopleApi(ApiChild, base='people'):
         :param login_enabled: Whether or not the user is allowed to use Webex. This property is only accessible if the
             authenticated user is an admin user for the person's organization.
         :type login_enabled: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/people/update-a-person
         """
         params = {}
         if calling_data is not None:
@@ -481,6 +489,8 @@ class PeopleApi(ApiChild, base='people'):
 
         :param person_id: A unique identifier for the person.
         :type person_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/people/delete-a-person
         """
         url = self.ep(f'{person_id}')
         super().delete(url=url)
@@ -495,6 +505,8 @@ class PeopleApi(ApiChild, base='people'):
 
         :param calling_data: Include Webex Calling user details in the response.
         :type calling_data: bool
+
+        documentation: https://developer.webex.com/docs/api/v1/people/get-my-own-details
         """
         params = {}
         if calling_data is not None:

@@ -88,6 +88,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type country_code: str
         :param city_name: Location city name.
         :type city_name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/workspace-locations/list-workspace-locations
         """
         params = {}
         if display_name is not None:
@@ -121,6 +123,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type city_name: str
         :param notes: Notes associated with the location.
         :type notes: str
+
+        documentation: https://developer.webex.com/docs/api/v1/workspace-locations/create-a-workspace-location
         """
         body = CreateWorkspaceLocationBody()
         if display_name is not None:
@@ -147,6 +151,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
 
         :param location_id: A unique identifier for the location.
         :type location_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/workspace-locations/get-a-workspace-location-details
         """
         url = self.ep(f'{location_id}')
         data = super().get(url=url)
@@ -177,6 +183,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type notes: str
         :param id: Unique identifier for the location.
         :type id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/workspace-locations/update-a-workspace-location
         """
         body = UpdateWorkspaceLocationBody()
         if display_name is not None:
@@ -206,6 +214,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
 
         :param location_id: A unique identifier for the location.
         :type location_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/workspace-locations/delete-a-workspace-location
         """
         url = self.ep(f'{location_id}')
         super().delete(url=url)
@@ -217,6 +227,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
 
         :param location_id: A unique identifier for the location.
         :type location_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/workspace-locations/list-workspace-location-floors
         """
         url = self.ep(f'{location_id}/floors')
         data = super().get(url=url)
@@ -233,6 +245,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type floor_number: int
         :param display_name: The floor display name.
         :type display_name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/workspace-locations/create-a-workspace-location-floor
         """
         body = CreateWorkspaceLocationFloorBody()
         if floor_number is not None:
@@ -251,6 +265,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type location_id: str
         :param floor_id: A unique identifier for the floor.
         :type floor_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/workspace-locations/get-a-workspace-location-floor-details
         """
         url = self.ep(f'{location_id}/floors/{floor_id}')
         data = super().get(url=url)
@@ -270,6 +286,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type floor_number: int
         :param display_name: The floor display name.
         :type display_name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/workspace-locations/update-a-workspace-location-floor
         """
         body = CreateWorkspaceLocationFloorBody()
         if floor_number is not None:
@@ -288,6 +306,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type location_id: str
         :param floor_id: A unique identifier for the floor.
         :type floor_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/workspace-locations/delete-a-workspace-location-floor
         """
         url = self.ep(f'{location_id}/floors/{floor_id}')
         super().delete(url=url)

@@ -161,6 +161,8 @@ class TrackingCodesApi(ApiChild, base=''):
             API retrieves the tracking code from the user's preferred site. All available Webex sites and preferred
             sites of a user can be retrieved by the Get Site List API.
         :type site_url: str
+
+        documentation: https://developer.webex.com/docs/api/v1/tracking-codes/list-tracking-codes
         """
         params = {}
         if site_url is not None:
@@ -179,6 +181,8 @@ class TrackingCodesApi(ApiChild, base=''):
             API retrieves the tracking code from the user's preferred site. All available Webex sites and the preferred
             sites of a user can be retrieved by the Get Site List API.
         :type site_url: str
+
+        documentation: https://developer.webex.com/docs/api/v1/tracking-codes/get-a-tracking-code
         """
         params = {}
         if site_url is not None:
@@ -206,6 +210,8 @@ class TrackingCodesApi(ApiChild, base=''):
         :param schedule_start_codes: Specify how tracking codes are used for each service on the meeting scheduler or
             meeting start pages. The maximum size of scheduleStartCodes is 5.
         :type schedule_start_codes: ScheduleStartCodeObject
+
+        documentation: https://developer.webex.com/docs/api/v1/tracking-codes/create-a-tracking-code
         """
         body = CreateTrackingCodeBody()
         if name is not None:
@@ -243,6 +249,8 @@ class TrackingCodesApi(ApiChild, base=''):
         :param schedule_start_codes: Specify how tracking codes are used for each service on the meeting scheduler or
             meeting start pages. The maximum size of scheduleStartCodes is 5.
         :type schedule_start_codes: ScheduleStartCodeObject
+
+        documentation: https://developer.webex.com/docs/api/v1/tracking-codes/update-a-tracking-code
         """
         body = CreateTrackingCodeBody()
         if name is not None:
@@ -270,6 +278,8 @@ class TrackingCodesApi(ApiChild, base=''):
         :param site_url: URL of the Webex site from which the API deletes the tracking code. All available Webex sites
             and preferred sites of a user can be retrieved by the Get Site List API.
         :type site_url: str
+
+        documentation: https://developer.webex.com/docs/api/v1/tracking-codes/delete-a-tracking-code
         """
         params = {}
         params['siteUrl'] = site_url
@@ -289,6 +299,8 @@ class TrackingCodesApi(ApiChild, base=''):
             specify the personId of a user on a site they manage and the API returns details for the user's tracking
             codes. At least one parameter of personId or email is required.
         :type person_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/tracking-codes/get-user-tracking-codes
         """
         params = {}
         if site_url is not None:
@@ -313,6 +325,8 @@ class TrackingCodesApi(ApiChild, base=''):
         :type email: str
         :param tracking_codes: Tracking code information for updates.
         :type tracking_codes: UpdateTrackingCodeItemForUserObject
+
+        documentation: https://developer.webex.com/docs/api/v1/tracking-codes/update-user-tracking-codes
         """
         body = UpdateUserTrackingCodesBody()
         if site_url is not None:

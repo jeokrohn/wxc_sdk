@@ -55,6 +55,8 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
 
         :param room_id: ID of the room for which to list room tabs.
         :type room_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/room-tabs/list-room-tabs
         """
         params = {}
         params['roomId'] = room_id
@@ -72,6 +74,8 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         :type content_url: str
         :param display_name: User-friendly name for the room tab.
         :type display_name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/room-tabs/create-a-room-tab
         """
         body = CreateRoomTabBody()
         if room_id is not None:
@@ -90,6 +94,8 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
 
         :param id: The unique identifier for the Room Tab.
         :type id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/room-tabs/get-room-tab-details
         """
         url = self.ep(f'{id}')
         data = super().get(url=url)
@@ -107,6 +113,8 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         :type content_url: str
         :param display_name: User-friendly name for the room tab.
         :type display_name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/room-tabs/update-a-room-tab
         """
         body = CreateRoomTabBody()
         if room_id is not None:
@@ -125,6 +133,8 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
 
         :param id: The unique identifier for the Room Tab to delete.
         :type id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/room-tabs/delete-a-room-tab
         """
         url = self.ep(f'{id}')
         super().delete(url=url)
