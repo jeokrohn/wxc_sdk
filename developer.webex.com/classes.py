@@ -19,7 +19,6 @@ import argparse
 import json
 import logging
 import re
-import sys
 from collections import Counter
 from collections.abc import Generator, Callable
 from contextlib import contextmanager
@@ -328,6 +327,178 @@ class API:
     doc: Optional[str]
     methods: list[APIMethod] = field(default_factory=list)
 
+    @staticmethod
+    def base_type(type_str: str) -> str:
+        """
+        get base type from type string
+
+        "array[foo]" --> "foo"
+
+        :param type_str:
+        :return:
+        """
+        type_str = type_str.strip()
+        if type_str.startswith('array['):
+            type_str = type_str[6:-1]
+        type_str = "".join(type_str.split())
+        return type_str
+
+    @staticmethod
+    def class_name(parameter: Parameter):
+        """
+        Determine class name for a given parameter
+        :param parameter:
+        :return:
+        """
+        type_str = API.base_type(parameter.type)
+
+        if type_str == 'enum' or type_str == 'object' or type_str == 'string':
+            # class name based on attribute name
+            class_name = parameter.name
+            class_name = f'{class_name[0].upper()}{class_name[1:]}'
+        else:
+            # class name is in type_str
+            class_name = type_str
+
+        return class_name
+
+    @staticmethod
+    def method_name_from_header(header: str) -> str:
+        """
+        Derive a method name from a doc header
+
+        Example: Create a Person --> Create Person
+
+        :param header:
+        :return:
+        """
+
+        def cap(s: str) -> str:
+            return s[0].upper() + s[1:]
+
+        header = header.replace(' a ', '')
+        header = header.replace(' an ', '')
+        header = header.replace(' the ', '')
+        header = header.replace("'", '')
+
+        result = "".join(map(cap, header.split()))
+        # print(f'{header} -> {result}')
+        return result
+
+    def create_class(self, class_name: str, attributes: list[Parameter], as_enum: bool = False) -> Class:
+        """
+        Create a class with the given name and attributes
+
+        :param class_name:
+        :param attributes:
+        :param as_enum:
+        :return:
+        """
+
+        # catch a situation where a class is to be created with only attributes that are quoted strings
+        # there is at least one occurrence on developer.webex.com where this schema is used to define an enum
+        quoted_string = re.compile(r"^'(\w+)'$")
+        if all(quoted_string.match(a.name) and a.type == 'string' and not a.param_attrs and not a.param_object
+               for a in attributes):
+            as_enum = True
+            # update names (remove quotes)
+            for attr in attributes:
+                attr.name = quoted_string.match(attr.name).group(1)
+        for attribute in attributes:
+            if as_enum and any((attribute.param_attrs, attribute.param_attrs)):
+                log.error(f'Enum cannot have childs: {class_name} {attributes}')
+                continue
+            # an attribute with just "true" and "false" as childs is a bool
+            attr_names = set(a.name for a in chain(attribute.param_attrs, attribute.param_object))
+            if attr_names == {'true', 'false'}:
+                log.debug(f'{class_name}.{attribute.name}: type set to "boolean" b/c the only childs are "true" '
+                          f'and "false"')
+                # TODO: move doc string from child attributes up to this attribute
+                attribute.type = 'boolean'
+                attribute.param_object = list()
+                attribute.param_attrs = list()
+                continue
+
+            # if the type has something like this then try to convert to attributes:
+            # array[{"type": "personal-room","value": "testuser5@mycompany.webex.com","primary": false}]
+            if not any((attribute.param_attrs, attribute.param_object)):
+                base_type = self.base_type(attribute.type)
+                try:
+                    data = json.loads(base_type)
+                except JSONDecodeError:
+                    pass
+                else:
+                    attrs = []
+                    for k, v in data.items():
+                        if isinstance(v, str):
+                            type_str = 'string'
+                        elif isinstance(v, bool):
+                            type_str = 'boolean'
+                        elif isinstance(v, int):
+                            type_str = 'number'
+                        else:
+                            type_str = 'any'
+                        attrs.append(Parameter(name=k, type=type_str, doc=''))
+                    log.debug(f'complex base type: "{base_type}", created parameters ad hoc: {attrs}')
+                    attribute.param_attrs = attrs
+
+                    # we also need a new type for the attribute
+                    type_str = f'{attribute.name}Type'
+                    type_str = f'{type_str[0].upper()}{type_str[1:]}'
+                    if attribute.type.startswith('array['):
+                        type_str = f'array[{type_str}]'
+                    attribute.type = type_str
+
+            is_enum = attribute.type == 'enum'
+            # if name ends in "Enum" and all attributes are simple strings then we also treat this as an enum
+            if attribute.type.endswith('Enum') and all(a.type == 'string' and not any((a.param_object, a.param_attrs))
+                                                       for a in chain(attribute.param_attrs, attribute.param_object)):
+                is_enum = True
+            if is_enum and not attr_names:
+                # an enum without childs is just a string
+                log.debug(f'{class_name}.{attribute.name}: type set to "string" instead of "enum" b/c there are no '
+                          f'child attributes')
+                attribute.type = 'string'
+
+            if attribute.param_attrs:
+                new_class = self.create_class(class_name=self.class_name(attribute), attributes=attribute.param_attrs,
+                                              as_enum=is_enum)
+                attribute.param_class = new_class
+            if attribute.param_object:
+                new_class = self.create_class(class_name=self.class_name(attribute), attributes=attribute.param_object,
+                                              as_enum=is_enum)
+                attribute.param_class = new_class
+            # if
+        # for
+
+        # if the class name has multiple words then make camel case
+        class_name = ''.join(f'{w[0].upper()}{w[1:]}' for w in class_name.split())
+        # strip illegal characters from class names
+        class_name = re.sub(r'\W', '', class_name)
+
+        new_class = Class(name=class_name, attributes=attributes, is_enum=as_enum)
+        log.debug(
+            f'create class: {new_class.name} - {", ".join(f"{attr.name}({attr.type})" for attr in attributes)}')
+        return new_class
+
+    def add_method(self, method_details: MethodDetails):
+        """
+        Add one method to the API
+        """
+        method_name = self.method_name_from_header(method_details.header)
+        body_class = None
+        response_class = None
+        # look at "Body Parameters" and "Response Properties"
+        if body := method_details.parameters_and_response.get('Body Parameters'):
+            body_class = self.create_class(class_name=f'{method_name}Body', attributes=body)
+        if response := method_details.parameters_and_response.get('Response Properties'):
+            response_class = self.create_class(class_name=f'{method_name}Response', attributes=response)
+        self.methods.append(APIMethod(name=method_name,
+                                      methods_details=method_details,
+                                      body_class=body_class,
+                                      response_class=response_class))
+        return
+
     @property
     def api_class_name(self) -> str:
         """
@@ -432,159 +603,13 @@ class ClassGenerator:
         parts.reverse()
         return next((p for p in parts if not p.startswith('{'))).capitalize()
 
-    @staticmethod
-    def method_name_from_header(header: str) -> str:
-        """
-        Derive a method name from a doc header
-
-        Example: Create a Person --> Create Person
-
-        :param header:
-        :return:
-        """
-
-        def cap(s: str) -> str:
-            return s[0].upper() + s[1:]
-
-        header = header.replace(' a ', '')
-        header = header.replace(' an ', '')
-        header = header.replace(' the ', '')
-        header = header.replace("'", '')
-
-        result = "".join(map(cap, header.split()))
-        # print(f'{header} -> {result}')
-        return result
-
-    @staticmethod
-    def base_type(type_str: str) -> str:
-        """
-        get base type from type string
-
-        "array[foo]" --> "foo"
-
-        :param type_str:
-        :return:
-        """
-        type_str = type_str.strip()
-        if type_str.startswith('array['):
-            type_str = type_str[6:-1]
-        type_str = "".join(type_str.split())
-        return type_str
-
-    @staticmethod
-    def class_name(parameter: Parameter):
-        """
-        Determine class name for a given parameter
-        :param parameter:
-        :return:
-        """
-        type_str = ClassGenerator.base_type(parameter.type)
-
-        if type_str == 'enum' or type_str == 'object' or type_str == 'string':
-            # class name based on attribute name
-            class_name = parameter.name
-            class_name = f'{class_name[0].upper()}{class_name[1:]}'
-        else:
-            # class name is in type_str
-            class_name = type_str
-
-        return class_name
-
-    def create_class(self, class_name: str, attributes: list[Parameter], as_enum: bool = False) -> Class:
-        """
-        Create a class with the given name and attributes
-
-        :param class_name:
-        :param attributes:
-        :param as_enum:
-        :return:
-        """
-
-        # catch a situation where a class is to be created with only attributes that are quoted strings
-        # there is at least one occurrence on developer.webex.com where this schema is used to define an enum
-        quoted_string = re.compile(r"^'(\w+)'$")
-        if all(quoted_string.match(a.name) and a.type == 'string' and not a.param_attrs and not a.param_object
-               for a in attributes):
-            as_enum = True
-            # update names (remove quotes)
-            for attr in attributes:
-                attr.name = quoted_string.match(attr.name).group(1)
-        for attribute in attributes:
-            if as_enum and any((attribute.param_attrs, attribute.param_attrs)):
-                log.error(f'Enum cannot have childs: {class_name} {attributes}')
-                continue
-            # an attribute with just "true" and "false" as childs is a bool
-            attr_names = set(a.name for a in chain(attribute.param_attrs, attribute.param_object))
-            if attr_names == {'true', 'false'}:
-                log.debug(f'{class_name}.{attribute.name}: type set to "boolean" b/c the only childs are "true" '
-                          f'and "false"')
-                # TODO: move doc string from child attributes up to this attribute
-                attribute.type = 'boolean'
-                attribute.param_object = list()
-                attribute.param_attrs = list()
-                continue
-
-            # if the type has something like this then try to convert to attributes:
-            # array[{"type": "personal-room","value": "testuser5@mycompany.webex.com","primary": false}]
-            if not any((attribute.param_attrs, attribute.param_object)):
-                base_type = self.base_type(attribute.type)
-                try:
-                    data = json.loads(base_type)
-                except JSONDecodeError:
-                    pass
-                else:
-                    attrs = []
-                    for k, v in data.items():
-                        if isinstance(v, str):
-                            type_str = 'string'
-                        elif isinstance(v, bool):
-                            type_str = 'boolean'
-                        elif isinstance(v, int):
-                            type_str = 'number'
-                        else:
-                            type_str = 'any'
-                        attrs.append(Parameter(name=k, type=type_str, doc=''))
-                    log.debug(f'complex base type: "{base_type}", created parameters ad hoc: {attrs}')
-                    attribute.param_attrs = attrs
-
-                    # we also need a new type for the attribute
-                    type_str = f'{attribute.name}Type'
-                    type_str = f'{type_str[0].upper()}{type_str[1:]}'
-                    if attribute.type.startswith('array['):
-                        type_str = f'array[{type_str}]'
-                    attribute.type = type_str
-
-            is_enum = attribute.type == 'enum'
-            # if name ends in "Enum" and all attributes are simple strings then we also treat this as an enum
-            if attribute.type.endswith('Enum') and all(a.type == 'string' and not any((a.param_object, a.param_attrs))
-                                                       for a in chain(attribute.param_attrs, attribute.param_object)):
-                is_enum = True
-            if is_enum and not attr_names:
-                # an enum without childs is just a string
-                log.debug(f'{class_name}.{attribute.name}: type set to "string" instead of "enum" b/c there are no '
-                          f'child attributes')
-                attribute.type = 'string'
-
-            if attribute.param_attrs:
-                new_class = self.create_class(class_name=self.class_name(attribute), attributes=attribute.param_attrs,
-                                              as_enum=is_enum)
-                attribute.param_class = new_class
-            if attribute.param_object:
-                new_class = self.create_class(class_name=self.class_name(attribute), attributes=attribute.param_object,
-                                              as_enum=is_enum)
-                attribute.param_class = new_class
-            # if
-        # for
-
-        # if the class name has multiple words then make camel case
-        class_name = ''.join(f'{w[0].upper()}{w[1:]}' for w in class_name.split())
-        # strip illegal characters from class names
-        class_name = re.sub(r'\W', '', class_name)
-
-        new_class = Class(name=class_name, attributes=attributes, is_enum=as_enum)
-        log.debug(
-            f'create class: {new_class.name} - {", ".join(f"{attr.name}({attr.type})" for attr in attributes)}')
-        return new_class
+    def from_methods(self, section: str, doc: str, method_list: list[MethodDetails]):
+        Class.registry.clear()
+        api = API(section=section, doc=doc)
+        self.api_list.append(api)
+        for method_details in method_list:
+            api.add_method(method_details)
+        Class.optimize()
 
     def from_doc_method_details(self, api_spec: DocMethodDetails, only_section: str = None):
         """
@@ -594,6 +619,7 @@ class ClassGenerator:
         :return:
         """
 
+        Class.registry.clear()
         # go through all methods
 
         # for each method look at request and response body parameters
@@ -616,18 +642,8 @@ class ClassGenerator:
             api = API(section=section, doc=section_details.doc)
             self.api_list.append(api)
             for method_details in methods:
-                method_name = self.method_name_from_header(method_details.header)
-                body_class = None
-                response_class = None
-                # look at "Body Parameters" and "Response Properties"
-                if body := method_details.parameters_and_response.get('Body Parameters'):
-                    body_class = self.create_class(class_name=f'{method_name}Body', attributes=body)
-                if response := method_details.parameters_and_response.get('Response Properties'):
-                    response_class = self.create_class(class_name=f'{method_name}Response', attributes=response)
-                api.methods.append(APIMethod(name=method_name,
-                                             methods_details=method_details,
-                                             body_class=body_class,
-                                             response_class=response_class))
+                api.add_method(method_details)
+
         Class.optimize()
 
     def sources(self) -> Generator[str, None, None]:
@@ -672,6 +688,16 @@ class ClassGenerator:
                                      first_line_prefix=first_line_prefix))
         return f'{first_line_prefix}{line}'
 
+    def run(self):
+        """
+        Generate all sources and write to output
+        """
+        print(PY_HEADER.strip('\n'), file=self.output)
+        print('\n', file=self.output)
+        print(self.dunder_all(), file=self.output)
+        print('\n', file=self.output)
+        print('\n\n'.join(self.sources()), file=self.output)
+
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
@@ -711,11 +737,7 @@ def main():
 
         class_generator = ClassGenerator(output=output)
         class_generator.from_doc_method_details(api_spec, only_section=args.section)
-        print(PY_HEADER.strip('\n'), file=output)
-        print('\n', file=output)
-        print(class_generator.dunder_all(), file=output)
-        print('\n', file=output)
-        print('\n\n'.join(class_generator.sources()), file=output)
+        class_generator.run()
 
     # with
     return
