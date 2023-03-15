@@ -91,7 +91,8 @@ def python_type(type_str: str, for_list: bool = False) -> Union[str, tuple[str, 
         return 'int'
     elif type_str == 'boolean':
         return 'bool'
-    elif type_str == 'string':
+    elif type_str.lower() == 'string':
+        # sometimes apparently "String" is used
         return 'str'
     elif m := re.match(r'array\[(\w+)]', type_str):
         return f'List[{python_type(m.group(1))}]'

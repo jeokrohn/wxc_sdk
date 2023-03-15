@@ -3802,7 +3802,7 @@ class ListVirtualLineObject(ApiModel):
     #: customExternalCallerIdName for virtual line.
     custom_external_caller_id_name: Optional[str]
     #: Calling details of virtual line.
-    number: Optional[GetUserNumberItemObject]
+    number: Optional[int]
     #: Location details of virtual line.
     location: Optional[GetAvailableRecallHuntGroupsObject]
     #: Number of devices assigned to a virtual line.

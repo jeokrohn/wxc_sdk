@@ -4202,7 +4202,7 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
     Refer to the Meetings API Scopes section of Meetings Overview for scopes required for each API.
     """
 
-    def list_participants(self, meeting_id: str, site_url: str = None, meeting_start_time_from: str = None, meeting_start_time_to: String = None, host_email: str = None, join_time_from: str = None, join_time_to: str = None, **params) -> Generator[Participant, None, None]:
+    def list_participants(self, meeting_id: str, site_url: str = None, meeting_start_time_from: str = None, meeting_start_time_to: str = None, host_email: str = None, join_time_from: str = None, join_time_to: str = None, **params) -> Generator[Participant, None, None]:
         """
         List all participants in a live or post meeting. The meetingId parameter is required, which is the unique
         identifier for the meeting.
@@ -4226,7 +4226,7 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
             meetingStartTimeFrom plus one month and the current time, and the result is the earlier of the two; if
             meetingStartTimeFrom is also not specified, the default value for meetingStartTimeTo is current date and
             time minus 1 month.
-        :type meeting_start_time_to: String
+        :type meeting_start_time_to: str
         :param host_email: Email address for the meeting host. This parameter is only used if the user or application
             calling the API has the admin-level scopes, the admin may specify the email of a user in a site they manage
             and the API will return meeting participants of the meetings that are hosted by that user.
@@ -4257,7 +4257,7 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Participant, params=params)
 
-    def query_participants_with_email(self, meeting_id: str, site_url: str = None, meeting_start_time_from: str = None, meeting_start_time_to: String = None, host_email: str = None, join_time_from: str = None, join_time_to: str = None, emails: List[str] = None, **params) -> Generator[Participant, None, None]:
+    def query_participants_with_email(self, meeting_id: str, site_url: str = None, meeting_start_time_from: str = None, meeting_start_time_to: str = None, host_email: str = None, join_time_from: str = None, join_time_to: str = None, emails: List[str] = None, **params) -> Generator[Participant, None, None]:
         """
         Query participants in a live meeting, or after the meeting, using participant's email. The meetingId parameter
         is the unique identifier for the meeting and is required.
@@ -4280,7 +4280,7 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
             meetingStartTimeFrom plus one month and the current time, and the result is the earlier of the two; if
             meetingStartTimeFrom is also not specified, the default value for meetingStartTimeTo is current date and
             time minus 1 month.
-        :type meeting_start_time_to: String
+        :type meeting_start_time_to: str
         :param host_email: Email address for the meeting host. This parameter is only used if the user or application
             calling the API has the admin-level scopes, the admin may specify the email of a user in a site they manage
             and the API will return meeting participants of the meetings that are hosted by that user.
@@ -7387,7 +7387,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         data = super().get(url=url, params=params)
         return CreateMeetingResponse.parse_obj(data)
 
-    def list(self, meeting_number: str = None, web_link: str = None, room_id: str = None, meeting_type: str = None, state: str = None, scheduled_type: str = None, current: bool = None, from_: str = None, to_: String = None, host_email: str = None, site_url: str = None, integration_tag: str = None, **params) -> Generator[MeetingSeriesObjectForListMeeting, None, None]:
+    def list(self, meeting_number: str = None, web_link: str = None, room_id: str = None, meeting_type: str = None, state: str = None, scheduled_type: str = None, current: bool = None, from_: str = None, to_: str = None, host_email: str = None, site_url: str = None, integration_tag: str = None, **params) -> Generator[MeetingSeriesObjectForListMeeting, None, None]:
         """
         Retrieves details for meetings with a specified meeting number, web link, meeting type, etc. Please note that
         there are various products in the Webex Suite such as Meetings and Events. Currently, only meetings of the
@@ -7432,7 +7432,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         :param to_: End date and time (exclusive) in any ISO 8601 compliant format for the meeting objects being
             requested. to cannot be before from. This parameter will be ignored if meetingNumber, webLink or roomId is
             specified.
-        :type to_: String
+        :type to_: str
         :param host_email: Email address for the meeting host. This parameter is only used if the user or application
             calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
             they manage and the API will return details for meetings that are hosted by that user.
@@ -7475,7 +7475,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=MeetingSeriesObjectForListMeeting, params=params)
 
-    def list_of_series(self, meeting_series_id: str, from_: str = None, to_: String = None, meeting_type: str = None, state: str = None, is_modified: bool = None, host_email: str = None, **params) -> Generator[ScheduledMeetingObject, None, None]:
+    def list_of_series(self, meeting_series_id: str, from_: str = None, to_: str = None, meeting_type: str = None, state: str = None, is_modified: bool = None, host_email: str = None, **params) -> Generator[ScheduledMeetingObject, None, None]:
         """
         Lists scheduled meeting and meeting instances of a meeting series identified by meetingSeriesId. Scheduled
         meetings of an ad-hoc meeting created by Create a Meeting with adhoc of true and a roomId will not be listed,
@@ -7497,7 +7497,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type from_: str
         :param to_: End date and time (exclusive) for the range for which meetings are to be returned in any ISO 8601
             compliant format. to cannot be before from.
-        :type to_: String
+        :type to_: str
         :param meeting_type: Meeting type for the meeting objects being requested. If not specified, return meetings of
             all types. Possible values: scheduledMeeting, meeting
         :type meeting_type: str
@@ -8804,7 +8804,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         data = super().get(url=url)
         return GetMeetingSurveyResponse.parse_obj(data)
 
-    def list_survey_results(self, meeting_id: str, meeting_start_time_from: str = None, meeting_start_time_to: String = None, **params) -> Generator[SurveyResultObject, None, None]:
+    def list_survey_results(self, meeting_id: str, meeting_start_time_from: str = None, meeting_start_time_to: str = None, **params) -> Generator[SurveyResultObject, None, None]:
         """
         Retrieves results for a meeting survey identified by meetingId.
 
@@ -8825,7 +8825,7 @@ class MeetingsApi(ApiChild, base='meetings'):
             default value for meetingStartTimeTo is the current date and time;For example,if meetingStartTimeFrom is a
             month ago, the default value for meetingStartTimeTo is 1 month after meetingStartTimeFrom.Otherwise it is
             the current date and time.
-        :type meeting_start_time_to: String
+        :type meeting_start_time_to: str
 
         documentation: https://developer.webex.com/docs/api/v1/meetings/list-meeting-survey-results
         """
@@ -15796,7 +15796,7 @@ class ListVirtualLineObject(ApiModel):
     #: customExternalCallerIdName for virtual line.
     custom_external_caller_id_name: Optional[str]
     #: Calling details of virtual line.
-    number: Optional[GetUserNumberItemObject]
+    number: Optional[int]
     #: Location details of virtual line.
     location: Optional[Role]
     #: Number of devices assigned to a virtual line.
