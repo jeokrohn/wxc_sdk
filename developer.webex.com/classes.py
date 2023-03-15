@@ -520,8 +520,10 @@ class {class_name}(ApiChild, base='{base}'):
         class_name = self.api_class_name
         # determine common base of all methods in this API
         endpoints = [m.methods_details.documentation.endpoint for m in self.methods]
+        # look for the 1st index where the set of letters is larger than one or a URL parameter starts
         common_index = next((i for i, letters in enumerate(zip(*endpoints))
-                             if len(set(letters)) > 1), min(map(len, endpoints)))
+                             if len(ls := set(letters)) > 1 or ls == {'{'}),
+                            min(map(len, endpoints)))
         common_prefix = endpoints[0][:common_index]
         webex_prefix = 'https://webexapis.com/v1/'
         if common_prefix.startswith(webex_prefix):

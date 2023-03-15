@@ -12148,7 +12148,7 @@ class ReadListOfReceptionistContactDirectoriesResponse(ApiModel):
     directories: Optional[list[GetAvailableRecallHuntGroupsObject]]
 
 
-class WebexCallingOrganizationSettingsWithLocationReceptionistDirectoriesApi(ApiChild, base='telephony/config/locations/{locationId}/receptionistContacts/directories'):
+class WebexCallingOrganizationSettingsWithLocationReceptionistDirectoriesApi(ApiChild, base='telephony/config/locations/'):
     """
     Webex Calling Location Receptionist Contacts supports creation of directories and assigning custom groups of users
     to directories for a location within an organization.
@@ -12188,7 +12188,7 @@ class WebexCallingOrganizationSettingsWithLocationReceptionistDirectoriesApi(Api
             body.contacts = contacts
         if name is not None:
             body.name = name
-        url = self.ep(f'')
+        url = self.ep(f'{location_id}/receptionistContacts/directories')
         data = super().post(url=url, params=params, data=body.json())
         return data["id"]
 
@@ -12209,7 +12209,7 @@ class WebexCallingOrganizationSettingsWithLocationReceptionistDirectoriesApi(Api
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'')
+        url = self.ep(f'{location_id}/receptionistContacts/directories')
         data = super().get(url=url, params=params)
         return parse_obj_as(list[GetAvailableRecallHuntGroupsObject], data["directories"])
 
@@ -12232,7 +12232,7 @@ class WebexCallingOrganizationSettingsWithLocationReceptionistDirectoriesApi(Api
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{directory_id}')
+        url = self.ep(f'{location_id}/receptionistContacts/directories/{directory_id}')
         super().delete(url=url, params=params)
         return
 
@@ -14782,7 +14782,7 @@ class PutSharedLineAppearanceMembersBody1(ApiModel):
     members: Optional[list[PutSharedLineMemberItem1]]
 
 
-class WebexCallingPersonSettingsWithSharedLineApi(ApiChild, base='telephony/config/people/{personId}/applications/{applicationId}/'):
+class WebexCallingPersonSettingsWithSharedLineApi(ApiChild, base='telephony/config/people/'):
     """
     Not supported for Webex for Government (FedRAMP)
     Webex Calling Person Settings supports modifying Webex Calling settings for a specific person.
@@ -14835,7 +14835,7 @@ class WebexCallingPersonSettingsWithSharedLineApi(ApiChild, base='telephony/conf
             body.number = number
         if order is not None:
             body.order = order
-        url = self.ep(f'availableMembers')
+        url = self.ep(f'{person_id}/applications/{application_id}/availableMembers')
         data = super().get(url=url, data=body.json())
         return parse_obj_as(list[AvailableSharedLineMemberItem1], data["members"])
 
@@ -14851,7 +14851,7 @@ class WebexCallingPersonSettingsWithSharedLineApi(ApiChild, base='telephony/conf
 
         documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings-with-shared-line/get-shared-line-appearance-members
         """
-        url = self.ep(f'members')
+        url = self.ep(f'{person_id}/applications/{application_id}/members')
         data = super().get(url=url)
         return GetSharedLineAppearanceMembersResponse.parse_obj(data)
 
@@ -14872,7 +14872,7 @@ class WebexCallingPersonSettingsWithSharedLineApi(ApiChild, base='telephony/conf
         body = PutSharedLineAppearanceMembersBody1()
         if members is not None:
             body.members = members
-        url = self.ep(f'members')
+        url = self.ep(f'{person_id}/applications/{application_id}/members')
         super().put(url=url, data=body.json())
         return
 
@@ -14888,7 +14888,7 @@ class ConfigureCallBridgeSettingsForPersonBody(ApiModel):
     warning_tone_enabled: Optional[bool]
 
 
-class WebexCallingPersonSettingswithCallBridgeFeatureApi(ApiChild, base='telephony/config/people/{personId}/features/callBridge'):
+class WebexCallingPersonSettingswithCallBridgeFeatureApi(ApiChild, base='telephony/config/people/'):
     """
     Not supported for Webex for Government (FedRAMP)
     Webex Calling Person Settings supports modifying Webex Calling settings for a specific person.
@@ -14917,7 +14917,7 @@ class WebexCallingPersonSettingswithCallBridgeFeatureApi(ApiChild, base='telepho
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'')
+        url = self.ep(f'{person_id}/features/callBridge')
         data = super().get(url=url, params=params)
         return data["warningToneEnabled"]
 
@@ -14944,7 +14944,7 @@ class WebexCallingPersonSettingswithCallBridgeFeatureApi(ApiChild, base='telepho
         body = ConfigureCallBridgeSettingsForPersonBody()
         if warning_tone_enabled is not None:
             body.warning_tone_enabled = warning_tone_enabled
-        url = self.ep(f'')
+        url = self.ep(f'{person_id}/features/callBridge')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -15144,7 +15144,7 @@ class ConfigureCallInterceptSettingsForWorkspaceBody(ApiModel):
     outgoing: Optional[Outgoing]
 
 
-class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspaces/{workspaceId}/features/'):
+class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspaces/'):
     """
     Webex Calling Organization Settings support reading and writing of Webex Calling settings for a specific
     organization.
@@ -15176,7 +15176,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'callForwarding')
+        url = self.ep(f'{workspace_id}/features/callForwarding')
         data = super().get(url=url, params=params)
         return CallForwardingPlaceSettingGet.parse_obj(data["callForwarding"])
 
@@ -15204,7 +15204,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         body = ModifyCallForwardingSettingsForWorkspaceBody()
         if call_forwarding is not None:
             body.call_forwarding = call_forwarding
-        url = self.ep(f'callForwarding')
+        url = self.ep(f'{workspace_id}/features/callForwarding')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -15228,7 +15228,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'callWaiting')
+        url = self.ep(f'{workspace_id}/features/callWaiting')
         data = super().get(url=url, params=params)
         return data["enabled"]
 
@@ -15257,7 +15257,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         body = ModifyCallWaitingSettingsForWorkspaceBody()
         if enabled is not None:
             body.enabled = enabled
-        url = self.ep(f'callWaiting')
+        url = self.ep(f'{workspace_id}/features/callWaiting')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -15280,7 +15280,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'callerId')
+        url = self.ep(f'{workspace_id}/features/callerId')
         data = super().get(url=url, params=params)
         return RetrieveCallerIDSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -15339,7 +15339,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
             body.custom_external_caller_id_name = custom_external_caller_id_name
         if location_external_caller_id_name is not None:
             body.location_external_caller_id_name = location_external_caller_id_name
-        url = self.ep(f'callerId')
+        url = self.ep(f'{workspace_id}/features/callerId')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -15364,7 +15364,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'monitoring')
+        url = self.ep(f'{workspace_id}/features/monitoring')
         data = super().get(url=url, params=params)
         return RetrieveMonitoringSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -15399,7 +15399,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
             body.enable_call_park_notification = enable_call_park_notification
         if monitored_elements is not None:
             body.monitored_elements = monitored_elements
-        url = self.ep(f'monitoring')
+        url = self.ep(f'{workspace_id}/features/monitoring')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -15423,7 +15423,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'incomingPermission')
+        url = self.ep(f'{workspace_id}/features/incomingPermission')
         data = super().get(url=url, params=params)
         return ReadIncomingPermissionSettingsForPersonResponse.parse_obj(data)
 
@@ -15465,7 +15465,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
             body.internal_calls_enabled = internal_calls_enabled
         if collect_calls_enabled is not None:
             body.collect_calls_enabled = collect_calls_enabled
-        url = self.ep(f'incomingPermission')
+        url = self.ep(f'{workspace_id}/features/incomingPermission')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -15489,7 +15489,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'outgoingPermission')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission')
         data = super().get(url=url, params=params)
         return RetrieveOutgoingPermissionSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -15522,7 +15522,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
             body.use_custom_enabled = use_custom_enabled
         if calling_permissions is not None:
             body.calling_permissions = calling_permissions
-        url = self.ep(f'outgoingPermission')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -15545,7 +15545,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'outgoingPermission/accessCodes')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
         data = super().get(url=url, params=params)
         return parse_obj_as(list[AccessCodes], data["accessCodes"])
 
@@ -15573,7 +15573,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         body = ModifyAccessCodesForWorkspaceBody()
         if delete_codes is not None:
             body.delete_codes = delete_codes
-        url = self.ep(f'outgoingPermission/accessCodes')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -15605,7 +15605,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
             body.code = code
         if description is not None:
             body.description = description
-        url = self.ep(f'outgoingPermission/accessCodes')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
         super().post(url=url, params=params, data=body.json())
         return
 
@@ -15631,7 +15631,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'intercept')
+        url = self.ep(f'{workspace_id}/features/intercept')
         data = super().get(url=url, params=params)
         return ReadCallInterceptSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -15670,7 +15670,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
             body.incoming = incoming
         if outgoing is not None:
             body.outgoing = outgoing
-        url = self.ep(f'intercept')
+        url = self.ep(f'{workspace_id}/features/intercept')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -15695,7 +15695,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'outgoingPermission/autoTransferNumbers')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission/autoTransferNumbers')
         data = super().get(url=url, params=params)
         return GetOutgoingPermissionAutoTransferNumberResponse.parse_obj(data)
 
@@ -15736,7 +15736,7 @@ class WebexCallingPersonSettingswithCallingBehaviorApi(ApiChild, base='workspace
             body.auto_transfer_number2 = auto_transfer_number2
         if auto_transfer_number3 is not None:
             body.auto_transfer_number3 = auto_transfer_number3
-        url = self.ep(f'outgoingPermission/autoTransferNumbers')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission/autoTransferNumbers')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -15895,7 +15895,7 @@ class ModifyAccessCodesForWorkspaceBody1(ApiModel):
     delete_codes: Optional[list[str]]
 
 
-class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/features/'):
+class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
     """
     Workspaces represent places where people work, such as conference rooms, meeting spaces, lobbies, and lunchrooms.
     Devices may be associated with workspaces.
@@ -15931,7 +15931,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'callForwarding')
+        url = self.ep(f'{workspace_id}/features/callForwarding')
         data = super().get(url=url, params=params)
         return CallForwardingPlaceSettingGet.parse_obj(data["callForwarding"])
 
@@ -15959,7 +15959,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         body = ModifyCallForwardingSettingsForWorkspaceBody1()
         if call_forwarding is not None:
             body.call_forwarding = call_forwarding
-        url = self.ep(f'callForwarding')
+        url = self.ep(f'{workspace_id}/features/callForwarding')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -15983,7 +15983,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'callWaiting')
+        url = self.ep(f'{workspace_id}/features/callWaiting')
         data = super().get(url=url, params=params)
         return data["enabled"]
 
@@ -16012,7 +16012,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         body = ModifyCallWaitingSettingsForWorkspaceBody1()
         if enabled is not None:
             body.enabled = enabled
-        url = self.ep(f'callWaiting')
+        url = self.ep(f'{workspace_id}/features/callWaiting')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -16035,7 +16035,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'callerId')
+        url = self.ep(f'{workspace_id}/features/callerId')
         data = super().get(url=url, params=params)
         return RetrieveCallerIDSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -16094,7 +16094,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             body.custom_external_caller_id_name = custom_external_caller_id_name
         if location_external_caller_id_name is not None:
             body.location_external_caller_id_name = location_external_caller_id_name
-        url = self.ep(f'callerId')
+        url = self.ep(f'{workspace_id}/features/callerId')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -16119,7 +16119,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'monitoring')
+        url = self.ep(f'{workspace_id}/features/monitoring')
         data = super().get(url=url, params=params)
         return RetrieveMonitoringSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -16154,7 +16154,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             body.enable_call_park_notification = enable_call_park_notification
         if monitored_elements is not None:
             body.monitored_elements = monitored_elements
-        url = self.ep(f'monitoring')
+        url = self.ep(f'{workspace_id}/features/monitoring')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -16192,7 +16192,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params['Body'] = body
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'numbers')
+        url = self.ep(f'{workspace_id}/features/numbers')
         super().get(url=url, params=params)
         return $!$!$!   # this is weird. Check the spec at https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace
 
@@ -16216,7 +16216,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'incomingPermission')
+        url = self.ep(f'{workspace_id}/features/incomingPermission')
         data = super().get(url=url, params=params)
         return ReadIncomingPermissionSettingsForPersonResponse.parse_obj(data)
 
@@ -16258,7 +16258,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             body.internal_calls_enabled = internal_calls_enabled
         if collect_calls_enabled is not None:
             body.collect_calls_enabled = collect_calls_enabled
-        url = self.ep(f'incomingPermission')
+        url = self.ep(f'{workspace_id}/features/incomingPermission')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -16282,7 +16282,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'outgoingPermission')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission')
         data = super().get(url=url, params=params)
         return RetrieveOutgoingPermissionSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -16315,7 +16315,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             body.use_custom_enabled = use_custom_enabled
         if calling_permissions is not None:
             body.calling_permissions = calling_permissions
-        url = self.ep(f'outgoingPermission')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -16338,7 +16338,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'outgoingPermission/accessCodes')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
         data = super().get(url=url, params=params)
         return parse_obj_as(list[AccessCodes], data["accessCodes"])
 
@@ -16366,7 +16366,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         body = ModifyAccessCodesForWorkspaceBody1()
         if delete_codes is not None:
             body.delete_codes = delete_codes
-        url = self.ep(f'outgoingPermission/accessCodes')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -16398,7 +16398,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             body.code = code
         if description is not None:
             body.description = description
-        url = self.ep(f'outgoingPermission/accessCodes')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
         super().post(url=url, params=params, data=body.json())
         return
 
@@ -16424,7 +16424,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'intercept')
+        url = self.ep(f'{workspace_id}/features/intercept')
         data = super().get(url=url, params=params)
         return ReadCallInterceptSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -16463,7 +16463,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             body.incoming = incoming
         if outgoing is not None:
             body.outgoing = outgoing
-        url = self.ep(f'intercept')
+        url = self.ep(f'{workspace_id}/features/intercept')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -16488,7 +16488,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'outgoingPermission/autoTransferNumbers')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission/autoTransferNumbers')
         data = super().get(url=url, params=params)
         return GetOutgoingPermissionAutoTransferNumberResponse.parse_obj(data)
 
@@ -16529,7 +16529,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             body.auto_transfer_number2 = auto_transfer_number2
         if auto_transfer_number3 is not None:
             body.auto_transfer_number3 = auto_transfer_number3
-        url = self.ep(f'outgoingPermission/autoTransferNumbers')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission/autoTransferNumbers')
         super().put(url=url, params=params, data=body.json())
         return
 

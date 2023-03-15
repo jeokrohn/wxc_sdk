@@ -4007,7 +4007,7 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         super().delete(url=url, params=params)
         return
 
-class MeetingMessagesApi(ApiChild, base='meeting/messages/{meetingMessageId}'):
+class MeetingMessagesApi(ApiChild, base='meeting/messages/'):
     """
     Meeting Messages are how we communicate through text within an active unified meeting
     Meeting Messages are also how we communicate through text within a space bound meeting.
@@ -4028,7 +4028,7 @@ class MeetingMessagesApi(ApiChild, base='meeting/messages/{meetingMessageId}'):
 
         documentation: https://developer.webex.com/docs/api/v1/meeting-messages/delete-a-meeting-message
         """
-        url = self.ep(f'')
+        url = self.ep(f'{meeting_message_id}')
         super().delete(url=url)
         return
 
@@ -27017,7 +27017,7 @@ class ConfigureCallInterceptSettingsForWorkspaceBody(ApiModel):
     outgoing: Optional[Outgoing]
 
 
-class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/features/'):
+class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
     """
     Workspaces represent places where people work, such as conference rooms, meeting spaces, lobbies, and lunchrooms.
     Devices may be associated with workspaces.
@@ -27053,7 +27053,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'callForwarding')
+        url = self.ep(f'{workspace_id}/features/callForwarding')
         data = super().get(url=url, params=params)
         return CallForwardingPlaceSettingGet.parse_obj(data["callForwarding"])
 
@@ -27081,7 +27081,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         body = ModifyCallForwardingSettingsForWorkspaceBody()
         if call_forwarding is not None:
             body.call_forwarding = call_forwarding
-        url = self.ep(f'callForwarding')
+        url = self.ep(f'{workspace_id}/features/callForwarding')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -27105,7 +27105,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'callWaiting')
+        url = self.ep(f'{workspace_id}/features/callWaiting')
         data = super().get(url=url, params=params)
         return data["enabled"]
 
@@ -27134,7 +27134,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         body = ModifyCallWaitingSettingsForWorkspaceBody()
         if enabled is not None:
             body.enabled = enabled
-        url = self.ep(f'callWaiting')
+        url = self.ep(f'{workspace_id}/features/callWaiting')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -27157,7 +27157,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'callerId')
+        url = self.ep(f'{workspace_id}/features/callerId')
         data = super().get(url=url, params=params)
         return RetrieveCallerIDSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -27216,7 +27216,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             body.custom_external_caller_id_name = custom_external_caller_id_name
         if location_external_caller_id_name is not None:
             body.location_external_caller_id_name = location_external_caller_id_name
-        url = self.ep(f'callerId')
+        url = self.ep(f'{workspace_id}/features/callerId')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -27241,7 +27241,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'monitoring')
+        url = self.ep(f'{workspace_id}/features/monitoring')
         data = super().get(url=url, params=params)
         return RetrieveMonitoringSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -27276,7 +27276,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             body.enable_call_park_notification = enable_call_park_notification
         if monitored_elements is not None:
             body.monitored_elements = monitored_elements
-        url = self.ep(f'monitoring')
+        url = self.ep(f'{workspace_id}/features/monitoring')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -27314,7 +27314,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params['Body'] = body
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'numbers')
+        url = self.ep(f'{workspace_id}/features/numbers')
         super().get(url=url, params=params)
         return $!$!$!   # this is weird. Check the spec at https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace
 
@@ -27338,7 +27338,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'incomingPermission')
+        url = self.ep(f'{workspace_id}/features/incomingPermission')
         data = super().get(url=url, params=params)
         return ReadIncomingPermissionSettingsForPersonResponse.parse_obj(data)
 
@@ -27380,7 +27380,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             body.internal_calls_enabled = internal_calls_enabled
         if collect_calls_enabled is not None:
             body.collect_calls_enabled = collect_calls_enabled
-        url = self.ep(f'incomingPermission')
+        url = self.ep(f'{workspace_id}/features/incomingPermission')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -27404,7 +27404,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'outgoingPermission')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission')
         data = super().get(url=url, params=params)
         return RetrieveOutgoingPermissionSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -27437,7 +27437,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             body.use_custom_enabled = use_custom_enabled
         if calling_permissions is not None:
             body.calling_permissions = calling_permissions
-        url = self.ep(f'outgoingPermission')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -27460,7 +27460,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'outgoingPermission/accessCodes')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
         data = super().get(url=url, params=params)
         return parse_obj_as(list[ReportError], data["accessCodes"])
 
@@ -27488,7 +27488,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         body = ModifyAccessCodesForWorkspaceBody()
         if delete_codes is not None:
             body.delete_codes = delete_codes
-        url = self.ep(f'outgoingPermission/accessCodes')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -27520,7 +27520,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             body.code = code
         if description is not None:
             body.description = description
-        url = self.ep(f'outgoingPermission/accessCodes')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
         super().post(url=url, params=params, data=body.json())
         return
 
@@ -27546,7 +27546,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'intercept')
+        url = self.ep(f'{workspace_id}/features/intercept')
         data = super().get(url=url, params=params)
         return ReadCallInterceptSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -27585,7 +27585,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             body.incoming = incoming
         if outgoing is not None:
             body.outgoing = outgoing
-        url = self.ep(f'intercept')
+        url = self.ep(f'{workspace_id}/features/intercept')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -27610,7 +27610,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'outgoingPermission/autoTransferNumbers')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission/autoTransferNumbers')
         data = super().get(url=url, params=params)
         return GetOutgoingPermissionAutoTransferNumberResponse.parse_obj(data)
 
@@ -27651,7 +27651,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/{workspaceId}/
             body.auto_transfer_number2 = auto_transfer_number2
         if auto_transfer_number3 is not None:
             body.auto_transfer_number3 = auto_transfer_number3
-        url = self.ep(f'outgoingPermission/autoTransferNumbers')
+        url = self.ep(f'{workspace_id}/features/outgoingPermission/autoTransferNumbers')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -29092,7 +29092,7 @@ class GetPersonalizationTaskResponse(ApiModel):
     error_description: Optional[str]
 
 
-class WorkspacePersonalizationApi(ApiChild, base='workspaces/{workspaceId}/personaliz'):
+class WorkspacePersonalizationApi(ApiChild, base='workspaces/'):
     """
     This API collection applies only to Webex Edge registered devices.
     The Workspace Personalization API is designed to help administrators enable Personal Mode for Webex Edge registered
@@ -29126,7 +29126,7 @@ class WorkspacePersonalizationApi(ApiChild, base='workspaces/{workspaceId}/perso
         body = PersonalizeWorkspaceBody()
         if email is not None:
             body.email = email
-        url = self.ep(f'e')
+        url = self.ep(f'{workspace_id}/personalize')
         super().post(url=url, data=body.json())
         return
 
@@ -29143,7 +29143,7 @@ class WorkspacePersonalizationApi(ApiChild, base='workspaces/{workspaceId}/perso
 
         documentation: https://developer.webex.com/docs/api/v1/workspace-personalization/get-personalization-task
         """
-        url = self.ep(f'ationTask')
+        url = self.ep(f'{workspace_id}/personalizationTask')
         data = super().get(url=url)
         return GetPersonalizationTaskResponse.parse_obj(data)
 
