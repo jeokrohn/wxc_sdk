@@ -6,17 +6,9 @@ from typing import Optional
 
 from ...api_child import ApiChild
 from ...base import ApiModel
+from ...common import LinkRelation
 
-__all__ = ['AnswerObject', 'Answers', 'Links', 'MeetingQandAApi', 'QAObject']
-
-
-class Links(ApiModel):
-    #: Link to the previous page of answers to this question.
-    prev: Optional[str]
-    #: Link to the current page of this answers to this question.
-    self: Optional[str]
-    #: Link to the next page of answers to this question.
-    next: Optional[str]
+__all__ = ['AnswerObject', 'Answers', 'MeetingQandAApi', 'QAObject']
 
 
 class AnswerObject(ApiModel):
@@ -34,7 +26,7 @@ class AnswerObject(ApiModel):
 
 class Answers(ApiModel):
     #: The pagination links of the question's answers.
-    links: Optional[Links]
+    links: Optional[LinkRelation]
     #: An array of answer objects for this question.
     items: Optional[list[AnswerObject]]
 

@@ -9,9 +9,10 @@ from pydantic import parse_obj_as
 from ...api_child import ApiChild
 from ...base import ApiModel
 from ...base import SafeEnum as Enum
+from ...common import LinkRelation
 
 __all__ = ['Audio', 'CallInNumber', 'CoHost', 'DefaultAudioType', 'MeetingPreferenceDetails',
-           'PersonalMeetingRoomOptions', 'VideoOptions', 'Link',
+           'PersonalMeetingRoomOptions', 'VideoOptions',
            'MeetingPreferencesApi', 'OfficeNumber', 'PersonalMeetingRoom', 'SchedulingOptions', 'MeetingsSite',
            'Telephony', 'UpdatePersonalMeetingRoomOptionsBody', 'Video', 'VideoDevice']
 
@@ -37,15 +38,6 @@ class CallInNumber(ApiModel):
     toll_type: Optional[str]
 
 
-class Link(ApiModel):
-    #: Link relation describing how the target resource is related to the current context (conforming with RFC5998).
-    rel: Optional[str]
-    #: Target resource URI (conforming with RFC5998).
-    href: Optional[str]
-    #: Target resource method (conforming with RFC5998).
-    method: Optional[str]
-
-
 class Telephony(ApiModel):
     #: Code for authenticating a user to join teleconference. Users join the teleconference using the call-in number or
     #: the global call-in number, followed by the value of the accessCode.
@@ -53,7 +45,7 @@ class Telephony(ApiModel):
     #: Array of call-in numbers for joining teleconference from a phone.
     call_in_numbers: Optional[list[CallInNumber]]
     #: HATEOAS information of global call-in numbers for joining teleconference from a phone.
-    links: Optional[list[Link]]
+    links: Optional[list[LinkRelation]]
 
 
 class PersonalMeetingRoom(ApiModel):

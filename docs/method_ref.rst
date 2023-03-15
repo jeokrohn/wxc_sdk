@@ -92,6 +92,42 @@ The second column of the table has a link to the documentation of the method.
    * - api.locations.update
         Update details for a location, by ID
      - :meth:`~wxc_sdk.locations.LocationsApi.update`
+   * - api.meetings.create
+        Creates a new meeting
+     - :meth:`~wxc_sdk.meetings.MeetingsApi.create`
+   * - api.meetings.delete
+        Deletes a meeting with a specified meeting ID
+     - :meth:`~wxc_sdk.meetings.MeetingsApi.delete`
+   * - api.meetings.get
+        Retrieves details for a meeting with a specified meeting ID
+     - :meth:`~wxc_sdk.meetings.MeetingsApi.get`
+   * - api.meetings.join
+        Retrieves a meeting join link for a meeting with a specified meetingId, meetingNumber, or webLink that allows
+     - :meth:`~wxc_sdk.meetings.MeetingsApi.join`
+   * - api.meetings.list
+        Retrieves details for meetings with a specified meeting number, web link, meeting type, etc
+     - :meth:`~wxc_sdk.meetings.MeetingsApi.list`
+   * - api.meetings.list_of_series
+        Lists scheduled meeting and meeting instances of a meeting series identified by meetingSeriesId
+     - :meth:`~wxc_sdk.meetings.MeetingsApi.list_of_series`
+   * - api.meetings.list_survey_results
+        Retrieves results for a meeting survey identified by meetingId
+     - :meth:`~wxc_sdk.meetings.MeetingsApi.list_survey_results`
+   * - api.meetings.list_tracking_codes
+        Lists tracking codes on a site by a meeting host
+     - :meth:`~wxc_sdk.meetings.MeetingsApi.list_tracking_codes`
+   * - api.meetings.patch
+        Updates details for a meeting with a specified meeting ID
+     - :meth:`~wxc_sdk.meetings.MeetingsApi.patch`
+   * - api.meetings.survey
+        Retrieves details for a meeting survey identified by meetingId
+     - :meth:`~wxc_sdk.meetings.MeetingsApi.survey`
+   * - api.meetings.update
+        Updates details for a meeting with a specified meeting ID
+     - :meth:`~wxc_sdk.meetings.MeetingsApi.update`
+   * - api.meetings.update_simultaneous_interpretation
+        Updates simultaneous interpretation options of a meeting with a specified meeting ID
+     - :meth:`~wxc_sdk.meetings.MeetingsApi.update_simultaneous_interpretation`
    * - api.meetings.chats.delete
         Deletes the meeting chats of a finished meeting instance specified by meetingId
      - :meth:`~wxc_sdk.meetings.chats.MeetingChatsApi.delete`

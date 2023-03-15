@@ -20,7 +20,16 @@ __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting',
            'CommonDeviceCustomization', 'BacklightTimer', 'Background', 'BackgroundSelection', 'DisplayNameSelection',
            'LoggingLevel', 'DisplayCallqueueAgentSoftkey', 'AcdCustomization', 'LineKeyLabelSelection',
            'LineKeyLedPattern', 'PhoneLanguage', 'ScreenTimeout', 'WifiNetwork', 'MppCustomization', 'PrimaryOrShared',
-           'MediaFileType', 'AnnAudioFile', 'WifiCustomization', 'RoomType']
+           'MediaFileType', 'AnnAudioFile', 'WifiCustomization', 'RoomType', 'LinkRelation']
+
+
+class LinkRelation(ApiModel):
+    #: Link relation describing how the target resource is related to the current context (conforming with RFC5998).
+    rel: Optional[str]
+    #: Target resource URI (conforming with RFC5998).
+    href: Optional[str]
+    #: Target resource method (conforming with RFC5998).
+    method: Optional[str]
 
 
 class RoomType(str, Enum):
