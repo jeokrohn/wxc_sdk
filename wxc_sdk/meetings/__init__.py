@@ -33,7 +33,7 @@ __all__ = ['AttendeePrivileges', 'AudioConnectionOptions', 'AudioConnectionType'
            'ScheduledType', 'MeetingService', 'SimultaneousInterpretation',
            'StandardRegistrationApproveRule', 'MeetingState', 'SurveyResult', 'MeetingTelephony',
            'TrackingCodeItem', 'Type', 'QuestionType', 'TrackingCodeType', 'UnlockedMeetingJoinSecurity',
-           'MeetingsApi']
+           'MeetingsApi', 'CreateMeetingBody', 'JoinMeetingBody']
 
 
 class ScheduledType(str, Enum):

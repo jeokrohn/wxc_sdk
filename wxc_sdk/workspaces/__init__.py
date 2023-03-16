@@ -19,7 +19,7 @@ from typing import Optional
 from pydantic import Field, validator
 
 from ..api_child import ApiChild
-from ..base import ApiModel, to_camel
+from ..base import ApiModel, to_camel, enum_str
 from ..base import SafeEnum as Enum
 
 __all__ = ['WorkSpaceType', 'CallingType', 'CalendarType', 'WorkspaceEmail', 'Calendar', 'Workspace', 'WorkspacesApi']
@@ -227,12 +227,6 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type org_id: str
         :return: generator of :class:`Workspace` instances
         """
-        def enum_str(p: Enum) -> str:
-            try:
-                return p.value
-            except:
-                pass
-            return p
         params.update((to_camel(k), enum_str(v))
                       for k, v in locals().items()
                       if k not in {'self', 'params', 'enum_str'} and v is not None)

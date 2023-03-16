@@ -8,7 +8,8 @@ from ...api_child import ApiChild
 from ...base import ApiModel
 from ...base import SafeEnum as Enum
 
-__all__ = ['MeetingTranscriptsApi', 'TranscriptSnippet', 'TranscriptStatus', 'Transcript']
+__all__ = ['MeetingTranscriptsApi', 'TranscriptSnippet', 'TranscriptStatus', 'Transcript',
+           'UpdateTranscriptSnippetBody', 'DeleteTranscriptBody']
 
 
 class TranscriptStatus(str, Enum):

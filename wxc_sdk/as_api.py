@@ -17,7 +17,7 @@ from pydantic import parse_obj_as
 
 from wxc_sdk.all_types import *
 from wxc_sdk.as_rest import AsRestSession
-from wxc_sdk.base import to_camel, StrOrDict, dt_iso_str
+from wxc_sdk.base import to_camel, StrOrDict, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 log = logging.getLogger(__name__)
@@ -6921,7 +6921,7 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         if team_id is not None:
             params['teamId'] = team_id
         if type_ is not None:
-            params['type'] = type_
+            params['type'] = enum_str(type_)
         if sort_by is not None:
             params['sortBy'] = sort_by
         if org_public_spaces is not None:
@@ -6967,7 +6967,7 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         if team_id is not None:
             params['teamId'] = team_id
         if type_ is not None:
-            params['type'] = type_
+            params['type'] = enum_str(type_)
         if sort_by is not None:
             params['sortBy'] = sort_by
         if org_public_spaces is not None:
@@ -13757,12 +13757,6 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         :type org_id: str
         :return: generator of :class:`Workspace` instances
         """
-        def enum_str(p: Enum) -> str:
-            try:
-                return p.value
-            except:
-                pass
-            return p
         params.update((to_camel(k), enum_str(v))
                       for k, v in locals().items()
                       if k not in {'self', 'params', 'enum_str'} and v is not None)
@@ -13806,12 +13800,6 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         :type org_id: str
         :return: generator of :class:`Workspace` instances
         """
-        def enum_str(p: Enum) -> str:
-            try:
-                return p.value
-            except:
-                pass
-            return p
         params.update((to_camel(k), enum_str(v))
                       for k, v in locals().items()
                       if k not in {'self', 'params', 'enum_str'} and v is not None)

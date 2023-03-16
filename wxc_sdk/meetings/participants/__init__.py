@@ -6,8 +6,9 @@ from ...base import ApiModel
 from ...base import SafeEnum as Enum
 
 __all__ = ['AudioType', 'MeetingCallType', 'MeetingDevice', 'InProgressDevice', 'MeetingParticipantsApi', 'Participant',
-           'QueryMeetingParticipantsWithEmailResponse', 'ParticipantState',
-           'UpdateParticipantResponse', 'VideoState']
+           'ParticipantState',
+           'UpdateParticipantResponse', 'VideoState', 'QueryMeetingParticipantsWithEmailBody', 'UpdateParticipantBody',
+           'AdmitParticipantsBody']
 
 
 class VideoState(str, Enum):
@@ -118,10 +119,6 @@ class QueryMeetingParticipantsWithEmailBody(ApiModel):
     #: Participants email list
     #: Possible values: a@example.com
     emails: Optional[list[str]]
-
-
-class QueryMeetingParticipantsWithEmailResponse(ApiModel):
-    items: Optional[list[Participant]]
 
 
 class UpdateParticipantBody(ApiModel):

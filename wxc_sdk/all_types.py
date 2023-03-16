@@ -1,6 +1,6 @@
 from wxc_sdk.attachment_actions import AttachmentAction, AttachmentActionData
-from wxc_sdk.base import ApiModel, ApiModelWithErrors, CodeAndReason, SafeEnum, StrOrDict, dt_iso_str, plus1,\
-    to_camel, webex_id_to_uuid
+from wxc_sdk.base import ApiModel, ApiModelWithErrors, CodeAndReason, SafeEnum, StrOrDict, dt_iso_str, enum_str,\
+    plus1, to_camel, webex_id_to_uuid
 from wxc_sdk.cdr import CDR, CDRCallType, CDRClientType, CDRDirection, CDROriginalReason, CDRRedirectReason,\
     CDRRelatedReason, CDRUserType
 from wxc_sdk.common import AcdCustomization, AlternateNumber, AnnAudioFile, AtaCustomization, AtaDtmfMethod,\
@@ -23,25 +23,27 @@ from wxc_sdk.licenses import License, SiteType
 from wxc_sdk.locations import Location, LocationAddress
 from wxc_sdk.meetings import AnswerCondition, ApprovalQuestion, ApprovalRule, AttendeePrivileges,\
     AudioConnectionOptions, AudioConnectionType, AutoRegistrationResult, BreakoutSession, CallInNumbers,\
-    CustomizedQuestionForCreateMeeting, EntryAndExitTone, GetMeetingSurveyResponse, InputMode,\
-    InterpreterForSimultaneousInterpretation, InviteeForCreateMeeting, JoinMeetingResponse, Meeting,\
-    MeetingOptions, MeetingService, MeetingState, MeetingTelephony, MeetingType, NoteType, PatchMeetingBody,\
-    PatchMeetingResponse, Question, QuestionAnswer, QuestionOption, QuestionType, QuestionWithAnswers,\
-    Registration, ScheduledMeeting, ScheduledType, SimultaneousInterpretation, StandardRegistrationApproveRule,\
-    SurveyResult, TrackingCode, TrackingCodeItem, TrackingCodeOption, TrackingCodeType, Type,\
-    UnlockedMeetingJoinSecurity
+    CreateMeetingBody, CustomizedQuestionForCreateMeeting, EntryAndExitTone, GetMeetingSurveyResponse, InputMode,\
+    InterpreterForSimultaneousInterpretation, InviteeForCreateMeeting, JoinMeetingBody, JoinMeetingResponse,\
+    Meeting, MeetingOptions, MeetingService, MeetingState, MeetingTelephony, MeetingType, NoteType,\
+    PatchMeetingBody, PatchMeetingResponse, Question, QuestionAnswer, QuestionOption, QuestionType,\
+    QuestionWithAnswers, Registration, ScheduledMeeting, ScheduledType, SimultaneousInterpretation,\
+    StandardRegistrationApproveRule, SurveyResult, TrackingCode, TrackingCodeItem, TrackingCodeOption,\
+    TrackingCodeType, Type, UnlockedMeetingJoinSecurity
 from wxc_sdk.meetings.chats import ChatObject, Sender
 from wxc_sdk.meetings.closed_captions import CCSnippet, ClosedCaption
-from wxc_sdk.meetings.invitees import CreateInviteesItem, Invitee
-from wxc_sdk.meetings.participants import AudioType, InProgressDevice, MeetingCallType, MeetingDevice,\
-    Participant, ParticipantState, QueryMeetingParticipantsWithEmailResponse, UpdateParticipantResponse,\
-    VideoState
+from wxc_sdk.meetings.invitees import CreateInviteesItem, CreateMeetingInviteeBody, Invitee,\
+    UpdateMeetingInviteeBody
+from wxc_sdk.meetings.participants import AdmitParticipantsBody, AudioType, InProgressDevice, MeetingCallType,\
+    MeetingDevice, Participant, ParticipantState, QueryMeetingParticipantsWithEmailBody, UpdateParticipantBody,\
+    UpdateParticipantResponse, VideoState
 from wxc_sdk.meetings.preferences import Audio, CallInNumber, CoHost, DefaultAudioType, MeetingPreferenceDetails,\
     MeetingsSite, OfficeNumber, PersonalMeetingRoom, PersonalMeetingRoomOptions, SchedulingOptions, Telephony,\
-    UpdatePersonalMeetingRoomOptionsBody, Video, VideoDevice, VideoOptions
+    UpdateDefaultSiteBody, UpdatePersonalMeetingRoomOptionsBody, Video, VideoDevice, VideoOptions
 from wxc_sdk.meetings.qanda import AnswerObject, Answers, QAObject
 from wxc_sdk.meetings.qualities import MediaSessionQuality, NetworkType, QualityResources, TransportType, VideoIn
-from wxc_sdk.meetings.transcripts import Transcript, TranscriptSnippet, TranscriptStatus
+from wxc_sdk.meetings.transcripts import DeleteTranscriptBody, Transcript, TranscriptSnippet, TranscriptStatus,\
+    UpdateTranscriptSnippetBody
 from wxc_sdk.memberships import Membership, MembershipsData
 from wxc_sdk.messages import AdaptiveCard, AdaptiveCardAction, AdaptiveCardBody, Message, MessageAttachment,\
     MessagesData
@@ -75,7 +77,7 @@ from wxc_sdk.person_settings.receptionist import ReceptionistSettings
 from wxc_sdk.person_settings.voicemail import UnansweredCalls, VoicemailEnabledWithGreeting, VoicemailSettings
 from wxc_sdk.reports import CallingCDR, Report, ReportTemplate, ValidationRules
 from wxc_sdk.room_tabs import RoomTab
-from wxc_sdk.rooms import GetRoomMeetingDetailsResponse, ListRoomsResponse, Room
+from wxc_sdk.rooms import GetRoomMeetingDetailsResponse, Room
 from wxc_sdk.team_memberships import TeamMembership
 from wxc_sdk.teams import Team
 from wxc_sdk.telephony import CallSourceInfo, CallSourceType, DestinationType, DeviceManagedBy,\
@@ -137,15 +139,15 @@ from wxc_sdk.workspace_settings.numbers import WorkSpaceNumbers
 from wxc_sdk.workspaces import Calendar, CalendarType, CallingType, WorkSpaceType, Workspace, WorkspaceEmail
 
 __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard', 'AdaptiveCardAction',
-           'AdaptiveCardBody', 'Agent', 'AgentQueue', 'AlternateNumber', 'AlternateNumberSettings', 'AnnAudioFile',
-           'Announcement', 'AnnouncementMode', 'AnswerCondition', 'AnswerObject', 'Answers', 'ApiModel',
-           'ApiModelWithErrors', 'AppServicesSettings', 'ApprovalQuestion', 'ApprovalRule', 'AtaCustomization',
-           'AtaDtmfMethod', 'AtaDtmfMode', 'AttachmentAction', 'AttachmentActionData', 'AttendeePrivileges', 'Audio',
-           'AudioCodecPriority', 'AudioConnectionOptions', 'AudioConnectionType', 'AudioSource', 'AudioType',
-           'AuthCode', 'AutoAttendant', 'AutoAttendantAction', 'AutoAttendantAudioFile',
-           'AutoAttendantKeyConfiguration', 'AutoAttendantMenu', 'AutoRegistrationResult', 'AutoTransferNumbers',
-           'AvailableMember', 'AvailableRecallHuntGroup', 'Background', 'BackgroundSelection', 'BacklightTimer',
-           'BargeSettings', 'BehaviorType', 'BlockContiguousSequences', 'BlockPreviousPasscodes',
+           'AdaptiveCardBody', 'AdmitParticipantsBody', 'Agent', 'AgentQueue', 'AlternateNumber',
+           'AlternateNumberSettings', 'AnnAudioFile', 'Announcement', 'AnnouncementMode', 'AnswerCondition',
+           'AnswerObject', 'Answers', 'ApiModel', 'ApiModelWithErrors', 'AppServicesSettings', 'ApprovalQuestion',
+           'ApprovalRule', 'AtaCustomization', 'AtaDtmfMethod', 'AtaDtmfMode', 'AttachmentAction',
+           'AttachmentActionData', 'AttendeePrivileges', 'Audio', 'AudioCodecPriority', 'AudioConnectionOptions',
+           'AudioConnectionType', 'AudioSource', 'AudioType', 'AuthCode', 'AutoAttendant', 'AutoAttendantAction',
+           'AutoAttendantAudioFile', 'AutoAttendantKeyConfiguration', 'AutoAttendantMenu', 'AutoRegistrationResult',
+           'AutoTransferNumbers', 'AvailableMember', 'AvailableRecallHuntGroup', 'Background', 'BackgroundSelection',
+           'BacklightTimer', 'BargeSettings', 'BehaviorType', 'BlockContiguousSequences', 'BlockPreviousPasscodes',
            'BlockRepeatedDigits', 'BreakoutSession', 'BusinessContinuity', 'CCSnippet', 'CDR', 'CDRCallType',
            'CDRClientType', 'CDRDirection', 'CDROriginalReason', 'CDRRedirectReason', 'CDRRelatedReason',
            'CDRUserType', 'CPActionType', 'CQHolidaySchedule', 'CQRoutingType', 'Calendar', 'CalendarType',
@@ -157,25 +159,25 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'CallerIdSelectedType', 'CallingBehavior', 'CallingCDR', 'CallingLineId', 'CallingPermissions',
            'CallingType', 'CallsFrom', 'ChatObject', 'ClosedCaption', 'CnameRecord', 'CoHost', 'CodeAndReason',
            'ComfortMessageBypass', 'ComfortMessageSetting', 'CommonDeviceCustomization', 'ComplianceEvent',
-           'CreateInviteesItem', 'CreateResponse', 'CustomNumbers', 'Customer', 'CustomizedQuestionForCreateMeeting',
-           'DND', 'DectDevice', 'DefaultAudioType', 'DefaultVoicemailPinRules', 'DestinationType', 'Device',
-           'DeviceActivationState', 'DeviceCustomization', 'DeviceCustomizations', 'DeviceManagedBy',
-           'DeviceManufacturer', 'DeviceMember', 'DeviceMembersResponse', 'DeviceOwner', 'DeviceStatus', 'DeviceType',
-           'DialPatternStatus', 'DialPatternValidate', 'DialPatternValidationResult', 'DialPlan', 'DialResponse',
-           'Dialing', 'DisplayCallqueueAgentSoftkey', 'DisplayNameSelection', 'DistinctiveRing',
-           'EmergencyDestination', 'EnabledAndNumberOfDays', 'EntryAndExitTone', 'ErrorMessageObject', 'ErrorObject',
-           'Event', 'EventData', 'EventResource', 'EventType', 'ExecAssistantType', 'ExpirePasscode',
-           'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts', 'FeatureAccessCodeDestination',
-           'FeatureSelector', 'ForcedForward', 'ForwardCallsTo', 'ForwardToSelection', 'ForwardingRule',
-           'ForwardingRuleDetails', 'ForwardingSetting', 'GetMeetingSurveyResponse', 'GetRoomMeetingDetailsResponse',
-           'Greeting', 'Group', 'GroupMember', 'HGCallPolicies', 'HGandCQ', 'HistoryType', 'HolidayService',
-           'HostedFeatureDestination', 'HostedUserDestination', 'HuntGroup', 'IdAndName', 'IdOnly',
-           'InProgressDevice', 'IncomingPermissions', 'InitiateMoveNumberJobsBody', 'InputMode',
-           'InterceptAnnouncements', 'InterceptNumber', 'InterceptSetting', 'InterceptSettingIncoming',
-           'InterceptSettingOutgoing', 'InterceptTypeIncoming', 'InterceptTypeOutgoing', 'InternalDialing',
-           'InterpreterForSimultaneousInterpretation', 'Invitee', 'InviteeForCreateMeeting', 'JobError',
-           'JobErrorItem', 'JobErrorMessage', 'JobExecutionStatus', 'JoinMeetingResponse', 'License',
-           'LineKeyLabelSelection', 'LineKeyLedPattern', 'LinkRelation', 'ListRoomsResponse', 'Location',
+           'CreateInviteesItem', 'CreateMeetingBody', 'CreateMeetingInviteeBody', 'CreateResponse', 'CustomNumbers',
+           'Customer', 'CustomizedQuestionForCreateMeeting', 'DND', 'DectDevice', 'DefaultAudioType',
+           'DefaultVoicemailPinRules', 'DeleteTranscriptBody', 'DestinationType', 'Device', 'DeviceActivationState',
+           'DeviceCustomization', 'DeviceCustomizations', 'DeviceManagedBy', 'DeviceManufacturer', 'DeviceMember',
+           'DeviceMembersResponse', 'DeviceOwner', 'DeviceStatus', 'DeviceType', 'DialPatternStatus',
+           'DialPatternValidate', 'DialPatternValidationResult', 'DialPlan', 'DialResponse', 'Dialing',
+           'DisplayCallqueueAgentSoftkey', 'DisplayNameSelection', 'DistinctiveRing', 'EmergencyDestination',
+           'EnabledAndNumberOfDays', 'EntryAndExitTone', 'ErrorMessageObject', 'ErrorObject', 'Event', 'EventData',
+           'EventResource', 'EventType', 'ExecAssistantType', 'ExpirePasscode', 'ExternalCallerIdNamePolicy',
+           'ExternalTransfer', 'FailedAttempts', 'FeatureAccessCodeDestination', 'FeatureSelector', 'ForcedForward',
+           'ForwardCallsTo', 'ForwardToSelection', 'ForwardingRule', 'ForwardingRuleDetails', 'ForwardingSetting',
+           'GetMeetingSurveyResponse', 'GetRoomMeetingDetailsResponse', 'Greeting', 'Group', 'GroupMember',
+           'HGCallPolicies', 'HGandCQ', 'HistoryType', 'HolidayService', 'HostedFeatureDestination',
+           'HostedUserDestination', 'HuntGroup', 'IdAndName', 'IdOnly', 'InProgressDevice', 'IncomingPermissions',
+           'InitiateMoveNumberJobsBody', 'InputMode', 'InterceptAnnouncements', 'InterceptNumber', 'InterceptSetting',
+           'InterceptSettingIncoming', 'InterceptSettingOutgoing', 'InterceptTypeIncoming', 'InterceptTypeOutgoing',
+           'InternalDialing', 'InterpreterForSimultaneousInterpretation', 'Invitee', 'InviteeForCreateMeeting',
+           'JobError', 'JobErrorItem', 'JobErrorMessage', 'JobExecutionStatus', 'JoinMeetingBody',
+           'JoinMeetingResponse', 'License', 'LineKeyLabelSelection', 'LineKeyLedPattern', 'LinkRelation', 'Location',
            'LocationAddress', 'LocationAndNumbers', 'LocationCallParkSettings', 'LocationMoHGreetingType',
            'LocationMoHSetting', 'LocationVoiceMailSettings', 'LoggingLevel', 'MACState', 'MACStatus',
            'MACValidationResponse', 'ManageNumberErrorItem', 'MediaFileType', 'MediaSessionQuality', 'Meeting',
@@ -196,8 +198,8 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'PersonPlaceAgent', 'PersonSettingsApiChild', 'PersonType', 'PersonalMeetingRoom',
            'PersonalMeetingRoomOptions', 'Personality', 'PhoneLanguage', 'PhoneNumber', 'PhoneNumberType',
            'PinLength', 'Policy', 'PrimaryOrShared', 'Privacy', 'PstnNumberDestination', 'PushToTalkAccessType',
-           'PushToTalkSettings', 'QAObject', 'QualityResources', 'QueryMeetingParticipantsWithEmailResponse',
-           'Question', 'QuestionAnswer', 'QuestionOption', 'QuestionType', 'QuestionWithAnswers', 'QueueCallerId',
+           'PushToTalkSettings', 'QAObject', 'QualityResources', 'QueryMeetingParticipantsWithEmailBody', 'Question',
+           'QuestionAnswer', 'QuestionOption', 'QuestionType', 'QuestionWithAnswers', 'QueueCallerId',
            'QueueSettings', 'RGTrunk', 'Recall', 'RecallHuntGroup', 'ReceptionistSettings', 'Record',
            'RecordingState', 'RecurWeekly', 'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence', 'RedirectReason',
            'Redirection', 'Registration', 'RejectAction', 'Report', 'ReportTemplate', 'ResponseStatus',
@@ -213,8 +215,9 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'TrackingCodeItem', 'TrackingCodeOption', 'TrackingCodeType', 'Transcript', 'TranscriptSnippet',
            'TranscriptStatus', 'TransportType', 'Trunk', 'TrunkDestination', 'TrunkDetail', 'TrunkDeviceType',
            'TrunkLocation', 'TrunkType', 'TrunkTypeWithDeviceType', 'TrunkUsage', 'Type', 'UCMProfile',
-           'UnansweredCalls', 'UnlockedMeetingJoinSecurity', 'UpdateNumbersResponse', 'UpdateParticipantResponse',
-           'UpdatePersonNumbers', 'UpdatePersonPhoneNumber', 'UpdatePersonalMeetingRoomOptionsBody',
+           'UnansweredCalls', 'UnlockedMeetingJoinSecurity', 'UpdateDefaultSiteBody', 'UpdateMeetingInviteeBody',
+           'UpdateNumbersResponse', 'UpdateParticipantBody', 'UpdateParticipantResponse', 'UpdatePersonNumbers',
+           'UpdatePersonPhoneNumber', 'UpdatePersonalMeetingRoomOptionsBody', 'UpdateTranscriptSnippetBody',
            'UsageRouteLists', 'UserBase', 'UserNumber', 'UserType', 'ValidateExtensionStatus',
            'ValidateExtensionStatusState', 'ValidateExtensionsResponse', 'ValidatePhoneNumberStatus',
            'ValidatePhoneNumberStatusState', 'ValidatePhoneNumbersResponse', 'ValidationRules', 'ValidationStatus',
@@ -226,4 +229,4 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'WaitMode', 'Webhook', 'WebhookCreate', 'WebhookEvent', 'WebhookEventData', 'WebhookEventType',
            'WebhookResource', 'WebhookStatus', 'WelcomeMessageSetting', 'WifiCustomization', 'WifiNetwork',
            'WorkSpaceNumbers', 'WorkSpaceType', 'Workspace', 'WorkspaceEmail', 'WorkspaceLocation',
-           'WorkspaceLocationFloor', '_Helper', 'dt_iso_str', 'plus1', 'to_camel', 'webex_id_to_uuid']
+           'WorkspaceLocationFloor', '_Helper', 'dt_iso_str', 'enum_str', 'plus1', 'to_camel', 'webex_id_to_uuid']

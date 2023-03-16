@@ -14,7 +14,7 @@ from ...common import LinkRelation
 __all__ = ['Audio', 'CallInNumber', 'CoHost', 'DefaultAudioType', 'MeetingPreferenceDetails',
            'PersonalMeetingRoomOptions', 'VideoOptions',
            'MeetingPreferencesApi', 'OfficeNumber', 'PersonalMeetingRoom', 'SchedulingOptions', 'MeetingsSite',
-           'Telephony', 'UpdatePersonalMeetingRoomOptionsBody', 'Video', 'VideoDevice']
+           'Telephony', 'UpdatePersonalMeetingRoomOptionsBody', 'Video', 'VideoDevice', 'UpdateDefaultSiteBody']
 
 
 class CoHost(ApiModel):

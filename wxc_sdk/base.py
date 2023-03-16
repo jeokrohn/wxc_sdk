@@ -9,7 +9,7 @@ from dateutil import tz
 from pydantic import BaseModel, ValidationError
 
 __all__ = ['StrOrDict', 'webex_id_to_uuid', 'to_camel', 'ApiModel', 'CodeAndReason', 'ApiModelWithErrors', 'plus1',
-           'dt_iso_str', 'SafeEnum']
+           'dt_iso_str', 'SafeEnum', 'enum_str']
 
 StrOrDict = Union[str, dict]
 
@@ -31,6 +31,22 @@ class SafeEnum(Enum):
         def _missing_(cls, value):
             log.warning(f'auto enhancing Enum {cls.__name__}, new value: {value}')
             return extend_enum(cls, value, value)
+
+
+def enum_str(enum_or_str: Union[Enum, str]) -> str:
+    """
+    return str value of enum or string
+
+    :param enum_or_str: value to be converted to string
+    :return: str representation
+    """
+    # try to treat as enum
+    try:
+        return enum_or_str.value
+    except AttributeError:
+        pass
+    # .. and if that fails we assume that we got a string and return just that
+    return enum_or_str
 
 
 def webex_id_to_uuid(webex_id: Optional[str]) -> Optional[str]:

@@ -3,6 +3,7 @@ Release history
 
 - new API for virtual lines :class:`wxc_sdk.telephony.virtual_line.VirtualLinesApi`
 - new API: :class:`wxc_sdk.meetings.MeetingsApi`. Experimental: not unit tested, 100% auto generated
+- fix: proper enum handling for type parameter in :meth:`wxc_sdk.rooms.RoomsApi.list`
 
 1.12.0
 ------

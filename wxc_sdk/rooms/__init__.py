@@ -6,10 +6,10 @@ from datetime import datetime
 from typing import Optional
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.common import RoomType
 
-__all__ = ['GetRoomMeetingDetailsResponse', 'ListRoomsResponse', 'Room', 'RoomsApi']
+__all__ = ['GetRoomMeetingDetailsResponse', 'Room', 'RoomsApi']
 
 
 class Room(ApiModel):
@@ -44,10 +44,6 @@ class Room(ApiModel):
     made_public: Optional[datetime]
     #: The description of the space.
     description: Optional[str]
-
-
-class ListRoomsResponse(ApiModel):
-    items: Optional[list[Room]]
 
 
 class GetRoomMeetingDetailsResponse(ApiModel):
@@ -111,7 +107,7 @@ class RoomsApi(ApiChild, base='rooms'):
         if team_id is not None:
             params['teamId'] = team_id
         if type_ is not None:
-            params['type'] = type_
+            params['type'] = enum_str(type_)
         if sort_by is not None:
             params['sortBy'] = sort_by
         if org_public_spaces is not None:
