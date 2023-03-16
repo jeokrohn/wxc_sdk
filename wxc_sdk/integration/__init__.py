@@ -48,10 +48,14 @@ class Integration:
     #: base URL of the access token service
     token_service: str
 
+    #: callback to initiate auth flow
+    initiate_flow_callback: Callable[[str], None]
+
     def __init__(self, *, client_id: str, client_secret: str, scopes: Union[str, list[str]],
                  redirect_url: str,
                  auth_service: str = None,
-                 token_service: str = None):
+                 token_service: str = None,
+                 initiate_flow_callback: Callable[[str], None] = None):
         """
 
         :param client_id: integration's client id, obtained from developer.webex.com
@@ -63,6 +67,8 @@ class Integration:
             Default: 'https://webexapis.com/v1/authorize'
         :param token_service: URL of token service to use to obtain tokens from.
             Default: 'https://webexapis.com/v1/access_token'
+        :param initiate_flow_callback: callback to initiate flow.
+            Default: webbrowser.open
         """
         self.client_id = client_id
         self.client_secret = client_secret
@@ -74,6 +80,7 @@ class Integration:
         self.redirect_url = redirect_url
         self.auth_service = auth_service or 'https://webexapis.com/v1/authorize'
         self.token_service = token_service or 'https://webexapis.com/v1/access_token'
+        self.initiate_flow_callback = initiate_flow_callback or webbrowser.open
 
     def auth_url(self, state: str) -> str:
         """
@@ -238,7 +245,7 @@ class Integration:
             fut = executor.submit(serve_redirect)
 
             # open authentication URL in local webbrowser
-            webbrowser.open(auth_url)
+            self.initiate_flow_callback(auth_url)
             # wait for GET on redirect URI and get the result (parsed query of redirect URI)
             try:
                 result = fut.result(timeout=120)
