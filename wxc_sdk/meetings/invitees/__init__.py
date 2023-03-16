@@ -300,7 +300,7 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         if host_email is not None:
             params['hostEmail'] = host_email
         if send_email is not None:
-            params['sendEmail'] = send_email
+            params['sendEmail'] = str(send_email).lower()
         url = self.ep(f'{meeting_invitee_id}')
         super().delete(url=url, params=params)
         return

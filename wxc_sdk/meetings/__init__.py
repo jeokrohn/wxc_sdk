@@ -1394,7 +1394,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         """
         params = {}
         if current is not None:
-            params['current'] = current
+            params['current'] = str(current).lower()
         if host_email is not None:
             params['hostEmail'] = host_email
         url = self.ep(f'{meeting_id}')

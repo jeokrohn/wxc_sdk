@@ -15,6 +15,7 @@ options:
                         Write detailed logs to this file.
 """
 # TODO: check/fix private_network_connect
+# TODO: enums in url parameters need to be converted to string values
 import argparse
 import json
 import logging
@@ -42,7 +43,7 @@ PY_HEADER = """
 from collections.abc import Generator
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
 from pydantic import Field, parse_obj_as
@@ -103,9 +104,9 @@ class APIMethod:
         :type {p_name}: {p_type}'''
     PARAM_INIT = '''
         if {p_name} is not None:
-            params['{p_name_camel}'] = {p_name}'''
+            params['{p_name_camel}'] = {p_value}'''
     PARAM_INIT_REQUIRED = '''
-        params['{p_name_camel}'] = {p_name}'''
+        params['{p_name_camel}'] = {p_value}'''
 
     BODY_INIT = '''
         if {p_name} is not None:
@@ -126,6 +127,9 @@ class APIMethod:
         body_params = []
 
         def add_param(param: Parameter, is_query: bool = False, is_body: bool = False):
+            """
+            add a method parameter, prepare code to be generated for the parameter
+            """
             p_name = param.python_name
             if param.param_class:
                 # type of parameter is actually a class we generated
@@ -148,10 +152,16 @@ class APIMethod:
                                                         p_type=p_type,
                                                         p_doc=p_doc).strip('\n'))
                 if is_query:
+                    # query parameters need special treatment
+                    # * bools need to be transformed to true/false
+                    # TODO: enums need to be conditionally transformed to strings
+                    p_value = p_name
+                    if p_type == 'bool':
+                        p_value = f"str({p_name}).lower()"
                     if param.required:
-                        param_code.append(self.PARAM_INIT_REQUIRED.format(p_name=p_name, p_name_camel=param.name))
+                        param_code.append(self.PARAM_INIT_REQUIRED.format(p_name=p_name, p_value=p_value, p_name_camel=param.name))
                     else:
-                        param_code.append(self.PARAM_INIT.format(p_name=p_name, p_name_camel=param.name))
+                        param_code.append(self.PARAM_INIT.format(p_name=p_name, p_value=p_value, p_name_camel=param.name))
             if is_body:
                 body_params.append(self.BODY_INIT.format(p_name=p_name))
 

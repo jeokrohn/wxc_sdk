@@ -676,7 +676,7 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
         :type user_email: str
         """
         params = {}
-        params['defaultSite'] = default_site
+        params['defaultSite'] = str(default_site).lower()
         if user_email is not None:
             params['userEmail'] = user_email
         body = UpdateDefaultSiteBody()
