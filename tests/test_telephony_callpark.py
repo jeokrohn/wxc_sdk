@@ -172,12 +172,17 @@ class TestCreate(TestWithLocations):
                     pagination_link_error = True
         self.assertFalse(pagination_link_error)
 
-    def test_003_with_call_park_extension(self):
+    @async_test
+    async def test_003_with_call_park_extension(self):
         """
         Create a call park with a call park extension
         """
+        # TODO: locations.list() is broken and returns locations without calling entitlement
+        #  ... which breaks all tests relying on calling
         # pick random location
-        target_location: Location = random.choice(self.locations)
+        target_location = next(self.api.locations.list(name='Hartford'), None)
+        # TODO: revert to random location selection asap (see above)
+        # target_location: Location = random.choice(self.locations)
         print(f'Target location: {target_location.name}')
 
         # new name for call park
@@ -187,10 +192,25 @@ class TestCreate(TestWithLocations):
         new_names = (name for i in range(1000) if (name := f'cp_{i:03}') not in names)
         new_name = next(new_names)
 
-        # we need a call park extension in that location
-        cpes = list(self.api.telephony.callpark_extension.list(location_id=target_location.location_id))
-        if cpes:
-            cpe: CallParkExtension = random.choice(cpes)
+        # we need a call park extension in that location that can be assigned
+        # .. get list of call park groups and collect CPE IDs for all CPEs used in these CPGs
+        call_park_groups = list(cpa.list(location_id=target_location.location_id))
+        cpg_details = await asyncio.gather(
+            *[self.async_api.telephony.callpark.details(location_id=target_location.location_id,
+                                                        callpark_id=cpg.callpark_id)
+              for cpg in call_park_groups])
+        cpg_details: list[CallPark]
+        used_call_park_extension_ids = set(
+            chain.from_iterable((cpe.cpe_id for cpe in cpg_detail.call_park_extensions)
+                                for cpg_detail in cpg_details
+                                if cpg_detail.call_park_extensions))
+
+        # we can only use a call park extension that is not yet assigned to a call park group
+        available_cpes = [cpe
+                          for cpe in self.api.telephony.callpark_extension.list(location_id=target_location.location_id)
+                          if cpe.cpe_id not in used_call_park_extension_ids]
+        if available_cpes:
+            cpe: CallParkExtension = random.choice(available_cpes)
             cpe_id = cpe.cpe_id
         else:
             cpe_id = create_call_park_extension(api=self.api, location_id=target_location.location_id)
