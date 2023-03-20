@@ -32,9 +32,9 @@ class LocationAddress(ApiModel):
     #: city
     city: str
     #: state
-    state: str
+    state: Optional[str]
     #: ZIP/Postal code
-    postal_code: str
+    postal_code: Optional[str]
     #: country
     country: Optional[str]
 

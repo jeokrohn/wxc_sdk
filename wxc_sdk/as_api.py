@@ -1475,7 +1475,7 @@ class AsMeetingInviteesApi(AsApiChild, base='meetingInvitees'):
         if host_email is not None:
             params['hostEmail'] = host_email
         if send_email is not None:
-            params['sendEmail'] = send_email
+            params['sendEmail'] = str(send_email).lower()
         url = self.ep(f'{meeting_invitee_id}')
         await super().delete(url=url, params=params)
         return
@@ -2072,7 +2072,7 @@ class AsMeetingPreferencesApi(AsApiChild, base='meetingPreferences'):
         :type user_email: str
         """
         params = {}
-        params['defaultSite'] = default_site
+        params['defaultSite'] = str(default_site).lower()
         if user_email is not None:
             params['userEmail'] = user_email
         body = UpdateDefaultSiteBody()
@@ -2800,7 +2800,7 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
         """
         params = {}
         if current is not None:
-            params['current'] = current
+            params['current'] = str(current).lower()
         if host_email is not None:
             params['hostEmail'] = host_email
         url = self.ep(f'{meeting_id}')

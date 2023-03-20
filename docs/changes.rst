@@ -5,6 +5,7 @@ Release history
 - new API: :class:`wxc_sdk.meetings.MeetingsApi`. Experimental: not unit tested, 100% auto generated
 - fix: proper enum handling for type parameter in :meth:`wxc_sdk.rooms.RoomsApi.list`
 - feat: new parameter initiate_flow_callback for :class:`wxc_sdk.integration.Integration`
+- fix: state and postal_code are optional in :class:`wxc_sdk.locations.LocationAddress`. They are mandatory in calling locations are not required in workspace locations which now are returned by :meth:`wxc_sdk.locations.LocationsApi.list` as well.
 
 1.12.0
 ------
