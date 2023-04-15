@@ -206,9 +206,6 @@ class Parameter(BaseModel):
 def break_lines(line: str, line_start: str, first_line_prefix: str = None) -> Generator[str, None, None]:
     """
     Break line in multiple lines (max 120 chars) if needed
-    :param line:
-    :param line_start:
-    :return:
     """
     max_len = 120
     current_line = ''
@@ -974,17 +971,32 @@ class DevWebexComScraper:
         try:
             # wait for button to accept cookies to be steady
             accept_cookies = WebDriverWait(driver=self.driver, timeout=10).until(
-                method=steady((By.ID, 'onetrust-accept-btn-handler')))
+                method=steady((By.ID, 'onetrust-consent-sdk')))
         except TimeoutException:
             # if there is no accept cookies button after 10 seconds then we are probably ok
             log('No popup to accept cookies', level=logging.WARNING)
         else:
             accept_cookies: WebElement
             # there is a button in there that we need to click
-            button = accept_cookies
             # button = accept_cookies.find_element(by=By.TAG_NAME, value='button')
+            button = accept_cookies.find_element(by=By.ID, value='onetrust-accept-btn-handler')
             log('accept cookies')
             button.click()
+
+        # try:
+        #     # wait for button to accept cookies to be steady
+        #     accept_cookies = WebDriverWait(driver=self.driver, timeout=10).until(
+        #         method=steady((By.ID, 'onetrust-accept-btn-handler')))
+        # except TimeoutException:
+        #     # if there is no accept cookies button after 10 seconds then we are probably ok
+        #     log('No popup to accept cookies', level=logging.WARNING)
+        # else:
+        #     accept_cookies: WebElement
+        #     # there is a button in there that we need to click
+        #     button = accept_cookies
+        #     # button = accept_cookies.find_element(by=By.TAG_NAME, value='button')
+        #     log('accept cookies')
+        #     button.click()
 
         if self.credentials:
             self.login()
