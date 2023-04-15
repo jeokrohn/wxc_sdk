@@ -14,32 +14,47 @@ __all__ = ['GroupMember', 'Group', 'GroupsApi']
 
 
 class GroupMember(ApiModel):
+    #: Person ID of the group member.
     member_id: Optional[str] = Field(alias='id')
+    #: Member type.
     member_type: Optional[str] = Field(alias='type')
     display_name: Optional[str]
-    # only used in updates. 'delete to delete a member'
+    # only used in updates. 'delete' to delete a member
     operation: Optional[str]
 
 
 class Group(ApiModel):
+    #: A unique identifier for the group.
     group_id: Optional[str] = Field(alias='id')
+    #: The name of the group.
     display_name: Optional[str]
+    #: An array of members
     members: Optional[list[GroupMember]]
+    #: The ID of the organization to which this group belongs.
     org_id: Optional[str]
     description: Optional[str]
+    #: The timestamp indicating creation date/time of group
     created: Optional[datetime.datetime]
+    #: The timestamp indicating lastModification time of group
     last_modified: Optional[datetime.datetime]
     member_size: Optional[int]
     usage: Optional[str]
 
 
 class GroupsApi(ApiChild, base='groups'):
+    """
+    Groups contain a collection of members in Webex. A member represents a Webex user. A group is used to assign
+    templates and settings to the set of members contained in a group. To create and manage a group, including adding
+    and removing members from a group, an auth token containing the identity:groups_rw is required. Searching and
+    viewing members of a group requires an auth token with a scope of identity:groups_read.
+    To learn more about managing people to use as members in the /groups API please refer to the People API.
+    """
 
     def list(self, include_members: bool = None, attributes: str = None, sort_by: str = None,
              sort_order: str = None, list_filter: str = None, org_id: str = None,
              **params) -> Generator[Group, None, None]:
         """
-        List groups
+        List groups in your organization.
 
         :param include_members: Include members in list response
         :type include_members: bool
@@ -49,9 +64,11 @@ class GroupsApi(ApiChild, base='groups'):
         :type sort_by: str
         :param sort_order: sort order, ascending or descending
         :type sort_order: str
-        :param org_id: organisation ID
+        :param org_id: List groups in this organization. Only admin users of another organization (such as partners)
+            may use this parameter.
         :type org_id: str
-        :param list_filter: filter expression. Example: displayName eq "test"
+        :param list_filter: Searches the group by displayName with an operator and a value. The available operators
+            are eq (equal) and sw (starts with). Only displayName can be used to filter results.
         :type list_filter: str
         :param params:
         :return: generator of :class:`Group` objects
