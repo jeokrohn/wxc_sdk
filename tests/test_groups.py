@@ -6,7 +6,7 @@ from functools import reduce
 from typing import Optional
 
 from wxc_sdk.groups import Group, GroupMember
-from .base import TestCaseWithLog, async_test
+from tests.base import TestCaseWithLog, async_test
 
 
 class TestGroups(TestCaseWithLog):

@@ -7,7 +7,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 
 from wxc_sdk.all_types import *
-from .base import TestCaseWithUsers
+from tests.base import TestCaseWithUsers
 
 
 class TestRead(TestCaseWithUsers):

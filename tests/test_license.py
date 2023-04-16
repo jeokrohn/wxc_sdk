@@ -1,4 +1,4 @@
-from .base import TestCaseWithLog
+from tests.base import TestCaseWithLog
 
 
 class TestLicense(TestCaseWithLog):

@@ -15,7 +15,7 @@ from unittest import skip
 
 from pydantic import parse_obj_as
 
-from tests.base import TestCaseWithUsersAndSpaces, TestCaseWithLog, async_test
+from tests.base import TestCaseWithUsersAndSpaces, TestCaseWithLog
 from wxc_sdk.common import RoomType
 from wxc_sdk.messages import MessageAttachment
 from wxc_sdk.people import Person

@@ -4,7 +4,7 @@ Unit test for voicemail settings
 import random
 from concurrent.futures import ThreadPoolExecutor
 
-from .base import TestCaseWithUsers
+from tests.base import TestCaseWithUsers
 
 
 class VoicemailTests(TestCaseWithUsers):

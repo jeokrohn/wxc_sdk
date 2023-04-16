@@ -2,7 +2,7 @@
 test organisation VM settings
 """
 from wxc_sdk.telephony.organisation_vm import OrganisationVoicemailSettings
-from .base import TestCaseWithLog
+from tests.base import TestCaseWithLog
 
 
 class TestOrgVM(TestCaseWithLog):

@@ -4,7 +4,7 @@ Test cases for call waiting settings
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 
-from .base import TestCaseWithUsers, async_test
+from tests.base import TestCaseWithUsers, async_test
 
 
 class TestRead(TestCaseWithUsers):

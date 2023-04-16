@@ -5,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 import random
 
 from wxc_sdk.person_settings.permissions_out import AutoTransferNumbers
-from .base import TestWithLocations
+from tests.base import TestWithLocations
 
 
 class TestPermOut(TestWithLocations):

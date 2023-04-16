@@ -3,7 +3,7 @@ Test resetting VM PIN
 """
 from concurrent.futures import ThreadPoolExecutor
 
-from .base import TestCaseWithUsers
+from tests.base import TestCaseWithUsers
 
 
 class TestRead(TestCaseWithUsers):

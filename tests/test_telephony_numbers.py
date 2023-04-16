@@ -6,8 +6,8 @@ from dataclasses import dataclass, field
 from typing import ClassVar, Optional
 
 from wxc_sdk.all_types import *
-from .base import TestCaseWithLog
-from .testutil import LocationInfo, us_location_info, available_tns
+from tests.base import TestCaseWithLog
+from tests.testutil import LocationInfo, us_location_info, available_tns
 
 
 class TestNumbers(TestCaseWithLog):

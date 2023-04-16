@@ -10,8 +10,8 @@ from contextlib import contextmanager
 from wxc_sdk.all_types import AutoAttendant, ScheduleType
 from wxc_sdk.common.schedules import Schedule
 from wxc_sdk.locations import Location
-from .base import TestCaseWithLog, TestWithLocations
-from .testutil import available_extensions_gen
+from tests.base import TestCaseWithLog, TestWithLocations
+from tests.testutil import available_extensions_gen
 
 
 class TestAutoAttendant(TestCaseWithLog):

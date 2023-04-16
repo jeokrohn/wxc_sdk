@@ -13,7 +13,7 @@ from itertools import chain
 
 from wxc_sdk.rest import RestError
 from wxc_sdk.all_types import *
-from .base import TestCaseWithUsers
+from tests.base import TestCaseWithUsers
 
 # prefix for test schedule names
 SCHEDULE_NAME_PREFIX = 'test_'

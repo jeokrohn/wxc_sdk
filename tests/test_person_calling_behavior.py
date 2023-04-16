@@ -8,8 +8,8 @@ from dataclasses import dataclass
 from typing import ClassVar
 
 from wxc_sdk.all_types import *
-from .base import TestCaseWithUsers, async_test, TestCaseWithLog
-from .testutil import calling_users
+from tests.base import TestCaseWithUsers, async_test, TestCaseWithLog
+from tests.testutil import calling_users
 
 
 class TestRead(TestCaseWithUsers):

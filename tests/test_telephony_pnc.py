@@ -5,7 +5,7 @@ import random
 from concurrent.futures import ThreadPoolExecutor
 
 from wxc_sdk.telephony.pnc import NetworkConnectionType
-from .base import TestWithLocations
+from tests.base import TestWithLocations
 
 
 class TestPNC(TestWithLocations):

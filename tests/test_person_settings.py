@@ -14,7 +14,7 @@ from wxc_sdk.person_settings.barge import BargeSettings
 from wxc_sdk.person_settings.call_intercept import InterceptSetting, InterceptTypeIncoming, Greeting
 from wxc_sdk.person_settings.caller_id import CallerIdSelectedType, CallerId, ExternalCallerIdNamePolicy
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber, OwnerType
-from .base import TestCaseWithUsers, gather, async_test
+from tests.base import TestCaseWithUsers, gather, async_test
 
 
 class TestRead(TestCaseWithUsers):

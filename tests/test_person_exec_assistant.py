@@ -5,7 +5,7 @@ import random
 from concurrent.futures import ThreadPoolExecutor
 
 from wxc_sdk.all_types import ExecAssistantType
-from .base import TestCaseWithUsers
+from tests.base import TestCaseWithUsers
 
 
 class TestRead(TestCaseWithUsers):

@@ -7,7 +7,7 @@ from itertools import groupby
 from typing import ClassVar
 
 from wxc_sdk.all_types import *
-from .base import TestCaseWithLog, TestCaseWithUsers
+from tests.base import TestCaseWithLog, TestCaseWithUsers
 
 # number of paging groups to create in create many test
 PG_MANY = 100

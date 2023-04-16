@@ -4,7 +4,7 @@ Test cases for location access codes
 import random
 from concurrent.futures import ThreadPoolExecutor
 
-from .base import TestWithLocations
+from tests.base import TestWithLocations
 
 from wxc_sdk.common import AuthCode
 

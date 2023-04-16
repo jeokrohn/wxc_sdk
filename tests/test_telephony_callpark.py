@@ -11,8 +11,8 @@ from typing import ClassVar
 from unittest import skip
 
 from wxc_sdk.all_types import *
-from .base import TestWithLocations, async_test
-from .testutil import create_call_park_extension
+from tests.base import TestWithLocations, async_test
+from tests.testutil import create_call_park_extension
 
 # Number of call parks to create by create many test
 CP_MANY = 100

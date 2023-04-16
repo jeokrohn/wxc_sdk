@@ -8,7 +8,7 @@ from contextlib import contextmanager
 
 from wxc_sdk.all_types import *
 from wxc_sdk.rest import RestError
-from .base import TestCaseWithUsers
+from tests.base import TestCaseWithUsers
 
 
 class PermissionsOutMixin(TestCaseWithUsers):

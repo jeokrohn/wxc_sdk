@@ -2,7 +2,7 @@
 Test cases UCM profiles
 """
 
-from .base import TestCaseWithLog
+from tests.base import TestCaseWithLog
 
 
 class Test(TestCaseWithLog):

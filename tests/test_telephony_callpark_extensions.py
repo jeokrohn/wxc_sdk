@@ -5,8 +5,8 @@ from concurrent.futures import ThreadPoolExecutor
 from json import dumps, loads
 from random import choice
 
-from .base import TestWithLocations
-from .testutil import create_call_park_extension
+from tests.base import TestWithLocations
+from tests.testutil import create_call_park_extension
 
 
 class TestCPE(TestWithLocations):

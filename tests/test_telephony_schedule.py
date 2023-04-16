@@ -13,7 +13,7 @@ from itertools import chain
 from typing import ClassVar
 
 from wxc_sdk.all_types import *
-from .base import TestWithLocations
+from tests.base import TestWithLocations
 
 
 class TestScheduleList(TestWithLocations):

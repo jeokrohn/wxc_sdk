@@ -9,7 +9,7 @@ from wxc_sdk.all_types import Person, Privacy
 
 import base64
 
-from .base import TestCaseWithUsers
+from tests.base import TestCaseWithUsers
 
 
 class TestRead(TestCaseWithUsers):

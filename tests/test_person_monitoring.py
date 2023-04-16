@@ -12,7 +12,7 @@ from typing import ClassVar, Optional
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.all_types import *
 from wxc_sdk.as_api import AsWebexSimpleApi
-from .base import TestCaseWithUsers
+from tests.base import TestCaseWithUsers
 
 
 def print_monitoring(*, user: Person, monitoring: Monitoring):

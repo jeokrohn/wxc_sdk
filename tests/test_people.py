@@ -12,8 +12,8 @@ from dotenv import load_dotenv
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.numbers import PersonNumbers
 from wxc_sdk.rest import RestError
-from .base import TestCaseWithLog, async_test
-from .testutil import calling_users
+from tests.base import TestCaseWithLog, async_test
+from tests.testutil import calling_users
 
 
 @contextmanager

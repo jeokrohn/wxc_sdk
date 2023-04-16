@@ -7,7 +7,7 @@ from contextlib import contextmanager
 
 from wxc_sdk.locations import Location
 from wxc_sdk.telephony.location.moh import LocationMoHSetting
-from .base import TestWithLocations
+from tests.base import TestWithLocations
 
 
 class Test(TestWithLocations):

@@ -1,5 +1,5 @@
 """
-Test async operations on people API anc provoke 429 responses
+Test async operations on people API and provoke 429 responses
 """
 import asyncio
 import time
@@ -10,7 +10,7 @@ from unittest import skip
 import matplotlib.pyplot as plt
 
 from wxc_sdk.as_api import AsWebexSimpleApi
-from .base import TestCaseWithLog, async_test, LoggedRequest
+from tests.base import TestCaseWithLog, async_test, LoggedRequest
 
 
 class TestPeople(TestCaseWithLog):

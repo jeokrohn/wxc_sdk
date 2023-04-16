@@ -11,8 +11,8 @@ from wxc_sdk.common import PatternAction, RingPattern
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.numbers import UpdatePersonNumbers, UpdatePersonPhoneNumber, PersonNumbers
-from .base import TestCaseWithUsers
-from .testutil import LocationInfo, us_location_info, available_tns
+from tests.base import TestCaseWithUsers
+from tests.testutil import LocationInfo, us_location_info, available_tns
 
 
 class TestRead(TestCaseWithUsers):

@@ -3,13 +3,12 @@ Test for app services settings
 """
 import asyncio
 import random
-from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from dataclasses import dataclass
 from unittest import skip
 
 from wxc_sdk.all_types import Person, AppServicesSettings
-from .base import TestCaseWithUsers, async_test
+from tests.base import TestCaseWithUsers, async_test
 
 
 class TestRead(TestCaseWithUsers):
