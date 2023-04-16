@@ -626,9 +626,6 @@ class ClassGenerator:
     def from_doc_method_details(self, api_spec: DocMethodDetails, only_section: str = None):
         """
         Read API spec and identify classes for objects in the API spec. Optionally limited to only one section
-
-        :param api_spec:
-        :return:
         """
 
         Class.registry.clear()
