@@ -374,7 +374,7 @@ class AsRestSession(ClientSession):
         def noop(x):
             return x
 
-        if not issubclass(model, ApiModel):
+        if model is None or not issubclass(model, ApiModel):
             model = noop
         else:
             model = model.parse_obj
