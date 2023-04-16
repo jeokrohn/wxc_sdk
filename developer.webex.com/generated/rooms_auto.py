@@ -1,7 +1,7 @@
 from collections.abc import Generator
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
 from pydantic import Field, parse_obj_as
@@ -128,7 +128,7 @@ class RoomsApi(ApiChild, base='rooms'):
         if type_ is not None:
             params['type'] = type_
         if org_public_spaces is not None:
-            params['orgPublicSpaces'] = org_public_spaces
+            params['orgPublicSpaces'] = str(org_public_spaces).lower()
         if from_ is not None:
             params['from'] = from_
         if to_ is not None:

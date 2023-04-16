@@ -1,7 +1,7 @@
 from collections.abc import Generator
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
 from pydantic import Field, parse_obj_as
@@ -228,7 +228,7 @@ class PeopleApi(ApiChild, base='people'):
         if roles is not None:
             params['roles'] = roles
         if calling_data is not None:
-            params['callingData'] = calling_data
+            params['callingData'] = str(calling_data).lower()
         if location_id is not None:
             params['locationId'] = location_id
         url = self.ep()
@@ -296,7 +296,7 @@ class PeopleApi(ApiChild, base='people'):
         """
         params = {}
         if calling_data is not None:
-            params['callingData'] = calling_data
+            params['callingData'] = str(calling_data).lower()
         body = CreatePersonBody()
         if emails is not None:
             body.emails = emails
@@ -355,7 +355,7 @@ class PeopleApi(ApiChild, base='people'):
         """
         params = {}
         if calling_data is not None:
-            params['callingData'] = calling_data
+            params['callingData'] = str(calling_data).lower()
         url = self.ep(f'{person_id}')
         data = super().get(url=url, params=params)
         return Person.parse_obj(data)
@@ -436,9 +436,9 @@ class PeopleApi(ApiChild, base='people'):
         """
         params = {}
         if calling_data is not None:
-            params['callingData'] = calling_data
+            params['callingData'] = str(calling_data).lower()
         if show_all_types is not None:
-            params['showAllTypes'] = show_all_types
+            params['showAllTypes'] = str(show_all_types).lower()
         body = UpdatePersonBody()
         if emails is not None:
             body.emails = emails
@@ -510,7 +510,7 @@ class PeopleApi(ApiChild, base='people'):
         """
         params = {}
         if calling_data is not None:
-            params['callingData'] = calling_data
+            params['callingData'] = str(calling_data).lower()
         url = self.ep('me')
         data = super().get(url=url, params=params)
         return Person.parse_obj(data)
