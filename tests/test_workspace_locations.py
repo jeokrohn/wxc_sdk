@@ -1,55 +1,16 @@
-import asyncio
 import base64
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
-from itertools import chain
-
-from test_helper.randomlocation import RandomLocation, Address
 
 from tests.base import TestCaseWithLog
+from tests.testutil import create_random_wsl
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.rest import RestError
 from wxc_sdk.workspace_locations import WorkspaceLocation
 
 
 class TestWorkspaceLocations(TestCaseWithLog):
-
-    @staticmethod
-    def random_address() -> Address:
-        """
-        Get a random address in the US
-        """
-
-        async def as_random_address() -> Address:
-            """
-            Get a random address in the US
-            """
-            async with RandomLocation() as rl:
-                return await rl.random_address()
-
-        return asyncio.run(as_random_address())
-
-    def create_random_wsl(self) -> WorkspaceLocation:
-        """
-        create a random workspace location
-        """
-        address = self.random_address()
-
-        # get a unique display name
-        display_name_prefix = f'{address.city}, {address.address1}'
-        wsl_list = self.api.workspace_locations.list()
-        display_names = set(wsl.display_name for wsl in wsl_list)
-        display_name = next(dpn
-                            for suffix in chain([''],
-                                                (f'_{i:02}'
-                                                 for i in range(1, 99)))
-                            if (dpn := f'{display_name_prefix}{suffix}') not in display_names)
-
-        wsl = self.api.workspace_locations.create(display_name=display_name, address=str(address),
-                                                  country_code='US', longitude=address.geo_location.lon,
-                                                  latitude=address.geo_location.lat, city_name=address.city)
-        return wsl
 
     def test_001_list(self):
         """
@@ -89,7 +50,7 @@ class TestWorkspaceLocations(TestCaseWithLog):
         """
         test creation
         """
-        wsl = self.create_random_wsl()
+        wsl = create_random_wsl(api=self.api)
         print(f'Created new workplace location: {wsl}')
 
     def test_005_details(self):
@@ -106,7 +67,7 @@ class TestWorkspaceLocations(TestCaseWithLog):
         """
         Try to update a workspace location
         """
-        wsl = self.create_random_wsl()
+        wsl = create_random_wsl(api=self.api)
         try:
             update = wsl.copy(deep=True)
             notes = f'Random text {uuid.uuid4()}'
@@ -125,7 +86,7 @@ class TestWorkspaceLocations(TestCaseWithLog):
         """
         Try to update a workspace location and clear the notes
         """
-        wsl = self.create_random_wsl()
+        wsl = create_random_wsl(api=self.api)
         try:
             notes = f'Random text {uuid.uuid4()}'
             wsl.notes = notes
@@ -143,7 +104,7 @@ class TestWorkspaceLocations(TestCaseWithLog):
     @contextmanager
     def temp_location(self):
         with self.no_log():
-            wsl = self.create_random_wsl()
+            wsl = create_random_wsl(api=self.api)
         try:
             yield wsl
         finally:

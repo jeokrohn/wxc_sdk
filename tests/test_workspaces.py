@@ -1,17 +1,16 @@
 """
 Test for workspaces API
 """
-# TODO: tests for authorization codes
 import random
-from collections.abc import Generator
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 
-from wxc_sdk.rest import RestError
 from wxc_sdk.all_types import *
-from .base import TestCaseWithLog
-
-TEST_WORKSPACES_PREFIX = 'workspace test '
+from wxc_sdk.rest import RestError
+from wxc_sdk.workspaces import WorkspaceCalling, WorkspaceWebexCalling, WorkspaceSupportedDevices
+from tests.base import TestCaseWithLog, TestWithLocations
+from tests.testutil import available_extensions_gen, new_workspace_names, TEST_WORKSPACES_PREFIX, \
+    create_workspace_with_webex_calling
 
 
 class TestList(TestCaseWithLog):
@@ -183,16 +182,116 @@ class TestOutgoingPermissionsAutoTransferNumbers(TestCaseWithLog):
         # with
 
 
-class TestCreateUpdate(TestCaseWithLog):
-    def new_names(self) -> Generator[str, None, None]:
-        ws_list = list(self.api.workspaces.list())
-        ws_names = set(w.display_name for w in ws_list)
-        new_gen = (name for i in range(1000)
-                   if (name := f'{TEST_WORKSPACES_PREFIX}{i:03}') not in ws_names)
-        return new_gen
+class TestCreate(TestWithLocations):
 
+    def test_001_trivial(self):
+        """
+        create workspace with minimal settings
+        """
+        ws = self.api.workspaces
+        name = next(new_workspace_names(api=self.api))
+        settings = Workspace.create(display_name=name)
+        workspace = ws.create(settings=settings)
+        print(f'new worksspace: {workspace.json()}')
+        self.assertEqual(name, workspace.display_name)
+
+    def test_002_edge_for_devices(self):
+        """
+        create workspace with edge_for_devices
+        """
+        ws = self.api.workspaces
+        name = next(new_workspace_names(api=self.api))
+        settings = Workspace(display_name=name, calling=WorkspaceCalling(type=CallingType.edge_for_devices))
+        workspace = ws.create(settings=settings)
+        print(f'new workspace: {workspace.json()}')
+        self.assertEqual(name, workspace.display_name)
+
+    def test_003_create_workspace_with_webex_calling(self):
+        """
+        create a workspace with webex calling
+        """
+        # get a calling location
+        target_location = random.choice(self.locations)
+        target_location: Location
+
+        workspace = create_workspace_with_webex_calling(api=self.api,
+                                                        target_location=target_location,
+                                                        supported_devices=WorkspaceSupportedDevices.phones)
+        print(f'Created workspace "{workspace.display_name}" in location "{target_location.name}" ')
+        # due to a limitation the workspace object returned does not have 'webex_calling' populated
+        # let's check nonetheless which extension got assigned
+        numbers = list(self.api.telephony.phone_numbers(owner_id=workspace.workspace_id))
+        self.assertEqual(1, len(numbers))
+        number = numbers[0]
+        self.assertIsNotNone(number.extension)
+        print(f'extension: {number.extension}')
+
+        # ... another option to get the number
+        workspace_numbers = self.api.workspace_settings.numbers.read(workspace_id=workspace.workspace_id)
+        self.assertIsNotNone(workspace_numbers.phone_numbers)
+        self.assertEqual(1, len(workspace_numbers.phone_numbers))
+        p_number = workspace_numbers.phone_numbers[0]
+        self.assertIsNotNone(p_number.extension)
+        self.assertEqual(number.extension, p_number.extension)
+
+    def test_004_create_workspace_wo_calling_and_upgrade_to_webex_calling(self):
+        """
+        create a workspace w/o calling and upgrede to WxC later
+        """
+        # get a calling location
+        target_location = random.choice(self.locations)
+        target_location: Location
+
+        # get an extension in location
+        extension = next(available_extensions_gen(api=self.api,
+                                                  location_id=target_location.location_id))
+
+        # get a name for new workspace
+        name = next(new_workspace_names(api=self.api))
+
+        # create workspace w/o calling 1st
+        print(f'Creating workspace "{name}"')
+
+        new_workspace = Workspace(
+            display_name=name,
+            supported_devices=WorkspaceSupportedDevices.phones)
+        workspace = self.api.workspaces.create(settings=new_workspace)
+
+        details = self.api.workspaces.details(workspace_id=workspace.workspace_id)
+        update = details.copy(deep=True)
+        update.calling = WorkspaceCalling(
+            type=CallingType.webex,
+            webex_calling=WorkspaceWebexCalling(
+                extension=extension,
+                location_id=target_location.location_id))
+        print(f'Updating workspace "{name}" in location "{target_location.name}" to WxC w/ extension {extension}')
+        update_result = self.api.workspaces.update(workspace_id=workspace.workspace_id,
+                                                   settings=update)
+        foo = 1
+
+    def test_005_no_calling_phones(self):
+        """
+        create workspace w/o calling for phones
+        """
+        # get a name for new workspace
+        name = next(new_workspace_names(api=self.api))
+
+        print(f'Creating workspace "{name}"')
+
+        new_workspace = Workspace(
+            display_name=name,
+            supported_devices=WorkspaceSupportedDevices.phones)
+        workspace = self.api.workspaces.create(settings=new_workspace)
+
+        details = self.api.workspaces.details(workspace_id=workspace.workspace_id)
+
+
+class TestUpdate(TestCaseWithLog):
     @contextmanager
     def target(self, no_edge: bool = False):
+        """
+        Yield a random workspace for updates and restore previous settings after test
+        """
         ws = self.api.workspaces
         ws_list = list(ws.list())
         if no_edge:
@@ -207,29 +306,7 @@ class TestCreateUpdate(TestCaseWithLog):
             restored = ws.details(workspace_id=targat_ws.workspace_id)
             self.assertEqual(targat_ws, restored)
 
-    def test_001_trivial(self):
-        """
-        create workspace with minimal settings
-        """
-        ws = self.api.workspaces
-        name = next(self.new_names())
-        settings = Workspace.create(display_name=name)
-        workspace = ws.create(settings=settings)
-        print(f'new worksspace: {workspace.json()}')
-        self.assertEqual(name, workspace.display_name)
-
-    def test_002_edge_for_devices(self):
-        """
-        create workspace with edge_for_devices
-        """
-        ws = self.api.workspaces
-        name = next(self.new_names())
-        settings = Workspace(display_name=name, calling=CallingType.edge_for_devices)
-        workspace = ws.create(settings=settings)
-        print(f'new workspace: {workspace.json()}')
-        self.assertEqual(name, workspace.display_name)
-
-    def test_003_change_name_full(self):
+    def test_001_change_name_full(self):
         """
         change name of a workspace, full settings
         """
@@ -237,20 +314,20 @@ class TestCreateUpdate(TestCaseWithLog):
         with self.target(no_edge=True) as target_ws:
             target_ws: Workspace
             settings: Workspace = target_ws.copy(deep=True)
-            new_name = next(self.new_names())
+            new_name = next(new_workspace_names(api=self.api))
             settings.display_name = new_name
             after = ws.update(workspace_id=target_ws.workspace_id,
                               settings=settings)
         self.assertEqual(new_name, after.display_name)
 
-    def test_004_change_name_name_only(self):
+    def test_002_change_name_name_only(self):
         """
         change name of a workspace, only name update
         """
         ws = self.api.workspaces
         with self.target(no_edge=True) as target_ws:
             target_ws: Workspace
-            new_name = next(self.new_names())
+            new_name = next(new_workspace_names(api=self.api))
             settings = Workspace(display_name=new_name)
             after = ws.update(workspace_id=target_ws.workspace_id,
                               settings=settings)

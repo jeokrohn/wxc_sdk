@@ -4,6 +4,7 @@
 # Copyright (c) 2022 Johannes Krohn <jkrohn@cisco.com>
 # License: MIT
 
+
 developer.webex.com/read_api_spec.py -f developer.webex.com/generated/api_spec.yml
 developer.webex.com/read_api_spec.py -a developer.webex.com/.env -f developer.webex.com/generated/auth_api_spec.yml
 developer.webex.com/read_api_spec.py -a developer.webex.com/.env -s Calling -t "Webex Calling Detailed Call History" -f developer.webex.com/generated/cdr.yml
@@ -44,5 +45,9 @@ developer.webex.com/read_api_spec.py -s Messaging -t Webhooks -f developer.webex
 
 developer.webex.com/read_api_spec.py --no_ignore -s "Full API Reference" -f developer.webex.com/generated/full_spec.yml
 developer.webex.com/endpoint_summary.py developer.webex.com/generated/full_spec.yml -o developer.webex.com/generated/full_spec.csv
+
+#
+developer.webex.com/read_api_spec.py -a developer.webex.com/.env -s Devices -t "Devices with WXC Devices Displayed" -f developer.webex.com/generated/devices_w_wxc.yml
+developer.webex.com/read_api_spec.py -a developer.webex.com/.env -s Calling -t "Workspaces with WXC Included" -f developer.webex.com/generated/workspaces_w_wxc.yml
 
 for i in developer.webex.com/generated/*.yml; do developer.webex.com/classes.py "$i" -o "${i/.yml/_auto.py}"; done
