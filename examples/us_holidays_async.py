@@ -113,12 +113,14 @@ async def observe_in_location(*, api: AsWebexSimpleApi, location: Location, holi
             if USE_TASKS:
                 await asyncio.gather(*[ats.event_delete(obj_id=location.location_id,
                                                         schedule_type=ScheduleType.holidays,
+                                                        schedule_id=schedule.schedule_id,
                                                         event_id=event.event_id)
                                        for event in to_delete])
             else:
                 for event in to_delete:
                     await ats.event_delete(obj_id=location.location_id,
                                            schedule_type=ScheduleType.holidays,
+                                           schedule_id=schedule.schedule_id,
                                            event_id=event.event_id)
 
         # add events which don't exist yet
