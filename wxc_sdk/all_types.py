@@ -32,8 +32,8 @@ from wxc_sdk.meetings import AnswerCondition, ApprovalQuestion, ApprovalRule, At
     TrackingCodeType, Type, UnlockedMeetingJoinSecurity
 from wxc_sdk.meetings.chats import ChatObject, Sender
 from wxc_sdk.meetings.closed_captions import CCSnippet, ClosedCaption
-from wxc_sdk.meetings.invitees import CreateInviteesItem, CreateMeetingInviteeBody, Invitee,\
-    UpdateMeetingInviteeBody
+from wxc_sdk.meetings.invitees import CreateInviteesItem, CreateMeetingInviteeBody, CreateMeetingInviteesBody,\
+    Invitee, UpdateMeetingInviteeBody
 from wxc_sdk.meetings.participants import AdmitParticipantsBody, AudioType, InProgressDevice, MeetingCallType,\
     MeetingDevice, Participant, ParticipantState, QueryMeetingParticipantsWithEmailBody, UpdateParticipantBody,\
     UpdateParticipantResponse, VideoState
@@ -135,8 +135,9 @@ from wxc_sdk.tokens import Tokens
 from wxc_sdk.webhook import Webhook, WebhookCreate, WebhookEvent, WebhookEventData, WebhookEventType,\
     WebhookResource, WebhookStatus
 from wxc_sdk.workspace_locations import WorkspaceLocation, WorkspaceLocationFloor
-from wxc_sdk.workspace_settings.numbers import WorkSpaceNumbers
-from wxc_sdk.workspaces import Calendar, CalendarType, CallingType, WorkSpaceType, Workspace, WorkspaceEmail
+from wxc_sdk.workspace_settings.numbers import WorkspaceNumbers
+from wxc_sdk.workspaces import Calendar, CalendarType, CallingType, CapabilityMap, WorkSpaceType, Workspace,\
+    WorkspaceCalling, WorkspaceEmail, WorkspaceSupportedDevices, WorkspaceWebexCalling
 
 __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard', 'AdaptiveCardAction',
            'AdaptiveCardBody', 'AdmitParticipantsBody', 'Agent', 'AgentQueue', 'AlternateNumber',
@@ -157,19 +158,20 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'CallParkSettings', 'CallPickup', 'CallQueue', 'CallQueueCallPolicies', 'CallRecordingSetting',
            'CallSourceInfo', 'CallSourceType', 'CallState', 'CallType', 'CallTypePermission', 'CallerId',
            'CallerIdSelectedType', 'CallingBehavior', 'CallingCDR', 'CallingLineId', 'CallingPermissions',
-           'CallingType', 'CallsFrom', 'ChatObject', 'ClosedCaption', 'CnameRecord', 'CoHost', 'CodeAndReason',
-           'ComfortMessageBypass', 'ComfortMessageSetting', 'CommonDeviceCustomization', 'ComplianceEvent',
-           'CreateInviteesItem', 'CreateMeetingBody', 'CreateMeetingInviteeBody', 'CreateResponse', 'CustomNumbers',
-           'Customer', 'CustomizedQuestionForCreateMeeting', 'DND', 'DectDevice', 'DefaultAudioType',
-           'DefaultVoicemailPinRules', 'DeleteTranscriptBody', 'DestinationType', 'Device', 'DeviceActivationState',
-           'DeviceCustomization', 'DeviceCustomizations', 'DeviceManagedBy', 'DeviceManufacturer', 'DeviceMember',
-           'DeviceMembersResponse', 'DeviceOwner', 'DeviceStatus', 'DeviceType', 'DialPatternStatus',
-           'DialPatternValidate', 'DialPatternValidationResult', 'DialPlan', 'DialResponse', 'Dialing',
-           'DisplayCallqueueAgentSoftkey', 'DisplayNameSelection', 'DistinctiveRing', 'EmergencyDestination',
-           'EnabledAndNumberOfDays', 'EntryAndExitTone', 'ErrorMessageObject', 'ErrorObject', 'Event', 'EventData',
-           'EventResource', 'EventType', 'ExecAssistantType', 'ExpirePasscode', 'ExternalCallerIdNamePolicy',
-           'ExternalTransfer', 'FailedAttempts', 'FeatureAccessCodeDestination', 'FeatureSelector', 'ForcedForward',
-           'ForwardCallsTo', 'ForwardToSelection', 'ForwardingRule', 'ForwardingRuleDetails', 'ForwardingSetting',
+           'CallingType', 'CallsFrom', 'CapabilityMap', 'ChatObject', 'ClosedCaption', 'CnameRecord', 'CoHost',
+           'CodeAndReason', 'ComfortMessageBypass', 'ComfortMessageSetting', 'CommonDeviceCustomization',
+           'ComplianceEvent', 'CreateInviteesItem', 'CreateMeetingBody', 'CreateMeetingInviteeBody',
+           'CreateMeetingInviteesBody', 'CreateResponse', 'CustomNumbers', 'Customer',
+           'CustomizedQuestionForCreateMeeting', 'DND', 'DectDevice', 'DefaultAudioType', 'DefaultVoicemailPinRules',
+           'DeleteTranscriptBody', 'DestinationType', 'Device', 'DeviceActivationState', 'DeviceCustomization',
+           'DeviceCustomizations', 'DeviceManagedBy', 'DeviceManufacturer', 'DeviceMember', 'DeviceMembersResponse',
+           'DeviceOwner', 'DeviceStatus', 'DeviceType', 'DialPatternStatus', 'DialPatternValidate',
+           'DialPatternValidationResult', 'DialPlan', 'DialResponse', 'Dialing', 'DisplayCallqueueAgentSoftkey',
+           'DisplayNameSelection', 'DistinctiveRing', 'EmergencyDestination', 'EnabledAndNumberOfDays',
+           'EntryAndExitTone', 'ErrorMessageObject', 'ErrorObject', 'Event', 'EventData', 'EventResource',
+           'EventType', 'ExecAssistantType', 'ExpirePasscode', 'ExternalCallerIdNamePolicy', 'ExternalTransfer',
+           'FailedAttempts', 'FeatureAccessCodeDestination', 'FeatureSelector', 'ForcedForward', 'ForwardCallsTo',
+           'ForwardToSelection', 'ForwardingRule', 'ForwardingRuleDetails', 'ForwardingSetting',
            'GetMeetingSurveyResponse', 'GetRoomMeetingDetailsResponse', 'Greeting', 'Group', 'GroupMember',
            'HGCallPolicies', 'HGandCQ', 'HistoryType', 'HolidayService', 'HostedFeatureDestination',
            'HostedUserDestination', 'HuntGroup', 'IdAndName', 'IdOnly', 'InProgressDevice', 'IncomingPermissions',
@@ -228,5 +230,6 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'VoicemailNotifications', 'VoicemailSettings', 'VoicemailTransferToNumber', 'WaitMessageSetting',
            'WaitMode', 'Webhook', 'WebhookCreate', 'WebhookEvent', 'WebhookEventData', 'WebhookEventType',
            'WebhookResource', 'WebhookStatus', 'WelcomeMessageSetting', 'WifiCustomization', 'WifiNetwork',
-           'WorkSpaceNumbers', 'WorkSpaceType', 'Workspace', 'WorkspaceEmail', 'WorkspaceLocation',
-           'WorkspaceLocationFloor', '_Helper', 'dt_iso_str', 'enum_str', 'plus1', 'to_camel', 'webex_id_to_uuid']
+           'WorkSpaceType', 'Workspace', 'WorkspaceCalling', 'WorkspaceEmail', 'WorkspaceLocation',
+           'WorkspaceLocationFloor', 'WorkspaceNumbers', 'WorkspaceSupportedDevices', 'WorkspaceWebexCalling',
+           '_Helper', 'dt_iso_str', 'enum_str', 'plus1', 'to_camel', 'webex_id_to_uuid']

@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from itertools import chain
 from math import ceil
 
-from tests.base import TestCaseWithLog, async_test
+from tests.base import async_test, TestWithLocations
 from tests.testutil import as_available_extensions_gen
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.base import webex_id_to_uuid
@@ -12,13 +12,16 @@ from wxc_sdk.people import Person
 from wxc_sdk.telephony.virtual_line import VirtualLine
 
 
-class VirtualLineTest(TestCaseWithLog):
+class VirtualLineTest(TestWithLocations):
     """
     Base class for tests that require some test virtual lines
     """
 
     @staticmethod
     async def create_test_vl(api: AsWebexSimpleApi, org_id: str, location: Location, extension: str) -> str:
+        """
+        Create a virtual line
+        """
         url = f'https://cpapi-r.wbx2.com/api/v1/customers/{webex_id_to_uuid(org_id)}/virtualprofiles'
         body = {"firstName": "VL", "lastName": extension, "displayName": f"VL {extension}-{location.name}",
                 "extension": extension,
@@ -28,6 +31,9 @@ class VirtualLineTest(TestCaseWithLog):
 
     @staticmethod
     async def delete_vl(api: AsWebexSimpleApi, org_id: str, vl_id: str):
+        """
+        Delete a virtual line
+        """
         url = f'https://cpapi-r.wbx2.com/api/v1/customers/{webex_id_to_uuid(org_id)}/virtualprofiles/' \
               f'{vl_id}'
         await api.session.rest_delete(url=url)
@@ -38,9 +44,9 @@ class VirtualLineTest(TestCaseWithLog):
         Guarantee that we have "enough" virtual lines for the test
         """
         with self.no_log():
-            me, vl_list, locations = await asyncio.gather(self.async_api.people.me(),
-                                                          self.async_api.telephony.virtual_lines.list(),
-                                                          self.async_api.locations.list())
+            me, vl_list = await asyncio.gather(self.async_api.people.me(),
+                                               self.async_api.telephony.virtual_lines.list())
+        locations = self.locations
         me: Person
         vl_list: list[VirtualLine]
         locations: list[Location]

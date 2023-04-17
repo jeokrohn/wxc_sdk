@@ -29,7 +29,7 @@ from wxc_sdk.telephony.location.internal_dialing import InternalDialing
 from wxc_sdk.telephony.prem_pstn.dial_plan import DialPlan, PatternAndAction
 from wxc_sdk.telephony.prem_pstn.trunk import TrunkDetail
 
-from .testutil import calling_users, us_location_info, LocationInfo, available_extensions, available_tns, \
+from tests.testutil import calling_users, us_location_info, LocationInfo, available_extensions, available_tns, \
     as_available_tns, random_users
 
 
@@ -285,7 +285,11 @@ class ToUserWithTN(TestCallRouting):
                 # get telephony location details for all locations
                 telephony_locations = await asyncio.gather(
                     *[api.telephony.location.details(location_id=loc.location_id)
-                      for loc in locations])
+                      for loc in locations], return_exceptions=True)
+                locations = [loc for loc, details in zip(locations, telephony_locations)
+                             if not isinstance(details, Exception)]
+                telephony_locations = [tl for tl in telephony_locations
+                                       if not isinstance(tl, Exception)]
                 telephony_locations: list[TelephonyLocation]
                 numbers = await api.telephony.phone_numbers()
                 numbers: list[NumberListPhoneNumber]

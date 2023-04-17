@@ -42,7 +42,7 @@ class Device(ApiModel):
     permissions: list[str]
     #: The connection status of the device.
     connection_status: str
-    #: The product name.
+    #: The product name. A display friendly version of the device's model.
     product: str
     #: The product type.
     product_type: str = Field(alias='type')
@@ -55,11 +55,10 @@ class Device(ApiModel):
     #: The unique address for the network adapter.
     mac: Optional[str]
     #: The primary SIP address to dial this device.
-    primary_sip_url: str
+    primary_sip_url: Optional[str]
     #: All SIP addresses to dial this device.
-    sip_urls: list[str]
-    #: error codes
-    error_codes: list[Any]
+    sip_urls: list[Any]
+    error_codes: Optional[list[Any]]
     #: Serial number for the device.
     serial: Optional[str]
     #: The operating system name data and version tag.
@@ -67,10 +66,11 @@ class Device(ApiModel):
     #: The upgrade channel the device is assigned to.
     upgrade_channel: Optional[str]
     #: The date and time that the device was registered, in ISO8601 format.
-    created: datetime
-    first_seen: datetime
+    created: Optional[datetime]
+    #: The date and time that the device was first seen, in ISO8601 format.
+    first_seen: Optional[datetime]
     #: The date and time that the device was last seen, in ISO8601 format.
-    last_seen: datetime
+    last_seen: Optional[datetime]
 
     @root_validator(pre=True)
     def pop_place_id(cls, values):
@@ -94,13 +94,22 @@ class ActivationCodeResponse(ApiModel):
 @dataclass(init=False)
 class DevicesApi(ApiChild, base='devices'):
     """
-    Devices represent cloud-registered Webex RoomOS devices. Devices may be associated with Workspaces.
+    Devices represent cloud-registered Webex RoomOS devices or IP Phones. Devices may be associated with Workspaces
+    or People.
 
-    Searching and viewing details for your devices requires an auth token with the spark:devices_read scope. Updating or
-    deleting your devices requires an auth token with the spark:devices_write scope. Viewing the list of all devices in
-    an organization requires an administrator auth token with the spark-admin:devices_read scope. Adding, updating,
-    or deleting all devices in an organization requires an administrator auth token with the spark-admin:devices_write
-    scope. Generating an activation code requires an auth token with the identity:placeonetimepassword_create scope.
+    The following scopes are required for performing the specified actions:
+
+    Searching and viewing details for devices requires an auth token with the spark:devices_read scope.
+
+    Updating or deleting your devices requires an auth token with the spark:devices_write scope.
+
+    Viewing the list of all devices in an organization requires an administrator auth token with
+    the spark-admin:devices_read scope.
+
+    Adding, updating, or deleting all devices in an organization requires an administrator auth token with
+    the spark-admin:devices_write scope.
+
+    Generating an activation code requires an auth token with the identity:placeonetimepassword_create scope.
     """
 
     #: device jobs Api
@@ -128,7 +137,7 @@ class DevicesApi(ApiChild, base='devices'):
         :type display_name: str
         :param product: List devices with this product name.
         :type product: str
-        :param product_type: List devices with this type.
+        :param product_type: List devices with this type. Possible values: roomdesk, phone, accessory, webexgo, unknown
         :type product_type: str
         :param tag: List devices which have a tag. Searching for multiple tags (logical AND) can be done by comma
         :type tag: str
@@ -154,13 +163,13 @@ class DevicesApi(ApiChild, base='devices'):
         """
         params.update((to_camel(p), v) for p, v in locals().items()
                       if p not in {'self', 'params'} and v is not None)
-        pt = params.pop(product_type, None)
+        pt = params.pop('productType', None)
         if pt is not None:
             params['type'] = pt
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Device, params=params, item_key='items')
 
-    def details(self, device_id: str, org_id: str = None) -> Device:
+    def details(self, device_id: str) -> Device:
         """
         Get Device Details
         Shows details for a device, by ID.
@@ -169,17 +178,14 @@ class DevicesApi(ApiChild, base='devices'):
 
         :param device_id: A unique identifier for the device.
         :type device_id: str
-        :param org_id:
-        :type org_id: str
         :return: Device details
         :rtype: Device
         """
         url = self.ep(device_id)
-        params = org_id and {'orgId': org_id} or None
-        data = self.get(url=url, params=params)
+        data = self.get(url=url)
         return Device.parse_obj(data)
 
-    def delete(self, device_id: str, org_id: str = None):
+    def delete(self, device_id: str):
         """
         Delete a Device
 
@@ -189,12 +195,9 @@ class DevicesApi(ApiChild, base='devices'):
 
         :param device_id: A unique identifier for the device.
         :type device_id: str
-        :param org_id:
-        :type org_id: str
         """
         url = self.ep(device_id)
-        params = org_id and {'orgId': org_id} or None
-        super().delete(url=url, params=params)
+        super().delete(url=url)
 
     def modify_device_tags(self, device_id: str, op: TagOp, value: List[str], org_id: str = None) -> Device:
         """
@@ -221,19 +224,54 @@ class DevicesApi(ApiChild, base='devices'):
         data = self.patch(url=url, json=body, params=params, content_type='application/json-patch+json')
         return Device.parse_obj(data)
 
-    def activation_code(self, workspace_id: str, org_id: str = None) -> ActivationCodeResponse:
+    def activation_code(self, workspace_id: str=None, person_id: str = None, model: str = None) -> ActivationCodeResponse:
         """
         Create a Device Activation Code
 
         Generate an activation code for a device in a specific workspace by workspaceId. Currently, activation codes
         may only be generated for shared workspaces--personal mode is not supported.
 
-        :param workspace_id: The workspaceId of the workspace where the device will be activated.
-        :param org_id:
-        :return: activation code and expiry time
+        :param workspace_id: The ID of the workspace where the device will be activated.
+        :type workspace_id: str
+        :param person_id: The ID of the person who will own the device once activated.
+        :type person_id: str
+        :param model: The model of the device being created.
+        :type model: str
         :rtype: ActivationCodeResponse
         """
+        body = {}
+        if workspace_id is not None:
+            body['workspaceId'] = workspace_id
+        if person_id is not None:
+            body['personId'] = person_id
+        if model is not None:
+            body['model'] = model
         url = self.ep('activationCode')
-        params = org_id and {'orgId': org_id} or None
-        data = self.post(url=url, params=params, json={'workspaceId': workspace_id})
+        data = self.post(url=url, json=body)
         return ActivationCodeResponse.parse_obj(data)
+
+    def create_by_mac_address(self, mac: str, workspace_id: str = None, person_id: str = None,
+                              model: str = None) -> Device:
+        """
+        Create a phone by it's MAC address in a specific workspace or for a person.
+        Specify the mac, model and either workspaceId or personId.
+
+        :param mac: The MAC address of the device being created.
+        :type mac: str
+        :param workspace_id: The ID of the workspace where the device will be activated.
+        :type workspace_id: str
+        :param person_id: The ID of the person who will own the device once activated.
+        :type person_id: str
+        :param model: The model of the device being created.
+        :type model: str
+        """
+        body = {'mac': mac}
+        if workspace_id is not None:
+            body['workspaceId'] = workspace_id
+        if person_id is not None:
+            body['personId'] = person_id
+        if model is not None:
+            body['model'] = model
+        url = self.ep()
+        data = super().post(url=url, json=body)
+        return Device.parse_obj(data)

@@ -23,6 +23,9 @@ The second column of the table has a link to the documentation of the method.
    * - api.devices.activation_code
         Create a Device Activation Code
      - :meth:`~wxc_sdk.devices.DevicesApi.activation_code`
+   * - api.devices.create_by_mac_address
+        Create a phone by it's MAC address in a specific workspace or for a person
+     - :meth:`~wxc_sdk.devices.DevicesApi.create_by_mac_address`
    * - api.devices.delete
         Delete a Device
      - :meth:`~wxc_sdk.devices.DevicesApi.delete`
@@ -63,7 +66,7 @@ The second column of the table has a link to the documentation of the method.
         Get group details
      - :meth:`~wxc_sdk.groups.GroupsApi.details`
    * - api.groups.list
-        List groups
+        List groups in your organization
      - :meth:`~wxc_sdk.groups.GroupsApi.list`
    * - api.groups.members
         Query members of a group
@@ -800,9 +803,15 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.location.device_settings
         Get device override settings for a location
      - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.device_settings`
+   * - api.telephony.location.enable_for_calling
+        Enable a location by adding it to Webex Calling
+     - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.enable_for_calling`
    * - api.telephony.location.generate_password
         Generates an example password using the effective password settings for the location
      - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.generate_password`
+   * - api.telephony.location.list
+        Lists Webex Calling locations for an organization with Webex Calling details
+     - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.list`
    * - api.telephony.location.update
         Update Webex Calling details for a location, by ID
      - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.update`
@@ -1229,6 +1238,9 @@ The second column of the table has a link to the documentation of the method.
    * - api.workspace_settings.permissions_out.transfer_numbers.read
         Retrieve Transfer Numbers Settings for a Workspace
      - :meth:`~wxc_sdk.person_settings.permissions_out.TransferNumbersApi.read`
+   * - api.workspaces.capabilities
+        Shows the capabilities for a workspace by ID
+     - :meth:`~wxc_sdk.workspaces.WorkspacesApi.capabilities`
    * - api.workspaces.create
         Create a Workspace
      - :meth:`~wxc_sdk.workspaces.WorkspacesApi.create`
@@ -1242,5 +1254,5 @@ The second column of the table has a link to the documentation of the method.
         List Workspaces
      - :meth:`~wxc_sdk.workspaces.WorkspacesApi.list`
    * - api.workspaces.update
-        Update a Workspace
+        Updates details for a workspace by ID
      - :meth:`~wxc_sdk.workspaces.WorkspacesApi.update`

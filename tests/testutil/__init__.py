@@ -9,13 +9,14 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import date
 from functools import reduce
-from itertools import zip_longest
+from itertools import zip_longest, chain
 from random import randint
 from typing import Generator
-from test_helper.randomuserutil import RandomUserUtil
-from test_helper.randomuser import User
 
 from test_helper.digittree import DigitTree
+from test_helper.randomlocation import RandomLocation, Address
+from test_helper.randomuser import User
+from test_helper.randomuserutil import RandomUserUtil
 
 from examples.calendarific import CalendarifiyApi
 from wxc_sdk import WebexSimpleApi
@@ -28,7 +29,14 @@ from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
 __all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'LocationInfo', 'us_location_info',
            'calling_users', 'available_numbers', 'available_extensions_gen', 'get_or_create_holiday_schedule',
            'get_or_create_business_schedule', 'random_users', 'create_call_park_extension',
-           'as_available_extensions_gen']
+           'as_available_extensions_gen', 'create_random_wsl', 'available_mac_address', 'new_workspace_names',
+           'TEST_WORKSPACES_PREFIX', 'create_workspace_with_webex_calling']
+
+from wxc_sdk.telephony.devices import MACState
+
+from wxc_sdk.workspace_locations import WorkspaceLocation
+from wxc_sdk.workspaces import Workspace, WorkspaceCalling, CallingType, WorkspaceWebexCalling, \
+    WorkspaceSupportedDevices
 
 
 def available_numbers(numbers: Iterable[str], seed: str = None) -> Generator[str, None, None]:
@@ -126,11 +134,12 @@ def available_extensions_gen(*, api: WebexSimpleApi, location_id: str, seed: str
 async def as_available_extensions_gen(*, api: AsWebexSimpleApi,
                                       location_id: str, seed: str = None) -> Generator[str, None, None]:
     phone_numbers, cpe_list = await asyncio.gather(api.telephony.phone_numbers(location_id=location_id),
-                                                api.telephony.callpark_extension.list(location_id=location_id))
+                                                   api.telephony.callpark_extension.list(location_id=location_id))
     extensions = [pn.extension for pn in phone_numbers
                   if pn.extension]
     extensions.extend(cpe.extension for cpe in cpe_list)
     return available_numbers(numbers=extensions, seed=seed)
+
 
 def available_extensions(*, api: WebexSimpleApi, location_id: str, ext_requested: int = 1,
                          seed: str = None) -> list[str]:
@@ -286,3 +295,94 @@ def create_call_park_extension(*, api: WebexSimpleApi, location_id: str) -> str:
 
     cpe_id = cp.create(location_id=location_id, name=new_name, extension=extension)
     return cpe_id
+
+
+def create_random_wsl(api: WebexSimpleApi) -> WorkspaceLocation:
+    """
+    create a random workspace location
+    """
+
+    def random_address() -> Address:
+        """
+        Get a random address in the US
+        """
+
+        async def as_random_address() -> Address:
+            """
+            Get a random address in the US
+            """
+            async with RandomLocation() as rl:
+                return await rl.random_address()
+
+        return asyncio.run(as_random_address())
+
+    address = random_address()
+
+    # get a unique display name
+    display_name_prefix = f'{address.city}, {address.address1}'
+    wsl_list = api.workspace_locations.list()
+    display_names = set(wsl.display_name for wsl in wsl_list)
+    display_name = next(dpn
+                        for suffix in chain([''],
+                                            (f'_{i:02}'
+                                             for i in range(1, 99)))
+                        if (dpn := f'{display_name_prefix}{suffix}') not in display_names)
+
+    wsl = api.workspace_locations.create(display_name=display_name, address=str(address),
+                                         country_code='US', longitude=address.geo_location.lon,
+                                         latitude=address.geo_location.lat, city_name=address.city)
+    return wsl
+
+
+def available_mac_address(*, api: WebexSimpleApi) -> Generator[str, None, None]:
+    mac_prefix = 'DEADDEAD'
+
+    def mac_candidates() -> Generator[str, None, None]:
+        for v in range(65536):
+            yield f'{mac_prefix}{hex(v)[2:].zfill(4)}'
+
+    # test macs in batches of 10
+    batch_args = [mac_candidates()] * 10
+    batches = zip_longest(*batch_args)
+    for batch in batches:
+        validation_result = api.telephony.devices.validate_macs(macs=list(batch))
+        errored_macs = set(ms.mac
+                           for ms in (validation_result.mac_status or [])
+                           if ms.state != MACState.available)
+        yield from (mac for mac in batch if mac not in errored_macs)
+
+
+TEST_WORKSPACES_PREFIX = 'workspace test '
+
+
+def new_workspace_names(api: WebexSimpleApi) -> Generator[str, None, None]:
+    ws_list = list(api.workspaces.list())
+    ws_names = set(w.display_name for w in ws_list)
+    new_gen = (name for i in range(1000)
+               if (name := f'{TEST_WORKSPACES_PREFIX}{i:03}') not in ws_names)
+    return new_gen
+
+
+def create_workspace_with_webex_calling(api: WebexSimpleApi, target_location: Location,
+                                        supported_devices: WorkspaceSupportedDevices)->Workspace:
+    """
+    create a workspace with webex calling in given location
+    """
+    # get an extension in location
+    extension = next(available_extensions_gen(api=api,
+                                              location_id=target_location.location_id))
+
+    # get a name for new workspace
+    name = next(new_workspace_names(api=api))
+
+    # create workspace with that extension
+    new_workspace = Workspace(
+        display_name=name,
+        calling=WorkspaceCalling(
+            type=CallingType.webex,
+            webex_calling=WorkspaceWebexCalling(
+                extension=extension,
+                location_id=target_location.location_id)),
+        supported_devices=supported_devices)
+    workspace = api.workspaces.create(settings=new_workspace)
+    return workspace

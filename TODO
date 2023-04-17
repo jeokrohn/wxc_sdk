@@ -1,3 +1,7 @@
+# TODO: virtual line related tests
+    * available members for call queues, call parks, ...
+    * add virtual lines to devices, w/ line labels
+    + add virtual lines to apps, w/ line labels
 # TODO: how do you create a workspace w/ WxC using the API?
 # TODO: what about location level settings?
     #   what about outgoing and incoming permissions for locations

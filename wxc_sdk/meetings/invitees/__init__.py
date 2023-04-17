@@ -4,7 +4,8 @@ from typing import List, Optional
 from ...api_child import ApiChild
 from ...base import ApiModel
 
-__all__ = ['CreateInviteesItem', 'Invitee', 'MeetingInviteesApi', 'CreateMeetingInviteeBody', 'UpdateMeetingInviteeBody']
+__all__ = ['CreateInviteesItem', 'Invitee', 'MeetingInviteesApi', 'CreateMeetingInviteeBody',
+           'UpdateMeetingInviteeBody', 'CreateMeetingInviteesBody']
 
 
 class Invitee(ApiModel):

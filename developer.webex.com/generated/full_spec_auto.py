@@ -1,7 +1,7 @@
 from collections.abc import Generator
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
 from pydantic import Field, parse_obj_as
@@ -1262,7 +1262,7 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
         if after is not None:
             params['after'] = after
         if self_activated is not None:
-            params['selfActivated'] = self_activated
+            params['selfActivated'] = str(self_activated).lower()
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Subscriber, params=params)
 
@@ -2852,7 +2852,7 @@ class GroupsApi(ApiChild, base='groups'):
         """
         params = {}
         if include_members is not None:
-            params['includeMembers'] = include_members
+            params['includeMembers'] = str(include_members).lower()
         url = self.ep(f'{group_id}')
         data = super().get(url=url, params=params)
         return CreateGroupResponse.parse_obj(data)
@@ -2895,7 +2895,7 @@ class GroupsApi(ApiChild, base='groups'):
         if sort_order is not None:
             params['sortOrder'] = sort_order
         if include_members is not None:
-            params['includeMembers'] = include_members
+            params['includeMembers'] = str(include_members).lower()
         if start_index is not None:
             params['startIndex'] = start_index
         if count is not None:
@@ -4002,7 +4002,7 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         if host_email is not None:
             params['hostEmail'] = host_email
         if send_email is not None:
-            params['sendEmail'] = send_email
+            params['sendEmail'] = str(send_email).lower()
         url = self.ep(f'{meeting_invitee_id}')
         super().delete(url=url, params=params)
         return
@@ -5252,7 +5252,7 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
         documentation: https://developer.webex.com/docs/api/v1/meeting-preferences/update-default-site
         """
         params = {}
-        params['defaultSite'] = default_site
+        params['defaultSite'] = str(default_site).lower()
         if user_email is not None:
             params['userEmail'] = user_email
         body = UpdateDefaultSiteBody()
@@ -7380,7 +7380,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         """
         params = {}
         if current is not None:
-            params['current'] = current
+            params['current'] = str(current).lower()
         if host_email is not None:
             params['hostEmail'] = host_email
         url = self.ep(f'{meeting_id}')
@@ -7461,7 +7461,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         if scheduled_type is not None:
             params['scheduledType'] = scheduled_type
         if current is not None:
-            params['current'] = current
+            params['current'] = str(current).lower()
         if from_ is not None:
             params['from'] = from_
         if to_ is not None:
@@ -7530,7 +7530,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         if state is not None:
             params['state'] = state
         if is_modified is not None:
-            params['isModified'] = is_modified
+            params['isModified'] = str(is_modified).lower()
         if host_email is not None:
             params['hostEmail'] = host_email
         url = self.ep()
@@ -7961,7 +7961,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         if host_email is not None:
             params['hostEmail'] = host_email
         if send_email is not None:
-            params['sendEmail'] = send_email
+            params['sendEmail'] = str(send_email).lower()
         url = self.ep(f'{meeting_id}')
         super().delete(url=url, params=params)
         return
@@ -8056,9 +8056,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         if locale is not None:
             params['locale'] = locale
         if is_default is not None:
-            params['isDefault'] = is_default
+            params['isDefault'] = str(is_default).lower()
         if is_standard is not None:
-            params['isStandard'] = is_standard
+            params['isStandard'] = str(is_standard).lower()
         if host_email is not None:
             params['hostEmail'] = host_email
         if site_url is not None:
@@ -8709,7 +8709,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         if host_email is not None:
             params['hostEmail'] = host_email
         if send_email is not None:
-            params['sendEmail'] = send_email
+            params['sendEmail'] = str(send_email).lower()
         url = self.ep(f'{meeting_id}/interpreters/{interpreter_id}')
         super().delete(url=url, params=params)
         return
@@ -8785,7 +8785,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         """
         params = {}
         if send_email is not None:
-            params['sendEmail'] = send_email
+            params['sendEmail'] = str(send_email).lower()
         url = self.ep(f'{meeting_id}/breakoutSessions')
         super().delete(url=url, params=params)
         return
@@ -9882,7 +9882,7 @@ class PeopleApi(ApiChild, base='people'):
         if roles is not None:
             params['roles'] = roles
         if calling_data is not None:
-            params['callingData'] = calling_data
+            params['callingData'] = str(calling_data).lower()
         if location_id is not None:
             params['locationId'] = location_id
         url = self.ep()
@@ -9950,7 +9950,7 @@ class PeopleApi(ApiChild, base='people'):
         """
         params = {}
         if calling_data is not None:
-            params['callingData'] = calling_data
+            params['callingData'] = str(calling_data).lower()
         body = CreatePersonBody()
         if emails is not None:
             body.emails = emails
@@ -10009,7 +10009,7 @@ class PeopleApi(ApiChild, base='people'):
         """
         params = {}
         if calling_data is not None:
-            params['callingData'] = calling_data
+            params['callingData'] = str(calling_data).lower()
         url = self.ep(f'{person_id}')
         data = super().get(url=url, params=params)
         return Person.parse_obj(data)
@@ -10090,9 +10090,9 @@ class PeopleApi(ApiChild, base='people'):
         """
         params = {}
         if calling_data is not None:
-            params['callingData'] = calling_data
+            params['callingData'] = str(calling_data).lower()
         if show_all_types is not None:
-            params['showAllTypes'] = show_all_types
+            params['showAllTypes'] = str(show_all_types).lower()
         body = UpdatePersonBody()
         if emails is not None:
             body.emails = emails
@@ -10164,7 +10164,7 @@ class PeopleApi(ApiChild, base='people'):
         """
         params = {}
         if calling_data is not None:
-            params['callingData'] = calling_data
+            params['callingData'] = str(calling_data).lower()
         url = self.ep('me')
         data = super().get(url=url, params=params)
         return Person.parse_obj(data)
@@ -11599,7 +11599,7 @@ class RoomsApi(ApiChild, base='rooms'):
         if type_ is not None:
             params['type'] = type_
         if org_public_spaces is not None:
-            params['orgPublicSpaces'] = org_public_spaces
+            params['orgPublicSpaces'] = str(org_public_spaces).lower()
         if from_ is not None:
             params['from'] = from_
         if to_ is not None:
@@ -15796,7 +15796,7 @@ class ListVirtualLineObject(ApiModel):
     #: customExternalCallerIdName for virtual line.
     custom_external_caller_id_name: Optional[str]
     #: Calling details of virtual line.
-    number: Optional[int]
+    number: Optional[GetUserNumberItemObject]
     #: Location details of virtual line.
     location: Optional[Role]
     #: Number of devices assigned to a virtual line.
@@ -21076,7 +21076,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         if phone_number is not None:
             params['phoneNumber'] = phone_number
         if available is not None:
-            params['available'] = available
+            params['available'] = str(available).lower()
         if order is not None:
             params['order'] = order
         if owner_name is not None:
@@ -21094,11 +21094,11 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         if state is not None:
             params['state'] = state
         if details is not None:
-            params['details'] = details
+            params['details'] = str(details).lower()
         if toll_free_numbers is not None:
-            params['tollFreeNumbers'] = toll_free_numbers
+            params['tollFreeNumbers'] = str(toll_free_numbers).lower()
         if restricted_non_geo_numbers is not None:
-            params['restrictedNonGeoNumbers'] = restricted_non_geo_numbers
+            params['restrictedNonGeoNumbers'] = str(restricted_non_geo_numbers).lower()
         url = self.ep('numbers')
         data = super().get(url=url, params=params)
         return NumberListGetObject.parse_obj(data["phoneNumbers"])
@@ -21709,11 +21709,11 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         if order is not None:
             params['order'] = order
         if has_device_assigned is not None:
-            params['hasDeviceAssigned'] = has_device_assigned
+            params['hasDeviceAssigned'] = str(has_device_assigned).lower()
         if has_extension_assigned is not None:
-            params['hasExtensionAssigned'] = has_extension_assigned
+            params['hasExtensionAssigned'] = str(has_extension_assigned).lower()
         if has_dn_assigned is not None:
-            params['hasDnAssigned'] = has_dn_assigned
+            params['hasDnAssigned'] = str(has_dn_assigned).lower()
         url = self.ep('virtualLines')
         return self.session.follow_pagination(url=url, model=ListVirtualLineObject, item_key='virtualLines', params=params)
 

@@ -11,7 +11,7 @@ from json import dumps, loads
 from time import sleep
 from typing import ClassVar
 
-from tests.base import TestCaseWithLog
+from tests.base import TestCaseWithLog, TestWithLocations, async_test
 from tests.testutil import calling_users
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.common import UserType, ValidationStatus, DeviceCustomization, DisplayNameSelection
@@ -39,7 +39,7 @@ class TestSupportedDevices(TestCaseWithLog):
         print(devices)
 
 
-class DeviceSettings(TestCaseWithLog):
+class DeviceSettings(TestWithLocations):
     def test_001_org_level(self):
         """
         Get org level device settings
@@ -50,8 +50,7 @@ class DeviceSettings(TestCaseWithLog):
 
     @TestCaseWithLog.async_test
     async def test_002_location_level(self):
-        with self.no_log():
-            locations = self.api.locations.list()
+        locations = self.locations
         customizations = await asyncio.gather(
             *[self.async_api.telephony.location.device_settings(location_id=loc.location_id)
               for loc in locations])
@@ -110,22 +109,19 @@ class ValidateMac(TestCaseWithLog):
         self.assertEqual(MACState.duplicate_in_list, r.mac_status[1].state)
         self.assertEqual(5676, r.mac_status[1].error_code)
 
-    @TestCaseWithLog.async_test
+    @async_test
     async def test_005_duplicate(self):
         """
-        duplicate
+        duplicate MAC address
         """
-        users = calling_users(api=self.api)
-        # get devices of all users
-        # TODO: replace with more appropriate way to get list of calling devices as soon as CSDM device list includes
-        #  calling devices
-        user_devices: list[PersonDevicesResponse] = await asyncio.gather(
-            *[self.async_api.person_settings.devices(person_id=user.person_id)
-              for user in users])
-        devices = list(chain.from_iterable(ud.devices for ud in user_devices))
-        if not devices:
-            self.skipTest('No existing calling devices')
-        r = self.api.telephony.devices.validate_macs(macs=[devices[0].mac])
+        # get mac addresses of existing devices
+        existing_macs = [mac for device in self.api.devices.list(product_type='phone')
+                         if (mac := device.mac)]
+        if not existing_macs:
+            self.skipTest('No existing device MAC addresses')
+
+        # try to validate an existing MAC address; this has to fail
+        r = self.api.telephony.devices.validate_macs(macs=existing_macs[0])
 
         self.assertEqual(ValidationStatus.errors, r.status)
         self.assertEqual(1, len(r.mac_status))
@@ -140,6 +136,16 @@ class Members(TestCaseWithLog):
         """
         Get members for all devices
         """
+        # get all MPP devices
+        phones = [p for p in self.api.devices.list(product_type='phone')
+                  if p.product_type == 'phone']
+
+        # get members for all devices
+        r = await asyncio.gather(*[self.async_api.telephony.devices.members(device_id=d.device_id) for d in phones],
+                                 return_exceptions=True)
+
+        # TODO: figure out new test now, as the devices API supports MPPs
+        raise NotImplementedError
         with self.no_log():
             users: dict[str, Person] = {user.person_id: user for user in calling_users(api=self.api)}
             # noinspection PyTypeChecker
@@ -189,8 +195,9 @@ class Members(TestCaseWithLog):
     @TestCaseWithLog.async_test
     async def test_002_available_members(self):
         """
-        Get available members for all devices
+        Get available members for all MPPs
         """
+        # TODO: rewrite now that devices API includes MPPs
         with self.no_log():
             users: dict[str, Person] = {user.person_id: user for user in calling_users(api=self.api)}
             person_devices_responses = await asyncio.gather(*[self.async_api.person_settings.devices(person_id=user_id)
@@ -225,7 +232,7 @@ class Members(TestCaseWithLog):
             *[self.async_api.telephony.devices.available_members(device_id=device.device_id,
                                                                  location_id=user.location_id)
               for user, device in users_and_device])
-        # TODO: add some validation nad/or output
+        # TODO: add some validation and/or output
 
 
 @dataclass(init=False)
@@ -236,7 +243,7 @@ class TestsWithDevices(TestCaseWithLog):
 
     #: all calling enabled users; w/o telephony details
     calling_users: ClassVar[dict[str, Person]]
-    #: all devices
+    #: all MPPs owned by users
     devices: ClassVar[list[TelephonyDevice]]
     #: device owners; w/ telephony details
     device_owners: ClassVar[dict[str, Person]]
@@ -285,8 +292,14 @@ class TestsWithDevices(TestCaseWithLog):
 
 
 class TestAddMember(TestsWithDevices):
+    """
+    Test related to device members
+    """
+    # TODO: add virtual lines as members
+    # TODO: verify available members semantics; since inter-location line sharing is now allowed I'd like to
+    #  understand what actually gets returned as "available". ... or what is "unavailable
 
-    @TestCaseWithLog.async_test
+    @async_test
     async def test_003_add_member(self):
         def member_equal(a: DeviceMember, b: DeviceMember):
             """

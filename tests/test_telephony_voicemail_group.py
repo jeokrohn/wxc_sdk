@@ -17,11 +17,11 @@ from wxc_sdk.locations import Location
 from wxc_sdk.rest import RestError
 from wxc_sdk.telephony import NumberListPhoneNumber
 from wxc_sdk.telephony.voicemail_groups import VoicemailGroupDetail, VoicemailGroup
-from .base import TestCaseWithLog, async_test
-from .testutil import available_numbers
+from tests.base import async_test, TestWithLocations
+from tests.testutil import available_numbers
 
 
-class TestVmGroup(TestCaseWithLog):
+class TestVmGroup(TestWithLocations):
 
     @contextmanager
     def assert_vmg(self) -> VoicemailGroup:
@@ -71,11 +71,11 @@ class TestVmGroup(TestCaseWithLog):
         filter lst by location id
         """
         # get list of locations, voicemail groups and numbers
-        locations, groups, numbers = await asyncio.gather(
-            self.async_api.locations.list(),
+        groups, numbers = await asyncio.gather(
             self.async_api.telephony.voicemail_groups.list(),
             self.async_api.telephony.phone_numbers()
         )
+        locations = self.locations
         locations: list[Location]
         groups: list[VoicemailGroup]
         numbers: list[NumberListPhoneNumber]
@@ -209,9 +209,9 @@ class TestVmGroup(TestCaseWithLog):
         number_of_groups_to_create = 10
 
         with self.no_log():
-            locations, groups, numbers = await asyncio.gather(self.async_api.locations.list(),
-                                                              self.async_api.telephony.voicemail_groups.list(),
-                                                              self.async_api.telephony.phone_numbers())
+            groups, numbers = await asyncio.gather(self.async_api.telephony.voicemail_groups.list(),
+                                                   self.async_api.telephony.phone_numbers())
+        locations = self.locations
         locations: list[Location]
         groups: list[VoicemailGroup]
         numbers: list[NumberListPhoneNumber]
@@ -307,7 +307,7 @@ class TestVmGroup(TestCaseWithLog):
         """
         with self.no_log():
             # pick target location
-            locations = list(self.api.locations.list())
+            locations = self.locations
             location = choice(locations)
 
             # get unique name for new group
@@ -396,7 +396,7 @@ class TestVmGroup(TestCaseWithLog):
         if len(groups) < create:
             # create a bunch of groups so that there is something to delete
             # pick target location
-            locations = list(self.api.locations.list())
+            locations = self.locations
             location = choice(locations)
 
             # get unique name for new group

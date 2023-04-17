@@ -6,6 +6,10 @@ Release history
 - fix: proper enum handling for type parameter in :meth:`wxc_sdk.rooms.RoomsApi.list`
 - feat: new parameter initiate_flow_callback for :class:`wxc_sdk.integration.Integration`
 - fix: state and postal_code are optional in :class:`wxc_sdk.locations.LocationAddress`. They are mandatory in calling locations are not required in workspace locations which now are returned by :meth:`wxc_sdk.locations.LocationsApi.list` as well.
+- feat: devices API now supports MPPs: :class:`wxc_sdk.devices.DevicesApi`
+- feat: unified locations and workspace locations: :class:`wxc_sdk.workspaces.WorkspacesApi`
+- feat: new :meth:`wxc_sdk.telephony.location.TelephonyLocationApi.enable_for_calling`
+- feat: new :meth:`wxc_sdk.telephony.location.TelephonyLocationApi.list`
 
 1.12.0
 ------

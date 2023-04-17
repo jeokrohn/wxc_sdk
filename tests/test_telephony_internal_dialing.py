@@ -3,9 +3,8 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from random import choice
-from typing import ClassVar
 
-from tests.base import TestCaseWithLog
+from tests.base import TestWithLocations
 from wxc_sdk.common import RouteIdentity, RouteType
 from wxc_sdk.locations import Location
 from wxc_sdk.telephony.location.internal_dialing import InternalDialing
@@ -13,15 +12,9 @@ from wxc_sdk.telephony.prem_pstn.trunk import TrunkDetail
 
 
 @dataclass(init=False)
-class TestInternalDialing(TestCaseWithLog):
-    locations: ClassVar[list[Location]]
+class TestInternalDialing(TestWithLocations):
     _settings: list[InternalDialing] = field(default=None)
     _route_choices: list[RouteIdentity] = field(default=None)
-
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-        cls.locations = list(cls.api.locations.list())
 
     def read_all_settings(self) -> dict[str, InternalDialing]:
         """

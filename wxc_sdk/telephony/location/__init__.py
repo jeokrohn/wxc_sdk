@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from dataclasses import dataclass
 from typing import Optional
 
@@ -10,8 +11,9 @@ from .numbers import LocationNumbersApi
 from .receptionist_contacts import ReceptionistContactsDirectoryApi
 from .vm import LocationVoicemailSettingsApi
 from ...api_child import ApiChild
-from ...base import ApiModel
+from ...base import ApiModel, to_camel
 from ...common import ValidateExtensionsResponse, RouteType, DeviceCustomization
+from ...locations import Location
 from ...rest import RestSession
 
 __all__ = ['CallingLineId', 'PSTNConnection', 'TelephonyLocation', 'TelephonyLocationApi']
@@ -63,6 +65,8 @@ class TelephonyLocation(ApiModel):
     default_domain: Optional[str]
     # TODO: add docstring, WXCAPIBULK-302
     subscription_status: Optional[str]
+    #: True if E911 setup is required.
+    e911_setup_required: Optional[bool]
 
 
 @dataclass(init=False)
@@ -157,6 +161,44 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         url = self.ep(location_id)
         data = self.get(url=url, params=params)
         return TelephonyLocation.parse_obj(data)
+
+    def enable_for_calling(self, location: Location, org_id: str = None)->str:
+        """
+        Enable a location by adding it to Webex Calling. This add Webex Calling support to a location created created
+        using the POST /v1/locations API.
+
+        Locations are used to support calling features which can be defined at the location level.
+
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        :return: A unique identifier for the location.
+        :rtype: str
+        """
+        params = org_id and {'orgId': org_id}
+        url = self.ep()
+        body = location.json()
+        data = self.post(url=url, data=body, params=params)
+        return data['id']
+
+    def list(self, name: str=None, order: str=None, org_id: str = None)->Generator[TelephonyLocation, None, None]:
+        """
+        Lists Webex Calling locations for an organization with Webex Calling details.
+
+        Searching and viewing locations with Webex Calling details in your organization require an administrator auth
+        token with the spark-admin:telephony_config_read scope.
+        :param name: List locations whose name contains this string.
+        :type name: str
+        :param order: Sort the list of locations based on name, either asc or desc.
+        :type order: str
+        :param org_id: List locations for this organization.
+        :type org_id: str
+        :return: generator of :class:`TelephonyLocation` instances
+        """
+        params = {to_camel(k): v
+                  for k, v in locals().items()
+                  if k != 'self' and v is not None}
+        url=self.ep()
+        return self.session.follow_pagination(url=url, model=TelephonyLocation, params=params, item_key='locations')
+
 
     def update(self, location_id: str, settings: TelephonyLocation, org_id: str = None):
         """

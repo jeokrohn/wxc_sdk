@@ -11,11 +11,10 @@ from wxc_sdk.all_types import *
 from wxc_sdk.telephony.callqueue import CQRoutingType
 from wxc_sdk.telephony.callqueue.policies import HolidayService, CPActionType, ScheduleLevel, NightService, \
     StrandedCalls, StrandedCallsAction, ForcedForward
-from .base import TestCaseWithLog, TestCaseWithUsers, async_test
+from tests.base import TestCaseWithLog, async_test, TestWithLocations, TestCaseWithUsers
+from tests.testutil import available_extensions_gen, get_or_create_holiday_schedule, get_or_create_business_schedule
 
 # number of call queues to create by create many test
-from .testutil import available_extensions_gen, get_or_create_holiday_schedule, get_or_create_business_schedule
-
 CQ_MANY = 100
 
 
@@ -45,16 +44,10 @@ class TestList(TestCaseWithLog):
         print(f'Got details for {len(details)} call queues')
 
 
-class TestCreate(TestCaseWithUsers):
+class TestCreate(TestWithLocations, TestCaseWithUsers):
     """
     Test call queue creation
     """
-    locations: ClassVar[list[Location]]
-
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-        cls.locations = list(cls.api.locations.list())
 
     def test_001_create_simple(self):
         """

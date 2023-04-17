@@ -22,7 +22,9 @@ from ..api_child import ApiChild
 from ..base import ApiModel, to_camel, enum_str
 from ..base import SafeEnum as Enum
 
-__all__ = ['WorkSpaceType', 'CallingType', 'CalendarType', 'WorkspaceEmail', 'Calendar', 'Workspace', 'WorkspacesApi']
+__all__ = ['WorkSpaceType', 'CallingType', 'CalendarType', 'WorkspaceEmail', 'Calendar',
+           'Workspace', 'CapabilityMap', 'WorkspaceCalling', 'WorkspaceWebexCalling', 'WorkspaceSupportedDevices',
+           'WorkspacesApi']
 
 
 class WorkSpaceType(str, Enum):
@@ -47,17 +49,17 @@ class WorkSpaceType(str, Enum):
 
 class CallingType(str, Enum):
     """
-    calling type
-    freeCalling, hybridCalling, webexCalling, webexEdgeForDevices
+    Calling types: freeCalling, webexEdgeForDevices, thirdPartySipCalling, webexCalling and none.
     """
     #: Free Calling.
     free = 'freeCalling'
-    #: Hybrid Calling.
-    hybrid = 'hybridCalling'
-    #: Webex Calling.
-    webex = 'webexCalling'
     #: Webex Edge For Devices.
     edge_for_devices = 'webexEdgeForDevices'
+    #: thirdPartySipCalling
+    third_party = 'thirdPartySipCalling'
+    #: Webex Calling.
+    webex = 'webexCalling'
+    none = 'none'
 
 
 class CalendarType(str, Enum):
@@ -86,6 +88,23 @@ class WorkspaceSupportedDevices(str, Enum):
     phones = 'phones'
 
 
+class WorkspaceWebexCalling(ApiModel):
+    #: End user phone number in Cisco Unified CM.
+    phone_number: Optional[str]
+    #: End user extension in Cisco Unified CM.
+    extension: Optional[str]
+    #: Calling location ID.
+    location_id: Optional[str]
+
+
+class WorkspaceCalling(ApiModel):
+    type: Optional[CallingType]
+    #: The webexCalling object only applies when calling type is webexCalling.
+    #: due to a backend limitation this information is never returned by the workspace API and only has to be used when
+    #: creating a workspace
+    webex_calling: Optional[WorkspaceWebexCalling]
+
+
 class Workspace(ApiModel):
     """
     Workspace details
@@ -109,7 +128,7 @@ class Workspace(ApiModel):
     #: The date and time that the workspace was registered
     created: Optional[datetime.datetime]
     #: Calling type.
-    calling: Optional[CallingType]
+    calling: Optional[WorkspaceCalling]
     #: The hybridCalling object only applies when calling type is hybridCalling.
     hybrid_calling: Optional[WorkspaceEmail]
     #: Calendar type. Calendar of type none does not include an emailAddress field.
@@ -120,17 +139,6 @@ class Workspace(ApiModel):
     hotdesking_status: Optional[bool]
     #: The supported devices for the workspace.
     supported_devices: Optional[WorkspaceSupportedDevices]
-
-    @validator('calling', pre=True)
-    def validate_calling(cls, value):
-        """
-        Calling type is actually stored in an object with a single 'type' attribute
-
-        :meta private:
-        """
-        if isinstance(value, CallingType):
-            return value
-        return value['type']
 
     @validator('hotdesking_status', pre=True)
     def validate_hotdesking_status(cls, value):
@@ -150,24 +158,22 @@ class Workspace(ApiModel):
         :meta private:
         """
         j_data = json.loads(super().json(*args, exclude_none=exclude_none, by_alias=by_alias, **kwargs))
-        ct = j_data.pop('calling', None)
-        if ct:
-            j_data['calling'] = {'type': ct}
         if self.hotdesking_status is not None:
             j_data['hotdeskingStatus'] = 'on' if self.hotdesking_status else 'off'
         return json.dumps(j_data)
 
-    def update_or_create(self, for_update: bool = False) -> str:
+    def update_or_create(self, for_update: bool=False) -> str:
         """
         JSON for update ot create
 
         :meta private:
         """
+        # supported device cannot be changed later
         return self.json(exclude={'workspace_id': True,
                                   'sip_address': True,
                                   'created': True,
                                   'hybrid_calling': True,
-                                  'calling': for_update})
+                                  'supported_devices': for_update})
 
     @staticmethod
     def create(*, display_name: str) -> 'Workspace':
@@ -178,25 +184,48 @@ class Workspace(ApiModel):
         return Workspace(display_name=display_name)
 
 
+class SupportAndConfiguredInfo(ApiModel):
+    #: Is the workspace capability supported or not.
+    supported: Optional[bool]
+    #: Is the workspace capability configured or not.
+    configured: Optional[bool]
+
+
+class CapabilityMap(ApiModel):
+    #: Occupancy detection.
+    occupancy_detection: Optional[SupportAndConfiguredInfo]
+    #: Presence detection.
+    presence_detection: Optional[SupportAndConfiguredInfo]
+    #: Ambient noise.
+    ambient_noise: Optional[SupportAndConfiguredInfo]
+    #: Sound level.
+    sound_level: Optional[SupportAndConfiguredInfo]
+    #: Temperature.
+    temperature: Optional[SupportAndConfiguredInfo]
+    #: Air quality.
+    air_quality: Optional[SupportAndConfiguredInfo]
+    #: Relative humidity.
+    relative_humidity: Optional[SupportAndConfiguredInfo]
+
+
 class WorkspacesApi(ApiChild, base='workspaces'):
     """
     Workspaces API
 
     Workspaces represent where people work, such as conference rooms, meeting spaces, lobbies, and lunch rooms. Devices
     may be associated with workspaces.
-
-    Viewing the list of workspaces in an organization requires an administrator auth token with
-    the spark-admin:workspaces_read scope. Adding, updating, or deleting workspaces in an organization requires an
+    Viewing the list of workspaces in an organization requires an administrator auth token with the
+    spark-admin:workspaces_read scope. Adding, updating, or deleting workspaces in an organization requires an
     administrator auth token with the spark-admin:workspaces_write scope.
-
     The Workspaces API can also be used by partner administrators acting as administrators of a different organization
-    than their own. In those cases an orgId value must be supplied, as indicated in the reference documentation for
-    the relevant endpoints.
+    than their own. In those cases an orgId value must be supplied, as indicated in the reference documentation for the
+    relevant endpoints.
     """
 
     def list(self, workspace_location_id: str = None, floor_id: str = None, display_name: str = None,
              capacity: int = None,
-             workspace_type: WorkSpaceType = None, calling: CallingType = None, calendar: CalendarType = None,
+             workspace_type: WorkSpaceType = None, calling: CallingType = None,
+             supported_devices: WorkspaceSupportedDevices = None, calendar: CalendarType = None,
              org_id: str = None, **params) -> Generator[Workspace, None, None]:
         """
         List Workspaces
@@ -216,11 +245,16 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :param capacity: List workspaces with the given capacity. Must be -1 or higher. A value of -1 lists workspaces
             with no capacity set.
         :type capacity: int
-        :param workspace_type: List workspaces by type.
+        :param workspace_type: List workspaces by type. Possible values: notSet, focus, huddle, meetingRoom, open,
+            desk, other
         :type workspace_type: :class:`WorkSpaceType`
-        :param calling: List workspaces by calling type.
+        :param calling: List workspaces by calling type. Possible values: freeCalling, hybridCalling, webexCalling,
+            webexEdgeForDevices, thirdPartySipCalling, none
         :type calling: :class:`CallingType`
-        :param calendar: List workspaces by calendar type.
+        :param supported_devices: List workspaces by supported devices. Possible values: collaborationDevices, phones
+        :type supported_devices: str
+
+        :param calendar: List workspaces by calendar type. Possible values: none, google, microsoft
         :type calendar: :class:`CalendarType`
         :param org_id: List workspaces in this organization. Only admin users of another organization
             (such as partners) may use this parameter.
@@ -241,11 +275,17 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         """
         Create a Workspace
 
-        Create a workspace. The workspaceLocationId, floorId, capacity, type and notes parameters are optional, and
-        omitting them will result in the creation of a workspace without these values set, or set to their default.
-        A workspaceLocationId must be provided when the floorId is set. Calendar and calling can also be set for a
-        new workspace. Omitting them will default to free calling and no calendaring. The orgId parameter can only be
-        used by admin users of another organization (such as partners).
+        The workspaceLocationId, floorId, capacity, type, notes and hotdeskingStatus parameters are optional,
+        and omitting them will result in the creation of a workspace without these values set, or set to their
+        default. A workspaceLocationId must be provided when the floorId is set. Calendar and calling can also be set
+        for a new workspace. Omitting them will default to free calling and no calendaring. The orgId parameter can
+        only be used by admin users of another organization (such as partners).
+
+        Information for Webex Calling fields may be found here: locations and available numbers.
+
+        The locationId and supportedDevices fields cannot be changed once configured.
+
+        When creating a webexCalling workspace, a locationId and either a phoneNumber or extension or both is required.
 
         :param settings: settings for new Workspace
         :type settings: :class:`Workspace`
@@ -279,14 +319,25 @@ class WorkspacesApi(ApiChild, base='workspaces'):
 
     def update(self, workspace_id, settings: Workspace) -> Workspace:
         """
-        Update a Workspace
+        Updates details for a workspace by ID.
 
-        Updates details for a workspace, by ID. Specify the workspace ID in the workspaceId parameter in the URI.
-        Include all details for the workspace that are present in a GET request for the workspace details. Not
-        including the optional capacity, type or notes fields will result in the fields no longer being defined
-        for the workspace. A workspaceLocationId must be provided when the floorId is set. The workspaceLocationId,
-        floorId, calendar and calling fields do not change when omitted from the update request. Updating the
-        calling parameter is not supported.
+        Specify the workspace ID in the workspaceId parameter in the URI. Include all details for the workspace that
+        are present in a GET request for the workspace details. Not including the optional capacity, type or notes
+        fields will result in the fields no longer being defined for the workspace. A workspaceLocationId must be
+        provided when the floorId is set. The workspaceLocationId, floorId, supportedDevices, calendar and calling
+        fields do not change when omitted from the update request.
+
+        Information for Webex Calling fields may be found here: locations and available numbers.
+
+        Updating the calling parameter is only supported if the existing calling type is freeCalling, none,
+        thirdPartySipCalling or webexCalling.
+
+        Updating the calling parameter to none, thirdPartySipCalling or webexCalling is not supported if the
+        workspace contains any devices.
+
+        The locationId and supportedDevices fields cannot be changed once configured.
+
+        When updating webexCalling information, a locationId and either a phoneNumber or extension or both is required.
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
@@ -312,3 +363,20 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         """
         url = self.ep(workspace_id)
         self.delete(url)
+
+    def capabilities(self, workspace_id: str) -> CapabilityMap:
+        """
+        Shows the capabilities for a workspace by ID.
+        Returns a set of capabilities, including whether or not the capability is supported by any device in the
+        workspace, and if the capability is configured (enabled). For example for a specific capability like
+        occupancyDetection, the API will return if the capability is supported and/or configured such that occupancy
+        detection data will flow from the workspace (device) to the cloud. Specify the workspace ID in the workspaceId
+        parameter in the URI.
+
+        :param workspace_id: A unique identifier for the workspace.
+        :type workspace_id: str
+
+        """
+        url = self.ep(f'{workspace_id}/capabilities')
+        data = super().get(url=url)
+        return CapabilityMap.parse_obj(data["capabilities"])

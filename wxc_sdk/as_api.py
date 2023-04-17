@@ -405,13 +405,22 @@ class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/ca
 
 class AsDevicesApi(AsApiChild, base='devices'):
     """
-    Devices represent cloud-registered Webex RoomOS devices. Devices may be associated with Workspaces.
+    Devices represent cloud-registered Webex RoomOS devices or IP Phones. Devices may be associated with Workspaces
+    or People.
 
-    Searching and viewing details for your devices requires an auth token with the spark:devices_read scope. Updating or
-    deleting your devices requires an auth token with the spark:devices_write scope. Viewing the list of all devices in
-    an organization requires an administrator auth token with the spark-admin:devices_read scope. Adding, updating,
-    or deleting all devices in an organization requires an administrator auth token with the spark-admin:devices_write
-    scope. Generating an activation code requires an auth token with the identity:placeonetimepassword_create scope.
+    The following scopes are required for performing the specified actions:
+
+    Searching and viewing details for devices requires an auth token with the spark:devices_read scope.
+
+    Updating or deleting your devices requires an auth token with the spark:devices_write scope.
+
+    Viewing the list of all devices in an organization requires an administrator auth token with
+    the spark-admin:devices_read scope.
+
+    Adding, updating, or deleting all devices in an organization requires an administrator auth token with
+    the spark-admin:devices_write scope.
+
+    Generating an activation code requires an auth token with the identity:placeonetimepassword_create scope.
     """
 
     #: device jobs Api
@@ -439,7 +448,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
         :type display_name: str
         :param product: List devices with this product name.
         :type product: str
-        :param product_type: List devices with this type.
+        :param product_type: List devices with this type. Possible values: roomdesk, phone, accessory, webexgo, unknown
         :type product_type: str
         :param tag: List devices which have a tag. Searching for multiple tags (logical AND) can be done by comma
         :type tag: str
@@ -465,7 +474,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
         """
         params.update((to_camel(p), v) for p, v in locals().items()
                       if p not in {'self', 'params'} and v is not None)
-        pt = params.pop(product_type, None)
+        pt = params.pop('productType', None)
         if pt is not None:
             params['type'] = pt
         url = self.ep()
@@ -489,7 +498,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
         :type display_name: str
         :param product: List devices with this product name.
         :type product: str
-        :param product_type: List devices with this type.
+        :param product_type: List devices with this type. Possible values: roomdesk, phone, accessory, webexgo, unknown
         :type product_type: str
         :param tag: List devices which have a tag. Searching for multiple tags (logical AND) can be done by comma
         :type tag: str
@@ -515,13 +524,13 @@ class AsDevicesApi(AsApiChild, base='devices'):
         """
         params.update((to_camel(p), v) for p, v in locals().items()
                       if p not in {'self', 'params'} and v is not None)
-        pt = params.pop(product_type, None)
+        pt = params.pop('productType', None)
         if pt is not None:
             params['type'] = pt
         url = self.ep()
         return [o async for o in self.session.follow_pagination(url=url, model=Device, params=params, item_key='items')]
 
-    async def details(self, device_id: str, org_id: str = None) -> Device:
+    async def details(self, device_id: str) -> Device:
         """
         Get Device Details
         Shows details for a device, by ID.
@@ -530,17 +539,14 @@ class AsDevicesApi(AsApiChild, base='devices'):
 
         :param device_id: A unique identifier for the device.
         :type device_id: str
-        :param org_id:
-        :type org_id: str
         :return: Device details
         :rtype: Device
         """
         url = self.ep(device_id)
-        params = org_id and {'orgId': org_id} or None
-        data = await self.get(url=url, params=params)
+        data = await self.get(url=url)
         return Device.parse_obj(data)
 
-    async def delete(self, device_id: str, org_id: str = None):
+    async def delete(self, device_id: str):
         """
         Delete a Device
 
@@ -550,12 +556,9 @@ class AsDevicesApi(AsApiChild, base='devices'):
 
         :param device_id: A unique identifier for the device.
         :type device_id: str
-        :param org_id:
-        :type org_id: str
         """
         url = self.ep(device_id)
-        params = org_id and {'orgId': org_id} or None
-        await super().delete(url=url, params=params)
+        await super().delete(url=url)
 
     async def modify_device_tags(self, device_id: str, op: TagOp, value: List[str], org_id: str = None) -> Device:
         """
@@ -582,22 +585,57 @@ class AsDevicesApi(AsApiChild, base='devices'):
         data = await self.patch(url=url, json=body, params=params, content_type='application/json-patch+json')
         return Device.parse_obj(data)
 
-    async def activation_code(self, workspace_id: str, org_id: str = None) -> ActivationCodeResponse:
+    async def activation_code(self, workspace_id: str=None, person_id: str = None, model: str = None) -> ActivationCodeResponse:
         """
         Create a Device Activation Code
 
         Generate an activation code for a device in a specific workspace by workspaceId. Currently, activation codes
         may only be generated for shared workspaces--personal mode is not supported.
 
-        :param workspace_id: The workspaceId of the workspace where the device will be activated.
-        :param org_id:
-        :return: activation code and expiry time
+        :param workspace_id: The ID of the workspace where the device will be activated.
+        :type workspace_id: str
+        :param person_id: The ID of the person who will own the device once activated.
+        :type person_id: str
+        :param model: The model of the device being created.
+        :type model: str
         :rtype: ActivationCodeResponse
         """
+        body = {}
+        if workspace_id is not None:
+            body['workspaceId'] = workspace_id
+        if person_id is not None:
+            body['personId'] = person_id
+        if model is not None:
+            body['model'] = model
         url = self.ep('activationCode')
-        params = org_id and {'orgId': org_id} or None
-        data = await self.post(url=url, params=params, json={'workspaceId': workspace_id})
+        data = await self.post(url=url, json=body)
         return ActivationCodeResponse.parse_obj(data)
+
+    async def create_by_mac_address(self, mac: str, workspace_id: str = None, person_id: str = None,
+                              model: str = None) -> Device:
+        """
+        Create a phone by it's MAC address in a specific workspace or for a person.
+        Specify the mac, model and either workspaceId or personId.
+
+        :param mac: The MAC address of the device being created.
+        :type mac: str
+        :param workspace_id: The ID of the workspace where the device will be activated.
+        :type workspace_id: str
+        :param person_id: The ID of the person who will own the device once activated.
+        :type person_id: str
+        :param model: The model of the device being created.
+        :type model: str
+        """
+        body = {'mac': mac}
+        if workspace_id is not None:
+            body['workspaceId'] = workspace_id
+        if person_id is not None:
+            body['personId'] = person_id
+        if model is not None:
+            body['model'] = model
+        url = self.ep()
+        data = await super().post(url=url, json=body)
+        return Device.parse_obj(data)
 
 
 class AsEventsApi(AsApiChild, base='events'):
@@ -685,12 +723,19 @@ class AsEventsApi(AsApiChild, base='events'):
 
 
 class AsGroupsApi(AsApiChild, base='groups'):
+    """
+    Groups contain a collection of members in Webex. A member represents a Webex user. A group is used to assign
+    templates and settings to the set of members contained in a group. To create and manage a group, including adding
+    and removing members from a group, an auth token containing the identity:groups_rw is required. Searching and
+    viewing members of a group requires an auth token with a scope of identity:groups_read.
+    To learn more about managing people to use as members in the /groups API please refer to the People API.
+    """
 
     def list_gen(self, include_members: bool = None, attributes: str = None, sort_by: str = None,
              sort_order: str = None, list_filter: str = None, org_id: str = None,
              **params) -> AsyncGenerator[Group, None, None]:
         """
-        List groups
+        List groups in your organization.
 
         :param include_members: Include members in list response
         :type include_members: bool
@@ -700,9 +745,11 @@ class AsGroupsApi(AsApiChild, base='groups'):
         :type sort_by: str
         :param sort_order: sort order, ascending or descending
         :type sort_order: str
-        :param org_id: organisation ID
+        :param org_id: List groups in this organization. Only admin users of another organization (such as partners)
+            may use this parameter.
         :type org_id: str
-        :param list_filter: filter expression. Example: displayName eq "test"
+        :param list_filter: Searches the group by displayName with an operator and a value. The available operators
+            are eq (equal) and sw (starts with). Only displayName can be used to filter results.
         :type list_filter: str
         :param params:
         :return: generator of :class:`Group` objects
@@ -721,7 +768,7 @@ class AsGroupsApi(AsApiChild, base='groups'):
              sort_order: str = None, list_filter: str = None, org_id: str = None,
              **params) -> List[Group]:
         """
-        List groups
+        List groups in your organization.
 
         :param include_members: Include members in list response
         :type include_members: bool
@@ -731,9 +778,11 @@ class AsGroupsApi(AsApiChild, base='groups'):
         :type sort_by: str
         :param sort_order: sort order, ascending or descending
         :type sort_order: str
-        :param org_id: organisation ID
+        :param org_id: List groups in this organization. Only admin users of another organization (such as partners)
+            may use this parameter.
         :type org_id: str
-        :param list_filter: filter expression. Example: displayName eq "test"
+        :param list_filter: Searches the group by displayName with an operator and a value. The available operators
+            are eq (equal) and sw (starts with). Only displayName can be used to filter results.
         :type list_filter: str
         :param params:
         :return: generator of :class:`Group` objects
@@ -12138,13 +12187,30 @@ class AsLocationVoicemailSettingsApi(AsApiChild, base='telephony/config/location
 
 
 class AsReceptionistContactsDirectoryApi(AsApiChild, base='telephony/config/locations'):
+    """
+    Webex Calling Location Receptionist Contacts supports creation of directories and assigning custom groups of
+    users to directories for a location within an organization.
+
+    Receptionist Contact Directories are named custom groups of users.
+
+    Viewing these read-only directories requires a full or read-only administrator auth token with a scope of
+    spark-admin:telephony_config_read, as the current set of APIs is designed to provide supplemental information for
+    administrators utilizing People Webex Calling APIs.
+
+    Modifying these directories requires a full administrator auth token with a scope
+    of spark-admin:telephony_config_write.
+
+    A partner administrator can retrieve or change settings in a customer's organization using the optional OrgId
+    query parameter.
+
+    """
     # TODO: create test cases
-    # TODO: really not details call and no way to update a directory?
+    # TODO: really no details call and no way to update a directory?
 
     def _url(self, location_id: str):
         return self.ep(f'{location_id}/receptionistContacts/directories')
 
-    async def create(self, location_id: str, name: str, contacts: list[str], org_id: str = None):
+    async def create(self, location_id: str, name: str, contacts: list[str], org_id: str = None)->str:
         """
         Creates a new Receptionist Contact Directory for a location.
 
@@ -12161,13 +12227,14 @@ class AsReceptionistContactsDirectoryApi(AsApiChild, base='telephony/config/loca
         :type contacts: list[str]
         :param org_id: Add a Receptionist Contact Directory to this organization.
         :type org_id: str
+        :return: Receptionist Contact Directory ID.
         """
         url = self._url(location_id)
         params = org_id and {'orgId': org_id} or None
         body = {'name': name,
                 'contacts': [{'personId': contact} for contact in contacts]}
-        await self.post(url=url, params=params, json=body)
-        # TODO: does create() really not return an id?
+        data = await self.post(url=url, params=params, json=body)
+        return data['id']
 
     def list_gen(self, location_id: str, org_id: str = None) -> AsyncGenerator[IdAndName, None, None]:
         """
@@ -12316,6 +12383,63 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         url = self.ep(location_id)
         data = await self.get(url=url, params=params)
         return TelephonyLocation.parse_obj(data)
+
+    async def enable_for_calling(self, location: Location, org_id: str = None)->str:
+        """
+        Enable a location by adding it to Webex Calling. This add Webex Calling support to a location created created
+        using the POST /v1/locations API.
+
+        Locations are used to support calling features which can be defined at the location level.
+
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        :return: A unique identifier for the location.
+        :rtype: str
+        """
+        params = org_id and {'orgId': org_id}
+        url = self.ep()
+        body = location.json()
+        data = await self.post(url=url, data=body, params=params)
+        return data['id']
+
+    def list_gen(self, name: str=None, order: str=None, org_id: str = None)-> AsyncGenerator[TelephonyLocation, None, None]:
+        """
+        Lists Webex Calling locations for an organization with Webex Calling details.
+
+        Searching and viewing locations with Webex Calling details in your organization require an administrator auth
+        token with the spark-admin:telephony_config_read scope.
+        :param name: List locations whose name contains this string.
+        :type name: str
+        :param order: Sort the list of locations based on name, either asc or desc.
+        :type order: str
+        :param org_id: List locations for this organization.
+        :type org_id: str
+        :return: generator of :class:`TelephonyLocation` instances
+        """
+        params = {to_camel(k): v
+                  for k, v in locals().items()
+                  if k != 'self' and v is not None}
+        url=self.ep()
+        return self.session.follow_pagination(url=url, model=TelephonyLocation, params=params, item_key='locations')
+
+    async def list(self, name: str=None, order: str=None, org_id: str = None)-> List[TelephonyLocation]:
+        """
+        Lists Webex Calling locations for an organization with Webex Calling details.
+
+        Searching and viewing locations with Webex Calling details in your organization require an administrator auth
+        token with the spark-admin:telephony_config_read scope.
+        :param name: List locations whose name contains this string.
+        :type name: str
+        :param order: Sort the list of locations based on name, either asc or desc.
+        :type order: str
+        :param org_id: List locations for this organization.
+        :type org_id: str
+        :return: generator of :class:`TelephonyLocation` instances
+        """
+        params = {to_camel(k): v
+                  for k, v in locals().items()
+                  if k != 'self' and v is not None}
+        url=self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=TelephonyLocation, params=params, item_key='locations')]
 
     async def update(self, location_id: str, settings: TelephonyLocation, org_id: str = None):
         """
@@ -13655,7 +13779,7 @@ class AsWorkspaceNumbersApi(AsApiChild, base='workspaces'):
         path = path and '/path' or ''
         return super().ep(path=f'{workspace_id}/features/numbers/{path}')
 
-    async def read(self, workspace_id: str, org_id: str = None) -> WorkSpaceNumbers:
+    async def read(self, workspace_id: str, org_id: str = None) -> WorkspaceNumbers:
         """
         List the PSTN phone numbers associated with a specific workspace, by ID, within the organization. Also shows
         the location and Organization associated with the workspace.
@@ -13668,14 +13792,12 @@ class AsWorkspaceNumbersApi(AsApiChild, base='workspaces'):
         :param org_id: List numbers for a workspace within this organization.
         :type org_id: str
         :return: Workspace numbers
-        :rtype: WorkSpaceNumbers
+        :rtype: WorkspaceNumbers
         """
-        # TODO: need to be updated in line with https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace
-        #  currently the documentation is incomplete. Tracked by WXCAPIBULK-296
         params = org_id and {'org_id': org_id} or None
         url = self.ep(workspace_id=workspace_id)
         data = await self.get(url=url, params=params)
-        return parse_obj_as(WorkSpaceNumbers, data)
+        return parse_obj_as(WorkspaceNumbers, data)
 
 
 @dataclass(init=False)
@@ -13714,19 +13836,18 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
 
     Workspaces represent where people work, such as conference rooms, meeting spaces, lobbies, and lunch rooms. Devices
     may be associated with workspaces.
-
-    Viewing the list of workspaces in an organization requires an administrator auth token with
-    the spark-admin:workspaces_read scope. Adding, updating, or deleting workspaces in an organization requires an
+    Viewing the list of workspaces in an organization requires an administrator auth token with the
+    spark-admin:workspaces_read scope. Adding, updating, or deleting workspaces in an organization requires an
     administrator auth token with the spark-admin:workspaces_write scope.
-
     The Workspaces API can also be used by partner administrators acting as administrators of a different organization
-    than their own. In those cases an orgId value must be supplied, as indicated in the reference documentation for
-    the relevant endpoints.
+    than their own. In those cases an orgId value must be supplied, as indicated in the reference documentation for the
+    relevant endpoints.
     """
 
     def list_gen(self, workspace_location_id: str = None, floor_id: str = None, display_name: str = None,
              capacity: int = None,
-             workspace_type: WorkSpaceType = None, calling: CallingType = None, calendar: CalendarType = None,
+             workspace_type: WorkSpaceType = None, calling: CallingType = None,
+             supported_devices: WorkspaceSupportedDevices = None, calendar: CalendarType = None,
              org_id: str = None, **params) -> AsyncGenerator[Workspace, None, None]:
         """
         List Workspaces
@@ -13746,11 +13867,16 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         :param capacity: List workspaces with the given capacity. Must be -1 or higher. A value of -1 lists workspaces
             with no capacity set.
         :type capacity: int
-        :param workspace_type: List workspaces by type.
+        :param workspace_type: List workspaces by type. Possible values: notSet, focus, huddle, meetingRoom, open,
+            desk, other
         :type workspace_type: :class:`WorkSpaceType`
-        :param calling: List workspaces by calling type.
+        :param calling: List workspaces by calling type. Possible values: freeCalling, hybridCalling, webexCalling,
+            webexEdgeForDevices, thirdPartySipCalling, none
         :type calling: :class:`CallingType`
-        :param calendar: List workspaces by calendar type.
+        :param supported_devices: List workspaces by supported devices. Possible values: collaborationDevices, phones
+        :type supported_devices: str
+
+        :param calendar: List workspaces by calendar type. Possible values: none, google, microsoft
         :type calendar: :class:`CalendarType`
         :param org_id: List workspaces in this organization. Only admin users of another organization
             (such as partners) may use this parameter.
@@ -13769,7 +13895,8 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
 
     async def list(self, workspace_location_id: str = None, floor_id: str = None, display_name: str = None,
              capacity: int = None,
-             workspace_type: WorkSpaceType = None, calling: CallingType = None, calendar: CalendarType = None,
+             workspace_type: WorkSpaceType = None, calling: CallingType = None,
+             supported_devices: WorkspaceSupportedDevices = None, calendar: CalendarType = None,
              org_id: str = None, **params) -> List[Workspace]:
         """
         List Workspaces
@@ -13789,11 +13916,16 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         :param capacity: List workspaces with the given capacity. Must be -1 or higher. A value of -1 lists workspaces
             with no capacity set.
         :type capacity: int
-        :param workspace_type: List workspaces by type.
+        :param workspace_type: List workspaces by type. Possible values: notSet, focus, huddle, meetingRoom, open,
+            desk, other
         :type workspace_type: :class:`WorkSpaceType`
-        :param calling: List workspaces by calling type.
+        :param calling: List workspaces by calling type. Possible values: freeCalling, hybridCalling, webexCalling,
+            webexEdgeForDevices, thirdPartySipCalling, none
         :type calling: :class:`CallingType`
-        :param calendar: List workspaces by calendar type.
+        :param supported_devices: List workspaces by supported devices. Possible values: collaborationDevices, phones
+        :type supported_devices: str
+
+        :param calendar: List workspaces by calendar type. Possible values: none, google, microsoft
         :type calendar: :class:`CalendarType`
         :param org_id: List workspaces in this organization. Only admin users of another organization
             (such as partners) may use this parameter.
@@ -13814,11 +13946,17 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         """
         Create a Workspace
 
-        Create a workspace. The workspaceLocationId, floorId, capacity, type and notes parameters are optional, and
-        omitting them will result in the creation of a workspace without these values set, or set to their default.
-        A workspaceLocationId must be provided when the floorId is set. Calendar and calling can also be set for a
-        new workspace. Omitting them will default to free calling and no calendaring. The orgId parameter can only be
-        used by admin users of another organization (such as partners).
+        The workspaceLocationId, floorId, capacity, type, notes and hotdeskingStatus parameters are optional,
+        and omitting them will result in the creation of a workspace without these values set, or set to their
+        default. A workspaceLocationId must be provided when the floorId is set. Calendar and calling can also be set
+        for a new workspace. Omitting them will default to free calling and no calendaring. The orgId parameter can
+        only be used by admin users of another organization (such as partners).
+
+        Information for Webex Calling fields may be found here: locations and available numbers.
+
+        The locationId and supportedDevices fields cannot be changed once configured.
+
+        When creating a webexCalling workspace, a locationId and either a phoneNumber or extension or both is required.
 
         :param settings: settings for new Workspace
         :type settings: :class:`Workspace`
@@ -13852,14 +13990,25 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
 
     async def update(self, workspace_id, settings: Workspace) -> Workspace:
         """
-        Update a Workspace
+        Updates details for a workspace by ID.
 
-        Updates details for a workspace, by ID. Specify the workspace ID in the workspaceId parameter in the URI.
-        Include all details for the workspace that are present in a GET request for the workspace details. Not
-        including the optional capacity, type or notes fields will result in the fields no longer being defined
-        for the workspace. A workspaceLocationId must be provided when the floorId is set. The workspaceLocationId,
-        floorId, calendar and calling fields do not change when omitted from the update request. Updating the
-        calling parameter is not supported.
+        Specify the workspace ID in the workspaceId parameter in the URI. Include all details for the workspace that
+        are present in a GET request for the workspace details. Not including the optional capacity, type or notes
+        fields will result in the fields no longer being defined for the workspace. A workspaceLocationId must be
+        provided when the floorId is set. The workspaceLocationId, floorId, supportedDevices, calendar and calling
+        fields do not change when omitted from the update request.
+
+        Information for Webex Calling fields may be found here: locations and available numbers.
+
+        Updating the calling parameter is only supported if the existing calling type is freeCalling, none,
+        thirdPartySipCalling or webexCalling.
+
+        Updating the calling parameter to none, thirdPartySipCalling or webexCalling is not supported if the
+        workspace contains any devices.
+
+        The locationId and supportedDevices fields cannot be changed once configured.
+
+        When updating webexCalling information, a locationId and either a phoneNumber or extension or both is required.
 
         :param workspace_id: A unique identifier for the workspace.
         :type workspace_id: str
@@ -13885,6 +14034,23 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         """
         url = self.ep(workspace_id)
         await self.delete(url)
+
+    async def capabilities(self, workspace_id: str) -> CapabilityMap:
+        """
+        Shows the capabilities for a workspace by ID.
+        Returns a set of capabilities, including whether or not the capability is supported by any device in the
+        workspace, and if the capability is configured (enabled). For example for a specific capability like
+        occupancyDetection, the API will return if the capability is supported and/or configured such that occupancy
+        detection data will flow from the workspace (device) to the cloud. Specify the workspace ID in the workspaceId
+        parameter in the URI.
+
+        :param workspace_id: A unique identifier for the workspace.
+        :type workspace_id: str
+
+        """
+        url = self.ep(f'{workspace_id}/capabilities')
+        data = await super().get(url=url)
+        return CapabilityMap.parse_obj(data["capabilities"])
 
 
 @dataclass(init=False)

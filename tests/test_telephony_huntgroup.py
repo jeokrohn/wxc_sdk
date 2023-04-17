@@ -5,8 +5,8 @@ from contextlib import contextmanager
 from typing import ClassVar
 
 from wxc_sdk.all_types import *
-from .base import TestCaseWithLog, TestCaseWithUsers
-from .testutil import available_extensions_gen
+from tests.base import TestCaseWithLog, TestCaseWithUsers, TestWithLocations
+from tests.testutil import available_extensions_gen
 
 # number of huntgroups to create my create many test
 HG_MANY = 100
@@ -38,16 +38,10 @@ class TestList(TestCaseWithLog):
         print(f'Got details for {len(details)} hunt groups')
 
 
-class TestCreate(TestCaseWithUsers):
+class TestCreate(TestWithLocations, TestCaseWithUsers):
     """
     Test hunt group creation
     """
-    locations: ClassVar[list[Location]]
-
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-        cls.locations = list(cls.api.locations.list())
 
     def test_001_create_simple(self):
         """

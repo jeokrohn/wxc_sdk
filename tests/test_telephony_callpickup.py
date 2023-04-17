@@ -2,17 +2,17 @@
 import asyncio
 from itertools import chain
 
-from tests.base import TestCaseWithLog, async_test
+from tests.base import async_test, TestWithLocations
 from wxc_sdk.telephony.callpickup import CallPickup
 
 
-class TestDetails(TestCaseWithLog):
+class TestDetails(TestWithLocations):
     @async_test
     async def test_all_details(self):
         """
         get details for all call pickups
         """
-        locations = await self.async_api.locations.list()
+        locations = self.locations
         # get call pickups for all locations
         pickups = list(chain.from_iterable(
             await asyncio.gather(*[self.async_api.telephony.pickup.list(location_id=loc.location_id)

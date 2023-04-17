@@ -11,7 +11,7 @@ from random import shuffle
 from time import sleep, perf_counter
 from typing import NamedTuple
 
-from tests.base import TestCaseWithLog
+from tests.base import TestCaseWithLog, TestWithLocations
 from tests.testutil import as_available_tns
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import NumberState
@@ -39,7 +39,7 @@ class MoveNumberContext(NamedTuple):
     numbers: list[str]
 
 
-class TestMoveNumbers(TestCaseWithLog):
+class TestMoveNumbers(TestWithLocations):
 
     async def pick_locations(self) -> tuple[LocationAndNumbers, LocationAndNumbers]:
         """
@@ -47,7 +47,7 @@ class TestMoveNumbers(TestCaseWithLog):
 
         US locations with premises PSTN and at least one number so that we can gather the NPA
         """
-        locations = [loc for loc in self.api.locations.list()
+        locations = [loc for loc in self.locations
                      if loc.address.country == 'US']
 
         # get telephony details for all locations
