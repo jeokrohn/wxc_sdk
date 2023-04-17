@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from ..api_child import ApiChild
-from ..base import to_camel, ApiModel
+from ..base import to_camel, ApiModel, webex_id_to_uuid
 from ..rest import RestSession
 
 
@@ -33,11 +33,26 @@ class WorkspaceLocation(ApiModel):
     #: The location city name.
     city_name: str
     #: The location longitude.
-    longitude: float
+    longitude: Optional[float]
     #: The location latitude.
-    latitude: float
+    latitude: Optional[float]
     #: Notes associated to the location.
     notes: Optional[str]
+
+    @property
+    def id_uuid(self) -> str:
+        """
+        the base64 decoded is {org_id}#{workspace_id}
+        :return: uuid of the workspace location
+        """
+        return webex_id_to_uuid(self.id).split('#')[-1]
+
+    @property
+    def org_id_uuid(self) -> str:
+        """
+        org id as uuid
+        """
+        return webex_id_to_uuid(self.id).split('#')[0]
 
 
 class WorkspaceLocationFloor(ApiModel):

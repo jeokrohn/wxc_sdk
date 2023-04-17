@@ -8,10 +8,10 @@ from ...api_child import ApiChild
 from ...base import ApiModel
 from ...common import IdAndName, UserNumber, IdOnly
 
-__all__ = ['WorkSpaceNumbers', 'WorkspaceNumbersApi']
+__all__ = ['WorkspaceNumbers', 'WorkspaceNumbersApi']
 
 
-class WorkSpaceNumbers(ApiModel):
+class WorkspaceNumbers(ApiModel):
     #: Array of numbers (primary/alternate).
     phone_numbers: list[UserNumber]
     #: workspace object having a unique identifier for the Workspace.
@@ -32,7 +32,7 @@ class WorkspaceNumbersApi(ApiChild, base='workspaces'):
         path = path and '/path' or ''
         return super().ep(path=f'{workspace_id}/features/numbers/{path}')
 
-    def read(self, workspace_id: str, org_id: str = None) -> WorkSpaceNumbers:
+    def read(self, workspace_id: str, org_id: str = None) -> WorkspaceNumbers:
         """
         List the PSTN phone numbers associated with a specific workspace, by ID, within the organization. Also shows
         the location and Organization associated with the workspace.
@@ -45,11 +45,9 @@ class WorkspaceNumbersApi(ApiChild, base='workspaces'):
         :param org_id: List numbers for a workspace within this organization.
         :type org_id: str
         :return: Workspace numbers
-        :rtype: WorkSpaceNumbers
+        :rtype: WorkspaceNumbers
         """
-        # TODO: need to be updated in line with https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace
-        #  currently the documentation is incomplete. Tracked by WXCAPIBULK-296
         params = org_id and {'org_id': org_id} or None
         url = self.ep(workspace_id=workspace_id)
         data = self.get(url=url, params=params)
-        return parse_obj_as(WorkSpaceNumbers, data)
+        return parse_obj_as(WorkspaceNumbers, data)

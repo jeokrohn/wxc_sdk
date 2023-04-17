@@ -9,13 +9,30 @@ from ...common import IdAndName
 
 
 class ReceptionistContactsDirectoryApi(ApiChild, base='telephony/config/locations'):
+    """
+    Webex Calling Location Receptionist Contacts supports creation of directories and assigning custom groups of
+    users to directories for a location within an organization.
+
+    Receptionist Contact Directories are named custom groups of users.
+
+    Viewing these read-only directories requires a full or read-only administrator auth token with a scope of
+    spark-admin:telephony_config_read, as the current set of APIs is designed to provide supplemental information for
+    administrators utilizing People Webex Calling APIs.
+
+    Modifying these directories requires a full administrator auth token with a scope
+    of spark-admin:telephony_config_write.
+
+    A partner administrator can retrieve or change settings in a customer's organization using the optional OrgId
+    query parameter.
+
+    """
     # TODO: create test cases
-    # TODO: really not details call and no way to update a directory?
+    # TODO: really no details call and no way to update a directory?
 
     def _url(self, location_id: str):
         return self.ep(f'{location_id}/receptionistContacts/directories')
 
-    def create(self, location_id: str, name: str, contacts: list[str], org_id: str = None):
+    def create(self, location_id: str, name: str, contacts: list[str], org_id: str = None)->str:
         """
         Creates a new Receptionist Contact Directory for a location.
 
@@ -32,13 +49,14 @@ class ReceptionistContactsDirectoryApi(ApiChild, base='telephony/config/location
         :type contacts: list[str]
         :param org_id: Add a Receptionist Contact Directory to this organization.
         :type org_id: str
+        :return: Receptionist Contact Directory ID.
         """
         url = self._url(location_id)
         params = org_id and {'orgId': org_id} or None
         body = {'name': name,
                 'contacts': [{'personId': contact} for contact in contacts]}
-        self.post(url=url, params=params, json=body)
-        # TODO: does create() really not return an id?
+        data = self.post(url=url, params=params, json=body)
+        return data['id']
 
     def list(self, location_id: str, org_id: str = None) -> Generator[IdAndName, None, None]:
         """

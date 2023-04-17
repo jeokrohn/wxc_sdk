@@ -47,6 +47,7 @@ class PhoneNumber(ApiModel):
     """
     number_type: PhoneNumberType = Field(alias='type')
     value: str
+    primary: Optional[bool]
 
 
 class SipType(str, Enum):

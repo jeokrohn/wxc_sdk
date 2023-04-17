@@ -42,7 +42,6 @@ class LocationAddress(ApiModel):
 class Location(ApiModel):
     """
     Webex location
-
     """
     #: A unique identifier for the location.
     location_id: Optional[str] = Field(alias='id')
@@ -52,8 +51,14 @@ class Location(ApiModel):
     org_id: Optional[str]
     #: The address of the location, :class:`LocationAddress`
     address: Optional[LocationAddress]
+    #: Time zone associated with this location. Refer to this link (
+    #: https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone)
+    #: for the format.
     time_zone: Optional[str]
+    #: Default email language.
     preferred_language: Optional[str]
+    #: Location's phone announcement language.
+    announcement_language: Optional[str]
 
     @property
     def location_id_uuid(self) -> str:

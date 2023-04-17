@@ -150,7 +150,6 @@ class TestCaseWithTokens(TestCase):
         """
         Decorator to run async tests
         also initializes the async_api attribute
-        :return:
         """
 
         @wraps(as_test)
@@ -484,13 +483,24 @@ class TestWithLocations(TestCaseWithLog):
     @classmethod
     def setUpClass(cls) -> None:
         """
-        Get list of locations
+        Get list of calling locations
         """
         super().setUpClass()
+
+        async def get_calling_locations() -> list[Location]:
+            async with AsWebexSimpleApi(tokens=cls.tokens) as api:
+                locations = await api.locations.list()
+                # figure out which locations are calling locations
+                details = await asyncio.gather(*[api.telephony.location.details(location_id=loc.location_id)
+                                                 for loc in locations], return_exceptions=True)
+            # the calling locations are the ones for which we can actually get calling details
+            return [loc for loc, detail in zip(locations, details)
+                    if not isinstance(detail, Exception)]
+
         if cls.api is None:
             cls.locations = None
             return
-        cls.locations = list(cls.api.locations.list())
+        cls.locations = asyncio.run(get_calling_locations())
 
     def setUp(self) -> None:
         """

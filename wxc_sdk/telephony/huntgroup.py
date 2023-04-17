@@ -1,6 +1,6 @@
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Any
 
 from .forwarding import ForwardingApi, FeatureSelector
 from .hg_and_cq import HGandCQ, Policy
@@ -98,6 +98,8 @@ class HuntGroup(HGandCQ):
     alternate_numbers: Optional[list[AlternateNumber]]
     #: Policy controlling how calls are routed to agents.
     call_policies: Optional[HGCallPolicies]
+    # TODO: undocumented
+    addressAgents: Any
 
     @staticmethod
     def exclude_update_or_create() -> dict:

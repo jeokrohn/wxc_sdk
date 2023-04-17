@@ -637,11 +637,14 @@ class MppCustomization(CommonDeviceCustomization):
     #: Enable/disable the use of the USB ports on Multi-Platform phones.
     usb_ports_enabled: Optional[bool]
     #: Specify the Wi-Fi SSID and password for wireless-enabled MPP phones.
-    wifi_network: WifiNetwork
+    wifi_network: Optional[WifiNetwork]
+    migration_url: Optional[str]
+
 
 
 class WifiCustomization(ApiModel):
     # TODO: implement as soon as properly documented on developer.webex.com
+
     #: Choose up to three predefined codec priority options available for your region.
     audio_codec_priority: AudioCodecPriority
     ldap: Any
