@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 """
-Read API spec and try to group endpoints based on common endpoint parts
+Read API spec and try to group endpoints based on common endpoint parts. Then auto-create code for each group
 """
 import re
 from collections.abc import Callable, Generator
 from dataclasses import dataclass, field
 from io import StringIO
-from typing import List, Optional
+from typing import Optional
 from urllib.parse import urlparse
 
-from scraper import DocMethodDetails, MethodDetails, Parameter
 from classes import ClassGenerator
+from scraper import DocMethodDetails, MethodDetails, Parameter
 
 
 # TODO: common URL for ApiChild base cannot contain URL parameters
