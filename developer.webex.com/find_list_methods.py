@@ -7,7 +7,6 @@ Code used to better understand list methods as foundation to improving code gene
 """
 import re
 from collections.abc import Callable
-from typing import List
 
 from scraper import DocMethodDetails, MethodDetails, Parameter
 
