@@ -50,7 +50,13 @@ async def main():
         print('Failed to get tokens', file=sys.stderr)
         exit(1)
     api = WebexSimpleApi(tokens=tokens)
+    # get calling locations
     locations = list(api.locations.list())
+    async with AsWebexSimpleApi(tokens=tokens) as as_api:
+        details = await asyncio.gather(*[as_api.telephony.location.details(location_id=loc.location_id)
+                                         for loc in locations], return_exceptions=True)
+    locations = [loc for loc, detail in zip(locations, details)
+                 if not isinstance(detail, Exception)]
 
     log_name = f'{os.path.splitext(__file__)[0]}.log'
 
@@ -70,6 +76,15 @@ async def main():
     rest_logger.setLevel(logging.DEBUG)
 
     with ThreadPoolExecutor() as pool:
+
+        # MPPs with mac DEADEAD mac or stll in "activating"
+        mpp_devices = [device for device in api.devices.list(product_type='phone')
+                       if device.mac and device.mac.startswith('DEADDEAD') or
+                       device.connection_status and device.connection_status == 'activating']
+        print(f'deleting {len(mpp_devices)} MPP phones: {", ".join(mpp.display_name for mpp in mpp_devices)}')
+        if not DRY_RUN:
+            list(pool.map(lambda mpp: api.devices.delete(device_id=mpp.device_id),
+                          mpp_devices))
 
         # remove Dustin Harris from Call Queues
         if False:
@@ -260,8 +275,18 @@ async def main():
         if not DRY_RUN:
             list(pool.map(lambda team: api.teams.delete(team_id=team.id), teams))
 
-    # spaces
     async with AsWebexSimpleApi(tokens=tokens) as as_api:
+        # workspace locations
+        # we can only delete workspace locations which are not enabled for calling
+        locations = [loc for loc in api.workspace_locations.list()
+                     if re.search(r'\b(\w{2})\b (\d+) USA', loc.address)]
+        print(f'Deleting {len(locations)} locations')
+        if not DRY_RUN:
+            await asyncio.gather(*[as_api.workspace_locations.delete(location_id=loc.id)
+                                   for loc in locations],
+                                 return_exceptions=True)
+
+        # spaces
         spaces = list(filtered(api.rooms.list(),
                                alternate_matches=r'(Test Space \d{3})||(public \w{8}-\w{4}-\w{4}-\w{4}-\w{12})',
                                name_getter=lambda i: i.title))
