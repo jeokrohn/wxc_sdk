@@ -4,13 +4,11 @@ Example script
 read tokens from file or interactively obtain token by starting a local web server and open the authorization URL in
 the local web browser
 """
-import json
 import logging
 import os
 from typing import Optional
 
 from dotenv import load_dotenv
-from yaml import safe_load, safe_dump
 
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.integration import Integration
