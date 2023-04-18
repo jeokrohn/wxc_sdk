@@ -279,8 +279,10 @@ class ToUserWithTN(TestCallRouting):
         async def setup():
             # noinspection PyShadowingNames
             async def location_info() -> list[LocationAndTelephony]:
-                # get locations with premises PSTN configured
+                # get locations with premises PSTN configured in the US
                 locations = await api.locations.list()
+                locations = [loc for loc in locations
+                             if loc.address and loc.address.country and loc.address.country=='US']
 
                 # get telephony location details for all locations
                 telephony_locations = await asyncio.gather(
@@ -349,7 +351,7 @@ class ToUserWithTN(TestCallRouting):
                 if cls.target_user:
                     # delete the user
                     await api.people.delete_person(person_id=cls.target_user.person_id)
-                    print(f'Deleted user user "{cls.target_user.display_name}({cls.target_user.emails[0]})"')
+                    print(f'Deleted user "{cls.target_user.display_name}({cls.target_user.emails[0]})"')
                 if cls.target_tn:
                     await api.telephony.location.number.remove(location_id=cls.target_location.location.location_id,
                                                                phone_numbers=[cls.target_tn])

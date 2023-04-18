@@ -138,9 +138,7 @@ async def main():
 
         # call queues
         atq = api.telephony.callqueue
-        cq_list = list(filtered(chain.from_iterable(
-            pool.map(lambda l: atq.list(location_id=l.location_id),
-                     locations))))
+        cq_list = list(filtered(atq.list()))
         print(f'deleting {len(cq_list)} call queues: {", ".join(cq.name for cq in cq_list)}')
         if not DRY_RUN:
             list(pool.map(lambda cq: atq.delete_queue(location_id=cq.location_id, queue_id=cq.id),

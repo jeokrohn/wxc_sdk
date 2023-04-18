@@ -70,7 +70,7 @@ class TestVmGroup(TestWithLocations):
         """
         filter lst by location id
         """
-        # get list of locations, voicemail groups and numbers
+        # get list of voicemail groups and numbers
         groups, numbers = await asyncio.gather(
             self.async_api.telephony.voicemail_groups.list(),
             self.async_api.telephony.phone_numbers()
@@ -136,11 +136,11 @@ class TestVmGroup(TestWithLocations):
                     vmg_if = None
                     err = True
                 # check that created voicemail group is in list
-                if next((vmg for vmg in vmg_list
+                elif next((vmg for vmg in vmg_list
                          if vmg.group_id == vmg_id), None) is None:
                     print(f'  failed to find created voicemail group in list of voicemail groups of location')
                     err = True
-                # verify that only voicemail groups of the requested lccation are in the list
+                # verify that only voicemail groups of the requested location are in the list
                 if any(vmg for vmg in vmg_list if vmg.group_id != location.location_id):
                     print('  Found some voicemail groups not belonging to location in list of voicemail groups')
                     err = True
