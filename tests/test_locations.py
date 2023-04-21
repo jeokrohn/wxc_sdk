@@ -21,7 +21,7 @@ from tests.base import TestCaseWithLog, async_test, TestWithLocations
 from tests.testutil import as_available_tns, create_random_wsl
 from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.base import webex_id_to_uuid, ApiModel
-from wxc_sdk.common import RouteType, RouteIdentity, IdAndName
+from wxc_sdk.common import RouteType, RouteIdentity
 from wxc_sdk.locations import Location, LocationAddress
 from wxc_sdk.people import Person
 from wxc_sdk.rest import RestError
@@ -103,7 +103,6 @@ class TestLocation(TestWithLocations):
 
                 # determine routing prefixes
                 # noinspection PyTypeChecker
-                self.api.telephony.location.enable_for_calling()
                 location_details = await asyncio.gather(
                     *[self.async_api.telephony.location.details(location_id=loc.location_id)
                       for loc in locations])
