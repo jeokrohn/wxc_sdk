@@ -53,13 +53,13 @@ class TestDevice(TestCaseWithLog):
 
         # get list of devices for each product type
         device_lists = await asyncio.gather(*[self.async_api.devices.list(product_type=pt) for pt in product_types],
-                                     return_exceptions=True)
+                                            return_exceptions=True)
 
         # check each list
         err = False
         for product_type, device_list in zip(product_types, device_lists):
             listed_types = set(device.product_type for device in device_list)
-            if len(listed_types)>1:
+            if len(listed_types) > 1:
                 print(f'list for product type "{product_type}" has devices '
                       f'with product types: {", ".join(sorted(listed_types))}')
                 err = True
@@ -121,7 +121,8 @@ class CreateDevice(TestWithLocations):
                   if w.calling and w.calling.type == CallingType.webex]
         return result
 
-    def get_or_create_calling_workspace_wo_devices(self, supported_devices: WorkspaceSupportedDevices=None)->Workspace:
+    def get_or_create_calling_workspace_wo_devices(self,
+                                                   supported_devices: WorkspaceSupportedDevices = None) -> Workspace:
         """
         Get or create a calling enabled workspace with no devices. This workspace can then be used for device creation
         tests
@@ -130,7 +131,7 @@ class CreateDevice(TestWithLocations):
         workspace_w_devices = set(device.workspace_id for device in self.api.devices.list()
                                   if device.workspace_id)
         workspaces = [w for w in self.workspaces_w_calling()
-                      if w.supported_devices==supported_devices and w.workspace_id not in workspace_w_devices]
+                      if w.supported_devices == supported_devices and w.workspace_id not in workspace_w_devices]
         if workspaces:
             return choice(workspaces)
         location = choice(self.locations)
@@ -138,15 +139,12 @@ class CreateDevice(TestWithLocations):
                                                         supported_devices=supported_devices)
         return workspace
 
-
     def test_001_activation_code_workspace_room(self):
         """
         Try to create an activation code for a workspace room device
         """
-        workspaces = list(self.api.workspaces.list())
-        if not workspaces:
-            self.skipTest('No workspaces')
-        target = choice(workspaces)
+        target = self.get_or_create_calling_workspace_wo_devices(
+            supported_devices=WorkspaceSupportedDevices.collaboration_devices)
         ac_result = self.api.devices.activation_code(workspace_id=target.workspace_id)
         print(f'Workspace "{target.display_name}", new activation code "{ac_result.code}" '
               f'valid until {ac_result.expiry_time}')
@@ -185,7 +183,7 @@ class CreateDevice(TestWithLocations):
                                                      model='DMS Cisco 8865')
         print(json.dumps(json.loads(ac_result.json()), indent=2))
 
-    def test_003_add_by_mac_for_user(self):
+    def test_003_mac_user(self):
         """
         Add MPP by mac for a user
         """
@@ -204,7 +202,7 @@ class CreateDevice(TestWithLocations):
         print(json.dumps(json.loads(result.json()), indent=2))
         self.assertIsNotNone(result.created, '"created" not set')
 
-    def test_004_add_by_mac_for_workspace(self):
+    def test_004_mac_workspace(self):
         """
         Add MPP by mac for a workspace
         """
@@ -219,19 +217,6 @@ class CreateDevice(TestWithLocations):
         result = self.api.devices.create_by_mac_address(mac=mac,
                                                         workspace_id=target.workspace_id,
                                                         model='DMS Cisco 8865')
-        print(json.dumps(json.loads(result.json()), indent=2))
-
-    def test_004_activation_code_for_mpp_in_workspace(self):
-        """
-        Add MPP by mac for a workspace
-        """
-        target = self.get_or_create_calling_workspace_wo_devices()
-
-        print(f'Trying to get an MPP activation code for workspace: {target.display_name}')
-
-        # get activation code
-        result = self.api.devices.activation_code(workspace_id=target.workspace_id,
-                                                  model='DMS Cisco 8865')
         print(json.dumps(json.loads(result.json()), indent=2))
 
 

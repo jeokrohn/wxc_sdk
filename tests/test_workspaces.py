@@ -187,12 +187,13 @@ class TestCreate(TestWithLocations):
     def test_001_trivial(self):
         """
         create workspace with minimal settings
+        This workspace doesn't have a location and is for room devices
         """
         ws = self.api.workspaces
         name = next(new_workspace_names(api=self.api))
         settings = Workspace.create(display_name=name)
         workspace = ws.create(settings=settings)
-        print(f'new worksspace: {workspace.json()}')
+        print(f'new workspace: {workspace.json()}')
         self.assertEqual(name, workspace.display_name)
 
     def test_002_edge_for_devices(self):

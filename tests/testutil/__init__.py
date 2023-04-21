@@ -338,8 +338,8 @@ def available_mac_address(*, api: WebexSimpleApi) -> Generator[str, None, None]:
     mac_prefix = 'DEADDEAD'
 
     def mac_candidates() -> Generator[str, None, None]:
-        for v in range(65536):
-            yield f'{mac_prefix}{hex(v)[2:].zfill(4)}'
+        for v in range(10, 65536):
+            yield f'{mac_prefix}{hex(v)[2:].zfill(4).upper()}'
 
     # test macs in batches of 10
     batch_args = [mac_candidates()] * 10
