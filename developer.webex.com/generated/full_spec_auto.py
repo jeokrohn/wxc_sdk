@@ -9,7 +9,7 @@ from pydantic import Field, parse_obj_as
 
 __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 'Actions', 'ActivationStates',
            'AdaptiveCard', 'AddNewEventForPersonsScheduleResponse', 'AddPhoneNumbersTolocationBody', 'Address',
-           'Address4', 'Addresses', 'AdminAuditEventsApi', 'Aggregation', 'Aggregation1', 'Alarm', 'AlarmSeverity',
+           'Address5', 'Addresses', 'AdminAuditEventsApi', 'Aggregation', 'Aggregation1', 'Alarm', 'AlarmSeverity',
            'AlternateNumberSettings', 'AlternateNumbersObject', 'AlternateNumbersWithPattern',
            'AlternateNumbersWithPattern1', 'Always', 'AnnouncementMode', 'Announcements', 'Announcements3',
            'AnswerForCustomizedQuestion', 'AnswerObject', 'AnswerSummaryItem', 'Answers', 'Arguments',
@@ -45,9 +45,9 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'ConnectorType', 'Content', 'CountObject', 'CreateAttachmentActionBody', 'CreateAttachmentActionResponse',
            'CreateAutoAttendantResponse', 'CreateBroadWorksBillingReportResponse', 'CreateCallParkBody',
            'CreateCallParkExtensionResponse', 'CreateCallParkResponse', 'CreateCallPickupBody',
-           'CreateCallPickupResponse', 'CreateCallQueueBody', 'CreateCallQueueResponse',
-           'CreateDeviceActivationCodeResponse', 'CreateDialPlanResponse', 'CreateGroupResponse',
-           'CreateHuntGroupResponse', 'CreateInvitationSourcesResponse', 'CreateInviteesItemObject',
+           'CreateCallPickupResponse', 'CreateCallQueueResponse', 'CreateDeviceActivationCodeResponse',
+           'CreateDialPlanResponse', 'CreateGroupResponse', 'CreateHuntGroupResponse',
+           'CreateInvitationSourcesResponse', 'CreateInviteesItemObject', 'CreateLocationBody',
            'CreateLocationResponse', 'CreateMeetingBody', 'CreateMeetingInterpreterBody',
            'CreateMeetingInviteesResponse', 'CreateMeetingResponse', 'CreateMembershipBody', 'CreateMessageResponse',
            'CreatePersonBody', 'CreateReportResponse', 'CreateRoomBody', 'CreateRoomTabBody',
@@ -58,7 +58,7 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'CreateSelectiveCallForwardingRuleForCallQueueBody',
            'CreateSelectiveCallForwardingRuleForCallQueueResponse',
            'CreateSelectiveCallForwardingRuleForHuntGroupResponse', 'CreateTeamBody', 'CreateTeamMembershipBody',
-           'CreateTrackingCodeBody', 'CreateTrunkResponse', 'CreateWebhookBody', 'CreateWholesaleBillingReportBody',
+           'CreateTrackingCodeBody', 'CreateTrunkResponse', 'CreateWebhookBody',
            'CreateWholesaleBillingReportResponse', 'CreateWorkspaceLocationBody', 'CreateWorkspaceLocationFloorBody',
            'CreatenewPagingGroupBody', 'CreatenewPagingGroupResponse', 'CreatenewVoicemailGroupForLocationResponse',
            'Customer2', 'CustomerInfo', 'CustomerInfo1', 'CustomizationDeviceLevelObject', 'CustomizationObject',
@@ -71,12 +71,12 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'DialPatternValidate', 'DialPlan', 'DialResponse', 'DirectMessage', 'DirectorySyncStatus',
            'DisplayCallqueueAgentSoftkeysObject', 'DisplayNameSelection', 'DistinctiveRing', 'DurationMetric',
            'EditMessageBody', 'Editability', 'Editability1', 'EffectiveBehaviorType', 'EmailCopyOfMessage',
-           'Emergency', 'EntryAndExitTone', 'EntryAndExitTone10', 'ErrorMessageObject', 'ErrorObject', 'Errors',
-           'Event', 'Event1', 'EventLongDetails', 'EventResourceEnum', 'EventTypeEnum', 'EventsApi',
-           'ExecuteCommandResponse', 'ExpirePasscode', 'ExtensionDialing', 'ExtensionStatusObject',
-           'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts', 'FailureDetails1', 'FaxMessage',
-           'FeatureAccessCode', 'FetchEventForpersonsScheduleResponse', 'Floor', 'Format',
-           'GenerateExamplePasswordForLocationResponse', 'GetAnnouncementFileInfo',
+           'Emergency', 'EnableLocationForWebexCallingResponse', 'EntryAndExitTone', 'EntryAndExitTone10',
+           'ErrorMessageObject', 'ErrorObject', 'Errors', 'Event', 'Event1', 'EventLongDetails', 'EventResourceEnum',
+           'EventTypeEnum', 'EventsApi', 'ExecuteCommandResponse', 'ExpirePasscode', 'ExtensionDialing',
+           'ExtensionStatusObject', 'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts',
+           'FailureDetails1', 'FaxMessage', 'FeatureAccessCode', 'FetchEventForpersonsScheduleResponse', 'Floor',
+           'Format', 'GenerateExamplePasswordForLocationResponse', 'GetAnnouncementFileInfo',
            'GetAvailableAgentsFromCallParksResponse', 'GetAvailableAgentsFromCallPickupsResponse',
            'GetAvailableRecallHuntGroupsFromCallParksResponse', 'GetBreakoutSessionObject',
            'GetBroadWorksBillingReportResponse', 'GetCallForwardAlwaysSettingObject',
@@ -91,27 +91,28 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'GetDetailsForCallQueueNightServiceResponse', 'GetDetailsForCallQueueResponse',
            'GetDetailsForCallQueueStrandedCallsResponse', 'GetDetailsForHuntGroupResponse',
            'GetDetailsForPagingGroupResponse', 'GetDetailsForScheduleResponse', 'GetDeviceMembersResponse',
-           'GetDeviceSettingsResponse', 'GetDialPlanResponse', 'GetInviteeObject',
-           'GetListOfPhoneNumbersForPersonResponse', 'GetLocalGatewayCallToOnPremisesExtensionUsageForTrunkResponse',
+           'GetDialPlanResponse', 'GetInviteeObject', 'GetListOfPhoneNumbersForPersonResponse',
+           'GetLocalGatewayCallToOnPremisesExtensionUsageForTrunkResponse',
            'GetLocalGatewayDialPlanUsageForTrunkResponse', 'GetLocalGatewayUsageCountResponse',
-           'GetLocationInterceptResponse', 'GetLocationOutgoingPermissionResponse',
-           'GetLocationVoicemailGroupResponse', 'GetLocationVoicemailResponse',
-           'GetLocationWebexCallingDetailsResponse', 'GetLocationsUsingLocalGatewayAsPSTNConnectionRoutingResponse',
-           'GetManageNumbersJobStatusResponse', 'GetMediaHealthMonitoringToolClusterResultsResponse',
-           'GetMediaHealthMonitoringToolNodeResultsResponse', 'GetMeetingArchiveDetailsResponse',
-           'GetMeetingCommonSettingsConfigurationResponse', 'GetMeetingControlStatusResponse',
-           'GetMeetingPollResultsResponse', 'GetMeetingPreferenceDetailsResponse', 'GetMeetingQualitiesResponse',
-           'GetMeetingSurveyResponse', 'GetMeetingTemplateResponse', 'GetMessageSummaryResponse',
-           'GetMonitoredElementsObject', 'GetMusicOnHoldResponse', 'GetNetworkTestResultsForClusterResponse',
-           'GetNetworkTestResultsForNodeResponse', 'GetNodeAvailabilityResponse',
-           'GetNumbersAssignedToRouteListResponse', 'GetOutgoingPermissionAutoTransferNumberResponse',
-           'GetOutgoingPermissionLocationAccessCodeResponse', 'GetPagingGroupAgentObject',
-           'GetPersonPlaceVirtualLineCallParksObject', 'GetPersonPlaceVirtualLineCallPickupObject',
-           'GetPersonPlaceVirtualLineCallQueueObject', 'GetPersonPlaceVirtualLineHuntGroupObject',
-           'GetPersonalMeetingRoomOptionsResponse', 'GetPersonalizationTaskResponse',
-           'GetPhoneNumbersForOrganizationWithGivenCriteriasResponse', 'GetPrivateNetworkConnectResponse',
-           'GetReachabilityTestResultsForClusterResponse', 'GetReachabilityTestResultsForNodeResponse',
-           'GetRecallHuntGroupObject', 'GetRecordingAuditReportDetailsResponse', 'GetRecordingDetailsResponse',
+           'GetLocationDeviceSettingsResponse', 'GetLocationInterceptResponse',
+           'GetLocationOutgoingPermissionResponse', 'GetLocationVoicemailGroupResponse',
+           'GetLocationVoicemailResponse', 'GetLocationWebexCallingDetailsResponse',
+           'GetLocationsUsingLocalGatewayAsPSTNConnectionRoutingResponse', 'GetManageNumbersJobStatusResponse',
+           'GetMediaHealthMonitoringToolClusterResultsResponse', 'GetMediaHealthMonitoringToolNodeResultsResponse',
+           'GetMeetingArchiveDetailsResponse', 'GetMeetingCommonSettingsConfigurationResponse',
+           'GetMeetingControlStatusResponse', 'GetMeetingPollResultsResponse', 'GetMeetingPreferenceDetailsResponse',
+           'GetMeetingQualitiesResponse', 'GetMeetingSurveyResponse', 'GetMeetingTemplateResponse',
+           'GetMessageSummaryResponse', 'GetMonitoredElementsObject', 'GetMusicOnHoldResponse',
+           'GetNetworkTestResultsForClusterResponse', 'GetNetworkTestResultsForNodeResponse',
+           'GetNodeAvailabilityResponse', 'GetNumbersAssignedToRouteListResponse',
+           'GetOutgoingPermissionAutoTransferNumberResponse', 'GetOutgoingPermissionLocationAccessCodeResponse',
+           'GetPagingGroupAgentObject', 'GetPersonPlaceVirtualLineCallParksObject',
+           'GetPersonPlaceVirtualLineCallPickupObject', 'GetPersonPlaceVirtualLineCallQueueObject',
+           'GetPersonPlaceVirtualLineHuntGroupObject', 'GetPersonalMeetingRoomOptionsResponse',
+           'GetPersonalizationTaskResponse', 'GetPhoneNumbersForOrganizationWithGivenCriteriasResponse',
+           'GetPrivateNetworkConnectResponse', 'GetReachabilityTestResultsForClusterResponse',
+           'GetReachabilityTestResultsForNodeResponse', 'GetRecallHuntGroupObject',
+           'GetRecordingAuditReportDetailsResponse', 'GetRecordingDetailsResponse',
            'GetRegistrationFormFormeetingResponse', 'GetRoomMeetingDetailsResponse',
            'GetRouteGroupsUsingLocalGatewayResponse', 'GetRouteListResponse', 'GetScheduleDetailsResponse',
            'GetScheduleEventObject', 'GetSelectiveCallForwardingRuleForAutoAttendantResponse',
@@ -125,10 +126,9 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'GetmeetingRegistrantsDetailInformationResponse', 'GetpersonsPrivacySettingsResponse', 'Greeting',
            'Greeting29', 'GroupsApi', 'HistoricalAnalyticsApi', 'HistoricalDataRelatedToMeetingsResponse',
            'HistoricalDataRelatedToMessagingResponse', 'HolidayScheduleLevel', 'HostProfileCode', 'HostedAgent',
-           'HostedAgentType', 'HostedFeature', 'Hoteling', 'HoursMenuObject', 'HuntPolicySelection',
-           'HuntRoutingTypeSelection', 'HybridClustersApi', 'HybridConnectorsApi', 'HydraClassification',
-           'InProgressDevice', 'Incoming', 'Info', 'InputMode', 'Inputs', 'InterceptAnnouncementsGet',
-           'InterceptIncomingGet', 'InterceptIncomingPatch',
+           'HostedFeature', 'Hoteling', 'HoursMenuObject', 'HuntPolicySelection', 'HuntRoutingTypeSelection',
+           'HybridClustersApi', 'HybridConnectorsApi', 'HydraClassification', 'InProgressDevice', 'Incoming', 'Info',
+           'InputMode', 'Inputs', 'InterceptAnnouncementsGet', 'InterceptIncomingGet', 'InterceptIncomingPatch',
            'InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting',
            'InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting', 'InvitationSourceCreateObject',
            'InvitationSourceObject', 'InviteeObjectForCreateMeeting', 'ItemObject', 'JobExecutionStatusObject',
@@ -144,10 +144,11 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'ListClustersAvailabilityResponse', 'ListClustersUtilizationResponse',
            'ListDeviceConfigurationsForDeviceResponse', 'ListDevicesResponse', 'ListDirectMessagesResponse',
            'ListEventsResponse', 'ListHybridClustersResponse', 'ListHybridConnectorsResponse',
-           'ListInvitationSourcesResponse', 'ListLicensesResponse', 'ListLocationsResponse',
-           'ListManageNumbersJobErrorsResponse', 'ListManageNumbersJobsResponse',
-           'ListMediaHealthMonitoringToolResultsResponse', 'ListMeetingArchiveSummariesResponse',
-           'ListMeetingAttendeeReportsResponse', 'ListMeetingBreakoutSessionsResponse', 'ListMeetingChatsResponse',
+           'ListInvitationSourcesResponse', 'ListLicensesResponse', 'ListLocationObject', 'ListLocationsResponse',
+           'ListLocationsWebexCallingDetailsResponse', 'ListManageNumbersJobErrorsResponse',
+           'ListManageNumbersJobsResponse', 'ListMediaHealthMonitoringToolResultsResponse',
+           'ListMeetingArchiveSummariesResponse', 'ListMeetingAttendeeReportsResponse',
+           'ListMeetingBreakoutSessionsResponse', 'ListMeetingChatsResponse',
            'ListMeetingClosedCaptionSnippetsResponse', 'ListMeetingClosedCaptionsResponse',
            'ListMeetingInterpretersResponse', 'ListMeetingInviteesResponse', 'ListMeetingParticipantsResponse',
            'ListMeetingPollsResponse', 'ListMeetingQAndAResponse', 'ListMeetingRegistrantsResponse',
@@ -167,8 +168,8 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'ListTrackingCodesResponse', 'ListUserSessionTypeResponse', 'ListVirtualLineObject',
            'ListVoicemailGroupResponse', 'ListWebhooksResponse', 'ListWholesaleBillingReportsResponse',
            'ListWholesaleCustomersResponse', 'ListWholesaleSubscribersResponse', 'ListWorkspaceLocationFloorsResponse',
-           'ListWorkspaceLocationsResponse', 'ListWorkspacesResponse', 'LocalGateways', 'Location', 'Location16',
-           'Location19', 'LocationsApi', 'MHMTestResults', 'MacStatusObject', 'ManagedByObject', 'ManufacturerObject',
+           'ListWorkspaceLocationsResponse', 'ListWorkspacesResponse', 'LocalGateways', 'Location', 'Location15',
+           'Location18', 'LocationsApi', 'MHMTestResults', 'MacStatusObject', 'ManagedByObject', 'ManufacturerObject',
            'Measurement', 'MediaHealthMonitoringResultsCollectionforcluster',
            'MediaHealthMonitoringResultsCollectionfornode', 'MediaHealthMonitoringResultsCollectionfororganization',
            'MediaHealthMonitoringTestResultsFailure', 'MediaHealthMonitoringclusters',
@@ -182,21 +183,21 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'MeetingRecordingArchiveQAAnswer', 'MeetingRecordingArchiveSystemInfo', 'MeetingRecordingArchiveUser',
            'MeetingSeriesObjectForListMeeting', 'MeetingSessionTypeObject', 'MeetingTranscriptsApi', 'MeetingType',
            'MeetingUsageReportObject', 'MeetingsApi', 'MeetingsSummaryReportApi', 'Member', 'Member5', 'MemberObject',
-           'Membership', 'MembershipsApi', 'MessageStorage', 'MessageStorage3', 'MessagesApi', 'MetricName', 'Metrics',
-           'ModifyDialPlanBody', 'ModifyNumbersForRouteListResponse', 'ModifyPersonPlaceVirtualLineCallQueueObject',
-           'ModifyRouteListBody', 'ModifyScheduleEventListObject', 'ModifyTrunkBody',
-           'ModifypersonsApplicationServicesSettingsBody', 'ModifypersonsMonitoringSettingsBody', 'MohMessage',
-           'MonitoredElementItem', 'MonitoredElementUser', 'MonitoredMemberObject', 'MonitoredPersonObject', 'Month',
-           'MoveRecordingsIntoRecycleBinBody', 'MppAudioCodecPriorityObject', 'MppObject', 'MppVlanObject', 'Name',
-           'NetworkConnectionType', 'NetworkConnectivtyType', 'NetworkType', 'NewNumber', 'NoAnswer', 'NoAnswer3',
-           'NodeAvailability', 'NodeAvailabilityCollection', 'NodeAvailableTimeline', 'NodeStatusList1', 'NodesResult',
-           'NormalSource', 'NoteType', 'NumberItem', 'NumberListGetObject', 'NumberStatus', 'Numbers', 'OfficeNumber',
-           'OnboardingMethodObject', 'Op', 'Op1', 'Operation', 'Option', 'Option1', 'Options',
-           'OptionsForTrackingCodeObject', 'OrderBy', 'OrderType', 'Organization', 'OrganizationsApi',
-           'OriginatorType', 'Outgoing', 'Overflow', 'OverflowDetails1', 'OverflowtoCloudCollection', 'Owner',
-           'Package', 'Package14', 'Package6', 'Package8', 'ParkResponse', 'Participant', 'ParticipantsByRoles',
-           'PartyInformation', 'Passcode', 'PasswordCriteria', 'PatchMeetingBody', 'PatchMeetingResponse',
-           'PatchMemberWithOperation', 'PbxUser', 'PeopleApi', 'PerClusterConnectivityResult1',
+           'MemberType', 'Membership', 'MembershipsApi', 'MessageStorage', 'MessageStorage3', 'MessagesApi',
+           'MetricName', 'Metrics', 'ModifyDialPlanBody', 'ModifyNumbersForRouteListResponse',
+           'ModifyPersonPlaceVirtualLineCallQueueObject', 'ModifyRouteListBody', 'ModifyScheduleEventListObject',
+           'ModifyTrunkBody', 'ModifypersonsApplicationServicesSettingsBody', 'ModifypersonsMonitoringSettingsBody',
+           'MohMessage', 'MonitoredElementItem', 'MonitoredElementUser', 'MonitoredMemberObject',
+           'MonitoredPersonObject', 'Month', 'MoveRecordingsIntoRecycleBinBody', 'MppAudioCodecPriorityObject',
+           'MppObject', 'MppVlanObject', 'Name', 'NetworkConnectionType', 'NetworkConnectivtyType', 'NetworkType',
+           'NewNumber', 'NoAnswer', 'NoAnswer3', 'NodeAvailability', 'NodeAvailabilityCollection',
+           'NodeAvailableTimeline', 'NodeStatusList1', 'NodesResult', 'NormalSource', 'NoteType', 'NumberItem',
+           'NumberListGetObject', 'NumberStatus', 'Numbers', 'OfficeNumber', 'OnboardingMethodObject', 'Op', 'Op1',
+           'Operation', 'Option', 'Option1', 'Options', 'OptionsForTrackingCodeObject', 'OrderBy', 'OrderType',
+           'Organization', 'OrganizationsApi', 'OriginatorType', 'Outgoing', 'Overflow', 'OverflowDetails1',
+           'OverflowtoCloudCollection', 'Owner', 'Package', 'Package6', 'Package8', 'ParkResponse', 'Participant',
+           'ParticipantsByRoles', 'PartyInformation', 'Passcode', 'PasswordCriteria', 'PatchMeetingBody',
+           'PatchMeetingResponse', 'PatchMemberWithOperation', 'PbxUser', 'PeopleApi', 'PerClusterConnectivityResult1',
            'PerClusterConnectivityResult2', 'PerNodeConnectivityResult1', 'PerclusterMediaHealthMonitoringclusters',
            'PernodeMediaHealthMonitoringclusters', 'PernodeMediaHealthMonitoringresult', 'Person',
            'PersonalMeetingRoom', 'PhoneLanguage', 'PhoneNumber', 'PhoneNumbers', 'PhoneNumbers7', 'PlaceDevices',
@@ -207,7 +208,7 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'ProvisionBroadWorksWorkspaceResponse', 'ProvisionWholesaleCustomerBody',
            'ProvisionWholesaleCustomerResponse', 'ProvisionWholesaleSubscriberBody', 'ProvisioningParameters',
            'ProvisioningParameters4', 'PstnNumber', 'PushToTalkAccessType', 'PushToTalkConnectionType',
-           'PutMemberObject', 'PutRecallHuntGroupObject', 'PutSharedLineMemberItem', 'QAObject',
+           'PutRecallHuntGroupObject', 'PutSharedLineMemberItem', 'QAObject',
            'QueryMeetingParticipantsWithEmailResponse', 'QueryMeetingRegistrantsResponse', 'QueryStatusResponse',
            'Question', 'Question1', 'Question8', 'QuestionObject', 'QuestionResult', 'QuestionWithAnswersObject',
            'ReachabilityTestResultsforcluster', 'ReachabilityTestResultsforfirstcluster',
@@ -233,7 +234,8 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'ReadPushtoTalkSettingsForPersonResponse', 'ReadReceptionistClientSettingsForPersonResponse',
            'ReadRouteGroupForOrganizationResponse', 'ReadRouteListsOfRoutingGroupResponse',
            'ReadUsageOfRoutingGroupResponse', 'ReadVoicemailSettingsForPersonResponse',
-           'ReaddeviceOverrideSettingsFororganizationResponse', 'Reason', 'RecallInformation', 'RecallTypeEnum',
+           'ReaddeviceOverrideSettingsFororganizationResponse', 'Reason', 'ReassignMeetingErrorDescriptionObject',
+           'ReassignMeetingResponseObject', 'ReassignMeetingsToNewHostResponse', 'RecallInformation', 'RecallTypeEnum',
            'Record', 'RecordingAchriveSummaryObject', 'RecordingObject', 'RecordingReportApi', 'RecordingReportObject',
            'RecordingReportSummaryObject', 'RecordingStateEnum', 'RecordingsApi', 'RecurWeekly2', 'RecurWeeklyObject',
            'RecurYearlyByDateObject', 'RecurYearlyByDayObject', 'Recurrence', 'RecurrenceObject1',
@@ -253,11 +255,11 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'RoomTab', 'RoomTabsApi', 'RoomType', 'RoomsApi', 'RouteGroup', 'RouteGroupUsageRouteListGet',
            'RouteIdentity', 'RouteList', 'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteType', 'Rules',
            'ScheduleEventObject', 'ScheduleShortDetails', 'ScheduleStartCodeObject', 'ScheduledMeetingObject',
-           'ScheduledType', 'SchedulingOptionsObject', 'SearchMemberObject', 'SearchMembersResponse',
-           'SearchSharedLineAppearanceMembersResponse', 'SecurityAuditEventsApi', 'SecurityOptions', 'Selection',
-           'Selection1', 'SelectionType', 'SendAllCalls', 'SendBusyCalls', 'SendBusyCalls1', 'SendUnansweredCalls',
-           'Sender', 'Service', 'ServiceType', 'ServiceType5', 'ServiceTypeResult1', 'SessionType', 'SessionTypesApi',
-           'Sharing', 'SimultaneousInterpretation', 'SimultaneousInterpretation1', 'SingleNodeAvailability',
+           'ScheduledType', 'SchedulingOptionsObject', 'SearchSharedLineAppearanceMembersResponse',
+           'SecurityAuditEventsApi', 'SecurityOptions', 'Selection', 'Selection1', 'SelectionType', 'SendAllCalls',
+           'SendBusyCalls', 'SendBusyCalls1', 'SendUnansweredCalls', 'Sender', 'Service', 'ServiceType',
+           'ServiceType5', 'ServiceTypeResult1', 'SessionType', 'SessionTypesApi', 'Sharing',
+           'SimultaneousInterpretation', 'SimultaneousInterpretation1', 'SingleNodeAvailability',
            'SingleNodeAvailabilityCollection', 'SingleNodeAvailableTimeline', 'SipAddressesType', 'SiteApi',
            'SiteSessionType', 'SiteType', 'Sites', 'SnippetObject', 'SnippetObject1', 'SortBy', 'Source', 'Sources',
            'SpaceClassificationsApi', 'StandardRegistrationApproveRule', 'StartJobResponse', 'State', 'State10',
@@ -271,10 +273,10 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'TranscriptObject', 'TransportType', 'TriggerDirectorySyncForUserResponse',
            'TriggerOndemandTestForClusterResponse', 'Trunk', 'TrunkType', 'TrunkTypeWithDeviceType', 'Type', 'Type1',
            'Type12', 'Type14', 'Type15', 'Type24', 'Type3', 'Type32', 'Type34', 'Type37', 'Type48', 'Type49', 'Type54',
-           'Type61', 'Type68', 'Type7', 'Type72', 'TypeObject', 'Unit', 'UnknownExtensionRouteIdentity',
+           'Type61', 'Type68', 'Type7', 'Type71', 'TypeObject', 'Unit', 'UnknownExtensionRouteIdentity',
            'UnlockedMeetingJoinSecurity', 'UpdateBroadworksWorkspaceBody', 'UpdateCallParkResponse',
-           'UpdateCallPickupResponse', 'UpdateDeviceSettingsBody', 'UpdateEventForpersonsScheduleResponse',
-           'UpdateLocationBody', 'UpdateLocationWebexCallingDetailsBody', 'UpdateMeetingBreakoutSessionsResponse',
+           'UpdateCallPickupResponse', 'UpdateEventForpersonsScheduleResponse', 'UpdateLocationBody',
+           'UpdateLocationWebexCallingDetailsBody', 'UpdateMeetingBreakoutSessionsResponse',
            'UpdateMeetingCommonSettingsConfigurationBody', 'UpdateParticipantResponse',
            'UpdatePersonalMeetingRoomOptionsBody', 'UpdateResourceGroupMembershipBody', 'UpdateScheduleEventResponse',
            'UpdateScheduleResponse', 'UpdateScheduleResponse1',
@@ -288,12 +290,12 @@ __all__ = ['AcdObject', 'Action', 'Action11', 'Action15', 'Action6', 'Action9', 
            'ValidateLocalGatewayFQDNAndDomainForTrunkBody', 'ValidatelistOfMACAddressResponse', 'ValidationRules',
            'ValidationRulesCollection', 'Video', 'Video4', 'VideoDevices', 'VideoIn', 'VideoMeshApi',
            'VirtualExtension', 'VlanObject', 'VoiceMailPartyInformation', 'VoiceMessageDetails', 'WaitMessage',
-           'WaitMode', 'WebexCallingDetailedCallHistoryApi', 'WebexCallingOrganizationSettingsApi',
-           'WebexCallingPersonSettingsApi', 'WebexCallingVoiceMessagingApi', 'WebexCallingWorkspaceSettingsApi',
-           'Webhook', 'WebhooksApi', 'Week', 'WelcomeMessage', 'WholesaleBillingReportsApi', 'WholesaleCustomersApi',
-           'WholesaleSubscribersApi', 'WifiNetworkObject', 'Workspace', 'WorkspaceDurationMetricsResponse',
-           'WorkspaceLocationsApi', 'WorkspaceMetricsApi', 'WorkspaceMetricsResponse', 'WorkspacePersonalizationApi',
-           'WorkspacesApi', 'xAPIApi']
+           'WaitMode', 'WebexCallingDetailedCallHistoryApi', 'WebexCallingDeviceSettingsApi',
+           'WebexCallingOrganizationSettingsApi', 'WebexCallingPersonSettingsApi', 'WebexCallingVoiceMessagingApi',
+           'WebexCallingWorkspaceSettingsApi', 'Webhook', 'WebhooksApi', 'Week', 'WelcomeMessage',
+           'WholesaleBillingReportsApi', 'WholesaleCustomersApi', 'WholesaleSubscribersApi', 'WifiNetworkObject',
+           'Workspace', 'WorkspaceDurationMetricsResponse', 'WorkspaceLocationsApi', 'WorkspaceMetricsApi',
+           'WorkspaceMetricsResponse', 'WorkspacePersonalizationApi', 'WorkspacesApi', 'xAPIApi']
 
 
 class Data3(ApiModel):
@@ -1190,12 +1192,13 @@ class UpdateBroadWorksSubscriberBody(UpdateBroadworksWorkspaceBody):
 
 
 class PrecheckBroadworksSubscriberProvisioningBody(ProvisionBroadWorksSubscriberBody):
-    #: Email address of a user in the customer org that you want to provision.
+    #: Email address of the customer org user to be provisioned.
     customer_info: Optional[object]
 
 
 class PrecheckBroadworksSubscriberProvisioningResponse(ApiModel):
-    #: A textual representation of the precheck response message.
+    #: A textual representation of the Precheck response message containing the infoCode object in the case of a
+    #: success response and the errorCode object in the case of failure.
     message: Optional[str]
     #: A list of ProvisioningPreCheckResponseInfo objects.
     info: Optional[Info]
@@ -1441,7 +1444,7 @@ class BroadWorksSubscribersApi(ApiChild, base='broadworks/subscribers'):
         :param timezone: The time zone associated with the subscriber. Refer to the Webex Meetings Site Timezone
             section of the Webex for BroadWorks guide for more information.
         :type timezone: str
-        :param customer_info: Email address of a user in the customer org that you want to provision.
+        :param customer_info: Email address of the customer org user to be provisioned.
         :type customer_info: object
 
         documentation: https://developer.webex.com/docs/api/v1/broadworks-subscribers/precheck-a-broadworks-subscriber-provisioning
@@ -2383,6 +2386,8 @@ class Device(Member):
     upgrade_channel: Optional[str]
     #: The date and time that the device was registered, in ISO8601 format.
     created: Optional[str]
+    #: The workspace location associated with the device.
+    workspace_location_id: Optional[str]
 
 
 class Op1(Op):
@@ -2427,7 +2432,7 @@ class DevicesApi(ApiChild, base='devices'):
     Generating an activation code requires an auth token with the identity:placeonetimepassword_create scope.
     """
 
-    def list(self, person_id: str = None, workspace_id: str = None, org_id: str = None, display_name: str = None, product: str = None, type_: str = None, tag: str = None, connection_status: str = None, serial: str = None, software: str = None, upgrade_channel: str = None, error_code: str = None, capability: str = None, permission: str = None, **params) -> Generator[Device, None, None]:
+    def list(self, person_id: str = None, workspace_id: str = None, org_id: str = None, workspace_location_id: str = None, display_name: str = None, product: str = None, type_: str = None, tag: str = None, connection_status: str = None, serial: str = None, software: str = None, upgrade_channel: str = None, error_code: str = None, capability: str = None, permission: str = None, **params) -> Generator[Device, None, None]:
         """
         Lists all active Webex devices associated with the authenticated user, such as devices activated in personal
         mode. Administrators can list all devices within an organization.
@@ -2439,6 +2444,8 @@ class DevicesApi(ApiChild, base='devices'):
         :param org_id: List devices in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
         :type org_id: str
+        :param workspace_location_id: List devices by workspace location ID.
+        :type workspace_location_id: str
         :param display_name: List devices with this display name.
         :type display_name: str
         :param product: List devices with this product name. Possible values: DX-80, RoomKit, SX-80
@@ -2471,6 +2478,8 @@ class DevicesApi(ApiChild, base='devices'):
             params['workspaceId'] = workspace_id
         if org_id is not None:
             params['orgId'] = org_id
+        if workspace_location_id is not None:
+            params['workspaceLocationId'] = workspace_location_id
         if display_name is not None:
             params['displayName'] = display_name
         if product is not None:
@@ -3369,8 +3378,9 @@ class CreateLocationResponse(ApiModel):
 class LocationsApi(ApiChild, base='locations'):
     """
     Locations allow you to organize users and workspaces based on a physical location. You can configure both calling
-    and workspace management functions into the same location. You can also create and inspect locations in Webex
-    Control Hub. See Locations on Control Hub for more information.
+    and workspace management functions into the same location. To enable a location for Webex Calling, use the Enable a
+    Location for Webex Calling API.
+    You can also create and inspect locations in Webex Control Hub. See Locations on Control Hub for more information.
     """
 
     def list(self, name: str = None, id: str = None, org_id: str = None, **params) -> Generator[Location, None, None]:
@@ -4145,6 +4155,13 @@ class QueryMeetingParticipantsWithEmailBody(ApiModel):
     #: Participants email list
     #: Possible values: john.andersen@example.com
     emails: Optional[list[str]]
+    #: The time participants join a meeting starts from the specified date and time (inclusive) in any ISO 8601
+    #: compliant format. If joinTimeFrom is not specified, it equals joinTimeTo minus 7 days.
+    join_time_from: Optional[str]
+    #: The time participants join a meeting before the specified date and time (exclusive) in any ISO 8601 compliant
+    #: format. If joinTimeTo is not specified, it equals joinTimeFrom plus 7 days. The interval between joinTimeFrom
+    #: and joinTimeTo must be within 90 days.
+    join_time_to: Optional[str]
 
 
 class QueryMeetingParticipantsWithEmailResponse(ApiModel):
@@ -4202,26 +4219,22 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
     Refer to the Meetings API Scopes section of Meetings Overview for scopes required for each API.
     """
 
-    def list_participants(self, meeting_id: str, site_url: str = None, meeting_start_time_from: str = None, meeting_start_time_to: str = None, host_email: str = None, join_time_from: str = None, join_time_to: str = None, **params) -> Generator[Participant, None, None]:
+    def list_participants(self, meeting_id: str, meeting_start_time_from: str = None, meeting_start_time_to: str = None, host_email: str = None, join_time_from: str = None, join_time_to: str = None) -> list[Participant]:
         """
-        List all participants in a live or post meeting. The meetingId parameter is required, which is the unique
-        identifier for the meeting.
+        List all participants in an in-progress meeting or an ended meeting. The meetingId parameter is required, which
+        is the unique identifier for the meeting.
         The authenticated user calling this API must either have an Administrator role with the
         meeting:admin_participants_read scope, or be the meeting host.
 
         :param meeting_id: The unique identifier for the meeting. Please note that currently meeting ID of a scheduled
             personal room meeting is not supported for this API.
         :type meeting_id: str
-        :param site_url: URL of the Webex site from which the API lists meeting participants. If not specified, the API
-            lists meeting participants from the user's preferred site. All available Webex sites and a user's preferred
-            site can be retrieved by the Get Site List API.
-        :type site_url: str
-        :param meeting_start_time_from: meetings start from the specified date and time(exclusive) in any ISO 8601
+        :param meeting_start_time_from: Meetings start from the specified date and time(exclusive) in any ISO 8601
             compliant format. If meetingStartTimeFrom is not specified, it equals meetingStartTimeTo minus 1 month; if
             meetingStartTimeTo is also not specified, the default value for meetingStartTimeFrom is 1 month before
             current date and time.
         :type meeting_start_time_from: str
-        :param meeting_start_time_to: meetings start before the specified date and time(exclusive) in any ISO 8601
+        :param meeting_start_time_to: Meetings start before the specified date and time(exclusive) in any ISO 8601
             compliant format. If meetingStartTimeTo is not specified, it equals the result of a comparison,
             meetingStartTimeFrom plus one month and the current time, and the result is the earlier of the two; if
             meetingStartTimeFrom is also not specified, the default value for meetingStartTimeTo is current date and
@@ -4241,9 +4254,8 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
 
         documentation: https://developer.webex.com/docs/api/v1/meeting-participants/list-meeting-participants
         """
+        params = {}
         params['meetingId'] = meeting_id
-        if site_url is not None:
-            params['siteUrl'] = site_url
         if meeting_start_time_from is not None:
             params['meetingStartTimeFrom'] = meeting_start_time_from
         if meeting_start_time_to is not None:
@@ -4255,9 +4267,10 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
         if join_time_to is not None:
             params['joinTimeTo'] = join_time_to
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=Participant, params=params)
+        data = super().get(url=url, params=params)
+        return parse_obj_as(list[Participant], data["items"])
 
-    def query_participants_with_email(self, meeting_id: str, site_url: str = None, meeting_start_time_from: str = None, meeting_start_time_to: str = None, host_email: str = None, join_time_from: str = None, join_time_to: str = None, emails: List[str] = None, **params) -> Generator[Participant, None, None]:
+    def query_participants_with_email(self, meeting_id: str, meeting_start_time_from: str = None, meeting_start_time_to: str = None, host_email: str = None, emails: List[str] = None, join_time_from: str = None, join_time_to: str = None) -> list[Participant]:
         """
         Query participants in a live meeting, or after the meeting, using participant's email. The meetingId parameter
         is the unique identifier for the meeting and is required.
@@ -4266,16 +4279,12 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
 
         :param meeting_id: The unique identifier for the meeting.
         :type meeting_id: str
-        :param site_url: URL of the Webex site from which the API lists meeting participants. If not specified, the API
-            lists meeting participants from the user's preferred site. All available Webex sites and a user's preferred
-            site can be retrieved by the Get Site List API.
-        :type site_url: str
-        :param meeting_start_time_from: meetings start from the specified date and time(exclusive) in any ISO 8601
+        :param meeting_start_time_from: Meetings start from the specified date and time(exclusive) in any ISO 8601
             compliant format. If meetingStartTimeFrom is not specified, it equals meetingStartTimeTo minus 1 month; if
             meetingStartTimeTo is also not specified, the default value for meetingStartTimeFrom is 1 month before
             current date and time.
         :type meeting_start_time_from: str
-        :param meeting_start_time_to: meetings start before the specified date and time(exclusive) in any ISO 8601
+        :param meeting_start_time_to: Meetings start before the specified date and time(exclusive) in any ISO 8601
             compliant format. If meetingStartTimeTo is not specified, it equals the result of a comparison,
             meetingStartTimeFrom plus one month and the current time, and the result is the earlier of the two; if
             meetingStartTimeFrom is also not specified, the default value for meetingStartTimeTo is current date and
@@ -4285,6 +4294,8 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
             calling the API has the admin-level scopes, the admin may specify the email of a user in a site they manage
             and the API will return meeting participants of the meetings that are hosted by that user.
         :type host_email: str
+        :param emails: Participants email list Possible values: john.andersen@example.com
+        :type emails: List[str]
         :param join_time_from: The time participants join a meeting starts from the specified date and time (inclusive)
             in any ISO 8601 compliant format. If joinTimeFrom is not specified, it equals joinTimeTo minus 7 days.
         :type join_time_from: str
@@ -4292,29 +4303,27 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
             ISO 8601 compliant format. If joinTimeTo is not specified, it equals joinTimeFrom plus 7 days. The interval
             between joinTimeFrom and joinTimeTo must be within 90 days.
         :type join_time_to: str
-        :param emails: Participants email list Possible values: john.andersen@example.com
-        :type emails: List[str]
 
         documentation: https://developer.webex.com/docs/api/v1/meeting-participants/query-meeting-participants-with-email
         """
+        params = {}
         params['meetingId'] = meeting_id
-        if site_url is not None:
-            params['siteUrl'] = site_url
         if meeting_start_time_from is not None:
             params['meetingStartTimeFrom'] = meeting_start_time_from
         if meeting_start_time_to is not None:
             params['meetingStartTimeTo'] = meeting_start_time_to
         if host_email is not None:
             params['hostEmail'] = host_email
-        if join_time_from is not None:
-            params['joinTimeFrom'] = join_time_from
-        if join_time_to is not None:
-            params['joinTimeTo'] = join_time_to
         body = QueryMeetingParticipantsWithEmailBody()
         if emails is not None:
             body.emails = emails
+        if join_time_from is not None:
+            body.join_time_from = join_time_from
+        if join_time_to is not None:
+            body.join_time_to = join_time_to
         url = self.ep('query')
-        return self.session.follow_pagination(url=url, model=Participant, params=params, data=body.json())
+        data = super().post(url=url, params=params, data=body.json())
+        return parse_obj_as(list[Participant], data["items"])
 
     def participant_details(self, participant_id: str, host_email: str = None) -> Participant:
         """
@@ -6873,6 +6882,22 @@ class Type14(HostProfileCode):
     not_applicable = 'notApplicable'
 
 
+class ReassignMeetingErrorDescriptionObject(ApiModel):
+    #: Detailed description for the host reassignment of meetingId if it fails.
+    description: Optional[str]
+
+
+class ReassignMeetingResponseObject(ApiModel):
+    #: Unique identifier for the meeting to be reassigned host.
+    meeting_id: Optional[str]
+    #: HTTP status code for the meeting reassignment result.
+    http_status: Optional[str]
+    #: General message for the host reassignment of meetingId if it fails.
+    message: Optional[str]
+    #: Detailed descriptions for the host reassignment of meetingId if it fails.
+    errors: Optional[list[ReassignMeetingErrorDescriptionObject]]
+
+
 class ListMeetingsResponse(ApiModel):
     #: Meetings array.
     items: Optional[list[MeetingSeriesObjectForListMeeting]]
@@ -6904,7 +6929,10 @@ class JoinMeetingBody(CoHosts):
 
 
 class JoinMeetingResponse(ApiModel):
-    #: The link can directly join or host the meeting.
+    #: The link is used to start a meeting as the meeting host. Only the meeting host or cohost can generate the
+    #: startLink.
+    start_link: Optional[str]
+    #: The link is used to join the meeting.
     join_link: Optional[str]
     #: Expiration time of joinLink.
     expiration: Optional[str]
@@ -7094,6 +7122,21 @@ class ListMeetingTrackingCodesResponse(Role):
     service: Optional[Service]
     #: Type for meeting scheduler or meeting start pages.
     type: Optional[Type14]
+
+
+class ReassignMeetingsToNewHostBody(ApiModel):
+    #: Email address of the new meeting host.
+    host_email: Optional[str]
+    #: List of meeting IDs to be reassigned the new host. The size is between 1 and 100. All the meetings of meetingIds
+    #: should belong to the same site, which is the siteUrl in the request header, if specified, or the admin user's
+    #: preferred site, if not specified. All available Webex sites and the preferred sites of a user can be retrieved
+    #: by Get Site List API.
+    meeting_ids: Optional[list[str]]
+
+
+class ReassignMeetingsToNewHostResponse(ApiModel):
+    #: Array of meeting reassignment results.
+    items: Optional[list[ReassignMeetingResponseObject]]
 
 
 class MeetingsApi(ApiChild, base='meetings'):
@@ -7968,8 +8011,8 @@ class MeetingsApi(ApiChild, base='meetings'):
 
     def join(self, email: str = None, display_name: str = None, meeting_id: str = None, meeting_number: str = None, web_link: str = None, join_directly: bool = None, password: str = None, expiration_minutes: int = None) -> JoinMeetingResponse:
         """
-        Retrieves a meeting join link for a meeting with a specified meetingId, meetingNumber, or webLink that allows
-        users to join the meeting directly without logging in and entering a password.
+        Retrieves links for a meeting with a specified meetingId, meetingNumber, or webLink that allow users to start
+        or join the meeting directly without logging in and entering a password.
 
         :param email: Email address for cohost. This attribute can be modified with the Update Personal Meeting Room
             Options API. Possible values: john.andersen@example.com
@@ -8422,7 +8465,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         data = super().get(url=url)
         return GetmeetingRegistrantsDetailInformationResponse.parse_obj(data)
 
-    def list_registrants(self, meeting_id: str, email: str = None, register_time_from: str = None, register_time_to: str = None, **params) -> Generator[GetmeetingRegistrantsDetailInformationResponse, None, None]:
+    def list_registrants(self, meeting_id: str, email: str = None, registration_time_from: str = None, registration_time_to: str = None, **params) -> Generator[GetmeetingRegistrantsDetailInformationResponse, None, None]:
         """
         Meeting's host and cohost can retrieve the list of registrants for a meeting with a specified meeting Id.
 
@@ -8430,23 +8473,24 @@ class MeetingsApi(ApiChild, base='meetings'):
         :type meeting_id: str
         :param email: Registrant's email to filter registrants.
         :type email: str
-        :param register_time_from: The time registrants register a meeting starts from the specified date and time
-            (inclusive) in any ISO 8601 compliant format. If registerTimeFrom is not specified, it equals
-            registerTimeTo minus 7 days.
-        :type register_time_from: str
-        :param register_time_to: The time registrants register a meeting before the specified date and time (exclusive)
-            in any ISO 8601 compliant format. If registerTimeTo is not specified, it equals registerTimeFrom plus 7
-            days. The interval between registerTimeFrom and registerTimeTo must be within 90 days.
-        :type register_time_to: str
+        :param registration_time_from: The time registrants register a meeting starts from the specified date and time
+            (inclusive) in any ISO 8601 compliant format. If registrationTimeFrom is not specified, it equals
+            registrationTimeTo minus 7 days.
+        :type registration_time_from: str
+        :param registration_time_to: The time registrants register a meeting before the specified date and time
+            (exclusive) in any ISO 8601 compliant format. If registrationTimeTo is not specified, it equals
+            registrationTimeFrom plus 7 days. The interval between registrationTimeFrom and registrationTimeTo must be
+            within 90 days.
+        :type registration_time_to: str
 
         documentation: https://developer.webex.com/docs/api/v1/meetings/list-meeting-registrants
         """
         if email is not None:
             params['email'] = email
-        if register_time_from is not None:
-            params['registerTimeFrom'] = register_time_from
-        if register_time_to is not None:
-            params['registerTimeTo'] = register_time_to
+        if registration_time_from is not None:
+            params['registrationTimeFrom'] = registration_time_from
+        if registration_time_to is not None:
+            params['registrationTimeTo'] = registration_time_to
         url = self.ep(f'{meeting_id}/registrants')
         return self.session.follow_pagination(url=url, model=GetmeetingRegistrantsDetailInformationResponse, params=params)
 
@@ -8908,6 +8952,40 @@ class MeetingsApi(ApiChild, base='meetings'):
         url = self.ep('trackingCodes')
         data = super().get(url=url, params=params)
         return ListMeetingTrackingCodesResponse.parse_obj(data)
+
+    def reassign_to_new_host(self, host_email: str, meeting_ids: List[str]) -> list[ReassignMeetingResponseObject]:
+        """
+        Reassigns a list of meetings to a new host by an admin user.
+        All the meetings of meetingIds should belong to the same site, which is the siteUrl in the request header, if
+        specified, or the admin user's preferred site, if not specified. All available Webex sites and the preferred
+        sites of a user can be retrieved by Get Site List API.
+        If the user of hostEmail is not qualified to be a host of the target site, the API returns an error with the
+        HTTP status code 403. If all the meetings referenced by meetingIds have been reassigned the new host
+        successfully, the API returns an empty response with the HTTP status code 204. Otherwise, if all the meetings
+        of meetingIds fail or some of them fail, the API returns a "Multi-Status" response with status code of 207, and
+        individual errors for each meeting in the response body.
+        Only IDs of meeting series are supported for the meetingIds. IDs of scheduled meetings, meeting instances, or
+        scheduled personal room meetings are not supported. See the Meetings Overview for more information about the
+        types of meetings
+
+        :param host_email: Email address of the new meeting host.
+        :type host_email: str
+        :param meeting_ids: List of meeting IDs to be reassigned the new host. The size is between 1 and 100. All the
+            meetings of meetingIds should belong to the same site, which is the siteUrl in the request header, if
+            specified, or the admin user's preferred site, if not specified. All available Webex sites and the
+            preferred sites of a user can be retrieved by Get Site List API.
+        :type meeting_ids: List[str]
+
+        documentation: https://developer.webex.com/docs/api/v1/meetings/reassign-meetings-to-a-new-host
+        """
+        body = ReassignMeetingsToNewHostBody()
+        if host_email is not None:
+            body.host_email = host_email
+        if meeting_ids is not None:
+            body.meeting_ids = meeting_ids
+        url = self.ep('reassignHost')
+        data = super().post(url=url, data=body.json())
+        return parse_obj_as(list[ReassignMeetingResponseObject], data["items"])
 
 class DurationMetric(ApiModel):
     #: Timestamp indicating the start of the aggregation bucket (ISO 8601).
@@ -9790,7 +9868,7 @@ class Person(CreatePersonBody):
     #: organization or an organization you manage. Presence information will not be shown if the authenticated user has
     #: disabled status sharing.
     last_activity: Optional[str]
-    #: The users sip addresses
+    #: The users sip addresses. Read-only.
     sip_addresses: Optional[list[SipAddressesType]]
     #: The current presence status of the person. This will only be returned for people within your organization or an
     #: organization you manage. Presence information will not be shown if the authenticated user has disabled status
@@ -11764,7 +11842,7 @@ class ListSecurityAuditEventsResponse(ApiModel):
 
 class SecurityAuditEventsApi(ApiChild, base='admin/securityAudit/events'):
     """
-    List security audit events in your organization like sign-in and sign-out.
+    List Security Audit Events. This API currently returns user sign-in and sign-out data.
     Several query parameters are available to filter the response.
     Long result sets will be split into multiple pages
     NOTE: A maximum of one year of audit events can be returned per request.
@@ -11772,7 +11850,7 @@ class SecurityAuditEventsApi(ApiChild, base='admin/securityAudit/events'):
 
     def list_security_audit_events(self, org_id: str, start_time: , end_time: , actor_id: str = None, event_categories: list = None, **params) -> Generator[AuditEvent, None, None]:
         """
-        List security audit events in your organization like sign-in and sign-out.
+        List Security Audit Events. This API currently returns user sign-in and sign-out data.
         Several query parameters are available to filter the response.
         Long result sets will be split into multiple pages
         NOTE: A maximum of one year of audit events can be returned per request.
@@ -13510,6 +13588,8 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
     def list_media_health_monitoring_tool_test_results_v2(self, org_id: str, from_: str, to_: str, trigger_type: str) -> MediaHealthMonitoringResultsCollectionfororganization:
         """
         Returns the test results of the Media Health Monitoring Tool tests for an organization.
+        Changes in V2:
+        On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.
 
         :param org_id: Unique ID of the organization.
         :type org_id: str
@@ -13557,6 +13637,8 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
     def media_health_monitoring_tool_test_results_for_clusters_v2(self, cluster_id: str, from_: str, to_: str, trigger_type: str) -> MediaHealthMonitoringResultsCollectionforcluster:
         """
         Returns the test results of the Media Health Monitoring Tool tests for a single Video Mesh cluster.
+        Changes in V2:
+        On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.
 
         :param cluster_id: Unique ID of the Video Mesh cluster.
         :type cluster_id: str
@@ -13604,6 +13686,8 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
     def media_health_monitoring_tool_test_results_for_node_v2(self, node_id: str, from_: str, to_: str, trigger_type: str) -> MediaHealthMonitoringResultsCollectionfornode:
         """
         Returns the test results of the Media Health Monitoring Tool tests for a single Video Mesh node.
+        Changes in V2:
+        On-demand test results can be obtained along with the periodic tests that are executed on Video Mesh nodes.
 
         :param node_id: Unique ID of the Video Mesh node.
         :type node_id: str
@@ -13761,6 +13845,7 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
     def list_reachability_test_results_v2(self, org_id: str, from_: str, to_: str, trigger_type: str) -> ReachabilityTestresultsfororganization:
         """
         Returns the test results of the Reachability tests for an organization.
+        Changes in V2:
 
         :param org_id: Unique ID of the organization.
         :type org_id: str
@@ -13808,6 +13893,7 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
     def reachability_test_results_for_cluster_v2(self, cluster_id: str, from_: str, to_: str, trigger_type: str) -> ReachabilityTestresultsforcluster:
         """
         Returns the test results of the Reachability tests for a single Video Mesh cluster.
+        Changes in V2:
 
         :param cluster_id: Unique ID of the Video Mesh cluster.
         :type cluster_id: str
@@ -13855,6 +13941,7 @@ class VideoMeshApi(ApiChild, base='videoMesh/'):
     def reachability_test_results_for_node_v2(self, node_id: str, from_: str, to_: str, trigger_type: str) -> ReachabilityTestresultsfornode:
         """
         Returns the test results of the Reachability tests for a single Video Mesh node.
+        Changes in V2:
 
         :param node_id: Unique ID of the Video Mesh node.
         :type node_id: str
@@ -14316,6 +14403,113 @@ class WebexCallingDetailedCallHistoryApi(ApiChild, base=''):
         url = self.ep('https://analytics.webexapis.com/v1/cdr_feed')
         return self.session.follow_pagination(url=url, model=CDR, params=params)
 
+class MemberType(ApiModel):
+    #: Indicates the associated member is a person.
+    people: Optional[str]
+    #: Indicates the associated member is a workspace.
+    place: Optional[str]
+
+
+class LineType(ApiModel):
+    #: Indicates a Primary line for the member.
+    primary: Optional[str]
+    #: Indicates a Shared line for the member. Shared line appearance allows users to receive and place calls to and
+    #: from another user's extension, using their device.
+    shared_call_appearance: Optional[str]
+
+
+class AvailableSharedLineMemberItem(ApiModel):
+    #: A unique member identifier.
+    id: Optional[str]
+    #: First name of member.
+    first_name: Optional[str]
+    #: Last name of member.
+    last_name: Optional[str]
+    #: Phone number of member. Currently, E.164 format is not supported.
+    phone_number: Optional[str]
+    #: Phone extension of member.
+    extension: Optional[str]
+    #: Indicates if the line is acting as a primary line or a shared line for this device.
+    line_type: Optional[LineType]
+    #: Location object having a unique identifier for the location and its name.
+    location: Optional[Role]
+
+
+class MemberObject(AvailableSharedLineMemberItem):
+    #: This field indicates whether the person or the workspace is the owner of the device, and points to a primary
+    #: Line/Port of the device.
+    primary_owner: Optional[bool]
+    #: Port number assigned to person or workspace.
+    port: Optional[int]
+    #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device
+    #: requires this option. This will override user level compression options.
+    t38_fax_compression_enabled: Optional[bool]
+    #: Number of lines that have been configured for the person on the device.
+    line_weight: Optional[int]
+    #: Registration Host IP address for the line port.
+    host_ip: Optional[str]
+    #: Registration Remote IP address for the line port.
+    remote_ip: Optional[str]
+    #: Enable Hotline. Configure this line to automatically call a predefined number whenever taken off-hook. Once
+    #: enabled, the line can only make calls to the predefined number set in hotlineDestination.
+    hotline_enabled: Optional[bool]
+    #: The preconfigured number for Hotline. Required only if hotlineEnabled is set to true.
+    hotline_destination: Optional[str]
+    #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended
+    #: to all the endpoints on the device. When set to false, a call decline request only declines the current
+    #: endpoint.
+    allow_call_decline_enabled: Optional[bool]
+    #: Device line label.
+    line_label: Optional[str]
+    #: Indicates if the member is of type PEOPLE or PLACE.
+    member_type: Optional[MemberType]
+
+
+class GetDeviceMembersResponse(ApiModel):
+    #: Model type of the device.
+    model: Optional[str]
+    #: List of members that appear on the device.
+    members: Optional[list[MemberObject]]
+    #: Maximum number of lines available for the device.
+    max_line_count: Optional[int]
+
+
+class WebexCallingDeviceSettingsApi(ApiChild, base='telephony/config/devices/'):
+    """
+    These APIs manages Webex Calling settings for devices with are of the Webex Calling type.
+    Viewing these read-only device settings requires a full, device, or
+    read-only administrator auth token with a scope of
+    spark-admin:telephony_config_read, as the current set of APIs is
+    designed to provide supplemental information for administrators
+    utilizing People Webex Calling APIs.
+    Modifying these device settings requires a full or device
+    administrator auth token with a scope of
+    spark-admin:telephony_config_write.
+    """
+
+    def device_members(self, device_id: str, org_id: str = None) -> GetDeviceMembersResponse:
+        """
+        Get the list of all the members of the device including primary and secondary users.
+        A device member can be either a person or a workspace. An admin can access the list of member details, modify
+        member details and
+        search for available members on a device.
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param org_id: Retrieves the list of all members of the device in this organization.
+        :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-device-settings/get-device-members
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{device_id}/members')
+        data = super().get(url=url, params=params)
+        return GetDeviceMembersResponse.parse_obj(data)
+
 class ListAutoAttendantObject(Role):
     #: Name of location for auto attendant.
     location_name: Optional[str]
@@ -14606,14 +14800,7 @@ class GetRecallHuntGroupObject(PutRecallHuntGroupObject):
     hunt_group_name: Optional[str]
 
 
-class HostedAgentType(ApiModel):
-    #: Indicates that this object is a person.
-    people: Optional[str]
-    #: Indicates a workspace that is not assigned to a specific person such as for a shared device in a common area.
-    place: Optional[str]
-
-
-class Type37(HostedAgentType):
+class Type37(MemberType):
     #: Indicates that this object is a virtual line.
     virtual_line = 'VIRTUAL_LINE'
 
@@ -14940,30 +15127,6 @@ class GetPersonPlaceVirtualLineCallQueueObject(CallForwardSelectiveCallsToNumber
     join_enabled: Optional[bool]
 
 
-class CreateCallQueueBody(GetDetailsForCallParkExtensionResponse):
-    #: Primary phone number of the call queue. Either a phoneNumber or extension is mandatory.
-    phone_number: Optional[str]
-    #: Language code.
-    language_code: Optional[str]
-    #: First name to be shown when calls are forwarded out of this call queue. Defaults to ".".
-    first_name: Optional[str]
-    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to phoneNumber if set, otherwise
-    #: defaults to call group name.
-    last_name: Optional[str]
-    #: Time zone for the call queue.
-    time_zone: Optional[str]
-    #: Policy controlling how calls are routed to agents.
-    call_policies: Optional[PostCallQueueCallPolicyObject]
-    #: Overall call queue settings.
-    queue_settings: Optional[CallQueueQueueSettingsObject]
-    #: People, workspaces and virtual lines that are eligible to receive calls.
-    agents: Optional[list[PostPersonPlaceVirtualLineCallQueueObject]]
-    #: Whether or not to allow agents to join or unjoin a queue.
-    allow_agent_join_enabled: Optional[bool]
-    #: When true, indicates that the agent's configuration allows them to use the queue's Caller ID for outgoing calls.
-    phone_number_for_outgoing_calls_enabled: Optional[bool]
-
-
 class ModifyPersonPlaceVirtualLineCallQueueObject(PostPersonPlaceVirtualLineCallQueueObject):
     #: Indicates the join status of the agent for this queue. The default value for newly added agents is true.
     join_enabled: Optional[bool]
@@ -15119,7 +15282,7 @@ class HostedAgent(ApiModel):
     #: Person or workspace's ID.
     id: Optional[str]
     #: Type of agent for call destination.
-    type: Optional[HostedAgentType]
+    type: Optional[MemberType]
     #: Person or workspace's first name.
     first_name: Optional[str]
     #: Person or workspace's last name.
@@ -15403,6 +15566,20 @@ class UpdateLocationWebexCallingDetailsBody(ApiModel):
     outside_dial_digit: Optional[str]
     #: Must dial a prefix when calling between locations having same extension within same location; should be numeric.
     routing_prefix: Optional[str]
+    #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will
+    #: include a P-Charge-Info header with the selected number in the SIP INVITE.
+    charge_number: Optional[str]
+
+
+class ListLocationObject(Role):
+    #: Must dial to reach an outside line, default is None.
+    outside_dial_digit: Optional[str]
+    #: Must dial a prefix when calling between locations having the same extension within the same location.
+    routing_prefix: Optional[str]
+    #: Location calling line information.
+    calling_line_id: Optional[CallingLineId]
+    #: True if E911 setup is required.
+    e911_setup_required: Optional[bool]
 
 
 class CallType3(str, Enum):
@@ -16163,85 +16340,6 @@ class GetDetailsForCallQueueForcedForwardResponse(ApiModel):
     audio_files: Optional[list[CallQueueAudioFilesObject]]
 
 
-class LineType(ApiModel):
-    #: Indicates a Primary line for the member.
-    primary: Optional[str]
-    #: Indicates a Shared line for the member. Shared line appearance allows users to receive and place calls to and
-    #: from another user's extension, using their device.
-    shared_call_appearance: Optional[str]
-
-
-class PutMemberObject(ApiModel):
-    #: Person's assigned port number.
-    port: Optional[int]
-    #: Unique identifier for the member.
-    id: Optional[str]
-    #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device
-    #: requires this option. This will override user level compression options.
-    t38_fax_compression_enabled: Optional[bool]
-    #: Whether the user is the owner of the device or not, and points to a primary Line/Port of device.
-    primary_owner: Optional[bool]
-    #: Line type is used to differentiate Primary and SCA, at which endpoint it is assigned.
-    line_type: Optional[LineType]
-    #: Number of lines that have been configured for the person on the device.
-    line_weight: Optional[int]
-    #: Enable Hotline. Configure this line to automatically call a predefined number whenever taken off-hook. Once
-    #: enabled, the line can only make calls to the predefined number set in hotlineDestination.
-    hotline_enabled: Optional[bool]
-    #: The preconfigured number for Hotline. Required only if hotlineEnabled is set to true.
-    hotline_destination: Optional[str]
-    #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended
-    #: to all the endpoints on the device. When set to false, a call decline request only declines the current
-    #: endpoint.
-    allow_call_decline_enabled: Optional[bool]
-    #: Device line label.
-    line_label: Optional[str]
-
-
-class MemberObject(PutMemberObject):
-    #: First name of a person or workspace.
-    first_name: Optional[str]
-    #: Last name of a person or workspace.
-    last_name: Optional[str]
-    #: Phone Number of a person or workspace. In some regions phone numbers are not returned in E.164 format. This will
-    #: be supported in a future update.
-    phone_number: Optional[str]
-    #: Extension of a person or workspace.
-    extension: Optional[str]
-    #: Registration Host IP address for the line port.
-    host_ip: Optional[str]
-    #: Registration Remote IP address for the line port.
-    remote_ip: Optional[str]
-    #: Indicates if the member is of type PEOPLE or PLACE.
-    member_type: Optional[HostedAgentType]
-    #: Location object having a unique identifier for the location and its name.
-    location: Optional[Role]
-
-
-class SearchMemberObject(ApiModel):
-    #: Unique identifier for the member.
-    id: Optional[str]
-    #: First name of a person or workspace.
-    first_name: Optional[str]
-    #: Last name of a person or workspace.
-    last_name: Optional[str]
-    #: Phone Number of a person or workspace.
-    phone_number: Optional[str]
-    #: T.38 Fax Compression setting and available only for ATA Devices. Choose T.38 fax compression if the device
-    #: requires this option. this will override user level compression options.
-    t38_fax_compression_enabled: Optional[bool]
-    #: Line type is used to differentiate Primary and SCA, at which endpoint it is assigned.
-    line_type: Optional[LineType]
-    #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended
-    #: to all the endpoints on the device. When set to false, a call decline request only declines the current
-    #: endpoint.
-    allow_call_decline_enabled: Optional[bool]
-    #: Indicates if member is of type PEOPLE or PLACE.
-    member_type: Optional[HostedAgentType]
-    #: Location object having a unique identifier for the location and its name.
-    location: Optional[Role]
-
-
 class SelectionType(ApiModel):
     #: Indicates the regional selection type for audio codec priority.
     regional: Optional[str]
@@ -16499,83 +16597,6 @@ class CustomizationDeviceLevelObject(ApiModel):
     mpp: Optional[MppObject]
 
 
-class UpdateDeviceSettingsBody(ApiModel):
-    #: Indicates the customization object of the device settings.
-    customizations: Optional[CustomizationDeviceLevelObject]
-    #: Indicates if customization is allowed at a device level. If true, customized at a device level. If false, not
-    #: customized; uses customer-level configuration.
-    custom_enabled: Optional[bool]
-
-
-class GetDeviceSettingsResponse(UpdateDeviceSettingsBody):
-    #: Customer devices setting update status. If true, an update is in progress (no further changes are allowed). If
-    #: false, no update in progress (changes are allowed).
-    update_in_progress: Optional[bool]
-    #: Number of devices that will be updated.
-    device_count: Optional[int]
-    #: Indicates the last updated time.
-    last_update_time: Optional[int]
-
-
-class DeviceOwner(ApiModel):
-    #: Unique identifier of a person or a workspace.
-    id: Optional[str]
-    #: Enumeration that indicates if the member is of type PEOPLE or PLACE.
-    type: Optional[HostedAgentType]
-    #: First name of device owner.
-    first_name: Optional[str]
-    #: Last name of device owner.
-    last_name: Optional[str]
-
-
-class ActivationStates(ApiModel):
-    #: Indicates a device is activating.
-    activating: Optional[str]
-    #: Indicates a device is activated.
-    activated: Optional[str]
-    #: Indicates a device is deactivated.
-    deactivated: Optional[str]
-
-
-class Devices(ApiModel):
-    #: Unique identifier for a device.
-    id: Optional[str]
-    #: Comma separated array of tags used to describe device.
-    description: Optional[list[str]]
-    #: Identifier for device model.
-    model: Optional[str]
-    #: MAC address of device.
-    mac: Optional[str]
-    #: IP address of device.
-    ip_address: Optional[str]
-    #: Indicates whether the person or the workspace is the owner of the device, and points to a primary Line/Port of
-    #: the device.
-    primary_owner: Optional[bool]
-    #: Indicates if the line is acting as a primary line or a shared line for this device.
-    type: Optional[LineType]
-    #: Owner of device.
-    owner: Optional[DeviceOwner]
-    #: Activation state of device.
-    activation_state: Optional[ActivationStates]
-
-
-class Hoteling(ApiModel):
-    #: Enable/Disable hoteling Host. Enabling the device for hoteling means that a guest(end user) can log into this
-    #: host(workspace device) and use this device
-    #: as if it were their own. This is useful when traveling to a remote office but still needing to place/receive
-    #: calls with their telephone number and access features normally available to them on their office phone.
-    enabled: Optional[bool]
-    #: Enable limiting the time a guest can use the device. The time limit is configured via guestHoursLimit.
-    limit_guest_use: Optional[bool]
-    #: Time Limit in hours until hoteling is enabled. Mandatory if limitGuestUse is enabled.
-    guest_hours_limit: Optional[int]
-
-
-class PlaceDevices(Devices):
-    #: Indicates Hoteling details of a device.
-    hoteling: Optional[Hoteling]
-
-
 class TypeObject(ApiModel):
     #: Cisco Multiplatform Phone
     mpp: Optional[str]
@@ -16626,7 +16647,7 @@ class DeviceObject(ApiModel):
     #: Users who manage the device.
     managed_by: Optional[ManagedByObject]
     #: List of places the device is supported for.
-    supported_for: Optional[list[HostedAgentType]]
+    supported_for: Optional[list[MemberType]]
     #: Onboarding method.
     onboarding_method: Optional[list[OnboardingMethodObject]]
     #: Enables / Disables layout configuration for devices.
@@ -16965,30 +16986,67 @@ class ReadListOfCallQueuesResponse(ApiModel):
     queues: Optional[list[ListCallQueueObject]]
 
 
+class CreateCallQueueBody(GetDetailsForCallParkExtensionResponse):
+    #: Primary phone number of the call queue. Either a phoneNumber or extension is mandatory.
+    phone_number: Optional[str]
+    #: Language code.
+    language_code: Optional[str]
+    #: First name to be shown when calls are forwarded out of this call queue. Defaults to ".".
+    first_name: Optional[str]
+    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to phoneNumber if set, otherwise
+    #: defaults to call group name.
+    last_name: Optional[str]
+    #: Time zone for the call queue.
+    time_zone: Optional[str]
+    #: Policy controlling how calls are routed to agents.
+    call_policies: Optional[PostCallQueueCallPolicyObject]
+    #: Overall call queue settings.
+    queue_settings: Optional[CallQueueQueueSettingsObject]
+    #: People, workspaces and virtual lines that are eligible to receive calls.
+    agents: Optional[list[PostPersonPlaceVirtualLineCallQueueObject]]
+    #: Whether or not to allow agents to join or unjoin a queue.
+    allow_agent_join_enabled: Optional[bool]
+    #: When true, indicates that the agent's configuration allows them to use the queue's Caller ID for outgoing calls.
+    phone_number_for_outgoing_calls_enabled: Optional[bool]
+
+
 class CreateCallQueueResponse(ApiModel):
     #: ID of the newly created call queue.
     id: Optional[str]
 
 
-class GetDetailsForCallQueueResponse(CreateCallQueueBody):
-    #: A unique identifier for the call queue.
-    id: Optional[str]
+class GetDetailsForCallQueueResponse(ListCPCallParkExtensionObject):
     #: Whether or not the call queue is enabled.
     enabled: Optional[bool]
     #: Language for the call queue.
     language: Optional[str]
+    #: Language code.
+    language_code: Optional[str]
+    #: First name to be shown when calls are forwarded out of this call queue. Defaults to ..
+    first_name: Optional[str]
+    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the phoneNumber if set,
+    #: otherwise defaults to call group name.
+    last_name: Optional[str]
+    #: Time zone for the call queue.
+    time_zone: Optional[str]
+    #: Primary phone number of the call queue.
+    phone_number: Optional[str]
+    #: When true, indicates that the agent's configuration allows them to use the queue's Caller ID for outgoing calls.
+    phone_number_for_outgoing_calls_enabled: Optional[bool]
     #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
     #: number will reach the same greeting and each menu will function identically to the main number. The alternate
     #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
     alternate_number_settings: Optional[AlternateNumberSettings]
-    #: Language for the call queue.
-    language: Optional[str]
     #: Policy controlling how calls are routed to agents.
     call_policies: Optional[PostCallQueueCallPolicyObject]
+    #: Overall call queue settings.
+    queue_settings: Optional[CallQueueQueueSettingsObject]
     #: Flag to indicate whether call waiting is enabled for agents.
     allow_call_waiting_for_agents_enabled: Optional[bool]
     #: People, workspaces and virtual lines that are eligible to receive calls.
     agents: Optional[list[GetPersonPlaceVirtualLineCallQueueObject]]
+    #: Whether or not to allow agents to join or unjoin a queue.
+    allow_agent_join_enabled: Optional[bool]
 
 
 class UpdateCallQueueBody(FaxMessage):
@@ -17276,6 +17334,21 @@ class GetLocationWebexCallingDetailsResponse(UpdateLocationWebexCallingDetailsBo
     user_limit: Optional[int]
     #: IP Address, hostname, or domain. Read-Only.
     default_domain: Optional[str]
+
+
+class EnableLocationForWebexCallingBody(CreateLocationBody):
+    #: A unique identifier for the location.
+    id: Optional[str]
+
+
+class EnableLocationForWebexCallingResponse(ApiModel):
+    #: A unique identifier for the location.
+    id: Optional[str]
+
+
+class ListLocationsWebexCallingDetailsResponse(ApiModel):
+    #: Array of locations.
+    locations: Optional[list[ListLocationObject]]
 
 
 class GenerateExamplePasswordForLocationBody(ApiModel):
@@ -17931,37 +18004,19 @@ class UpdateCallQueueNightServiceBody(GetDetailsForCallQueueStrandedCallsRespons
     manual_audio_files: Optional[list[CallQueueAudioFilesObject]]
 
 
-class GetDeviceMembersResponse(ApiModel):
-    #: Model type of the device.
-    model: Optional[str]
-    #: List of members that appear on the device.
-    members: Optional[list[MemberObject]]
-    #: Maximum number of lines available for the device.
-    max_line_count: Optional[int]
-
-
-class UpdateMembersOndeviceBody(ApiModel):
-    #: If the member's list is missing then all the users are removed except the primary user.
-    members: Optional[list[PutMemberObject]]
-
-
-class SearchMembersResponse(ApiModel):
-    #: List of members available for the device.
-    members: Optional[list[SearchMemberObject]]
-
-
-class GetUserDevicesResponse(ApiModel):
-    #: Array of devices available to person.
-    devices: Optional[list[Devices]]
-    #: Maximum number of devices a person can be assigned to.
-    max_device_count: Optional[int]
-
-
-class GetWorkspaceDevicesResponse(ApiModel):
-    #: Array of devices associated to a workspace.
-    devices: Optional[list[PlaceDevices]]
-    #: Maximum number of devices a workspace can be assigned to.
-    max_device_count: Optional[int]
+class GetLocationDeviceSettingsResponse(ApiModel):
+    #: Indicates the customization object of the device settings.
+    customizations: Optional[CustomizationDeviceLevelObject]
+    #: Indicates if customization is allowed at a location level. If true, customized at a location level. If false,
+    #: not customized; uses customer-level configuration.
+    custom_enabled: Optional[bool]
+    #: Customer devices setting update status. If true, an update is in progress (no further changes are allowed). If
+    #: false, no update in progress (changes are allowed).
+    update_in_progress: Optional[bool]
+    #: Number of devices that will be updated.
+    device_count: Optional[int]
+    #: Indicates the last updated time.
+    last_update_time: Optional[int]
 
 
 class ReadListOfSupportedDevicesResponse(ApiModel):
@@ -20436,7 +20491,80 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         data = super().get(url=url, params=params)
         return GetLocationWebexCallingDetailsResponse.parse_obj(data)
 
-    def update_location_webexing_details(self, location_id: str, org_id: str = None, announcement_language: str = None, calling_line_id: CallingLineId = None, connection: UnknownExtensionRouteIdentity = None, external_caller_id_name: str = None, p_access_network_info: str = None, outside_dial_digit: str = None, routing_prefix: str = None):
+    def enable_location_for_webexing(self, announcement_language: str, id: str, org_id: str = None, name: str = None, time_zone: str = None, preferred_language: str = None, address: Address = None) -> str:
+        """
+        Enable a location by adding it to Webex Calling. This add Webex Calling support to a
+        location created created using the POST /v1/locations API.
+        Locations are used to support calling features which can be defined at the location level.
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param announcement_language: Location's phone announcement language.
+        :type announcement_language: str
+        :param id: A unique identifier for the location.
+        :type id: str
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :param name: The name of the location.
+        :type name: str
+        :param time_zone: Time zone associated with this location, refer to this link
+            (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone)
+            for format.
+        :type time_zone: str
+        :param preferred_language: Default email language.
+        :type preferred_language: str
+        :param address: The address of the location.
+        :type address: Address
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/enable-a-location-for-webex-calling
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = EnableLocationForWebexCallingBody()
+        if announcement_language is not None:
+            body.announcement_language = announcement_language
+        if id is not None:
+            body.id = id
+        if name is not None:
+            body.name = name
+        if time_zone is not None:
+            body.time_zone = time_zone
+        if preferred_language is not None:
+            body.preferred_language = preferred_language
+        if address is not None:
+            body.address = address
+        url = self.ep('locations')
+        data = super().post(url=url, params=params, data=body.json())
+        return data["id"]
+
+    def list_locations_webexing_details(self, org_id: str = None, name: str = None, order: str = None, **params) -> Generator[ListLocationObject, None, None]:
+        """
+        Lists Webex Calling locations for an organization with Webex Calling details.
+        Searching and viewing locations with Webex Calling details in your
+        organization require an administrator auth token with the
+        spark-admin:telephony_config_read scope.
+
+        :param org_id: List locations for this organization.
+        :type org_id: str
+        :param name: List locations whose name contains this string.
+        :type name: str
+        :param order: Sort the list of locations based on name, either asc or desc.
+        :type order: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/list-locations-webex-calling-details
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        if order is not None:
+            params['order'] = order
+        url = self.ep('locations')
+        return self.session.follow_pagination(url=url, model=ListLocationObject, item_key='locations', params=params)
+
+    def update_location_webexing_details(self, location_id: str, org_id: str = None, announcement_language: str = None, calling_line_id: CallingLineId = None, connection: UnknownExtensionRouteIdentity = None, external_caller_id_name: str = None, p_access_network_info: str = None, outside_dial_digit: str = None, routing_prefix: str = None, charge_number: str = None):
         """
         Update Webex Calling details for a location, by ID.
         Specifies the location ID in the locationId parameter in the URI.
@@ -20464,6 +20592,9 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         :param routing_prefix: Must dial a prefix when calling between locations having same extension within same
             location; should be numeric.
         :type routing_prefix: str
+        :param charge_number: Chargeable number for the line placing the call. When this is set, all calls placed from
+            this location will include a P-Charge-Info header with the selected number in the SIP INVITE.
+        :type charge_number: str
 
         documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-location-webex-calling-details
         """
@@ -20485,6 +20616,8 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             body.outside_dial_digit = outside_dial_digit
         if routing_prefix is not None:
             body.routing_prefix = routing_prefix
+        if charge_number is not None:
+            body.charge_number = charge_number
         url = self.ep(f'locations/{location_id}')
         super().put(url=url, params=params, data=body.json())
         return
@@ -23738,173 +23871,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         super().put(url=url, params=params, data=body.json())
         return
 
-    def device_members(self, device_id: str, org_id: str = None) -> GetDeviceMembersResponse:
-        """
-        Get the list of all the members of the device including primary and secondary users.
-        A device member can be either a person or a workspace. An admin can access the list of member details, modify
-        member details and
-        search for available members on a device.
-        Retrieving this list requires a full or read-only administrator auth token with a scope of
-        spark-admin:telephony_config_read.
-
-        :param device_id: Unique identifier for the device.
-        :type device_id: str
-        :param org_id: Retrieves the list of all members of the device in this organization.
-        :type org_id: str
-
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-device-members
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'devices/{device_id}/members')
-        data = super().get(url=url, params=params)
-        return GetDeviceMembersResponse.parse_obj(data)
-
-    def update_members_ondevice(self, device_id: str, org_id: str = None, members: PutMemberObject = None):
-        """
-        Modify member details on the device.
-        A device member can be either a person or a workspace. An admin can access the list of member details, modify
-        member details and
-        search for available members on a device.
-        Modifying members on the device requires a full administrator auth token with a scope of
-        spark-admin:telephony_config_write.
-
-        :param device_id: Unique identifier for the device.
-        :type device_id: str
-        :param org_id: Modify members on the device in this organization.
-        :type org_id: str
-        :param members: If the member's list is missing then all the users are removed except the primary user.
-        :type members: PutMemberObject
-
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-members-on-the-device
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = UpdateMembersOndeviceBody()
-        if members is not None:
-            body.members = members
-        url = self.ep(f'devices/{device_id}/members')
-        super().put(url=url, params=params, data=body.json())
-        return
-
-    def search_members(self, device_id: str, location_id: str, org_id: str = None, member_name: str = None, phone_number: str = None, extension: str = None, **params) -> Generator[SearchMemberObject, None, None]:
-        """
-        Search members that can be assigned to the device.
-        A device member can be either a person or a workspace. A admin can access the list of member details, modify
-        member details and
-        search for available members on a device.
-        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
-
-        :param device_id: Unique identifier for the device.
-        :type device_id: str
-        :param location_id: Unique identifier for the location.
-        :type location_id: str
-        :param org_id: Retrieves the list of available members on the device in this organization.
-        :type org_id: str
-        :param member_name: Search (Contains) numbers based on member name.
-        :type member_name: str
-        :param phone_number: Search (Contains) based on number.
-        :type phone_number: str
-        :param extension: Search (Contains) based on extension.
-        :type extension: str
-
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/search-members
-        """
-        params['locationId'] = location_id
-        if org_id is not None:
-            params['orgId'] = org_id
-        if member_name is not None:
-            params['memberName'] = member_name
-        if phone_number is not None:
-            params['phoneNumber'] = phone_number
-        if extension is not None:
-            params['extension'] = extension
-        url = self.ep(f'devices/{device_id}/availableMembers')
-        return self.session.follow_pagination(url=url, model=SearchMemberObject, item_key='members', params=params)
-
-    def apply_changes_forspecific_device(self, device_id: str, org_id: str = None):
-        """
-        Issues request to the device to download and apply changes to the configuration.
-        Applying changes for a specific device requires a full administrator auth token with a scope of
-        spark-admin:telephony_config_write.
-
-        :param device_id: Unique identifier for the device.
-        :type device_id: str
-        :param org_id: Apply changes for a device in this organization.
-        :type org_id: str
-
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/apply-changes-for-a-specific-device
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'devices/{device_id}/actions/applyChanges/invoke')
-        super().post(url=url, params=params)
-        return
-
-    def device_settings(self, device_id: str, device_model: str, org_id: str = None) -> GetDeviceSettingsResponse:
-        """
-        Get override settings for a device.
-        Device settings lists all the applicable settings for an MPP and an ATA devices at the device level. An admin
-        can also modify the settings. DECT devices do not support settings at the device level.
-        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
-
-        :param device_id: Unique identifier for the device.
-        :type device_id: str
-        :param device_model: Model type of the device.
-        :type device_model: str
-        :param org_id: Settings on the device in this organization.
-        :type org_id: str
-
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-device-settings
-        """
-        params = {}
-        params['deviceModel'] = device_model
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'devices/{device_id}/settings')
-        data = super().get(url=url, params=params)
-        return GetDeviceSettingsResponse.parse_obj(data)
-
-    def update_device_settings(self, device_id: str, customizations: CustomizationDeviceLevelObject, custom_enabled: bool, org_id: str = None, device_model: str = None):
-        """
-        Modify override settings for a device.
-        Device settings list all the applicable settings for an MPP and an ATA devices at the device level. Admins can
-        also modify the settings. NOTE: DECT devices do not support settings at the device level.
-        Updating settings on the device requires a full administrator auth token with a scope of
-        spark-admin:telephony_config_write.
-
-        :param device_id: Unique identifier for the device.
-        :type device_id: str
-        :param customizations: Indicates the customization object of the device settings.
-        :type customizations: CustomizationDeviceLevelObject
-        :param custom_enabled: Indicates if customization is allowed at a device level. If true, customized at a device
-            level. If false, not customized; uses customer-level configuration.
-        :type custom_enabled: bool
-        :param org_id: Organization in which the device resides..
-        :type org_id: str
-        :param device_model: Device model name.
-        :type device_model: str
-
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/update-device-settings
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        if device_model is not None:
-            params['deviceModel'] = device_model
-        body = UpdateDeviceSettingsBody()
-        if customizations is not None:
-            body.customizations = customizations
-        if custom_enabled is not None:
-            body.custom_enabled = custom_enabled
-        url = self.ep(f'devices/{device_id}/settings')
-        super().put(url=url, params=params, data=body.json())
-        return
-
-    def location_device_settings(self, location_id: str, org_id: str = None) -> GetDeviceSettingsResponse:
+    def location_device_settings(self, location_id: str, org_id: str = None) -> GetLocationDeviceSettingsResponse:
         """
         Get device override settings for a location.
         This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
@@ -23921,82 +23888,7 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/devices/settings')
         data = super().get(url=url, params=params)
-        return GetDeviceSettingsResponse.parse_obj(data)
-
-    def user_devices(self, person_id: str, org_id: str = None) -> GetUserDevicesResponse:
-        """
-        Get all devices for a person.
-        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
-
-        :param person_id: Person for whom to retrieve devices.
-        :type person_id: str
-        :param org_id: Organization to which the person belongs.
-        :type org_id: str
-
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-user-devices
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'people/{person_id}/devices')
-        data = super().get(url=url, params=params)
-        return GetUserDevicesResponse.parse_obj(data)
-
-    def workspace_devices(self, workspace_id: str, org_id: str = None) -> GetWorkspaceDevicesResponse:
-        """
-        Get all devices for a workspace.
-        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
-
-        :param workspace_id: ID of the workspace for which to retrieve devices.
-        :type workspace_id: str
-        :param org_id: Organization to which the workspace belongs.
-        :type org_id: str
-
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-workspace-devices
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'workspaces/{workspace_id}/devices')
-        data = super().get(url=url, params=params)
-        return GetWorkspaceDevicesResponse.parse_obj(data)
-
-    def modify_workspace_devices(self, workspace_id: str, org_id: str = None, enabled: bool = None, limit_guest_use: bool = None, guest_hours_limit: int = None):
-        """
-        Modify devices for a workspace.
-        Modifying devices for a workspace requires a full administrator auth token with a scope of
-        spark-admin:telephony_config_write.
-
-        :param workspace_id: ID of the workspace for which to modify devices.
-        :type workspace_id: str
-        :param org_id: Organization to which the workspace belongs.
-        :type org_id: str
-        :param enabled: Enable/Disable hoteling Host. Enabling the device for hoteling means that a guest(end user) can
-            log into this host(workspace device) and use this device as if it were their own. This is useful when
-            traveling to a remote office but still needing to place/receive calls with their telephone number and
-            access features normally available to them on their office phone.
-        :type enabled: bool
-        :param limit_guest_use: Enable limiting the time a guest can use the device. The time limit is configured via
-            guestHoursLimit.
-        :type limit_guest_use: bool
-        :param guest_hours_limit: Time Limit in hours until hoteling is enabled. Mandatory if limitGuestUse is enabled.
-        :type guest_hours_limit: int
-
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/modify-workspace-devices
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = Hoteling()
-        if enabled is not None:
-            body.enabled = enabled
-        if limit_guest_use is not None:
-            body.limit_guest_use = limit_guest_use
-        if guest_hours_limit is not None:
-            body.guest_hours_limit = guest_hours_limit
-        url = self.ep(f'workspaces/{workspace_id}/devices')
-        super().put(url=url, params=params, data=body.json())
-        return
+        return GetLocationDeviceSettingsResponse.parse_obj(data)
 
     def read_list_of_supported_devices(self, org_id: str = None) -> list[DeviceObject]:
         """
@@ -24170,23 +24062,6 @@ class WebexCallingOrganizationSettingsApi(ApiChild, base='telephony/config/'):
         url = self.ep(f'jobs/devices/callDeviceSettings/{job_id}/errors')
         return self.session.follow_pagination(url=url, model=ItemObject, params=params)
 
-class AvailableSharedLineMemberItem(ApiModel):
-    #: A unique member identifier.
-    id: Optional[str]
-    #: First name of member.
-    first_name: Optional[str]
-    #: Last name of member.
-    last_name: Optional[str]
-    #: Phone number of member. Currently, E.164 format is not supported.
-    phone_number: Optional[str]
-    #: Phone extension of member.
-    extension: Optional[str]
-    #: Indicates if the line is acting as a primary line or a shared line for this device.
-    line_type: Optional[LineType]
-    #: Location object having a unique identifier for the location and its name.
-    location: Optional[Role]
-
-
 class PutSharedLineMemberItem(ApiModel):
     #: Unique identifier for the person or workspace.
     id: Optional[str]
@@ -24227,7 +24102,7 @@ class GetSharedLineMemberItem(PutSharedLineMemberItem):
     #: Registration remote IP for the line port.
     remote_ip: Optional[str]
     #: Indicates if the member is of type PEOPLE or PLACE.
-    member_type: Optional[HostedAgentType]
+    member_type: Optional[MemberType]
     #: Location object having a unique identifier for the location and its name.
     location: Optional[Role]
 
@@ -24288,6 +24163,48 @@ class ReadForwardingSettingsForPersonResponse(ApiModel):
     #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any
     #: reason, such as power outage, failed Internet connection, or wiring problem.
     business_continuity: Optional[BusinessContinuity]
+
+
+class DeviceOwner(ApiModel):
+    #: Unique identifier of a person or a workspace.
+    id: Optional[str]
+    #: Enumeration that indicates if the member is of type PEOPLE or PLACE.
+    type: Optional[MemberType]
+    #: First name of device owner.
+    first_name: Optional[str]
+    #: Last name of device owner.
+    last_name: Optional[str]
+
+
+class ActivationStates(ApiModel):
+    #: Indicates a device is activating.
+    activating: Optional[str]
+    #: Indicates a device is activated.
+    activated: Optional[str]
+    #: Indicates a device is deactivated.
+    deactivated: Optional[str]
+
+
+class Devices(ApiModel):
+    #: Unique identifier for a device.
+    id: Optional[str]
+    #: Comma separated array of tags used to describe device.
+    description: Optional[list[str]]
+    #: Identifier for device model.
+    model: Optional[str]
+    #: MAC address of device.
+    mac: Optional[str]
+    #: IP address of device.
+    ip_address: Optional[str]
+    #: Indicates whether the person or the workspace is the owner of the device, and points to a primary Line/Port of
+    #: the device.
+    primary_owner: Optional[bool]
+    #: Indicates if the line is acting as a primary line or a shared line for this device.
+    type: Optional[LineType]
+    #: Owner of device.
+    owner: Optional[DeviceOwner]
+    #: Activation state of device.
+    activation_state: Optional[ActivationStates]
 
 
 class Record(str, Enum):
@@ -24662,6 +24579,13 @@ class ReadPersonsCallingBehaviorResponse(ConfigurepersonsCallingBehaviorBody):
     #: The effective Calling Behavior setting for the person, will be the organization's default Calling Behavior if
     #: the user's behaviorType is set to null.
     effective_behavior_type: Optional[EffectiveBehaviorType]
+
+
+class GetUserDevicesResponse(ApiModel):
+    #: Array of devices available to person.
+    devices: Optional[list[Devices]]
+    #: Maximum number of devices a person can be assigned to.
+    max_device_count: Optional[int]
 
 
 class ReadCallRecordingSettingsForPersonResponse(ConfigureCallRecordingSettingsForPersonBody):
@@ -25168,6 +25092,25 @@ class WebexCallingPersonSettingsApi(ApiChild, base=''):
         url = self.ep(f'people/{person_id}/features/callForwarding')
         super().put(url=url, params=params, data=body.json())
         return
+
+    def user_devices(self, person_id: str, org_id: str = None) -> GetUserDevicesResponse:
+        """
+        Get all devices for a person.
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param person_id: Person for whom to retrieve devices.
+        :type person_id: str
+        :param org_id: Organization to which the person belongs.
+        :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-person-settings/get-user-devices
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/people/{person_id}/devices')
+        data = super().get(url=url, params=params)
+        return GetUserDevicesResponse.parse_obj(data)
 
     def read_call_intercept_for_person(self, person_id: str, org_id: str = None) -> GetLocationInterceptResponse:
         """
@@ -26841,6 +26784,23 @@ class CallForwardingPlaceSettingPatch(ApiModel):
     no_answer: Optional[NoAnswer3]
 
 
+class Hoteling(ApiModel):
+    #: Enable/Disable hoteling Host. Enabling the device for hoteling means that a guest(end user) can log into this
+    #: host(workspace device) and use this device
+    #: as if it were their own. This is useful when traveling to a remote office but still needing to place/receive
+    #: calls with their telephone number and access features normally available to them on their office phone.
+    enabled: Optional[bool]
+    #: Enable limiting the time a guest can use the device. The time limit is configured via guestHoursLimit.
+    limit_guest_use: Optional[bool]
+    #: Time Limit in hours until hoteling is enabled. Mandatory if limitGuestUse is enabled.
+    guest_hours_limit: Optional[int]
+
+
+class PlaceDevices(Devices):
+    #: Indicates Hoteling details of a device.
+    hoteling: Optional[Hoteling]
+
+
 class UserNumberItem(GetUserNumberItemObject):
     #: Flag to indicate toll free number.
     toll_free_number: Optional[bool]
@@ -26854,7 +26814,7 @@ class MonitoredElementUser(CoHosts):
     #: Last name of person or workspace.
     last_name: Optional[str]
     #: Type of the person or workspace.
-    type: Optional[HostedAgentType]
+    type: Optional[MemberType]
     #: List of phone numbers of the person or workspace.
     numbers: Optional[list[UserNumberItem]]
     #: Name of location for call park.
@@ -26968,6 +26928,13 @@ class ModifyCallerIDSettingsForWorkspaceBody(ApiModel):
     location_external_caller_id_name: Optional[str]
 
 
+class GetWorkspaceDevicesResponse(ApiModel):
+    #: Array of devices associated to a workspace.
+    devices: Optional[list[PlaceDevices]]
+    #: Maximum number of devices a workspace can be assigned to.
+    max_device_count: Optional[int]
+
+
 class RetrieveMonitoringSettingsForWorkspaceResponse(ApiModel):
     #: Call park notification enabled or disabled.
     call_park_notification_enabled: Optional[bool]
@@ -27017,7 +26984,7 @@ class ConfigureCallInterceptSettingsForWorkspaceBody(ApiModel):
     outgoing: Optional[Outgoing]
 
 
-class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
+class WebexCallingWorkspaceSettingsApi(ApiChild, base=''):
     """
     Workspaces represent places where people work, such as conference rooms, meeting spaces, lobbies, and lunchrooms.
     Devices may be associated with workspaces.
@@ -27053,7 +27020,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/callForwarding')
+        url = self.ep(f'workspaces/{workspace_id}/features/callForwarding')
         data = super().get(url=url, params=params)
         return CallForwardingPlaceSettingGet.parse_obj(data["callForwarding"])
 
@@ -27081,7 +27048,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         body = ModifyCallForwardingSettingsForWorkspaceBody()
         if call_forwarding is not None:
             body.call_forwarding = call_forwarding
-        url = self.ep(f'{workspace_id}/features/callForwarding')
+        url = self.ep(f'workspaces/{workspace_id}/features/callForwarding')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -27105,7 +27072,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/callWaiting')
+        url = self.ep(f'workspaces/{workspace_id}/features/callWaiting')
         data = super().get(url=url, params=params)
         return data["enabled"]
 
@@ -27134,7 +27101,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         body = ModifyCallWaitingSettingsForWorkspaceBody()
         if enabled is not None:
             body.enabled = enabled
-        url = self.ep(f'{workspace_id}/features/callWaiting')
+        url = self.ep(f'workspaces/{workspace_id}/features/callWaiting')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -27157,7 +27124,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/callerId')
+        url = self.ep(f'workspaces/{workspace_id}/features/callerId')
         data = super().get(url=url, params=params)
         return RetrieveCallerIDSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -27216,7 +27183,63 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
             body.custom_external_caller_id_name = custom_external_caller_id_name
         if location_external_caller_id_name is not None:
             body.location_external_caller_id_name = location_external_caller_id_name
-        url = self.ep(f'{workspace_id}/features/callerId')
+        url = self.ep(f'workspaces/{workspace_id}/features/callerId')
+        super().put(url=url, params=params, data=body.json())
+        return
+
+    def devices(self, workspace_id: str, org_id: str = None) -> GetWorkspaceDevicesResponse:
+        """
+        Get all devices for a workspace.
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param workspace_id: ID of the workspace for which to retrieve devices.
+        :type workspace_id: str
+        :param org_id: Organization to which the workspace belongs.
+        :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/get-workspace-devices
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/workspaces/{workspace_id}/devices')
+        data = super().get(url=url, params=params)
+        return GetWorkspaceDevicesResponse.parse_obj(data)
+
+    def modify_devices(self, workspace_id: str, org_id: str = None, enabled: bool = None, limit_guest_use: bool = None, guest_hours_limit: int = None):
+        """
+        Modify devices for a workspace.
+        Modifying devices for a workspace requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
+
+        :param workspace_id: ID of the workspace for which to modify devices.
+        :type workspace_id: str
+        :param org_id: Organization to which the workspace belongs.
+        :type org_id: str
+        :param enabled: Enable/Disable hoteling Host. Enabling the device for hoteling means that a guest(end user) can
+            log into this host(workspace device) and use this device as if it were their own. This is useful when
+            traveling to a remote office but still needing to place/receive calls with their telephone number and
+            access features normally available to them on their office phone.
+        :type enabled: bool
+        :param limit_guest_use: Enable limiting the time a guest can use the device. The time limit is configured via
+            guestHoursLimit.
+        :type limit_guest_use: bool
+        :param guest_hours_limit: Time Limit in hours until hoteling is enabled. Mandatory if limitGuestUse is enabled.
+        :type guest_hours_limit: int
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-workspace-devices
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = Hoteling()
+        if enabled is not None:
+            body.enabled = enabled
+        if limit_guest_use is not None:
+            body.limit_guest_use = limit_guest_use
+        if guest_hours_limit is not None:
+            body.guest_hours_limit = guest_hours_limit
+        url = self.ep(f'telephony/config/workspaces/{workspace_id}/devices')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -27241,7 +27264,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/monitoring')
+        url = self.ep(f'workspaces/{workspace_id}/features/monitoring')
         data = super().get(url=url, params=params)
         return RetrieveMonitoringSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -27276,11 +27299,11 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
             body.enable_call_park_notification = enable_call_park_notification
         if monitored_elements is not None:
             body.monitored_elements = monitored_elements
-        url = self.ep(f'{workspace_id}/features/monitoring')
+        url = self.ep(f'workspaces/{workspace_id}/features/monitoring')
         super().put(url=url, params=params, data=body.json())
         return
 
-    def list_numbers_associated_withspecific(self, workspace_id: str, attributes: , body: , org_id: str = None):
+    def list_numbers_associated_withspecific(self, workspace_id: str, org_id: str = None):
         """
         List the PSTN phone numbers associated with a specific workspace, by ID, within the organization. Also shows
         the location and organization associated with the workspace.
@@ -27289,20 +27312,6 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
 
         :param workspace_id: List numbers for this workspace.
         :type workspace_id: str
-        :param attributes:   * phoneNumbers (array[PhoneNumbers], fixed-type, required) - Array of numbers
-                (primary/alternate). * workspace (workspace, fixed-type, required) - Workspace object having a unique
-                identifier for the Workspace. * location (location, fixed-type, required) - Location object having a
-                unique identifier for the location and its name. * organization (organization, fixed-type, required) -
-                Organization object having a unique identifier for the organization and its name.
-        :type attributes: 
-        :param body: { "phoneNumbers": [ { "external": "+12055550001", "extension": "12211", "primary": true }, {
-            "external": "+12055550002", "extension": "122", "primary": false } ], "workspace": { "id":
-            "Y2lzY29zcGFyazovL3VzL1BMQUNFLzg0MjkzOGQ1LTkyNzMtNGJjNi1hYTNhLTA1Njc3MmRiMzE2NQ" }, "location": { "name":
-            "MainOffice", "id": "Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4Mjg5NzIyLTFiODAtNDFiNy05Njc4LTBlNzdhZThjMTA5OA" },
-            "organization": { "id":
-            "Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi9hNDVkNmNkYS1hZTVhLTQwYzMtYTdhZC01NjUwZmRkZGQ1M2M", "name":
-            "Atlas_Test_CALL-1237" } }
-        :type body: 
         :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
             can use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
@@ -27310,11 +27319,9 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace
         """
         params = {}
-        params['Attributes'] = attributes
-        params['Body'] = body
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/numbers')
+        url = self.ep(f'workspaces/{workspace_id}/features/numbers')
         super().get(url=url, params=params)
         return $!$!$!   # this is weird. Check the spec at https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace
 
@@ -27338,7 +27345,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/incomingPermission')
+        url = self.ep(f'workspaces/{workspace_id}/features/incomingPermission')
         data = super().get(url=url, params=params)
         return ReadIncomingPermissionSettingsForPersonResponse.parse_obj(data)
 
@@ -27380,7 +27387,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
             body.internal_calls_enabled = internal_calls_enabled
         if collect_calls_enabled is not None:
             body.collect_calls_enabled = collect_calls_enabled
-        url = self.ep(f'{workspace_id}/features/incomingPermission')
+        url = self.ep(f'workspaces/{workspace_id}/features/incomingPermission')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -27404,7 +27411,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/outgoingPermission')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission')
         data = super().get(url=url, params=params)
         return RetrieveOutgoingPermissionSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -27437,7 +27444,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
             body.use_custom_enabled = use_custom_enabled
         if calling_permissions is not None:
             body.calling_permissions = calling_permissions
-        url = self.ep(f'{workspace_id}/features/outgoingPermission')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -27460,7 +27467,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/accessCodes')
         data = super().get(url=url, params=params)
         return parse_obj_as(list[ReportError], data["accessCodes"])
 
@@ -27488,7 +27495,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         body = ModifyAccessCodesForWorkspaceBody()
         if delete_codes is not None:
             body.delete_codes = delete_codes
-        url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/accessCodes')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -27520,7 +27527,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
             body.code = code
         if description is not None:
             body.description = description
-        url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/accessCodes')
         super().post(url=url, params=params, data=body.json())
         return
 
@@ -27546,7 +27553,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/intercept')
+        url = self.ep(f'workspaces/{workspace_id}/features/intercept')
         data = super().get(url=url, params=params)
         return ReadCallInterceptSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -27585,7 +27592,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
             body.incoming = incoming
         if outgoing is not None:
             body.outgoing = outgoing
-        url = self.ep(f'{workspace_id}/features/intercept')
+        url = self.ep(f'workspaces/{workspace_id}/features/intercept')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -27610,7 +27617,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/outgoingPermission/autoTransferNumbers')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/autoTransferNumbers')
         data = super().get(url=url, params=params)
         return GetOutgoingPermissionAutoTransferNumberResponse.parse_obj(data)
 
@@ -27651,7 +27658,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
             body.auto_transfer_number2 = auto_transfer_number2
         if auto_transfer_number3 is not None:
             body.auto_transfer_number3 = auto_transfer_number3
-        url = self.ep(f'{workspace_id}/features/outgoingPermission/autoTransferNumbers')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/autoTransferNumbers')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -27681,6 +27688,8 @@ class Event1(EventTypeEnum):
     joined = 'joined'
     #: A participant left.
     left = 'left'
+    #: A room was migrated to a different geography. The roomId has changed.
+    migrated = 'migrated'
 
 
 class CreateWebhookBody(ApiModel):
@@ -27870,18 +27879,18 @@ class Type68(str, Enum):
     partner = 'PARTNER'
 
 
-class CreateWholesaleBillingReportBody(ApiModel):
-    #: The startDate (YYYY-MM-DD) for which the partner requests the billing report.
+class CreateWholesaleBillingReportResponse(ApiModel):
+    #: A unique report ID that corresponds to a billing report.
+    id: Optional[str]
+    #: Billing report startDate.
     billing_start_date: Optional[str]
-    #: The endDate (YYYY-MM-DD) for which the partner requests the billing report.
+    #: Billing report endDate.
     billing_end_date: Optional[str]
-    #: Create report of the given type.
+    #: Billing Report Type
     type: Optional[Type68]
 
 
-class ListReport1(CreateWholesaleBillingReportBody):
-    #: A unique report id that corresponds to a billing report.
-    id: Optional[str]
+class ListReport1(CreateWholesaleBillingReportResponse):
     #: The status of the billing report
     status: Optional[Status]
 
@@ -27894,52 +27903,58 @@ class ListWholesaleBillingReportsResponse(ApiModel):
 class GetWholesaleBillingReportResponse(ListReport1):
     #: The date and time the report was generated.
     created: Optional[str]
-    #: The person Id of the partner administrator who created the report.
+    #: The person ID of the partner administrator who created the report.
     created_by: Optional[str]
     #: The URL for partners to download the billing report.
     temp_download_url: Optional[str]
     #: List of errors that occurred during report generation.
     #: Note:
     #:   * This list captures errors that occurred during asynchronous or background report generation, after the
-    #:     request has been accepted and 202 OK response returned.
+    #:     request has been accepted and a 202 OK response is returned.
     errors: Optional[list[ReportError]]
 
 
-class CreateWholesaleBillingReportResponse(CreateWholesaleBillingReportBody):
-    #: A unique report id that corresponds to a billing report.
-    id: Optional[str]
+class CreateWholesaleBillingReportBody(ApiModel):
+    #: The startDate (YYYY-MM-DD) for which the partner requests the billing report.
+    billing_start_date: Optional[str]
+    #: The endDate (YYYY-MM-DD) for which the partner requests the billing report.
+    billing_end_date: Optional[str]
+    #: Create report of the given type, PARTNER, CUSTOMER, or USER. Default: PARTNER.
+    type: Optional[str]
+    #: The Organization ID of the sub partner on Cisco Webex.
+    sub_partner_org_id: Optional[str]
 
 
 class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
     """
-    These are a set of APIs that are targeted at Service Providers who sign up to the Webex for Wholesale solution.
-    These APIs provides customer and user breakdown reports to the Service Providers or Partners. Service Providers can
-    use these reports to reconcile their monthly invoice.
-    Viewing billing reports information requires a partner administrator auth token with
-    spark-admin:wholesale_billing_reports_read scope. Creating or deleting billing reports require a partner
-    administrator auth token with spark-admin:wholesale_billing_reports_write scope.
+    The Wholesale Billing Report APIs are targeted at Service Providers who sign up for the Webex for Wholesale
+    solution. These APIs provides customer and user breakdown reports to the service providers or partners. Service
+    providers can use these reports to reconcile their monthly invoices.
+    Viewing Webex for Wholesale billing reports information requires a partner administrator auth token with the
+    spark-admin:wholesale_billing_reports_read scope. Creating, Deleting billing reports require a partner
+    administrator auth token with the spark-admin:wholesale_billing_reports_write scope.
     Each Webex Developer Sandbox for Webex Wholesale use is limited to a maximum of 250 account users for validation
     and test purposes only. Cisco may from time to time audit Webex Developer Sandbox accounts and reserves the right
     to remove users in excess of 250 account users, or terminate the Webex Developer Sandbox environment for any
     Developer resource misuse.
     """
 
-    def list_billing_reports(self, billing_start_date: str = None, billing_end_date: str = None, sort_by: str = None, type_: str = None, status: str = None, **params) -> Generator[ListReport1, None, None]:
+    def list_billing_reports(self, billing_start_date: str = None, billing_end_date: str = None, sort_by: str = None, type_: str = None, status: str = None, sub_partner_org_id: str = None, **params) -> Generator[ListReport1, None, None]:
         """
-        This API lets a partner search for their associated wholesale billing reconciliation reports. There are a
-        number of filter options that can be combined in a single request.
+        Search for associated wholesale billing reconciliation reports.
 
-        :param billing_start_date: Only include billing reports having this billing start date.
+        :param billing_start_date: Only include billing reports having this billing startDate.
         :type billing_start_date: str
-        :param billing_end_date: Only include billing reports having this billing end date.
+        :param billing_end_date: Only include billing reports having this billing endDate.
         :type billing_end_date: str
-        :param sort_by: Sort the reports by the specified report attribute. Possible values: id, billingStartDate,
-            billingEndDate, status
+        :param sort_by: Sort the reports. Possible values: id, billingStartDate, billingEndDate, status
         :type sort_by: str
-        :param type_: Only include reports of the specified type. Possible values: PARTNER, CUSTOMER, USER
+        :param type_: Only include reports of this type. Possible values: PARTNER, CUSTOMER, USER
         :type type_: str
         :param status: The status of the billing report Possible values: IN_PROGRESS, COMPLETED, FAILED
         :type status: str
+        :param sub_partner_org_id: The Organization ID of the sub partner on Cisco Webex.
+        :type sub_partner_org_id: str
 
         documentation: https://developer.webex.com/docs/api/v1/wholesale-billing-reports/list-wholesale-billing-reports
         """
@@ -27953,12 +27968,14 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
             params['type'] = type_
         if status is not None:
             params['status'] = status
+        if sub_partner_org_id is not None:
+            params['subPartnerOrgId'] = sub_partner_org_id
         url = self.ep()
         return self.session.follow_pagination(url=url, model=ListReport1, params=params)
 
     def billing_report(self, id: str) -> GetWholesaleBillingReportResponse:
         """
-        This API retrieves a specific wholesale billing reconciliation report.
+        Retrieve a specific wholesale billing reconciliation report.
 
         :param id: A unique identifier for the report being requested.
         :type id: str
@@ -27969,16 +27986,18 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
         data = super().get(url=url)
         return GetWholesaleBillingReportResponse.parse_obj(data)
 
-    def create_billing_report(self, billing_start_date: str, billing_end_date: str, type_: Type68 = None) -> CreateWholesaleBillingReportResponse:
+    def create_billing_report(self, billing_start_date: str, billing_end_date: str, type_: str = None, sub_partner_org_id: str = None) -> CreateWholesaleBillingReportResponse:
         """
-        This API generates a wholesale billing reconciliation report.
+        Generate a wholesale billing reconciliation report.
 
         :param billing_start_date: The startDate (YYYY-MM-DD) for which the partner requests the billing report.
         :type billing_start_date: str
         :param billing_end_date: The endDate (YYYY-MM-DD) for which the partner requests the billing report.
         :type billing_end_date: str
-        :param type_: Create report of the given type.
-        :type type_: Type68
+        :param type_: Create report of the given type, PARTNER, CUSTOMER, or USER. Default: PARTNER.
+        :type type_: str
+        :param sub_partner_org_id: The Organization ID of the sub partner on Cisco Webex.
+        :type sub_partner_org_id: str
 
         documentation: https://developer.webex.com/docs/api/v1/wholesale-billing-reports/create-a-wholesale-billing-report
         """
@@ -27989,15 +28008,17 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
             body.billing_end_date = billing_end_date
         if type_ is not None:
             body.type_ = type_
+        if sub_partner_org_id is not None:
+            body.sub_partner_org_id = sub_partner_org_id
         url = self.ep()
         data = super().post(url=url, data=body.json())
         return CreateWholesaleBillingReportResponse.parse_obj(data)
 
     def delete_billing_report(self, id: str):
         """
-        This API deletes a monthly reconciliation report with the specified report ID.
+        Delete a monthly reconciliation report by report ID.
 
-        :param id: A unique report id that corresponds to a billing report.
+        :param id: A unique report ID that corresponds to a billing report.
         :type id: str
 
         documentation: https://developer.webex.com/docs/api/v1/wholesale-billing-reports/delete-a-wholesale-billing-report
@@ -28006,7 +28027,7 @@ class WholesaleBillingReportsApi(ApiChild, base='wholesale/billing/reports'):
         super().delete(url=url)
         return
 
-class Address4(ApiModel):
+class Address5(ApiModel):
     #: Address Line 1.
     address_line1: Optional[str]
     #: Address Line 2.
@@ -28041,20 +28062,20 @@ class Status39(Status40):
     pending_rpl_review = 'pending_rpl_review'
 
 
-class Package14(str, Enum):
+class Package8(str, Enum):
     #: Calling Basic Package.
     webex_calling = 'webex_calling'
     #: Meetings Package.
     webex_meetings = 'webex_meetings'
     #: Suite Package.
     webex_suite = 'webex_suite'
+    #: Voice Package.
+    webex_voice = 'webex_voice'
 
 
-class Name(Package14):
+class Name(Package8):
     #: Webex Common Area Calling Package.
     common_area_calling = 'common_area_calling'
-    #: Webex Voice Package.
-    webex_voice = 'webex_voice'
 
 
 class Package6(ApiModel):
@@ -28091,7 +28112,7 @@ class Customer2(ApiModel):
     org_id: Optional[str]
     #: External ID of the Customer.
     external_id: Optional[str]
-    address: Optional[Address4]
+    address: Optional[Address5]
     #: The provisioning status of the customer.
     status: Optional[Status39]
     #: List of package names provisioned
@@ -28126,11 +28147,11 @@ class Numbers(ApiModel):
     +17205557881: Optional[str]
 
 
-class Location16(ApiModel):
+class Location15(ApiModel):
     #: Name of the wholesale customer office.
     name: Optional[str]
     #: Address of the wholesale customer.
-    address: Optional[Address4]
+    address: Optional[Address5]
     #: Customer timezone for calling package.
     timezone: Optional[str]
     #: Determine language for all generated emails and voice announcements.
@@ -28144,7 +28165,7 @@ class Location16(ApiModel):
 
 
 class Calling(ApiModel):
-    location: Optional[Location16]
+    location: Optional[Location15]
 
 
 class ProvisioningParameters(ApiModel):
@@ -28162,7 +28183,7 @@ class UpdateWholesaleCustomerBody(ApiModel):
     #: Possible values: common_area_calling, webex_calling, webex_meetings, webex_suite, webex_voice
     packages: Optional[list[str]]
     #: Billing Address of the customer.
-    address: Optional[Address4]
+    address: Optional[Address5]
     #: Provisioning parameters are required when updating an existing package.
     provisioning_parameters: Optional[ProvisioningParameters]
 
@@ -28232,7 +28253,7 @@ class WholesaleCustomersApi(ApiChild, base='wholesale/customers'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Customer2, params=params)
 
-    def provision_customer(self, packages: List[str], provisioning_id: str, external_id: str = None, address: Address4 = None, provisioning_parameters: ProvisioningParameters = None, org_id: str = None, customer_info: CustomerInfo = None) -> str:
+    def provision_customer(self, packages: List[str], provisioning_id: str, external_id: str = None, address: Address5 = None, provisioning_parameters: ProvisioningParameters = None, org_id: str = None, customer_info: CustomerInfo = None) -> str:
         """
         Provision a Wholesale customer for Cisco Webex services.
         This API will allow a Service Provider to map the Wholesale customer and assign the required licenses and
@@ -28252,7 +28273,7 @@ class WholesaleCustomersApi(ApiChild, base='wholesale/customers'):
         :param external_id: External ID of the Wholesale customer.
         :type external_id: str
         :param address: Billing Address of the customer.
-        :type address: Address4
+        :type address: Address5
         :param provisioning_parameters: Provisioning parameters are required when updating an existing package.
         :type provisioning_parameters: ProvisioningParameters
         :param org_id: The Organization ID of the enterprise on Webex. Mandatory for existing customer.
@@ -28294,7 +28315,7 @@ class WholesaleCustomersApi(ApiChild, base='wholesale/customers'):
         data = super().get(url=url)
         return Customer2.parse_obj(data)
 
-    def update_customer(self, customer_id: str, packages: List[str], external_id: str = None, address: Address4 = None, provisioning_parameters: ProvisioningParameters = None) -> str:
+    def update_customer(self, customer_id: str, packages: List[str], external_id: str = None, address: Address5 = None, provisioning_parameters: ProvisioningParameters = None) -> str:
         """
         This API allows a Service Provider to update certain details of a provisioned Wholesale customer.
         The Wholesale customer provisioning is asynchronous and thus a background task is created when this endpoint is
@@ -28310,7 +28331,7 @@ class WholesaleCustomersApi(ApiChild, base='wholesale/customers'):
         :param external_id: External ID of the Wholesale customer.
         :type external_id: str
         :param address: Billing Address of the customer.
-        :type address: Address4
+        :type address: Address5
         :param provisioning_parameters: Provisioning parameters are required when updating an existing package.
         :type provisioning_parameters: ProvisioningParameters
 
@@ -28342,7 +28363,7 @@ class WholesaleCustomersApi(ApiChild, base='wholesale/customers'):
         super().delete(url=url)
         return
 
-    def precheck_customer_provisioning(self, packages: List[str], provisioning_id: str, external_id: str = None, address: Address4 = None, provisioning_parameters: ProvisioningParameters = None, org_id: str = None, customer_info: CustomerInfo = None) -> PrecheckBroadworksSubscriberProvisioningResponse:
+    def precheck_customer_provisioning(self, packages: List[str], provisioning_id: str, external_id: str = None, address: Address5 = None, provisioning_parameters: ProvisioningParameters = None, org_id: str = None, customer_info: CustomerInfo = None) -> PrecheckBroadworksSubscriberProvisioningResponse:
         """
         This API will allow the Partner sales team to verify likely success of provisioning a Wholesale customer.
 
@@ -28358,7 +28379,7 @@ class WholesaleCustomersApi(ApiChild, base='wholesale/customers'):
         :param external_id: External ID of the Wholesale customer.
         :type external_id: str
         :param address: Billing Address of the customer.
-        :type address: Address4
+        :type address: Address5
         :param provisioning_parameters: Provisioning parameters are required when updating an existing package.
         :type provisioning_parameters: ProvisioningParameters
         :param org_id: The Organization ID of the enterprise on Webex. Mandatory for existing customer.
@@ -28386,11 +28407,6 @@ class WholesaleCustomersApi(ApiChild, base='wholesale/customers'):
         url = self.ep('validate')
         data = super().post(url=url, data=body.json())
         return PrecheckBroadworksSubscriberProvisioningResponse.parse_obj(data)
-
-class Package8(Package14):
-    #: Voice Package.
-    webex_voice = 'webex_voice'
-
 
 class Status43(Status3):
     #: The subscriber email verification is pending.
@@ -28454,6 +28470,10 @@ class ListWholesaleSubscribersResponse(ApiModel):
 
 
 class PrecheckWholesaleSubscriberProvisioningBody(ProvisionWholesaleSubscriberBody):
+    #: This Provisioning ID defines how this wholesale subscriber is to be provisioned for Cisco Webex Services.
+    #: Each Customer template has its unique provisioning ID. This ID is displayed under the chosen customer template
+    #: on Cisco Webex Control Hub.
+    provisioning_id: Optional[str]
     #: The primary email address of the customer.
     customer_info: Optional[object]
 
@@ -28607,7 +28627,7 @@ class WholesaleSubscribersApi(ApiChild, base='wholesale/subscribers'):
         super().delete(url=url)
         return
 
-    def precheck_subscriber_provisioning(self, package: Package8, customer_id: str, email: str, provisioning_parameters: ProvisioningParameters4 = None, customer_info: object = None) -> PrecheckBroadworksSubscriberProvisioningResponse:
+    def precheck_subscriber_provisioning(self, package: Package8, customer_id: str, email: str, provisioning_parameters: ProvisioningParameters4 = None, provisioning_id: str = None, customer_info: object = None) -> PrecheckBroadworksSubscriberProvisioningResponse:
         """
         This API will allow the Partner sales team to verify likely success of provisioning a wholesale subscriber.
 
@@ -28620,6 +28640,10 @@ class WholesaleSubscribersApi(ApiChild, base='wholesale/subscribers'):
         :param provisioning_parameters: The following attributes should only be supplied when changing from the
             Meetings Package to a package that requires calling-specific attributes.
         :type provisioning_parameters: ProvisioningParameters4
+        :param provisioning_id: This Provisioning ID defines how this wholesale subscriber is to be provisioned for
+            Cisco Webex Services. Each Customer template has its unique provisioning ID. This ID is displayed under the
+            chosen customer template on Cisco Webex Control Hub.
+        :type provisioning_id: str
         :param customer_info: The primary email address of the customer.
         :type customer_info: object
 
@@ -28634,6 +28658,8 @@ class WholesaleSubscribersApi(ApiChild, base='wholesale/subscribers'):
             body.email = email
         if provisioning_parameters is not None:
             body.provisioning_parameters = provisioning_parameters
+        if provisioning_id is not None:
+            body.provisioning_id = provisioning_id
         if customer_info is not None:
             body.customer_info = customer_info
         url = self.ep('validate')
@@ -28657,7 +28683,7 @@ class CreateWorkspaceLocationBody(ApiModel):
     notes: Optional[str]
 
 
-class Location19(CreateWorkspaceLocationBody):
+class Location18(CreateWorkspaceLocationBody):
     #: Unique identifier for the location.
     id: Optional[str]
     #: Unique identifier for the location org ID.
@@ -28680,7 +28706,7 @@ class Floor(CreateWorkspaceLocationFloorBody):
 
 class ListWorkspaceLocationsResponse(ApiModel):
     #: An array of location objects.
-    items: Optional[list[Location19]]
+    items: Optional[list[Location18]]
 
 
 class UpdateWorkspaceLocationBody(CreateWorkspaceLocationBody):
@@ -28704,7 +28730,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
     documentation for the relevant endpoints.
     """
 
-    def list_locations(self, display_name: str = None, address: str = None, country_code: str = None, city_name: str = None) -> list[Location19]:
+    def list_locations(self, display_name: str = None, address: str = None, country_code: str = None, city_name: str = None) -> list[Location18]:
         """
         List workspace locations.
 
@@ -28730,9 +28756,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
             params['cityName'] = city_name
         url = self.ep()
         data = super().get(url=url, params=params)
-        return parse_obj_as(list[Location19], data["items"])
+        return parse_obj_as(list[Location18], data["items"])
 
-    def create_location(self, display_name: str, address: str, country_code: str, latitude: int, longitude: int, city_name: str = None, notes: str = None) -> Location19:
+    def create_location(self, display_name: str, address: str, country_code: str, latitude: int, longitude: int, city_name: str = None, notes: str = None) -> Location18:
         """
         Create a location. The cityName and notes parameters are optional, and omitting them will result in the
         creation of a location without values for those attributes.
@@ -28771,9 +28797,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
             body.notes = notes
         url = self.ep()
         data = super().post(url=url, data=body.json())
-        return Location19.parse_obj(data)
+        return Location18.parse_obj(data)
 
-    def location_details(self, location_id: str) -> Location19:
+    def location_details(self, location_id: str) -> Location18:
         """
         Shows details for a location, by ID. Specify the location ID in the locationId parameter in the URI.
 
@@ -28784,9 +28810,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         """
         url = self.ep(f'{location_id}')
         data = super().get(url=url)
-        return Location19.parse_obj(data)
+        return Location18.parse_obj(data)
 
-    def update_location(self, location_id: str, display_name: str, address: str, country_code: str, latitude: int, longitude: int, city_name: str = None, notes: str = None, id: str = None) -> Location19:
+    def update_location(self, location_id: str, display_name: str, address: str, country_code: str, latitude: int, longitude: int, city_name: str = None, notes: str = None, id: str = None) -> Location18:
         """
         Updates details for a location, by ID. Specify the location ID in the locationId parameter in the URI. The
         request should include all details for the location returned in a previous call to Get Workspace Location
@@ -28833,7 +28859,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
             body.id = id
         url = self.ep(f'{location_id}')
         data = super().put(url=url, data=body.json())
-        return Location19.parse_obj(data)
+        return Location18.parse_obj(data)
 
     def delete_location(self, location_id: str):
         """
@@ -29154,7 +29180,7 @@ class SupportedDevices(str, Enum):
     phones = 'phones'
 
 
-class Type72(str, Enum):
+class Type71(str, Enum):
     #: No workspace type set.
     not_set = 'notSet'
     #: High concentration.
@@ -29187,7 +29213,7 @@ class UpdateWorkspaceBody(ApiModel):
     #: How many people the workspace is suitable for. If set, must be 0 or higher.
     capacity: Optional[int]
     #: The type that best describes the workspace.
-    type: Optional[Type72]
+    type: Optional[Type71]
     #: An empty/null calendar field will not cause any changes. Provide a type (microsoft, google or none) and an
     #: emailAddress. Removing calendar is done by setting the none type, and setting none type does not require an
     #: emailAddress.
@@ -29315,7 +29341,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Workspace, params=params)
 
-    def create(self, display_name: str, workspace_location_id: str = None, floor_id: str = None, capacity: int = None, type_: Type72 = None, calendar: Calendar1 = None, sip_address: str = None, calling: object = None, notes: str = None, hotdesking_status: Video = None, org_id: str = None) -> Workspace:
+    def create(self, display_name: str, workspace_location_id: str = None, floor_id: str = None, capacity: int = None, type_: Type71 = None, calendar: Calendar1 = None, sip_address: str = None, calling: object = None, notes: str = None, hotdesking_status: Video = None, org_id: str = None) -> Workspace:
         """
         Create a workspace.
         The workspaceLocationId, floorId, capacity, type, notes and hotdeskingStatus parameters are optional, and
@@ -29333,7 +29359,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :param capacity: How many people the workspace is suitable for. If set, must be 0 or higher.
         :type capacity: int
         :param type_: The type that best describes the workspace.
-        :type type_: Type72
+        :type type_: Type71
         :param calendar: An empty/null calendar field will not cause any changes. Provide a type (microsoft, google or
             none) and an emailAddress. Removing calendar is done by setting the none type, and setting none type does
             not require an emailAddress.
@@ -29394,7 +29420,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         data = super().get(url=url)
         return Workspace.parse_obj(data)
 
-    def update(self, workspace_id: str, display_name: str, workspace_location_id: str = None, floor_id: str = None, capacity: int = None, type_: Type72 = None, calendar: Calendar1 = None, sip_address: str = None, calling: object = None, notes: str = None, hotdesking_status: Video = None) -> Workspace:
+    def update(self, workspace_id: str, display_name: str, workspace_location_id: str = None, floor_id: str = None, capacity: int = None, type_: Type71 = None, calendar: Calendar1 = None, sip_address: str = None, calling: object = None, notes: str = None, hotdesking_status: Video = None) -> Workspace:
         """
         Updates details for a workspace by ID.
         Specify the workspace ID in the workspaceId parameter in the URI. Include all details for the workspace that
@@ -29418,7 +29444,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :param capacity: How many people the workspace is suitable for. If set, must be 0 or higher.
         :type capacity: int
         :param type_: The type that best describes the workspace.
-        :type type_: Type72
+        :type type_: Type71
         :param calendar: An empty/null calendar field will not cause any changes. Provide a type (microsoft, google or
             none) and an emailAddress. Removing calendar is done by setting the none type, and setting none type does
             not require an emailAddress.

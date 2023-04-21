@@ -204,6 +204,10 @@ docs:
     doc: null
     header: null
     methods: []
+  Webex Calling Device Settings:
+    doc: null
+    header: null
+    methods: []
   Webex Calling Organization Settings:
     doc: null
     header: null

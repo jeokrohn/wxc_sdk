@@ -51,6 +51,8 @@ class Event(str, Enum):
     joined = 'joined'
     #: A participant left.
     left = 'left'
+    #: A room was migrated to a different geography. The roomId has changed.
+    migrated = 'migrated'
 
 
 class CreateWebhookBody(ApiModel):

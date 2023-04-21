@@ -32,6 +32,10 @@ docs:
     doc: null
     header: null
     methods: []
+  Devices with WXC Devices Displayed:
+    doc: null
+    header: null
+    methods: []
   Locations:
     doc: null
     header: null
@@ -549,7 +553,15 @@ docs:
           param_object: []
           type: array[CDR]
           type_spec: null
+  Webex Calling Device Settings:
+    doc: null
+    header: null
+    methods: []
   Webex Calling Organization Settings:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Organization Settings With Announcement Languages:
     doc: null
     header: null
     methods: []
@@ -558,10 +570,6 @@ docs:
     header: null
     methods: []
   Webex Calling Person Settings:
-    doc: null
-    header: null
-    methods: []
-  Webex Calling Person Settings With Shared Line:
     doc: null
     header: null
     methods: []
@@ -589,15 +597,15 @@ docs:
     doc: null
     header: null
     methods: []
-  Wholesale Billing Reports with Sub Partners:
-    doc: null
-    header: null
-    methods: []
   Wholesale Customers:
     doc: null
     header: null
     methods: []
   Wholesale Subscribers:
+    doc: null
+    header: null
+    methods: []
+  Workspaces with WXC Included:
     doc: null
     header: null
     methods: []

@@ -136,7 +136,7 @@ class Person(CreatePersonBody):
     #: organization or an organization you manage. Presence information will not be shown if the authenticated user has
     #: disabled status sharing.
     last_activity: Optional[str]
-    #: The users sip addresses
+    #: The users sip addresses. Read-only.
     sip_addresses: Optional[list[SipAddressesType]]
     #: The current presence status of the person. This will only be returned for people within your organization or an
     #: organization you manage. Presence information will not be shown if the authenticated user has disabled status

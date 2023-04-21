@@ -32,12 +32,12 @@ from ..api_child import ApiChild
 from ..base import ApiModel, to_camel, plus1
 from ..base import SafeEnum as Enum
 from ..common import UserType, RouteIdentity, NumberState, ValidateExtensionsResponse, ValidatePhoneNumbersResponse, \
-    DeviceCustomization
+    DeviceCustomization, IdAndName
 from ..common.schedules import ScheduleApi, ScheduleApiBase
 from ..person_settings.permissions_out import OutgoingPermissionsApi
 from ..rest import RestSession
 
-__all__ = ['OwnerType', 'NumberLocation', 'NumberOwner', 'NumberListPhoneNumberType',
+__all__ = ['OwnerType', 'NumberOwner', 'NumberListPhoneNumberType',
            'NumberListPhoneNumber',
            'NumberType', 'NumberDetails', 'UCMProfile',
            'TestCallRoutingResult', 'OriginatorType', 'CallSourceType', 'CallSourceInfo', 'DestinationType',
@@ -61,16 +61,6 @@ class OwnerType(str, Enum):
     contact_center_link = 'CONTACT_CENTER_LINK'
     route_list = 'ROUTE_LIST'
     voicemail_group = 'VOICEMAIL_GROUP'
-
-
-class NumberLocation(ApiModel):
-    """
-    Location of a phone number
-    """
-    #: ID of location for phone number.
-    location_id: str = Field(alias='id')
-    #: Name of the location for phone number
-    name: str
 
 
 class NumberOwner(ApiModel):
@@ -108,7 +98,7 @@ class NumberListPhoneNumber(ApiModel):
     main_number: bool
     #: Indicates if a phone number is a toll free number.
     toll_free_number: bool
-    location: NumberLocation
+    location: IdAndName
     owner: Optional[NumberOwner]
 
 

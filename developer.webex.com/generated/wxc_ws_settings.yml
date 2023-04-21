@@ -40,6 +40,10 @@ docs:
     doc: null
     header: null
     methods: []
+  Webex Calling Device Settings:
+    doc: null
+    header: null
+    methods: []
   Webex Calling Organization Settings:
     doc: null
     header: null
@@ -620,6 +624,253 @@ docs:
           param_object: []
           type: string
           type_spec: required
+    - doc: 'Get all devices for a workspace.
+
+        This requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.'
+      documentation:
+        doc: Get Workspace Devices
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/get-workspace-devices
+        endpoint: https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/devices
+        http_method: GET
+      header: Get Workspace Devices
+      parameters_and_response:
+        Query Parameters:
+        - doc: Organization to which the workspace belongs.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Array of devices associated to a workspace.
+          name: devices
+          param_attrs:
+          - doc: Unique identifier for a device.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Comma separated array of tags used to describe device.
+            name: description
+            param_attrs: []
+            param_object: []
+            type: array[string]
+            type_spec: null
+          - doc: Identifier for device model.
+            name: model
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: MAC address of device.
+            name: mac
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: IP address of device.
+            name: ipAddress
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Indicates whether the person or the workspace is the owner of the
+              device and points to a primary Line/Port of the device.
+            name: primaryOwner
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Indicates if the line is acting as a primary line or a shared line
+              for this device.
+            name: type
+            param_attrs:
+            - doc: Indicates a Primary line for the member.
+              name: PRIMARY
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates a Shared line for the member. Shared line appearance
+                allows users to receive and place calls to and from another user's
+                extension, using their device.
+              name: SHARED_CALL_APPEARANCE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: LineType
+            type_spec: null
+          - doc: Indicates Hoteling details of a device.
+            name: hoteling
+            param_attrs:
+            - doc: 'Enable/Disable hoteling Host. Enabling the device for hoteling
+                means that a guest(end user) can log into this host(workspace device)
+                and use this device
+
+                as if it were their own. This is useful when traveling to a remote
+                office but still needing to place/receive calls with their telephone
+                number and access features normally available to them on their office
+                phone.'
+              name: enabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Enable limiting the time a guest can use the device. The time limit
+                is configured via guestHoursLimit.
+              name: limitGuestUse
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Time Limit in hours until hoteling is enabled. Mandatory if limitGuestUse
+                is enabled.
+              name: guestHoursLimit
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: null
+            param_object: []
+            type: Hoteling
+            type_spec: null
+          - doc: Owner of the device.
+            name: owner
+            param_attrs:
+            - doc: Unique identifier of a person or a workspace.
+              name: id
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Enumeration that indicates if the member is of type PEOPLE or PLACE.
+              name: type
+              param_attrs:
+              - doc: Indicates the associated member is a person.
+                name: PEOPLE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates the associated member is a workspace.
+                name: PLACE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: MemberType
+              type_spec: null
+            - doc: First name of device owner.
+              name: firstName
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Last name of device owner.
+              name: lastName
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: deviceOwner
+            type_spec: null
+          - doc: Activation state of a device.
+            name: activationState
+            param_attrs:
+            - doc: Indicates a device is activating.
+              name: ACTIVATING
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates a device is activated.
+              name: ACTIVATED
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates a device is deactivated.
+              name: DEACTIVATED
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: ActivationStates
+            type_spec: null
+          param_object: []
+          type: array[placeDevices]
+          type_spec: null
+        - doc: Maximum number of devices a workspace can be assigned to.
+          name: maxDeviceCount
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        URI Parameters:
+        - doc: ID of the workspace for which to retrieve devices.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Modify devices for a workspace.
+
+        Modifying devices for a workspace requires a full administrator auth token
+        with a scope of spark-admin:telephony_config_write.'
+      documentation:
+        doc: Modify Workspace Devices
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-workspace-devices
+        endpoint: https://webexapis.com/v1/telephony/config/workspaces/{workspaceId}/devices
+        http_method: PUT
+      header: Modify Workspace Devices
+      parameters_and_response:
+        Body Parameters:
+        - doc: 'Enable/Disable hoteling Host. Enabling the device for hoteling means
+            that a guest(end user) can log into this host(workspace device) and use
+            this device
+
+            as if it were their own. This is useful when traveling to a remote office
+            but still needing to place/receive calls with their telephone number and
+            access features normally available to them on their office phone.'
+          name: enabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: required
+        - doc: Enable limiting the time a guest can use the device. The time limit
+            is configured via guestHoursLimit.
+          name: limitGuestUse
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Time Limit in hours until hoteling is enabled. Mandatory if limitGuestUse
+            is enabled.
+          name: guestHoursLimit
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        Query Parameters:
+        - doc: Organization to which the workspace belongs.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: ID of the workspace for which to modify devices.
+          name: workspaceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
     - doc: 'Retrieves Monitoring settings for a Workspace.
 
         Allow workspaces to monitor the line status of specified agents, workspaces,
@@ -868,37 +1119,6 @@ docs:
           param_object: []
           type: string
           type_spec: null
-        - doc: '* phoneNumbers (array[PhoneNumbers], fixed-type, required) - Array
-            of numbers (primary/alternate).
-
-            * workspace (workspace, fixed-type, required) - Workspace object having
-            a unique identifier for the Workspace.
-
-            * location (location, fixed-type, required) - Location object having a
-            unique identifier for the location and its name.
-
-            * organization (organization, fixed-type, required) - Organization object
-            having a unique identifier for the organization and its name.'
-          name: Attributes
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: required
-        - doc: "{\n        \"phoneNumbers\": [\n            {\n                \"\
-            external\": \"+12055550001\",\n                \"extension\": \"12211\"\
-            ,\n                \"primary\": true\n            },\n             {\n\
-            \                \"external\": \"+12055550002\",\n                \"extension\"\
-            : \"122\",\n                \"primary\": false\n            }\n      \
-            \  ],\n        \"workspace\": {\n            \"id\": \"Y2lzY29zcGFyazovL3VzL1BMQUNFLzg0MjkzOGQ1LTkyNzMtNGJjNi1hYTNhLTA1Njc3MmRiMzE2NQ\"\
-            \n        },\n        \"location\": {\n            \"name\": \"MainOffice\"\
-            ,\n            \"id\": \"Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4Mjg5NzIyLTFiODAtNDFiNy05Njc4LTBlNzdhZThjMTA5OA\"\
-            \n        },\n        \"organization\": {\n            \"id\": \"Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi9hNDVkNmNkYS1hZTVhLTQwYzMtYTdhZC01NjUwZmRkZGQ1M2M\"\
-            ,\n            \"name\": \"Atlas_Test_CALL-1237\"\n        }\n    }"
-          name: Body
-          param_attrs: []
-          param_object: []
-          type: ''
-          type_spec: required
         URI Parameters:
         - doc: List numbers for this workspace.
           name: workspaceId

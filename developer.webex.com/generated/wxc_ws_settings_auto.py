@@ -7,16 +7,18 @@ from typing import List, Optional
 from pydantic import Field, parse_obj_as
 
 
-__all__ = ['Action', 'AuthorizationCode', 'CLIDPolicySelection', 'CallForwardingBusyGet', 'CallForwardingNoAnswerGet',
-           'CallForwardingPlaceSettingGet', 'CallForwardingPlaceSettingPatch', 'CallType', 'CallingPermission',
-           'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'Greeting', 'InterceptAnnouncementsGet',
+__all__ = ['Action', 'ActivationStates', 'AuthorizationCode', 'CLIDPolicySelection', 'CallForwardingBusyGet',
+           'CallForwardingNoAnswerGet', 'CallForwardingPlaceSettingGet', 'CallForwardingPlaceSettingPatch', 'CallType',
+           'CallingPermission', 'DeviceOwner', 'ExternalCallerIdNamePolicy', 'ExternalTransfer',
+           'GetWorkspaceDevicesResponse', 'Greeting', 'Hoteling', 'InterceptAnnouncementsGet',
            'InterceptAnnouncementsPatch', 'InterceptIncomingGet', 'InterceptIncomingPatch', 'InterceptNumberGet',
-           'InterceptOutGoingGet', 'MonitoredElementCallParkExtension', 'MonitoredElementItem', 'MonitoredElementUser',
+           'InterceptOutGoingGet', 'LineType', 'MemberType', 'MonitoredElementCallParkExtension',
+           'MonitoredElementItem', 'MonitoredElementUser', 'PlaceDevices',
            'ReadCallInterceptSettingsForWorkspaceResponse', 'RetrieveAccessCodesForWorkspaceResponse',
            'RetrieveCallForwardingSettingsForWorkspaceResponse', 'RetrieveCallWaitingSettingsForWorkspaceResponse',
            'RetrieveCallerIDSettingsForWorkspaceResponse', 'RetrieveIncomingPermissionSettingsForWorkspaceResponse',
            'RetrieveMonitoringSettingsForWorkspaceResponse', 'RetrieveOutgoingPermissionSettingsForWorkspaceResponse',
-           'RetrieveTransferNumbersSettingsForWorkspaceResponse', 'Type', 'Type1', 'Type2', 'UserNumberItem',
+           'RetrieveTransferNumbersSettingsForWorkspaceResponse', 'Type1', 'Type2', 'UserNumberItem',
            'WebexCallingWorkspaceSettingsApi']
 
 
@@ -74,6 +76,77 @@ class ExternalCallerIdNamePolicy(str, Enum):
     other = 'OTHER'
 
 
+class LineType(ApiModel):
+    #: Indicates a Primary line for the member.
+    primary: Optional[str]
+    #: Indicates a Shared line for the member. Shared line appearance allows users to receive and place calls to and
+    #: from another user's extension, using their device.
+    shared_call_appearance: Optional[str]
+
+
+class Hoteling(ApiModel):
+    #: Enable/Disable hoteling Host. Enabling the device for hoteling means that a guest(end user) can log into this
+    #: host(workspace device) and use this device
+    #: as if it were their own. This is useful when traveling to a remote office but still needing to place/receive
+    #: calls with their telephone number and access features normally available to them on their office phone.
+    enabled: Optional[bool]
+    #: Enable limiting the time a guest can use the device. The time limit is configured via guestHoursLimit.
+    limit_guest_use: Optional[bool]
+    #: Time Limit in hours until hoteling is enabled. Mandatory if limitGuestUse is enabled.
+    guest_hours_limit: Optional[int]
+
+
+class MemberType(ApiModel):
+    #: Indicates the associated member is a person.
+    people: Optional[str]
+    #: Indicates the associated member is a workspace.
+    place: Optional[str]
+
+
+class DeviceOwner(ApiModel):
+    #: Unique identifier of a person or a workspace.
+    id: Optional[str]
+    #: Enumeration that indicates if the member is of type PEOPLE or PLACE.
+    type: Optional[MemberType]
+    #: First name of device owner.
+    first_name: Optional[str]
+    #: Last name of device owner.
+    last_name: Optional[str]
+
+
+class ActivationStates(ApiModel):
+    #: Indicates a device is activating.
+    activating: Optional[str]
+    #: Indicates a device is activated.
+    activated: Optional[str]
+    #: Indicates a device is deactivated.
+    deactivated: Optional[str]
+
+
+class PlaceDevices(ApiModel):
+    #: Unique identifier for a device.
+    id: Optional[str]
+    #: Comma separated array of tags used to describe device.
+    description: Optional[list[str]]
+    #: Identifier for device model.
+    model: Optional[str]
+    #: MAC address of device.
+    mac: Optional[str]
+    #: IP address of device.
+    ip_address: Optional[str]
+    #: Indicates whether the person or the workspace is the owner of the device and points to a primary Line/Port of
+    #: the device.
+    primary_owner: Optional[bool]
+    #: Indicates if the line is acting as a primary line or a shared line for this device.
+    type: Optional[LineType]
+    #: Indicates Hoteling details of a device.
+    hoteling: Optional[Hoteling]
+    #: Owner of the device.
+    owner: Optional[DeviceOwner]
+    #: Activation state of a device.
+    activation_state: Optional[ActivationStates]
+
+
 class MonitoredElementCallParkExtension(ApiModel):
     #: ID of call park extension.
     id: Optional[str]
@@ -85,13 +158,6 @@ class MonitoredElementCallParkExtension(ApiModel):
     location: Optional[str]
     #: ID of location for call park extension.
     location_id: Optional[str]
-
-
-class Type(str, Enum):
-    #: Object is a user.
-    people = 'PEOPLE'
-    #: Object is a workspace.
-    place = 'PLACE'
 
 
 class UserNumberItem(ApiModel):
@@ -115,7 +181,7 @@ class MonitoredElementUser(ApiModel):
     #: Display name of person or workspace.
     display_name: Optional[str]
     #: Type of the person or workspace.
-    type: Optional[Type]
+    type: Optional[MemberType]
     #: Email of the person or workspace.
     email: Optional[str]
     #: List of phone numbers of the person or workspace.
@@ -354,6 +420,13 @@ class ModifyCallerIDSettingsForWorkspaceBody(ApiModel):
     location_external_caller_id_name: Optional[str]
 
 
+class GetWorkspaceDevicesResponse(ApiModel):
+    #: Array of devices associated to a workspace.
+    devices: Optional[list[PlaceDevices]]
+    #: Maximum number of devices a workspace can be assigned to.
+    max_device_count: Optional[int]
+
+
 class RetrieveMonitoringSettingsForWorkspaceResponse(ApiModel):
     #: Call park notification enabled or disabled.
     call_park_notification_enabled: Optional[bool]
@@ -410,7 +483,7 @@ class ConfigureCallInterceptSettingsForWorkspaceBody(ApiModel):
     outgoing: Optional[InterceptOutGoingGet]
 
 
-class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
+class WebexCallingWorkspaceSettingsApi(ApiChild, base=''):
     """
     Workspaces represent places where people work, such as conference rooms, meeting spaces, lobbies, and lunchrooms.
     Devices may be associated with workspaces.
@@ -446,7 +519,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/callForwarding')
+        url = self.ep(f'workspaces/{workspace_id}/features/callForwarding')
         data = super().get(url=url, params=params)
         return CallForwardingPlaceSettingGet.parse_obj(data["callForwarding"])
 
@@ -474,7 +547,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         body = ModifyCallForwardingSettingsForWorkspaceBody()
         if call_forwarding is not None:
             body.call_forwarding = call_forwarding
-        url = self.ep(f'{workspace_id}/features/callForwarding')
+        url = self.ep(f'workspaces/{workspace_id}/features/callForwarding')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -498,7 +571,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/callWaiting')
+        url = self.ep(f'workspaces/{workspace_id}/features/callWaiting')
         data = super().get(url=url, params=params)
         return data["enabled"]
 
@@ -527,7 +600,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         body = ModifyCallWaitingSettingsForWorkspaceBody()
         if enabled is not None:
             body.enabled = enabled
-        url = self.ep(f'{workspace_id}/features/callWaiting')
+        url = self.ep(f'workspaces/{workspace_id}/features/callWaiting')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -550,7 +623,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/callerId')
+        url = self.ep(f'workspaces/{workspace_id}/features/callerId')
         data = super().get(url=url, params=params)
         return RetrieveCallerIDSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -609,7 +682,63 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
             body.custom_external_caller_id_name = custom_external_caller_id_name
         if location_external_caller_id_name is not None:
             body.location_external_caller_id_name = location_external_caller_id_name
-        url = self.ep(f'{workspace_id}/features/callerId')
+        url = self.ep(f'workspaces/{workspace_id}/features/callerId')
+        super().put(url=url, params=params, data=body.json())
+        return
+
+    def devices(self, workspace_id: str, org_id: str = None) -> GetWorkspaceDevicesResponse:
+        """
+        Get all devices for a workspace.
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param workspace_id: ID of the workspace for which to retrieve devices.
+        :type workspace_id: str
+        :param org_id: Organization to which the workspace belongs.
+        :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/get-workspace-devices
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/workspaces/{workspace_id}/devices')
+        data = super().get(url=url, params=params)
+        return GetWorkspaceDevicesResponse.parse_obj(data)
+
+    def modify_devices(self, workspace_id: str, org_id: str = None, enabled: bool = None, limit_guest_use: bool = None, guest_hours_limit: int = None):
+        """
+        Modify devices for a workspace.
+        Modifying devices for a workspace requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
+
+        :param workspace_id: ID of the workspace for which to modify devices.
+        :type workspace_id: str
+        :param org_id: Organization to which the workspace belongs.
+        :type org_id: str
+        :param enabled: Enable/Disable hoteling Host. Enabling the device for hoteling means that a guest(end user) can
+            log into this host(workspace device) and use this device as if it were their own. This is useful when
+            traveling to a remote office but still needing to place/receive calls with their telephone number and
+            access features normally available to them on their office phone.
+        :type enabled: bool
+        :param limit_guest_use: Enable limiting the time a guest can use the device. The time limit is configured via
+            guestHoursLimit.
+        :type limit_guest_use: bool
+        :param guest_hours_limit: Time Limit in hours until hoteling is enabled. Mandatory if limitGuestUse is enabled.
+        :type guest_hours_limit: int
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/modify-workspace-devices
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = Hoteling()
+        if enabled is not None:
+            body.enabled = enabled
+        if limit_guest_use is not None:
+            body.limit_guest_use = limit_guest_use
+        if guest_hours_limit is not None:
+            body.guest_hours_limit = guest_hours_limit
+        url = self.ep(f'telephony/config/workspaces/{workspace_id}/devices')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -634,7 +763,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/monitoring')
+        url = self.ep(f'workspaces/{workspace_id}/features/monitoring')
         data = super().get(url=url, params=params)
         return RetrieveMonitoringSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -668,11 +797,11 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
             body.enable_call_park_notification = enable_call_park_notification
         if monitored_elements is not None:
             body.monitored_elements = monitored_elements
-        url = self.ep(f'{workspace_id}/features/monitoring')
+        url = self.ep(f'workspaces/{workspace_id}/features/monitoring')
         super().put(url=url, params=params, data=body.json())
         return
 
-    def list_numbers_associated_withspecific(self, workspace_id: str, attributes: , body: , org_id: str = None):
+    def list_numbers_associated_withspecific(self, workspace_id: str, org_id: str = None):
         """
         List the PSTN phone numbers associated with a specific workspace, by ID, within the organization. Also shows
         the location and organization associated with the workspace.
@@ -681,20 +810,6 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
 
         :param workspace_id: List numbers for this workspace.
         :type workspace_id: str
-        :param attributes:   * phoneNumbers (array[PhoneNumbers], fixed-type, required) - Array of numbers
-                (primary/alternate). * workspace (workspace, fixed-type, required) - Workspace object having a unique
-                identifier for the Workspace. * location (location, fixed-type, required) - Location object having a
-                unique identifier for the location and its name. * organization (organization, fixed-type, required) -
-                Organization object having a unique identifier for the organization and its name.
-        :type attributes: 
-        :param body: { "phoneNumbers": [ { "external": "+12055550001", "extension": "12211", "primary": true }, {
-            "external": "+12055550002", "extension": "122", "primary": false } ], "workspace": { "id":
-            "Y2lzY29zcGFyazovL3VzL1BMQUNFLzg0MjkzOGQ1LTkyNzMtNGJjNi1hYTNhLTA1Njc3MmRiMzE2NQ" }, "location": { "name":
-            "MainOffice", "id": "Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4Mjg5NzIyLTFiODAtNDFiNy05Njc4LTBlNzdhZThjMTA5OA" },
-            "organization": { "id":
-            "Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi9hNDVkNmNkYS1hZTVhLTQwYzMtYTdhZC01NjUwZmRkZGQ1M2M", "name":
-            "Atlas_Test_CALL-1237" } }
-        :type body: 
         :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
             can use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
@@ -702,11 +817,9 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         documentation: https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace
         """
         params = {}
-        params['Attributes'] = attributes
-        params['Body'] = body
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/numbers')
+        url = self.ep(f'workspaces/{workspace_id}/features/numbers')
         super().get(url=url, params=params)
         return $!$!$!   # this is weird. Check the spec at https://developer.webex.com/docs/api/v1/webex-calling-workspace-settings/list-numbers-associated-with-a-specific-workspace
 
@@ -730,7 +843,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/incomingPermission')
+        url = self.ep(f'workspaces/{workspace_id}/features/incomingPermission')
         data = super().get(url=url, params=params)
         return RetrieveIncomingPermissionSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -771,7 +884,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
             body.internal_calls_enabled = internal_calls_enabled
         if collect_calls_enabled is not None:
             body.collect_calls_enabled = collect_calls_enabled
-        url = self.ep(f'{workspace_id}/features/incomingPermission')
+        url = self.ep(f'workspaces/{workspace_id}/features/incomingPermission')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -795,7 +908,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/outgoingPermission')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission')
         data = super().get(url=url, params=params)
         return RetrieveOutgoingPermissionSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -828,7 +941,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
             body.use_custom_enabled = use_custom_enabled
         if calling_permissions is not None:
             body.calling_permissions = calling_permissions
-        url = self.ep(f'{workspace_id}/features/outgoingPermission')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -851,7 +964,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/accessCodes')
         data = super().get(url=url, params=params)
         return parse_obj_as(list[AuthorizationCode], data["accessCodes"])
 
@@ -879,7 +992,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         body = ModifyAccessCodesForWorkspaceBody()
         if delete_codes is not None:
             body.delete_codes = delete_codes
-        url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/accessCodes')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -911,7 +1024,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
             body.code = code
         if description is not None:
             body.description = description
-        url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/accessCodes')
         super().post(url=url, params=params, data=body.json())
         return
 
@@ -937,7 +1050,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/intercept')
+        url = self.ep(f'workspaces/{workspace_id}/features/intercept')
         data = super().get(url=url, params=params)
         return ReadCallInterceptSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -976,7 +1089,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
             body.incoming = incoming
         if outgoing is not None:
             body.outgoing = outgoing
-        url = self.ep(f'{workspace_id}/features/intercept')
+        url = self.ep(f'workspaces/{workspace_id}/features/intercept')
         super().put(url=url, params=params, data=body.json())
         return
 
@@ -1001,7 +1114,7 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/outgoingPermission/autoTransferNumbers')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/autoTransferNumbers')
         data = super().get(url=url, params=params)
         return RetrieveTransferNumbersSettingsForWorkspaceResponse.parse_obj(data)
 
@@ -1042,6 +1155,6 @@ class WebexCallingWorkspaceSettingsApi(ApiChild, base='workspaces/'):
             body.auto_transfer_number2 = auto_transfer_number2
         if auto_transfer_number3 is not None:
             body.auto_transfer_number3 = auto_transfer_number3
-        url = self.ep(f'{workspace_id}/features/outgoingPermission/autoTransferNumbers')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/autoTransferNumbers')
         super().put(url=url, params=params, data=body.json())
         return

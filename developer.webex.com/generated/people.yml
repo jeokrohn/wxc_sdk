@@ -331,7 +331,7 @@ docs:
             param_object: []
             type: array[string]
             type_spec: null
-          - doc: The users sip addresses
+          - doc: The users sip addresses. Read-only.
             name: sipAddresses
             param_attrs: []
             param_object: []
@@ -897,7 +897,7 @@ docs:
           param_object: []
           type: array[string]
           type_spec: null
-        - doc: The users sip addresses
+        - doc: The users sip addresses. Read-only.
           name: sipAddresses
           param_attrs: []
           param_object: []
@@ -1266,7 +1266,7 @@ docs:
           param_object: []
           type: array[string]
           type_spec: null
-        - doc: The users sip addresses
+        - doc: The users sip addresses. Read-only.
           name: sipAddresses
           param_attrs: []
           param_object: []
@@ -1861,7 +1861,7 @@ docs:
           param_object: []
           type: array[string]
           type_spec: null
-        - doc: The users sip addresses
+        - doc: The users sip addresses. Read-only.
           name: sipAddresses
           param_attrs: []
           param_object: []
@@ -2248,7 +2248,7 @@ docs:
           param_object: []
           type: array[string]
           type_spec: null
-        - doc: The users sip addresses
+        - doc: The users sip addresses. Read-only.
           name: sipAddresses
           param_attrs: []
           param_object: []

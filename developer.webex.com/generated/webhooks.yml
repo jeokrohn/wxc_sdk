@@ -200,6 +200,12 @@ docs:
               param_object: []
               type: string
               type_spec: null
+            - doc: A room was migrated to a different geography. The roomId has changed.
+              name: migrated
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
             param_object: []
             type: enum
             type_spec: null
@@ -371,6 +377,12 @@ docs:
             param_object: []
             type: string
             type_spec: null
+          - doc: A room was migrated to a different geography. The roomId has changed.
+            name: migrated
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
           param_object: []
           type: enum
           type_spec: required
@@ -509,6 +521,12 @@ docs:
             type_spec: null
           - doc: A participant left.
             name: left
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A room was migrated to a different geography. The roomId has changed.
+            name: migrated
             param_attrs: []
             param_object: []
             type: string
@@ -683,6 +701,12 @@ docs:
             type_spec: null
           - doc: A participant left.
             name: left
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A room was migrated to a different geography. The roomId has changed.
+            name: migrated
             param_attrs: []
             param_object: []
             type: string
@@ -910,6 +934,12 @@ docs:
             type_spec: null
           - doc: A participant left.
             name: left
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: A room was migrated to a different geography. The roomId has changed.
+            name: migrated
             param_attrs: []
             param_object: []
             type: string
