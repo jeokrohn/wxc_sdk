@@ -12,4 +12,5 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   wxc_sdk.workspace_settings.devices
    wxc_sdk.workspace_settings.numbers

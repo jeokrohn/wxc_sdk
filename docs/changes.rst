@@ -10,6 +10,7 @@ Release history
 - feat: unified locations and workspace locations: :class:`wxc_sdk.workspaces.WorkspacesApi`
 - feat: new :meth:`wxc_sdk.telephony.location.TelephonyLocationApi.enable_for_calling`
 - feat: new :meth:`wxc_sdk.telephony.location.TelephonyLocationApi.list`
+- feat: new API :class:`wxc_sdk.workspace_settings.devices.WorkspaceDevicesApi`
 
 1.12.0
 ------
