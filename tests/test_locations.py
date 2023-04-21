@@ -14,13 +14,14 @@ from random import choice
 from typing import ClassVar, NamedTuple, Any
 from unittest import skip
 
+from pydantic import parse_obj_as
 from test_helper.randomlocation import RandomLocation, NpaInfo, Address
 
 from tests.base import TestCaseWithLog, async_test, TestWithLocations
 from tests.testutil import as_available_tns, create_random_wsl
 from wxc_sdk.as_rest import AsRestError
-from wxc_sdk.base import webex_id_to_uuid
-from wxc_sdk.common import RouteType, RouteIdentity
+from wxc_sdk.base import webex_id_to_uuid, ApiModel
+from wxc_sdk.common import RouteType, RouteIdentity, IdAndName
 from wxc_sdk.locations import Location, LocationAddress
 from wxc_sdk.people import Person
 from wxc_sdk.rest import RestError
@@ -102,6 +103,7 @@ class TestLocation(TestWithLocations):
 
                 # determine routing prefixes
                 # noinspection PyTypeChecker
+                self.api.telephony.location.enable_for_calling()
                 location_details = await asyncio.gather(
                     *[self.async_api.telephony.location.details(location_id=loc.location_id)
                       for loc in locations])
@@ -213,6 +215,43 @@ class TestLocation(TestWithLocations):
         print(dumps(loads(location_details.json()), indent=2))
         print('--------------- Location telephony details ---------------')
         print(dumps(loads(telephony_details.json()), indent=2))
+
+class CodeAndName(ApiModel):
+    code: str
+    name: str
+
+class CPAPICountryDetail(ApiModel):
+    url: str
+    state_required: bool
+    zip_code_required: bool
+    states: list[CodeAndName]
+    time_zones: list[str]
+
+
+class TestCountries(TestCaseWithLog):
+    def test_001_list_countries(self):
+        """
+        Try to list countries using CPAPI
+        """
+        me = self.api.people.me()
+        org_id_uuid = webex_id_to_uuid(me.org_id)
+        url = f'https://cpapi-r.wbx2.com/api/v1/customers/{org_id_uuid}/countries'
+        data = self.api.session.rest_get(url)
+        countries = parse_obj_as(list[CodeAndName], data['countries'])
+        countries.sort(key=attrgetter('name'))
+        print('\n'.join(f'{c.code}: {c.name}' for c in countries))
+
+    def test_002_details_belgium(self):
+        """
+        Get details for Belgium
+        """
+        me = self.api.people.me()
+        org_id_uuid = webex_id_to_uuid(me.org_id)
+        country_code = 'BE'
+        url = f'https://cpapi-r.wbx2.com/api/v1/customers/{org_id_uuid}/countries/{country_code}'
+        data = self.api.session.rest_get(url)
+        result = CPAPICountryDetail.parse_obj(data)
+        print(dumps(loads(result.json()), indent=2))
 
 
 class TestUnifiedLocations(TestCaseWithLog):
