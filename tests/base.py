@@ -30,6 +30,7 @@ from yaml.scanner import ScannerError
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.all_types import Person
 from wxc_sdk.as_api import AsWebexSimpleApi
+from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.integration import Integration
 from wxc_sdk.licenses import License
 from wxc_sdk.locations import Location
@@ -494,8 +495,9 @@ class TestWithLocations(TestCaseWithLog):
                 details = await asyncio.gather(*[api.telephony.location.details(location_id=loc.location_id)
                                                  for loc in locations], return_exceptions=True)
             # the calling locations are the ones for which we can actually get calling details
-            return [loc for loc, detail in zip(locations, details)
+            result = [loc for loc, detail in zip(locations, details)
                     if not isinstance(detail, Exception)]
+            return result
 
         if cls.api is None:
             cls.locations = None

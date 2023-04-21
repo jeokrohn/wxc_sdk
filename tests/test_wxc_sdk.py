@@ -2,4 +2,4 @@ from wxc_sdk import __version__
 
 
 def test_version():
-    assert __version__ == '1.12.0'
+    assert __version__ == '1.13.0'

@@ -83,7 +83,7 @@ from wxc_sdk.teams import Team
 from wxc_sdk.telephony import CallSourceInfo, CallSourceType, DestinationType, DeviceManagedBy,\
     DeviceManufacturer, DeviceType, EmergencyDestination, FeatureAccessCodeDestination, HostedFeatureDestination,\
     HostedUserDestination, LocationAndNumbers, NumberDetails, NumberListPhoneNumber, NumberListPhoneNumberType,\
-    NumberLocation, NumberOwner, NumberType, OnboardingMethod, OriginatorType, OwnerType, PbxUserDestination,\
+    NumberOwner, NumberType, OnboardingMethod, OriginatorType, OwnerType, PbxUserDestination,\
     PstnNumberDestination, RouteListDestination, ServiceType, SupportedDevice, TestCallRoutingResult,\
     TrunkDestination, UCMProfile, VirtualExtensionDestination
 from wxc_sdk.telephony.autoattendant import AutoAttendant, AutoAttendantAction, AutoAttendantAudioFile,\
@@ -123,8 +123,7 @@ from wxc_sdk.telephony.prem_pstn.route_group import RGTrunk, RouteGroup, RouteGr
 from wxc_sdk.telephony.prem_pstn.route_list import NumberAndAction, RouteList, RouteListDetail,\
     UpdateNumbersResponse
 from wxc_sdk.telephony.prem_pstn.trunk import CnameRecord, DeviceStatus, OutboundProxy, ResponseStatus,\
-    ResponseStatusType, Trunk, TrunkDetail, TrunkDeviceType, TrunkLocation, TrunkType, TrunkTypeWithDeviceType,\
-    TrunkUsage
+    ResponseStatusType, Trunk, TrunkDetail, TrunkDeviceType, TrunkType, TrunkTypeWithDeviceType, TrunkUsage
 from wxc_sdk.telephony.virtual_line import VirtualLine
 from wxc_sdk.telephony.vm_rules import BlockContiguousSequences, BlockPreviousPasscodes, BlockRepeatedDigits,\
     DefaultVoicemailPinRules, EnabledAndNumberOfDays, PinLength, VoiceMailRules
@@ -135,6 +134,7 @@ from wxc_sdk.tokens import Tokens
 from wxc_sdk.webhook import Webhook, WebhookCreate, WebhookEvent, WebhookEventData, WebhookEventType,\
     WebhookResource, WebhookStatus
 from wxc_sdk.workspace_locations import WorkspaceLocation, WorkspaceLocationFloor
+from wxc_sdk.workspace_settings.devices import Hoteling, WorkspaceDevice
 from wxc_sdk.workspace_settings.numbers import WorkspaceNumbers
 from wxc_sdk.workspaces import Calendar, CalendarType, CallingType, CapabilityMap, WorkSpaceType, Workspace,\
     WorkspaceCalling, WorkspaceEmail, WorkspaceSupportedDevices, WorkspaceWebexCalling
@@ -174,28 +174,29 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'ForwardToSelection', 'ForwardingRule', 'ForwardingRuleDetails', 'ForwardingSetting',
            'GetMeetingSurveyResponse', 'GetRoomMeetingDetailsResponse', 'Greeting', 'Group', 'GroupMember',
            'HGCallPolicies', 'HGandCQ', 'HistoryType', 'HolidayService', 'HostedFeatureDestination',
-           'HostedUserDestination', 'HuntGroup', 'IdAndName', 'IdOnly', 'InProgressDevice', 'IncomingPermissions',
-           'InitiateMoveNumberJobsBody', 'InputMode', 'InterceptAnnouncements', 'InterceptNumber', 'InterceptSetting',
-           'InterceptSettingIncoming', 'InterceptSettingOutgoing', 'InterceptTypeIncoming', 'InterceptTypeOutgoing',
-           'InternalDialing', 'InterpreterForSimultaneousInterpretation', 'Invitee', 'InviteeForCreateMeeting',
-           'JobError', 'JobErrorItem', 'JobErrorMessage', 'JobExecutionStatus', 'JoinMeetingBody',
-           'JoinMeetingResponse', 'License', 'LineKeyLabelSelection', 'LineKeyLedPattern', 'LinkRelation', 'Location',
-           'LocationAddress', 'LocationAndNumbers', 'LocationCallParkSettings', 'LocationMoHGreetingType',
-           'LocationMoHSetting', 'LocationVoiceMailSettings', 'LoggingLevel', 'MACState', 'MACStatus',
-           'MACValidationResponse', 'ManageNumberErrorItem', 'MediaFileType', 'MediaSessionQuality', 'Meeting',
-           'MeetingCallType', 'MeetingDevice', 'MeetingOptions', 'MeetingPreferenceDetails', 'MeetingService',
-           'MeetingState', 'MeetingTelephony', 'MeetingType', 'MeetingsSite', 'MemberCommon', 'Membership',
-           'MembershipsData', 'MenuKey', 'Message', 'MessageAttachment', 'MessageSummary', 'MessagesData',
-           'MohMessageSetting', 'MonitoredElement', 'MonitoredElementMember', 'MonitoredMember', 'Monitoring',
-           'MoveNumberCounts', 'MppCustomization', 'NetworkConnectionType', 'NetworkType', 'NightService', 'NoAnswer',
-           'NoteType', 'Notification', 'NotificationRepeat', 'NotificationType', 'NumberAndAction', 'NumberDetails',
-           'NumberItem', 'NumberJob', 'NumberListPhoneNumber', 'NumberListPhoneNumberType', 'NumberLocation',
-           'NumberOwner', 'NumberState', 'NumberType', 'OfficeNumber', 'OnboardingMethod',
-           'OrganisationVoicemailSettings', 'OrganisationVoicemailSettingsAPI', 'Organization', 'OriginatorType',
-           'OutboundProxy', 'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction', 'OverflowSetting',
-           'OwnerType', 'PSTNConnection', 'PTTConnectionType', 'Paging', 'PagingAgent', 'ParkedAgainst',
-           'Participant', 'ParticipantState', 'PasscodeRules', 'PatchMeetingBody', 'PatchMeetingResponse',
-           'PatternAction', 'PatternAndAction', 'PbxUserDestination', 'PeopleStatus', 'Person', 'PersonAddress',
+           'HostedUserDestination', 'Hoteling', 'HuntGroup', 'IdAndName', 'IdOnly', 'InProgressDevice',
+           'IncomingPermissions', 'InitiateMoveNumberJobsBody', 'InputMode', 'InterceptAnnouncements',
+           'InterceptNumber', 'InterceptSetting', 'InterceptSettingIncoming', 'InterceptSettingOutgoing',
+           'InterceptTypeIncoming', 'InterceptTypeOutgoing', 'InternalDialing',
+           'InterpreterForSimultaneousInterpretation', 'Invitee', 'InviteeForCreateMeeting', 'JobError',
+           'JobErrorItem', 'JobErrorMessage', 'JobExecutionStatus', 'JoinMeetingBody', 'JoinMeetingResponse',
+           'License', 'LineKeyLabelSelection', 'LineKeyLedPattern', 'LinkRelation', 'Location', 'LocationAddress',
+           'LocationAndNumbers', 'LocationCallParkSettings', 'LocationMoHGreetingType', 'LocationMoHSetting',
+           'LocationVoiceMailSettings', 'LoggingLevel', 'MACState', 'MACStatus', 'MACValidationResponse',
+           'ManageNumberErrorItem', 'MediaFileType', 'MediaSessionQuality', 'Meeting', 'MeetingCallType',
+           'MeetingDevice', 'MeetingOptions', 'MeetingPreferenceDetails', 'MeetingService', 'MeetingState',
+           'MeetingTelephony', 'MeetingType', 'MeetingsSite', 'MemberCommon', 'Membership', 'MembershipsData',
+           'MenuKey', 'Message', 'MessageAttachment', 'MessageSummary', 'MessagesData', 'MohMessageSetting',
+           'MonitoredElement', 'MonitoredElementMember', 'MonitoredMember', 'Monitoring', 'MoveNumberCounts',
+           'MppCustomization', 'NetworkConnectionType', 'NetworkType', 'NightService', 'NoAnswer', 'NoteType',
+           'Notification', 'NotificationRepeat', 'NotificationType', 'NumberAndAction', 'NumberDetails', 'NumberItem',
+           'NumberJob', 'NumberListPhoneNumber', 'NumberListPhoneNumberType', 'NumberOwner', 'NumberState',
+           'NumberType', 'OfficeNumber', 'OnboardingMethod', 'OrganisationVoicemailSettings',
+           'OrganisationVoicemailSettingsAPI', 'Organization', 'OriginatorType', 'OutboundProxy',
+           'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction', 'OverflowSetting', 'OwnerType',
+           'PSTNConnection', 'PTTConnectionType', 'Paging', 'PagingAgent', 'ParkedAgainst', 'Participant',
+           'ParticipantState', 'PasscodeRules', 'PatchMeetingBody', 'PatchMeetingResponse', 'PatternAction',
+           'PatternAndAction', 'PbxUserDestination', 'PeopleStatus', 'Person', 'PersonAddress',
            'PersonDevicesResponse', 'PersonForwardingSetting', 'PersonNumbers', 'PersonPhoneNumber',
            'PersonPlaceAgent', 'PersonSettingsApiChild', 'PersonType', 'PersonalMeetingRoom',
            'PersonalMeetingRoomOptions', 'Personality', 'PhoneLanguage', 'PhoneNumber', 'PhoneNumberType',
@@ -216,8 +217,8 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'TelephonyLocation', 'TelephonyParty', 'TestCallRoutingResult', 'Tokens', 'TrackingCode',
            'TrackingCodeItem', 'TrackingCodeOption', 'TrackingCodeType', 'Transcript', 'TranscriptSnippet',
            'TranscriptStatus', 'TransportType', 'Trunk', 'TrunkDestination', 'TrunkDetail', 'TrunkDeviceType',
-           'TrunkLocation', 'TrunkType', 'TrunkTypeWithDeviceType', 'TrunkUsage', 'Type', 'UCMProfile',
-           'UnansweredCalls', 'UnlockedMeetingJoinSecurity', 'UpdateDefaultSiteBody', 'UpdateMeetingInviteeBody',
+           'TrunkType', 'TrunkTypeWithDeviceType', 'TrunkUsage', 'Type', 'UCMProfile', 'UnansweredCalls',
+           'UnlockedMeetingJoinSecurity', 'UpdateDefaultSiteBody', 'UpdateMeetingInviteeBody',
            'UpdateNumbersResponse', 'UpdateParticipantBody', 'UpdateParticipantResponse', 'UpdatePersonNumbers',
            'UpdatePersonPhoneNumber', 'UpdatePersonalMeetingRoomOptionsBody', 'UpdateTranscriptSnippetBody',
            'UsageRouteLists', 'UserBase', 'UserNumber', 'UserType', 'ValidateExtensionStatus',
@@ -230,6 +231,6 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'VoicemailNotifications', 'VoicemailSettings', 'VoicemailTransferToNumber', 'WaitMessageSetting',
            'WaitMode', 'Webhook', 'WebhookCreate', 'WebhookEvent', 'WebhookEventData', 'WebhookEventType',
            'WebhookResource', 'WebhookStatus', 'WelcomeMessageSetting', 'WifiCustomization', 'WifiNetwork',
-           'WorkSpaceType', 'Workspace', 'WorkspaceCalling', 'WorkspaceEmail', 'WorkspaceLocation',
+           'WorkSpaceType', 'Workspace', 'WorkspaceCalling', 'WorkspaceDevice', 'WorkspaceEmail', 'WorkspaceLocation',
            'WorkspaceLocationFloor', 'WorkspaceNumbers', 'WorkspaceSupportedDevices', 'WorkspaceWebexCalling',
            '_Helper', 'dt_iso_str', 'enum_str', 'plus1', 'to_camel', 'webex_id_to_uuid']

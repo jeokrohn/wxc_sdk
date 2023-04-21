@@ -67,8 +67,9 @@ __all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsApi
            'AsRouteGroupApi', 'AsRouteListApi', 'AsScheduleApi', 'AsTeamMembershipsApi', 'AsTeamsApi',
            'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi',
            'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
-           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceLocationApi',
-           'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
+           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
+           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi', 'AsWorkspaceSettingsApi',
+           'AsWorkspacesApi']
 
 
 @dataclass(init=False)
@@ -1023,7 +1024,7 @@ class AsLocationsApi(AsApiChild, base='locations'):
         return next((location for location in await self.list(name=name, org_id=org_id)
                      if location.name == name), None)
 
-    async def details(self, location_id:str, org_id:str = None) -> Location:
+    async def details(self, location_id: str, org_id: str = None) -> Location:
         """
         Shows details for a location, by ID.
 
@@ -1035,7 +1036,7 @@ class AsLocationsApi(AsApiChild, base='locations'):
         :return: location details
         :rtype: :class:`Location`
         """
-        params = org_id and {'oorgId': org_id} or None
+        params = org_id and {'orgId': org_id} or None
         ep = self.ep(location_id)
         return Location.parse_obj(await self.get(ep, params=params))
 
@@ -12204,13 +12205,14 @@ class AsReceptionistContactsDirectoryApi(AsApiChild, base='telephony/config/loca
     query parameter.
 
     """
+
     # TODO: create test cases
     # TODO: really no details call and no way to update a directory?
 
     def _url(self, location_id: str):
         return self.ep(f'{location_id}/receptionistContacts/directories')
 
-    async def create(self, location_id: str, name: str, contacts: list[str], org_id: str = None)->str:
+    async def create(self, location_id: str, name: str, contacts: list[str], org_id: str = None) -> str:
         """
         Creates a new Receptionist Contact Directory for a location.
 
@@ -12384,7 +12386,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         data = await self.get(url=url, params=params)
         return TelephonyLocation.parse_obj(data)
 
-    async def enable_for_calling(self, location: Location, org_id: str = None)->str:
+    async def enable_for_calling(self, location: Location, org_id: str = None) -> str:
         """
         Enable a location by adding it to Webex Calling. This add Webex Calling support to a location created created
         using the POST /v1/locations API.
@@ -12401,7 +12403,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         data = await self.post(url=url, data=body, params=params)
         return data['id']
 
-    def list_gen(self, name: str=None, order: str=None, org_id: str = None)-> AsyncGenerator[TelephonyLocation, None, None]:
+    def list_gen(self, name: str = None, order: str = None, org_id: str = None) -> AsyncGenerator[TelephonyLocation, None, None]:
         """
         Lists Webex Calling locations for an organization with Webex Calling details.
 
@@ -12418,10 +12420,10 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         params = {to_camel(k): v
                   for k, v in locals().items()
                   if k != 'self' and v is not None}
-        url=self.ep()
+        url = self.ep()
         return self.session.follow_pagination(url=url, model=TelephonyLocation, params=params, item_key='locations')
 
-    async def list(self, name: str=None, order: str=None, org_id: str = None)-> List[TelephonyLocation]:
+    async def list(self, name: str = None, order: str = None, org_id: str = None) -> List[TelephonyLocation]:
         """
         Lists Webex Calling locations for an organization with Webex Calling details.
 
@@ -12438,7 +12440,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         params = {to_camel(k): v
                   for k, v in locals().items()
                   if k != 'self' and v is not None}
-        url=self.ep()
+        url = self.ep()
         return [o async for o in self.session.follow_pagination(url=url, model=TelephonyLocation, params=params, item_key='locations')]
 
     async def update(self, location_id: str, settings: TelephonyLocation, org_id: str = None):
@@ -13769,6 +13771,65 @@ class AsWorkspaceLocationApi(AsApiChild, base='workspaceLocations'):
         await super().delete(url=url, params=params)
 
 
+class AsWorkspaceDevicesApi(AsApiChild, base='telephony/config/workspaces'):
+    def list_gen(self, workspace_id: str, org_id: str = None) -> AsyncGenerator[WorkspaceDevice, None, None]:
+        """
+        Get all devices for a workspace.
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param workspace_id: ID of the workspace for which to retrieve devices.
+        :type workspace_id: str
+        :param org_id: Organization to which the workspace belongs.
+        :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-workspace-devices
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{workspace_id}/devices')
+        return self.session.follow_pagination(url=url, model=WorkspaceDevice, params=params, item_key='devices')
+
+    async def list(self, workspace_id: str, org_id: str = None) -> List[WorkspaceDevice]:
+        """
+        Get all devices for a workspace.
+        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
+
+        :param workspace_id: ID of the workspace for which to retrieve devices.
+        :type workspace_id: str
+        :param org_id: Organization to which the workspace belongs.
+        :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/get-workspace-devices
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{workspace_id}/devices')
+        return [o async for o in self.session.follow_pagination(url=url, model=WorkspaceDevice, params=params, item_key='devices')]
+
+    async def modify_hoteling(self, workspace_id: str, hoteling: Hoteling, org_id: str = None):
+        """
+        Modify devices for a workspace.
+        Modifying devices for a workspace requires a full administrator auth token with a scope of
+        spark-admin:telephony_config_write.
+
+        :param workspace_id: ID of the workspace for which to modify devices.
+        :type workspace_id: str
+        :param hoteling: hoteling settings
+        :type hoteling: Hoteling
+        :param org_id: Organization to which the workspace belongs.
+        :type org_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/modify-workspace-devices
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{workspace_id}/devices')
+        await super().put(url=url, params=params, data=hoteling.json())
+
+
 class AsWorkspaceNumbersApi(AsApiChild, base='workspaces'):
 
     # noinspection PyMethodOverriding
@@ -13809,25 +13870,27 @@ class AsWorkspaceSettingsApi(AsApiChild, base='workspaces'):
     this class are instances of the respective user settings APIs. When calling endpoints of these APIs workspace IDs
     need to be passed to the ``person_id`` parameter of the called function.
     """
-    call_intercept: AsCallInterceptApi
+    forwarding: AsPersonForwardingApi
     call_waiting: AsCallWaitingApi
     caller_id: AsCallerIdApi
-    forwarding: AsPersonForwardingApi
     monitoring: AsMonitoringApi
     numbers: AsWorkspaceNumbersApi
     permissions_in: AsIncomingPermissionsApi
     permissions_out: AsOutgoingPermissionsApi
+    devices: AsWorkspaceDevicesApi
+    call_intercept: AsCallInterceptApi
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
-        self.call_intercept = AsCallInterceptApi(session=session, workspaces=True)
+        self.forwarding = AsPersonForwardingApi(session=session, workspaces=True)
         self.call_waiting = AsCallWaitingApi(session=session, workspaces=True)
         self.caller_id = AsCallerIdApi(session=session, workspaces=True)
-        self.forwarding = AsPersonForwardingApi(session=session, workspaces=True)
         self.monitoring = AsMonitoringApi(session=session, workspaces=True)
         self.numbers = AsWorkspaceNumbersApi(session=session)
         self.permissions_in = AsIncomingPermissionsApi(session=session, workspaces=True)
         self.permissions_out = AsOutgoingPermissionsApi(session=session, workspaces=True)
+        self.devices = AsWorkspaceDevicesApi(session=session)
+        self.call_intercept = AsCallInterceptApi(session=session, workspaces=True)
 
 
 class AsWorkspacesApi(AsApiChild, base='workspaces'):

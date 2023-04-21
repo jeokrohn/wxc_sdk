@@ -1193,6 +1193,12 @@ The second column of the table has a link to the documentation of the method.
    * - api.workspace_settings.caller_id.read
         Retrieve a Person's Caller ID Settings
      - :meth:`~wxc_sdk.person_settings.caller_id.CallerIdApi.read`
+   * - api.workspace_settings.devices.list
+        Get all devices for a workspace
+     - :meth:`~wxc_sdk.workspace_settings.devices.WorkspaceDevicesApi.list`
+   * - api.workspace_settings.devices.modify_hoteling
+        Modify devices for a workspace
+     - :meth:`~wxc_sdk.workspace_settings.devices.WorkspaceDevicesApi.modify_hoteling`
    * - api.workspace_settings.forwarding.configure
         Configure a Person's Call Forwarding Settings
      - :meth:`~wxc_sdk.person_settings.forwarding.PersonForwardingApi.configure`
