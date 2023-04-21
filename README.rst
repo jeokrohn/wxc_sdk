@@ -43,7 +43,7 @@ Documentation
 -------------
 
 Documentation is available at:
-http://wxc_sdk.readthedocs.io
+http://wxc-sdk.readthedocs.io
 
 Examples
 --------
