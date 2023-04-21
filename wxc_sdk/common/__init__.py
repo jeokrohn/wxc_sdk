@@ -641,7 +641,6 @@ class MppCustomization(CommonDeviceCustomization):
     migration_url: Optional[str]
 
 
-
 class WifiCustomization(ApiModel):
     # TODO: implement as soon as properly documented on developer.webex.com
 

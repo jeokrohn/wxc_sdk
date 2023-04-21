@@ -165,7 +165,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         data = self.get(url=url, params=params)
         return TelephonyLocation.parse_obj(data)
 
-    def enable_for_calling(self, location: Location, org_id: str = None)->str:
+    def enable_for_calling(self, location: Location, org_id: str = None) -> str:
         """
         Enable a location by adding it to Webex Calling. This add Webex Calling support to a location created created
         using the POST /v1/locations API.
@@ -182,7 +182,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         data = self.post(url=url, data=body, params=params)
         return data['id']
 
-    def list(self, name: str=None, order: str=None, org_id: str = None)->Generator[TelephonyLocation, None, None]:
+    def list(self, name: str = None, order: str = None, org_id: str = None) -> Generator[TelephonyLocation, None, None]:
         """
         Lists Webex Calling locations for an organization with Webex Calling details.
 
@@ -199,9 +199,8 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         params = {to_camel(k): v
                   for k, v in locals().items()
                   if k != 'self' and v is not None}
-        url=self.ep()
+        url = self.ep()
         return self.session.follow_pagination(url=url, model=TelephonyLocation, params=params, item_key='locations')
-
 
     def update(self, location_id: str, settings: TelephonyLocation, org_id: str = None):
         """

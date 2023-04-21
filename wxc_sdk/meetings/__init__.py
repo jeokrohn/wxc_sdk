@@ -515,7 +515,6 @@ class CallInNumbers(ApiModel):
     toll_type: Optional[str]
 
 
-
 class MeetingTelephony(ApiModel):
     #: Code for authenticating a user to join teleconference. Users join the teleconference using the call-in number or
     #: the global call-in number, followed by the value of the accessCode.

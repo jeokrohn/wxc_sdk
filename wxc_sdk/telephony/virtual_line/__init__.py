@@ -9,6 +9,7 @@ from ...person_settings.caller_id import ExternalCallerIdNamePolicy
 
 __all__ = ['VirtualLine', 'VirtualLinesApi']
 
+
 class VirtualLine(ApiModel):
     #: A unique identifier for the virtual line.
     id: Optional[str]
@@ -99,4 +100,3 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
             params['hasDnAssigned'] = has_dn_assigned
         url = self.ep()
         return self.session.follow_pagination(url=url, model=VirtualLine, params=params, item_key='virtualLines')
-

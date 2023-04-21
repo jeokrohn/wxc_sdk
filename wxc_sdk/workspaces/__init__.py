@@ -162,7 +162,7 @@ class Workspace(ApiModel):
             j_data['hotdeskingStatus'] = 'on' if self.hotdesking_status else 'off'
         return json.dumps(j_data)
 
-    def update_or_create(self, for_update: bool=False) -> str:
+    def update_or_create(self, for_update: bool = False) -> str:
         """
         JSON for update ot create
 

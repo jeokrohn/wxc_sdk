@@ -124,7 +124,7 @@ class LocationsApi(ApiChild, base='locations'):
         return next((location for location in self.list(name=name, org_id=org_id)
                      if location.name == name), None)
 
-    def details(self, location_id:str, org_id:str = None) -> Location:
+    def details(self, location_id: str, org_id: str = None) -> Location:
         """
         Shows details for a location, by ID.
 
@@ -136,7 +136,7 @@ class LocationsApi(ApiChild, base='locations'):
         :return: location details
         :rtype: :class:`Location`
         """
-        params = org_id and {'oorgId': org_id} or None
+        params = org_id and {'orgId': org_id} or None
         ep = self.ep(location_id)
         return Location.parse_obj(self.get(ep, params=params))
 

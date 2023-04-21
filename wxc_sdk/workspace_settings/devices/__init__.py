@@ -7,6 +7,7 @@ from wxc_sdk.person_settings import TelephonyDevice
 
 __all__ = ['Hoteling', 'WorkspaceDevice', 'WorkspaceDevicesApi']
 
+
 class Hoteling(ApiModel):
     #: Enable/Disable hoteling Host. Enabling the device for hoteling means that a guest(end user) can log into this
     #: host(workspace device) and use this device
@@ -63,4 +64,3 @@ class WorkspaceDevicesApi(ApiChild, base='telephony/config/workspaces'):
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/devices')
         super().put(url=url, params=params, data=hoteling.json())
-

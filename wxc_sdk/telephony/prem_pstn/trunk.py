@@ -14,7 +14,6 @@ __all__ = ['TrunkType', 'Trunk', 'TrunkDeviceType', 'TrunkTypeWithDeviceType', '
            'TrunkApi']
 
 
-
 class TrunkType(str, Enum):
     #: for Cisco CUBE Local Gateway
     registering = 'REGISTERING'

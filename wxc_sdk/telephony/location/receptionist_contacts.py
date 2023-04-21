@@ -26,13 +26,14 @@ class ReceptionistContactsDirectoryApi(ApiChild, base='telephony/config/location
     query parameter.
 
     """
+
     # TODO: create test cases
     # TODO: really no details call and no way to update a directory?
 
     def _url(self, location_id: str):
         return self.ep(f'{location_id}/receptionistContacts/directories')
 
-    def create(self, location_id: str, name: str, contacts: list[str], org_id: str = None)->str:
+    def create(self, location_id: str, name: str, contacts: list[str], org_id: str = None) -> str:
         """
         Creates a new Receptionist Contact Directory for a location.
 
