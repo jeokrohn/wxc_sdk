@@ -61,6 +61,9 @@ class TelephonyLocation(ApiModel):
     outside_dial_digit: Optional[str]
     #: Must dial a prefix when calling between locations having same extension within same location.
     routing_prefix: Optional[str]
+    #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will
+    #: include a P-Charge-Info header with the selected number in the SIP INVITE.
+    charge_number: Optional[str]
     #: IP Address, hostname, or domain, Read-Only
     default_domain: Optional[str]
     # TODO: add docstring, WXCAPIBULK-302

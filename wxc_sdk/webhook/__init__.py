@@ -34,6 +34,8 @@ class WebhookEventType(str, Enum):
     joined = 'joined'
     #: a participant left
     left = 'left'
+    #: A room was migrated to a different geography. The roomId has changed.
+    migrated = 'migrated'
     all = 'all'
 
 

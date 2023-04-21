@@ -9,14 +9,10 @@ from ...base import SafeEnum as Enum
 from ...base import to_camel, ApiModel
 from ...common import Customer, IdAndName
 
-__all__ = ['TrunkLocation', 'TrunkType', 'Trunk', 'TrunkDeviceType', 'TrunkTypeWithDeviceType', 'DeviceStatus',
+__all__ = ['TrunkType', 'Trunk', 'TrunkDeviceType', 'TrunkTypeWithDeviceType', 'DeviceStatus',
            'ResponseStatusType', 'ResponseStatus', 'CnameRecord', 'OutboundProxy', 'TrunkDetail', 'TrunkUsage',
            'TrunkApi']
 
-
-class TrunkLocation(ApiModel):
-    location_id: str = Field(alias='id')
-    name: str
 
 
 class TrunkType(str, Enum):
@@ -30,7 +26,7 @@ class TrunkType(str, Enum):
 class Trunk(ApiModel):
     trunk_id: str = Field(alias='id')
     name: str
-    location: TrunkLocation
+    location: IdAndName
     in_use: bool
     trunk_type: TrunkType
 
@@ -92,12 +88,12 @@ class TrunkDetail(ApiModel):
     #: Customer associated with the trunk.
     organization: Customer
     #: Location associated with the trunk.
-    location: TrunkLocation
+    location: IdAndName
     #: Unique Outgoing and Destination trunk group associated with the dial plan.
     otg_dtg_id: str
     #: The Line/Port identifies a device endpoint in standalone mode or a SIPURI public identity in IMS mode.
     line_port: str
-    locations_using_trunk: list[TrunkLocation]
+    locations_using_trunk: list[IdAndName]
     pilot_user_id: str
     outbound_proxy: Any
     #: User's authentication service information.
@@ -110,7 +106,7 @@ class TrunkDetail(ApiModel):
     dual_identity_support_enabled: bool
     #: Trunk Type associated with the trunk.
     trunk_type: TrunkType
-    #: Device type assosiated with trunk.
+    #: Device type associated with trunk.
     device_type: str
     #: FQDN or SRV address. Required to create a static certificate-based trunk.
     address: Optional[str]

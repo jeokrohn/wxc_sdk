@@ -180,12 +180,23 @@ class ForwardingRuleDetails(ApiModel):
     Details of a call forwarding rule
     """
     name: str
+    #: A unique identifier for the auto attendant call forward selective rule.
     id: Optional[str]
+    #: Flag to indicate if always call forwarding selective rule criteria is active. If not set, flag will be set to
+    #: false.
     enabled: bool
+    #: Name of the holiday schedule which determines when this selective call forwarding rule is in effect.
     holiday_schedule: Optional[str]
+    #: Name of the location's business schedule which determines when this selective call forwarding rule is in effect.
     business_schedule: Optional[str]
+    #: Number to which calls will be forwarded if the rule is of type "Forward To" and the incoming call is matched.
     forward_to: ForwardTo
+    #: Comma-separated list of the types of numbers being matched for incoming call destination.
     calls_to: ForwardCallsTo
+    #: Comma-separated list of incoming call numbers that, when matched, will not be forwarded. A Limit of 12 numbers
+    #: is allowed. Use Any private Number in the comma-separated value to indicate rules that match incoming calls from
+    #: a private number. Use Any unavailable number in the comma-separated value to match incoming calls from an
+    #: unavailable number.
     calls_from: CallsFrom
 
     @staticmethod

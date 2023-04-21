@@ -167,23 +167,17 @@ class Person(ApiModelWithErrors):
     #: your organization or an organization you manage. Presence information will not be shown if the authenticated
     #: user has disabled status sharing.
     last_activity: Optional[str]
-    #: The users sip addresses
+    #: The users sip addresses. Read-only.
     sip_addresses: Optional[list[SipAddress]]
-    #: The current presence status of the person. This will only be returned for people within your organization or
-    #: an organization you manage. Presence information will not be shown if the authenticated user has disabled
-    #: status sharing.
+    #: The current presence status of the person. This will only be returned for people within your organization or an
+    #: organization you manage. Presence information will not be shown if the authenticated user has disabled status
+    #: sharing.
     status: Optional[PeopleStatus]
-    #: Whether or not an invite is pending for the user to complete account activation. This property is only
-    #: returned if the authenticated user is an admin user for the person's organization.
-    #: True: the person has been invited to Webex but has not created an account
-    #:
-    #: False: the person has been invited to Webex but has not created an account
+    #: Whether or not an invite is pending for the user to complete account activation. This property is only returned
+    #: if the authenticated user is an admin user for the person's organization.
     invite_pending: Optional[bool]
     #: Whether or not the user is allowed to use Webex. This property is only returned if the authenticated user is an
     #: admin user for the person's organization.
-    #: True: the person can log into Webex
-    #:
-    #: False: the person cannot log into Webex
     login_enabled: Optional[bool]
     #: The type of person account, such as person or bot.
     person_type: Optional[PersonType] = Field(alias='type')
