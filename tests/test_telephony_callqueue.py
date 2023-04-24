@@ -240,7 +240,7 @@ class TestUpdate(TestWithQueues):
         return new_name
 
     @contextmanager
-    def random_queue(self) -> CallQueue:
+    def random_queue(self, restore: bool = False) -> CallQueue:
         target = random.choice(self.queues)
         details = self.api.telephony.callqueue.details(location_id=target.location_id,
                                                        queue_id=target.id)
@@ -250,8 +250,9 @@ class TestUpdate(TestWithQueues):
         try:
             yield details.copy(deep=True)
         finally:
-            self.api.telephony.callqueue.update(location_id=target.location_id,
-                                                queue_id=target.id, update=details)
+            if restore:
+                self.api.telephony.callqueue.update(location_id=target.location_id,
+                                                    queue_id=target.id, update=details)
 
     def test_001_update_extension(self):
         """
@@ -412,6 +413,118 @@ class TestUpdate(TestWithQueues):
         details.location_id = target.location_id
         details.location_name = target.location_name
         self.assertEqual(target, details)
+
+    def test_008_call_forwarding(self):
+        """
+        Try to update call forwarding settings af a queue
+        """
+        with self.random_queue(restore=False) as target:
+            target: CallQueue
+            before = self.api.telephony.callqueue.forwarding.settings(location_id=target.location_id,
+                                                                      feature_id=target.id)
+            forwarding = before.copy(deep=True)
+            try:
+                if forwarding.always.enabled:
+                    forwarding.always.enabled = False
+                    forwarding.always.destination = ''
+                else:
+                    forwarding.always.enabled = True
+                    forwarding.always.destination = '4300'
+                self.api.telephony.callqueue.forwarding.update(location_id=target.location_id, feature_id=target.id,
+                                                               forwarding=forwarding)
+                after = self.api.telephony.callqueue.forwarding.settings(location_id=target.location_id,
+                                                                         feature_id=target.id)
+                if not forwarding.always.destination:
+                    forwarding.always.destination = None
+                self.assertEqual(forwarding, after)
+            finally:
+                self.api.telephony.callqueue.forwarding.update(location_id=target.location_id, feature_id=target.id,
+                                                               forwarding=before)
+
+    @async_test
+    async def test_010_create_and_delete_rules(self):
+        """
+        Try creating and deleting some selective forwarding rules
+        """
+        with self.random_queue(restore=False) as target:
+            target: CallQueue
+            fapi = self.api.telephony.callqueue.forwarding
+            as_fapi = self.async_api.telephony.callqueue.forwarding
+            before = fapi.settings(location_id=target.location_id,
+                                   feature_id=target.id)
+
+            # get some new rule names
+            existing_rule_names = set(rule.name for rule in before.rules)
+            new_rule_names = (name for i in range(100)
+                              if (name := f'test {i:0}') not in existing_rule_names)
+            new_names = [next(new_rule_names) for _ in range(5)]
+
+            # create the new rules
+            tasks = [as_fapi.create_call_forwarding_rule(location_id=target.location_id,
+                                                         feature_id=target.id,
+                                                         forwarding_rule=ForwardingRuleDetails.default(name=rule_name))
+                     for rule_name in new_names]
+            new_rule_ids = await asyncio.gather(*tasks)
+
+            try:
+                # now all these rules are expected to be present
+                after = fapi.settings(location_id=target.location_id,
+                                      feature_id=target.id)
+                existing_rule_ids = set(rule.id for rule in after.rules)
+                self.assertTrue(all(rule_id in existing_rule_ids
+                                    for rule_id in new_rule_ids))
+                self.assertEqual(len(after.rules), len(before.rules) + len(new_names))
+            finally:
+                # clean up: remove all rules but the 1st
+                tasks = [as_fapi.delete_call_forwarding_rule(location_id=target.location_id,
+                                                             feature_id=target.id,
+                                                             rule_id=rule.id)
+                         for rule in after.rules[1:]]
+                await asyncio.gather(*tasks)
+
+            # validate # of rules
+            after = fapi.settings(location_id=target.location_id,
+                                  feature_id=target.id)
+            print(json.dumps(json.loads(after.json()), indent=2))
+            # only one rule should be left
+            self.assertEqual(1, len(after.rules))
+
+    def test_009_call_forwarding_selective(self):
+        """
+        Test selective forwarding for a queue
+        """
+        with self.random_queue(restore=False) as target:
+            target: CallQueue
+            fapi = self.api.telephony.callqueue.forwarding
+            before = fapi.settings(location_id=target.location_id,
+                                   feature_id=target.id)
+            forwarding: CallForwarding = before.copy(deep=True)
+            if forwarding.selective.enabled:
+                # disable selective forwarding
+                forwarding.selective.enabled = False
+                forwarding.rules = None
+                fapi.update(location_id=target.location_id, feature_id=target.id, forwarding=forwarding)
+                # delete rules
+                for rule in before.rules[1:]:
+                    fapi.delete_call_forwarding_rule(location_id=target.location_id, feature_id=target.id,
+                                                     rule_id=rule.id)
+            else:
+                if not forwarding.rules:
+                    # create a forwarding rule
+                    rule = ForwardingRuleDetails.default(name='test rule')
+                    rule_id = fapi.create_call_forwarding_rule(location_id=target.location_id,
+                                                               feature_id=target.id,
+                                                               forwarding_rule=rule)
+                # enable selective forwarding with this rule
+                forwarding.selective.enabled = True
+                # don't update the rules...
+                forwarding.rules = None
+                fapi.update(location_id=target.location_id, feature_id=target.id, forwarding=forwarding)
+            after = fapi.settings(location_id=target.location_id,
+                                  feature_id=target.id)
+            print(json.dumps(json.loads(after.json()), indent=2))
+
+        return
 
 
 class TestCallQueuePolicies(TestWithQueues):

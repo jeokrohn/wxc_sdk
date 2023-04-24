@@ -7486,18 +7486,11 @@ class AsForwardingApi:
         """
         params = org_id and {'orgId': org_id} or {}
         url = self._endpoint(location_id=location_id, feature_id=feature_id)
-        body = forwarding.dict()
 
-        # update only has 'id' and 'enabled' in rules
-        # determine names of ForwardingRule fields to remove
-        to_pop = [field
-                  for field in ForwardingRule.__fields__
-                  if field not in {'id', 'enabled'}]
-        for rule in body['rules']:
-            rule: Dict
-            for field in to_pop:
-                rule.pop(field, None)
-        body = {'callForwarding': body}
+        body = {'callForwarding': json.loads(forwarding.json(exclude={'rules': {'__all__': {'calls_from',
+                                                                                            'forward_to',
+                                                                                            'calls_to',
+                                                                                            'name'}}}))}
         await self._session.rest_put(url=url, json=body, params=params)
 
     async def create_call_forwarding_rule(self, location_id: str, feature_id: str,
@@ -7522,9 +7515,9 @@ class AsForwardingApi:
         :rtype; str
         """
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path='selectiveRules')
-        body = forwarding_rule.dict()
         params = org_id and {'orgId': org_id} or None
-        data = await self._session.rest_post(url=url, json=body, params=params)
+        body = forwarding_rule.json()
+        data = await self._session.rest_post(url=url, data=body, params=params)
         return data['id']
 
     async def call_forwarding_rule(self, location_id: str, feature_id: str, rule_id: str,
@@ -7582,8 +7575,8 @@ class AsForwardingApi:
         """
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path=f'selectiveRules/{rule_id}')
         params = org_id and {'orgId': org_id} or None
-        body = forwarding_rule.dict()
-        data = await self._session.rest_put(url=url, params=params, json=body)
+        body = forwarding_rule.json(exclude={'id'})
+        data = await self._session.rest_put(url=url, params=params, data=body)
         return data['id']
 
     async def delete_call_forwarding_rule(self, location_id: str, feature_id: str, rule_id: str, org_id: str = None):
@@ -7599,7 +7592,7 @@ class AsForwardingApi:
         """
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path=f'selectiveRules/{rule_id}')
         params = org_id and {'orgId': org_id} or None
-        await self._session.delete(url=url, params=params)
+        await self._session.rest_delete(url=url, params=params)
 
 
 class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):

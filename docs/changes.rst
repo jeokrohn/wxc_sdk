@@ -1,6 +1,10 @@
 Release history
 ===============
 
+- fix: call forwarding for auto attendants, call queues, hunt groups: rules attribute optional in updates.
+  Forwarding rule creation, update, and deletion was broken
+- feat: unit tests for call queue forwarding and selective forwarding rule creation and deletion
+
 1.13.0
 ------
 - new API for virtual lines :class:`wxc_sdk.telephony.virtual_line.VirtualLinesApi`
