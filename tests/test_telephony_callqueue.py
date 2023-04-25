@@ -536,50 +536,60 @@ class TestUpdate(TestWithQueues):
             target: CallQueue
             fapi = self.api.telephony.callqueue.forwarding
             as_fapi = self.async_api.telephony.callqueue.forwarding
-            before = fapi.settings(location_id=target.location_id,
-                                   feature_id=target.id)
+            # common parameters to select target queue
+            queue_sel = dict(location_id=target.location_id,
+                             feature_id=target.id)
+
+            # get queue forwarding settings
+            before = fapi.settings(**queue_sel)
+
             # we need a few rules to play with
-            if len(before.rules)<5:
+            if len(before.rules) < 5:
                 # get some new rule names
                 existing_rule_names = set(rule.name for rule in before.rules)
                 new_rule_names = (name for i in range(100)
                                   if (name := f'test {i:0}') not in existing_rule_names)
-                new_names = [next(new_rule_names) for _ in range(5)]
+                new_names = [next(new_rule_names) for _ in range(5 - len(before.rules))]
 
                 # create the new rules
-                tasks = [as_fapi.create_call_forwarding_rule(location_id=target.location_id,
-                                                             feature_id=target.id,
+                tasks = [as_fapi.create_call_forwarding_rule(**queue_sel,
                                                              forwarding_rule=ForwardingRuleDetails.default(name=rule_name))
                          for rule_name in new_names]
                 await asyncio.gather(*tasks)
-                before = fapi.settings(location_id=target.location_id,
-                                       feature_id=target.id)
+                before = fapi.settings(**queue_sel)
             # now we have a queue with a bunch of rules
-            # .. now try to enable/disable some of them
+            # .. try to enable/disable some of them
+
+            # pick three
             target_rules:list[ForwardingRule] = random.sample(before.rules, 3)
             target_rules = sorted(target_rules, key=attrgetter('name'))
 
+            # track enable state of target rules
             rule_states: dict[str, bool] = dict()
+
             async def toggle_rule(rule: ForwardingRule):
                 # get rule and switch enabled state
-                details = await as_fapi.call_forwarding_rule(location_id=target.location_id, feature_id=target.id,
+                details = await as_fapi.call_forwarding_rule(**queue_sel,
                                                              rule_id=rule.id)
                 details.enabled = not details.enabled
-                await as_fapi.update_call_forwarding_rule(location_id=target.location_id, feature_id=target.id,
+                await as_fapi.update_call_forwarding_rule(**queue_sel,
                                                           rule_id=rule.id,forwarding_rule=details)
+                # track the enabled state of updated rule
                 rule_states[rule.id] = details.enabled
 
+            # actually toggle enabled on rules
             print(f'toggle rules: {", ".join(rule.name for rule in target_rules)}')
             tasks = [toggle_rule(rule) for rule in target_rules]
             await asyncio.gather(*tasks)
+
+            # print state we (tried to) set enabled to
             name_len=max(len(rule.name) for rule in target_rules)
             for rule in target_rules:
                 print(f'rule "{rule.name:{name_len}}" desired state: '
                       f'{"enabled" if rule_states[rule.id] else "disabled"}')
 
             # now verify that all rules have been properly updated
-            after = fapi.settings(location_id=target.location_id,
-                                   feature_id=target.id)
+            after = fapi.settings(**queue_sel)
             self.assertTrue(all(rule_states[rule.id]==rule.enabled
                                 for rule in after.rules
                                 if rule.id in rule_states))
