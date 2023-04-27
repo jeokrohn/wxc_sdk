@@ -711,7 +711,10 @@ class LocationInfo:
 
     @property
     def ok(self) -> bool:
-        return self.location is not None and self.workspace is not None and self.calling is not None
+        return self.location is not None and self.workspace is not None and self.calling is not None and \
+            webex_id_to_uuid(
+                self.location.location_id) == webex_id_to_uuid(self.calling.location_id) and webex_id_to_uuid(
+                self.location.location_id) == webex_id_to_uuid(self.workspace.id).split('#')[-1]
 
 
 class TestLocationConsistency(TestCaseWithLog):
@@ -745,6 +748,10 @@ class TestLocationConsistency(TestCaseWithLog):
             info = location_info[name]
             if info.ok:
                 # print(f'"{name}": ok')
+                print(f'{name}')
+                print(f'            location id: {webex_id_to_uuid(info.location.location_id)}')
+                print(f'         ws location id: {webex_id_to_uuid(info.workspace.id)}')
+                print(f'  telephony location id: {webex_id_to_uuid(info.calling.location_id)}')
                 continue
             print(f'"{name}"')
             if info.location is not None:

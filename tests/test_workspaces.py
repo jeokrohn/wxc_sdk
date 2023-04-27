@@ -6,12 +6,25 @@ import random
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 
+from wxc_sdk import WebexSimpleApi
 from wxc_sdk.all_types import *
 from wxc_sdk.rest import RestError
 from wxc_sdk.workspaces import WorkspaceCalling, WorkspaceWebexCalling, WorkspaceSupportedDevices
 from tests.base import TestCaseWithLog, TestWithLocations
 from tests.testutil import available_extensions_gen, new_workspace_names, TEST_WORKSPACES_PREFIX, \
     create_workspace_with_webex_calling
+
+
+def workspace_location_for_location(api: WebexSimpleApi, location_id: str) -> WorkspaceLocation:
+    """
+    get workspace location for location or telephony location identified by id
+    :param api: api to use
+    :param location_id: location or telephony location id
+    :return: workspace location
+    """
+    location_uuid = webex_id_to_uuid(location_id)
+    wsl = next((l for l in api.workspace_locations.list() if l.id_uuid == location_uuid), None)
+    return wsl
 
 
 class TestList(TestCaseWithLog):
@@ -191,7 +204,8 @@ class TestCreate(TestWithLocations):
         This workspace doesn't have a location and is for room devices
         """
         ws = self.api.workspaces
-        name = next(new_workspace_names(api=self.api))
+        with self.no_log():
+            name = next(new_workspace_names(api=self.api))
         settings = Workspace.create(display_name=name)
         settings.notes = 'test_001_trivial: no calling location, room devices'
         workspace = ws.create(settings=settings)
@@ -204,7 +218,8 @@ class TestCreate(TestWithLocations):
         create workspace with edge_for_devices
         """
         ws = self.api.workspaces
-        name = next(new_workspace_names(api=self.api))
+        with self.no_log():
+            name = next(new_workspace_names(api=self.api))
         settings = Workspace(display_name=name, calling=WorkspaceCalling(type=CallingType.edge_for_devices),
                              notes='test_002_edge_for_devices: edge for devices')
         workspace = ws.create(settings=settings)
@@ -219,9 +234,13 @@ class TestCreate(TestWithLocations):
         # get a calling location
         target_location = random.choice(self.locations)
         target_location: Location
+        with self.no_log():
+            wsl = workspace_location_for_location(api=self.api, location_id=target_location.location_id)
+            self.assertIsNotNone(wsl)
 
         workspace = create_workspace_with_webex_calling(api=self.api,
                                                         target_location=target_location,
+                                                        # workspace_location_id=wsl.id,
                                                         supported_devices=WorkspaceSupportedDevices.phones,
                                                         notes=f'test_003_create_workspace_with_webex_calling: phones, '
                                                               f'location "{target_location.name}"')
@@ -243,6 +262,11 @@ class TestCreate(TestWithLocations):
         self.assertIsNotNone(p_number.extension)
         self.assertEqual(number.extension, p_number.extension)
 
+        # also as a side effect the workspace location id gets set
+        self.assertIsNotNone(workspace.workspace_location_id)
+        # ... location id and workspace location id are related
+        self.assertEqual(webex_id_to_uuid(target_location.location_id), webex_id_to_uuid(workspace.workspace_location_id).split('#')[-1])
+
     def test_004_create_workspace_wo_calling_and_upgrade_to_webex_calling(self):
         """
         create a workspace w/o calling for room devices and upgrade to WxC later
@@ -250,13 +274,16 @@ class TestCreate(TestWithLocations):
         # get a calling location
         target_location = random.choice(self.locations)
         target_location: Location
+        with self.no_log():
+            wsl = workspace_location_for_location(api=self.api, location_id=target_location.location_id)
+            self.assertIsNotNone(wsl)
 
-        # get an extension in location
-        extension = next(available_extensions_gen(api=self.api,
-                                                  location_id=target_location.location_id))
+            # get an extension in location
+            extension = next(available_extensions_gen(api=self.api,
+                                                      location_id=target_location.location_id))
 
-        # get a name for new workspace
-        name = next(new_workspace_names(api=self.api))
+            # get a name for new workspace
+            name = next(new_workspace_names(api=self.api))
 
         # create workspace w/o calling 1st
         print(f'Creating workspace "{name}"')
@@ -273,30 +300,40 @@ class TestCreate(TestWithLocations):
         # get details and try to upgrade to calling
         details = self.api.workspaces.details(workspace_id=workspace.workspace_id)
         update = details.copy(deep=True)
+        # update.workspace_location_id = wsl.id
         update.calling = WorkspaceCalling(
             type=CallingType.webex,
             webex_calling=WorkspaceWebexCalling(
                 extension=extension,
                 location_id=target_location.location_id))
         print(f'Updating workspace "{name}" in location "{target_location.name}" to WxC w/ extension {extension}')
-        update_result = self.api.workspaces.update(workspace_id=workspace.workspace_id,
+        after = self.api.workspaces.update(workspace_id=workspace.workspace_id,
                                                    settings=update)
         print(f'after update:')
-        print(json.dumps(json.loads(update_result.json()), indent=2))
+        print(json.dumps(json.loads(after.json()), indent=2))
+
+        # also as a side effect the workspace location id should get set
+        self.assertIsNotNone(after.workspace_location_id)
+        # ... location id and workspace location id are related
+        self.assertEqual(webex_id_to_uuid(target_location.location_id),
+                         webex_id_to_uuid(after.workspace_location_id).split('#')[-1])
+
+
 
     def test_005_no_calling_phones(self):
         """
         create workspace w/o calling for phones; this should not work
         """
         # get a name for new workspace
-        name = next(new_workspace_names(api=self.api))
+        with self.no_log():
+            name = next(new_workspace_names(api=self.api))
 
         print(f'Creating workspace "{name}"')
 
         new_workspace = Workspace(
             display_name=name,
             supported_devices=WorkspaceSupportedDevices.phones)
-        # this expected to fail witj
+        # this expected to fail with a 400
         with self.assertRaises(RestError) as ctx:
             _ = self.api.workspaces.create(settings=new_workspace)
         self.assertEqual(400, ctx.exception.response.status_code)
@@ -309,10 +346,14 @@ class TestCreate(TestWithLocations):
         # get a calling location
         target_location = random.choice(self.locations)
         target_location: Location
+        with self.no_log():
+            wsl = workspace_location_for_location(api=self.api, location_id=target_location.location_id)
+            self.assertIsNotNone(wsl)
 
         workspace = create_workspace_with_webex_calling(
             api=self.api,
             target_location=target_location,
+            # workspace_location_id=wsl.id,
             supported_devices=WorkspaceSupportedDevices.collaboration_devices,
             notes=f'test_006_create_workspace_with_webex_calling_room: room devices, '
                   f'location "{target_location.name}"')
@@ -333,6 +374,119 @@ class TestCreate(TestWithLocations):
         p_number = workspace_numbers.phone_numbers[0]
         self.assertIsNotNone(p_number.extension)
         self.assertEqual(number.extension, p_number.extension)
+
+        # also as a side effect the workspace location id should get set
+        self.assertIsNotNone(workspace.workspace_location_id)
+        # ... location id and workspace location id are related
+        self.assertEqual(webex_id_to_uuid(target_location.location_id),
+                         webex_id_to_uuid(workspace.workspace_location_id).split('#')[-1])
+
+    def test_007_create_workspace_w_calling_and_downgrade_to_free(self):
+        """
+        create a workspace w/ calling for room devices and downgrade to free calling later
+        """
+        # get a calling location
+        target_location = random.choice(self.locations)
+        target_location: Location
+        with self.no_log():
+            wsl = workspace_location_for_location(api=self.api, location_id=target_location.location_id)
+            self.assertIsNotNone(wsl)
+
+            # get an extension in location
+            extension = next(available_extensions_gen(api=self.api,
+                                                      location_id=target_location.location_id))
+
+            # get a name for new workspace
+            name = next(new_workspace_names(api=self.api))
+
+        # create workspace w/o calling 1st
+        print(f'Creating workspace "{name}"')
+
+        new_workspace = Workspace(
+            display_name=name,
+            # supported_devices=WorkspaceSupportedDevices.phones,
+            notes=f'test_007_create_workspace_w_calling_and_downgrade_to_free: room devices, created w/ '
+                  f'calling in location "{target_location.name}", tried to downgrade to free calling',
+            supported_devices=WorkspaceSupportedDevices.collaboration_devices,
+            # workspace_location_id=wsl.id,
+            calling=WorkspaceCalling(
+                type=CallingType.webex,
+                webex_calling=WorkspaceWebexCalling(
+                    extension=extension,
+                    location_id=target_location.location_id)))
+        workspace = self.api.workspaces.create(settings=new_workspace)
+        print(f'new workspace:')
+        print(json.dumps(json.loads(workspace.json()), indent=2))
+
+        # get details and try to downgrade to free calling
+        details = self.api.workspaces.details(workspace_id=workspace.workspace_id)
+        update = details.copy(deep=True)
+        update.calling = WorkspaceCalling(
+            type=CallingType.free)
+        print(f'Updating workspace "{name}" in location "{target_location.name}" ')
+        after = self.api.workspaces.update(workspace_id=workspace.workspace_id,
+                                                   settings=update)
+        print(f'after update:')
+        print(json.dumps(json.loads(after.json()), indent=2))
+
+        # the workspace location id should still be set
+        self.assertIsNotNone(after.workspace_location_id)
+        # ... location id and workspace location id are related
+        self.assertEqual(webex_id_to_uuid(target_location.location_id),
+                         webex_id_to_uuid(after.workspace_location_id).split('#')[-1])
+
+    def test_008_create_workspace_w_calling_phone_and_downgrade_to_free(self):
+        """
+        create a workspace w/ calling for phones and downgrade to free calling later; expected to fail
+        """
+        # get a calling location
+        target_location = random.choice(self.locations)
+        target_location: Location
+        with self.no_log():
+            wsl = workspace_location_for_location(api=self.api, location_id=target_location.location_id)
+            self.assertIsNotNone(wsl)
+
+            # get an extension in location
+            extension = next(available_extensions_gen(api=self.api,
+                                                      location_id=target_location.location_id))
+
+            # get a name for new workspace
+            name = next(new_workspace_names(api=self.api))
+
+        # create workspace w/o calling 1st
+        print(f'Creating workspace "{name}"')
+
+        new_workspace = Workspace(
+            display_name=name,
+            # supported_devices=WorkspaceSupportedDevices.phones,
+            notes=f'test_007_create_workspace_w_calling_and_downgrade_to_free: room devices, created w/ '
+                  f'calling in location "{target_location.name}", tried to downgrade to free calling',
+            supported_devices=WorkspaceSupportedDevices.phones,
+            # workspace_location_id=wsl.id,
+            calling=WorkspaceCalling(
+                type=CallingType.webex,
+                webex_calling=WorkspaceWebexCalling(
+                    extension=extension,
+                    location_id=target_location.location_id)))
+        workspace = self.api.workspaces.create(settings=new_workspace)
+        print(f'new workspace:')
+        print(json.dumps(json.loads(workspace.json()), indent=2))
+
+        # get details and try to downgrade to free calling
+        details = self.api.workspaces.details(workspace_id=workspace.workspace_id)
+        update = details.copy(deep=True)
+        update.calling = WorkspaceCalling(
+            type=CallingType.free)
+        print(f'Updating workspace "{name}" in location "{target_location.name}" ')
+
+        # this is expected to fail
+        # * workspace for phones has to have WxC enabled
+        # * supportedDevices cannot be changed after creation
+        with self.assertRaises(RestError) as ctx:
+            _ = self.api.workspaces.update(workspace_id=workspace.workspace_id,
+                                                       settings=update)
+        self.assertEqual(400, ctx.exception.response.status_code)
+
 
 
 class TestUpdate(TestCaseWithLog):
