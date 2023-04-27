@@ -364,7 +364,8 @@ def new_workspace_names(api: WebexSimpleApi) -> Generator[str, None, None]:
 
 
 def create_workspace_with_webex_calling(api: WebexSimpleApi, target_location: Location,
-                                        supported_devices: WorkspaceSupportedDevices)->Workspace:
+                                        supported_devices: WorkspaceSupportedDevices,
+                                        **kwargs)->Workspace:
     """
     create a workspace with webex calling in given location
     """
@@ -383,6 +384,6 @@ def create_workspace_with_webex_calling(api: WebexSimpleApi, target_location: Lo
             webex_calling=WorkspaceWebexCalling(
                 extension=extension,
                 location_id=target_location.location_id)),
-        supported_devices=supported_devices)
+        supported_devices=supported_devices, **kwargs)
     workspace = api.workspaces.create(settings=new_workspace)
     return workspace

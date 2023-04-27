@@ -1,6 +1,7 @@
 """
 Test for workspaces API
 """
+import json
 import random
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
@@ -192,8 +193,10 @@ class TestCreate(TestWithLocations):
         ws = self.api.workspaces
         name = next(new_workspace_names(api=self.api))
         settings = Workspace.create(display_name=name)
+        settings.notes = 'test_001_trivial: no calling location, room devices'
         workspace = ws.create(settings=settings)
-        print(f'new workspace: {workspace.json()}')
+        print(f'new workspace:')
+        print(json.dumps(json.loads(workspace.json()), indent=2))
         self.assertEqual(name, workspace.display_name)
 
     def test_002_edge_for_devices(self):
@@ -202,14 +205,16 @@ class TestCreate(TestWithLocations):
         """
         ws = self.api.workspaces
         name = next(new_workspace_names(api=self.api))
-        settings = Workspace(display_name=name, calling=WorkspaceCalling(type=CallingType.edge_for_devices))
+        settings = Workspace(display_name=name, calling=WorkspaceCalling(type=CallingType.edge_for_devices),
+                             notes='test_002_edge_for_devices: edge for devices')
         workspace = ws.create(settings=settings)
-        print(f'new workspace: {workspace.json()}')
+        print(f'new workspace:')
+        print(json.dumps(json.loads(workspace.json()), indent=2))
         self.assertEqual(name, workspace.display_name)
 
     def test_003_create_workspace_with_webex_calling(self):
         """
-        create a workspace with webex calling
+        create a workspace with webex calling for phones
         """
         # get a calling location
         target_location = random.choice(self.locations)
@@ -217,8 +222,11 @@ class TestCreate(TestWithLocations):
 
         workspace = create_workspace_with_webex_calling(api=self.api,
                                                         target_location=target_location,
-                                                        supported_devices=WorkspaceSupportedDevices.phones)
+                                                        supported_devices=WorkspaceSupportedDevices.phones,
+                                                        notes=f'test_003_create_workspace_with_webex_calling: phones, '
+                                                              f'location "{target_location.name}"')
         print(f'Created workspace "{workspace.display_name}" in location "{target_location.name}" ')
+        print(json.dumps(json.loads(workspace.json()), indent=2))
         # due to a limitation the workspace object returned does not have 'webex_calling' populated
         # let's check nonetheless which extension got assigned
         numbers = list(self.api.telephony.phone_numbers(owner_id=workspace.workspace_id))
@@ -237,7 +245,7 @@ class TestCreate(TestWithLocations):
 
     def test_004_create_workspace_wo_calling_and_upgrade_to_webex_calling(self):
         """
-        create a workspace w/o calling and upgrede to WxC later
+        create a workspace w/o calling for room devices and upgrade to WxC later
         """
         # get a calling location
         target_location = random.choice(self.locations)
@@ -255,9 +263,14 @@ class TestCreate(TestWithLocations):
 
         new_workspace = Workspace(
             display_name=name,
-            supported_devices=WorkspaceSupportedDevices.phones)
+            # supported_devices=WorkspaceSupportedDevices.phones,
+            notes=f'test_004_create_workspace_wo_calling_and_upgrade_to_webex_calling: room devices, created w/o '
+                  f'calling, tried to upgrade to calling in location "{target_location.name}"')
         workspace = self.api.workspaces.create(settings=new_workspace)
+        print(f'new workspace:')
+        print(json.dumps(json.loads(workspace.json()), indent=2))
 
+        # get details and try to upgrade to calling
         details = self.api.workspaces.details(workspace_id=workspace.workspace_id)
         update = details.copy(deep=True)
         update.calling = WorkspaceCalling(
@@ -268,11 +281,12 @@ class TestCreate(TestWithLocations):
         print(f'Updating workspace "{name}" in location "{target_location.name}" to WxC w/ extension {extension}')
         update_result = self.api.workspaces.update(workspace_id=workspace.workspace_id,
                                                    settings=update)
-        foo = 1
+        print(f'after update:')
+        print(json.dumps(json.loads(update_result.json()), indent=2))
 
     def test_005_no_calling_phones(self):
         """
-        create workspace w/o calling for phones
+        create workspace w/o calling for phones; this should not work
         """
         # get a name for new workspace
         name = next(new_workspace_names(api=self.api))
@@ -282,9 +296,43 @@ class TestCreate(TestWithLocations):
         new_workspace = Workspace(
             display_name=name,
             supported_devices=WorkspaceSupportedDevices.phones)
-        workspace = self.api.workspaces.create(settings=new_workspace)
+        # this expected to fail witj
+        with self.assertRaises(RestError) as ctx:
+            _ = self.api.workspaces.create(settings=new_workspace)
+        self.assertEqual(400, ctx.exception.response.status_code)
+        print('Failed as expected')
 
-        details = self.api.workspaces.details(workspace_id=workspace.workspace_id)
+    def test_006_create_workspace_with_webex_calling_room(self):
+        """
+        create a workspace with webex calling for room devices
+        """
+        # get a calling location
+        target_location = random.choice(self.locations)
+        target_location: Location
+
+        workspace = create_workspace_with_webex_calling(
+            api=self.api,
+            target_location=target_location,
+            supported_devices=WorkspaceSupportedDevices.collaboration_devices,
+            notes=f'test_006_create_workspace_with_webex_calling_room: room devices, '
+                  f'location "{target_location.name}"')
+        print(f'Created workspace "{workspace.display_name}" in location "{target_location.name}" ')
+        print(json.dumps(json.loads(workspace.json()), indent=2))
+        # due to a limitation the workspace object returned does not have 'webex_calling' populated
+        # let's check nonetheless which extension got assigned
+        numbers = list(self.api.telephony.phone_numbers(owner_id=workspace.workspace_id))
+        self.assertEqual(1, len(numbers))
+        number = numbers[0]
+        self.assertIsNotNone(number.extension)
+        print(f'extension: {number.extension}')
+
+        # ... another option to get the number
+        workspace_numbers = self.api.workspace_settings.numbers.read(workspace_id=workspace.workspace_id)
+        self.assertIsNotNone(workspace_numbers.phone_numbers)
+        self.assertEqual(1, len(workspace_numbers.phone_numbers))
+        p_number = workspace_numbers.phone_numbers[0]
+        self.assertIsNotNone(p_number.extension)
+        self.assertEqual(number.extension, p_number.extension)
 
 
 class TestUpdate(TestCaseWithLog):
