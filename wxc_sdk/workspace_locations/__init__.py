@@ -241,7 +241,7 @@ class WorkspaceLocationApi(ApiChild, base='workspaceLocations'):
         data = self.get(url=url, params=params)
         return WorkspaceLocation.parse_obj(data)
 
-    def update(self, location_id: str, settings: WorkspaceLocation, org_id: str = None):
+    def update(self, location_id: str, settings: WorkspaceLocation, org_id: str = None) -> WorkspaceLocation:
         """
         Update a Workspace Location
         Updates details for a location, by ID. Specify the location ID in the locationId parameter in the URI.

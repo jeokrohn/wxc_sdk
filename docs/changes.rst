@@ -4,6 +4,7 @@ Release history
 - fix: call forwarding for auto attendants, call queues, hunt groups: rules attribute optional in updates.
   Forwarding rule creation, update, and deletion was broken
 - feat: unit tests for call queue forwarding and selective forwarding rule creation and deletion
+- fix: missing return type for :meth:`wxc_sdk.workspace_locations.WorkspaceLocationApi.update`
 
 1.13.0
 ------
