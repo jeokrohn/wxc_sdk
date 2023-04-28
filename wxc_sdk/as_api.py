@@ -11675,8 +11675,8 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         params = org_id and {'orgId': org_id} or None
         await self.put(url=url, data=body, params=params)
 
-    def available_members_gen(self, device_id: str, location_id: str, member_name: str = None, phone_number: str = None,
-                          extension: str = None, org_id: str = None,
+    def available_members_gen(self, device_id: str, location_id: str = None, member_name: str = None,
+                          phone_number: str = None, extension: str = None, org_id: str = None,
                           **params) -> AsyncGenerator[AvailableMember, None, None]:
         """
         Search members that can be assigned to the device.
@@ -11706,8 +11706,8 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=AvailableMember, params=params, item_key='members')
 
-    async def available_members(self, device_id: str, location_id: str, member_name: str = None, phone_number: str = None,
-                          extension: str = None, org_id: str = None,
+    async def available_members(self, device_id: str, location_id: str = None, member_name: str = None,
+                          phone_number: str = None, extension: str = None, org_id: str = None,
                           **params) -> List[AvailableMember]:
         """
         Search members that can be assigned to the device.
@@ -13730,7 +13730,7 @@ class AsWorkspaceLocationApi(AsApiChild, base='workspaceLocations'):
         data = await self.get(url=url, params=params)
         return WorkspaceLocation.parse_obj(data)
 
-    async def update(self, location_id: str, settings: WorkspaceLocation, org_id: str = None):
+    async def update(self, location_id: str, settings: WorkspaceLocation, org_id: str = None) -> WorkspaceLocation:
         """
         Update a Workspace Location
         Updates details for a location, by ID. Specify the location ID in the locationId parameter in the URI.

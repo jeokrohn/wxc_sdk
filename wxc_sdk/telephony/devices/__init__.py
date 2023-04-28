@@ -213,8 +213,8 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config/devices'):
         params = org_id and {'orgId': org_id} or None
         self.put(url=url, data=body, params=params)
 
-    def available_members(self, device_id: str, location_id: str, member_name: str = None, phone_number: str = None,
-                          extension: str = None, org_id: str = None,
+    def available_members(self, device_id: str, location_id: str = None, member_name: str = None,
+                          phone_number: str = None, extension: str = None, org_id: str = None,
                           **params) -> Generator[AvailableMember, None, None]:
         """
         Search members that can be assigned to the device.
