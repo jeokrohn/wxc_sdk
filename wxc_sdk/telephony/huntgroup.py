@@ -105,8 +105,9 @@ class HuntGroup(HGandCQ):
     def exclude_update_or_create() -> dict:
         """
         Exclude dict for update or create calls
-        :return: dict
+
         :meta private:
+        :return: dict
         """
         base_exclude = HGandCQ.exclude_update_or_create()
         base_exclude.update({'call_policies':

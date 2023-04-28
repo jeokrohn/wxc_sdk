@@ -105,8 +105,9 @@ class HGandCQ(ApiModel):
     def exclude_update_or_create() -> dict:
         """
         Exclude dict for update or create calls
-        :return: dict
+
         :meta private:
+        :return: dict
         """
         return {'id': True,
                 'location_name': True,

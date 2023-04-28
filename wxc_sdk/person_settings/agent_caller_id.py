@@ -41,6 +41,7 @@ class QueueCallerId(ApiModel):
     @root_validator(pre=True)
     def root(cls, values):
         """
+
         :meta private
 
         if no agent caller id is configured API returns a selectedQueue with id == None. In that case we pop the
@@ -54,6 +55,7 @@ class QueueCallerId(ApiModel):
     def for_update(self) -> str:
         """
         JSON string for updates
+
         :meta private:
         """
         data = self.dict(include={'queue_caller_id_enabled': True,
@@ -74,6 +76,7 @@ class AgentCallerIdApi(ApiChild, base='telephony/config/people'):
     # noinspection PyMethodOverriding
     def ep(self, person_id: str, path: str):
         """
+
         :meta private:
         """
         return super().ep(f'{person_id}/queues/{path}')

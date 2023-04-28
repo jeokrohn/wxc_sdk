@@ -80,6 +80,7 @@ class CallingPermissions(ApiModel):
     @root_validator
     def rv(cls, v):
         """
+
         :meta private:
 
         Make sure that values for unknown call types are also parsed into CallTypePermission instances
@@ -200,6 +201,7 @@ class OutgoingPermissions(ApiModel):
     # noinspection PyMethodOverriding
     def json(self, drop_call_types: set[str] = None) -> str:
         """
+
         :meta private:
         calling permissions are converted back to a list of objects.
         drop_call_types can be a set of call types to be excluded from callingPermissions

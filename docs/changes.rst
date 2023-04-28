@@ -6,6 +6,7 @@ Release history
 - feat: unit tests for call queue forwarding and selective forwarding rule creation and deletion
 - fix: missing return type for :meth:`wxc_sdk.workspace_locations.WorkspaceLocationApi.update`
 - fix: make parameter location_id optional in :meth:`wxc_sdk.telephony.devices.TelephonyDevicesApi.available_members`
+- fix: include line label attributes in updates: :meth:`wxc_sdk.telephony.devices.TelephonyDevicesApi.update_members`
 
 1.13.0
 ------

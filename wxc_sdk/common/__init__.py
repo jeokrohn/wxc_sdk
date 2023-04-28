@@ -671,6 +671,7 @@ class DeviceCustomization(ApiModel):
     @validator('last_update_time', pre=True)
     def update_time(cls, v):
         """
+
         :meta private:
         """
         if not v:

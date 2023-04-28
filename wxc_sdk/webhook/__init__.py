@@ -124,6 +124,7 @@ class WebhookEventDataForbid(ApiModel):
 
     def __init_subclass__(cls: 'WebhookEventDataForbid', **kwargs):
         """
+
         :meta private:
         """
         if cls.resource is None and cls.__name__ != 'WebhookEventData':
@@ -133,6 +134,7 @@ class WebhookEventDataForbid(ApiModel):
     @classmethod
     def registered_subclass(cls, resource: str):
         """
+
         :meta private:
         """
         return cls._registry.get(resource)

@@ -255,9 +255,9 @@ class RestSession(Session):
         """
         get an API endpoint
 
+        :meta private:
         :param path:
         :return: full endpoint
-        :meta private:
         """
         path = path and f'/{path}' or ''
         return f'{self.BASE}{path}'

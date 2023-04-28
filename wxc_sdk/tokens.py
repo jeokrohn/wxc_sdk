@@ -24,6 +24,7 @@ class Tokens(BaseModel):
 
     def json(self, *args, **kwargs):
         """
+
         :meta private:
         """
         exclude = kwargs.get('exclude', set())

@@ -4544,6 +4544,7 @@ class AsAgentCallerIdApi(AsApiChild, base='telephony/config/people'):
     # noinspection PyMethodOverriding
     def ep(self, person_id: str, path: str):
         """
+
         :meta private:
         """
         return super().ep(f'{person_id}/queues/{path}')
@@ -8709,9 +8710,9 @@ class AsCallQueueApi:
         """
         Get JSON for update or create
 
+        :meta private:
         :param queue:
         :return:
-        :meta private:
         """
         return queue.json(
             exclude={'id': True,
@@ -11664,8 +11665,8 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         # create body
         if members_for_update:
             members = ','.join(m.json(include={'member_id', 'port', 't38_fax_compression_enabled', 'primary_owner',
-                                               'line_type', 'line_weight', 'hotline_enabled', 'hotline_destination',
-                                               'allow_call_decline_enabled'})
+                                               'line_type', 'line_weight', 'line_label', 'hotline_enabled',
+                                               'hotline_destination', 'allow_call_decline_enabled'})
                                for m in members_for_update)
             body = f'{{"members": [{members}]}}'
         else:
@@ -13828,6 +13829,7 @@ class AsWorkspaceNumbersApi(AsApiChild, base='workspaces'):
     # noinspection PyMethodOverriding
     def ep(self, workspace_id: str, path: str = None):
         """
+
         :meta private:
         """
         path = path and '/path' or ''

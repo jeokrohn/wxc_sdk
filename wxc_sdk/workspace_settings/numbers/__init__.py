@@ -27,6 +27,7 @@ class WorkspaceNumbersApi(ApiChild, base='workspaces'):
     # noinspection PyMethodOverriding
     def ep(self, workspace_id: str, path: str = None):
         """
+
         :meta private:
         """
         path = path and '/path' or ''

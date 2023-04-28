@@ -306,6 +306,7 @@ class CallQueue(HGandCQ):
         """
         Exclude dict for update or create calls
         :return: dict
+
         :meta private:
         """
         base_exclude = HGandCQ.exclude_update_or_create()
@@ -401,9 +402,9 @@ class CallQueueApi:
         """
         Get JSON for update or create
 
+        :meta private:
         :param queue:
         :return:
-        :meta private:
         """
         return queue.json(
             exclude={'id': True,

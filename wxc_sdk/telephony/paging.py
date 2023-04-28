@@ -33,6 +33,7 @@ class PagingAgent(ApiModel):
     def create_update_exclude(cls) -> dict:
         """
         What to exclude in JSON for create and update
+
         :meta private:
         """
         return {'first_name': True,
