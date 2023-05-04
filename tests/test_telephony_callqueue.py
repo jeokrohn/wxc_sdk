@@ -417,13 +417,18 @@ class TestUpdate(TestWithQueues):
 
     def test_008_call_forwarding(self):
         """
-        Try to update call forwarding settings af a queue
+        Try to update call forwarding all settings af a queue
         """
         with self.random_queue(restore=False) as target:
             target: CallQueue
             before = self.api.telephony.callqueue.forwarding.settings(location_id=target.location_id,
                                                                       feature_id=target.id)
+
+            # Don't mess with rules in this test
+            before.rules = None
+
             forwarding = before.copy(deep=True)
+            forwarding.selective.enabled = False
             try:
                 if forwarding.always.enabled:
                     forwarding.always.enabled = False
@@ -435,6 +440,7 @@ class TestUpdate(TestWithQueues):
                                                                forwarding=forwarding)
                 after = self.api.telephony.callqueue.forwarding.settings(location_id=target.location_id,
                                                                          feature_id=target.id)
+                after.rules = None
                 if not forwarding.always.destination:
                     forwarding.always.destination = None
                 self.assertEqual(forwarding, after)
