@@ -12,14 +12,14 @@ documentation = 'https://wxc-sdk.readthedocs.io'
 python = "^3.9"
 pydantic = "^1.9.0"
 requests = "^2.27.1"
-requests-toolbelt = "^0.10.0"
+requests-toolbelt = "^1.0.0"
 pytz = "*"
 aiohttp = "^3.8.1"
 python-dateutil = "^2.8.2"
 aenum = "^3.1.11"
 PyYAML = "^6.0"
 # TODO: avoiding import errors with "appengine" in requests_toolbelt
-urllib3 = "<2"
+#urllib3 = "<2"
 
 [tool.poetry.dev-dependencies]
 Sphinx = "^4.4.0"
