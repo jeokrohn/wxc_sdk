@@ -21,6 +21,7 @@ class Tokens(BaseModel):
     refresh_token_expires_in: Optional[int]   # remaining lifetime of refresh token at time of token creation
     refresh_token_expires_at: Optional[datetime.datetime]   #: expiration, calculated at time of token creation
     token_type: Optional[Literal['Bearer']]
+    scope: Optional[str]
 
     def json(self, *args, **kwargs):
         """
@@ -45,6 +46,7 @@ class Tokens(BaseModel):
         self.refresh_token = new_tokes.refresh_token
         self.refresh_token_expires_in = new_tokes.refresh_token_expires_in
         self.refresh_token_expires_at = new_tokes.refresh_token_expires_at
+        self.scope = new_tokes.scope
 
     def set_expiration(self):
         """

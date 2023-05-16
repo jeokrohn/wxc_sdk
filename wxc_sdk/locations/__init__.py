@@ -179,7 +179,6 @@ class LocationsApi(ApiChild, base='locations'):
         :return: ID of new location
         :rtype: :class:`Location`
         """
-        # TODO: unit tests
         body = {}
         address = {}
         for p, v in list(locals().items()):

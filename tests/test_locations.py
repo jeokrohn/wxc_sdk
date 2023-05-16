@@ -140,21 +140,24 @@ class TestLocation(TestWithLocations):
                              if (name := f'{address.city} {npa}{suffix}') not in location_names)
         print(f'Creating location: {npa=}, {npa=}, {address=}')
 
-        location_id = await self.async_api.locations.create(name=location_name,
-                                                            time_zone='America/Los_Angeles',
-                                                            announcement_language='en_us',
-                                                            preferred_language='en_us',
-                                                            address1=address.address1,
-                                                            city=address.city,
-                                                            state=address.state_or_province_abbr,
-                                                            postal_code=address.zip_or_postal_code,
-                                                            country='US')
+        # TODO: looks like announcement_language and time_zone can't be set here?
+        location_id = self.api.locations.create(name=location_name,
+                                                time_zone='America/Chicago',
+                                                announcement_language=None,
+                                                preferred_language='de_de',
+                                                address1=address.address1,
+                                                city=address.city,
+                                                state=address.state_or_province_abbr,
+                                                postal_code=address.zip_or_postal_code,
+                                                country='US')
+
+        created_location = await self.async_api.locations.details(location_id=location_id)
         # enable location for webex calling
         location = Location(location_id=location_id,
                             name=location_name,
-                            time_zone='America/Los_Angeles',
-                            announcement_language='en_us',
-                            preferred_language='en_us',
+                            time_zone='America/Chicago',
+                            announcement_language='de_de',
+                            preferred_language='de_de',
                             address=LocationAddress(address1=address.address1,
                                                     city=address.city,
                                                     state=address.state_or_province_abbr,
@@ -167,21 +170,21 @@ class TestLocation(TestWithLocations):
         trunk_name = next(name for suffix in chain([''], (f'-{i:02}'
                                                           for i in range(1, 100)))
                           if (name := f'{address.city}{suffix}') not in set(trunk.name for trunk in trunks))
-        password = await self.async_api.telephony.location.generate_password(location_id=location_id)
+        password = self.api.telephony.location.generate_password(location_id=location_id)
         print(f'Creating trunk "{trunk_name}" in location "{location_name}"')
-        trunk_id = await self.async_api.telephony.prem_pstn.trunk.create(name=trunk_name,
-                                                                         location_id=location_id,
-                                                                         password=password)
+        trunk_id = self.api.telephony.prem_pstn.trunk.create(name=trunk_name,
+                                                             location_id=location_id,
+                                                             password=password)
 
         # set PSTN choice for location to trunk
         print(f'Setting new trunk "{trunk_name}" as PSTN choice for location "{location_name}"')
-        await self.async_api.telephony.location.update(location_id=location_id,
-                                                       settings=TelephonyLocation(
-                                                           connection=PSTNConnection(type=RouteType.trunk,
-                                                                                     id=trunk_id)))
+        self.api.telephony.location.update(location_id=location_id,
+                                           settings=TelephonyLocation(
+                                               connection=PSTNConnection(type=RouteType.trunk,
+                                                                         id=trunk_id)))
 
         # add number to location
-        await self.async_api.telephony.location.number.add(location_id=location_id, phone_numbers=[tn])
+        self.api.telephony.location.number.add(location_id=location_id, phone_numbers=[tn])
 
         # finally set that number as main number and set site code
         # also enable unknown extension dialing to the trunk we just defined
@@ -215,9 +218,32 @@ class TestLocation(TestWithLocations):
         print('--------------- Location telephony details ---------------')
         print(dumps(loads(telephony_details.json()), indent=2))
 
+    def test_004_create_and_validate_settings(self):
+        """
+        Apparently time zone and announcement language are not set when creating a location?
+        """
+        l_names = set(l.name for l in self.api.locations.list('TEST'))
+        location_name = next((name for i in range(100) if (name := f'TEST_{i:03}') not in l_names), None)
+        print(f'Creating location "{location_name}"')
+        location_id = self.api.locations.create(name=location_name,
+                                                time_zone='Europe/Berlin',
+                                                announcement_language='de_de',
+                                                preferred_language='de_de',
+                                                address1='strasse 1',
+                                                city='Darmstadt',
+                                                state=None,
+                                                postal_code='64291',
+                                                country='DE')
+        details = self.api.locations.details(location_id=location_id)
+        self.assertEqual('de_de', details.announcement_language)
+        self.assertEqual('de_de', details.preferred_language)
+        self.assertEqual('Europe/Berlin', details.time_zone)
+
+
 class CodeAndName(ApiModel):
     code: str
     name: str
+
 
 class CPAPICountryDetail(ApiModel):
     url: str
@@ -750,7 +776,9 @@ class TestLocationConsistency(TestCaseWithLog):
                 # print(f'"{name}": ok')
                 print(f'{name}')
                 print(f'            location id: {webex_id_to_uuid(info.location.location_id)}')
-                print(f'         ws location id: {webex_id_to_uuid(info.workspace.id)}')
+                print(
+                    f'         ws location id: {webex_id_to_uuid(info.workspace.id)} '
+                    f'{base64.b64decode(info.workspace.id + "==").decode()}')
                 print(f'  telephony location id: {webex_id_to_uuid(info.calling.location_id)}')
                 continue
             print(f'"{name}"')
@@ -828,8 +856,10 @@ class TestLocationConsistency(TestCaseWithLog):
                       for n in numbers_in_unknown_location)
 
         for number in numbers_in_unknown_location:
-            print(f'number in unknown location "{number.location.name:{loc_len}}"({webex_id_to_uuid(number.location.id)}): '
-                  f'{number.phone_number or "":12} {number.extension or ""}')
+            print(
+                f'number in unknown location "{number.location.name:{loc_len}}"('
+                f'{webex_id_to_uuid(number.location.id)}): '
+                f'{number.phone_number or "":12} {number.extension or ""}')
         self.assertTrue(not numbers_in_unknown_location, 'Found numbers in unknown locations')
 
     def test_005_trunks_and_locations(self):
@@ -859,7 +889,7 @@ class TestLocationConsistency(TestCaseWithLog):
             return
 
         loc_len = max(len(trunk.location.name) for trunk in trunks_in_unknown_location)
-        t_len= max(len(trunk.name) for trunk in trunks_in_unknown_location)
+        t_len = max(len(trunk.name) for trunk in trunks_in_unknown_location)
 
         err = False
         for location_id, trunks in trunks_by_location.items():
@@ -877,8 +907,8 @@ class TestLocationConsistency(TestCaseWithLog):
         check consistency of number ownerships
         """
 
-        def check_exists(number_key: NumberListPhoneNumber, cache:dict[str, Any],
-                         list_call:Callable[[], Generator[Any, None,None]],
+        def check_exists(number_key: NumberListPhoneNumber, cache: dict[str, Any],
+                         list_call: Callable[[], Generator[Any, None, None]],
                          key_attr: Callable[[Any], str], entity: str):
             key = number_key.owner.owner_id
             if not cache:
@@ -968,17 +998,17 @@ class TestLocationConsistency(TestCaseWithLog):
                   f'({webex_id_to_uuid(number.owner.owner_id)}): {result}')
 
         # also there seems to be an issue with owner IDs for places in the numbers response
-        numbers_in_places = [n for n in numbers if n.owner and n.owner.owner_type==OwnerType.place]
+        numbers_in_places = [n for n in numbers if n.owner and n.owner.owner_type == OwnerType.place]
         owner_name_and_id = dict()
         for number in numbers_in_places:
             owner_display_name = f'{number.owner.first_name} {number.owner.last_name.strip(".")}'.strip()
-            owner_name_and_id[owner_display_name] = base64.b64decode(number.owner.owner_id+'==').decode()
+            owner_name_and_id[owner_display_name] = base64.b64decode(number.owner.owner_id + '==').decode()
 
         ws_name_and_id = dict()
         for ws in validator_cache.places.values():
             if not ws:
                 continue
-            ws_name_and_id[ws.display_name] = base64.b64decode(ws.workspace_id+'==').decode()
+            ws_name_and_id[ws.display_name] = base64.b64decode(ws.workspace_id + '==').decode()
         for name in sorted(owner_name_and_id):
             owner_id = owner_name_and_id[name]
             ws_id = ws_name_and_id.get(name, 'not found')

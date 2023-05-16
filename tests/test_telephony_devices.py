@@ -5,11 +5,13 @@ import asyncio
 import json
 import random
 from collections import defaultdict
+from collections.abc import Iterable
 from dataclasses import dataclass
-from itertools import chain
+from itertools import chain, zip_longest
 from json import dumps, loads
 from time import sleep
 from typing import ClassVar
+from unittest import skip
 
 from tests.base import TestCaseWithLog, TestWithLocations, async_test
 from tests.testutil import calling_users
@@ -18,7 +20,8 @@ from wxc_sdk.common import UserType, ValidationStatus, DeviceCustomization, Disp
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings import PersonDevicesResponse, TelephonyDevice
-from wxc_sdk.telephony.devices import MACState, DeviceMembersResponse, AvailableMember, DeviceMember
+from wxc_sdk.telephony.devices import MACState, DeviceMembersResponse, AvailableMember, DeviceMember, \
+    MACValidationResponse
 from wxc_sdk.telephony.jobs import StartJobResponse
 
 
@@ -129,6 +132,49 @@ class ValidateMac(TestCaseWithLog):
         self.assertEqual(5675, r.mac_status[0].error_code)
 
 
+    @skip('Takes too long')
+    @async_test
+    async def test_006_docker_macs(self):
+        """
+        scan for Docker mac addresses
+        """
+        docker_oui = '02423b'
+        macs_to_check = 100
+        # scan a bunch of macs for each 4th octet
+        async def scan_range(index:int)->str:
+            prefix = f'{docker_oui}{index:02x}'
+            # we want to check the top and bottom x MACs
+            check_macs = [f'{prefix}{i:04x}' for i in range(macs_to_check)]
+            check_macs.extend(f'{prefix}{255-i:04x}' for i in range(macs_to_check))
+
+            validation = await self.async_api.telephony.devices.validate_macs(macs=check_macs)
+            if validation.status == ValidationStatus.ok:
+                return ''
+            return validation
+
+
+        results = await asyncio.gather(*[scan_range(i) for i in range(256)])
+
+    @skip('Takes too long')
+    @async_test
+    async def test_007_all_docker_macs(self):
+        def batches(seq: Iterable, batch_size:int):
+            it = iter(seq)
+            itb = [it] * batch_size
+            return zip_longest(*itb)
+
+        macs_to_check = (f'02423b{i:06x}' for i in range(0, 2**24, 64))
+        tasks = [self.async_api.telephony.devices.validate_macs([m for m in batch if m])
+                 for batch in batches(macs_to_check, 200)]
+        results = await asyncio.gather(*tasks,
+                                       return_exceptions=True)
+        results: list[MACValidationResponse]
+        nok = [result for result in results if isinstance(result, MACValidationResponse) and result.status != ValidationStatus.ok]
+        foo = 1
+
+
+
+
 class Members(TestCaseWithLog):
 
     @TestCaseWithLog.async_test
@@ -233,6 +279,7 @@ class Members(TestCaseWithLog):
                                                                  location_id=user.location_id)
               for user, device in users_and_device])
         # TODO: add some validation and/or output
+        foo = 1
 
 
 @dataclass(init=False)

@@ -7,6 +7,8 @@ Release history
 - fix: missing return type for :meth:`wxc_sdk.workspace_locations.WorkspaceLocationApi.update`
 - fix: make parameter location_id optional in :meth:`wxc_sdk.telephony.devices.TelephonyDevicesApi.available_members`
 - fix: include line label attributes in updates: :meth:`wxc_sdk.telephony.devices.TelephonyDevicesApi.update_members`
+- feat: optional org_id parameter in :meth:`wxc_sdk.devices.DevicesApi.activation_code`
+- feat: optional org_id parameter in :meth:`wxc_sdk.devices.DevicesApi.create_by_mac_address`
 
 1.13.0
 ------

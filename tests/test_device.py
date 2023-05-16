@@ -153,8 +153,8 @@ class CreateDevice(TestWithLocations):
         """
         Try to create an activation code for a workspace MPP device
         """
-        model = 'DMS Cisco 8865'
-        target = self.get_or_create_calling_workspace_wo_devices()
+        model = 'DMS Cisco 8851'
+        target = self.get_or_create_calling_workspace_wo_devices(supported_devices=WorkspaceSupportedDevices.phones)
         ac_result = self.api.devices.activation_code(workspace_id=target.workspace_id, model=model)
         print(json.dumps(json.loads(ac_result.json()), indent=2))
         print(f'Workspace "{target.display_name}", new activation code "{ac_result.code}" '
@@ -180,7 +180,7 @@ class CreateDevice(TestWithLocations):
         target_user = choice(users)
         print(f'Trying to create an MPP activation code for: {target_user.display_name}')
         ac_result = self.api.devices.activation_code(person_id=target_user.person_id,
-                                                     model='DMS Cisco 8865')
+                                                     model='DMS Cisco 8851')
         print(json.dumps(json.loads(ac_result.json()), indent=2))
 
     def test_003_mac_user(self):
@@ -198,7 +198,7 @@ class CreateDevice(TestWithLocations):
         # add device by MAC
         result = self.api.devices.create_by_mac_address(mac=mac,
                                                         person_id=target_user.person_id,
-                                                        model='DMS Cisco 8865')
+                                                        model='DMS Cisco 8851')
         print(json.dumps(json.loads(result.json()), indent=2))
         self.assertIsNotNone(result.created, '"created" not set')
 
@@ -216,7 +216,7 @@ class CreateDevice(TestWithLocations):
         # add device by MAC
         result = self.api.devices.create_by_mac_address(mac=mac,
                                                         workspace_id=target.workspace_id,
-                                                        model='DMS Cisco 8865')
+                                                        model='DMS Cisco 8851')
         print(json.dumps(json.loads(result.json()), indent=2))
 
 

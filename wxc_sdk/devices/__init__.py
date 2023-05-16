@@ -224,7 +224,8 @@ class DevicesApi(ApiChild, base='devices'):
         data = self.patch(url=url, json=body, params=params, content_type='application/json-patch+json')
         return Device.parse_obj(data)
 
-    def activation_code(self, workspace_id: str=None, person_id: str = None, model: str = None) -> ActivationCodeResponse:
+    def activation_code(self, workspace_id: str=None, person_id: str = None, model: str = None,
+                        org_id: str = None) -> ActivationCodeResponse:
         """
         Create a Device Activation Code
 
@@ -237,8 +238,11 @@ class DevicesApi(ApiChild, base='devices'):
         :type person_id: str
         :param model: The model of the device being created.
         :type model: str
+        :param org_id: The organization associated with the activation code generated.
+        :type org_id: str
         :rtype: ActivationCodeResponse
         """
+        params = org_id and {'orgId': org_id} or None
         body = {}
         if workspace_id is not None:
             body['workspaceId'] = workspace_id
@@ -247,11 +251,11 @@ class DevicesApi(ApiChild, base='devices'):
         if model is not None:
             body['model'] = model
         url = self.ep('activationCode')
-        data = self.post(url=url, json=body)
+        data = self.post(url=url, json=body, params=params)
         return ActivationCodeResponse.parse_obj(data)
 
     def create_by_mac_address(self, mac: str, workspace_id: str = None, person_id: str = None,
-                              model: str = None) -> Device:
+                              model: str = None, org_id: str = None) -> Device:
         """
         Create a phone by it's MAC address in a specific workspace or for a person.
         Specify the mac, model and either workspaceId or personId.
@@ -264,7 +268,12 @@ class DevicesApi(ApiChild, base='devices'):
         :type person_id: str
         :param model: The model of the device being created.
         :type model: str
+        :param org_id: The organization associated with the device.
+        :type org_id: str
+        :return: created device information
+        :rtype: Device
         """
+        params = org_id and {'orgId': org_id} or None
         body = {'mac': mac}
         if workspace_id is not None:
             body['workspaceId'] = workspace_id
@@ -273,5 +282,5 @@ class DevicesApi(ApiChild, base='devices'):
         if model is not None:
             body['model'] = model
         url = self.ep()
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, json=body, params=params)
         return Device.parse_obj(data)

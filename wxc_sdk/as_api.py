@@ -586,7 +586,8 @@ class AsDevicesApi(AsApiChild, base='devices'):
         data = await self.patch(url=url, json=body, params=params, content_type='application/json-patch+json')
         return Device.parse_obj(data)
 
-    async def activation_code(self, workspace_id: str=None, person_id: str = None, model: str = None) -> ActivationCodeResponse:
+    async def activation_code(self, workspace_id: str=None, person_id: str = None, model: str = None,
+                        org_id: str = None) -> ActivationCodeResponse:
         """
         Create a Device Activation Code
 
@@ -599,8 +600,11 @@ class AsDevicesApi(AsApiChild, base='devices'):
         :type person_id: str
         :param model: The model of the device being created.
         :type model: str
+        :param org_id: The organization associated with the activation code generated.
+        :type org_id: str
         :rtype: ActivationCodeResponse
         """
+        params = org_id and {'orgId': org_id} or None
         body = {}
         if workspace_id is not None:
             body['workspaceId'] = workspace_id
@@ -609,11 +613,11 @@ class AsDevicesApi(AsApiChild, base='devices'):
         if model is not None:
             body['model'] = model
         url = self.ep('activationCode')
-        data = await self.post(url=url, json=body)
+        data = await self.post(url=url, json=body, params=params)
         return ActivationCodeResponse.parse_obj(data)
 
     async def create_by_mac_address(self, mac: str, workspace_id: str = None, person_id: str = None,
-                              model: str = None) -> Device:
+                              model: str = None, org_id: str = None) -> Device:
         """
         Create a phone by it's MAC address in a specific workspace or for a person.
         Specify the mac, model and either workspaceId or personId.
@@ -626,7 +630,12 @@ class AsDevicesApi(AsApiChild, base='devices'):
         :type person_id: str
         :param model: The model of the device being created.
         :type model: str
+        :param org_id: The organization associated with the device.
+        :type org_id: str
+        :return: created device information
+        :rtype: Device
         """
+        params = org_id and {'orgId': org_id} or None
         body = {'mac': mac}
         if workspace_id is not None:
             body['workspaceId'] = workspace_id
@@ -635,7 +644,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
         if model is not None:
             body['model'] = model
         url = self.ep()
-        data = await super().post(url=url, json=body)
+        data = await super().post(url=url, json=body, params=params)
         return Device.parse_obj(data)
 
 
@@ -1079,7 +1088,6 @@ class AsLocationsApi(AsApiChild, base='locations'):
         :return: ID of new location
         :rtype: :class:`Location`
         """
-        # TODO: unit tests
         body = {}
         address = {}
         for p, v in list(locals().items()):
@@ -12467,7 +12475,8 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         :type org_id: str
         :return:
         """
-        data = settings.json(exclude={'location_id', 'user_limit', 'default_domain'})
+        data = settings.json(exclude={'location_id', 'name', 'user_limit', 'default_domain', 'subscription_status',
+                                      'e911_setup_required'})
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
         await self.put(url=url, data=data, params=params)
