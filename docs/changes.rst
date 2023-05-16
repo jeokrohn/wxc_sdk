@@ -1,6 +1,8 @@
 Release history
 ===============
 
+1.14.0
+------
 - fix: call forwarding for auto attendants, call queues, hunt groups: rules attribute optional in updates.
   Forwarding rule creation, update, and deletion was broken
 - feat: unit tests for call queue forwarding and selective forwarding rule creation and deletion
@@ -9,6 +11,7 @@ Release history
 - fix: include line label attributes in updates: :meth:`wxc_sdk.telephony.devices.TelephonyDevicesApi.update_members`
 - feat: optional org_id parameter in :meth:`wxc_sdk.devices.DevicesApi.activation_code`
 - feat: optional org_id parameter in :meth:`wxc_sdk.devices.DevicesApi.create_by_mac_address`
+- fix: bump requests-toolbelt version for urllib3 2.0 compatibility
 
 1.13.0
 ------
