@@ -1,6 +1,10 @@
 Release history
 ===============
 
+1.14.1
+------
+- update dependencies to avoid typing-extensions 4.6.0 which breaks Literals in Pydantic models
+
 1.14.0
 ------
 - fix: call forwarding for auto attendants, call queues, hunt groups: rules attribute optional in updates.

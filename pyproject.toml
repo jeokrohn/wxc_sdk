@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "wxc_sdk"
-version = "1.14.0"
+version = "1.14.1"
 description = "SDK for Webex APIs with special focus on Webex Calling specific endpoints"
 license = 'MIT'
 authors = ["Johannes Krohn <jkrohn@cisco.com>"]
@@ -18,15 +18,15 @@ aiohttp = "^3.8.1"
 python-dateutil = "^2.8.2"
 aenum = "^3.1.11"
 PyYAML = "^6.0"
-# TODO: avoiding import errors with "appengine" in requests_toolbelt
-#urllib3 = "<2"
+# TODO typing-extensions 4.6.0 breaks Literals in pydantic models
+typing-extensions = "<4.6.0"
 
 [tool.poetry.dev-dependencies]
 Sphinx = "^4.4.0"
 sphinx-rtd-theme = "^1.0.0"
 flake8 = "^5.0.3"
 pytest = "^7.1.1"
-python-dotenv = "^0.21.0"
+python-dotenv = "^1.0.0"
 aiohttp = "^3.8.1"
 PyJWT = "^2.4.0"
 webexteamssdk = "^1.6.1"
