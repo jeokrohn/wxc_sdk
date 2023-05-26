@@ -128,6 +128,14 @@ docs:
     doc: null
     header: null
     methods: []
+  Partner Management:
+    doc: null
+    header: null
+    methods: []
+  Partner Tags:
+    doc: null
+    header: null
+    methods: []
   People:
     doc: null
     header: null
@@ -259,7 +267,7 @@ docs:
       Viewing the list of workspaces in an organization requires an administrator
       auth token with the spark-admin:workspaces_read scope. Adding, updating, or
       deleting workspaces in an organization requires an administrator auth token
-      with the spark-admin:workspaces_write scope.
+      with the scopes spark-admin:workspaces_write and spark-admin:telephony_config_write.
 
       The Workspaces API can also be used by partner administrators acting as administrators
       of a different organization than their own. In those cases an orgId value must
@@ -582,7 +590,7 @@ docs:
               param_object: []
               type: string
               type_spec: null
-            - doc: Workspace supports phones.
+            - doc: Workspace supports MPP phones.
               name: phones
               param_attrs: []
               param_object: []
@@ -979,7 +987,7 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: Workspace supports phones.
+          - doc: Workspace supports MPP phones.
             name: phones
             param_attrs: []
             param_object: []
@@ -1228,7 +1236,7 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: Workspace supports phones.
+          - doc: Workspace supports MPP phones.
             name: phones
             param_attrs: []
             param_object: []
@@ -1271,7 +1279,7 @@ docs:
           param_attrs: []
           param_object: []
           type: string
-          type_spec: required
+          type_spec: null
         - doc: Location associated with the workspace. Must be provided when the floorId
             is set.
           name: workspaceLocationId
@@ -1629,7 +1637,7 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: Workspace supports phones.
+          - doc: Workspace supports MPP phones.
             name: phones
             param_attrs: []
             param_object: []

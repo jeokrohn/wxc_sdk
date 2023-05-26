@@ -86,15 +86,30 @@ The second column of the table has a link to the documentation of the method.
    * - api.locations.create
         Create a new Location for a given organization
      - :meth:`~wxc_sdk.locations.LocationsApi.create`
+   * - api.locations.create_floor
+        Create a new floor in the given location
+     - :meth:`~wxc_sdk.locations.LocationsApi.create_floor`
+   * - api.locations.delete_floor
+        Deletes a floor, by ID
+     - :meth:`~wxc_sdk.locations.LocationsApi.delete_floor`
    * - api.locations.details
         Shows details for a location, by ID
      - :meth:`~wxc_sdk.locations.LocationsApi.details`
+   * - api.locations.floor_details
+        Shows details for a floor, by ID
+     - :meth:`~wxc_sdk.locations.LocationsApi.floor_details`
    * - api.locations.list
         List locations for an organization
      - :meth:`~wxc_sdk.locations.LocationsApi.list`
+   * - api.locations.list_floors
+        List location floors
+     - :meth:`~wxc_sdk.locations.LocationsApi.list_floors`
    * - api.locations.update
         Update details for a location, by ID
      - :meth:`~wxc_sdk.locations.LocationsApi.update`
+   * - api.locations.update_floor
+        Updates details for a floor, by ID
+     - :meth:`~wxc_sdk.locations.LocationsApi.update_floor`
    * - api.meetings.create
         Creates a new meeting
      - :meth:`~wxc_sdk.meetings.MeetingsApi.create`
@@ -563,6 +578,9 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.phone_numbers
         Get Phone Numbers for an Organization with given criteria
      - :meth:`~wxc_sdk.telephony.TelephonyApi.phone_numbers`
+   * - api.telephony.read_list_of_announcement_languages
+        List all languages supported by Webex Calling for announcements and voice prompts
+     - :meth:`~wxc_sdk.telephony.TelephonyApi.read_list_of_announcement_languages`
    * - api.telephony.route_choices
         List all Routes for the organization
      - :meth:`~wxc_sdk.telephony.TelephonyApi.route_choices`

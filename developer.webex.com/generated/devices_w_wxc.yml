@@ -1,4 +1,4 @@
-# command: /Users/jkrohn/Library/CloudStorage/Dropbox/ln/workspace/wxc_sdk/developer.webex.com/read_api_spec.py -a .env -s Devices -t "Devices with WXC Devices Displayed" -f generated/devices_w_wxc.yml
+# command: developer.webex.com/read_api_spec.py -a developer.webex.com/.env -s Devices -t "Devices with WXC Devices Displayed" -f developer.webex.com/generated/devices_w_wxc.yml
 docs:
   Device Configurations:
     doc: null
@@ -320,6 +320,14 @@ docs:
         http_method: GET
       header: Get Device Details
       parameters_and_response:
+        Query Parameters:
+        - doc: The organization associated with the device. If left empty, the organization
+            associated with the caller will be used.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
         Response Properties:
         - doc: A unique identifier for the device.
           name: id
@@ -495,6 +503,14 @@ docs:
         http_method: DELETE
       header: Delete a Device
       parameters_and_response:
+        Query Parameters:
+        - doc: The organization associated with the device. If left empty, the organization
+            associated with the caller will be used.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
         URI Parameters:
         - doc: A unique identifier for the device.
           name: deviceId
@@ -550,6 +566,14 @@ docs:
           param_attrs: []
           param_object: []
           type: array[string]
+          type_spec: null
+        Query Parameters:
+        - doc: The organization associated with the device. If left empty, the organization
+            associated with the caller will be used.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
           type_spec: null
         Response Properties:
         - doc: A unique identifier for the device.
@@ -744,6 +768,14 @@ docs:
           param_object: []
           type: string
           type_spec: null
+        Query Parameters:
+        - doc: The organization associated with the activation code generated. If
+            left empty, the organization associated with the caller will be used.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
         Response Properties:
         - doc: The activation code.
           name: code
@@ -757,7 +789,7 @@ docs:
           param_object: []
           type: string
           type_spec: null
-    - doc: 'Create a phone by it''s MAC address in a specific workspace or for a person.
+    - doc: 'Create a phone by its MAC address in a specific workspace or for a person.
 
         Specify the mac, model and either workspaceId or personId.'
       documentation:
@@ -788,6 +820,21 @@ docs:
           type_spec: null
         - doc: The ID of the person who will own the device once created.
           name: personId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: SIP password to be configured for the phone, only required with third
+            party devices.
+          name: password
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Query Parameters:
+        - doc: The organization associated with the device. If left empty, the organization
+            associated with the caller will be used.
+          name: orgId
           param_attrs: []
           param_object: []
           type: string
@@ -951,6 +998,14 @@ docs:
           type: string
           type_spec: null
   Webex Calling Device Settings:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Device Settings with Devices Phase3 Features:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Organization Settings with Devices Phase3 Features:
     doc: null
     header: null
     methods: []

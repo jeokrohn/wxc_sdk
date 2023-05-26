@@ -531,7 +531,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
         url = self.ep()
         return [o async for o in self.session.follow_pagination(url=url, model=Device, params=params, item_key='items')]
 
-    async def details(self, device_id: str) -> Device:
+    async def details(self, device_id: str, org_id: str = None) -> Device:
         """
         Get Device Details
         Shows details for a device, by ID.
@@ -540,14 +540,17 @@ class AsDevicesApi(AsApiChild, base='devices'):
 
         :param device_id: A unique identifier for the device.
         :type device_id: str
+        :param org_id:
+        :type org_id: str
         :return: Device details
         :rtype: Device
         """
         url = self.ep(device_id)
-        data = await self.get(url=url)
+        params = org_id and {'orgId': org_id} or None
+        data = await self.get(url=url, params=params)
         return Device.parse_obj(data)
 
-    async def delete(self, device_id: str):
+    async def delete(self, device_id: str, org_id: str = None):
         """
         Delete a Device
 
@@ -557,9 +560,12 @@ class AsDevicesApi(AsApiChild, base='devices'):
 
         :param device_id: A unique identifier for the device.
         :type device_id: str
+        :param org_id:
+        :type org_id: str
         """
         url = self.ep(device_id)
-        await super().delete(url=url)
+        params = org_id and {'orgId': org_id} or None
+        await super().delete(url=url, params=params)
 
     async def modify_device_tags(self, device_id: str, op: TagOp, value: List[str], org_id: str = None) -> Device:
         """
@@ -617,7 +623,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
         return ActivationCodeResponse.parse_obj(data)
 
     async def create_by_mac_address(self, mac: str, workspace_id: str = None, person_id: str = None,
-                              model: str = None, org_id: str = None) -> Device:
+                              model: str = None, password: str = None, org_id: str = None) -> Device:
         """
         Create a phone by it's MAC address in a specific workspace or for a person.
         Specify the mac, model and either workspaceId or personId.
@@ -630,6 +636,8 @@ class AsDevicesApi(AsApiChild, base='devices'):
         :type person_id: str
         :param model: The model of the device being created.
         :type model: str
+        :param password: SIP password to be configured for the phone, only required with third party devices.
+        :type password: str
         :param org_id: The organization associated with the device.
         :type org_id: str
         :return: created device information
@@ -643,6 +651,8 @@ class AsDevicesApi(AsApiChild, base='devices'):
             body['personId'] = person_id
         if model is not None:
             body['model'] = model
+        if password is not None:
+            body.password = password
         url = self.ep()
         data = await super().post(url=url, json=body, params=params)
         return Device.parse_obj(data)
@@ -1128,6 +1138,103 @@ class AsLocationsApi(AsApiChild, base='locations'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
         await self.put(url=url, data=data, params=params)
+
+    async def list_floors(self, location_id: str) -> List[Floor]:
+        """
+        List location floors.
+        Requires an administrator auth token with the spark-admin:locations_read scope.
+
+        :param location_id: A unique identifier for the location.
+        :type location_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/locations/list-location-floors
+        """
+        url = self.ep(f'{location_id}/floors')
+        data = await super().get(url=url)
+        return parse_obj_as(list[Floor], data["items"])
+
+    async def create_floor(self, location_id: str, floor_number: int, display_name: str = None) -> Floor:
+        """
+        Create a new floor in the given location. The displayName parameter is optional, and omitting it will result in
+        the creation of a floor without that value set.
+        Requires an administrator auth token with the spark-admin:locations_write scope.
+
+        :param location_id: A unique identifier for the location.
+        :type location_id: str
+        :param floor_number: The floor number.
+        :type floor_number: int
+        :param display_name: The floor display name.
+        :type display_name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/locations/create-a-location-floor
+        """
+        body = CreateLocationFloorBody()
+        if floor_number is not None:
+            body.floor_number = floor_number
+        if display_name is not None:
+            body.display_name = display_name
+        url = self.ep(f'{location_id}/floors')
+        data = await super().post(url=url, data=body.json())
+        return Floor.parse_obj(data)
+
+    async def floor_details(self, location_id: str, floor_id: str) -> Floor:
+        """
+        Shows details for a floor, by ID. Specify the floor ID in the floorId parameter in the URI.
+        Requires an administrator auth token with the spark-admin:locations_read scope.
+
+        :param location_id: A unique identifier for the location.
+        :type location_id: str
+        :param floor_id: A unique identifier for the floor.
+        :type floor_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/locations/get-location-floor-details
+        """
+        url = self.ep(f'{location_id}/floors/{floor_id}')
+        data = await super().get(url=url)
+        return Floor.parse_obj(data)
+
+    async def update_floor(self, location_id: str, floor_id: str, floor_number: int, display_name: str = None) -> Floor:
+        """
+        Updates details for a floor, by ID. Specify the floor ID in the floorId parameter in the URI. Include all
+        details for the floor returned by a previous call to Get Location Floor Details. Omitting the optional
+        displayName field will result in that field no longer being defined for the floor.
+        Requires an administrator auth token with the spark-admin:locations_write scope.
+
+        :param location_id: A unique identifier for the location.
+        :type location_id: str
+        :param floor_id: A unique identifier for the floor.
+        :type floor_id: str
+        :param floor_number: The floor number.
+        :type floor_number: int
+        :param display_name: The floor display name.
+        :type display_name: str
+
+        documentation: https://developer.webex.com/docs/api/v1/locations/update-a-location-floor
+        """
+        body = CreateLocationFloorBody()
+        if floor_number is not None:
+            body.floor_number = floor_number
+        if display_name is not None:
+            body.display_name = display_name
+        url = self.ep(f'{location_id}/floors/{floor_id}')
+        data = await super().put(url=url, data=body.json())
+        return Floor.parse_obj(data)
+
+    async def delete_floor(self, location_id: str, floor_id: str):
+        """
+        Deletes a floor, by ID.
+        Requires an administrator auth token with the spark-admin:locations_write scope.
+
+        :param location_id: A unique identifier for the location.
+        :type location_id: str
+        :param floor_id: A unique identifier for the floor.
+        :type floor_id: str
+
+        documentation: https://developer.webex.com/docs/api/v1/locations/delete-a-location-floor
+        """
+        url = self.ep(f'{location_id}/floors/{floor_id}')
+        await super().delete(url=url)
+        return
 
 
 class AsMeetingChatsApi(AsApiChild, base='meetings/postMeetingChats'):
@@ -5479,7 +5586,7 @@ class AsNumbersApi(AsPersonSettingsApiChild):
 
     feature = 'numbers'
 
-    async def read(self, person_id: str, org_id: str = None) -> PersonNumbers:
+    async def read(self, person_id: str, prefer_e164_format: bool = None, org_id: str = None) -> PersonNumbers:
         """
         Get a person's phone numbers including alternate numbers.
 
@@ -5490,14 +5597,20 @@ class AsNumbersApi(AsPersonSettingsApiChild):
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
+        :param prefer_e164_format: Return phone numbers in E.164 format.
+        :type prefer_e164_format: bool
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners) may
             use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :return: Alternate numbers of the user
         :rtype: :class:`PersonNumbers`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if prefer_e164_format is not None:
+            params['preferE164Format'] = str(prefer_e164_format).lower()
         ep = self.f_ep(person_id=person_id)
-        params = org_id and {'orgId': org_id} or None
         return PersonNumbers.parse_obj(await self.get(ep, params=params))
 
     async def update(self, person_id: str, update: UpdatePersonNumbers, org_id: str = None):
@@ -13435,6 +13548,18 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         url = self.ep('devices/settings')
         data = await self.get(url=url, params=params)
         return DeviceCustomization.parse_obj(data)
+
+    async def read_list_of_announcement_languages(self) -> list[AnnouncementLanguage]:
+        """
+        List all languages supported by Webex Calling for announcements and voice prompts.
+        Retrieving announcement languages requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-announcement-languages
+        """
+        url = self.ep('announcementLanguages')
+        data = await super().get(url=url)
+        return parse_obj_as(list[AnnouncementLanguage], data["languages"])
 
 
 class AsWebhookApi(AsApiChild, base='webhooks'):

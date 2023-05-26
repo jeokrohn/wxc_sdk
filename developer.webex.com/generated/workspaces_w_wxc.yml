@@ -20,10 +20,6 @@ docs:
     doc: null
     header: null
     methods: []
-  BroadWorks Virtual On-Net Range Extensions:
-    doc: null
-    header: null
-    methods: []
   BroadWorks Workspaces:
     doc: null
     header: null
@@ -52,10 +48,6 @@ docs:
     doc: null
     header: null
     methods: []
-  SCIM2-Group:
-    doc: null
-    header: null
-    methods: []
   Video Mesh:
     doc: null
     header: null
@@ -68,15 +60,19 @@ docs:
     doc: null
     header: null
     methods: []
+  Webex Calling Device Settings with Devices Phase3 Features:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Device Settings with Third-party Device Support:
+    doc: null
+    header: null
+    methods: []
   Webex Calling Organization Settings:
     doc: null
     header: null
     methods: []
-  Webex Calling Organization Settings With Announcement Languages:
-    doc: null
-    header: null
-    methods: []
-  Webex Calling Organization Settings With Location Receptionist Directories:
+  Webex Calling Organization Settings with Devices Phase3 Features:
     doc: null
     header: null
     methods: []
@@ -92,11 +88,19 @@ docs:
     doc: null
     header: null
     methods: []
+  Webex Calling Person Settings with Hoteling:
+    doc: null
+    header: null
+    methods: []
   Webex Calling Voice Messaging:
     doc: null
     header: null
     methods: []
   Webex Calling Workspace Settings:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Workspace Settings with Enhanced Forwarding:
     doc: null
     header: null
     methods: []
@@ -123,12 +127,12 @@ docs:
       Viewing the list of workspaces in an organization requires an administrator
       auth token with the spark-admin:workspaces_read scope. Adding, updating, or
       deleting workspaces in an organization requires an administrator auth token
-      with the spark-admin:workspaces_write scope.
+      with the scopes spark-admin:workspaces_write and spark-admin:telephony_config_write.
 
       The Workspaces API can also be used by partner administrators acting as administrators
       of a different organization than their own. In those cases an orgId value must
       be supplied, as indicated in the reference documentation for the relevant endpoints.'
-    header: Workspaces with Webex Calling Workspaces Support
+    header: Workspaces with WxC included
     methods:
     - doc: 'List workspaces.
 
@@ -454,7 +458,7 @@ docs:
               param_object: []
               type: string
               type_spec: null
-            - doc: Workspace supports phones.
+            - doc: Workspace supports MPP phones.
               name: phones
               param_attrs: []
               param_object: []
@@ -583,13 +587,13 @@ docs:
           - doc: The webexCalling object only applies when calling type is webexCalling.
             name: webexCalling
             param_attrs:
-            - doc: End user phone number in Cisco Unified CM.
+            - doc: End user phone number.
               name: phoneNumber
               param_attrs: []
               param_object: []
               type: string
               type_spec: null
-            - doc: End user extension in Cisco Unified CM.
+            - doc: End user extension.
               name: extension
               param_attrs: []
               param_object: []
@@ -660,7 +664,7 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: Workspace supports phones.
+          - doc: Workspace supports MPP phones.
             name: phones
             param_attrs: []
             param_object: []
@@ -897,7 +901,7 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: Workspace supports phones.
+          - doc: Workspace supports MPP phones.
             name: phones
             param_attrs: []
             param_object: []
@@ -1146,7 +1150,7 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: Workspace supports phones.
+          - doc: Workspace supports MPP phones.
             name: phones
             param_attrs: []
             param_object: []
@@ -1184,7 +1188,7 @@ docs:
           param_attrs: []
           param_object: []
           type: string
-          type_spec: required
+          type_spec: null
         - doc: Location associated with the workspace. Must be provided when the floorId
             is set.
           name: workspaceLocationId
@@ -1294,13 +1298,13 @@ docs:
           - doc: The webexCalling object only applies when calling type is webexCalling.
             name: webexCalling
             param_attrs:
-            - doc: End user phone number in Cisco Unified CM.
+            - doc: End user phone number.
               name: phoneNumber
               param_attrs: []
               param_object: []
               type: string
               type_spec: null
-            - doc: End user extension in Cisco Unified CM.
+            - doc: End user extension.
               name: extension
               param_attrs: []
               param_object: []
@@ -1570,7 +1574,7 @@ docs:
             param_object: []
             type: string
             type_spec: null
-          - doc: Workspace supports phones.
+          - doc: Workspace supports MPP phones.
             name: phones
             param_attrs: []
             param_object: []

@@ -128,6 +128,14 @@ docs:
     doc: null
     header: null
     methods: []
+  Partner Management:
+    doc: null
+    header: null
+    methods: []
+  Partner Tags:
+    doc: null
+    header: null
+    methods: []
   People:
     doc: null
     header: null

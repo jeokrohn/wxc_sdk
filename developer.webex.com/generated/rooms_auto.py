@@ -96,7 +96,9 @@ class RoomsApi(ApiChild, base='rooms'):
     def list(self, team_id: str = None, type_: str = None, org_public_spaces: bool = None, from_: str = None, to_: str = None, sort_by: str = None, **params) -> Generator[Room, None, None]:
         """
         List rooms.
-        The title of the room for 1:1 rooms will be the display name of the other person.
+        The title of the room for 1:1 rooms will be the display name of the other person. When a Compliance Officer
+        lists 1:1 rooms, the "other" person cannot be determined. This means that the room's title may not be filled
+        in. Please use the memberships API to list the people in the space.
         By default, lists rooms to which the authenticated user belongs.
         Long result sets will be split into pages.
         Known Limitations:

@@ -15,7 +15,7 @@ __all__ = ['Calendar1', 'CapabilityMap', 'GetWorkspaceCapabilitiesResponse', 'Ho
 class SupportedDevices(str, Enum):
     #: Workspace supports collaborationDevices.
     collaboration_devices = 'collaborationDevices'
-    #: Workspace supports phones.
+    #: Workspace supports MPP phones.
     phones = 'phones'
 
 
@@ -132,7 +132,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
     may be associated with workspaces.
     Viewing the list of workspaces in an organization requires an administrator auth token with the
     spark-admin:workspaces_read scope. Adding, updating, or deleting workspaces in an organization requires an
-    administrator auth token with the spark-admin:workspaces_write scope.
+    administrator auth token with the scopes spark-admin:workspaces_write and spark-admin:telephony_config_write.
     The Workspaces API can also be used by partner administrators acting as administrators of a different organization
     than their own. In those cases an orgId value must be supplied, as indicated in the reference documentation for the
     relevant endpoints.
@@ -187,7 +187,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Workspace, params=params)
 
-    def create(self, display_name: str, workspace_location_id: str = None, floor_id: str = None, capacity: int = None, type_: Type = None, calendar: Calendar1 = None, sip_address: str = None, calling: object = None, notes: str = None, hotdesking_status: HotdeskingStatus = None, org_id: str = None) -> Workspace:
+    def create(self, display_name: str = None, workspace_location_id: str = None, floor_id: str = None, capacity: int = None, type_: Type = None, calendar: Calendar1 = None, sip_address: str = None, calling: object = None, notes: str = None, hotdesking_status: HotdeskingStatus = None, org_id: str = None) -> Workspace:
         """
         Create a workspace.
         The workspaceLocationId, floorId, capacity, type, notes and hotdeskingStatus parameters are optional, and
@@ -266,7 +266,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         data = super().get(url=url)
         return Workspace.parse_obj(data)
 
-    def update(self, workspace_id: str, display_name: str, workspace_location_id: str = None, floor_id: str = None, capacity: int = None, type_: Type = None, calendar: Calendar1 = None, sip_address: str = None, calling: object = None, notes: str = None, hotdesking_status: HotdeskingStatus = None) -> Workspace:
+    def update(self, workspace_id: str, display_name: str = None, workspace_location_id: str = None, floor_id: str = None, capacity: int = None, type_: Type = None, calendar: Calendar1 = None, sip_address: str = None, calling: object = None, notes: str = None, hotdesking_status: HotdeskingStatus = None) -> Workspace:
         """
         Updates details for a workspace by ID.
         Specify the workspace ID in the workspaceId parameter in the URI. Include all details for the workspace that

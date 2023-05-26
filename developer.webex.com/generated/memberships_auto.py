@@ -98,7 +98,8 @@ class MembershipsApi(ApiChild, base='memberships'):
 
     def create(self, room_id: str, person_id: str = None, person_email: str = None, is_moderator: bool = None) -> Membership:
         """
-        Add someone to a room by Person ID or email address, optionally making them a moderator.
+        Add someone to a room by Person ID or email address, optionally making them a moderator. Compliance Officers
+        cannot add people to empty (team) spaces.
 
         :param room_id: The room ID.
         :type room_id: str

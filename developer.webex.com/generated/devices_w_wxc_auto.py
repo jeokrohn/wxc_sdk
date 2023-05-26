@@ -110,6 +110,8 @@ class CreateDeviceActivationCodeResponse(ApiModel):
 class CreateDeviceByMACAddressBody(CreateDeviceActivationCodeBody):
     #: The MAC address of the device being created.
     mac: Optional[str]
+    #: SIP password to be configured for the phone, only required with third party devices.
+    password: Optional[str]
 
 
 class DeviceswithWXCDevicesDisplayedApi(ApiChild, base='devices'):
@@ -195,41 +197,56 @@ class DeviceswithWXCDevicesDisplayedApi(ApiChild, base='devices'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Device, params=params)
 
-    def details(self, device_id: str) -> Device:
+    def details(self, device_id: str, org_id: str = None) -> Device:
         """
         Shows details for a device, by ID.
         Specify the device ID in the deviceId parameter in the URI.
 
         :param device_id: A unique identifier for the device.
         :type device_id: str
+        :param org_id: The organization associated with the device. If left empty, the organization associated with the
+            caller will be used.
+        :type org_id: str
 
         documentation: https://developer.webex.com/docs/api/v1/devices-with-wxc-devices-displayed/get-device-details
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
         url = self.ep(f'{device_id}')
-        data = super().get(url=url)
+        data = super().get(url=url, params=params)
         return Device.parse_obj(data)
 
-    def delete(self, device_id: str):
+    def delete(self, device_id: str, org_id: str = None):
         """
         Deletes a device, by ID.
         Specify the device ID in the deviceId parameter in the URI.
 
         :param device_id: A unique identifier for the device.
         :type device_id: str
+        :param org_id: The organization associated with the device. If left empty, the organization associated with the
+            caller will be used.
+        :type org_id: str
 
         documentation: https://developer.webex.com/docs/api/v1/devices-with-wxc-devices-displayed/delete-a-device
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
         url = self.ep(f'{device_id}')
-        super().delete(url=url)
+        super().delete(url=url, params=params)
         return
 
-    def modify_tags(self, device_id: str, op: Op = None, path: str = None, value: List[str] = None) -> Device:
+    def modify_tags(self, device_id: str, org_id: str = None, op: Op = None, path: str = None, value: List[str] = None) -> Device:
         """
         Update requests use the JSON Patch syntax.
         The request must include a Content-Type header with the value application/json-patch+json.
 
         :param device_id: Unique identifier for the device.
         :type device_id: str
+        :param org_id: The organization associated with the device. If left empty, the organization associated with the
+            caller will be used.
+        :type org_id: str
         :param op: 
         :type op: Op
         :param path: Only the tags path is supported to patch.
@@ -239,6 +256,9 @@ class DeviceswithWXCDevicesDisplayedApi(ApiChild, base='devices'):
 
         documentation: https://developer.webex.com/docs/api/v1/devices-with-wxc-devices-displayed/modify-device-tags
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
         body = ModifyDeviceTagsBody()
         if op is not None:
             body.op = op
@@ -247,13 +267,16 @@ class DeviceswithWXCDevicesDisplayedApi(ApiChild, base='devices'):
         if value is not None:
             body.value = value
         url = self.ep(f'{device_id}')
-        data = super().patch(url=url, data=body.json())
+        data = super().patch(url=url, params=params, data=body.json())
         return Device.parse_obj(data)
 
-    def create_activation_code(self, workspace_id: str = None, person_id: str = None, model: str = None) -> CreateDeviceActivationCodeResponse:
+    def create_activation_code(self, org_id: str = None, workspace_id: str = None, person_id: str = None, model: str = None) -> CreateDeviceActivationCodeResponse:
         """
         Generate an activation code for a device in a specific workspace by workspaceId or for a person by personId.
 
+        :param org_id: The organization associated with the activation code generated. If left empty, the organization
+            associated with the caller will be used.
+        :type org_id: str
         :param workspace_id: The ID of the workspace where the device will be activated.
         :type workspace_id: str
         :param person_id: The ID of the person who will own the device once activated.
@@ -263,6 +286,9 @@ class DeviceswithWXCDevicesDisplayedApi(ApiChild, base='devices'):
 
         documentation: https://developer.webex.com/docs/api/v1/devices-with-wxc-devices-displayed/create-a-device-activation-code
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
         body = CreateDeviceActivationCodeBody()
         if workspace_id is not None:
             body.workspace_id = workspace_id
@@ -271,25 +297,33 @@ class DeviceswithWXCDevicesDisplayedApi(ApiChild, base='devices'):
         if model is not None:
             body.model = model
         url = self.ep('activationCode')
-        data = super().post(url=url, data=body.json())
+        data = super().post(url=url, params=params, data=body.json())
         return CreateDeviceActivationCodeResponse.parse_obj(data)
 
-    def create_by_mac_address(self, mac: str, workspace_id: str = None, person_id: str = None, model: str = None) -> Device:
+    def create_by_mac_address(self, mac: str, org_id: str = None, workspace_id: str = None, person_id: str = None, model: str = None, password: str = None) -> Device:
         """
-        Create a phone by it's MAC address in a specific workspace or for a person.
+        Create a phone by its MAC address in a specific workspace or for a person.
         Specify the mac, model and either workspaceId or personId.
 
         :param mac: The MAC address of the device being created.
         :type mac: str
+        :param org_id: The organization associated with the device. If left empty, the organization associated with the
+            caller will be used.
+        :type org_id: str
         :param workspace_id: The ID of the workspace where the device will be activated.
         :type workspace_id: str
         :param person_id: The ID of the person who will own the device once activated.
         :type person_id: str
         :param model: The model of the device being created.
         :type model: str
+        :param password: SIP password to be configured for the phone, only required with third party devices.
+        :type password: str
 
         documentation: https://developer.webex.com/docs/api/v1/devices-with-wxc-devices-displayed/create-a-device-by-mac-address
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
         body = CreateDeviceByMACAddressBody()
         if mac is not None:
             body.mac = mac
@@ -299,6 +333,8 @@ class DeviceswithWXCDevicesDisplayedApi(ApiChild, base='devices'):
             body.person_id = person_id
         if model is not None:
             body.model = model
+        if password is not None:
+            body.password = password
         url = self.ep()
-        data = super().post(url=url, data=body.json())
+        data = super().post(url=url, params=params, data=body.json())
         return Device.parse_obj(data)

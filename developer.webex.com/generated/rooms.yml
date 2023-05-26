@@ -42,7 +42,9 @@ docs:
     - doc: 'List rooms.
 
         The title of the room for 1:1 rooms will be the display name of the other
-        person.
+        person. When a Compliance Officer lists 1:1 rooms, the "other" person cannot
+        be determined. This means that the room''s title may not be filled in. Please
+        use the memberships API to list the people in the space.
 
         By default, lists rooms to which the authenticated user belongs.
 

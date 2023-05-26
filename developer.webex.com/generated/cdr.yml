@@ -20,10 +20,6 @@ docs:
     doc: null
     header: null
     methods: []
-  BroadWorks Virtual On-Net Range Extensions:
-    doc: null
-    header: null
-    methods: []
   BroadWorks Workspaces:
     doc: null
     header: null
@@ -311,6 +307,18 @@ docs:
             param_object: []
             type: string
             type_spec: null
+          - doc: 'The Session ID comprises a Universally Unique Identifier (UUID)
+              for each user-agent participating in a call. It can be used for end-to-end
+              tracking of a SIP session in IP-based multimedia communication. Each
+              call consists of two UUIDs known as Local Session ID and Remote Session
+              ID.
+
+              * The Local SessionID is generated from the Originating user agent.'
+            name: Local SessionID
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
           - doc: Location of the report.
             name: Location
             param_attrs: []
@@ -442,6 +450,18 @@ docs:
             param_object: []
             type: string
             type_spec: null
+          - doc: 'The Session ID comprises a Universally Unique Identifier (UUID)
+              for each user-agent participating in a call. It can be used for end-to-end
+              tracking of a SIP session in IP-based multimedia communication. Each
+              call consists of two UUIDs known as Local Session ID and Remote Session
+              ID.
+
+              * The Remote SessionID is generated from the Terminating user agent.'
+            name: Remote SessionID
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
           - doc: A unique ID for this particular record. This can be used when processing
               records to aid in deduplication.
             name: Report ID
@@ -557,15 +577,19 @@ docs:
     doc: null
     header: null
     methods: []
+  Webex Calling Device Settings with Devices Phase3 Features:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Device Settings with Third-party Device Support:
+    doc: null
+    header: null
+    methods: []
   Webex Calling Organization Settings:
     doc: null
     header: null
     methods: []
-  Webex Calling Organization Settings With Announcement Languages:
-    doc: null
-    header: null
-    methods: []
-  Webex Calling Organization Settings With Location Receptionist Directories:
+  Webex Calling Organization Settings with Devices Phase3 Features:
     doc: null
     header: null
     methods: []
@@ -581,11 +605,19 @@ docs:
     doc: null
     header: null
     methods: []
+  Webex Calling Person Settings with Hoteling:
+    doc: null
+    header: null
+    methods: []
   Webex Calling Voice Messaging:
     doc: null
     header: null
     methods: []
   Webex Calling Workspace Settings:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Workspace Settings with Enhanced Forwarding:
     doc: null
     header: null
     methods: []

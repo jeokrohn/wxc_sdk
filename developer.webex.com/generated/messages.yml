@@ -882,7 +882,7 @@ docs:
           param_attrs: []
           param_object: []
           type: string
-          type_spec: null
+          type_spec: required
         - doc: The message, in plain text. If markdown is specified this parameter
             may be optionally used to provide alternate text for UI clients that do
             not support rich text. The maximum message length is 7439 bytes.

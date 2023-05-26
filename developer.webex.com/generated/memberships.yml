@@ -156,7 +156,7 @@ docs:
           type: array[Membership]
           type_spec: null
     - doc: Add someone to a room by Person ID or email address, optionally making
-        them a moderator.
+        them a moderator. Compliance Officers cannot add people to empty (team) spaces.
       documentation:
         doc: Create a Membership
         doc_link: https://developer.webex.com/docs/api/v1/memberships/create-a-membership

@@ -169,7 +169,7 @@ class DevicesApi(ApiChild, base='devices'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Device, params=params, item_key='items')
 
-    def details(self, device_id: str) -> Device:
+    def details(self, device_id: str, org_id: str = None) -> Device:
         """
         Get Device Details
         Shows details for a device, by ID.
@@ -178,14 +178,17 @@ class DevicesApi(ApiChild, base='devices'):
 
         :param device_id: A unique identifier for the device.
         :type device_id: str
+        :param org_id:
+        :type org_id: str
         :return: Device details
         :rtype: Device
         """
         url = self.ep(device_id)
-        data = self.get(url=url)
+        params = org_id and {'orgId': org_id} or None
+        data = self.get(url=url, params=params)
         return Device.parse_obj(data)
 
-    def delete(self, device_id: str):
+    def delete(self, device_id: str, org_id: str = None):
         """
         Delete a Device
 
@@ -195,9 +198,12 @@ class DevicesApi(ApiChild, base='devices'):
 
         :param device_id: A unique identifier for the device.
         :type device_id: str
+        :param org_id:
+        :type org_id: str
         """
         url = self.ep(device_id)
-        super().delete(url=url)
+        params = org_id and {'orgId': org_id} or None
+        super().delete(url=url, params=params)
 
     def modify_device_tags(self, device_id: str, op: TagOp, value: List[str], org_id: str = None) -> Device:
         """
@@ -255,7 +261,7 @@ class DevicesApi(ApiChild, base='devices'):
         return ActivationCodeResponse.parse_obj(data)
 
     def create_by_mac_address(self, mac: str, workspace_id: str = None, person_id: str = None,
-                              model: str = None, org_id: str = None) -> Device:
+                              model: str = None, password: str = None, org_id: str = None) -> Device:
         """
         Create a phone by it's MAC address in a specific workspace or for a person.
         Specify the mac, model and either workspaceId or personId.
@@ -268,6 +274,8 @@ class DevicesApi(ApiChild, base='devices'):
         :type person_id: str
         :param model: The model of the device being created.
         :type model: str
+        :param password: SIP password to be configured for the phone, only required with third party devices.
+        :type password: str
         :param org_id: The organization associated with the device.
         :type org_id: str
         :return: created device information
@@ -281,6 +289,8 @@ class DevicesApi(ApiChild, base='devices'):
             body['personId'] = person_id
         if model is not None:
             body['model'] = model
+        if password is not None:
+            body.password = password
         url = self.ep()
         data = super().post(url=url, json=body, params=params)
         return Device.parse_obj(data)

@@ -914,7 +914,7 @@ docs:
           type: array[Membership]
           type_spec: null
     - doc: Add someone to a room by Person ID or email address, optionally making
-        them a moderator.
+        them a moderator. Compliance Officers cannot add people to empty (team) spaces.
       documentation:
         doc: Create a Membership
         doc_link: https://developer.webex.com/docs/api/v1/memberships/create-a-membership
@@ -2122,7 +2122,7 @@ docs:
           param_attrs: []
           param_object: []
           type: string
-          type_spec: null
+          type_spec: required
         - doc: The message, in plain text. If markdown is specified this parameter
             may be optionally used to provide alternate text for UI clients that do
             not support rich text. The maximum message length is 7439 bytes.
@@ -5307,7 +5307,9 @@ docs:
     - doc: 'List rooms.
 
         The title of the room for 1:1 rooms will be the display name of the other
-        person.
+        person. When a Compliance Officer lists 1:1 rooms, the "other" person cannot
+        be determined. This means that the room''s title may not be filled in. Please
+        use the memberships API to list the people in the space.
 
         By default, lists rooms to which the authenticated user belongs.
 

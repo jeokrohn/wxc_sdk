@@ -44,7 +44,8 @@ __all__ = ['OwnerType', 'NumberOwner', 'NumberListPhoneNumberType',
            'LocationAndNumbers', 'HostedUserDestination', 'ServiceType', 'HostedFeatureDestination',
            'TrunkDestination', 'PbxUserDestination', 'PstnNumberDestination', 'VirtualExtensionDestination',
            'RouteListDestination', 'FeatureAccessCodeDestination', 'EmergencyDestination',
-           'DeviceType', 'DeviceManufacturer', 'DeviceManagedBy', 'OnboardingMethod', 'SupportedDevice', 'TelephonyApi']
+           'DeviceType', 'DeviceManufacturer', 'DeviceManagedBy', 'OnboardingMethod', 'SupportedDevice',
+           'AnnouncementLanguage', 'TelephonyApi']
 
 
 class OwnerType(str, Enum):
@@ -185,6 +186,8 @@ class DestinationType(str, Enum):
     pstn_number = 'PSTN_NUMBER'
     #: Matching destination routes into a virtual extension with details in the virtualExtension field.
     virtual_extension = 'VIRTUAL_EXTENSION'
+    #: Matching destination routes into a virtual extension range with details in the virtualExtensionRange field.
+    virtual_extension_range = 'VIRTUAL_EXTENSION_RANGE'
     #: Matching destination routes into a route list with details in the routeList field.
     route_list = 'ROUTE_LIST'
     #: Matching destination routes into a feature access code (FAC) with details in the featureAccessCode field.
@@ -273,10 +276,26 @@ class PstnNumberDestination(TrunkDestination):
 
 
 class VirtualExtensionDestination(LocationAndNumbers, TrunkDestination):
+    #: Virtual extension ID.
     virtual_extension_id: str = Field(alias='id')
+    #: Virtual extension display first name.
     first_name: str
+    #: Virtual extension display last name.
     last_name: str
+    #: Virtual extension display name.
     display_name: str
+
+
+class VirtualExtensionRange(LocationAndNumbers, TrunkDestination):
+    #: Virtual extension range ID.
+    id: Optional[str]
+    #: Virtual extension range name.
+    name: Optional[str]
+    #: Prefix that the virtual extension range is associated with (Note: Standard mode must have leading '+' in prefix;
+    #: BCD/Enhanced mode can have any valid prefix).
+    prefix: Optional[str]
+    #: Pattern associated with the virtual extension range.
+    pattern: Optional[str]
 
 
 class RouteListDestination(ApiModel):
@@ -331,6 +350,8 @@ class TestCallRoutingResult(ApiModel):
     pstn_number: Optional[PstnNumberDestination]
     #: This data object is returned when destinationType is VIRTUAL_EXTENSION.
     virtual_extension: Optional[VirtualExtensionDestination]
+    #: Returned when destinationType is VIRTUAL_EXTENSION_RANGE.
+    virtual_extension_range: Optional[VirtualExtensionRange]
     #: This data object is returned when destinationType is ROUTE_LIST.
     route_list: Optional[RouteListDestination]
     #: This data object is returned when destinationType is FAC.
@@ -409,6 +430,11 @@ class SupportedDevice(ApiModel):
     customizable_line_label_enabled: Optional[bool]
     supports_line_port_reordering_enabled: Optional[bool]
 
+class AnnouncementLanguage(ApiModel):
+    #: Language name.
+    name: Optional[str]
+    #: Language Code
+    code: Optional[str]
 
 @dataclass(init=False)
 class TelephonyApi(ApiChild, base='telephony/config'):
@@ -713,3 +739,15 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         url = self.ep('devices/settings')
         data = self.get(url=url, params=params)
         return DeviceCustomization.parse_obj(data)
+
+    def read_list_of_announcement_languages(self) -> list[AnnouncementLanguage]:
+        """
+        List all languages supported by Webex Calling for announcements and voice prompts.
+        Retrieving announcement languages requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-announcement-languages
+        """
+        url = self.ep('announcementLanguages')
+        data = super().get(url=url)
+        return parse_obj_as(list[AnnouncementLanguage], data["languages"])

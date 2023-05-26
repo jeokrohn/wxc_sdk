@@ -319,7 +319,8 @@ class MembershipsApi(ApiChild, base='memberships'):
 
     def create(self, room_id: str, person_id: str = None, person_email: str = None, is_moderator: bool = None) -> Membership:
         """
-        Add someone to a room by Person ID or email address, optionally making them a moderator.
+        Add someone to a room by Person ID or email address, optionally making them a moderator. Compliance Officers
+        cannot add people to empty (team) spaces.
 
         :param room_id: The room ID.
         :type room_id: str
@@ -605,7 +606,7 @@ class MessagesApi(ApiChild, base='messages'):
         data = super().get(url=url, params=params)
         return parse_obj_as(list[DirectMessage], data["items"])
 
-    def create(self, room_id: str = None, text: str = None, markdown: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None, files: List[str] = None, attachments: Attachment = None) -> CreateMessageResponse:
+    def create(self, room_id: str, text: str = None, markdown: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None, files: List[str] = None, attachments: Attachment = None) -> CreateMessageResponse:
         """
         Post a plain text or rich text message, and optionally, a file attachment attachment, to a room.
         The files parameter is an array, which accepts multiple values to allow for future expansion, but currently
@@ -658,7 +659,7 @@ class MessagesApi(ApiChild, base='messages'):
         data = super().post(url=url, data=body.json())
         return CreateMessageResponse.parse_obj(data)
 
-    def edit(self, message_id: str, room_id: str = None, text: str = None, markdown: str = None) -> ListMessage:
+    def edit(self, message_id: str, room_id: str, text: str = None, markdown: str = None) -> ListMessage:
         """
         Update a message you have posted not more than 10 times.
         Specify the messageId of the message you want to edit.
@@ -1438,7 +1439,9 @@ class RoomsApi(ApiChild, base='rooms'):
     def list(self, team_id: str = None, type_: str = None, org_public_spaces: bool = None, from_: str = None, to_: str = None, sort_by: str = None, **params) -> Generator[Room, None, None]:
         """
         List rooms.
-        The title of the room for 1:1 rooms will be the display name of the other person.
+        The title of the room for 1:1 rooms will be the display name of the other person. When a Compliance Officer
+        lists 1:1 rooms, the "other" person cannot be determined. This means that the room's title may not be filled
+        in. Please use the memberships API to list the people in the space.
         By default, lists rooms to which the authenticated user belongs.
         Long result sets will be split into pages.
         Known Limitations:

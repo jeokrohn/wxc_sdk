@@ -20,7 +20,7 @@ from wxc_sdk.devices import ActivationCodeResponse, Device, TagOp
 from wxc_sdk.events import ComplianceEvent, EventData, EventResource, EventType
 from wxc_sdk.groups import Group, GroupMember
 from wxc_sdk.licenses import License, SiteType
-from wxc_sdk.locations import Location, LocationAddress
+from wxc_sdk.locations import Floor, Location, LocationAddress
 from wxc_sdk.meetings import AnswerCondition, ApprovalQuestion, ApprovalRule, AttendeePrivileges,\
     AudioConnectionOptions, AudioConnectionType, AutoRegistrationResult, BreakoutSession, CallInNumbers,\
     CreateMeetingBody, CustomizedQuestionForCreateMeeting, EntryAndExitTone, GetMeetingSurveyResponse, InputMode,\
@@ -80,12 +80,12 @@ from wxc_sdk.room_tabs import RoomTab
 from wxc_sdk.rooms import GetRoomMeetingDetailsResponse, Room
 from wxc_sdk.team_memberships import TeamMembership
 from wxc_sdk.teams import Team
-from wxc_sdk.telephony import CallSourceInfo, CallSourceType, DestinationType, DeviceManagedBy,\
-    DeviceManufacturer, DeviceType, EmergencyDestination, FeatureAccessCodeDestination, HostedFeatureDestination,\
-    HostedUserDestination, LocationAndNumbers, NumberDetails, NumberListPhoneNumber, NumberListPhoneNumberType,\
-    NumberOwner, NumberType, OnboardingMethod, OriginatorType, OwnerType, PbxUserDestination,\
-    PstnNumberDestination, RouteListDestination, ServiceType, SupportedDevice, TestCallRoutingResult,\
-    TrunkDestination, UCMProfile, VirtualExtensionDestination
+from wxc_sdk.telephony import AnnouncementLanguage, CallSourceInfo, CallSourceType, DestinationType,\
+    DeviceManagedBy, DeviceManufacturer, DeviceType, EmergencyDestination, FeatureAccessCodeDestination,\
+    HostedFeatureDestination, HostedUserDestination, LocationAndNumbers, NumberDetails, NumberListPhoneNumber,\
+    NumberListPhoneNumberType, NumberOwner, NumberType, OnboardingMethod, OriginatorType, OwnerType,\
+    PbxUserDestination, PstnNumberDestination, RouteListDestination, ServiceType, SupportedDevice,\
+    TestCallRoutingResult, TrunkDestination, UCMProfile, VirtualExtensionDestination
 from wxc_sdk.telephony.autoattendant import AutoAttendant, AutoAttendantAction, AutoAttendantAudioFile,\
     AutoAttendantKeyConfiguration, AutoAttendantMenu, Dialing, MenuKey
 from wxc_sdk.telephony.callpark import AvailableRecallHuntGroup, CallPark, CallParkRecall, CallParkSettings,\
@@ -141,9 +141,9 @@ from wxc_sdk.workspaces import Calendar, CalendarType, CallingType, CapabilityMa
 
 __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard', 'AdaptiveCardAction',
            'AdaptiveCardBody', 'AdmitParticipantsBody', 'Agent', 'AgentQueue', 'AlternateNumber',
-           'AlternateNumberSettings', 'AnnAudioFile', 'Announcement', 'AnnouncementMode', 'AnswerCondition',
-           'AnswerObject', 'Answers', 'ApiModel', 'ApiModelWithErrors', 'AppServicesSettings', 'ApprovalQuestion',
-           'ApprovalRule', 'AtaCustomization', 'AtaDtmfMethod', 'AtaDtmfMode', 'AttachmentAction',
+           'AlternateNumberSettings', 'AnnAudioFile', 'Announcement', 'AnnouncementLanguage', 'AnnouncementMode',
+           'AnswerCondition', 'AnswerObject', 'Answers', 'ApiModel', 'ApiModelWithErrors', 'AppServicesSettings',
+           'ApprovalQuestion', 'ApprovalRule', 'AtaCustomization', 'AtaDtmfMethod', 'AtaDtmfMode', 'AttachmentAction',
            'AttachmentActionData', 'AttendeePrivileges', 'Audio', 'AudioCodecPriority', 'AudioConnectionOptions',
            'AudioConnectionType', 'AudioSource', 'AudioType', 'AuthCode', 'AutoAttendant', 'AutoAttendantAction',
            'AutoAttendantAudioFile', 'AutoAttendantKeyConfiguration', 'AutoAttendantMenu', 'AutoRegistrationResult',
@@ -170,8 +170,8 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'DisplayNameSelection', 'DistinctiveRing', 'EmergencyDestination', 'EnabledAndNumberOfDays',
            'EntryAndExitTone', 'ErrorMessageObject', 'ErrorObject', 'Event', 'EventData', 'EventResource',
            'EventType', 'ExecAssistantType', 'ExpirePasscode', 'ExternalCallerIdNamePolicy', 'ExternalTransfer',
-           'FailedAttempts', 'FeatureAccessCodeDestination', 'FeatureSelector', 'ForcedForward', 'ForwardCallsTo',
-           'ForwardToSelection', 'ForwardingRule', 'ForwardingRuleDetails', 'ForwardingSetting',
+           'FailedAttempts', 'FeatureAccessCodeDestination', 'FeatureSelector', 'Floor', 'ForcedForward',
+           'ForwardCallsTo', 'ForwardToSelection', 'ForwardingRule', 'ForwardingRuleDetails', 'ForwardingSetting',
            'GetMeetingSurveyResponse', 'GetRoomMeetingDetailsResponse', 'Greeting', 'Group', 'GroupMember',
            'HGCallPolicies', 'HGandCQ', 'HistoryType', 'HolidayService', 'HostedFeatureDestination',
            'HostedUserDestination', 'Hoteling', 'HuntGroup', 'IdAndName', 'IdOnly', 'InProgressDevice',

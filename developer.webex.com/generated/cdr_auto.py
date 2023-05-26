@@ -83,6 +83,11 @@ class CDR(ApiModel):
     inbound_trunk: Optional[str] = Field(alias='Inbound trunk')
     #: The country code of the dialed number. This is only populated for international calls.
     international_country: Optional[str] = Field(alias='International country')
+    #: The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call. It
+    #: can be used for end-to-end tracking of a SIP session in IP-based multimedia communication. Each call consists of
+    #: two UUIDs known as Local Session ID and Remote Session ID.
+    #:   * The Local SessionID is generated from the Originating user agent.
+    local_session_id: Optional[str] = Field(alias='Local SessionID')
     #: Location of the report.
     location: Optional[str]
     #: The device model type the user is using to make or receive the call.
@@ -159,6 +164,11 @@ class CDR(ApiModel):
     #:     party who released the call. It could be because of situations like force lock or because of a session audit
     #:     failure.
     releasing_party: Optional[str] = Field(alias='Releasing party')
+    #: The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call. It
+    #: can be used for end-to-end tracking of a SIP session in IP-based multimedia communication. Each call consists of
+    #: two UUIDs known as Local Session ID and Remote Session ID.
+    #:   * The Remote SessionID is generated from the Terminating user agent.
+    remote_session_id: Optional[str] = Field(alias='Remote SessionID')
     #: A unique ID for this particular record. This can be used when processing records to aid in deduplication.
     report_id: Optional[str] = Field(alias='Report ID')
     #: The time this report was created. Time is in UTC.

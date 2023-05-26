@@ -73,7 +73,7 @@ class NumbersApi(PersonSettingsApiChild):
 
     feature = 'numbers'
 
-    def read(self, person_id: str, org_id: str = None) -> PersonNumbers:
+    def read(self, person_id: str, prefer_e164_format: bool = None, org_id: str = None) -> PersonNumbers:
         """
         Get a person's phone numbers including alternate numbers.
 
@@ -84,14 +84,20 @@ class NumbersApi(PersonSettingsApiChild):
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
+        :param prefer_e164_format: Return phone numbers in E.164 format.
+        :type prefer_e164_format: bool
         :param org_id: Person is in this organization. Only admin users of another organization (such as partners) may
             use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         :return: Alternate numbers of the user
         :rtype: :class:`PersonNumbers`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if prefer_e164_format is not None:
+            params['preferE164Format'] = str(prefer_e164_format).lower()
         ep = self.f_ep(person_id=person_id)
-        params = org_id and {'orgId': org_id} or None
         return PersonNumbers.parse_obj(self.get(ep, params=params))
 
     def update(self, person_id: str, update: UpdatePersonNumbers, org_id: str = None):

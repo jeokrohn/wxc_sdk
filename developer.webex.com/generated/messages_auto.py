@@ -225,7 +225,7 @@ class MessagesApi(ApiChild, base='messages'):
         data = super().get(url=url, params=params)
         return parse_obj_as(list[DirectMessage], data["items"])
 
-    def create(self, room_id: str = None, text: str = None, markdown: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None, files: List[str] = None, attachments: Attachment = None) -> CreateMessageResponse:
+    def create(self, room_id: str, text: str = None, markdown: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None, files: List[str] = None, attachments: Attachment = None) -> CreateMessageResponse:
         """
         Post a plain text or rich text message, and optionally, a file attachment attachment, to a room.
         The files parameter is an array, which accepts multiple values to allow for future expansion, but currently
@@ -278,7 +278,7 @@ class MessagesApi(ApiChild, base='messages'):
         data = super().post(url=url, data=body.json())
         return CreateMessageResponse.parse_obj(data)
 
-    def edit(self, message_id: str, room_id: str = None, text: str = None, markdown: str = None) -> ListMessage:
+    def edit(self, message_id: str, room_id: str, text: str = None, markdown: str = None) -> ListMessage:
         """
         Update a message you have posted not more than 10 times.
         Specify the messageId of the message you want to edit.

@@ -2062,6 +2062,250 @@ docs:
           param_object: []
           type: string
           type_spec: required
+    - doc: 'List location floors.
+
+        Requires an administrator auth token with the spark-admin:locations_read scope.'
+      documentation:
+        doc: List Location Floors
+        doc_link: https://developer.webex.com/docs/api/v1/locations/list-location-floors
+        endpoint: https://webexapis.com/v1/locations/{locationId}/floors
+        http_method: GET
+      header: List Location Floors
+      parameters_and_response:
+        Response Properties:
+        - doc: An array of floor objects.
+          name: items
+          param_attrs:
+          - doc: Unique identifier for the floor.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unique identifier for the location.
+            name: locationId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The floor number.
+            name: floorNumber
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          - doc: The floor display name.
+            name: displayName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[Floor]
+          type_spec: null
+        URI Parameters:
+        - doc: A unique identifier for the location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Create a new floor in the given location. The displayName parameter is
+        optional, and omitting it will result in the creation of a floor without that
+        value set.
+
+        Requires an administrator auth token with the spark-admin:locations_write
+        scope.'
+      documentation:
+        doc: Create a Location Floor
+        doc_link: https://developer.webex.com/docs/api/v1/locations/create-a-location-floor
+        endpoint: https://webexapis.com/v1/locations/{locationId}/floors
+        http_method: POST
+      header: Create a Location Floor
+      parameters_and_response:
+        Body Parameters:
+        - doc: The floor number.
+          name: floorNumber
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: required
+        - doc: The floor display name.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Unique identifier for the floor.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier for the location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The floor number.
+          name: floorNumber
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: The floor display name.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: A unique identifier for the location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Shows details for a floor, by ID. Specify the floor ID in the floorId
+        parameter in the URI.
+
+        Requires an administrator auth token with the spark-admin:locations_read scope.'
+      documentation:
+        doc: Get Location Floor Details
+        doc_link: https://developer.webex.com/docs/api/v1/locations/get-location-floor-details
+        endpoint: https://webexapis.com/v1/locations/{locationId}/floors/{floorId}
+        http_method: GET
+      header: Get Location Floor Details
+      parameters_and_response:
+        Response Properties:
+        - doc: Unique identifier for the floor.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier for the location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The floor number.
+          name: floorNumber
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: The floor display name.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: A unique identifier for the location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: A unique identifier for the floor.
+          name: floorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Updates details for a floor, by ID. Specify the floor ID in the floorId
+        parameter in the URI. Include all details for the floor returned by a previous
+        call to Get Location Floor Details. Omitting the optional displayName field
+        will result in that field no longer being defined for the floor.
+
+        Requires an administrator auth token with the spark-admin:locations_write
+        scope.'
+      documentation:
+        doc: Update a Location Floor
+        doc_link: https://developer.webex.com/docs/api/v1/locations/update-a-location-floor
+        endpoint: https://webexapis.com/v1/locations/{locationId}/floors/{floorId}
+        http_method: PUT
+      header: Update a Location Floor
+      parameters_and_response:
+        Body Parameters:
+        - doc: The floor number.
+          name: floorNumber
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: required
+        - doc: The floor display name.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Unique identifier for the floor.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier for the location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: The floor number.
+          name: floorNumber
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: The floor display name.
+          name: displayName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: A unique identifier for the location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: A unique identifier for the floor.
+          name: floorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Deletes a floor, by ID.
+
+        Requires an administrator auth token with the spark-admin:locations_write
+        scope.'
+      documentation:
+        doc: Delete a Location Floor
+        doc_link: https://developer.webex.com/docs/api/v1/locations/delete-a-location-floor
+        endpoint: https://webexapis.com/v1/locations/{locationId}/floors/{floorId}
+        http_method: DELETE
+      header: Delete a Location Floor
+      parameters_and_response:
+        URI Parameters:
+        - doc: A unique identifier for the location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: A unique identifier for the floor.
+          name: floorId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
   People:
     doc: 'People are registered users of Webex. Searching and viewing People requires
       an auth token with a scope of spark:people_read. Viewing the list of all People
@@ -4691,6 +4935,18 @@ docs:
             param_object: []
             type: string
             type_spec: null
+          - doc: 'The Session ID comprises a Universally Unique Identifier (UUID)
+              for each user-agent participating in a call. It can be used for end-to-end
+              tracking of a SIP session in IP-based multimedia communication. Each
+              call consists of two UUIDs known as Local Session ID and Remote Session
+              ID.
+
+              * The Local SessionID is generated from the Originating user agent.'
+            name: Local SessionID
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
           - doc: Location of the report.
             name: Location
             param_attrs: []
@@ -4818,6 +5074,18 @@ docs:
               could be because of situations like force lock or because of a session
               audit failure.'
             name: Releasing party
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'The Session ID comprises a Universally Unique Identifier (UUID)
+              for each user-agent participating in a call. It can be used for end-to-end
+              tracking of a SIP session in IP-based multimedia communication. Each
+              call consists of two UUIDs known as Local Session ID and Remote Session
+              ID.
+
+              * The Remote SessionID is generated from the Terminating user agent.'
+            name: Remote SessionID
             param_attrs: []
             param_object: []
             type: string
@@ -5150,6 +5418,1969 @@ docs:
           param_attrs: []
           param_object: []
           type: number
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the device.
+          name: deviceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Modify member details on the device.
+
+        A device member can be either a person or a workspace. An admin can access
+        the list of member details, modify member details and
+
+        search for available members on a device.
+
+        Modifying members on the device requires a full administrator auth token with
+        a scope of spark-admin:telephony_config_write.'
+      documentation:
+        doc: Update Members on the device
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-device-settings/update-members-on-the-device
+        endpoint: https://webexapis.com/v1/telephony/config/devices/{deviceId}/members
+        http_method: PUT
+      header: Update Members on the device
+      parameters_and_response:
+        Body Parameters:
+        - doc: If the member's list is missing then all the users are removed except
+            the primary user.
+          name: members
+          param_attrs:
+          - doc: Person's assigned port number.
+            name: port
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: required
+          - doc: Unique identifier for the member.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: required
+          - doc: T.38 Fax Compression setting and is available only for ATA Devices.
+              Choose T.38 fax compression if the device requires this option. This
+              will override user level compression options.
+            name: t38FaxCompressionEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Whether the user is the owner of the device or not, and points to
+              a primary Line/Port of device.
+            name: primaryOwner
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: required
+          - doc: Line type is used to differentiate Primary and SCA, at which endpoint
+              it is assigned.
+            name: lineType
+            param_attrs:
+            - doc: Indicates a Primary line for the member.
+              name: PRIMARY
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates a Shared line for the member. Shared line appearance
+                allows users to receive and place calls to and from another user's
+                extension, using their device.
+              name: SHARED_CALL_APPEARANCE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: LineType
+            type_spec: required
+          - doc: Number of lines that have been configured for the person on the device.
+            name: lineWeight
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: required
+          - doc: Enable Hotline. Configure this line to automatically call a predefined
+              number whenever taken off-hook. Once enabled, the line can only make
+              calls to the predefined number set in hotlineDestination.
+            name: hotlineEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: required
+          - doc: The preconfigured number for Hotline. Required only if hotlineEnabled
+              is set to true.
+            name: hotlineDestination
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: required
+          - doc: Set how a person's device behaves when a call is declined. When set
+              to true, a call decline request is extended to all the endpoints on
+              the device. When set to false, a call decline request only declines
+              the current endpoint.
+            name: allowCallDeclineEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: required
+          - doc: Device line label.
+            name: lineLabel
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[PutMemberObject]
+          type_spec: null
+        Query Parameters:
+        - doc: Modify members on the device in this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the device.
+          name: deviceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Search members that can be assigned to the device.
+
+        A device member can be either a person or a workspace. A admin can access
+        the list of member details, modify member details and
+
+        search for available members on a device.
+
+        This requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.'
+      documentation:
+        doc: Search Members
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-device-settings/search-members
+        endpoint: https://webexapis.com/v1/telephony/config/devices/{deviceId}/availableMembers
+        http_method: GET
+      header: Search Members
+      parameters_and_response:
+        Query Parameters:
+        - doc: Retrieves the list of available members on the device in this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Unique identifier for the location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Specifies the offset from the first result that you want to fetch.
+          name: start
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Specifies the maximum number of records that you want to fetch.
+          name: max
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Search (Contains) numbers based on member name.
+          name: memberName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Search (Contains) based on number.
+          name: phoneNumber
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Search (Contains) based on extension.
+          name: extension
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: List of members available for the device.
+          name: members
+          param_attrs:
+          - doc: Unique identifier for the member.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: First name of a person or workspace.
+            name: firstName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Last name of a person or workspace.
+            name: lastName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Phone Number of a person or workspace.
+            name: phoneNumber
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: T.38 Fax Compression setting and available only for ATA Devices.
+              Choose T.38 fax compression if the device requires this option. this
+              will override user level compression options.
+            name: t38FaxCompressionEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Line type is used to differentiate Primary and SCA, at which endpoint
+              it is assigned.
+            name: lineType
+            param_attrs:
+            - doc: Indicates a Primary line for the member.
+              name: PRIMARY
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates a Shared line for the member. Shared line appearance
+                allows users to receive and place calls to and from another user's
+                extension, using their device.
+              name: SHARED_CALL_APPEARANCE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: LineType
+            type_spec: null
+          - doc: Set how a person's device behaves when a call is declined. When set
+              to true, a call decline request is extended to all the endpoints on
+              the device. When set to false, a call decline request only declines
+              the current endpoint.
+            name: allowCallDeclineEnabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
+          - doc: Indicates if member is of type PEOPLE or PLACE.
+            name: memberType
+            param_attrs:
+            - doc: Indicates the associated member is a person.
+              name: PEOPLE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Indicates the associated member is a workspace.
+              name: PLACE
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: MemberType
+            type_spec: null
+          - doc: Location object having a unique identifier for the location and its
+              name.
+            name: location
+            param_attrs:
+            - doc: Location identifier associated with the members.
+              name: id
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Location name associated with the member.
+              name: name
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: location
+            type_spec: null
+          param_object: []
+          type: array[SearchMemberObject]
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the device.
+          name: deviceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Issues request to the device to download and apply changes to the configuration.
+
+        Applying changes for a specific device requires a full administrator auth
+        token with a scope of spark-admin:telephony_config_write.'
+      documentation:
+        doc: Apply Changes for a specific device
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-device-settings/apply-changes-for-a-specific-device
+        endpoint: https://webexapis.com/v1/telephony/config/devices/{deviceId}/actions/applyChanges/invoke
+        http_method: POST
+      header: Apply Changes for a specific device
+      parameters_and_response:
+        Query Parameters:
+        - doc: Apply changes for a device in this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the device.
+          name: deviceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Get override settings for a device.
+
+        Device settings lists all the applicable settings for an MPP and an ATA devices
+        at the device level. An admin can also modify the settings. DECT devices do
+        not support settings at the device level.
+
+        This requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.'
+      documentation:
+        doc: Get Device Settings
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-device-settings/get-device-settings
+        endpoint: https://webexapis.com/v1/telephony/config/devices/{deviceId}/settings
+        http_method: GET
+      header: Get Device Settings
+      parameters_and_response:
+        Query Parameters:
+        - doc: Settings on the device in this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Model type of the device.
+          name: deviceModel
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        Response Properties:
+        - doc: Indicates the customization object of the device settings.
+          name: customizations
+          param_attrs:
+          - doc: Applicable device settings for an ATA device.
+            name: ata
+            param_attrs:
+            - doc: Choose up to three predefined codec priority options available
+                for your region.
+              name: audioCodecPriority
+              param_attrs:
+              - doc: Indicates the selection of an Audio Codec Priority Object.
+                name: selection
+                param_attrs:
+                - doc: Indicates the regional selection type for audio codec priority.
+                  name: REGIONAL
+                  param_attrs: []
+                  param_object: []
+                  type: string
+                  type_spec: null
+                - doc: Indicates the custom selection type for audio codec priority.
+                  name: CUSTOM
+                  param_attrs: []
+                  param_object: []
+                  type: string
+                  type_spec: null
+                param_object: []
+                type: SelectionType
+                type_spec: null
+              - doc: Indicates the primary Audio Codec.
+                name: primary
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates the secondary Audio Codec.
+                name: secondary
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates the tertiary Audio Codec.
+                name: tertiary
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: AudioCodecPriorityObject
+              type_spec: null
+            - doc: DTMF Detection Tx Mode selection for Cisco ATA devices.
+              name: ataDtmfMode
+              param_attrs:
+              - doc: A DTMF digit requires an extra hold time after detection and
+                  the DTMF level threshold is raised to -20 dBm.
+                name: STRICT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Normal threshold mode.
+                name: NORMAL
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: AtaDtmfModeObject
+              type_spec: null
+            - doc: Method for transmitting DTMF signals to the far end.
+              name: ataDtmfMethod
+              param_attrs:
+              - doc: Sends DTMF by using the audio path.
+                name: INBAND
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Audio video transport. Sends DTMF as AVT events.
+                name: AVT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Uses InBand or AVT based on the outcome of codec negotiation.
+                name: AUTO
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: AtaDtmfMethodObject
+              type_spec: null
+            - doc: Enable/disable Cisco Discovery Protocol for local devices.
+              name: cdpEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Enable/disable Link Layer Discovery Protocol for local devices.
+              name: lldpEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Enable/disable quality of service tagging of packets from the local
+                device to the Webex Calling platform.
+              name: qosEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Specify a numeric Virtual LAN ID for devices.
+              name: vlan
+              param_attrs:
+              - doc: Denotes whether the VLAN object of an ATA is enabled.
+                name: enabled
+                param_attrs: []
+                param_object: []
+                type: boolean
+                type_spec: null
+              - doc: The value of the VLAN Object of DECT.
+                name: value
+                param_attrs: []
+                param_object: []
+                type: number
+                type_spec: null
+              param_object: []
+              type: VlanObject
+              type_spec: null
+            param_object: []
+            type: ataObject
+            type_spec: null
+          - doc: Applicable device settings for an MPP device.
+            name: mpp
+            param_attrs:
+            - doc: Indicates whether the PNAC of MPP object is enabled or not.
+              name: pnacEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Choose up to three predefined codec priority options available
+                for your region.
+              name: audioCodecPriority
+              param_attrs:
+              - doc: Indicates the selection of the Audio Codec Priority Object for
+                  an MPP object.
+                name: selection
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates the primary Audio Codec for an MPP object.
+                name: primary
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates the secondary Audio Codec for an MPP object.
+                name: secondary
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates the tertiary Audio Codec for an MPP object.
+                name: tertiary
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: MppAudioCodecPriorityObject
+              type_spec: null
+            - doc: Choose the length of time (in minutes) for the phone's backlight
+                to remain on.
+              name: backlightTimer
+              param_attrs:
+              - doc: ''
+                name: ONE_M
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: FIVE_M
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: THIRTY_M
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: ALWAYS_ON
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: 'OFF'
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: TEN_S
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: TWENTY_S
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: THIRTY_S
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: BacklightTimerObject
+              type_spec: null
+            - doc: Holds the background object of MPP Object.
+              name: background
+              param_attrs:
+              - doc: Indicates that there will be no background image set for the
+                  devices.
+                name: NONE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates that dark blue background image will be set for the
+                  devices.
+                name: DARK_BLUE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates that Cisco themed dark blue background image will be
+                  set for the devices.
+                name: CISCO_DARK_BLUE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates that Cisco Webex dark blue background image will be
+                  set for the devices.
+                name: WEBEX_DARK_BLUE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates that a custom background image will be set for the
+                  devices.
+                name: CUSTOM_BACKGROUND
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: When this option is selected, a field 'Custom Background URL'
+                  needs to be added with the image url. URLs provided must link directly
+                  to an image file and be in HTTP, HTTPS, or filepath format.
+                name: customUrl
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: BackgroundImage
+              type_spec: null
+            - doc: The display name that appears on the phone screen.
+              name: displayNameFormat
+              param_attrs:
+              - doc: Indicates that devices will display the person's phone number,
+                  or if a person doesn't have a phone number, the location number
+                  will be displayed.
+                name: PERSON_NUMBER
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates that devices will display the name in first name then
+                  last name format.
+                name: PERSON_FIRST_THEN_LAST_NAME
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates that devices will display the name in last name then
+                  first name format.
+                name: PERSON_LAST_THEN_FIRST_NAME
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: DisplayNameSelection
+              type_spec: null
+            - doc: Allows you to enable/disable CDP for local devices.
+              name: cdpEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Choose the desired logging level for an MPP devices.
+              name: defaultLoggingLevel
+              param_attrs:
+              - doc: Enables standard logging.
+                name: STANDARD
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Enables detailed debugging logging.
+                name: DEBUGGING
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: DefaultLoggingLevelObject
+              type_spec: null
+            - doc: Enable/disable Do-Not-Disturb capabilities for Multi-Platform Phones.
+              name: dndServicesEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Chooses the location of the Call Queue Agent Login/Logout softkey
+                on Multi-Platform Phones.
+              name: displayCallqueueAgentSoftkeys
+              param_attrs:
+              - doc: ''
+                name: FRONT_PAGE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: LAST_PAGE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: DisplayCallqueueAgentSoftkeysObject
+              type_spec: null
+            - doc: Choose the duration (in hours) of Hoteling guest login.
+              name: hotelingGuestAssociationTimer
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: null
+            - doc: Holds the Acd object value.
+              name: acd
+              param_attrs:
+              - doc: Indicates whether the ACD object is enabled.
+                name: enabled
+                param_attrs: []
+                param_object: []
+                type: boolean
+                type_spec: null
+              - doc: Indicates the call queue agent soft key value of an ACD object.
+                name: displayCallqueueAgentSoftkeys
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: AcdObject
+              type_spec: null
+            - doc: Indicates the short inter digit timer value.
+              name: shortInterdigitTimer
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: null
+            - doc: Indicates the long inter digit timer value..
+              name: longInterdigitTimer
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: null
+            - doc: Line key labels define the format of what's shown next to line
+                keys.
+              name: lineKeyLabelFormat
+              param_attrs:
+              - doc: This will display the person extension, or if a person doesn't
+                  have an extension, the person's first name will be displayed.
+                name: PERSON_EXTENSION
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates that devices will display the name in first name then
+                  last name format.
+                name: PERSON_FIRST_THEN_LAST_NAME
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates that devices will display the name in last name then
+                  first name format.
+                name: PERSON_LAST_THEN_FIRST_NAME
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: LineKeyLabelSelection
+              type_spec: null
+            - doc: LED patterns define lighting schemes for the line keys on the MPP
+                devices. Note that this parameter is not supported on the MPP 8875
+              name: lineKeyLEDPattern
+              param_attrs:
+              - doc: ''
+                name: DEFAULT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: PRESET_1
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: LineKeyLEDPattern
+              type_spec: null
+            - doc: Enable/disable Link Layer Discovery Protocol for local devices.
+              name: lldpEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Enable/disable user-level access to the web interface of Multi-Platform
+                Phones.
+              name: mppUserWebAccessEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Select up to 10 Multicast Group URLs (each with a unique Listening
+                Port).
+              name: multicast
+              param_attrs: []
+              param_object: []
+              type: array[string]
+              type_spec: null
+            - doc: Specify the amount of time (in seconds) that a phone can remain
+                off-hook.
+              name: offHookTimer
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: null
+            - doc: Select the language for your MPP phone. Setting this overrides
+                the default language setting in place for your provisioned location.
+              name: phoneLanguage
+              param_attrs:
+              - doc: Indicates a person's announcement language.
+                name: PERSON_LANGUAGE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: ARABIC
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: BULGARIAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: CATALAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: CHINESE_SIMPLIFIED
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: CHINESE_TRADITIONAL
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: CROATIAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: CZECH
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: DANISH
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: DUTCH
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: ENGLISH_UNITED_STATES
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: ENGLISH_UNITED_KINGDOM
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: FINNISH
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: FRENCH_CANADA
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: FRENCH_FRANCE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: GERMAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: GREEK
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: HEBREW
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: HUNGARIAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: ITALIAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: JAPANESE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: KOREAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: NORWEGIAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: POLISH
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: PORTUGUESE_PORTUGAL
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: RUSSIAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: SPANISH_COLOMBIA
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: SPANISH_SPAIN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: SLOVAK
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: SWEDISH
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: SLOVENIAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: TURKISH
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: UKRAINE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: PhoneLanguage
+              type_spec: null
+            - doc: Enable/disable the Power-Over-Ethernet mode for Multi-Platform
+                Phones.
+              name: poeMode
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Allows you to enable/disable tagging of packets from the local
+                device to the Webex Calling platform.
+              name: qosEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Specify the amount of inactive time needed (in seconds) before
+                the phone's screen saver activates.
+              name: screenTimeout
+              param_attrs:
+              - doc: Indicates whether the Screen Time object is enabled.
+                name: enabled
+                param_attrs: []
+                param_object: []
+                type: boolean
+                type_spec: null
+              - doc: Indicates the value of screen timeout.
+                name: value
+                param_attrs: []
+                param_object: []
+                type: number
+                type_spec: null
+              param_object: []
+              type: ScreenTimeoutObject
+              type_spec: null
+            - doc: Enable/disable the use of the USB ports on Multi-Platform phones.
+              name: usbPortsEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: null
+            - doc: Specify a numeric Virtual LAN ID for devices.
+              name: vlan
+              param_attrs:
+              - doc: Indicates whether the VLAN object of an MPP is enabled.
+                name: enabled
+                param_attrs: []
+                param_object: []
+                type: boolean
+                type_spec: null
+              - doc: Indicates the value of a VLAN object for an MPP object.
+                name: value
+                param_attrs: []
+                param_object: []
+                type: number
+                type_spec: null
+              - doc: Indicates the PC port value of a VLAN object for an MPP object.
+                name: pcPort
+                param_attrs: []
+                param_object: []
+                type: number
+                type_spec: null
+              param_object: []
+              type: MppVlanObject
+              type_spec: null
+            - doc: Specify the Wi-Fi SSID and password for wireless-enabled MPP phones.
+              name: wifiNetwork
+              param_attrs:
+              - doc: Indicates whether the wifi network is enabled.
+                name: enabled
+                param_attrs: []
+                param_object: []
+                type: boolean
+                type_spec: null
+              - doc: Authentication method of wifi network.
+                name: authenticationMethod
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: SSID name of the wifi network.
+                name: ssidName
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: User Id of the wifi network.
+                name: userId
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: WifiNetworkObject
+              type_spec: null
+            param_object: []
+            type: mppObject
+            type_spec: null
+          param_object: []
+          type: CustomizationDeviceLevelObject
+          type_spec: null
+        - doc: Indicates if customization is allowed at a device level. If true, customized
+            at a device level. If false, not customized; uses customer-level configuration.
+          name: customEnabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Customer devices setting update status. If true, an update is in progress
+            (no further changes are allowed). If false, no update in progress (changes
+            are allowed).
+          name: updateInProgress
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
+        - doc: Number of devices that will be updated.
+          name: deviceCount
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Indicates the last updated time.
+          name: lastUpdateTime
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier for the device.
+          name: deviceId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Modify override settings for a device.
+
+        Device settings list all the applicable settings for an MPP and an ATA devices
+        at the device level. Admins can also modify the settings. NOTE: DECT devices
+        do not support settings at the device level.
+
+        Updating settings on the device requires a full administrator auth token with
+        a scope of spark-admin:telephony_config_write.'
+      documentation:
+        doc: Update device settings
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-device-settings/update-device-settings
+        endpoint: https://webexapis.com/v1/telephony/config/devices/{deviceId}/settings
+        http_method: PUT
+      header: Update device settings
+      parameters_and_response:
+        Body Parameters:
+        - doc: Indicates the customization object of the device settings.
+          name: customizations
+          param_attrs:
+          - doc: Applicable device settings for an ATA device.
+            name: ata
+            param_attrs:
+            - doc: Choose up to three predefined codec priority options available
+                for your region.
+              name: audioCodecPriority
+              param_attrs:
+              - doc: Indicates the selection of an Audio Codec Priority Object.
+                name: selection
+                param_attrs:
+                - doc: Indicates the regional selection type for audio codec priority.
+                  name: REGIONAL
+                  param_attrs: []
+                  param_object: []
+                  type: string
+                  type_spec: null
+                - doc: Indicates the custom selection type for audio codec priority.
+                  name: CUSTOM
+                  param_attrs: []
+                  param_object: []
+                  type: string
+                  type_spec: null
+                param_object: []
+                type: enum
+                type_spec: required
+              - doc: Indicates the primary Audio Codec.
+                name: primary
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: required
+              - doc: Indicates the secondary Audio Codec.
+                name: secondary
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: required
+              - doc: Indicates the tertiary Audio Codec.
+                name: tertiary
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: required
+              param_object: []
+              type: object
+              type_spec: required
+            - doc: DTMF Detection Tx Mode selection for Cisco ATA devices.
+              name: ataDtmfMode
+              param_attrs:
+              - doc: A DTMF digit requires an extra hold time after detection and
+                  the DTMF level threshold is raised to -20 dBm.
+                name: STRICT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Normal threshold mode.
+                name: NORMAL
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: required
+            - doc: Method for transmitting DTMF signals to the far end.
+              name: ataDtmfMethod
+              param_attrs:
+              - doc: Sends DTMF by using the audio path.
+                name: INBAND
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Audio video transport. Sends DTMF as AVT events.
+                name: AVT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Uses InBand or AVT based on the outcome of codec negotiation.
+                name: AUTO
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: required
+            - doc: Enable/disable Cisco Discovery Protocol for local devices.
+              name: cdpEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: required
+            - doc: Enable/disable Link Layer Discovery Protocol for local devices.
+              name: lldpEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: required
+            - doc: Enable/disable quality of service tagging of packets from the local
+                device to the Webex Calling platform.
+              name: qosEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: required
+            - doc: Specify a numeric Virtual LAN ID for devices.
+              name: vlan
+              param_attrs:
+              - doc: Denotes whether the VLAN object of an ATA is enabled.
+                name: enabled
+                param_attrs: []
+                param_object: []
+                type: boolean
+                type_spec: required
+              - doc: The value of the VLAN Object of DECT.
+                name: value
+                param_attrs: []
+                param_object: []
+                type: number
+                type_spec: required
+              param_object: []
+              type: object
+              type_spec: required
+            param_object: []
+            type: ataObject
+            type_spec: null
+          - doc: Applicable device settings for an MPP device.
+            name: mpp
+            param_attrs:
+            - doc: Indicates whether the PNAC of MPP object is enabled or not.
+              name: pnacEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: required
+            - doc: Choose up to three predefined codec priority options available
+                for your region.
+              name: audioCodecPriority
+              param_attrs:
+              - doc: Indicates the selection of the Audio Codec Priority Object for
+                  an MPP object.
+                name: selection
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: required
+              - doc: Indicates the primary Audio Codec for an MPP object.
+                name: primary
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: required
+              - doc: Indicates the secondary Audio Codec for an MPP object.
+                name: secondary
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: required
+              - doc: Indicates the tertiary Audio Codec for an MPP object.
+                name: tertiary
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: required
+              param_object: []
+              type: object
+              type_spec: required
+            - doc: Choose the length of time (in minutes) for the phone's backlight
+                to remain on.
+              name: backlightTimer
+              param_attrs:
+              - doc: ''
+                name: ONE_M
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: FIVE_M
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: THIRTY_M
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: ALWAYS_ON
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: 'OFF'
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: TEN_S
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: TWENTY_S
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: THIRTY_S
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: required
+            - doc: Holds the background object of MPP Object.
+              name: background
+              param_attrs:
+              - doc: Indicates that there will be no background image set for the
+                  devices.
+                name: NONE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates that dark blue background image will be set for the
+                  devices.
+                name: DARK_BLUE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates that Cisco themed dark blue background image will be
+                  set for the devices.
+                name: CISCO_DARK_BLUE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates that Cisco Webex dark blue background image will be
+                  set for the devices.
+                name: WEBEX_DARK_BLUE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates that a custom background image will be set for the
+                  devices.
+                name: CUSTOM_BACKGROUND
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: When this option is selected, a field 'Custom Background URL'
+                  needs to be added with the image url. URLs provided must link directly
+                  to an image file and be in HTTP, HTTPS, or filepath format.
+                name: customUrl
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: required
+            - doc: The display name that appears on the phone screen.
+              name: displayNameFormat
+              param_attrs:
+              - doc: Indicates that devices will display the person's phone number,
+                  or if a person doesn't have a phone number, the location number
+                  will be displayed.
+                name: PERSON_NUMBER
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates that devices will display the name in first name then
+                  last name format.
+                name: PERSON_FIRST_THEN_LAST_NAME
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates that devices will display the name in last name then
+                  first name format.
+                name: PERSON_LAST_THEN_FIRST_NAME
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: null
+            - doc: Allows you to enable/disable CDP for local devices.
+              name: cdpEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: required
+            - doc: Choose the desired logging level for an MPP devices.
+              name: defaultLoggingLevel
+              param_attrs:
+              - doc: Enables standard logging.
+                name: STANDARD
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Enables detailed debugging logging.
+                name: DEBUGGING
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: required
+            - doc: Enable/disable Do-Not-Disturb capabilities for Multi-Platform Phones.
+              name: dndServicesEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: required
+            - doc: Chooses the location of the Call Queue Agent Login/Logout softkey
+                on Multi-Platform Phones.
+              name: displayCallqueueAgentSoftkeys
+              param_attrs:
+              - doc: ''
+                name: FRONT_PAGE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: LAST_PAGE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: required
+            - doc: Choose the duration (in hours) of Hoteling guest login.
+              name: hotelingGuestAssociationTimer
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: required
+            - doc: Holds the Acd object value.
+              name: acd
+              param_attrs:
+              - doc: Indicates whether the ACD object is enabled.
+                name: enabled
+                param_attrs: []
+                param_object: []
+                type: boolean
+                type_spec: required
+              - doc: Indicates the call queue agent soft key value of an ACD object.
+                name: displayCallqueueAgentSoftkeys
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: required
+              param_object: []
+              type: object
+              type_spec: required
+            - doc: Indicates the short inter digit timer value.
+              name: shortInterdigitTimer
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: required
+            - doc: Indicates the long inter digit timer value..
+              name: longInterdigitTimer
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: required
+            - doc: Line key labels define the format of what's shown next to line
+                keys.
+              name: lineKeyLabelFormat
+              param_attrs:
+              - doc: This will display the person extension, or if a person doesn't
+                  have an extension, the person's first name will be displayed.
+                name: PERSON_EXTENSION
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates that devices will display the name in first name then
+                  last name format.
+                name: PERSON_FIRST_THEN_LAST_NAME
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: Indicates that devices will display the name in last name then
+                  first name format.
+                name: PERSON_LAST_THEN_FIRST_NAME
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: required
+            - doc: LED patterns define lighting schemes for the line keys on the MPP
+                devices. Note that this parameter is not supported on the MPP 8875
+              name: lineKeyLEDPattern
+              param_attrs:
+              - doc: ''
+                name: DEFAULT
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: PRESET_1
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: required
+            - doc: Enable/disable Link Layer Discovery Protocol for local devices.
+              name: lldpEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: required
+            - doc: Enable/disable user-level access to the web interface of Multi-Platform
+                Phones.
+              name: mppUserWebAccessEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: required
+            - doc: 'Select up to 10 Multicast Group URLs (each with a unique Listening
+                Port).
+
+                '
+              name: multicast
+              param_attrs: []
+              param_object: []
+              type: array[string]
+              type_spec: required
+            - doc: Specify the amount of time (in seconds) that a phone can remain
+                off-hook.
+              name: offHookTimer
+              param_attrs: []
+              param_object: []
+              type: number
+              type_spec: required
+            - doc: Select the language for your MPP phone. Setting this overrides
+                the default language setting in place for your provisioned location.
+              name: phoneLanguage
+              param_attrs:
+              - doc: Indicates a person's announcement language.
+                name: PERSON_LANGUAGE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: ARABIC
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: BULGARIAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: CATALAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: CHINESE_SIMPLIFIED
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: CHINESE_TRADITIONAL
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: CROATIAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: CZECH
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: DANISH
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: DUTCH
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: ENGLISH_UNITED_STATES
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: ENGLISH_UNITED_KINGDOM
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: FINNISH
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: FRENCH_CANADA
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: FRENCH_FRANCE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: GERMAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: GREEK
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: HEBREW
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: HUNGARIAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: ITALIAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: JAPANESE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: KOREAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: NORWEGIAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: POLISH
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: PORTUGUESE_PORTUGAL
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: RUSSIAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: SPANISH_COLOMBIA
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: SPANISH_SPAIN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: SLOVAK
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: SWEDISH
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: SLOVENIAN
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: TURKISH
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              - doc: ''
+                name: UKRAINE
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: null
+              param_object: []
+              type: enum
+              type_spec: required
+            - doc: Enable/disable the Power-Over-Ethernet mode for Multi-Platform
+                Phones.
+              name: poeMode
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: required
+            - doc: Allows you to enable/disable tagging of packets from the local
+                device to the Webex Calling platform.
+              name: qosEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: required
+            - doc: Specify the amount of inactive time needed (in seconds) before
+                the phone's screen saver activates.
+              name: screenTimeout
+              param_attrs:
+              - doc: Indicates whether the Screen Time object is enabled.
+                name: enabled
+                param_attrs: []
+                param_object: []
+                type: boolean
+                type_spec: required
+              - doc: Indicates the value of screen timeout.
+                name: value
+                param_attrs: []
+                param_object: []
+                type: number
+                type_spec: required
+              param_object: []
+              type: object
+              type_spec: required
+            - doc: Enable/disable the use of the USB ports on Multi-Platform phones.
+              name: usbPortsEnabled
+              param_attrs: []
+              param_object: []
+              type: boolean
+              type_spec: required
+            - doc: Specify a numeric Virtual LAN ID for devices.
+              name: vlan
+              param_attrs:
+              - doc: Indicates whether the VLAN object of an MPP is enabled.
+                name: enabled
+                param_attrs: []
+                param_object: []
+                type: boolean
+                type_spec: required
+              - doc: Indicates the value of a VLAN object for an MPP object.
+                name: value
+                param_attrs: []
+                param_object: []
+                type: number
+                type_spec: null
+              - doc: Indicates the PC port value of a VLAN object for an MPP object.
+                name: pcPort
+                param_attrs: []
+                param_object: []
+                type: number
+                type_spec: null
+              param_object: []
+              type: object
+              type_spec: required
+            - doc: Specify the Wi-Fi SSID and password for wireless-enabled MPP phones.
+              name: wifiNetwork
+              param_attrs:
+              - doc: Indicates whether the wifi network is enabled.
+                name: enabled
+                param_attrs: []
+                param_object: []
+                type: boolean
+                type_spec: required
+              - doc: Authentication method of wifi network.
+                name: authenticationMethod
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: required
+              - doc: SSID name of the wifi network.
+                name: ssidName
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: required
+              - doc: User Id of the wifi network.
+                name: userId
+                param_attrs: []
+                param_object: []
+                type: string
+                type_spec: required
+              param_object: []
+              type: object
+              type_spec: required
+            param_object: []
+            type: mppObject
+            type_spec: null
+          param_object: []
+          type: CustomizationDeviceLevelObject
+          type_spec: required
+        - doc: Indicates if customization is allowed at a device level. If true, customized
+            at a device level. If false, not customized; uses customer-level configuration.
+          name: customEnabled
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: required
+        Query Parameters:
+        - doc: Organization in which the device resides..
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Device model name.
+          name: deviceModel
+          param_attrs: []
+          param_object: []
+          type: string
           type_spec: null
         URI Parameters:
         - doc: Unique identifier for the device.
@@ -14082,6 +16313,13 @@ docs:
             param_object: []
             type: string
             type_spec: null
+          - doc: Matching destination routes into a virtual extension range with details
+              in the virtualExtensionRange field.
+            name: VIRTUAL_EXTENSION_RANGE
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
           - doc: Matching destination routes into a route list with details in the
               routeList field.
             name: ROUTE_LIST
@@ -14503,6 +16741,88 @@ docs:
             type_spec: null
           param_object: []
           type: VirtualExtension
+          type_spec: null
+        - doc: Returned when destinationType is VIRTUAL_EXTENSION_RANGE.
+          name: virtualExtensionRange
+          param_attrs:
+          - doc: Virtual extension range ID.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Virtual extension range name.
+            name: name
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'Prefix that the virtual extension range is associated with (Note:
+              Standard mode must have leading ''+'' in prefix; BCD/Enhanced mode can
+              have any valid prefix).'
+            name: prefix
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Pattern associated with the virtual extension range.
+            name: pattern
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Location name if the virtual extension range is at the location level,
+              empty if it is at customer level.
+            name: locationName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Location ID if the virtual extension range is at the location level,
+              empty if it is at customer level.
+            name: locationId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Trunk name.
+            name: trunkName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Trunk ID.
+            name: trunkId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Route group name.
+            name: routeGroupName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Route group ID.
+            name: routeGroupId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Location of the trunk; required if trunkName is returned.
+            name: trunkLocationName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Location ID of the trunk; required if trunkName is returned.
+            name: trunkLocationId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: VirtualExtensionRange
           type_spec: null
         - doc: Returned when destinationType is ROUTE_LIST.
           name: routeList
@@ -24842,6 +27162,193 @@ docs:
           param_object: []
           type: string
           type_spec: required
+    - doc: 'Create a new voicemail group for the given location for a customer.
+
+        A voicemail group can be created for given location for a customer.
+
+        Creating a voicemail group for the given location requires a full or user
+        administrator auth token with a scope of spark-admin:telephony_config_write.'
+      documentation:
+        doc: Create a new Voicemail Group for a Location
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-a-new-voicemail-group-for-a-location
+        endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/voicemailGroups
+        http_method: POST
+      header: Create a new Voicemail Group for a Location
+      parameters_and_response:
+        Body Parameters:
+        - doc: Set name to create new voicemail group for a particular location for
+            a customer.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Set voicemail group phone number for this particular location.
+          name: phoneNumber
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Set unique voicemail group extension number for this particular location.
+          name: extension
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: required
+        - doc: Set voicemail group caller ID first name.
+          name: firstName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Set voicemail group called ID last name.
+          name: lastName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Set passcode to access voicemail group when calling.
+          name: passcode
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: required
+        - doc: Language code for voicemail group audio announcement.
+          name: languageCode
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Message storage information
+          name: messageStorage
+          param_attrs:
+          - doc: Message storage type.
+            name: storageType
+            param_attrs:
+            - doc: Set to INTERNAL to store messages in internal mailbox.
+              name: INTERNAL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Set to EXTERNAL to send messages to the email address provided.
+              name: EXTERNAL
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: required
+          - doc: Set external email to forward the messages.
+            name: externalEmail
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: object
+          type_spec: required
+        - doc: Message notifications
+          name: notifications
+          param_attrs:
+          - doc: Set to true to enable message notification.
+            name: enabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: required
+          - doc: Set email to SMS gateway to send notifications.
+            name: destination
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: object
+          type_spec: required
+        - doc: Fax message information
+          name: faxMessage
+          param_attrs:
+          - doc: Set to true to enable fax messaging.
+            name: enabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: required
+          - doc: Set valid phone number to receive fax message.
+            name: phoneNumber
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Set fax messaging extension number.
+            name: extension
+            param_attrs: []
+            param_object: []
+            type: number
+            type_spec: null
+          param_object: []
+          type: object
+          type_spec: required
+        - doc: Transfer message information
+          name: transferToNumber
+          param_attrs:
+          - doc: Set to true to enable to transfer message.
+            name: enabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: required
+          - doc: Set phone number and dial '0' to transfer message to the provided
+              number.
+            name: destination
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: object
+          type_spec: required
+        - doc: Message copy information
+          name: emailCopyOfMessage
+          param_attrs:
+          - doc: Set to true to enable email message copy.
+            name: enabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: required
+          - doc: Set email to receive message copy to the email address provided.
+            name: emailId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: object
+          type_spec: required
+        Query Parameters:
+        - doc: Create a new voice mail group for this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: UUID of the newly created voice mail group.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Create a new voice mail group for this location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
     - doc: 'Delete the designated voicemail group.
 
         Deleting a voicemail group requires a full administrator auth token with a
@@ -32793,6 +35300,168 @@ docs:
           param_object: []
           type: string
           type_spec: required
+    - doc: 'List all languages supported by Webex Calling for announcements and voice
+        prompts.
+
+        Retrieving announcement languages requires a full or read-only administrator
+        auth token with a scope of spark-admin:telephony_config_read.'
+      documentation:
+        doc: Read the List of Announcement Languages
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-the-list-of-announcement-languages
+        endpoint: https://webexapis.com/v1/telephony/config/announcementLanguages
+        http_method: GET
+      header: Read the List of Announcement Languages
+      parameters_and_response:
+        Response Properties:
+        - doc: Array of Languages.
+          name: languages
+          param_attrs:
+          - doc: Language name.
+            name: name
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Language code.
+            name: code
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[Language]
+          type_spec: null
+    - doc: 'Creates a new Receptionist Contact Directory for a location.
+
+        Receptionist Contact Directories can be used to create named directories of
+        users.
+
+        Adding a directory requires a full or write-only administrator auth token
+        with a scope of spark-admin:telephony_config_write.'
+      documentation:
+        doc: Create a Receptionist Contact Directory
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/create-a-receptionist-contact-directory
+        endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/receptionistContacts/directories
+        http_method: POST
+      header: Create a Receptionist Contact Directory
+      parameters_and_response:
+        Body Parameters:
+        - doc: Receptionist Contact Directory name.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'Array of users assigned to this Receptionist Contact Directory.
+
+            Person ID.'
+          name: contacts
+          param_attrs: []
+          param_object: []
+          type: array[PersonId]
+          type_spec: required
+        Query Parameters:
+        - doc: Add a Receptionist Contact Directory to this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Receptionist Contact Directory ID.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Add a Receptionist Contact Directory to this location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'List all Receptionist Contact Directories for a location.
+
+        Receptionist Contact Directories can be used to create named directories of
+        users.
+
+        Retrieving this list requires a full or read-only administrator auth token
+        with a scope of spark-admin:telephony_config_read.'
+      documentation:
+        doc: Read list of Receptionist Contact Directories
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/read-list-of-receptionist-contact-directories
+        endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/receptionistContacts/directories
+        http_method: GET
+      header: Read list of Receptionist Contact Directories
+      parameters_and_response:
+        Query Parameters:
+        - doc: List Receptionist Contact Directories for this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Array of Receptionist Contact Directories.
+          name: directories
+          param_attrs:
+          - doc: ID of Receptionist Contact Directory
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Name of Receptionist Contact Directory.
+            name: name
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[Directory]
+          type_spec: null
+        URI Parameters:
+        - doc: List Receptionist Contact Directories for this location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Delete a Receptionist Contact Directory from a location.
+
+        Receptionist Contact Directories can be used to create named directories of
+        users.
+
+        Deleting a directory requires a full or write-only administrator auth token
+        with a scope of spark-admin:telephony_config_write.'
+      documentation:
+        doc: Delete a Receptionist Contact Directory
+        doc_link: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/delete-a-receptionist-contact-directory
+        endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/receptionistContacts/directories/{directoryId}
+        http_method: DELETE
+      header: Delete a Receptionist Contact Directory
+      parameters_and_response:
+        Query Parameters:
+        - doc: Delete a Receptionist Contact Directory from this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Delete a Receptionist Contact Directory from this location.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Add a Receptionist Contact Directory ID.
+          name: directoryId
+          param_attrs: []
+          param_object: []
+          type: optional
+          type_spec: required
   Webex Calling Person Settings:
     doc: 'Not supported for Webex for Government (FedRAMP)
 
@@ -34549,6 +37218,31 @@ docs:
           name: notification
           param_attrs: []
           param_object:
+          - doc: Type of pause/resume notification.
+            name: type
+            param_attrs:
+            - doc: No notification sound played when call recording is paused or resumed.
+              name: None
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: A beep sound is played when call recording is paused or resumed.
+              name: Beep
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: A verbal announcement is played when call recording is paused or
+                resumed.
+              name: Play Announcement
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
           - doc: true when the notification feature is in effect. false indicates
               notification is disabled.
             name: enabled
@@ -34672,12 +37366,35 @@ docs:
           param_object: []
           type: boolean
           type_spec: null
-        - doc: 'Pause/resume notification settings.
-
-            true when notification feature is in effect. false indicates notification
-            is disabled.'
+        - doc: Pause/resume notification settings.
           name: notification
-          param_attrs: []
+          param_attrs:
+          - doc: Type of pause/resume notification.
+            name: type
+            param_attrs:
+            - doc: A beep sound is played when call recording is paused or resumed.
+              name: Beep
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: A verbal announcement is played when call recording is paused or
+                resumed.
+              name: Play Announcement
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: enum
+            type_spec: null
+          - doc: true when notification feature is in effect. false indicates notification
+              is disabled.
+            name: enabled
+            param_attrs: []
+            param_object: []
+            type: boolean
+            type_spec: null
           param_object: []
           type: object
           type_spec: null
@@ -37412,6 +40129,12 @@ docs:
           param_object: []
           type: string
           type_spec: null
+        - doc: Return phone numbers in E.164 format.
+          name: preferE164Format
+          param_attrs: []
+          param_object: []
+          type: boolean
+          type_spec: null
         Response Properties:
         - doc: Enable/disable a distinctive ring pattern that identifies calls coming
             from a specific phone number.
@@ -37513,12 +40236,26 @@ docs:
           param_object: []
           type: boolean
           type_spec: null
+        - doc: Device ID of WebRTC client. Returns only if browserClientEnabled is
+            true.
+          name: browserClientId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
         - doc: Indicates that the desktop Webex Calling application is enabled for
             use.
           name: desktopClientEnabled
           param_attrs: []
           param_object: []
           type: boolean
+          type_spec: null
+        - doc: Device ID of Desktop client. Returns only if desktopClientEnabled is
+            true.
+          name: desktopClientId
+          param_attrs: []
+          param_object: []
+          type: string
           type_spec: null
         - doc: Indicates that the tablet Webex Calling application is enabled for
             use.
@@ -38812,7 +41549,7 @@ docs:
             type: Action
             type_spec: required
           - doc: Phone numbers that are assigned.
-            name: external
+            name: directNumber
             param_attrs: []
             param_object: []
             type: string
