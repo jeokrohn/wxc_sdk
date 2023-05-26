@@ -67,16 +67,17 @@ def get_tokens() -> Optional[Tokens]:
     return tokens
 
 
-logging.basicConfig(level=logging.DEBUG)
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
 
-# load environment variables from .env
-path = env_path()
-log.info(f'reading {path}')
-load_dotenv(env_path())
+    # load environment variables from .env
+    path = env_path()
+    log.info(f'reading {path}')
+    load_dotenv(env_path())
 
-tokens = get_tokens()
+    tokens = get_tokens()
 
-# use the tokens to get identity of authenticated user
-api = WebexSimpleApi(tokens=tokens)
-me = api.people.me()
-print(f'authenticated as {me.display_name} ({me.emails[0]}) ')
+    # use the tokens to get identity of authenticated user
+    api = WebexSimpleApi(tokens=tokens)
+    me = api.people.me()
+    print(f'authenticated as {me.display_name} ({me.emails[0]}) ')

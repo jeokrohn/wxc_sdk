@@ -212,6 +212,19 @@ Source: |queue_helper.py|_
 .. literalinclude:: ../examples/queue_helper.py
     :linenos:
 
+Using service APP tokens to access a API endpoints
+--------------------------------------------------
+
+The script uses service app credentials to get an access token and then use this access token to call Webex Calling
+APIs.
+
+Source: |service_app.py|_
+
+.. |service_app.py| replace:: ``service_app.py``
+
+.. literalinclude:: ../examples/service_app.py
+    :linenos:
+
 
 
 .. _examples directory on GitHub: https://github.com/jeokrohn/wxc_sdk/tree/master/examples
@@ -228,6 +241,7 @@ Source: |queue_helper.py|_
 .. _modify_voicemail.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/modify_voicemail.py
 .. _call_intercept.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/call_intercept.py
 .. _queue_helper.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/queue_helper.py
+.. _service_app.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/service_app.py
 
 .. _webbrowser module: https://docs.python.org/3/library/webbrowser.html
 .. _My Webex Apps on developer.webex.com: https://developer.webex.com/my-apps

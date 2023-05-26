@@ -1,0 +1,18 @@
+# rename this to service_app.env and set values
+
+# client id, secret and refresh token of a service app
+# A good set of scopes for Webex Calling provisioning is below. Make sure to requesr these scopes when creating the
+# service app on developer.webex.com:
+#   * Identity:one_time_password
+#   * spark-admin:devices_read
+#   * identity:placeonetimepassword_create
+#   * spark:people_read
+#   * spark:devices_write
+#   * spark-admin:telephony_config_read
+#   * spark-admin:telephony_config_write
+#   * spark:devices_read
+#   * spark-admin:devices_write
+#   * spark-admin:people_read
+SERVICE_APP_CLIENT_ID=
+SERVICE_APP_CLIENT_SECRET=
+SERVICE_APP_REFRESH_TOKEN=
