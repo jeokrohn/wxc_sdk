@@ -26,7 +26,7 @@ class TestCDR(TestCaseWithLog):
         print(f'Got {len(cdrs)} CDRs')
         call_ids = set(cdr.call_id for cdr in cdrs)
         print(f'{len(call_ids)} different call IDs:')
-        print('\n'.join(f'  {c}' for c in sorted(call_ids)))
+        print('\n'.join(f'  {c}' for c in sorted(call_ids, key=lambda v:v or '')))
 
         by_correlation_id: dict[str, list[CDR]] = reduce(lambda s, el: s[el.correlation_id].append(el) or s,
                                                          cdrs,

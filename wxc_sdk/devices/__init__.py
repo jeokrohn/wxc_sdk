@@ -31,6 +31,8 @@ class Device(ApiModel):
     display_name: str
     #: The workspace associated with the device.
     workspace_id: Optional[str]
+    #: The workspace location associated with the device.
+    workspace_location_id: Optional[str]
     #: The person associated with the device.
     person_id: Optional[str]
     #: The organization associated with the device
@@ -119,7 +121,8 @@ class DevicesApi(ApiChild, base='devices'):
         super().__init__(session=session)
         self.settings_jobs = DeviceSettingsJobsApi(session=session)
 
-    def list(self, person_id: str = None, workspace_id: str = None, display_name: str = None, product: str = None,
+    def list(self, person_id: str = None, workspace_id: str = None, workspace_location_id: str = None,
+             display_name: str = None, product: str = None,
              product_type: str = None, tag: str = None, connection_status: str = None, serial: str = None,
              software: str = None, upgrade_channel: str = None, error_code: str = None, capability: str = None,
              permission: str = None, org_id: str = None, **params) -> Generator[Device, None, None]:
@@ -133,6 +136,8 @@ class DevicesApi(ApiChild, base='devices'):
         :type person_id: str
         :param workspace_id: List devices by workspace ID.
         :type workspace_id: str
+        :param workspace_location_id: List devices by workspace location ID.
+        :type workspace_location_id: str
         :param display_name: List devices with this display name.
         :type display_name: str
         :param product: List devices with this product name.

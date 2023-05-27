@@ -6,6 +6,8 @@ Release history
 - feat: new methods in :class:`wxc_sdk.locations.LocationsApi`: list_floors, create_floor, floor_details, update_floor, delete_floor
 - feat: support for virtual extension ranges in result of :meth:`wxc_sdk.telephony.TelephonyApi.test_call_routing`
 - feat: new parameter prefer_e164_format in :meth:`wxc_sdk.person_settings_numbers.NumbersApi.read`
+- fix: new :attr:`wxc_sdk.devices.Device.workspace_location_id`
+- fix: changes in CDR fields based on tests
 
 1.14.1
 ------

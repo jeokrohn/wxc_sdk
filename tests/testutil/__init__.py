@@ -176,7 +176,7 @@ def us_location_info(*, api: WebexSimpleApi) -> list[LocationInfo]:
     # group numbers by location id
     numbers_by_location: dict[str, list[NumberListPhoneNumber]] = defaultdict(list)
     for number in numbers:
-        numbers_by_location[number.location.location_id].append(number)
+        numbers_by_location[number.location.id].append(number)
     # collect results
     result = []
     for loc in us_locations:

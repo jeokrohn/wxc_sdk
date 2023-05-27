@@ -78,6 +78,7 @@ class CDRRelatedReason(str, Enum):
     unrecognised = 'Unrecognised'
     call_pickup = 'CallPickup'
     call_forward_always = 'CallForwardAlways'
+    call_forward_busy = 'CallForwardBusy'
     fax_deposit = 'FaxDeposit'
     hunt_group = 'HuntGroup'
     push_notification_retrieval = 'PushNotificationRetrieval'
@@ -99,6 +100,7 @@ class CDRUserType(str, Enum):
     call_center_standard = 'CallCenterStandard'
     voice_xml = 'VoiceXML'
     route_point = 'RoutePoint'
+    virtual_line = 'VirtualLine'
 
 
 class CDR(ApiModel):
@@ -110,9 +112,10 @@ class CDR(ApiModel):
         :param values:
         :return:
         """
-        empty_attrs = [k for k, v in values.items() if v == '' and k.endswith('time')]
-        for k in empty_attrs:
-            values.pop(k)
+        values = {k: v for k,v in values.items() if v != ''}
+        # empty_attrs = [k for k, v in values.items() if v == '' and k.endswith('time')]
+        # for k in empty_attrs:
+        #     values.pop(k)
         return values
 
     #: The time the call was answered. Time is in UTC.
@@ -143,6 +146,11 @@ class CDR(ApiModel):
     correlation_id: Optional[str] = Field(alias='Correlation ID')
     #: The country code of the dialed number. This is only populated for international calls.
     international_country: Optional[str] = Field(alias='International country')
+    #: The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call. It
+    #: can be used for end-to-end tracking of a SIP session in IP-based multimedia communication. Each call consists of
+    #: two UUIDs known as Local Session ID and Remote Session ID.
+    #:   * The Local SessionID is generated from the Originating user agent.
+    local_session_id: Optional[str] = Field(alias='Local SessionID')
     #: The MAC address of the device, if known.
     device_mac: Optional[str] = Field(alias='Device MAC')
     #: The length of the call in seconds.
@@ -179,8 +187,20 @@ class CDR(ApiModel):
     #: A unique identifier for the user associated with the call. This is a unique identifier across Cisco products.
     user_uuid: Optional[str] = Field(alias='User UUID')
     #: The user who made or received the call.
-    user: Optional[str]
+    user: Optional[str] = Field(alias='User')
     #: The type of user (user or workspace) that made or received the call. For example:
+    #:  * AutomatedAttendantVideo
+    #:  * Anchor
+    #:  * BroadworksAnywhere
+    #:  * VoiceMailRetrieval
+    #:  * LocalGateway
+    #:  * HuntGroup
+    #:  * GroupPaging
+    #:  * User
+    #:  * VoiceMailGroup
+    #:  * CallCenterStandard
+    #:  * VoiceXML
+    #:  * RoutePoint
     user_type: Optional[CDRUserType] = Field(alias='User type')
     #: For incoming calls, the telephone number of the user. For outgoing calls, it's the telephone number of the
     #: called party.
@@ -210,6 +230,11 @@ class CDR(ApiModel):
     #: Unknown: Used when the call has partial information or is unable to gather enough information about the party
     #: who released the call. It could be because of situations like force lock or because of a session audit failure.
     releasing_party: Optional[str] = Field(alias='Releasing party')
+    #: The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call. It
+    #: can be used for end-to-end tracking of a SIP session in IP-based multimedia communication. Each call consists of
+    #: two UUIDs known as Local Session ID and Remote Session ID.
+    #:   * The Remote SessionID is generated from the Terminating user agent.
+    remote_session_id: Optional[str] = Field(alias='Remote SessionID')
     #: When the call has been redirected one or more times, this field reports the last redirecting number.
     #: Identifies who last redirected the call. Only applies to call scenarios such as transfer, call forwarded calls,
     #: simultaneous rings, etc.
@@ -221,6 +246,8 @@ class CDR(ApiModel):
     #: Transfer related call ID is used as a call identifier of the other call involved in the transfer. You can share
     #: this ID with Cisco TAC to help them pinpoint parties who are involved during a call transfer.
     transfer_related_call_id: Optional[str] = Field(alias='Transfer related call ID')
+    #: The user who made or received the call.
+    user: Optional[str]
     #: The authorization code admin created for a location or site for users to use. Collected by the
     #: Account/Authorization Codes or Enhanced Outgoing Calling Plan services.
     authorization_code: Optional[str] = Field(alias='Authorization code')
