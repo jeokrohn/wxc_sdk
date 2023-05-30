@@ -431,7 +431,8 @@ class AsDevicesApi(AsApiChild, base='devices'):
         super().__init__(session=session)
         self.settings_jobs = AsDeviceSettingsJobsApi(session=session)
 
-    def list_gen(self, person_id: str = None, workspace_id: str = None, display_name: str = None, product: str = None,
+    def list_gen(self, person_id: str = None, workspace_id: str = None, workspace_location_id: str = None,
+             display_name: str = None, product: str = None,
              product_type: str = None, tag: str = None, connection_status: str = None, serial: str = None,
              software: str = None, upgrade_channel: str = None, error_code: str = None, capability: str = None,
              permission: str = None, org_id: str = None, **params) -> AsyncGenerator[Device, None, None]:
@@ -445,6 +446,8 @@ class AsDevicesApi(AsApiChild, base='devices'):
         :type person_id: str
         :param workspace_id: List devices by workspace ID.
         :type workspace_id: str
+        :param workspace_location_id: List devices by workspace location ID.
+        :type workspace_location_id: str
         :param display_name: List devices with this display name.
         :type display_name: str
         :param product: List devices with this product name.
@@ -481,7 +484,8 @@ class AsDevicesApi(AsApiChild, base='devices'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Device, params=params, item_key='items')
 
-    async def list(self, person_id: str = None, workspace_id: str = None, display_name: str = None, product: str = None,
+    async def list(self, person_id: str = None, workspace_id: str = None, workspace_location_id: str = None,
+             display_name: str = None, product: str = None,
              product_type: str = None, tag: str = None, connection_status: str = None, serial: str = None,
              software: str = None, upgrade_channel: str = None, error_code: str = None, capability: str = None,
              permission: str = None, org_id: str = None, **params) -> List[Device]:
@@ -495,6 +499,8 @@ class AsDevicesApi(AsApiChild, base='devices'):
         :type person_id: str
         :param workspace_id: List devices by workspace ID.
         :type workspace_id: str
+        :param workspace_location_id: List devices by workspace location ID.
+        :type workspace_location_id: str
         :param display_name: List devices with this display name.
         :type display_name: str
         :param product: List devices with this product name.
@@ -1108,10 +1114,14 @@ class AsLocationsApi(AsApiChild, base='locations'):
                 address[p] = v
             else:
                 body[p] = v
+        # TODO: this is broken see conversation in "Implementation - Locations as a Common Construct"
+        if (tz := body.pop('timeZone', None)) is not None:
+            body['timezone'] = tz
         body['address'] = address
         params = org_id and {'orgId': org_id} or None
         url = self.ep()
         data = await self.post(url=url, json=body, params=params)
+        # TODO: doc issue, looks like this endpoint returns location details, but the doc only mentions "id"
         return data['id']
 
     async def update(self, location_id: str, settings: Location, org_id: str = None):
@@ -1134,6 +1144,7 @@ class AsLocationsApi(AsApiChild, base='locations'):
         if settings_copy.address and not settings_copy.address.address2:
             settings_copy.address.address2 = None
 
+        # TODO: check whether update also needs a TZ fix
         data = settings_copy.json(exclude={'location_id', 'org_id'}, exclude_none=False, exclude_unset=True)
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
@@ -5408,6 +5419,8 @@ class AsHotelingApi(AsPersonSettingsApiChild):
     """
     API for person's hoteling settings
     """
+
+    # TODO: this seems to be wrong. For workspace devices methods exist with complete coverage for all hoteling settings
 
     feature = 'hoteling'
 
@@ -12503,7 +12516,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
     async def enable_for_calling(self, location: Location, org_id: str = None) -> str:
         """
-        Enable a location by adding it to Webex Calling. This add Webex Calling support to a location created created
+        Enable a location by adding it to Webex Calling. This add Webex Calling support to a location created
         using the POST /v1/locations API.
 
         Locations are used to support calling features which can be defined at the location level.
@@ -13900,7 +13913,7 @@ class AsWorkspaceLocationApi(AsApiChild, base='workspaceLocations'):
 
 
 class AsWorkspaceDevicesApi(AsApiChild, base='telephony/config/workspaces'):
-    def list_gen(self, workspace_id: str, org_id: str = None) -> AsyncGenerator[WorkspaceDevice, None, None]:
+    def list_gen(self, workspace_id: str, org_id: str = None) -> AsyncGenerator[TelephonyDevice, None, None]:
         """
         Get all devices for a workspace.
         This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
@@ -13916,9 +13929,9 @@ class AsWorkspaceDevicesApi(AsApiChild, base='telephony/config/workspaces'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/devices')
-        return self.session.follow_pagination(url=url, model=WorkspaceDevice, params=params, item_key='devices')
+        return self.session.follow_pagination(url=url, model=TelephonyDevice, params=params, item_key='devices')
 
-    async def list(self, workspace_id: str, org_id: str = None) -> List[WorkspaceDevice]:
+    async def list(self, workspace_id: str, org_id: str = None) -> List[TelephonyDevice]:
         """
         Get all devices for a workspace.
         This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
@@ -13934,7 +13947,7 @@ class AsWorkspaceDevicesApi(AsApiChild, base='telephony/config/workspaces'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/devices')
-        return [o async for o in self.session.follow_pagination(url=url, model=WorkspaceDevice, params=params, item_key='devices')]
+        return [o async for o in self.session.follow_pagination(url=url, model=TelephonyDevice, params=params, item_key='devices')]
 
     async def modify_hoteling(self, workspace_id: str, hoteling: Hoteling, org_id: str = None):
         """
@@ -13949,7 +13962,8 @@ class AsWorkspaceDevicesApi(AsApiChild, base='telephony/config/workspaces'):
         :param org_id: Organization to which the workspace belongs.
         :type org_id: str
 
-        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/modify-workspace-devices
+        documentation: https://developer.webex.com/docs/api/v1/webex-calling-organization-settings/modify-workspace
+        -devices
         """
         params = {}
         if org_id is not None:

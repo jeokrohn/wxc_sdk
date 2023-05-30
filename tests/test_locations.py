@@ -481,20 +481,18 @@ class TestUpdate(TestWithLocations):
         async with self.target_location() as target:
             target: Location
             new_name = f'{target.name}XYZ'
-            update = Location(name=new_name)
             expected = target.copy(deep=True)
             expected.name = new_name
-            await self.update_and_verify(target=target, update=update, expected=expected)
+            await self.update_and_verify(target=target, update=expected, expected=expected)
 
     @async_test
     async def test_002_update_timezone(self):
         async with self.target_location() as target:
             target: Location
             new_zone = 'America/New_York' if target.time_zone == 'America/Los_Angeles' else 'America/Los_Angeles'
-            update = Location(time_zone=new_zone)
             expected = target.copy(deep=True)
             expected.time_zone = new_zone
-            await self.update_and_verify(target=target, update=update, expected=expected)
+            await self.update_and_verify(target=target, update=expected, expected=expected)
 
     @async_test
     async def test_003_update_address2(self):
@@ -504,14 +502,9 @@ class TestUpdate(TestWithLocations):
         async with self.target_location() as target:
             target: Location
             address2 = 'whatever'
-            update = Location(address=LocationAddress(address1=target.address.address1,
-                                                      city=target.address.city,
-                                                      address2=address2,
-                                                      postal_code=target.address.postal_code,
-                                                      state=target.address.state))
             expected = target.copy(deep=True)
             expected.address.address2 = address2
-            await self.update_and_verify(target=target, update=update, expected=expected)
+            await self.update_and_verify(target=target, update=expected, expected=expected)
 
     @async_test
     async def test_004_clear_whatever(self):
@@ -568,8 +561,10 @@ class TestUpdateTelephony(TestCaseWithLog):
         if self.locations is None:
             with self.no_log():
                 locations = await self.async_api.locations.list()
+                # some location are getting created as workspace locations. These locations don't have preferred
+                # language and we ignore them as candidates for these tests
                 us_locations = [loc for loc in locations
-                                if loc.address.country == 'US']
+                                if loc.address.country == 'US' and loc.preferred_language]
                 if not us_locations:
                     self.skipTest('Need some US locations to run test')
                 details = await asyncio.gather(*[self.async_api.telephony.location.details(location_id=loc.location_id)
@@ -638,7 +633,9 @@ class TestUpdateTelephony(TestCaseWithLog):
             with self.assertRaises(AsRestError) as exc:
                 await self.update_and_verify(target=target, update=update, expected=expected)
             rest_error: AsRestError = exc.exception
-            self.assertEqual(502, rest_error.status)
+            self.assertEqual(400, rest_error.status)
+            self.assertEqual(5600, rest_error.detail.code)
+
 
     @async_test
     async def test_003_oac(self):
@@ -669,7 +666,7 @@ class TestUpdateTelephony(TestCaseWithLog):
     @async_test
     async def test_005_main_number(self):
         """
-        update OAC
+        update main number
         """
         tn = None
         try:
@@ -737,10 +734,10 @@ class LocationInfo:
 
     @property
     def ok(self) -> bool:
-        return self.location is not None and self.workspace is not None and self.calling is not None and \
-            webex_id_to_uuid(
-                self.location.location_id) == webex_id_to_uuid(self.calling.location_id) and webex_id_to_uuid(
-                self.location.location_id) == webex_id_to_uuid(self.workspace.id).split('#')[-1]
+        location_uuid = self.location and webex_id_to_uuid(self.location.location_id)
+        return self.location is not None and self.workspace is not None and \
+            location_uuid == webex_id_to_uuid(self.workspace.id).split('#')[-1] and \
+            (self.calling is None or location_uuid == webex_id_to_uuid(self.calling.location_id))
 
 
 class TestLocationConsistency(TestCaseWithLog):
@@ -779,9 +776,9 @@ class TestLocationConsistency(TestCaseWithLog):
                 print(
                     f'         ws location id: {webex_id_to_uuid(info.workspace.id)} '
                     f'{base64.b64decode(info.workspace.id + "==").decode()}')
-                print(f'  telephony location id: {webex_id_to_uuid(info.calling.location_id)}')
+                print(f'  telephony location id: {info.calling and webex_id_to_uuid(info.calling.location_id)}')
                 continue
-            print(f'"{name}"')
+            print(f'!!!!!!!!! {name} with issues:')
             if info.location is not None:
                 print(f'                              location id: {webex_id_to_uuid(info.location.location_id)}')
             if info.workspace is not None:

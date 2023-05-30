@@ -26,7 +26,7 @@ class TestCDR(TestCaseWithLog):
         print(f'Got {len(cdrs)} CDRs')
         call_ids = set(cdr.call_id for cdr in cdrs)
         print(f'{len(call_ids)} different call IDs:')
-        print('\n'.join(f'  {c}' for c in sorted(call_ids, key=lambda v:v or '')))
+        print('\n'.join(f'  {c}' for c in sorted(call_ids, key=lambda v: v or '')))
 
         by_correlation_id: dict[str, list[CDR]] = reduce(lambda s, el: s[el.correlation_id].append(el) or s,
                                                          cdrs,
@@ -37,8 +37,6 @@ class TestCDR(TestCaseWithLog):
             for record in records:
                 print(f'    {record.start_time} {record.answer_time} {record.duration} {record.calling_number}'
                       f'->{record.called_number} {record.call_id}')
-
-        foo = 1
 
     def test_002_pagination(self):
         """

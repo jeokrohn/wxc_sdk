@@ -57,7 +57,7 @@ class TestMoveNumbers(TestWithLocations):
             self.async_api.telephony.phone_numbers(number_type=NumberType.number))
         details: list[TelephonyLocation]
         numbers: list[NumberListPhoneNumber]
-        numbers_by_location = reduce(lambda r, e: r[e.location.location_id].append(e) or r, numbers, defaultdict(list))
+        numbers_by_location = reduce(lambda r, e: r[e.location.id].append(e) or r, numbers, defaultdict(list))
         candidates = [loc for loc in details
                       if loc.connection and numbers_by_location.get(loc.location_id)]
         if len(candidates) < 2:

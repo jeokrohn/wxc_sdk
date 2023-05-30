@@ -33,7 +33,8 @@ from ..common import UserType, PrimaryOrShared
 from ..common.schedules import ScheduleApi, ScheduleApiBase
 from ..rest import RestSession
 
-__all__ = ['PersonSettingsApi', 'DeviceOwner', 'DeviceActivationState', 'TelephonyDevice', 'PersonDevicesResponse']
+__all__ = ['PersonSettingsApi', 'DeviceOwner', 'DeviceActivationState', 'Hoteling', 'TelephonyDevice',
+           'PersonDevicesResponse']
 
 
 # TODO: UC profile
@@ -56,6 +57,18 @@ class DeviceActivationState(str, Enum):
     deactivated = 'DEACTIVATED'
 
 
+class Hoteling(ApiModel):
+    #: Enable/Disable hoteling Host. Enabling the device for hoteling means that a guest(end user) can log into this
+    #: host(workspace device) and use this device
+    #: as if it were their own. This is useful when traveling to a remote office but still needing to place/receive
+    #: calls with their telephone number and access features normally available to them on their office phone.
+    enabled: Optional[bool]
+    #: Enable limiting the time a guest can use the device. The time limit is configured via guestHoursLimit.
+    limit_guest_use: Optional[bool]
+    #: Time Limit in hours until hoteling is enabled. Mandatory if limitGuestUse is enabled.
+    guest_hours_limit: Optional[int]
+
+
 class TelephonyDevice(ApiModel):
     #: Unique identifier for a device.
     device_id: str = Field(alias='id')
@@ -70,6 +83,9 @@ class TelephonyDevice(ApiModel):
     #: This field indicates whether the person or the workspace is the owner of the device, and points to a primary
     #: Line/Port of the device.
     primary_owner: bool
+    # TODO: missing in documentation
+    #: Indicates Hoteling details of a device.
+    hoteling: Optional[Hoteling]
     #: Indicates if the line is acting as a primary line or a shared line for this device.
     device_type: PrimaryOrShared = Field(alias='type')
     #: Owner of device.

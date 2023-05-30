@@ -8,6 +8,11 @@ Release history
 - feat: new parameter prefer_e164_format in :meth:`wxc_sdk.person_settings_numbers.NumbersApi.read`
 - fix: new :attr:`wxc_sdk.devices.Device.workspace_location_id`
 - fix: changes in CDR fields based on tests
+- new: :attr:`wxc_sdk.events.EventData.title`
+- fix: camelCase issues for timezone when creating a location (temp fix): :meth:`wxc_sdk.locations.LocationsApi.create`
+- new: :attr:`wxc_sdk.person_settings.TelephonyDevice.hoteling`. Moved :class:`wxc_sdk.person_settings.Hoteling`,
+- fix: got rid of class WorkspaceDevice, use :class:`wxc_sdk.person_settings.TelephonyDevice` instead
+- feat: improved details in :class:`wxc_sdk.as_rest.AsRestError`
 
 1.14.1
 ------

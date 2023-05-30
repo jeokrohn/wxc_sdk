@@ -50,7 +50,8 @@ from wxc_sdk.messages import AdaptiveCard, AdaptiveCardAction, AdaptiveCardBody,
 from wxc_sdk.organizations import Organization
 from wxc_sdk.people import PeopleStatus, Person, PersonAddress, PersonType, PhoneNumber, PhoneNumberType,\
     SipAddress, SipType
-from wxc_sdk.person_settings import DeviceActivationState, DeviceOwner, PersonDevicesResponse, TelephonyDevice
+from wxc_sdk.person_settings import DeviceActivationState, DeviceOwner, Hoteling, PersonDevicesResponse,\
+    TelephonyDevice
 from wxc_sdk.person_settings.agent_caller_id import AgentQueue, QueueCallerId
 from wxc_sdk.person_settings.appservices import AppServicesSettings
 from wxc_sdk.person_settings.barge import BargeSettings
@@ -134,7 +135,6 @@ from wxc_sdk.tokens import Tokens
 from wxc_sdk.webhook import Webhook, WebhookCreate, WebhookEvent, WebhookEventData, WebhookEventType,\
     WebhookResource, WebhookStatus
 from wxc_sdk.workspace_locations import WorkspaceLocation, WorkspaceLocationFloor
-from wxc_sdk.workspace_settings.devices import Hoteling, WorkspaceDevice
 from wxc_sdk.workspace_settings.numbers import WorkspaceNumbers
 from wxc_sdk.workspaces import Calendar, CalendarType, CallingType, CapabilityMap, WorkSpaceType, Workspace,\
     WorkspaceCalling, WorkspaceEmail, WorkspaceSupportedDevices, WorkspaceWebexCalling
@@ -231,6 +231,6 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'VoicemailNotifications', 'VoicemailSettings', 'VoicemailTransferToNumber', 'WaitMessageSetting',
            'WaitMode', 'Webhook', 'WebhookCreate', 'WebhookEvent', 'WebhookEventData', 'WebhookEventType',
            'WebhookResource', 'WebhookStatus', 'WelcomeMessageSetting', 'WifiCustomization', 'WifiNetwork',
-           'WorkSpaceType', 'Workspace', 'WorkspaceCalling', 'WorkspaceDevice', 'WorkspaceEmail', 'WorkspaceLocation',
+           'WorkSpaceType', 'Workspace', 'WorkspaceCalling', 'WorkspaceEmail', 'WorkspaceLocation',
            'WorkspaceLocationFloor', 'WorkspaceNumbers', 'WorkspaceSupportedDevices', 'WorkspaceWebexCalling',
            '_Helper', 'dt_iso_str', 'enum_str', 'plus1', 'to_camel', 'webex_id_to_uuid']

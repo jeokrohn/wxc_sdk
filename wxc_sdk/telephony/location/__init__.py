@@ -167,7 +167,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
 
     def enable_for_calling(self, location: Location, org_id: str = None) -> str:
         """
-        Enable a location by adding it to Webex Calling. This add Webex Calling support to a location created created
+        Enable a location by adding it to Webex Calling. This add Webex Calling support to a location created
         using the POST /v1/locations API.
 
         Locations are used to support calling features which can be defined at the location level.

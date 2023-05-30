@@ -46,6 +46,7 @@ class EventType(str, Enum):
 
 class EventData(ApiModel):
     id: Optional[str]
+    title: Optional[str]
     room_id: Optional[str]
     type: Optional[str]
     room_type: Optional[str]

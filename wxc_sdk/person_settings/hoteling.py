@@ -13,6 +13,8 @@ class HotelingApi(PersonSettingsApiChild):
     API for person's hoteling settings
     """
 
+    # TODO: this seems to be wrong. For workspace devices methods exist with complete coverage for all hoteling settings
+
     feature = 'hoteling'
 
     def read(self, person_id: str, org_id: str = None) -> bool:

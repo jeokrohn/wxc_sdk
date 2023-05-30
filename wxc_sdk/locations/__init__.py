@@ -8,7 +8,7 @@ Searching and viewing locations in your organization requires an administrator a
 spark-admin:people_read and spark-admin:people_write or spark-admin:device_read AND spark-admin:device_writescope
 combinations.
 """
-
+import json
 from collections.abc import Generator
 from typing import Optional, List
 
@@ -203,10 +203,14 @@ class LocationsApi(ApiChild, base='locations'):
                 address[p] = v
             else:
                 body[p] = v
+        # TODO: this is broken see conversation in "Implementation - Locations as a Common Construct"
+        if (tz := body.pop('timeZone', None)) is not None:
+            body['timezone'] = tz
         body['address'] = address
         params = org_id and {'orgId': org_id} or None
         url = self.ep()
         data = self.post(url=url, json=body, params=params)
+        # TODO: doc issue, looks like this endpoint returns location details, but the doc only mentions "id"
         return data['id']
 
     def update(self, location_id: str, settings: Location, org_id: str = None):
@@ -229,6 +233,7 @@ class LocationsApi(ApiChild, base='locations'):
         if settings_copy.address and not settings_copy.address.address2:
             settings_copy.address.address2 = None
 
+        # TODO: check whether update also needs a TZ fix
         data = settings_copy.json(exclude={'location_id', 'org_id'}, exclude_none=False, exclude_unset=True)
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)

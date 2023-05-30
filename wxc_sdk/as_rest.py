@@ -11,27 +11,32 @@ from collections.abc import AsyncGenerator
 from functools import wraps
 from io import TextIOBase, StringIO
 from time import perf_counter_ns
-from typing import Tuple, Type, Optional
+from typing import Tuple, Type, Optional, Any
 
 from aiohttp import ClientSession, ClientResponse, ClientResponseError, RequestInfo
 from aiohttp.typedefs import LooseHeaders
-from pydantic import BaseModel, Field
+from pydantic import ValidationError
 
 from .base import ApiModel
 from .base import StrOrDict
 from .tokens import Tokens
 
-__all__ = ['AsSingleError', 'AsErrorDetail', 'AsRestError', 'as_dump_response', 'AsRestSession']
+__all__ = ['AsErrorMessage', 'AsSingleError', 'AsErrorDetail', 'AsRestError', 'as_dump_response', 'AsRestSession']
 
 log = logging.getLogger(__name__)
 
 
-class AsSingleError(BaseModel):
+class AsErrorMessage(ApiModel):
+    description: str
+    code: Optional[int]
+
+
+class AsSingleError(ApiModel):
     """
     Representation of single error in the body of an HTTP error response from Webex
     """
-    description: str
-    error_code: Optional[int] = Field(alias='errorCode')
+    key: Optional[str]
+    message: list[AsErrorMessage]
 
     @property
     def code(self) -> Optional[int]:
@@ -40,17 +45,24 @@ class AsSingleError(BaseModel):
 
         :return: error code
         """
-        return self.error_code
+        return self.message[0].code
+
+    @property
+    def description(self) -> Optional[int]:
+        """
+        Description or None
+
+        :return: description
+        """
+        return self.message[0].description
 
 
 class AsErrorDetail(ApiModel):
     """
     Representation of error details in the body of an HTTP error response from Webex
     """
-    error_code: Optional[int] = Field(alias='errorCode')
-    message: str  #: error message
-    errors: list[AsSingleError]  #: list of errors; typically has a single entry
-    tracking_id: str  #: tracking ID of the request
+    error: list[AsSingleError]
+    tracking_id: Optional[str]
 
     @property
     def description(self) -> str:
@@ -58,7 +70,7 @@ class AsErrorDetail(ApiModel):
         error description
 
         """
-        return self.errors and self.errors[0].description or ''
+        return self.error and self.error[0].description or ''
 
     @property
     def code(self) -> Optional[int]:
@@ -66,7 +78,7 @@ class AsErrorDetail(ApiModel):
         error code
 
         """
-        return self.errors and self.errors[0].code or None
+        return self.error and self.error[0].code or None
 
 
 class AsRestError(ClientResponseError):
@@ -75,8 +87,13 @@ class AsRestError(ClientResponseError):
     """
 
     def __init__(self, request_info: RequestInfo, history: Tuple[ClientResponse, ...], *, code: Optional[int] = None,
-                 status: Optional[int] = None, message: str = "", headers: Optional[LooseHeaders] = None) -> None:
+                 status: Optional[int] = None, message: str = "", headers: Optional[LooseHeaders] = None,
+                 detail: Any = None) -> None:
         super().__init__(request_info, history, code=code, status=status, message=message, headers=headers)
+        try:
+            self.detail = AsErrorDetail.parse_obj(detail)
+        except ValidationError:
+            self.detail = detail
         # TODO: implement equivalent to __init__ in sync implementation
 
 
@@ -283,7 +300,8 @@ class AsRestSession(ClientSession):
                 # create a RestError based on HTTP error
                 error = AsRestError(request_info=error.request_info,
                                     history=error.history, status=error.status,
-                                    message=error.message, headers=error.headers)
+                                    message=error.message, headers=error.headers,
+                                    detail=response_data)
                 raise error
 
         return response, response_data
