@@ -13,6 +13,7 @@ Release history
 - new: :attr:`wxc_sdk.person_settings.TelephonyDevice.hoteling`. Moved :class:`wxc_sdk.person_settings.Hoteling`,
 - fix: got rid of class WorkspaceDevice, use :class:`wxc_sdk.person_settings.TelephonyDevice` instead
 - feat: improved details in :class:`wxc_sdk.as_rest.AsRestError`
+- fix: camelCase issues for timezone when updating a location (temp fix): :meth:`wxc_sdk.locations.LocationsApi.update`
 
 1.14.1
 ------

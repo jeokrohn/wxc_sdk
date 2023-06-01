@@ -59,10 +59,14 @@ class AsSingleError(ApiModel):
 
 class AsErrorDetail(ApiModel):
     """
-    Representation of error details in the body of an HTTP error response from Webex
+    Representation of error details in the body of an HTTP error response from Webex. There are several variants of
+    error responses. This model tries to generalize them
     """
-    error: list[AsSingleError]
+    error: Optional[list[AsSingleError]]
     tracking_id: Optional[str]
+    #
+    message: Optional[str]
+    errors: Optional[list[AsErrorMessage]]
 
     @property
     def description(self) -> str:
@@ -70,7 +74,7 @@ class AsErrorDetail(ApiModel):
         error description
 
         """
-        return self.error and self.error[0].description or ''
+        return self.error and self.error[0].description or (self.errors and self.errors[0].description)
 
     @property
     def code(self) -> Optional[int]:

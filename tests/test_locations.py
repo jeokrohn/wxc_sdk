@@ -34,6 +34,7 @@ from wxc_sdk.telephony.location.internal_dialing import InternalDialing
 from wxc_sdk.telephony.prem_pstn.route_group import RouteGroup
 from wxc_sdk.telephony.prem_pstn.trunk import Trunk
 from wxc_sdk.telephony.virtual_line import VirtualLine
+from wxc_sdk.telephony.voicemail_groups import VoicemailGroup
 from wxc_sdk.workspace_locations import WorkspaceLocation
 from wxc_sdk.workspaces import Workspace
 
@@ -907,19 +908,24 @@ class TestLocationConsistency(TestCaseWithLog):
         def check_exists(number_key: NumberListPhoneNumber, cache: dict[str, Any],
                          list_call: Callable[[], Generator[Any, None, None]],
                          key_attr: Callable[[Any], str], entity: str):
-            key = number_key.owner.owner_id
+            key = webex_id_to_uuid(number_key.owner.owner_id)
             if not cache:
                 entities = list_call()
                 # assert that dict has at least one entry .. even if the list call doesn't return anything
                 cache[''] = ''
                 # add entities to dict
                 for en in entities:
-                    cache[key_attr(en)] = en
+                    cache[webex_id_to_uuid(key_attr(en))] = en
             if cache.get(key) is None:
                 return f'{entity} not found'
             return ''
 
         def vm_exists(number_key: NumberListPhoneNumber) -> str:
+            """
+            Validator for VM portal number
+            :param number_key:
+            :return:
+            """
             # get VM portal settings for location
             try:
                 vm_settings = self.api.telephony.voiceportal.read(location_id=number_key.location.id)
@@ -943,13 +949,16 @@ class TestLocationConsistency(TestCaseWithLog):
             call_queues: dict[str, CallQueue]
             places: dict[str, Workspace]
             hunt_groups: dict[str, HuntGroup]
+            vm_groups: dict[str, VoicemailGroup]
 
         validator_cache = ValidatorCache(users=dict(),
                                          auto_attendants=dict(),
                                          virtual_lines=dict(),
                                          call_queues=dict(),
                                          places=dict(),
-                                         hunt_groups=dict())
+                                         hunt_groups=dict(),
+                                         vm_groups=dict())
+        # dict of validators for each owner type
         validators = {
             OwnerType.people: partial(check_exists, cache=validator_cache.users,
                                       list_call=partial(self.api.people.list, callingData=True),
@@ -969,7 +978,10 @@ class TestLocationConsistency(TestCaseWithLog):
             OwnerType.hunt_group: partial(check_exists, cache=validator_cache.hunt_groups,
                                           list_call=self.api.telephony.huntgroup.list,
                                           key_attr=attrgetter('id'), entity='huntgroup'),
-            OwnerType.voice_messaging: vm_exists
+            OwnerType.voice_messaging: vm_exists,
+            OwnerType.voicemail_group: partial(check_exists, cache=validator_cache.vm_groups,
+                                               list_call=self.api.telephony.voicemail_groups.list,
+                                               key_attr=attrgetter('group_id'), entity='voicemail group')
         }
 
         numbers = list(self.api.telephony.phone_numbers())
@@ -1013,6 +1025,6 @@ class TestLocationConsistency(TestCaseWithLog):
 
         for name, ws_id in ws_name_and_id.items():
             if name not in owner_name_and_id:
-                print(f'{name} workspace id {ws_id}, not references as owner')
+                print(f'{name} workspace id {ws_id}, not referenced as owner')
 
         self.assertFalse(err, 'Some issues with numbers')

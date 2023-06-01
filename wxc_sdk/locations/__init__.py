@@ -233,11 +233,16 @@ class LocationsApi(ApiChild, base='locations'):
         if settings_copy.address and not settings_copy.address.address2:
             settings_copy.address.address2 = None
 
-        # TODO: check whether update also needs a TZ fix
-        data = settings_copy.json(exclude={'location_id', 'org_id'}, exclude_none=False, exclude_unset=True)
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
-        self.put(url=url, data=data, params=params)
+
+        # TODO: this is broken see conversation in "Implementation - Locations as a Common Construct"
+        data = json.loads(settings_copy.json(exclude={'location_id', 'org_id'}, exclude_none=False, exclude_unset=True))
+        data['timezone'] = data.pop('timeZone', None)
+        self.put(url=url, json=data, params=params)
+
+        # data = settings_copy.json(exclude={'location_id', 'org_id'}, exclude_none=False, exclude_unset=True)
+        # self.put(url=url, data=data, params=params)
 
     def list_floors(self, location_id: str) -> List[Floor]:
         """
