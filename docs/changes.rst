@@ -14,6 +14,7 @@ Release history
 - fix: got rid of class WorkspaceDevice, use :class:`wxc_sdk.person_settings.TelephonyDevice` instead
 - feat: improved details in :class:`wxc_sdk.as_rest.AsRestError`
 - fix: camelCase issues for timezone when updating a location (temp fix): :meth:`wxc_sdk.locations.LocationsApi.update`
+- feat: new example catch_tns.py
 
 1.14.1
 ------

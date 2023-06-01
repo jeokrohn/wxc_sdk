@@ -1,0 +1,12 @@
+# rename this to catch_tns.env and set values
+
+# client ID for integration to be used.
+TOKEN_INTEGRATION_CLIENT_ID=
+
+# client secret of integration
+TOKEN_INTEGRATION_CLIENT_SECRET=
+
+# scopes to request. Use these scopes when creating the integration at developer.webex.com
+# scopes can be in any form supported by wxc_sdk.scopes.parse_scopes()
+TOKEN_INTEGRATION_CLIENT_SCOPES="spark:calls_write spark:kms spark:calls_read spark-admin:telephony_config_read spark:people_read"
+
