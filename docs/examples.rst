@@ -225,6 +225,30 @@ Source: |service_app.py|_
 .. literalinclude:: ../examples/service_app.py
     :linenos:
 
+Pool unassigned TNs on hunt groups to catch calls to unassigned TNs
+-------------------------------------------------------------------
+
+This script looks for unassigned TNs and assigns them to HGs that are forwarded to the locations main number.
+The idea is to catch all incoming calls to unassigned TNs and handle them accordingly.
+
+    | usage: catch_tns.py [-h] [--test] [--location LOCATION] [--token TOKEN]
+    |                     [--cleanup]
+    | 
+    | optional arguments:
+    |   -h, --help           show this help message and exit
+    |   --test               test only; don't actually apply any config
+    |   --location LOCATION  Location to work on
+    |   --token TOKEN        admin access token to use.
+    |   --cleanup            remove all pooling HGs
+    |
+
+
+Source: |catch_tns.py|_
+
+.. |catch_tns.py| replace:: ``catch_tns.py``
+
+.. literalinclude:: ../examples/catch_tns.py
+    :linenos:
 
 
 .. _examples directory on GitHub: https://github.com/jeokrohn/wxc_sdk/tree/master/examples
@@ -242,6 +266,7 @@ Source: |service_app.py|_
 .. _call_intercept.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/call_intercept.py
 .. _queue_helper.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/queue_helper.py
 .. _service_app.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/service_app.py
+.. _catch_tns.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/catch_tns.py
 
 .. _webbrowser module: https://docs.python.org/3/library/webbrowser.html
 .. _My Webex Apps on developer.webex.com: https://developer.webex.com/my-apps
