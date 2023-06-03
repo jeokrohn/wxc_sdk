@@ -120,6 +120,11 @@ async def pool_tns_location(api: AsWebexSimpleApi, args: Namespace, location: Id
 
     async def add_to_hg(hg: Union[HuntGroup, str],
                         tns: list[NumberListPhoneNumber]):
+        """
+        Add a bunch of TNs to given HG
+        :param hg: can be an existing HG or a name of a HG to be created
+        :param tns: list of TNs to be added to the HG
+        """
         if isinstance(hg, str):
             # create new HG
             print(f'Creating HG "{hg}" in location "{location.name}" for: '
@@ -130,6 +135,9 @@ async def pool_tns_location(api: AsWebexSimpleApi, args: Namespace, location: Id
                                         phone_number=tns[0].phone_number)
             new_id = await api.telephony.huntgroup.create(location_id=location.id,
                                                           settings=settings)
+            # Get details of new HG and also the forwarding settings
+            # * details are needed for the recursive call to add_to_hg .. in case we have more than one TN to add
+            # * ... and forwarding settings are needed b/c we want to set CFwdAll to location's main number
             details, forwarding = await asyncio.gather(
                 api.telephony.huntgroup.details(location_id=location.id, huntgroup_id=new_id),
                 api.telephony.huntgroup.forwarding.settings(location_id=location.id, feature_id=new_id))
@@ -137,6 +145,7 @@ async def pool_tns_location(api: AsWebexSimpleApi, args: Namespace, location: Id
             details: HuntGroup
 
             # set call forwarding
+            print(f'HG "{hg}" in location "{location.name}": set CFwdAll to {main_number}')
             forwarding.always.enabled = True
             forwarding.always.destination = main_number
             await api.telephony.huntgroup.forwarding.update(location_id=location.id, feature_id=new_id,
@@ -151,10 +160,12 @@ async def pool_tns_location(api: AsWebexSimpleApi, args: Namespace, location: Id
               f'{", ".join(tn.phone_number for tn in tns)}')
         if args.test:
             return
+        # weirdly on GET alternate numbers are returned in alternate_number_settings ...
         alternate_numbers = hg.alternate_number_settings.alternate_numbers
         alternate_numbers.extend(AlternateNumber(phone_number=tn.phone_number,
                                                  ring_pattern=RingPattern.normal)
                                  for tn in tns)
+        # ... while for an update Wx expects the alternate numbers in an alternate_number attribute
         update = HuntGroup(alternate_numbers=alternate_numbers)
         await api.telephony.huntgroup.update(location_id=location.id,
                                              huntgroup_id=hg.id,
@@ -176,33 +187,50 @@ async def pool_tns_location(api: AsWebexSimpleApi, args: Namespace, location: Id
     # get list if "pool" HGs in location
     existing_hg_list = [hg for hg in await api.telephony.huntgroup.list(location_id=location.id)
                         if hg.name.startswith(POOL_HG_NAME)]
+
+    # we need the details for all HGs: list() response is missing the alternate number list
+    # get all HG details in parallel
     existing_hg_list = await asyncio.gather(*[api.telephony.huntgroup.details(location_id=location.id,
                                                                               huntgroup_id=hg.id)
                                               for hg in existing_hg_list])
     existing_hg_list: list[HuntGroup]
+
+    # start with an empty list of tasks
     tasks = []
 
     # assign TNs to existing "pool" HGs
-    hgs_with_open_slots = (hg for hg in existing_hg_list if len(hg.alternate_number_settings.alternate_numbers) < 10)
+
+    # these are the HGs we can still assign some TNs to
+    hgs_with_open_slots = (hg
+                           for hg in existing_hg_list
+                           if len(hg.alternate_number_settings.alternate_numbers) < 10)
     tns.sort(key=attrgetter('phone_number'))
     while tns:
         hg_with_open_slots = next(hgs_with_open_slots, None)
         if hg_with_open_slots is None:
+            # no more HGs we can assign TNs to --> we are done here
             break
-        # add some tns to this hg
+
+        # add some tns to this hg; hg can have max 10 alternate numbers
         tns_to_add = 10 - len(hg_with_open_slots.alternate_number_settings.alternate_numbers)
         tasks.append(add_to_hg(hg=hg_with_open_slots, tns=tns[:tns_to_add]))
+
+        # continue w/ remaining TNs
         tns = tns[tns_to_add:]
 
     # assign remaining TNs to new "pool" HGs
     # .. in batches of 11
     existing_names = set(hg.name for hg in existing_hg_list)
-    new_hg_names = (name for i in range(1, 1000) if (name := f'{POOL_HG_NAME}{i:03d}') not in existing_names)
+    new_hg_names = (name
+                    for i in range(1, 1000)
+                    if (name := f'{POOL_HG_NAME}{i:03d}') not in existing_names)
     while tns:
         tasks.append(add_to_hg(hg=next(new_hg_names), tns=tns[:11]))
         tns = tns[11:]
-    results = await asyncio.gather(*tasks)
-    return results
+
+    # Now run all tasks
+    await asyncio.gather(*tasks)
+    return
 
 
 async def pool_tns(api: AsWebexSimpleApi, args: Namespace):
@@ -211,11 +239,12 @@ async def pool_tns(api: AsWebexSimpleApi, args: Namespace):
     """
     location_id = await location_id_from_args(api, args)
 
-    # get available TNs
+    # get available TNs. If a location argument was present then limit to that location
     numbers = await api.telephony.phone_numbers(available=True, location_id=location_id)
 
-    # we need to work on TNs by location
+    # we need to work on TNs by location ...
     tns_by_location: dict[str, list[NumberListPhoneNumber]] = defaultdict(list)
+    # ... and we want to collect location information (specifically the name)
     locations: dict[str, IdAndName] = dict()
     for tn in numbers:
         locations[tn.location.id] = tn.location
@@ -229,8 +258,7 @@ async def pool_tns(api: AsWebexSimpleApi, args: Namespace):
 
 async def catch_tns():
     """
-
-    :return:
+    Main async logic
     """
     parser = ArgumentParser()
     parser.add_argument('--test', required=False, help='test only; don\'t actually apply any config',
