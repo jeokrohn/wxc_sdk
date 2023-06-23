@@ -17,6 +17,7 @@ Release history
 - feat: new example catch_tns.py
 - feat: better handling of CDRs in :class:`wxc_sdk.cdr.CDR` to allow deserialization of addtl. fields
 - feat: new parameter ´retry_429' for :class:`wxc_sdk.WebexSimpleApi and :class:`wxc_sdk.as_api.AsWebexSimpleApi`
+- fix: missing :class:`wxc_sdk.locations.CreateLocationFloorBody` in __all__
 
 1.14.1
 ------
