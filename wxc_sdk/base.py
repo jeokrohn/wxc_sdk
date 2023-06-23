@@ -9,11 +9,14 @@ from dateutil import tz
 from pydantic import BaseModel, ValidationError
 
 __all__ = ['StrOrDict', 'webex_id_to_uuid', 'to_camel', 'ApiModel', 'CodeAndReason', 'ApiModelWithErrors', 'plus1',
-           'dt_iso_str', 'SafeEnum', 'enum_str']
+           'dt_iso_str', 'SafeEnum', 'enum_str', 'RETRY_429_MAX_WAIT']
 
 StrOrDict = Union[str, dict]
 
 log = logging.getLogger(__name__)
+
+# maximum wait time for 429 retries
+RETRY_429_MAX_WAIT = 60
 
 
 class SafeEnum(Enum):

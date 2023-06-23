@@ -17,7 +17,7 @@ from requests import HTTPError, Response, Session
 from requests.adapters import HTTPAdapter
 from requests.models import PreparedRequest
 
-from .base import ApiModel, StrOrDict
+from .base import ApiModel, StrOrDict, RETRY_429_MAX_WAIT
 from .tokens import Tokens
 
 __all__ = ['SingleError', 'ErrorDetail', 'RestError', 'RestSession', 'dump_response']
@@ -213,8 +213,8 @@ def retry_request(func):
         # determine how long we have to wait
         retry_after = int(response.headers.get('Retry-After', 5))
 
-        # never wait more than the defined maximum of 20 s
-        retry_after = min(retry_after, 20)
+        # never wait more than the defined maximum
+        retry_after = min(retry_after, RETRY_429_MAX_WAIT)
         time.sleep(retry_after)
         return False
 

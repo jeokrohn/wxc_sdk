@@ -17,7 +17,7 @@ from aiohttp import ClientSession, ClientResponse, ClientResponseError, RequestI
 from aiohttp.typedefs import LooseHeaders
 from pydantic import ValidationError
 
-from .base import ApiModel
+from .base import ApiModel, RETRY_429_MAX_WAIT
 from .base import StrOrDict
 from .tokens import Tokens
 
@@ -63,6 +63,7 @@ class AsErrorDetail(ApiModel):
     error responses. This model tries to generalize them
     """
     error: Optional[list[AsSingleError]]
+    error_code: Optional[int]
     tracking_id: Optional[str]
     #
     message: Optional[str]
@@ -201,7 +202,7 @@ def retry_request(func):
         retry_after = int(e.headers.get('Retry-After', 5))
 
         # never wait more than the defined maximum of 20 s
-        retry_after = min(retry_after, 20)
+        retry_after = min(retry_after, RETRY_429_MAX_WAIT)
         log.warning(f'429 retry after {retry_after} on {e.request_info.method} {e.request_info.url}')
         await asyncio.sleep(retry_after)
         return False
