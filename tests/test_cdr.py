@@ -1,10 +1,15 @@
 """
 Test CDR API
 """
+import asyncio
 from collections import defaultdict
+from datetime import datetime, timedelta
 from functools import reduce
 
-from tests.base import TestCaseWithLog
+from dateutil.tz import tz
+
+from tests.base import TestCaseWithLog, async_test
+from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.cdr import CDR
 from wxc_sdk.rest import RestError
 
@@ -52,3 +57,25 @@ class TestCDR(TestCaseWithLog):
                 return
             raise
         print(f'Got {len(cdrs)} CDRs')
+
+    @async_test
+    async def test_003_force_429(self):
+        """
+        Trying to force a 429 response
+        """
+        start_time = datetime.now(tz=tz.tzutc()) - timedelta(hours=47, minutes=58)
+        end_time = datetime.now(tz=tz.tzutc()) - timedelta(minutes=5, seconds=30)
+        print(f'Looking for CDRs between {start_time} and {end_time}')
+        try:
+            cdr1 = list(self.api.cdr.get_cdr_history(start_time=start_time,
+                                                     end_time=end_time))
+            cdr2 = list(self.api.cdr.get_cdr_history(start_time=start_time + timedelta(seconds=2),
+                                                     end_time=end_time + timedelta(seconds=2)))
+        except RestError as rest_error:
+            if rest_error.detail.error_code == 404 and rest_error.detail.message == 'No CDRs for requested time range and filters':
+                self.skipTest('No CDRs')
+
+        # we expect one 429 response
+        request_w_429 = next((request for request in self.requests()
+                              if request.status==429), None)
+        self.assertIsNotNone(request_w_429, 'Did not get the expected 429')

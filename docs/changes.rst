@@ -15,6 +15,7 @@ Release history
 - feat: improved details in :class:`wxc_sdk.as_rest.AsRestError`
 - fix: camelCase issues for timezone when updating a location (temp fix): :meth:`wxc_sdk.locations.LocationsApi.update`
 - feat: new example catch_tns.py
+- feat: better handling of CDRs in :class:`wxc_sdk.cdr.CDR` to allow deserialization of addtl. fields
 
 1.14.1
 ------
