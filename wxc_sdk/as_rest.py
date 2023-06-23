@@ -187,14 +187,15 @@ def retry_request(func):
     :return:
     """
 
-    async def giveup_429(e: ClientResponseError) -> bool:
+    async def giveup_429(e: ClientResponseError, retry_429: bool) -> bool:
         """
         callback for backoff on REST requests
 
         :param e: latest exception
+        :param retry_429: retry on 429?
         :return: True -> break the backoff loop
         """
-        if e.status != 429:
+        if e.status != 429 or not retry_429:
             # Don't retry on anything other than 429
             return True
 
@@ -214,7 +215,7 @@ def retry_request(func):
                 try:
                     result = await func(session, *args, **kwargs)
                 except ClientResponseError as e:
-                    if await giveup_429(e):
+                    if await giveup_429(e, session.retry_429):
                         raise
                 else:
                     break
@@ -233,10 +234,11 @@ class AsRestSession(ClientSession):
     #: base URL for all Webex API requests
     BASE = 'https://webexapis.com/v1'
 
-    def __init__(self, *, tokens: Tokens, concurrent_requests: int):
+    def __init__(self, *, tokens: Tokens, concurrent_requests: int, retry_429: bool = True):
         super().__init__()
         self._tokens = tokens
         self._sem = Semaphore(concurrent_requests)
+        self.retry_429 = retry_429
 
     def ep(self, path: str = None):
         """

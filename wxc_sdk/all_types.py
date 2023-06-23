@@ -1,6 +1,6 @@
 from wxc_sdk.attachment_actions import AttachmentAction, AttachmentActionData
-from wxc_sdk.base import ApiModel, ApiModelWithErrors, CodeAndReason, SafeEnum, StrOrDict, dt_iso_str, enum_str,\
-    plus1, to_camel, webex_id_to_uuid
+from wxc_sdk.base import ApiModel, ApiModelWithErrors, CodeAndReason, RETRY_429_MAX_WAIT, SafeEnum, StrOrDict,\
+    dt_iso_str, enum_str, plus1, to_camel, webex_id_to_uuid
 from wxc_sdk.cdr import CDR, CDRCallType, CDRClientType, CDRDirection, CDROriginalReason, CDRRedirectReason,\
     CDRRelatedReason, CDRUserType
 from wxc_sdk.common import AcdCustomization, AlternateNumber, AnnAudioFile, AtaCustomization, AtaDtmfMethod,\
@@ -20,7 +20,7 @@ from wxc_sdk.devices import ActivationCodeResponse, Device, TagOp
 from wxc_sdk.events import ComplianceEvent, EventData, EventResource, EventType
 from wxc_sdk.groups import Group, GroupMember
 from wxc_sdk.licenses import License, SiteType
-from wxc_sdk.locations import Floor, Location, LocationAddress
+from wxc_sdk.locations import CreateLocationFloorBody, Floor, Location, LocationAddress
 from wxc_sdk.meetings import AnswerCondition, ApprovalQuestion, ApprovalRule, AttendeePrivileges,\
     AudioConnectionOptions, AudioConnectionType, AutoRegistrationResult, BreakoutSession, CallInNumbers,\
     CreateMeetingBody, CustomizedQuestionForCreateMeeting, EntryAndExitTone, GetMeetingSurveyResponse, InputMode,\
@@ -160,8 +160,8 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'CallerIdSelectedType', 'CallingBehavior', 'CallingCDR', 'CallingLineId', 'CallingPermissions',
            'CallingType', 'CallsFrom', 'CapabilityMap', 'ChatObject', 'ClosedCaption', 'CnameRecord', 'CoHost',
            'CodeAndReason', 'ComfortMessageBypass', 'ComfortMessageSetting', 'CommonDeviceCustomization',
-           'ComplianceEvent', 'CreateInviteesItem', 'CreateMeetingBody', 'CreateMeetingInviteeBody',
-           'CreateMeetingInviteesBody', 'CreateResponse', 'CustomNumbers', 'Customer',
+           'ComplianceEvent', 'CreateInviteesItem', 'CreateLocationFloorBody', 'CreateMeetingBody',
+           'CreateMeetingInviteeBody', 'CreateMeetingInviteesBody', 'CreateResponse', 'CustomNumbers', 'Customer',
            'CustomizedQuestionForCreateMeeting', 'DND', 'DectDevice', 'DefaultAudioType', 'DefaultVoicemailPinRules',
            'DeleteTranscriptBody', 'DestinationType', 'Device', 'DeviceActivationState', 'DeviceCustomization',
            'DeviceCustomizations', 'DeviceManagedBy', 'DeviceManufacturer', 'DeviceMember', 'DeviceMembersResponse',
@@ -203,12 +203,12 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'PinLength', 'Policy', 'PrimaryOrShared', 'Privacy', 'PstnNumberDestination', 'PushToTalkAccessType',
            'PushToTalkSettings', 'QAObject', 'QualityResources', 'QueryMeetingParticipantsWithEmailBody', 'Question',
            'QuestionAnswer', 'QuestionOption', 'QuestionType', 'QuestionWithAnswers', 'QueueCallerId',
-           'QueueSettings', 'RGTrunk', 'Recall', 'RecallHuntGroup', 'ReceptionistSettings', 'Record',
-           'RecordingState', 'RecurWeekly', 'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence', 'RedirectReason',
-           'Redirection', 'Registration', 'RejectAction', 'Report', 'ReportTemplate', 'ResponseStatus',
-           'ResponseStatusType', 'RingPattern', 'Room', 'RoomTab', 'RoomType', 'RouteGroup', 'RouteGroupUsage',
-           'RouteIdentity', 'RouteList', 'RouteListDestination', 'RouteListDetail', 'RouteType', 'SafeEnum',
-           'Schedule', 'ScheduleApiBase', 'ScheduleDay', 'ScheduleLevel', 'ScheduleMonth', 'ScheduleType',
+           'QueueSettings', 'RETRY_429_MAX_WAIT', 'RGTrunk', 'Recall', 'RecallHuntGroup', 'ReceptionistSettings',
+           'Record', 'RecordingState', 'RecurWeekly', 'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence',
+           'RedirectReason', 'Redirection', 'Registration', 'RejectAction', 'Report', 'ReportTemplate',
+           'ResponseStatus', 'ResponseStatusType', 'RingPattern', 'Room', 'RoomTab', 'RoomType', 'RouteGroup',
+           'RouteGroupUsage', 'RouteIdentity', 'RouteList', 'RouteListDestination', 'RouteListDetail', 'RouteType',
+           'SafeEnum', 'Schedule', 'ScheduleApiBase', 'ScheduleDay', 'ScheduleLevel', 'ScheduleMonth', 'ScheduleType',
            'ScheduleTypeOrStr', 'ScheduleWeek', 'ScheduledMeeting', 'ScheduledType', 'SchedulingOptions',
            'ScreenTimeout', 'Sender', 'ServiceType', 'SimultaneousInterpretation', 'SipAddress', 'SipType',
            'SiteType', 'StandardRegistrationApproveRule', 'StartJobResponse', 'StepExecutionStatus', 'StorageType',

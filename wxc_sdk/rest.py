@@ -197,16 +197,17 @@ def retry_request(func):
     :return:
     """
 
-    def giveup_429(e: RestError) -> bool:
+    def giveup_429(e: RestError, retry_429: bool) -> bool:
         """
         callback for backoff on REST requests
 
         :param e: latest exception
+        :param retry_429: retry on 429?
         :return: True -> break the backoff loop
         """
         response = e.response
         response: Response
-        if response.status_code != 429:
+        if response.status_code != 429 or not retry_429:
             # Don't retry on anything other than 429
             return True
 
@@ -225,7 +226,7 @@ def retry_request(func):
                 try:
                     result = func(session, *args, **kwargs)
                 except RestError as e:
-                    if giveup_429(e):
+                    if giveup_429(e, session.retry_429):
                         raise
                 else:
                     break
@@ -244,12 +245,13 @@ class RestSession(Session):
     #: base URL for all Webex API requests
     BASE = 'https://webexapis.com/v1'
 
-    def __init__(self, *, tokens: Tokens, concurrent_requests: int):
+    def __init__(self, *, tokens: Tokens, concurrent_requests: int, retry_429: bool = True):
         super().__init__()
         self.mount('http://', HTTPAdapter(pool_maxsize=concurrent_requests))
         self.mount('https://', HTTPAdapter(pool_maxsize=concurrent_requests))
         self._tokens = tokens
         self._sem = Semaphore(concurrent_requests)
+        self.retry_429 = retry_429
 
     def ep(self, path: str = None):
         """

@@ -58,8 +58,7 @@ class TestCDR(TestCaseWithLog):
             raise
         print(f'Got {len(cdrs)} CDRs')
 
-    @async_test
-    async def test_003_force_429(self):
+    def test_003_force_429(self):
         """
         Trying to force a 429 response
         """
@@ -69,13 +68,14 @@ class TestCDR(TestCaseWithLog):
         try:
             cdr1 = list(self.api.cdr.get_cdr_history(start_time=start_time,
                                                      end_time=end_time))
-            cdr2 = list(self.api.cdr.get_cdr_history(start_time=start_time + timedelta(seconds=2),
-                                                     end_time=end_time + timedelta(seconds=2)))
         except RestError as rest_error:
             if rest_error.detail.error_code == 404 and rest_error.detail.message == 'No CDRs for requested time range and filters':
                 self.skipTest('No CDRs')
-
-        # we expect one 429 response
-        request_w_429 = next((request for request in self.requests()
-                              if request.status==429), None)
-        self.assertIsNotNone(request_w_429, 'Did not get the expected 429')
+            else:
+                raise
+        # this should get us a 429
+        with self.assertRaises(RestError) as exc:
+            self.api.session.retry_429 = False
+            cdr2 = list(self.api.cdr.get_cdr_history(start_time=start_time + timedelta(seconds=2),
+                                                     end_time=end_time + timedelta(seconds=2)))
+        self.assertEqual(429, exc.exception.response.status_code, f'Unexpected exception: {exc.exception}')

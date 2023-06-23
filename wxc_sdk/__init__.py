@@ -95,13 +95,15 @@ class WebexSimpleApi:
     #: :class:`rest.RestSession` used for all API requests
     session: RestSession
 
-    def __init__(self, *, tokens: Union[str, Tokens] = None, concurrent_requests: int = 10):
+    def __init__(self, *, tokens: Union[str, Tokens] = None, concurrent_requests: int = 10, retry_429: bool = True):
         """
 
         :param tokens: token to be used by the API. Can be a :class:`tokens.Tokens` instance, a string or None. If
             None then an access token is expected in the WEBEX_ACCESS_TOKEN environment variable.
         :param concurrent_requests: number of concurrent requests when using multi-threading
         :type concurrent_requests: int
+        :param retry_429: automatically retry for 429 throttling response
+        :type retry_429: bool
         """
         if isinstance(tokens, str):
             tokens = Tokens(access_token=tokens)
@@ -112,7 +114,7 @@ class WebexSimpleApi:
                                  'WEBEX_ACCESS_TOKEN environment variable')
             tokens = Tokens(access_token=tokens)
 
-        session = RestSession(tokens=tokens, concurrent_requests=concurrent_requests)
+        session = RestSession(tokens=tokens, concurrent_requests=concurrent_requests, retry_429=retry_429)
         self.attachment_actions = AttachmentActionsApi(session=session)
         self.cdr = DetailedCDRApi(session=session)
         self.devices = DevicesApi(session=session)
