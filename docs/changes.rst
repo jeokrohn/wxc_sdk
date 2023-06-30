@@ -16,8 +16,9 @@ Release history
 - fix: camelCase issues for timezone when updating a location (temp fix): :meth:`wxc_sdk.locations.LocationsApi.update`
 - feat: new example catch_tns.py
 - feat: better handling of CDRs in :class:`wxc_sdk.cdr.CDR` to allow deserialization of addtl. fields
-- feat: new parameter ´retry_429' for :class:`wxc_sdk.WebexSimpleApi and :class:`wxc_sdk.as_api.AsWebexSimpleApi`
+- feat: new parameter ´retry_429' for :class:`wxc_sdk.WebexSimpleApi` and :class:`wxc_sdk.as_api.AsWebexSimpleApi`
 - fix: missing :class:`wxc_sdk.locations.CreateLocationFloorBody` in __all__
+- feat: new parameter 'html' in :meth:`wxc_sdk.messages.MessagesApi.create` and :meth:`wxc_sdk.messages.MessagesApi.edit`
 
 1.14.1
 ------

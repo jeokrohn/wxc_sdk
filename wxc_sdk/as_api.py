@@ -4236,12 +4236,15 @@ class AsMessagesApi(AsApiChild, base='messages'):
         return [o async for o in self.session.follow_pagination(url=url, model=Message, params=params)]
 
     async def create(self, room_id: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None,
-               text: str = None, markdown: str = None, files: List[str] = None,
+               text: str = None, markdown: str = None, html: str = None, files: List[str] = None,
                attachments: List[Union[dict, MessageAttachment]] = None) -> Message:
         """
-        Post a plain text or rich text message, and optionally, a file attachment, to a room.
+        Post a plain text, rich text or html message, and optionally, a file attachment, to a room.
+
         The files parameter is an array, which accepts multiple values to allow for future expansion, but currently
         only one file may be included with the message. File previews are only rendered for attachments of 1MB or less.
+
+        html formatting is limited to the following markup h1,h2,h3,ul,ol,u,i,b and links.
 
         :param room_id: The room ID of the message.
         :type room_id: str
@@ -4257,6 +4260,8 @@ class AsMessagesApi(AsApiChild, base='messages'):
         :type text: str
         :param markdown: The message, in Markdown format. The maximum message length is 7439 bytes.
         :type markdown: str
+        :param html: The message, in HTML format. The maximum message length is 7439 bytes.
+        :type html: str
         :param files: The public URL to a binary file or a path to a local file to be posted into the room.
             Only one file is allowed
             per message. Uploaded files are automatically converted into a format that all Webex clients can render. For
@@ -4281,6 +4286,8 @@ class AsMessagesApi(AsApiChild, base='messages'):
             body['text'] = text
         if markdown is not None:
             body['markdown'] = markdown
+        if html is not None:
+            body['html'] = html
         if attachments is not None:
             body['attachments'] = [a.dict(by_alias=True) if isinstance(a, MessageAttachment) else a
                                    for a in attachments]
@@ -4330,8 +4337,9 @@ class AsMessagesApi(AsApiChild, base='messages'):
                   is 7439 bytes.
                 * markdown: str: The message, in Markdown format. If this attribute is set ensure that the request does
                   NOT contain an html attribute.
+                * html: str: The message, in HTML format. The maximum message length is 7439 bytes.
         """
-        data = message.json(include={'room_id', 'text', 'markdown'})
+        data = message.json(include={'room_id', 'text', 'markdown', 'html'})
         if not message.id:
             raise ValueError('ID has to be set')
         url = self.ep(f'{message.id}')
