@@ -273,7 +273,7 @@ The second column of the table has a link to the documentation of the method.
         Updates properties for a membership by ID
      - :meth:`~wxc_sdk.memberships.MembershipApi.update`
    * - api.messages.create
-        Post a plain text or rich text message, and optionally, a file attachment, to a room
+        Post a plain text, rich text or html message, and optionally, a file attachment, to a room
      - :meth:`~wxc_sdk.messages.MessagesApi.create`
    * - api.messages.delete
         Delete a message, by message ID
@@ -1247,15 +1247,15 @@ The second column of the table has a link to the documentation of the method.
    * - api.workspace_settings.permissions_out.read
         Retrieve a Person's Outgoing Calling Permissions Settings
      - :meth:`~wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.read`
-   * - api.workspace_settings.permissions_out.auth_codes.create
-        Modify Authorization codes for a workspace
-     - :meth:`~wxc_sdk.person_settings.permissions_out.AuthCodesApi.create`
-   * - api.workspace_settings.permissions_out.auth_codes.delete_codes
-        Modify Authorization codes for a workspace
-     - :meth:`~wxc_sdk.person_settings.permissions_out.AuthCodesApi.delete_codes`
-   * - api.workspace_settings.permissions_out.auth_codes.read
-        Retrieve Authorization codes for a Workspace
-     - :meth:`~wxc_sdk.person_settings.permissions_out.AuthCodesApi.read`
+   * - api.workspace_settings.permissions_out.access_codes.create
+        Create new Access codes for the given workspace
+     - :meth:`~wxc_sdk.person_settings.permissions_out.AccessCodesApi.create`
+   * - api.workspace_settings.permissions_out.access_codes.delete_codes
+        Modify Access codes for a workspace
+     - :meth:`~wxc_sdk.person_settings.permissions_out.AccessCodesApi.delete_codes`
+   * - api.workspace_settings.permissions_out.access_codes.read
+        Retrieve Access codes for a Workspace
+     - :meth:`~wxc_sdk.person_settings.permissions_out.AccessCodesApi.read`
    * - api.workspace_settings.permissions_out.transfer_numbers.configure
         Modify Transfer Numbers Settings for a Place
      - :meth:`~wxc_sdk.person_settings.permissions_out.TransferNumbersApi.configure`

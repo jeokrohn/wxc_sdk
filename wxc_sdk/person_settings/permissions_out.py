@@ -20,7 +20,7 @@ from ..rest import RestSession
 
 __all__ = ['OutgoingPermissionCallType', 'Action', 'CallTypePermission', 'CallingPermissions',
            'OutgoingPermissions', 'AutoTransferNumbers', 'TransferNumbersApi',
-           'AuthCodesApi', 'OutgoingPermissionsApi']
+           'AccessCodesApi', 'OutgoingPermissionsApi']
 
 
 class OutgoingPermissionCallType(str, Enum):
@@ -308,77 +308,80 @@ class TransferNumbersApi(PersonSettingsApiChild):
         self.put(url, params=params, data=body)
 
 
-class AuthCodesApi(PersonSettingsApiChild):
+class AccessCodesApi(PersonSettingsApiChild):
     """
-    API for person's outgoing permission authorization codes
+    API for workspace's outgoing permission access codes
     """
-    feature = 'outgoingPermission/authorizationCodes'
+    feature = 'outgoingPermission/accessCodes'
 
-    def read(self, person_id: str, org_id: str = None) -> list[AuthCode]:
+    def read(self, workspace_id: str, org_id: str = None) -> list[AuthCode]:
         """
-        Retrieve Authorization codes for a Workspace.
+        Retrieve Access codes for a Workspace.
 
-        Authorization codes are used to bypass permissions.
+        Access codes are used to bypass permissions.
 
         This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or
         a user auth token with spark:workspaces_read scope can be used to read workspace settings.
 
-        :param person_id: Unique identifier for the workspace.
-        :type person_id: str
-        :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
-            may use this parameter as the default is the same organization as the token used to access API.
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
-        :return: list of authorization codes
+        :return: list of access codes
         :rtype: list of :class:`AuthCode`
         """
-        url = self.f_ep(person_id=person_id)
+        url = self.f_ep(person_id=workspace_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(url, params=params)
-        return parse_obj_as(list[AuthCode], data['authorizationCodes'])
+        return parse_obj_as(list[AuthCode], data['accessCodes'])
 
-    def delete_codes(self, person_id: str, access_codes: list[Union[str, AuthCode]], org_id: str = None):
+    def delete_codes(self, workspace_id: str, access_codes: list[Union[str, AuthCode]], org_id: str = None):
         """
-        Modify Authorization codes for a workspace.
+        Modify Access codes for a workspace.
 
-        Authorization codes are used to bypass permissions.
+        Access codes are used to bypass permissions.
 
         This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a
         user auth token with spark:workspaces_write scope can be used to update workspace settings.
 
-        :param person_id: Unique identifier for the workspace.
-        :type person_id: str
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
         :param access_codes: authorization codes to remove
         :type access_codes: list[str]
-        :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
-            may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
-        url = self.f_ep(person_id=person_id)
+        url = self.f_ep(person_id=workspace_id)
         params = org_id and {'orgId': org_id} or None
         body = {'deleteCodes': [ac.code if isinstance(ac, AuthCode) else ac
                                 for ac in access_codes]}
         self.put(url, params=params, json=body)
 
-    def create(self, person_id: str, code: str, description: str, org_id: str = None):
+    def create(self, workspace_id: str, code: str, description: str, org_id: str = None):
         """
-        Modify Authorization codes for a workspace.
+        Create new Access codes for the given workspace.
 
-        Authorization codes are used to bypass permissions.
+        Access codes are used to bypass permissions.
 
         This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a
         user auth token with spark:workspaces_write scope can be used to update workspace settings.
 
-        :param person_id: Unique identifier for the workspace.
-        :type person_id: str
-        :param code: Indicates an authorization code.
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param code: Indicates an access code.
         :type code: str
-        :param description: Indicates the description of the authorization code.
+        :param description: Indicates the description of the access code.
         :type description: str
-        :param org_id: Workspace is in this organization. Only admin users of another organization (such as partners)
-            may use this parameter as the default is the same organization as the token used to access API.
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
         :type org_id: str
         """
-        url = self.f_ep(person_id=person_id)
+        url = self.f_ep(person_id=workspace_id)
         params = org_id and {'orgId': org_id} or None
         body = {'code': code,
                 'description': description}
@@ -395,7 +398,7 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
     #: Only available for workspaces and locations
     transfer_numbers: TransferNumbersApi
     #: Only available for workspaces
-    auth_codes: AuthCodesApi
+    access_codes: AccessCodesApi
 
     feature = 'outgoingPermission'
 
@@ -406,14 +409,14 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
             # auto transfer numbers API seems to only exist for workspaces
             self.transfer_numbers = TransferNumbersApi(session=session,
                                                        workspaces=True)
-            self.auth_codes = AuthCodesApi(session=session, workspaces=True)
+            self.access_codes = AccessCodesApi(session=session, workspaces=True)
         elif locations:
             self.transfer_numbers = TransferNumbersApi(session=session,
                                                        locations=True)
-            self.auth_codes = None
+            self.access_codes = None
         else:
             self.transfer_numbers = None
-            self.auth_codes = None
+            self.access_codes = None
 
     def read(self, person_id: str, org_id: str = None) -> OutgoingPermissions:
         """

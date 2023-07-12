@@ -173,7 +173,7 @@ class CallParkExtension(ApiModel):
 
 class AuthCode(ApiModel):
     """
-    authorization codea and description.
+    authorization code and description.
     """
     #: Indicates an authorization code.
     code: str

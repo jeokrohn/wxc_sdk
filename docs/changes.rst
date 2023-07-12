@@ -19,6 +19,10 @@ Release history
 - feat: new parameter ´retry_429' for :class:`wxc_sdk.WebexSimpleApi` and :class:`wxc_sdk.as_api.AsWebexSimpleApi`
 - fix: missing :class:`wxc_sdk.locations.CreateLocationFloorBody` in __all__
 - feat: new parameter 'html' in :meth:`wxc_sdk.messages.MessagesApi.create` and :meth:`wxc_sdk.messages.MessagesApi.edit`
+- fix: workspace outgoing permissions auth codes are now called access codes. Updates to
+  :class:`wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi`: renamed API attribute to
+  :attr:`wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.access_codes` and updated endpoint URL in
+  :class:`wxc_sdk.person_settings.permissions_out.AccessCodesApi`
 
 1.14.1
 ------
