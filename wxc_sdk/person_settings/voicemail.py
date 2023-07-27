@@ -172,7 +172,7 @@ class VoicemailApi(PersonSettingsApiChild):
             # an existing reader
             if not upload_as:
                 raise ValueError('upload_as is required')
-        encoder = MultipartEncoder(fields={'file': (upload_as, content, 'audio/wav')})
+        encoder = MultipartEncoder({'file': (upload_as, content, 'audio/wav')})
         ep = self.f_ep(person_id=person_id, path=f'actions/{greeting_key}/invoke')
         params = org_id and {'orgId': org_id} or None
         try:

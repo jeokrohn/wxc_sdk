@@ -211,13 +211,12 @@ class CallInterceptApi(PersonSettingsApiChild):
             upload_as = os.path.basename(content)
             content = open(content, mode='rb')
             must_close = True
-            pass
         else:
             must_close = False
             # an existing reader
             if not upload_as:
                 raise ValueError('upload_as is required')
-        encoder = MultipartEncoder(fields={'file': (upload_as, content, 'audio/wav')})
+        encoder = MultipartEncoder({'file': (upload_as, content, 'audio/wav')})
         ep = self.f_ep(person_id=person_id, path='actions/announcementUpload/invoke')
         params = org_id and {'orgId': org_id} or None
         try:
