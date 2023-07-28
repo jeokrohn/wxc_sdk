@@ -25,7 +25,7 @@ https://chromedriver.chromium.org/getting-started
   | ``>>> driver.get("http://selenium.dev")``
   | ``>>> driver.quit()``
 
-  If error messga pops up ...
+  If error message pops up ...
 
   .. image:: developer.webex.com/README_rst/chromedriver.security.png
         :width: 200
@@ -33,6 +33,16 @@ https://chromedriver.chromium.org/getting-started
   ... trust the webdriver binary by lifting the quarantine:
 
   | ``% xattr -d com.apple.quarantine /usr/local/bin/chromedriver``
+
+Get Google Chrome for testing
+=============================
+
+* Download from: https://googlechromelabs.github.io/chrome-for-testing/
+
+* remove extended attribute that prohibits Chrome from starting
+
+  | ``xattr -cr 'Google Chrome for Testing.app'``
+
 
 
 

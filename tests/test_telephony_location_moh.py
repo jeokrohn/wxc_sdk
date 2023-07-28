@@ -1,13 +1,14 @@
 """
 Test cases UCM profiles
 """
+import asyncio
 import random
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 
 from wxc_sdk.locations import Location
 from wxc_sdk.telephony.location.moh import LocationMoHSetting
-from tests.base import TestWithLocations
+from tests.base import TestWithLocations, async_test
 
 
 class Test(TestWithLocations):
@@ -24,11 +25,10 @@ class Test(TestWithLocations):
             after = self.api.telephony.location.moh.read(location_id=target_location.location_id)
             self.assertEqual(before, after)
 
-    def test_001_read_all(self):
-        moh = self.api.telephony.location.moh
-        with ThreadPoolExecutor() as pool:
-            settings = list(pool.map(lambda location: moh.read(location_id=location.location_id),
-                                     self.locations))
+    @async_test
+    async def test_001_read_all(self):
+        moh = self.async_api.telephony.location.moh
+        settings = await asyncio.gather(*[moh.read(location_id=loc.location_id) for loc in self.locations])
         print(f'Got {len(settings)} location MoH settings')
 
     def test_002_update_call_hold(self):

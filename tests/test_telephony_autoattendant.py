@@ -1,6 +1,7 @@
 """
 Tests for auto attendants
 """
+import asyncio
 import json
 # TODO: additional tests
 import random
@@ -10,7 +11,7 @@ from contextlib import contextmanager
 from wxc_sdk.all_types import AutoAttendant, ScheduleType
 from wxc_sdk.common.schedules import Schedule
 from wxc_sdk.locations import Location
-from tests.base import TestCaseWithLog, TestWithLocations
+from tests.base import TestCaseWithLog, TestWithLocations, async_test
 from tests.testutil import available_extensions_gen
 
 
@@ -27,20 +28,18 @@ class TestAutoAttendant(TestCaseWithLog):
         print(f'got {len(aa_list)} auto attendants')
         print('\n'.join(f'{aa}' for aa in aa_list))
 
-    def test_002_details(self):
+    @async_test
+    async def test_002_details(self):
         """
         Get details of all auto attendants
         """
-        aa_list = list(self.api.telephony.auto_attendant.list())
+        aa_list = await self.async_api.telephony.auto_attendant.list()
         if not aa_list:
             self.skipTest('No existing auto attendants')
-        ata = self.api.telephony.auto_attendant
-        with ThreadPoolExecutor() as pool:
-            aa = aa_list[0]
-            ata.details(location_id=aa.location_id, auto_attendant_id=aa.auto_attendant_id)
-            details = list(pool.map(
-                lambda aa: ata.details(location_id=aa.location_id, auto_attendant_id=aa.auto_attendant_id),
-                aa_list))
+        ata = self.async_api.telephony.auto_attendant
+        details = await asyncio.gather(*[ata.details(location_id=aa.location_id,
+                                                     auto_attendant_id=aa.auto_attendant_id)
+                                         for aa in aa_list])
         print(f'got details for {len(aa_list)} auto attendants')
         print('\n'.join(f'{aa}' for aa in details))
 

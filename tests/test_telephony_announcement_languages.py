@@ -9,6 +9,6 @@ class AnnouncementLanguages(TestCaseWithLog):
         list announcement langauages
         """
         ann_languages = self.api.telephony.read_list_of_announcement_languages()
-        ann_languages.sort(key = attrgetter('name'))
-        name_len= max(map(len, map(attrgetter('name'), ann_languages)))
+        ann_languages.sort(key=attrgetter('name'))
+        name_len = max(map(len, map(attrgetter('name'), ann_languages)))
         print('\n'.join(f'{al.name:{name_len}} - {al.code}' for al in ann_languages))
