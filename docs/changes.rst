@@ -1,6 +1,9 @@
 Release history
 ===============
 
+1.15.0
+------
+
 - fix: missing org_id parameters in devices api
 - feat: password parameter in :meth:`wxc_sdk.devices.DevicesApi.create_by_mac_address`
 - feat: new methods in :class:`wxc_sdk.locations.LocationsApi`: list_floors, create_floor, floor_details, update_floor, delete_floor
