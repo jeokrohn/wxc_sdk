@@ -29,6 +29,7 @@ log = logging.getLogger(__name__)
 class AsErrorMessage(ApiModel):
     description: str
     code: Optional[int]
+    error_code: Optional[int]
 
 
 class AsSingleError(ApiModel):

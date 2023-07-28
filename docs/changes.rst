@@ -25,6 +25,10 @@ Release history
   :class:`wxc_sdk.person_settings.permissions_out.AccessCodesApi`
 - fix: better handling of start_time and end_time parameters in :meth:`wxc_sdk.cdr.DetailedCDRApi.get_cdr_history`.
   Instead of datetime objects the call also accepts ISO-8601 datetime strings.
+- feat: announcement repository. New API to manage announcements:
+  :class:`wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi` available in the telephony.announcements_repo
+  path of :class:`wxc_sdk.WebexSimpleApi`
+- feat: announcements from repository can now be referenced for: location MoH, call queue, auto attendant menus
 
 1.14.1
 ------

@@ -5,16 +5,16 @@ from collections.abc import Generator
 from dataclasses import dataclass
 from typing import Optional
 
-from pydantic import Field
+from pydantic import Field, root_validator
 
 from .forwarding import ForwardingApi, FeatureSelector
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
 from ..base import SafeEnum as Enum
-from ..common import Greeting, AlternateNumber, MediaFileType
+from ..common import Greeting, AlternateNumber, MediaFileType, AnnAudioFile
 from ..rest import RestSession
 
-__all__ = ['Dialing', 'MenuKey', 'AutoAttendantAction', 'AutoAttendantKeyConfiguration', 'AutoAttendantAudioFile',
+__all__ = ['Dialing', 'MenuKey', 'AutoAttendantAction', 'AutoAttendantKeyConfiguration',
            'AutoAttendantMenu', 'AutoAttendant', 'AutoAttendantApi']
 
 
@@ -95,7 +95,11 @@ class AutoAttendantMenu(ApiModel):
     extension_enabled: bool
     #: Key configurations defined for the auto attendant.
     key_configurations: list[AutoAttendantKeyConfiguration]
+    #: Announcement Audio File details.
+    #: this is deprecated with the availability of the announcement repo start using audio_announcement_file
     audio_file: Optional[AutoAttendantAudioFile]
+    #: Announcement Audio File details.
+    audio_announcement_file: Optional[AnnAudioFile]
 
     @staticmethod
     def default() -> 'AutoAttendantMenu':

@@ -1,0 +1,1075 @@
+# command: developer.webex.com/read_api_spec.py --auth developer.webex.com/.env -s "Full API Reference" -t "Beta Features: Announcement Repository with Announcements Repository Feature" -f developer.webex.com/generated/announcement_repo.yml
+docs:
+  Admin Audit Events:
+    doc: null
+    header: null
+    methods: []
+  Attachment Actions:
+    doc: null
+    header: null
+    methods: []
+  Authorizations:
+    doc: null
+    header: null
+    methods: []
+  Beta BroadWorks Enterprises With Delete Org Improvements:
+    doc: null
+    header: null
+    methods: []
+  Beta Device Call Settings with Hoteling:
+    doc: null
+    header: null
+    methods: []
+  Beta Device Call Settings with Third-party Device Support:
+    doc: null
+    header: null
+    methods: []
+  Beta Devices with WXC Devices Displayed:
+    doc: null
+    header: null
+    methods: []
+  'Beta Features: Announcement Repository with Announcements Repository Feature':
+    doc: 'Not supported for Webex for Government (FedRAMP)
+
+      Features: Announcement Repository support reading and writing of Webex Calling
+      Announcement Repository settings for a specific organization.
+
+      Viewing these read-only organization settings requires a full or read-only administrator
+      auth token with a scope of spark-admin:telephony_config_read.
+
+      Modifying these organization settings requires a full administrator auth token
+      with a scope of spark-admin:telephony_config_write.
+
+      A partner administrator can retrieve or change settings in a customer''s organization
+      using the optional orgId query parameter.'
+    header: 'Beta Features:  Announcement Repository with Announcements Repository
+      Feature'
+    methods:
+    - doc: 'Fetch a list of binary announcement greetings at an organization as well
+        as location level.
+
+        An admin can upload a file at an organization level. This file will be uploaded
+        to the announcement repository.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.'
+      documentation:
+        doc: Fetch list of announcement greetings on location and organization level
+        doc_link: https://developer.webex.com/docs/api/v1/beta-features-announcement-repository-with-announcements-repository-feature/fetch-list-of-announcement-greetings-on-location-and-organization-level
+        endpoint: https://webexapis.com/v1/telephony/config/announcements
+        http_method: GET
+      header: Fetch list of announcement greetings on location and organization level
+      parameters_and_response:
+        Query Parameters:
+        - doc: Create an announcement in this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: 'Return the list of enterprise or Location announcement files. Without
+            this parameter, the Enterprise level announcements are returned.
+
+            Possible values: all, locations, Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzMxMTYx'
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Limit the number of objects returned to this maximum count.
+          name: max
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Start at the zero-based offset in the list of matching objects.
+          name: start
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Sort the list according to fileName or fileSize. The default sort will
+            be in Ascending order.
+          name: order
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Return the list of announcements with the given fileName.
+          name: fileName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Return the list of announcement files for this fileType.
+          name: fileType
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Return the list of announcement files for this mediaFileType.
+          name: mediaFileType
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Return the list of announcement files for this announcement label.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Array of announcements.
+          name: announcements
+          param_attrs:
+          - doc: Unique identifier of the announcement.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Name of the announcement.
+            name: name
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: File name of the uploaded binary announcement greeting.
+            name: fileName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Size of the file in kilobytes.
+            name: fileSize
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Media file type of the announcement file.
+            name: mediaFileType
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: LastUpdated timestamp (in UTC format) of the announcement.
+            name: lastUpdated
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: 'The level at which this announcement exists.
+
+              '
+            name: level
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: The details of location at which this announcement exists.
+            name: location
+            param_attrs:
+            - doc: Unique identifier of the location.
+              name: id
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            - doc: Name of the Location.
+              name: name
+              param_attrs: []
+              param_object: []
+              type: string
+              type_spec: null
+            param_object: []
+            type: LocationObject
+            type_spec: null
+          param_object: []
+          type: array[AnnouncementsListResponse]
+          type_spec: null
+    - doc: 'Upload a binary file to the announcement repository at an organization
+        level.
+
+        An admin can upload a file at an organization level. This file will be uploaded
+        to the announcement repository.
+
+        Your request will need to be a multipart/form-data request rather than JSON,
+        using the audio/wav Content-Type.
+
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write
+        .'
+      documentation:
+        doc: Upload a binary announcement greeting at organization level
+        doc_link: https://developer.webex.com/docs/api/v1/beta-features-announcement-repository-with-announcements-repository-feature/upload-a-binary-announcement-greeting-at-organization-level
+        endpoint: https://webexapis.com/v1/telephony/config/announcements
+        http_method: POST
+      header: Upload a binary announcement greeting at organization level
+      parameters_and_response:
+        Query Parameters:
+        - doc: Create an announcement in this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Unique identifier of the announcement.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+    - doc: 'Retrieves repository usage for announcements for an organization.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.'
+      documentation:
+        doc: Fetch repository usage for announcements for an organization
+        doc_link: https://developer.webex.com/docs/api/v1/beta-features-announcement-repository-with-announcements-repository-feature/fetch-repository-usage-for-announcements-for-an-organization
+        endpoint: https://webexapis.com/v1/telephony/config/announcements/usage
+        http_method: GET
+      header: Fetch repository usage for announcements for an organization
+      parameters_and_response:
+        Query Parameters:
+        - doc: Create an announcement in this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Total file size used by announcements in this repository in kilobytes.
+          name: totalFileSizeUsedKB
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Maximum audio file size allowed to upload in kilobytes.
+          name: maxAudioFileSizeAllowedKB
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Maximum video file size allowed to upload in kilobytes.
+          name: maxVideoFileSizeAllowedKB
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Total file size limit for the repository in megabytes.
+          name: totalFileSizeLimitMB
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+    - doc: 'Delete an announcement greeting for an organization.
+
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.'
+      documentation:
+        doc: Delete an announcement greeting of the organization
+        doc_link: https://developer.webex.com/docs/api/v1/beta-features-announcement-repository-with-announcements-repository-feature/delete-an-announcement-greeting-of-the-organization
+        endpoint: https://webexapis.com/v1/telephony/config/announcements/{announcementsId}
+        http_method: DELETE
+      header: Delete an announcement greeting of the organization
+      parameters_and_response:
+        Query Parameters:
+        - doc: Unique identifier of an announcement.
+          name: announcementId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Create an announcement in this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+    - doc: 'Fetch details of a binary announcement greeting by its ID at an organization
+        level.
+
+        An admin can upload a file at an organization level. This file will be uploaded
+        to the announcement repository.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.'
+      documentation:
+        doc: Fetch details of a binary announcement greeting at the organization level
+        doc_link: https://developer.webex.com/docs/api/v1/beta-features-announcement-repository-with-announcements-repository-feature/fetch-details-of-a-binary-announcement-greeting-at-the-organization-level
+        endpoint: https://webexapis.com/v1/telephony/config/announcements/{announcementId}
+        http_method: GET
+      header: Fetch details of a binary announcement greeting at the organization
+        level
+      parameters_and_response:
+        Query Parameters:
+        - doc: Create an announcement in this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Unique identifier of the announcement.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Name of the announcement.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: File name of the uploaded binary announcement greeting.
+          name: fileName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Size of the file in kilobytes.
+          name: fileSize
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Media file type of the announcement file.
+          name: mediaFileType
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Last updated timestamp (in UTC format) of the announcement.
+          name: lastUpdated
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Reference count of the call features this announcement is assigned
+            to.
+          name: featureReferenceCount
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Call features referenced by this announcement.
+          name: featureReferences
+          param_attrs:
+          - doc: Unique identifier of the call feature referenced. The call Feature
+              can be Auto Attendant, Call Queue or Music On hold.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Name of the call feature referenced.
+            name: name
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Resource Type of the call feature.
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unique identifier of the location.
+            name: locationId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Location name of the announcement file.
+            name: locationName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[FeatureReferenceObject]
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier of an announcement.
+          name: announcementId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Modify an existing announcement greeting at an organization level.
+
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.'
+      documentation:
+        doc: Modify a binary announcement greeting
+        doc_link: https://developer.webex.com/docs/api/v1/beta-features-announcement-repository-with-announcements-repository-feature/modify-a-binary-announcement-greeting
+        endpoint: https://webexapis.com/v1/telephony/config/announcements/{announcementId}
+        http_method: PUT
+      header: Modify a binary announcement greeting
+      parameters_and_response:
+        Query Parameters:
+        - doc: Create an announcement in this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier of an announcement.
+          name: announcementId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Upload a binary file to the announcement repository at a location level.
+
+        An admin can upload a file at a location level. This file will be uploaded
+        to the announcement repository.
+
+        Your request will need to be a multipart/form-data request rather than JSON,
+        using the audio/wav Content-Type.
+
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write
+        .'
+      documentation:
+        doc: Upload a binary announcement greeting at the location level
+        doc_link: https://developer.webex.com/docs/api/v1/beta-features-announcement-repository-with-announcements-repository-feature/upload-a-binary-announcement-greeting-at-the-location-level
+        endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/announcements
+        http_method: POST
+      header: Upload a binary announcement greeting at the location level
+      parameters_and_response:
+        Query Parameters:
+        - doc: Create an announcement for location in this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Unique identifier of the announcement.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier of a location where an announcement is being created.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Retrieves repository usage for announcements in a location.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.'
+      documentation:
+        doc: Fetch repository usage for announcements in a location
+        doc_link: https://developer.webex.com/docs/api/v1/beta-features-announcement-repository-with-announcements-repository-feature/fetch-repository-usage-for-announcements-in-a-location
+        endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/announcements/usage
+        http_method: GET
+      header: Fetch repository usage for announcements in a location
+      parameters_and_response:
+        Query Parameters:
+        - doc: Create an announcement for location in this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Total file size used by announcements in this repository in kilobytes.
+          name: totalFileSizeUsedKB
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Maximum audio file size allowed to upload in kilobytes.
+          name: maxAudioFileSizeAllowedKB
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Maximum video file size allowed to upload in kilobytes.
+          name: maxVideoFileSizeAllowedKB
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Total file size limit for the repository in megabytes.
+          name: totalFileSizeLimitMB
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier of a location where an announcement is being created.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Delete an announcement greeting in a location.
+
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.'
+      documentation:
+        doc: Delete an announcement greeting in a location
+        doc_link: https://developer.webex.com/docs/api/v1/beta-features-announcement-repository-with-announcements-repository-feature/delete-an-announcement-greeting-in-a-location
+        endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/announcements/{announcementsId}
+        http_method: DELETE
+      header: Delete an announcement greeting in a location
+      parameters_and_response:
+        Query Parameters:
+        - doc: Create a announcement for location in this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier of a location where announcement is being created.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Fetch details of a binary announcement greeting by its ID at a location
+        level.
+
+        An admin can upload a file at a location level. This file will be uploaded
+        to the announcement repository.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.'
+      documentation:
+        doc: Fetch details of a binary announcement greeting at location level
+        doc_link: https://developer.webex.com/docs/api/v1/beta-features-announcement-repository-with-announcements-repository-feature/fetch-details-of-a-binary-announcement-greeting-at-location-level
+        endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/announcements/{announcementId}
+        http_method: GET
+      header: Fetch details of a binary announcement greeting at location level
+      parameters_and_response:
+        Query Parameters:
+        - doc: Create an announcement for location in this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        Response Properties:
+        - doc: Unique identifier of the announcement.
+          name: id
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Name of the announcement.
+          name: name
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: File name of the uploaded binary announcement greeting.
+          name: fileName
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Size of the file in kilobytes.
+          name: fileSize
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Media file type of the announcement file.
+          name: mediaFileType
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Last updated timestamp (in UTC format) of the announcement.
+          name: lastUpdated
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        - doc: Reference count of the call features this announcement is assigned
+            to.
+          name: featureReferenceCount
+          param_attrs: []
+          param_object: []
+          type: number
+          type_spec: null
+        - doc: Call features referenced by this announcement.
+          name: featureReferences
+          param_attrs:
+          - doc: Unique identifier of the call feature referenced. The call Feature
+              can be Auto Attendant, Call Queue or Music On hold.
+            name: id
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Name of the call feature referenced.
+            name: name
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Resource Type of the call feature.
+            name: type
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Unique identifier of the location.
+            name: locationId
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          - doc: Location name of the announcement file.
+            name: locationName
+            param_attrs: []
+            param_object: []
+            type: string
+            type_spec: null
+          param_object: []
+          type: array[FeatureReferenceObject]
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier of a location where an announcement is being created.
+          name: locationId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+        - doc: Unique identifier of an announcement.
+          name: announcementId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+    - doc: 'Modify an existing announcement greeting at an organization level.
+
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.'
+      documentation:
+        doc: Modify a binary announcement greeting
+        doc_link: https://developer.webex.com/docs/api/v1/beta-features-announcement-repository-with-announcements-repository-feature/modify-a-binary-announcement-greeting
+        endpoint: https://webexapis.com/v1/telephony/config/locations/{locationId}/announcements/{announcementId}
+        http_method: PUT
+      header: Modify a binary announcement greeting
+      parameters_and_response:
+        Query Parameters:
+        - doc: Create an announcement in this organization.
+          name: orgId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: null
+        URI Parameters:
+        - doc: Unique identifier of an announcement.
+          name: announcementId
+          param_attrs: []
+          param_object: []
+          type: string
+          type_spec: required
+  'Beta Features: Auto Attendant with Announcements Repository Feature':
+    doc: null
+    header: null
+    methods: []
+  'Beta Features: Call Queue with Announcements Repository Feature':
+    doc: null
+    header: null
+    methods: []
+  'Beta Features: Call Recording with Compliance Announcement Feature':
+    doc: null
+    header: null
+    methods: []
+  'Beta Features: Call Recording with Compliance Announcement Feature Phase 3':
+    doc: null
+    header: null
+    methods: []
+  Beta Location Call Settings with Announcements Repository Feature:
+    doc: null
+    header: null
+    methods: []
+  Beta User Call Settings with Call Bridge Feature:
+    doc: null
+    header: null
+    methods: []
+  Beta User Call Settings with Compliance Announcement Feature:
+    doc: null
+    header: null
+    methods: []
+  Beta User Call Settings with Enhanced Forwarding:
+    doc: null
+    header: null
+    methods: []
+  Beta User Call Settings with Hoteling:
+    doc: null
+    header: null
+    methods: []
+  Beta Virtual Line Call Settings with Virtual Line Call Recording:
+    doc: null
+    header: null
+    methods: []
+  Beta Workspace Call Settings with Enhanced Forwarding:
+    doc: null
+    header: null
+    methods: []
+  Beta Workspaces with WxC included:
+    doc: null
+    header: null
+    methods: []
+  BroadWorks Billing Reports:
+    doc: null
+    header: null
+    methods: []
+  BroadWorks Enterprises:
+    doc: null
+    header: null
+    methods: []
+  BroadWorks Enterprises With Delete Org Improvements:
+    doc: null
+    header: null
+    methods: []
+  BroadWorks Subscriber:
+    doc: null
+    header: null
+    methods: []
+  BroadWorks Workspace:
+    doc: null
+    header: null
+    methods: []
+  Call Controls:
+    doc: null
+    header: null
+    methods: []
+  Call Routing:
+    doc: null
+    header: null
+    methods: []
+  Calling Service Settings:
+    doc: null
+    header: null
+    methods: []
+  Device Call Settings:
+    doc: null
+    header: null
+    methods: []
+  Device Configurations:
+    doc: null
+    header: null
+    methods: []
+  Devices:
+    doc: null
+    header: null
+    methods: []
+  Devices with WXC Devices Displayed:
+    doc: null
+    header: null
+    methods: []
+  Events:
+    doc: null
+    header: null
+    methods: []
+  'Features: Auto Attendant':
+    doc: null
+    header: null
+    methods: []
+  'Features: Call Park':
+    doc: null
+    header: null
+    methods: []
+  'Features: Call Pickup':
+    doc: null
+    header: null
+    methods: []
+  'Features: Call Queue':
+    doc: null
+    header: null
+    methods: []
+  'Features: Call Recording':
+    doc: null
+    header: null
+    methods: []
+  'Features: Hunt Group':
+    doc: null
+    header: null
+    methods: []
+  'Features: Paging Group':
+    doc: null
+    header: null
+    methods: []
+  'Features: Receptionist Client':
+    doc: null
+    header: null
+    methods: []
+  Groups:
+    doc: null
+    header: null
+    methods: []
+  Historical Analytics:
+    doc: null
+    header: null
+    methods: []
+  Hybrid Clusters:
+    doc: null
+    header: null
+    methods: []
+  Hybrid Connectors:
+    doc: null
+    header: null
+    methods: []
+  Licenses:
+    doc: null
+    header: null
+    methods: []
+  Local Gateway:
+    doc: null
+    header: null
+    methods: []
+  Location Call Settings:
+    doc: null
+    header: null
+    methods: []
+  'Location Call Settings: Call Handling':
+    doc: null
+    header: null
+    methods: []
+  'Location Call Settings: Schedules':
+    doc: null
+    header: null
+    methods: []
+  'Location Call Settings: Voicemail':
+    doc: null
+    header: null
+    methods: []
+  Locations:
+    doc: null
+    header: null
+    methods: []
+  Meeting Chats:
+    doc: null
+    header: null
+    methods: []
+  Meeting Closed Captions:
+    doc: null
+    header: null
+    methods: []
+  Meeting Invitees:
+    doc: null
+    header: null
+    methods: []
+  Meeting Messages:
+    doc: null
+    header: null
+    methods: []
+  Meeting Participants:
+    doc: null
+    header: null
+    methods: []
+  Meeting Polls:
+    doc: null
+    header: null
+    methods: []
+  Meeting Preferences:
+    doc: null
+    header: null
+    methods: []
+  Meeting Q and A:
+    doc: null
+    header: null
+    methods: []
+  Meeting Qualities:
+    doc: null
+    header: null
+    methods: []
+  Meeting Transcripts:
+    doc: null
+    header: null
+    methods: []
+  Meetings:
+    doc: null
+    header: null
+    methods: []
+  Meetings Summary Report:
+    doc: null
+    header: null
+    methods: []
+  Memberships:
+    doc: null
+    header: null
+    methods: []
+  Messages:
+    doc: null
+    header: null
+    methods: []
+  Messages with Edit:
+    doc: null
+    header: null
+    methods: []
+  Numbers:
+    doc: null
+    header: null
+    methods: []
+  Organizations:
+    doc: null
+    header: null
+    methods: []
+  Organizations with Delete:
+    doc: null
+    header: null
+    methods: []
+  Organizations with Xsi:
+    doc: null
+    header: null
+    methods: []
+  Partner Management:
+    doc: null
+    header: null
+    methods: []
+  Partner Tags:
+    doc: null
+    header: null
+    methods: []
+  People:
+    doc: null
+    header: null
+    methods: []
+  People with Calling:
+    doc: null
+    header: null
+    methods: []
+  Recording Report:
+    doc: null
+    header: null
+    methods: []
+  Recordings:
+    doc: null
+    header: null
+    methods: []
+  Report Templates:
+    doc: null
+    header: null
+    methods: []
+  Reports:
+    doc: null
+    header: null
+    methods: []
+  'Reports: Detailed Call History':
+    doc: null
+    header: null
+    methods: []
+  Resource Group Memberships:
+    doc: null
+    header: null
+    methods: []
+  Resource Groups:
+    doc: null
+    header: null
+    methods: []
+  Roles:
+    doc: null
+    header: null
+    methods: []
+  Room Tabs:
+    doc: null
+    header: null
+    methods: []
+  Rooms:
+    doc: null
+    header: null
+    methods: []
+  Security Audit Events:
+    doc: null
+    header: null
+    methods: []
+  Session Types:
+    doc: null
+    header: null
+    methods: []
+  Site:
+    doc: null
+    header: null
+    methods: []
+  Space Classifications:
+    doc: null
+    header: null
+    methods: []
+  Team Memberships:
+    doc: null
+    header: null
+    methods: []
+  Teams:
+    doc: null
+    header: null
+    methods: []
+  Tracking Codes:
+    doc: null
+    header: null
+    methods: []
+  UCM Profile:
+    doc: null
+    header: null
+    methods: []
+  User Call Settings:
+    doc: null
+    header: null
+    methods: []
+  Video Mesh:
+    doc: null
+    header: null
+    methods: []
+  Virtual Line Call Settings:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Device Settings with Third-party Device Support:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Organization Setting with Modify:
+    doc: null
+    header: null
+    methods: []
+  Webex Calling Person Settings with Calling Behavior:
+    doc: null
+    header: null
+    methods: []
+  Webex for Broadworks phone list sync:
+    doc: null
+    header: null
+    methods: []
+  Webhooks:
+    doc: null
+    header: null
+    methods: []
+  Wholesale Provisioning:
+    doc: null
+    header: null
+    methods: []
+  Workspace Call Settings:
+    doc: null
+    header: null
+    methods: []
+  Workspace Locations:
+    doc: null
+    header: null
+    methods: []
+  Workspace Metrics:
+    doc: null
+    header: null
+    methods: []
+  Workspace Personalization:
+    doc: null
+    header: null
+    methods: []
+  Workspaces:
+    doc: null
+    header: null
+    methods: []
+  xAPI:
+    doc: null
+    header: null
+    methods: []

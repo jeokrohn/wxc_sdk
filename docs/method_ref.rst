@@ -608,6 +608,24 @@ The second column of the table has a link to the documentation of the method.
    * - api.telephony.access_codes.read
         Get Location Access Code
      - :meth:`~wxc_sdk.telephony.access_codes.AccessCodesApi.read`
+   * - api.telephony.announcements_repo.delete
+        Delete an announcement greeting
+     - :meth:`~wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.delete`
+   * - api.telephony.announcements_repo.details
+        Fetch details of a binary announcement greeting by its ID at an organization level
+     - :meth:`~wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.details`
+   * - api.telephony.announcements_repo.list
+        Fetch a list of binary announcement greetings at an organization as well as location level
+     - :meth:`~wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.list`
+   * - api.telephony.announcements_repo.modify
+        Modify an existing announcement greeting
+     - :meth:`~wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.modify`
+   * - api.telephony.announcements_repo.upload_announcement
+        Upload a binary file to the announcement repository at organization or location level
+     - :meth:`~wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.upload_announcement`
+   * - api.telephony.announcements_repo.usage
+        Retrieves repository usage for announcements for an organization
+     - :meth:`~wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.usage`
    * - api.telephony.auto_attendant.by_name
         Get auto attendant info by name
      - :meth:`~wxc_sdk.telephony.autoattendant.AutoAttendantApi.by_name`
@@ -885,6 +903,81 @@ The second column of the table has a link to the documentation of the method.
         Get Location Voicemail
      - :meth:`~wxc_sdk.telephony.location.vm.LocationVoicemailSettingsApi.read`
    * - api.telephony.location.voicemail.update
+        Get Location Voicemail
+     - :meth:`~wxc_sdk.telephony.location.vm.LocationVoicemailSettingsApi.update`
+   * - api.telephony.locations.change_announcement_language
+        Change Announcement Language
+     - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.change_announcement_language`
+   * - api.telephony.locations.details
+        Shows Webex Calling details for a location, by ID
+     - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.details`
+   * - api.telephony.locations.device_settings
+        Get device override settings for a location
+     - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.device_settings`
+   * - api.telephony.locations.enable_for_calling
+        Enable a location by adding it to Webex Calling
+     - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.enable_for_calling`
+   * - api.telephony.locations.generate_password
+        Generates an example password using the effective password settings for the location
+     - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.generate_password`
+   * - api.telephony.locations.list
+        Lists Webex Calling locations for an organization with Webex Calling details
+     - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.list`
+   * - api.telephony.locations.update
+        Update Webex Calling details for a location, by ID
+     - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.update`
+   * - api.telephony.locations.validate_extensions
+        Validate extensions for a specific location
+     - :meth:`~wxc_sdk.telephony.location.TelephonyLocationApi.validate_extensions`
+   * - api.telephony.locations.intercept.configure
+        Put Location Intercept
+     - :meth:`~wxc_sdk.telephony.location.intercept.LocationInterceptApi.configure`
+   * - api.telephony.locations.intercept.read
+        Get Location Intercept
+     - :meth:`~wxc_sdk.telephony.location.intercept.LocationInterceptApi.read`
+   * - api.telephony.locations.internal_dialing.read
+        Get current configuration for routing unknown extensions to the Premises as internal calls
+     - :meth:`~wxc_sdk.telephony.location.internal_dialing.InternalDialingApi.read`
+   * - api.telephony.locations.internal_dialing.update
+        Modify current configuration for routing unknown extensions to the Premises as internal calls
+     - :meth:`~wxc_sdk.telephony.location.internal_dialing.InternalDialingApi.update`
+   * - api.telephony.locations.internal_dialing.url
+        
+     - :meth:`~wxc_sdk.telephony.location.internal_dialing.InternalDialingApi.url`
+   * - api.telephony.locations.moh.create
+        :param location_id: Add new access code for this location
+     - :meth:`~wxc_sdk.telephony.location.moh.LocationMoHApi.create`
+   * - api.telephony.locations.moh.delete_codes
+        Delete Access Code Location
+     - :meth:`~wxc_sdk.telephony.location.moh.LocationMoHApi.delete_codes`
+   * - api.telephony.locations.moh.read
+        Get Music On Hold
+     - :meth:`~wxc_sdk.telephony.location.moh.LocationMoHApi.read`
+   * - api.telephony.locations.moh.update
+        Get Music On Hold
+     - :meth:`~wxc_sdk.telephony.location.moh.LocationMoHApi.update`
+   * - api.telephony.locations.number.activate
+        Activate the specified set of phone numbers in a location for an organization
+     - :meth:`~wxc_sdk.telephony.location.numbers.LocationNumbersApi.activate`
+   * - api.telephony.locations.number.add
+        Adds specified set of phone numbers to a location for an organization
+     - :meth:`~wxc_sdk.telephony.location.numbers.LocationNumbersApi.add`
+   * - api.telephony.locations.number.remove
+        Remove the specified set of phone numbers from a location for an organization
+     - :meth:`~wxc_sdk.telephony.location.numbers.LocationNumbersApi.remove`
+   * - api.telephony.locations.receptionist_contacts_directory.create
+        Creates a new Receptionist Contact Directory for a location
+     - :meth:`~wxc_sdk.telephony.location.receptionist_contacts.ReceptionistContactsDirectoryApi.create`
+   * - api.telephony.locations.receptionist_contacts_directory.delete
+        Delete a Receptionist Contact Directory from a location
+     - :meth:`~wxc_sdk.telephony.location.receptionist_contacts.ReceptionistContactsDirectoryApi.delete`
+   * - api.telephony.locations.receptionist_contacts_directory.list
+        List all Receptionist Contact Directories for a location
+     - :meth:`~wxc_sdk.telephony.location.receptionist_contacts.ReceptionistContactsDirectoryApi.list`
+   * - api.telephony.locations.voicemail.read
+        Get Location Voicemail
+     - :meth:`~wxc_sdk.telephony.location.vm.LocationVoicemailSettingsApi.read`
+   * - api.telephony.locations.voicemail.update
         Get Location Voicemail
      - :meth:`~wxc_sdk.telephony.location.vm.LocationVoicemailSettingsApi.update`
    * - api.telephony.organisation_voicemail.read

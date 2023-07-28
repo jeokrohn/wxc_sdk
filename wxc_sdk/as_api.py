@@ -49,19 +49,20 @@ MAX_USERS_WITH_CALLING_DATA = 10
 CALLING_DATA_TIMEOUT_PROTECTION = False
 
 
-__all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsApiChild', 'AsAppServicesApi',
-           'AsAttachmentActionsApi', 'AsAutoAttendantApi', 'AsBargeApi', 'AsCQPolicyApi', 'AsCallInterceptApi',
-           'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi', 'AsCallRecordingApi', 'AsCallWaitingApi',
-           'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsDetailedCDRApi',
-           'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi', 'AsDndApi', 'AsEventsApi',
-           'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi', 'AsHotelingApi', 'AsHuntGroupApi',
-           'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationInterceptApi',
-           'AsLocationMoHApi', 'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi',
-           'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi',
-           'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi',
-           'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi',
-           'AsNumbersApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi',
-           'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
+__all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsAnnouncementsRepositoryApi',
+           'AsApiChild', 'AsAppServicesApi', 'AsAttachmentActionsApi', 'AsAutoAttendantApi', 'AsBargeApi',
+           'AsCQPolicyApi', 'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi',
+           'AsCallRecordingApi', 'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallingBehaviorApi',
+           'AsCallparkExtensionApi', 'AsCallsApi', 'AsDetailedCDRApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi',
+           'AsDialPlanApi', 'AsDndApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi',
+           'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi',
+           'AsLicensesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
+           'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsManageNumbersJobsApi', 'AsMeetingChatsApi',
+           'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
+           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
+           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi', 'AsNumbersApi',
+           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi',
+           'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
            'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsReceptionistApi',
            'AsReceptionistContactsDirectoryApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi',
            'AsRouteGroupApi', 'AsRouteListApi', 'AsScheduleApi', 'AsTeamMembershipsApi', 'AsTeamsApi',
@@ -191,8 +192,8 @@ class AsDetailedCDRApi(AsApiChild, base='devices'):
     This API is rate-limited to one call every 5 minutes for a given organization ID.
     """
 
-    def get_cdr_history_gen(self, start_time: datetime = None, end_time: datetime = None, locations: list[str] = None,
-                        **params) -> AsyncGenerator[CDR, None, None]:
+    def get_cdr_history_gen(self, start_time: Union[str, datetime] = None, end_time: Union[datetime, str] = None,
+                        locations: list[str] = None, **params) -> AsyncGenerator[CDR, None, None]:
         """
         Provides Webex Calling Detailed Call History data for your organization.
 
@@ -202,11 +203,18 @@ class AsDetailedCDRApi(AsApiChild, base='devices'):
         The API will return all reports that were created between startTime and endTime.
 
         :param start_time: Time of the first report you wish to collect. (report time is the time the call finished).
+            Can be a datetime object or an ISO-8601 datetime string to be
+            parsed by :meth:`dateutil.parser.isoparse`.
+
             Note: The specified time must be between 5 minutes ago and 48 hours ago.
+        :type start_time: Union[str, datetime]
         :param end_time: Time of the last report you wish to collect. Note: The specified time should be earlier than
-            startTime and no earlier than 48 hours ago
+            startTime and no earlier than 48 hours ago. Can be a datetime object or an ISO-8601 datetime string to be
+            parsed by :meth:`dateutil.parser.isoparse`.
+        :type end_time: Union[str, datetime]
         :param locations: Names of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
             provided. Allows you to query reports by location.
+        :type locations: list[str]
         :param params: additional arguments
         :return:
         """
@@ -218,13 +226,20 @@ class AsDetailedCDRApi(AsApiChild, base='devices'):
         if not end_time:
             end_time = datetime.now(tz=tz.tzutc()) - timedelta(minutes=5, seconds=30)
 
-        params['startTime'] = dt_iso_str(start_time)
-        params['endTime'] = dt_iso_str(end_time)
+        def guess_datetime(dt: Union[datetime, str]) -> datetime:
+            if isinstance(dt, str):
+                r = isoparse(dt)
+            else:
+                r = dt_iso_str(dt)
+            return r
+
+        params['startTime'] = guess_datetime(start_time)
+        params['endTime'] = guess_datetime(end_time)
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=CDR, params=params, item_key='items')
 
-    async def get_cdr_history(self, start_time: datetime = None, end_time: datetime = None, locations: list[str] = None,
-                        **params) -> List[CDR]:
+    async def get_cdr_history(self, start_time: Union[str, datetime] = None, end_time: Union[datetime, str] = None,
+                        locations: list[str] = None, **params) -> List[CDR]:
         """
         Provides Webex Calling Detailed Call History data for your organization.
 
@@ -234,11 +249,18 @@ class AsDetailedCDRApi(AsApiChild, base='devices'):
         The API will return all reports that were created between startTime and endTime.
 
         :param start_time: Time of the first report you wish to collect. (report time is the time the call finished).
+            Can be a datetime object or an ISO-8601 datetime string to be
+            parsed by :meth:`dateutil.parser.isoparse`.
+
             Note: The specified time must be between 5 minutes ago and 48 hours ago.
+        :type start_time: Union[str, datetime]
         :param end_time: Time of the last report you wish to collect. Note: The specified time should be earlier than
-            startTime and no earlier than 48 hours ago
+            startTime and no earlier than 48 hours ago. Can be a datetime object or an ISO-8601 datetime string to be
+            parsed by :meth:`dateutil.parser.isoparse`.
+        :type end_time: Union[str, datetime]
         :param locations: Names of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
             provided. Allows you to query reports by location.
+        :type locations: list[str]
         :param params: additional arguments
         :return:
         """
@@ -250,8 +272,15 @@ class AsDetailedCDRApi(AsApiChild, base='devices'):
         if not end_time:
             end_time = datetime.now(tz=tz.tzutc()) - timedelta(minutes=5, seconds=30)
 
-        params['startTime'] = dt_iso_str(start_time)
-        params['endTime'] = dt_iso_str(end_time)
+        def guess_datetime(dt: Union[datetime, str]) -> datetime:
+            if isinstance(dt, str):
+                r = isoparse(dt)
+            else:
+                r = dt_iso_str(dt)
+            return r
+
+        params['startTime'] = guess_datetime(start_time)
+        params['endTime'] = guess_datetime(end_time)
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=CDR, params=params, item_key='items')]
 
@@ -5029,13 +5058,12 @@ class AsCallInterceptApi(AsPersonSettingsApiChild):
             upload_as = os.path.basename(content)
             content = open(content, mode='rb')
             must_close = True
-            pass
         else:
             must_close = False
             # an existing reader
             if not upload_as:
                 raise ValueError('upload_as is required')
-        encoder = MultipartEncoder(fields={'file': (upload_as, content, 'audio/wav')})
+        encoder = MultipartEncoder({'file': (upload_as, content, 'audio/wav')})
         ep = self.f_ep(person_id=person_id, path='actions/announcementUpload/invoke')
         params = org_id and {'orgId': org_id} or None
         try:
@@ -6602,7 +6630,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
             # an existing reader
             if not upload_as:
                 raise ValueError('upload_as is required')
-        encoder = MultipartEncoder(fields={'file': (upload_as, content, 'audio/wav')})
+        encoder = MultipartEncoder({'file': (upload_as, content, 'audio/wav')})
         ep = self.f_ep(person_id=person_id, path=f'actions/{greeting_key}/invoke')
         params = org_id and {'orgId': org_id} or None
         try:
@@ -7484,6 +7512,295 @@ class AsTeamsApi(AsApiChild, base='teams'):
         url = self.ep(f'{team_id}')
         await super().delete(url=url)
         return
+
+
+class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
+    """
+    Not supported for Webex for Government (FedRAMP)
+
+    Features: Announcement Repository support reading and writing of Webex Calling Announcement Repository settings for
+    a specific organization.
+
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    spark-admin:telephony_config_read.
+    Modifying these organization settings requires a full administrator auth token with a scope
+    of spark-admin:telephony_config_write.
+
+    A partner administrator can retrieve or change settings in a customer's organization using the optional orgId query
+    parameter.
+    """
+
+    def list_gen(self, location_id: str = None, order: str = None, file_name: str = None, file_type: str = None,
+             media_file_type: str = None, name: str = None, org_id: str = None,
+             **params) -> AsyncGenerator[RepoAnnouncement, None, None]:
+        """
+        Fetch a list of binary announcement greetings at an organization as well as location level.
+        An admin can upload a file at an organization level. This file will be uploaded to the announcement repository.
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+
+        :param location_id: Return the list of enterprise or Location announcement files. Without this parameter, the
+            Enterprise level announcements are returned. Possible values: all, locations,
+            Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzMxMTYx
+        :type location_id: str
+        :param order: Sort the list according to fileName or fileSize. The default sort will be in Ascending order.
+        :type order: str
+        :param file_name: Return the list of announcements with the given fileName.
+        :type file_name: str
+        :param file_type: Return the list of announcement files for this fileType.
+        :type file_type: str
+        :param media_file_type: Return the list of announcement files for this mediaFileType.
+        :type media_file_type: str
+        :param name: Return the list of announcement files for this announcement label.
+        :type name: str
+        :param org_id: Create an announcement in this organization.
+        :type org_id: str
+        :return: yields :class:`RepoAnnouncement` objects
+
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if order is not None:
+            params['order'] = order
+        if file_name is not None:
+            params['fileName'] = file_name
+        if file_type is not None:
+            params['fileType'] = file_type
+        if media_file_type is not None:
+            params['mediaFileType'] = media_file_type
+        if name is not None:
+            params['name'] = name
+        url = self.ep('announcements')
+        return self.session.follow_pagination(url=url, model=RepoAnnouncement, item_key='announcements',
+                                              params=params)
+
+    async def list(self, location_id: str = None, order: str = None, file_name: str = None, file_type: str = None,
+             media_file_type: str = None, name: str = None, org_id: str = None,
+             **params) -> List[RepoAnnouncement]:
+        """
+        Fetch a list of binary announcement greetings at an organization as well as location level.
+        An admin can upload a file at an organization level. This file will be uploaded to the announcement repository.
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+
+        :param location_id: Return the list of enterprise or Location announcement files. Without this parameter, the
+            Enterprise level announcements are returned. Possible values: all, locations,
+            Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzMxMTYx
+        :type location_id: str
+        :param order: Sort the list according to fileName or fileSize. The default sort will be in Ascending order.
+        :type order: str
+        :param file_name: Return the list of announcements with the given fileName.
+        :type file_name: str
+        :param file_type: Return the list of announcement files for this fileType.
+        :type file_type: str
+        :param media_file_type: Return the list of announcement files for this mediaFileType.
+        :type media_file_type: str
+        :param name: Return the list of announcement files for this announcement label.
+        :type name: str
+        :param org_id: Create an announcement in this organization.
+        :type org_id: str
+        :return: yields :class:`RepoAnnouncement` objects
+
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if order is not None:
+            params['order'] = order
+        if file_name is not None:
+            params['fileName'] = file_name
+        if file_type is not None:
+            params['fileType'] = file_type
+        if media_file_type is not None:
+            params['mediaFileType'] = media_file_type
+        if name is not None:
+            params['name'] = name
+        url = self.ep('announcements')
+        return [o async for o in self.session.follow_pagination(url=url, model=RepoAnnouncement, item_key='announcements',
+                                              params=params)]
+
+    def _upload_or_modify(self, *, url, name, file, upload_as, params, is_upload) -> dict:
+        """
+
+        :meta private:
+        """
+        if isinstance(file, str):
+            upload_as = upload_as or os.path.basename(file)
+            file = open(file, mode='rb')
+            must_close = True
+        else:
+            must_close = False
+            # an existing reader
+            if not upload_as:
+                raise ValueError('upload_as is required')
+        encoder = MultipartEncoder({'name': name, 'file': (upload_as, file, 'audio/wav')})
+        if is_upload:
+            meth = super().post
+        else:
+            meth = super().put
+        try:
+            data = meth(url, data=encoder, headers={'Content-Type': encoder.content_type},
+                        params=params)
+        finally:
+            if must_close:
+                file.close()
+        return data
+
+    def upload_announcement(self, name: str, file: Union[BufferedReader, str], upload_as: str = None,
+                            location_id: str = None,
+                            org_id: str = None) -> str:
+        """
+        Upload a binary file to the announcement repository at organization or location level.
+        An admin can upload a file at an organization or location level. This file will be uploaded to the
+        announcement repository.
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write .
+
+        :param name: Announcement name
+        :type name: str
+        :param file: the file to be uploaded, can be a path to a file or a buffered reader (opened file); if a
+            reader referring to an open file is passed then make sure to open the file as binary b/c otherwise the
+            content length might be calculated wrong
+        :type file: Union[BufferedReader, str]
+        :param upload_as: filename for the content. Only required if content is a reader; has to be a .wav file name.
+        :type upload_as: str
+        :param location_id: Unique identifier of a location where an announcement is being created.
+        :type location_id: str
+        :param org_id: Create an announcement in this organization.
+        :type org_id: str
+        :return: id of announcement
+        :rtype: str
+
+        Examples:
+
+            .. code-block:: python
+
+                # upload a local file as announcement at the org level
+                r = api.telephony.announcements_repo.upload_announcement(name='Sample', file='sample.wav')
+
+                # upload an announcement from an open file
+                # any files-like object can be used as input.
+                # note: the upload_as parameter is required to set the file name for the upload
+                with open('sample.wav', mode='rb') as wav_file:
+                    r = api.telephony.announcements_repo.upload_announcement(name='Sample', file=wav_file,
+                                                                             upload_as='sample.wav')
+
+                # upload an announcement from content in a string
+                with open('sample.wav', mode='rb') as wav_file:
+                    data = wav_file.read()
+
+                # data now is a bytes object with the file content. As we can use files-like objects as input
+                # it's also possible to use a BytesIO as input for upload_announcement()
+                binary_file = io.BytesIO(data)
+                r = self.api.telephony.announcements_repo.upload_announcement(name='Sample', file=binary_file,
+                                                                              upload_as='from_string.wav')
+
+        """
+        params = org_id and {'orgId': org_id} or None
+        if location_id is None:
+            url = self.ep('announcements')
+        else:
+            url = self.ep(f'locations/{location_id}/announcements')
+        data = self._upload_or_modify(url=url, name=name, file=file, upload_as=upload_as, params=params,
+                                      is_upload=True)
+        return data["id"]
+
+    async def usage(self, location_id: str = None, org_id: str = None) -> RepositoryUsage:
+        """
+        Retrieves repository usage for announcements for an organization.
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+
+        :param location_id: Unique identifier of a location
+        :type location_id: str
+        :param org_id: Create an announcement in this organization.
+        :type org_id: str
+
+        """
+        params = org_id and {'orgId': org_id} or None
+        if location_id is None:
+            url = self.ep('announcements/usage')
+        else:
+            url = self.ep(f'locations/{location_id}/announcements/usage')
+        data = await super().get(url=url, params=params)
+        return RepositoryUsage.parse_obj(data)
+
+    async def details(self, announcement_id: str, location_id: str = None, org_id: str = None) -> RepoAnnouncement:
+        """
+        Fetch details of a binary announcement greeting by its ID at an organization level.
+        An admin can upload a file at an organization level. This file will be uploaded to the announcement repository.
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+
+        :param location_id: Unique identifier of a location
+        :type location_id: str
+        :param announcement_id: Unique identifier of an announcement.
+        :type announcement_id: str
+        :param org_id: Get details of an announcement in this organization.
+        :type org_id: str
+
+        """
+        params = org_id and {'orgId': org_id} or None
+        if location_id is None:
+            url = self.ep(f'announcements/{announcement_id}')
+        else:
+            url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
+        data = await super().get(url=url, params=params)
+        return RepoAnnouncement.parse_obj(data)
+
+    async def delete(self, announcement_id: str, location_id: str = None, org_id: str = None):
+        """
+        Delete an announcement greeting.
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param announcement_id: Unique identifier of an announcement.
+        :type announcement_id: str
+        :param location_id: Unique identifier of a location where announcement is being deleted.
+        :type location_id: str
+        :param org_id: Delete an announcement in this organization.
+        :type org_id: str
+
+        """
+        params = org_id and {'orgId': org_id} or None
+
+        if location_id is None:
+            url = self.ep(f'announcements/{announcement_id}')
+        else:
+            url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
+        await super().delete(url=url, params=params)
+
+    def modify(self, announcement_id: str, name: str, file: Union[BufferedReader, str],
+               upload_as: str = None, location_id: str = None, org_id: str = None):
+        """
+        Modify an existing announcement greeting
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param announcement_id: Unique identifier of an announcement.
+        :type announcement_id: str
+        :param name: Announcement name
+        :type name: str
+        :param file: the file to be uploaded, can be a path to a file or a buffered reader (opened file); if a
+            reader referring to an open file is passed then make sure to open the file as binary b/c otherwise the
+            content length might be calculated wrong
+        :type file: Union[BufferedReader, str]
+        :param upload_as: filename for the content. Only required if content is a reader; has to be a .wav file name.
+        :type upload_as: str
+        :param location_id: Unique identifier of a location where announcement is being deleted.
+        :type location_id: str
+        :param org_id: Modify an announcement in this organization.
+        :type org_id: str
+
+        """
+        params = org_id and {'orgId': org_id} or None
+        if location_id is None:
+            url = self.ep(f'announcements/{announcement_id}')
+        else:
+            url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
+        data = self._upload_or_modify(url=url, name=name, file=file, upload_as=upload_as, params=params,
+                                      is_upload=False)
+        return data["id"]
 
 
 class AsForwardingApi:
@@ -13100,6 +13417,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     """
     #: access or authentication codes
     access_codes: AsAccessCodesApi
+    announcements_repo: AsAnnouncementsRepositoryApi
     auto_attendant: AsAutoAttendantApi
     #: location call intercept settings
     call_intercept: AsLocationInterceptApi
@@ -13113,6 +13431,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     jobs: AsJobsApi
     #: location specific settings
     location: AsTelephonyLocationApi
+    locations: AsTelephonyLocationApi
     #: organisation voicemail settings
     organisation_voicemail: AsOrganisationVoicemailSettingsAPI
     paging: AsPagingApi
@@ -13131,6 +13450,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
         self.access_codes = AsAccessCodesApi(session=session)
+        self.announcements_repo = AsAnnouncementsRepositoryApi(session=session)
         self.auto_attendant = AsAutoAttendantApi(session=session)
         self.call_intercept = AsLocationInterceptApi(session=session)
         self.calls = AsCallsApi(session=session)
@@ -13141,6 +13461,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.huntgroup = AsHuntGroupApi(session=session)
         self.jobs = AsJobsApi(session=session)
         self.location = AsTelephonyLocationApi(session=session)
+        self.locations = self.location
         self.organisation_voicemail = AsOrganisationVoicemailSettingsAPI(session=session)
         self.paging = AsPagingApi(session=session)
         self.permissions_out = AsOutgoingPermissionsApi(session=session, locations=True)

@@ -50,4 +50,8 @@ developer.webex.com/endpoint_summary.py developer.webex.com/generated/full_spec.
 developer.webex.com/read_api_spec.py -a developer.webex.com/.env -s Devices -t "Devices with WXC Devices Displayed" -f developer.webex.com/generated/devices_w_wxc.yml
 developer.webex.com/read_api_spec.py -a developer.webex.com/.env -s Calling -t "Workspaces with WXC Included" -f developer.webex.com/generated/workspaces_w_wxc.yml
 
+# announcement repository
+developer.webex.com/read_api_spec.py --auth developer.webex.com/.env -s "Webex Calling" -t "Webex Calling Organization Settings with Announcements Repository Feature" -f developer.webex.com/generated/announcement_rep.yml
+developer.webex.com/read_api_spec.py --auth developer.webex.com/.env -s "Full API Reference" -t "Beta Features: Announcement Repository with Announcements Repository Feature" -f developer.webex.com/generated/announcement_repo.yml
+
 for i in developer.webex.com/generated/*.yml; do developer.webex.com/classes.py "$i" -o "${i/.yml/_auto.py}"; done

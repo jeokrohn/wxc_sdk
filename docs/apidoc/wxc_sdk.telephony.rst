@@ -12,6 +12,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   wxc_sdk.telephony.announcements_repo
    wxc_sdk.telephony.callqueue
    wxc_sdk.telephony.devices
    wxc_sdk.telephony.jobs

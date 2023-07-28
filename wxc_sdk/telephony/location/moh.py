@@ -8,7 +8,7 @@ from typing import Union, Optional
 from ...api_child import ApiChild
 from ...base import ApiModel
 from ...base import SafeEnum as Enum
-from ...common import AuthCode
+from ...common import AuthCode, AnnAudioFile
 
 __all__ = ['LocationMoHGreetingType', 'LocationMoHSetting', 'LocationMoHApi']
 
@@ -35,6 +35,7 @@ class LocationMoHSetting(ApiModel):
     call_park_enabled: Optional[bool]
     #: Greeting type for the location.
     greeting: Optional[LocationMoHGreetingType]
+    audio_file: Optional[AnnAudioFile]
 
 
 class LocationMoHApi(ApiChild, base='telephony/config/locations'):

@@ -20,7 +20,7 @@ __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting',
            'CommonDeviceCustomization', 'BacklightTimer', 'Background', 'BackgroundSelection', 'DisplayNameSelection',
            'LoggingLevel', 'DisplayCallqueueAgentSoftkey', 'AcdCustomization', 'LineKeyLabelSelection',
            'LineKeyLedPattern', 'PhoneLanguage', 'ScreenTimeout', 'WifiNetwork', 'MppCustomization', 'PrimaryOrShared',
-           'MediaFileType', 'AnnAudioFile', 'WifiCustomization', 'RoomType', 'LinkRelation']
+           'MediaFileType', 'AnnAudioFile', 'WifiCustomization', 'RoomType', 'LinkRelation', 'AnnouncementLevel']
 
 
 class LinkRelation(ApiModel):
@@ -718,11 +718,25 @@ class MediaFileType(str, Enum):
     three_gp = '3GP'
 
 
+class AnnouncementLevel(Enum):
+    #: Specifies this audio file is configured across organisation.
+    organization = 'ORGANIZATION'
+    #: Specifies this audio file is configured across location.
+    location = 'LOCATION'
+    #: Specifies this audio file is configured on instance level.
+    entity = 'ENTITY'
+
+
 class AnnAudioFile(ApiModel):
     """
     Announcement Audio Files
     """
+    #: A unique identifier for the announcement. name, mediaFileType, level are mandatory if id is not provided for
+    #: uploading an announcement.
+    id: Optional[str]
     #: Name of the file.
-    file_name: str
+    file_name: Optional[str]
     #: Media Type of the audio file.
-    media_file_type: MediaFileType
+    media_file_type: Optional[MediaFileType]
+    #: Audio announcement file type location.
+    level: Optional[AnnouncementLevel]

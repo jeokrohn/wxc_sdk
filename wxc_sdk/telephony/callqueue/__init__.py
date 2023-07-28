@@ -10,7 +10,7 @@ from ..forwarding import ForwardingApi, FeatureSelector
 from ..hg_and_cq import HGandCQ, Policy, Agent
 from ...base import SafeEnum as Enum
 from ...base import to_camel, ApiModel
-from ...common import RingPattern, Greeting
+from ...common import RingPattern, Greeting, AnnAudioFile
 from ...rest import RestSession
 
 __all__ = ['CallBounce', 'DistinctiveRing', 'CallQueueCallPolicies', 'OverflowAction', 'OverflowSetting', 'WaitMode',
@@ -144,9 +144,10 @@ class OverflowSetting(ApiModel):
     play_overflow_greeting_enabled: Optional[bool]
     #: How to handle new calls when the queue is full.
     greeting: Optional[Greeting]
-    #: Array of announcement file name strings to be played as overflow greetings. These files must be from the list
-    #: of announcements files associated with this call queue.
-    audio_files: Optional[list[str]]
+    #: Array of announcement files to be played as overflow greetings. These files are from the list of announcement
+    #:  files associated with this call queue. For CUSTOM announcement, a minimum of 1 file is mandatory,
+    #:  and the maximum is 4.
+    audio_announcement_files: Optional[list[AnnAudioFile]]
 
     @staticmethod
     def default() -> 'OverflowSetting':
@@ -157,7 +158,7 @@ class OverflowSetting(ApiModel):
                                overflow_after_wait_time=30,
                                play_overflow_greeting_enabled=False,
                                greeting=Greeting.default,
-                               audio_files=list())
+                               audio_announcement_files=list())
 
 
 class WaitMode(str, Enum):
@@ -207,7 +208,7 @@ class WaitMessageSetting(ApiModel):
 class AudioSource(ApiModel):
     enabled: bool = Field(default=True)
     greeting: Greeting = Field(default=Greeting.default)
-    audio_files: list[str] = Field(default_factory=list)
+    audio_announcement_files: list[AnnAudioFile] = Field(default_factory=list)
 
 
 class WelcomeMessageSetting(AudioSource):

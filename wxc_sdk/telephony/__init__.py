@@ -8,6 +8,7 @@ from typing import Optional
 from pydantic import Field, parse_obj_as, validator
 
 from .access_codes import AccessCodesApi
+from .announcements_repo import AnnouncementsRepositoryApi
 from .autoattendant import AutoAttendantApi
 from .callpark import CallParkApi
 from .callpark_extension import CallparkExtensionApi
@@ -430,11 +431,13 @@ class SupportedDevice(ApiModel):
     customizable_line_label_enabled: Optional[bool]
     supports_line_port_reordering_enabled: Optional[bool]
 
+
 class AnnouncementLanguage(ApiModel):
     #: Language name.
     name: Optional[str]
     #: Language Code
     code: Optional[str]
+
 
 @dataclass(init=False)
 class TelephonyApi(ApiChild, base='telephony/config'):
@@ -443,6 +446,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     """
     #: access or authentication codes
     access_codes: AccessCodesApi
+    announcements_repo: AnnouncementsRepositoryApi
     auto_attendant: AutoAttendantApi
     #: location call intercept settings
     call_intercept: LocationInterceptApi
@@ -456,6 +460,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     jobs: JobsApi
     #: location specific settings
     location: TelephonyLocationApi
+    locations: TelephonyLocationApi
     #: organisation voicemail settings
     organisation_voicemail: OrganisationVoicemailSettingsAPI
     paging: PagingApi
@@ -474,6 +479,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     def __init__(self, session: RestSession):
         super().__init__(session=session)
         self.access_codes = AccessCodesApi(session=session)
+        self.announcements_repo = AnnouncementsRepositoryApi(session=session)
         self.auto_attendant = AutoAttendantApi(session=session)
         self.call_intercept = LocationInterceptApi(session=session)
         self.calls = CallsApi(session=session)
@@ -484,6 +490,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.huntgroup = HuntGroupApi(session=session)
         self.jobs = JobsApi(session=session)
         self.location = TelephonyLocationApi(session=session)
+        self.locations = self.location
         self.organisation_voicemail = OrganisationVoicemailSettingsAPI(session=session)
         self.paging = PagingApi(session=session)
         self.permissions_out = OutgoingPermissionsApi(session=session, locations=True)

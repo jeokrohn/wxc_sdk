@@ -8,7 +8,7 @@ from pydantic import Field
 
 from ..base import ApiModel, webex_id_to_uuid
 from ..base import SafeEnum as Enum
-from ..common import UserBase, AlternateNumber
+from ..common import UserBase, AlternateNumber, IdAndName
 
 __all__ = ['HGandCQ', 'Policy', 'Agent', 'AlternateNumberSettings']
 
@@ -42,6 +42,7 @@ class Agent(UserBase):
     skill_level: Optional[int]
     #: Indicates the join status of the agent for this queue. Only for call queues
     join_enabled: Optional[bool]
+    location: Optional[IdAndName]
 
     @property
     def cpapi_id(self) -> str:
