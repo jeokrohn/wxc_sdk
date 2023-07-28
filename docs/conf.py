@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'wxc_sdk'
-copyright = '2022, Johannes Krohn'
+copyright = '2023, Johannes Krohn'
 author = 'Johannes Krohn'
 
 # The full version, including alpha/beta/rc tags
@@ -35,9 +35,26 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx_rtd_theme',
     'sphinx.ext.viewcode',
+    'sphinx.ext.intersphinx',
     # 'autoapi.extension',
     # 'enum_tools.autoenum'
 ]
+
+# intersphinx allows to reference other RTD projects
+# to view an object inventory:
+#   python -m sphinx.ext.intersphinx https://dateutil.readthedocs.io/en/stable/objects.inv
+intersphinx_mapping = {
+    'dateutil': ('https://dateutil.readthedocs.io/en/stable/', None)
+}
+
+# We recommend adding the following config value.
+# Sphinx defaults to automatically resolve *unresolved* labels using all your Intersphinx mappings.
+# This behavior has unintended side-effects, namely that documentations local references can
+# suddenly resolve to an external location.
+# See also:
+# https://www.sphinx-doc.org/en/master/usage/extensions/intersphinx.html#confval-intersphinx_disabled_reftypes
+# intersphinx_disabled_reftypes = ["*"]
+
 
 # This value selects what content will be inserted into the main body of an autoclass directive.
 # Both the class’ and the __init__ method’s docstring are concatenated and inserted.

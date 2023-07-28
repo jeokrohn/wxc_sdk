@@ -23,6 +23,8 @@ Release history
   :class:`wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi`: renamed API attribute to
   :attr:`wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.access_codes` and updated endpoint URL in
   :class:`wxc_sdk.person_settings.permissions_out.AccessCodesApi`
+- fix: better handling of start_time and end_time parameters in :meth:`wxc_sdk.cdr.DetailedCDRApi.get_cdr_history`.
+  Instead of datetime objects the call also accepts ISO-8601 datetime strings.
 
 1.14.1
 ------

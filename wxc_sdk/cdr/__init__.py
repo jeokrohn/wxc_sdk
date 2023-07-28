@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from typing import Optional, Union
 
 from dateutil import tz
+from dateutil.parser import isoparse
 from pydantic import Field, root_validator
 
 from ..api_child import ApiChild
@@ -116,7 +117,8 @@ def camel(name: str) -> str:
 
     :meta private:
     """
-    def replacement(m)->str:
+
+    def replacement(m) -> str:
         r = m.group(1).lower().capitalize()
         return r
 
@@ -274,7 +276,7 @@ class CDR(ApiModel):
     #: The device model type the user is using to make or receive the call.
     model: Optional[str]
     #: Indicates the time at which the call transfer service was invoked during the call. The invocation time is
-    # shown using the UTC/GMT time zone.
+    #: shown using the UTC/GMT time zone.
     call_transfer_time: Optional[datetime]
 
 
@@ -292,8 +294,8 @@ class DetailedCDRApi(ApiChild, base='devices'):
     This API is rate-limited to one call every 5 minutes for a given organization ID.
     """
 
-    def get_cdr_history(self, start_time: datetime = None, end_time: datetime = None, locations: list[str] = None,
-                        **params) -> Generator[CDR, None, None]:
+    def get_cdr_history(self, start_time: Union[str, datetime] = None, end_time: Union[datetime, str] = None,
+                        locations: list[str] = None, **params) -> Generator[CDR, None, None]:
         """
         Provides Webex Calling Detailed Call History data for your organization.
 
@@ -303,11 +305,18 @@ class DetailedCDRApi(ApiChild, base='devices'):
         The API will return all reports that were created between startTime and endTime.
 
         :param start_time: Time of the first report you wish to collect. (report time is the time the call finished).
+            Can be a datetime object or an ISO-8601 datetime string to be
+            parsed by :meth:`dateutil.parser.isoparse`.
+
             Note: The specified time must be between 5 minutes ago and 48 hours ago.
+        :type start_time: Union[str, datetime]
         :param end_time: Time of the last report you wish to collect. Note: The specified time should be earlier than
-            startTime and no earlier than 48 hours ago
+            startTime and no earlier than 48 hours ago. Can be a datetime object or an ISO-8601 datetime string to be
+            parsed by :meth:`dateutil.parser.isoparse`.
+        :type end_time: Union[str, datetime]
         :param locations: Names of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
             provided. Allows you to query reports by location.
+        :type locations: list[str]
         :param params: additional arguments
         :return:
         """
@@ -319,7 +328,14 @@ class DetailedCDRApi(ApiChild, base='devices'):
         if not end_time:
             end_time = datetime.now(tz=tz.tzutc()) - timedelta(minutes=5, seconds=30)
 
-        params['startTime'] = dt_iso_str(start_time)
-        params['endTime'] = dt_iso_str(end_time)
+        def guess_datetime(dt: Union[datetime, str]) -> datetime:
+            if isinstance(dt, str):
+                r = isoparse(dt)
+            else:
+                r = dt_iso_str(dt)
+            return r
+
+        params['startTime'] = guess_datetime(start_time)
+        params['endTime'] = guess_datetime(end_time)
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=CDR, params=params, item_key='items')
