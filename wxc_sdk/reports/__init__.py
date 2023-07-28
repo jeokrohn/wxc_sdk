@@ -7,10 +7,11 @@ from dataclasses import dataclass
 from datetime import datetime, date
 from typing import Optional
 
-from pydantic import Field, parse_obj_as, root_validator
+from pydantic import Field, parse_obj_as
 
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
+from ..cdr import CDR
 
 __all__ = ['ValidationRules', 'ReportTemplate', 'Report', 'ReportsApi', 'CallingCDR']
 
@@ -65,60 +66,10 @@ class Report(ApiModel):
     download_url: Optional[str] = Field(alias='downloadURL')
 
 
-class CallingCDR(ApiModel):
+class CallingCDR(CDR):
     """
     Records in a Calling Detailed Call History report
     """
-
-    @root_validator(pre=True)
-    def remove_na(cls, values):
-        """
-        Some report fields are marked 'NA'. We want to treat them as null
-
-        :meta private:
-        """
-        return {k: v for k, v in values.items()
-                if v != 'NA'}
-
-    start_time: Optional[datetime] = Field(alias='Start time')
-    answer_time: Optional[datetime] = Field(alias='Answer time')
-    duration: Optional[int] = Field(alias='Duration')
-    calling_number: Optional[str] = Field(alias='Calling number')
-    called_number: Optional[str] = Field(alias='Called number')
-    user: Optional[str] = Field(alias='User')
-    calling_line_id: Optional[str] = Field(alias='Calling line ID')
-    called_line_id: Optional[str] = Field(alias='Called line ID')
-    correlation_id: Optional[str] = Field(alias='Correlation ID')
-    location: Optional[str] = Field(alias='Location')
-    inbound_trunk: Optional[str] = Field(alias='Inbound trunk')
-    outbound_trunk: Optional[str] = Field(alias='Outbound trunk')
-    route_group: Optional[str] = Field(alias='Route group')
-    direction: Optional[str] = Field(alias='Direction')
-    call_type: Optional[str] = Field(alias='Call type')
-    client_type: Optional[str] = Field(alias='Client type')
-    client_version: Optional[str] = Field(alias='Client version')
-    sub_client_type: Optional[str] = Field(alias='Sub client type')
-    os_type: Optional[str] = Field(alias='OS type')
-    device_mac: Optional[str] = Field(alias='Device Mac')
-    answered: Optional[bool] = Field(alias='Answered')
-    international_country: Optional[str] = Field(alias='International Country')
-    original_reason: Optional[str] = Field(alias='Original reason')
-    related_reason: Optional[str] = Field(alias='Related reason')
-    redirect_reason: Optional[str] = Field(alias='Redirect reason')
-    site_main_number: Optional[str] = Field(alias='Site main number')
-    site_timezone: Optional[int] = Field(alias='Site timezone')
-    user_type: Optional[str] = Field(alias='User type')
-    call_id: Optional[str] = Field(alias='Call ID')
-    user_uuid: Optional[str] = Field(alias='User UUID')
-    org_uuid: Optional[str] = Field(alias='Org UUID')
-    report_id: Optional[str] = Field(alias='Report ID')
-    department_id: Optional[str] = Field(alias='Department ID')
-    site_uuid: Optional[str] = Field(alias='Site UUID')
-    releasing_party: Optional[str] = Field(alias='Releasing party')
-    redirecting_number: Optional[str] = Field(alias='Redirecting number')
-    transfer_related_call_ID: Optional[str] = Field(alias='Transfer related call ID')
-    dialed_digits: Optional[str] = Field(alias='Dialed digits')
-    authorization_code: Optional[str] = Field(alias='Authorization code')
 
     @classmethod
     def from_dicts(cls, dicts: Iterable[dict]) -> Generator['CallingCDR', None, None]:

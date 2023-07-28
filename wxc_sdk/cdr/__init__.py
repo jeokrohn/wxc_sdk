@@ -55,6 +55,8 @@ class CDROriginalReason(str, Enum):
     user_busy = 'UserBusy'
     follow_me = 'FollowMe'
     unrecognised = 'Unrecognised'
+    deflection = 'Deflection'
+    unavailable = 'Unavailable'
     unknown = 'Unknown'
 
 
@@ -88,6 +90,7 @@ class CDRRelatedReason(str, Enum):
     call_forward_no_answer = 'CallForwardNoAnswer'
     anywhere_location = 'AnywhereLocation'
     call_retrieve = 'CallRetrieve'
+    deflection = 'Deflection'
 
 
 class CDRUserType(str, Enum):
@@ -101,6 +104,7 @@ class CDRUserType(str, Enum):
     user = 'User'
     voice_mail_group = 'VoiceMailGroup'
     call_center_standard = 'CallCenterStandard'
+    call_center_premium = 'CallCenterPremium'
     voice_xml = 'VoiceXML'
     route_point = 'RoutePoint'
     virtual_line = 'VirtualLine'
@@ -110,7 +114,7 @@ class CDRUserType(str, Enum):
 CAMEL_RE = re.compile(r'\b ?(\w+)')
 
 
-def camel(name: str) -> str:
+def space_separated_to_camel(name: str) -> str:
     """
     get a camel case name for a field name in a CDR
     Example: Answer time -> answerTime
@@ -127,6 +131,7 @@ def camel(name: str) -> str:
     return r
 
 
+
 class CDR(ApiModel):
 
     @root_validator(pre=True)
@@ -137,7 +142,7 @@ class CDR(ApiModel):
         :return:
         """
         # get rid of all empty values and convert to camelCase
-        values = {camel(k): v for k, v in values.items() if v != ''}
+        values = {space_separated_to_camel(k): v for k, v in values.items() if v != '' and v != 'NA'}
         return values
 
     #: This is the start time of the call, the answer time may be slightly after this. Time is in UTC.
