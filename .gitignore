@@ -151,3 +151,5 @@ cython_debug/
 /tests/geocodify.env
 /developer.webex.com/debug.txt
 /developer.webex.com/auto.py
+
+/apib/apib_yml
