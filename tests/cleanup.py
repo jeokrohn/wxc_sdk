@@ -21,9 +21,10 @@ from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.common import NumberState
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
+from wxc_sdk.telephony.announcements_repo import RepoAnnouncement
 from wxc_sdk.telephony.callqueue import CallQueue
 
-TO_DELETE = re.compile(r'^(?:(?:\w{2}_|many_|test_|test_user_|workspace test |CPE )\d{3})|National Holidays$')
+TO_DELETE = re.compile(r'^(?:(?:\w{2}_|many_|test_|test_ann_|test_user_|workspace test |CPE )\d{3})|National Holidays$')
 DRY_RUN = False
 
 
@@ -292,6 +293,15 @@ async def main():
         if not DRY_RUN:
             await asyncio.gather(*[as_api.rooms.delete(room_id=space.id) for space in spaces],
                                  return_exceptions=True)
+
+        # try deleting all announcements and ignore any errors
+        anns = list(filtered(await as_api.telephony.announcements_repo.list()))
+        try:
+            await asyncio.gather(
+                *[api.telephony.announcements_repo.delete(announcement_id=ann.id) for ann in anns],
+                return_exceptions=True)
+        except Exception:
+            pass
 
 
 if __name__ == '__main__':
