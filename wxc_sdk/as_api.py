@@ -8,6 +8,7 @@ from collections.abc import AsyncGenerator
 from dataclasses import dataclass
 from datetime import datetime, date, timedelta
 from dateutil import tz
+from dateutil.parser import isoparse
 from enum import Enum
 from io import BufferedReader
 from typing import Union, Dict, Optional, Literal, List
@@ -627,7 +628,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
         data = await self.patch(url=url, json=body, params=params, content_type='application/json-patch+json')
         return Device.parse_obj(data)
 
-    async def activation_code(self, workspace_id: str=None, person_id: str = None, model: str = None,
+    async def activation_code(self, workspace_id: str = None, person_id: str = None, model: str = None,
                         org_id: str = None) -> ActivationCodeResponse:
         """
         Create a Device Activation Code
@@ -7622,11 +7623,7 @@ class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
         return [o async for o in self.session.follow_pagination(url=url, model=RepoAnnouncement, item_key='announcements',
                                               params=params)]
 
-    def _upload_or_modify(self, *, url, name, file, upload_as, params, is_upload) -> dict:
-        """
-
-        :meta private:
-        """
+    async def _upload_or_modify(self, *, url, name, file, upload_as, params, is_upload) -> dict:
         if isinstance(file, str):
             upload_as = upload_as or os.path.basename(file)
             file = open(file, mode='rb')
@@ -7642,70 +7639,27 @@ class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
         else:
             meth = super().put
         try:
-            data = meth(url, data=encoder, headers={'Content-Type': encoder.content_type},
+            data = await meth(url, data=encoder, headers={'Content-Type': encoder.content_type},
                         params=params)
         finally:
             if must_close:
                 file.close()
         return data
+        
 
-    def upload_announcement(self, name: str, file: Union[BufferedReader, str], upload_as: str = None,
+    async def upload_announcement(self, name: str, file: Union[BufferedReader, str], upload_as: str = None,
                             location_id: str = None,
                             org_id: str = None) -> str:
-        """
-        Upload a binary file to the announcement repository at organization or location level.
-        An admin can upload a file at an organization or location level. This file will be uploaded to the
-        announcement repository.
-        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write .
-
-        :param name: Announcement name
-        :type name: str
-        :param file: the file to be uploaded, can be a path to a file or a buffered reader (opened file); if a
-            reader referring to an open file is passed then make sure to open the file as binary b/c otherwise the
-            content length might be calculated wrong
-        :type file: Union[BufferedReader, str]
-        :param upload_as: filename for the content. Only required if content is a reader; has to be a .wav file name.
-        :type upload_as: str
-        :param location_id: Unique identifier of a location where an announcement is being created.
-        :type location_id: str
-        :param org_id: Create an announcement in this organization.
-        :type org_id: str
-        :return: id of announcement
-        :rtype: str
-
-        Examples:
-
-            .. code-block:: python
-
-                # upload a local file as announcement at the org level
-                r = api.telephony.announcements_repo.upload_announcement(name='Sample', file='sample.wav')
-
-                # upload an announcement from an open file
-                # any files-like object can be used as input.
-                # note: the upload_as parameter is required to set the file name for the upload
-                with open('sample.wav', mode='rb') as wav_file:
-                    r = api.telephony.announcements_repo.upload_announcement(name='Sample', file=wav_file,
-                                                                             upload_as='sample.wav')
-
-                # upload an announcement from content in a string
-                with open('sample.wav', mode='rb') as wav_file:
-                    data = wav_file.read()
-
-                # data now is a bytes object with the file content. As we can use files-like objects as input
-                # it's also possible to use a BytesIO as input for upload_announcement()
-                binary_file = io.BytesIO(data)
-                r = self.api.telephony.announcements_repo.upload_announcement(name='Sample', file=binary_file,
-                                                                              upload_as='from_string.wav')
-
-        """
         params = org_id and {'orgId': org_id} or None
         if location_id is None:
             url = self.ep('announcements')
         else:
             url = self.ep(f'locations/{location_id}/announcements')
-        data = self._upload_or_modify(url=url, name=name, file=file, upload_as=upload_as, params=params,
+        data = await self._upload_or_modify(url=url, name=name, file=file, upload_as=upload_as, params=params,
                                       is_upload=True)
         return data["id"]
+
+        
 
     async def usage(self, location_id: str = None, org_id: str = None) -> RepositoryUsage:
         """
@@ -7771,36 +7725,18 @@ class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
             url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
         await super().delete(url=url, params=params)
 
-    def modify(self, announcement_id: str, name: str, file: Union[BufferedReader, str],
+    async def modify(self, announcement_id: str, name: str, file: Union[BufferedReader, str],
                upload_as: str = None, location_id: str = None, org_id: str = None):
-        """
-        Modify an existing announcement greeting
-        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
-
-        :param announcement_id: Unique identifier of an announcement.
-        :type announcement_id: str
-        :param name: Announcement name
-        :type name: str
-        :param file: the file to be uploaded, can be a path to a file or a buffered reader (opened file); if a
-            reader referring to an open file is passed then make sure to open the file as binary b/c otherwise the
-            content length might be calculated wrong
-        :type file: Union[BufferedReader, str]
-        :param upload_as: filename for the content. Only required if content is a reader; has to be a .wav file name.
-        :type upload_as: str
-        :param location_id: Unique identifier of a location where announcement is being deleted.
-        :type location_id: str
-        :param org_id: Modify an announcement in this organization.
-        :type org_id: str
-
-        """
         params = org_id and {'orgId': org_id} or None
         if location_id is None:
             url = self.ep(f'announcements/{announcement_id}')
         else:
             url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
-        data = self._upload_or_modify(url=url, name=name, file=file, upload_as=upload_as, params=params,
+        data = await self._upload_or_modify(url=url, name=name, file=file, upload_as=upload_as, params=params,
                                       is_upload=False)
         return data["id"]
+
+        
 
 
 class AsForwardingApi:

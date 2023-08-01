@@ -27,6 +27,7 @@ from collections.abc import AsyncGenerator
 from dataclasses import dataclass
 from datetime import datetime, date, timedelta
 from dateutil import tz
+from dateutil.parser import isoparse
 from enum import Enum
 from io import BufferedReader
 from typing import Union, Dict, Optional, Literal, List
