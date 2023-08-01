@@ -131,6 +131,30 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
 
         :meta private:
         """
+        '''async
+    async def _upload_or_modify(self, *, url, name, file, upload_as, params, is_upload) -> dict:
+        if isinstance(file, str):
+            upload_as = upload_as or os.path.basename(file)
+            file = open(file, mode='rb')
+            must_close = True
+        else:
+            must_close = False
+            # an existing reader
+            if not upload_as:
+                raise ValueError('upload_as is required')
+        encoder = MultipartEncoder({'name': name, 'file': (upload_as, file, 'audio/wav')})
+        if is_upload:
+            meth = super().post
+        else:
+            meth = super().put
+        try:
+            data = await meth(url, data=encoder, headers={'Content-Type': encoder.content_type},
+                        params=params)
+        finally:
+            if must_close:
+                file.close()
+        return data
+        '''
         if isinstance(file, str):
             upload_as = upload_as or os.path.basename(file)
             file = open(file, mode='rb')
@@ -202,6 +226,20 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
                                                                               upload_as='from_string.wav')
 
         """
+        '''async
+    async def upload_announcement(self, name: str, file: Union[BufferedReader, str], upload_as: str = None,
+                            location_id: str = None,
+                            org_id: str = None) -> str:
+        params = org_id and {'orgId': org_id} or None
+        if location_id is None:
+            url = self.ep('announcements')
+        else:
+            url = self.ep(f'locations/{location_id}/announcements')
+        data = await self._upload_or_modify(url=url, name=name, file=file, upload_as=upload_as, params=params,
+                                      is_upload=True)
+        return data["id"]
+
+        '''
         params = org_id and {'orgId': org_id} or None
         if location_id is None:
             url = self.ep('announcements')
@@ -297,6 +335,19 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
 
         """
+        '''async
+    async def modify(self, announcement_id: str, name: str, file: Union[BufferedReader, str],
+               upload_as: str = None, location_id: str = None, org_id: str = None):
+        params = org_id and {'orgId': org_id} or None
+        if location_id is None:
+            url = self.ep(f'announcements/{announcement_id}')
+        else:
+            url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
+        data = await self._upload_or_modify(url=url, name=name, file=file, upload_as=upload_as, params=params,
+                                      is_upload=False)
+        return data["id"]
+
+        '''
         params = org_id and {'orgId': org_id} or None
         if location_id is None:
             url = self.ep(f'announcements/{announcement_id}')

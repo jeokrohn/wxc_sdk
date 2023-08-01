@@ -536,7 +536,7 @@ def transform_classes_to_async(sources: Iterable[str]) -> Generator[str, None, N
         source, subs = ClassTransform.appy_all(source=source)
         log.debug(f'transform_method ({class_name}.{method_name}): class name transformations: {subs}')
 
-        # see if there is a a """:async block which as the async code
+        # see if there is a '''async block which has the async code
         if async_code_match := RE_ASYNC_SOURCE.search(source):
             log.debug(f'transform_method ({class_name}.{method_name}): using async code from async block comment')
             async_code = async_code_match.group('async_source').strip('\n')
