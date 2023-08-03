@@ -19,8 +19,21 @@ __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting',
            'VlanSetting', 'AtaCustomization', 'DeviceCustomizations', 'DeviceCustomization',
            'CommonDeviceCustomization', 'BacklightTimer', 'Background', 'BackgroundSelection', 'DisplayNameSelection',
            'LoggingLevel', 'DisplayCallqueueAgentSoftkey', 'AcdCustomization', 'LineKeyLabelSelection',
-           'LineKeyLedPattern', 'PhoneLanguage', 'ScreenTimeout', 'WifiNetwork', 'MppCustomization', 'PrimaryOrShared',
-           'MediaFileType', 'AnnAudioFile', 'WifiCustomization', 'RoomType', 'LinkRelation', 'AnnouncementLevel']
+           'LineKeyLedPattern', 'PhoneLanguage', 'EnabledAndValue', 'WifiNetwork', 'MppCustomization',
+           'PrimaryOrShared',
+           'MediaFileType', 'AnnAudioFile', 'WifiCustomization', 'RoomType', 'LinkRelation', 'AnnouncementLevel',
+           'UsbPortsObject', 'WifiAuthenticationMethod', 'DirectoryMethod', 'CallHistoryMethod', 'MppVlanDevice',
+           'VolumeSettings', 'CallForwardExpandedSoftKey', 'HttpProxy', 'HttpProxyMode', 'BluetoothMode',
+           'BluetoothSetting', 'NoiseCancellation', 'SoftKeyLayout', 'SoftKeyMenu', 'PskObject', 'BackgroundImageColor',
+           'BacklightTimer68XX78XX', 'DectCustomization']
+
+
+class IdOnly(ApiModel):
+    id: str
+
+
+class IdAndName(IdOnly):
+    name: str
 
 
 class LinkRelation(ApiModel):
@@ -112,6 +125,7 @@ class PersonPlaceAgent(UserBase):
     email: Optional[str]
     #: List of phone numbers of the person or workspace.
     numbers: Optional[list[UserNumber]]
+    location: Optional[IdAndName]
 
 
 class MonitoredMember(ApiModel):
@@ -222,14 +236,6 @@ class Customer(ApiModel):
     #: ID of the customer/organization.
     customer_id: str = Field(alias='id')
     #: Name of the customer/organization.
-    name: str
-
-
-class IdOnly(ApiModel):
-    id: str
-
-
-class IdAndName(IdOnly):
     name: str
 
 
@@ -438,6 +444,8 @@ class CommonDeviceCustomization(ApiModel):
     qos_enabled: bool
     #: Specify a numeric Virtual LAN ID for devices.
     vlan: VlanSetting
+    #: Enable/disable automatic nightly configuration resync of the device.
+    nightly_resync_enabled: Optional[bool]
 
 
 class AtaCustomization(CommonDeviceCustomization):
@@ -449,14 +457,40 @@ class AtaCustomization(CommonDeviceCustomization):
     #: Method for transmitting DTMF signals to the far end.
     ata_dtmf_method: AtaDtmfMethod
     snmp: dict
+    #: Enable/disable user level web access to the local device.
+    web_access_enabled: bool
+
+
+class DectCustomization(CommonDeviceCustomization):
+    #: Enable/disable user level web access to the local device.
+    web_access_enabled: bool
 
 
 class BacklightTimer(str, Enum):
-    one_m = 'ONE_M'
-    five_m = 'FIVE_M'
-    thirty_m = 'THIRTY_M'
+    one_min = 'ONE_MIN'
+    five_min = 'FIVE_MIN'
+    thirty_min = 'THIRTY_MIN'
     always_on = 'ALWAYS_ON'
+
+
+class BacklightTimer68XX78XX(str, Enum):
+    #: Keep the phone's backlight always on.
+    always_on = 'ALWAYS_ON'
+    #: Set the phone's backlight to be on for ten seconds.
+    ten_sec = 'TEN_SEC'
+    #: Set the phone's backlight to be on for twenty seconds.
+    twenty_sec = 'TWENTY_SEC'
+    #: Set the phone's backlight to be on for thirty seconds.
+    thirty_sec = 'THIRTY_SEC'
+    #: Keep the phone's backlight off.
     off = 'OFF'
+
+
+class BacklightTimer(str, Enum):
+    one_min = 'ONE_MIN'
+    five_min = 'FIVE_MIN'
+    thirty_min = 'THIRTY_MIN'
+    always_on = 'ALWAYS_ON'
 
 
 class Background(str, Enum):
@@ -567,13 +601,8 @@ class PhoneLanguage(str, Enum):
     ukraine = 'UKRAINE'
 
 
-class ScreenTimeout(ApiModel):
-    """
-    Specify the amount of inactive time needed (in seconds) before the phone’s screen saver activates.
-    """
-    #: Indicates whether the Screen Time object is enabled.
+class EnabledAndValue(ApiModel):
     enabled: bool
-    #: Indicates the value of screen timeout.
     value: int
 
 
@@ -589,6 +618,210 @@ class WifiNetwork(ApiModel):
     ssid_name: Optional[str]
     #: User ID of the wifi network.
     user_id: Optional[str]
+
+
+class UsbPortsObject(ApiModel):
+    #: New Control to Enable/Disable the side USB port.
+    enabled: Optional[bool]
+    #: Enable/disable use of the side USB port on the MPP device. Enabled by default.
+    side_usb_enabled: Optional[bool]
+    #: Enable/disable use of the rear USB port on the MPP device.
+    rear_usb_enabled: Optional[bool]
+
+
+class MppVlanDevice(EnabledAndValue):
+    #: Indicates the PC port value of a VLAN object for an MPP object.
+    pc_port: Optional[int]
+
+
+class WifiAuthenticationMethod(str, Enum):
+    #: No authentication.
+    none = 'NONE'
+    #: Extensible Authentication Protocol-Flexible Authentication via Secure Tunneling. Requires username and 
+    # password authentication.
+    eap_fast = 'EAP_FAST'
+    #: Protected Extensible Authentication Protocol - Generic Token Card. Requires username and password authentication.
+    peap_gtc = 'PEAP_GTC'
+    #: Protected Extensible Authentication Protocol - Microsoft Challenge Handshake Authentication Protocol version 
+    # 2. Requires username and password authentication.
+    peap_mschapv2 = 'PEAP_MSCHAPV2'
+    #: Pre-Shared Key. Requires shared passphrase for authentication.
+    psk = 'PSK'
+    #: Wired Equivalent Privacy. Requires encryption key for authentication.
+    wep = 'WEP'
+
+
+class CallHistoryMethod(str, Enum):
+    #: Set call history to use the unified call history from all of the end user's devices.
+    unified = 'WEBEX_UNIFIED_CALL_HISTORY'
+    #: Set call history to use local device information only.
+    local = 'LOCAL_CALL_HISTORY'
+
+
+class DirectoryMethod(str, Enum):
+    #: Set directory services to use standard XSI query method from the device.
+    xsi_directory = 'XSI_DIRECTORY'
+    #: Set directory services to use the Webex Enterprise directory.
+    webex_directory = 'WEBEX_DIRECTORY'
+
+
+class VolumeSettings(ApiModel):
+    #: Specify a ringer volume level through a numeric value between 0 and 15.
+    ringer_volume: Optional[int]
+    #: Specify a speaker volume level through a numeric value between 0 and 15.
+    speaker_volume: Optional[int]
+    #: Specify a handset volume level through a numeric value between 0 and 15.
+    handset_volume: Optional[int]
+    #: Specify a headset volume level through a numeric value between 0 and 15.
+    headset_volume: Optional[int]
+    #: Enable/disable the wireless headset hookswitch control.
+    e_hook_enabled: Optional[bool]
+    #: Enable/disable to preserve the existing values on the phone and not the values defined for the device settings.
+    allow_end_user_override_enabled: Optional[bool]
+
+
+class CallForwardExpandedSoftKey(str, Enum):
+    #: Set the default call forward expanded soft key behavior to single option.
+    only_the_call_forward_all = 'ONLY_THE_CALL_FORWARD_ALL'
+    #: Set the default call forward expanded soft key behavior to multiple menu option.
+    all_call_forwards = 'ALL_CALL_FORWARDS'
+
+
+class HttpProxyMode(str, Enum):
+    off = 'OFF'
+    auto = 'AUTO'
+    manual = 'MANUAL'
+
+
+class HttpProxy(ApiModel):
+    #: Mode of the HTTP proxy.
+    mode: Optional[HttpProxyMode]
+    #: Enable/disable auto discovery of the URL.
+    auto_discovery_enabled: Optional[bool]
+    #: Specify the host URL if the HTTP mode is set to MANUAL.
+    host: Optional[str]
+    #: Specify the port if the HTTP mode is set to MANUAL.
+    port: Optional[str]
+    #: Specify PAC URL if auto discovery is disabled.
+    pack_url: Optional[str]
+    #: Enable/disable authentication settings.
+    auth_settings_enabled: Optional[bool]
+    #: Specify a username if authentication settings are enabled.
+    username: Optional[str]
+    #: Specify a password if authentication settings are enabled.
+    password: Optional[str]
+
+
+class BluetoothMode(str, Enum):
+    phone = 'PHONE'
+    hands_free = 'HANDS_FREE'
+    both = 'BOTH'
+
+
+class BluetoothSetting(ApiModel):
+    #: Enable/disable Bluetooth.
+    enabled: Optional[bool]
+    #: Select a Bluetooth mode.
+    mode: Optional[BluetoothMode]
+
+
+class NoiseCancellation(ApiModel):
+    #: Enable/disable the Noise Cancellation.
+    enabled: Optional[bool]
+    #: Enable/disable to preserve the existing values on the phone and not the value defined for the device setting.
+    allow_end_user_override_enabled: Optional[bool]
+
+
+class SoftKeyMenu(ApiModel):
+    #: Specify the idle key list.
+    idle_key_list: Optional[str]
+    #: Specify the off hook key list.
+    off_hook_key_list: Optional[str]
+    #: Specify the dialing input key list.
+    dialing_input_key_list: Optional[str]
+    #: Specify the progressing key list.
+    progressing_key_list: Optional[str]
+    #: Specify the connected key list.
+    connected_key_list: Optional[str]
+    #: Specify the connected video key list.
+    connected_video_key_list: Optional[str]
+    #: Start the transfer key list.
+    start_transfer_key_list: Optional[str]
+    #: Start the conference key list.
+    start_conference_key_list: Optional[str]
+    #: Specify the conferencing key list.
+    conferencing_key_list: Optional[str]
+    #: Specify the releasing key list.
+    releasing_key_list: Optional[str]
+    #: Specify the hold key list.
+    hold_key_list: Optional[str]
+    #: Specify the ringing key list.
+    ringing_key_list: Optional[str]
+    #: Specify the shared active key list.
+    shared_active_key_list: Optional[str]
+    #: Specify the shared held key list.
+    shared_held_key_list: Optional[str]
+
+
+class PskObject(ApiModel):
+    #: Specify PSK1.
+    psk1: Optional[str]
+    #: Specify PSK2.
+    psk2: Optional[str]
+    #: Specify PSK3.
+    psk3: Optional[str]
+    #: Specify PSK4.
+    psk4: Optional[str]
+    #: Specify PSK5.
+    psk5: Optional[str]
+    #: Specify PSK6.
+    psk6: Optional[str]
+    #: Specify PSK7.
+    psk7: Optional[str]
+    #: Specify PSK8.
+    psk8: Optional[str]
+    #: Specify PSK9.
+    psk9: Optional[str]
+    #: Specify PSK10.
+    psk10: Optional[str]
+    #: Specify PSK11.
+    psk11: Optional[str]
+    #: Specify PSK12.
+    psk12: Optional[str]
+    #: Specify PSK13.
+    psk13: Optional[str]
+    #: Specify PSK14.
+    psk14: Optional[str]
+    #: Specify PSK15.
+    psk15: Optional[str]
+    #: Specify PSK16.
+    psk16: Optional[str]
+
+
+class SoftKeyLayout(ApiModel):
+    #: Customize SoftKey menu settings.
+    soft_key_menu: Optional[SoftKeyMenu]
+    #: Customize PSK.
+    psk: Optional[PskObject]
+    #: Default SoftKey menu settings.
+    soft_key_menu_defaults: Optional[SoftKeyMenu]
+    #: Default PSK.
+    psk_defaults: Optional[PskObject]
+
+
+class BackgroundImageColor(str, Enum):
+    #: Indicates that dark cyan background image will be set for the devices.
+    cyan_dark = 'CYAN_DARK'
+    #: Indicates the dark purple background image will be set for the devices.
+    purple_dark = 'PURPLE_DARK'
+    #: Indicates the dark blue background image will be set for the devices.
+    blue_dark = 'BLUE_DARK'
+    #: Indicates the dark violet background image will be set for the devices.
+    violet_dark = 'VIOLET_DARK'
+    #: Indicates the light blue background image will be set for the devices.
+    blue_light = 'BLUE_LIGHT'
+    #: Indicates the light violet background image will be set for the devices.
+    violet_light = 'VIOLET_LIGHT'
 
 
 class MppCustomization(CommonDeviceCustomization):
@@ -611,6 +844,7 @@ class MppCustomization(CommonDeviceCustomization):
     display_callqueue_agent_softkeys: Optional[DisplayCallqueueAgentSoftkey]
     #: Choose the duration (in hours) of Hoteling guest login.
     hoteling_guest_association_timer: Optional[int]
+    #: Holds the Acd object value.
     acd: AcdCustomization
     #: Indicates the short inter digit timer value.
     short_interdigit_timer: int
@@ -633,12 +867,60 @@ class MppCustomization(CommonDeviceCustomization):
     #: Enable/disable the Power-Over-Ethernet mode for Multi-Platform Phones.
     poe_mode: str
     #: Specify the amount of inactive time needed (in seconds) before the phone’s screen saver activates.
-    screen_timeout: ScreenTimeout
+    screen_timeout: EnabledAndValue
     #: Enable/disable the use of the USB ports on Multi-Platform phones.
     usb_ports_enabled: Optional[bool]
+    #: By default the Side USB port is enabled to support KEMs and other peripheral devices. Use the option to disable
+    #: use of this port.
+    usb_ports: Optional[UsbPortsObject]
+    #: Specify a numeric Virtual LAN ID for devices.
+    vlan: Optional[MppVlanDevice]
     #: Specify the Wi-Fi SSID and password for wireless-enabled MPP phones.
     wifi_network: Optional[WifiNetwork]
-    migration_url: Optional[str]
+    #: Specify the call history information to use. Only applies to user devices.
+    call_history: Optional[CallHistoryMethod]
+    #: Specify the directory services to use.
+    contacts: Optional[DirectoryMethod]
+    #: Enable/disable the availability of the webex meetings functionality from the phone.
+    webex_meetings_enabled: Optional[bool]
+    #: Specify all volume level values on the phone.
+    volume_settings: Optional[VolumeSettings]
+    #: Specify the call forward expanded soft key behavior.
+    cf_expanded_soft_key: Optional[CallForwardExpandedSoftKey]
+    #: Specify HTTP Proxy values.
+    http_proxy: Optional[HttpProxy]
+    #: Enable/disable the visibility of the bluetooth menu on the MPP device.
+    bluetooth: Optional[BluetoothSetting]
+    #: Enable/disable the use of the PC passthrough ethernet port on supported phone models.
+    pass_through_port_enabled: Optional[bool]
+    #: Enable/disable the ability for an end user to set a local password on the phone to restrict local access to the
+    #: device.
+    user_password_override_enabled: Optional[bool]
+    #: Enable/disable the default screen behavior when inbound calls are received.
+    active_call_focus_enabled: Optional[bool]
+    #: Enable/disable peer firmware sharing.
+    peer_firmware_enabled: Optional[bool]
+    #: Enable/disable local noise cancellation on active calls from the device.
+    noise_cancellation: Optional[NoiseCancellation]
+    #: Enable/disable visibility of the Accessibility Voice Feedback menu on the MPP device.
+    voice_feedback_accessibility_enabled: Optional[bool]
+    #: Enable/disable availability of dial assist feature on the phone.
+    dial_assist_enabled: Optional[bool]
+    #: Specify the number of calls per unique line appearance on the phone.
+    calls_per_line: Optional[int]
+    #: Enable/disable the visual indication of missed calls.
+    missed_call_notification_enabled: Optional[bool]
+    #: Specify the softkey layout per phone menu state.
+    soft_key_layout: Optional[SoftKeyLayout]
+    #: Specify the image option for the MPP 8875 phone background.
+    background_image8875: Optional[BackgroundImageColor]
+    #: Specify the use of the backlight feature on 6800 nad 7800 series devices.
+    backlight_timer_68xx78xx: Optional[BacklightTimer68XX78XX] = Field(alias='backlightTimer68XX78XX')
+
+    # !!
+    # #: Specify the Wi-Fi SSID and password for wireless-enabled MPP phones.
+    # wifi_network: Optional[WifiNetwork]
+    # migration_url: Optional[str]
 
 
 class WifiCustomization(ApiModel):
@@ -658,7 +940,7 @@ class DeviceCustomizations(ApiModel):
     customizations are set.
     """
     ata: Optional[AtaCustomization]
-    dect: Optional[CommonDeviceCustomization]
+    dect: Optional[DectCustomization]
     mpp: Optional[MppCustomization]
     wifi: Optional[WifiCustomization]
 

@@ -64,14 +64,14 @@ __all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsAnn
            'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi', 'AsNumbersApi',
            'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi',
            'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
-           'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsReceptionistApi',
-           'AsReceptionistContactsDirectoryApi', 'AsReportsApi', 'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi',
-           'AsRouteGroupApi', 'AsRouteListApi', 'AsScheduleApi', 'AsTeamMembershipsApi', 'AsTeamsApi',
-           'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTrunkApi',
-           'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
-           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
-           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi', 'AsWorkspaceSettingsApi',
-           'AsWorkspacesApi']
+           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi',
+           'AsPushToTalkApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi', 'AsReportsApi',
+           'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsScheduleApi',
+           'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi',
+           'AsTransferNumbersApi', 'AsTrunkApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi',
+           'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi',
+           'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
+           'AsWorkspaceSettingsApi', 'AsWorkspacesApi']
 
 
 @dataclass(init=False)
@@ -5978,6 +5978,64 @@ class AsPersonForwardingApi(AsPersonSettingsApiChild):
         await self.put(ep, params=params, data=data)
 
 
+class AsPreferredAnswerApi(AsApiChild, base='telephony/config/people'):
+
+    # noinspection PyMethodOverriding
+    def ep(self, person_id: str) -> str:
+        """
+        :meta private:
+        """
+        return super().ep(f'{person_id}/preferredAnswerEndpoint')
+
+    async def read(self, person_id: str, org_id: str = None) -> PreferredAnswerResponse:
+        """
+        Get Preferred Answer Endpoint
+        Get the person's preferred answer endpoint (if any) and the list of endpoints available for selection. These
+        endpoints can be used by the following Call Control API's that allow the person to specify an endpointId to
+        use for the call:
+
+        /v1/telephony/calls/dial
+
+        /v1/telephony/calls/retrieve
+
+        /v1/telephony/calls/pickup
+
+        /v1/telephony/calls/barge-in
+
+        /v1/telephony/calls/answer
+
+        This API requires spark:telephony_config_read or spark-admin:telephony_config_read scope.
+        :param person_id: A unique identifier for the person.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access
+            API.
+        :return: person's preferred answer endpoint settings
+        :rtype: PreferredAnswerResponse
+        """
+        params = org_id and {'orgId': org_id} or None
+        ep = self.ep(person_id=person_id)
+        return PreferredAnswerResponse.parse_obj(await self.get(ep, params=params))
+
+    async def modify(self, person_id: str, preferred_answer_endpoint_id: str, org_id: str = None):
+        """
+        Modify Preferred Answer Endpoint
+        Sets or clears the person’s preferred answer endpoint. To clear the preferred answer endpoint the p
+        preferred_answer_endpoint_id parameter must be set to None.
+        This API requires spark:telephony_config_write or spark-admin:telephony_config_write scope.
+
+        :param person_id: A unique identifier for the person.
+        :param preferred_answer_endpoint_id: Person’s preferred answer endpoint.
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access
+            API.
+        """
+        params = org_id and {'orgId': org_id} or None
+        ep = self.ep(person_id=person_id)
+        await self.put(ep, params=params, json={'preferredAnswerEndpointId': preferred_answer_endpoint_id})
+
+
 class AsPrivacyApi(AsPersonSettingsApiChild):
     """
     API for person's call monitoring settings
@@ -6733,6 +6791,8 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
     permissions_in: AsIncomingPermissionsApi
     #: Person's Outgoing Calling Permissions Settings
     permissions_out: AsOutgoingPermissionsApi
+    #: Preferred answer endpoint settings
+    preferred_answer: AsPreferredAnswerApi
     #: Person's Privacy Settings
     privacy: AsPrivacyApi
     #: Push-to-Talk Settings for a Person
@@ -6762,6 +6822,7 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         self.numbers = AsNumbersApi(session=session)
         self.permissions_in = AsIncomingPermissionsApi(session=session)
         self.permissions_out = AsOutgoingPermissionsApi(session=session)
+        self.preferred_answer = AsPreferredAnswerApi(session=session)
         self.privacy = AsPrivacyApi(session=session)
         self.push_to_talk = AsPushToTalkApi(session=session)
         self.receptionist = AsReceptionistApi(session=session)

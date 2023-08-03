@@ -9,6 +9,7 @@ from collections.abc import Generator
 from contextlib import contextmanager
 from io import StringIO
 from itertools import chain
+from unittest import skip
 
 from tests.base import async_test, TestWithLocations
 from wxc_sdk.as_rest import AsRestError
@@ -21,6 +22,7 @@ from wxc_sdk.telephony.callqueue import CallQueue
 from wxc_sdk.telephony.location.moh import LocationMoHSetting, LocationMoHGreetingType
 
 
+@skip('Asked to stop testing by Bob Russel')
 class Repo(TestWithLocations):
 
     def new_ann_names(self, location_id: str = None) -> Generator[str, None, None]:
@@ -48,7 +50,8 @@ class Repo(TestWithLocations):
                                                                       upload_as=f'sample_{new_name[-3:]}.wav')
         print(f'Uploaded new announcement: {new_name} id: {r}')
 
-    def test_003_modify_org(self):
+    @async_test
+    async def test_003_modify_org(self):
         """
         modify an existing repo.
         Change:
@@ -59,6 +62,17 @@ class Repo(TestWithLocations):
         api = self.api.telephony.announcements_repo
         with self.no_log():
             anns = list(api.list())
+            # # try to only use announcements as targets for which we can also get details
+            # details = await asyncio.gather(
+            #     *[self.async_api.telephony.announcements_repo.details(announcement_id=ann.id)
+            #       for ann in anns], return_exceptions=True)
+            #
+            # w_exception = [ann for ann, det in zip(anns, details) if isinstance(det, Exception)]
+            # if w_exception:
+            #     print(f'!!!!!!!!!!!!: failed to get details for {len(w_exception)} announcements')
+            #
+            # anns = [ann for ann, detail in zip(anns, details)
+            #         if not isinstance(detail, Exception)]
         if not anns:
             self.skipTest('No org level announcements')
         target: RepoAnnouncement = random.choice(anns)
@@ -68,13 +82,13 @@ class Repo(TestWithLocations):
         print(f'Trying to rename: "{target.name}" to "{new_name}", new file: {upload_as}')
         details_before = api.details(announcement_id=target.id)
         api.modify(announcement_id=target.id,
-                   name=new_name,
+                   name=target.name,
                    file='sample.wav',
                    upload_as=upload_as)
 
         details_after = api.details(announcement_id=target.id)
         foo = 1
-        self.assertTrue(False,'Why can\'t we modify?')
+        self.assertTrue(False, 'Why can\'t we modify?')
 
     def test_004_upload_org_from_file(self):
         new_name = next(self.new_ann_names())
@@ -134,6 +148,12 @@ class Repo(TestWithLocations):
                                          for ann in anns], return_exceptions=True)
         err = next((detail for detail in details if isinstance(detail, Exception)), None)
         if err:
+            for ann, detail in zip(anns, details):
+                print(f'{ann.name}: ', end='')
+                if isinstance(detail, Exception):
+                    print(f'{detail}')
+                else:
+                    print(f'no issues')
             raise err
         print(f'Got details for {len(details)} announcements')
 
@@ -224,6 +244,7 @@ class Repo(TestWithLocations):
             await api.telephony.announcements_repo.delete(announcement_id='jhgfdghj')
 
 
+@skip('Asked to stop testing by Bob Russel')
 class RepoUsage(TestWithLocations):
     """
     Tests with references to announcements

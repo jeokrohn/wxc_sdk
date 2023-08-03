@@ -1,6 +1,7 @@
 """
 Test for privacy settings
 """
+import asyncio
 import random
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
@@ -9,20 +10,20 @@ from wxc_sdk.all_types import Person, Privacy
 
 import base64
 
-from tests.base import TestCaseWithUsers
+from tests.base import TestCaseWithUsers, async_test
 
 
 class TestRead(TestCaseWithUsers):
 
-    def test_001_read_all(self):
+    @async_test
+    async def test_001_read_all(self):
         """
         Read privacy setting of all users
         """
-        ps = self.api.person_settings.privacy
+        ps = self.async_api.person_settings.privacy
 
-        with ThreadPoolExecutor() as pool:
-            list(pool.map(lambda user: ps.read(person_id=user.person_id),
-                          self.users))
+        await asyncio.gather(*[ps.read(person_id=user.person_id) for user in self.users])
+
         print(f'Got privacy settings for {len(self.users)} users')
 
 

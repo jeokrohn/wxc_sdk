@@ -11,7 +11,7 @@ from ..base import ApiModel
 from ..base import SafeEnum as Enum
 
 __all__ = ['Record', 'NotificationType', 'NotificationRepeat', 'Notification', 'CallRecordingSetting',
-           'CallRecordingApi']
+           'StartStopAnnouncement', 'CallRecordingApi']
 
 
 class Record(str, Enum):
@@ -56,6 +56,18 @@ class Notification(ApiModel):
     enabled: bool
 
 
+class StartStopAnnouncement(ApiModel):
+    """
+    Call Recording starts and stops announcement settings.
+    """
+    #: When true, an announcement is played when call recording starts and an announcement is played when call
+    #:  recording ends for internal calls.
+    internal_calls_enabled: Optional[bool]
+    #: When true, an announcement is played when call recording starts and an announcement is played when call
+    #: recording ends for PSTN calls.
+    pstn_calls_enabled: Optional[bool]
+
+
 class CallRecordingSetting(ApiModel):
     #: true if call recording is enabled.
     enabled: bool
@@ -76,6 +88,8 @@ class CallRecordingSetting(ApiModel):
     external_group: Optional[str]
     #: Unique person identifier utilized by the service provider providing call recording service.
     external_identifier: Optional[str]
+    #: Call Recording starts and stops announcement settings.
+    start_stop_announcement: Optional[StartStopAnnouncement]
 
     @staticmethod
     def default() -> 'CallRecordingSetting':
@@ -89,7 +103,9 @@ class CallRecordingSetting(ApiModel):
                                     notification=Notification(notification_type=NotificationType.none,
                                                               enabled=False),
                                     repeat=NotificationRepeat(interval=15,
-                                                              enabled=False))
+                                                              enabled=False),
+                                    start_stop_announcement=StartStopAnnouncement(internal_calls_enabled=False,
+                                                                                  pstn_calls_enabled=False))
 
 
 class CallRecordingApi(PersonSettingsApiChild):

@@ -73,6 +73,23 @@ class Device(ApiModel):
     first_seen: Optional[datetime]
     #: The date and time that the device was last seen, in ISO8601 format.
     last_seen: Optional[datetime]
+    #: Device manager(s)
+    managed_by: Optional[str]
+    #: Manufacturer of the device
+    #: only for 3rd party devices
+    manufacturer: Optional[str]
+    #: The Line/Port identifies a device endpoint in standalone mode or a SIP URI public identity in IMS mode
+    #: only for 3rd party devices
+    line_port: Optional[str]
+    #: Contains the body of the HTTP response received following the request to the Console API.
+    #: Not set if the response has no body.
+    #: only for 3rd party devices
+    outbound_proxy: Optional[str]
+    #: SIP authentication user name for the owner of the device.
+    #: only for 3rd party devices
+    sip_user_name: Optional[str]
+
+
 
     @root_validator(pre=True)
     def pop_place_id(cls, values):
@@ -235,7 +252,7 @@ class DevicesApi(ApiChild, base='devices'):
         data = self.patch(url=url, json=body, params=params, content_type='application/json-patch+json')
         return Device.parse_obj(data)
 
-    def activation_code(self, workspace_id: str=None, person_id: str = None, model: str = None,
+    def activation_code(self, workspace_id: str = None, person_id: str = None, model: str = None,
                         org_id: str = None) -> ActivationCodeResponse:
         """
         Create a Device Activation Code

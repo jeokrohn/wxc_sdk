@@ -4,7 +4,7 @@ Webex Calling Workspace settings
 import asyncio
 
 from tests.base import TestCaseWithLog, async_test
-from wxc_sdk.workspace_settings.devices import WorkspaceDevice
+from wxc_sdk.person_settings import TelephonyDevice
 from wxc_sdk.workspace_settings.numbers import WorkspaceNumbers
 from wxc_sdk.workspaces import Workspace
 
@@ -28,7 +28,7 @@ class TestWorkspaceSettings(TestCaseWithLog):
             if isinstance(devices, Exception):
                 print(f'  failed to get device list: {devices}')
                 continue
-            devices: list[WorkspaceDevice]
+            devices: list[TelephonyDevice]
             if not devices:
                 print('  no devices')
                 continue

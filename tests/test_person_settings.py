@@ -1,3 +1,5 @@
+import asyncio
+import base64
 import os.path
 import random
 import uuid
@@ -6,13 +8,17 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from functools import reduce
 from itertools import chain
+from operator import attrgetter
 from typing import Callable
 
 from wxc_sdk.base import to_camel
 from wxc_sdk.people import Person
+from wxc_sdk.person_settings.appservices import AppServicesSettings
 from wxc_sdk.person_settings.barge import BargeSettings
 from wxc_sdk.person_settings.call_intercept import InterceptSetting, InterceptTypeIncoming, Greeting
 from wxc_sdk.person_settings.caller_id import CallerIdSelectedType, CallerId, ExternalCallerIdNamePolicy
+from wxc_sdk.person_settings.preferred_answer import PreferredAnswerResponse, PreferredAnswerEndpointType, \
+    PreferredAnswerEndpoint
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber, OwnerType
 from tests.base import TestCaseWithUsers, gather, async_test
 
@@ -67,6 +73,33 @@ class TestRead(TestCaseWithUsers):
         results = self.execute_read_test(self.api.person_settings.caller_id.read)
         for e in (r for r in results if isinstance(r, Exception)):
             print(f'{e}')
+        self.assertFalse(any(isinstance(r, Exception) for r in results))
+
+    def test_006_read_all_preferred_answer_endpoints(self):
+        """
+        read preferred answer endpoints settings for all users
+        """
+        results = self.execute_read_test(self.api.person_settings.preferred_answer.read)
+        for e in (r for r in results if isinstance(r, Exception)):
+            print(f'{e}')
+        dn_len = max(len(user.display_name) for user in self.users)
+        for user, pa_setting in zip(self.users, results):
+            pa_setting: PreferredAnswerResponse
+            print(f'{user.display_name:{dn_len}}', end='')
+            if isinstance(pa_setting, Exception):
+                print(f'{pa_setting}')
+            else:
+                if pa_setting.preferred_answer_endpoint_id:
+                    pae = next((ep for ep in pa_setting.endpoints if ep.id == pa_setting.preferred_answer_endpoint_id),
+                               None)
+                    if pae is None:
+                        print('preferred_answer_endpoint_id set but ep not found in list')
+                    else:
+                        print(f'{pae.type}, {pae.name}')
+                else:
+                    print('preferred_answer_endpoint_id is None')
+                for ep in sorted(pa_setting.endpoints, key=attrgetter('name')):
+                    print(f'  {ep.type}, {ep.name}: {base64.b64decode(ep.id).decode()}')
         self.assertFalse(any(isinstance(r, Exception) for r in results))
 
 
@@ -217,6 +250,128 @@ class TestConfigure(TestCaseWithUsers):
         self.assertEqual(upload_as, intermediate.incoming.announcements.file_name)
         self.assertEqual(upload_as, updated.incoming.announcements.file_name)
         self.assertEqual(Greeting.custom, updated.incoming.announcements.greeting)
+
+    @async_test
+    async def test_009_update_preferred_answer_endpoint(self):
+        """
+        Test updating the preferred answer endpoint for one user
+        """
+        api = self.async_api.person_settings.preferred_answer
+        # get preferred answer settings for all users
+        pa_settings = await asyncio.gather(
+            *[api.read(person_id=user.person_id) for user in self.users])
+        pa_settings: list[PreferredAnswerResponse]
+
+        # pic a user where an alternative endpoint exists
+        pa: PreferredAnswerResponse
+        candidates = [(user, pa) for user, pa in zip(self.users, pa_settings)
+                      if pa.endpoints]
+        target_user, pa_setting = random.choice(candidates)
+        target_user: Person
+        pa_setting: PreferredAnswerResponse
+
+        # update endpoint
+        new_preferred = pa_setting.endpoints[0]
+        print(f'Updating preferred answer endpoint for "{target_user.display_name}" to: '
+              f'{new_preferred.type}, {new_preferred.name}')
+        await api.modify(person_id=target_user.person_id,
+                         preferred_answer_endpoint_id=new_preferred.id)
+        try:
+            # verify
+            pa_after = await api.read(person_id=target_user.person_id)
+            self.assertEqual(new_preferred.id, pa_after.preferred_answer_endpoint_id)
+        finally:
+            # restore
+            await api.modify(person_id=target_user.person_id,
+                             preferred_answer_endpoint_id=pa_setting.preferred_answer_endpoint_id)
+            restored = await api.read(person_id=target_user.person_id)
+            self.assertEqual(pa_setting, restored)
+
+    @async_test
+    async def test_010_application_in_preferred_answer_endpoints_aligns_with_user_app_setting(self):
+        """
+        verify that for all users the presence of an APPLICATION entry in the list of available preferred answer
+        endpoints correlates with the webex desktop app being enabled on the user level.
+
+        Also verify the ID formats
+        """
+
+        async def app_services_settings() -> list[AppServicesSettings]:
+            return await asyncio.gather(
+                *[self.async_api.person_settings.appservices.read(person_id=user.person_id)
+                  for user in self.users])
+
+        async def preferred_answer_settings() -> list[PreferredAnswerResponse]:
+            return await asyncio.gather(
+                *[self.async_api.person_settings.preferred_answer.read(person_id=user.person_id)
+                  for user in self.users])
+
+        # for all users get application settings
+        # for all users get preferred answer settings
+        apps, pa = await asyncio.gather(app_services_settings(), preferred_answer_settings())
+        apps: list[AppServicesSettings]
+        pa: list[PreferredAnswerResponse]
+
+        # verify that 'APPLICATION' entry in preferred answer endpoints correlates with desktop app enablement
+        err = False
+        for user, app_setting, preferred_answer in zip(self.users, apps, pa):
+            user: Person
+            app_setting: AppServicesSettings
+            pa: PreferredAnswerResponse
+            app_available_as_pa = next((endpoint for endpoint in preferred_answer.endpoints
+                                        if endpoint.type == PreferredAnswerEndpointType.application and
+                                        endpoint.name == 'Webex Desktop Application'),
+                                       None)
+            is_app_available_as_pa = app_available_as_pa is not None
+            if is_app_available_as_pa != app_setting.desktop_client_enabled:
+                print(
+                    f'!!! {user.display_name}: app available as preferred answer endpoint ({is_app_available_as_pa}), '
+                    f'desktop client enabled ({app_setting.desktop_client_enabled})')
+                err = True
+            if app_available_as_pa:
+                app_available_as_pa: PreferredAnswerEndpoint
+                if app_available_as_pa.id != app_setting.desktop_client_id:
+                    print(f'!!! {user.display_name}: desktop id (preferred answer endpoint): '
+                          f'{base64.b64decode(app_available_as_pa.id + "==").decode()}, '
+                          f'desktop id (user app settings): '
+                          f'{base64.b64decode(app_setting.desktop_client_id + "==").decode()}')
+                    err = True
+            foo = 1
+        self.assertFalse(err, 'check output for errors')
+
+    def test_011_toggle_desktop_app_and_check_in_preferred_answer_endpoint(self):
+        """
+        for a single user try to toggle desktop availability and check the correlation with 'APPLICATION' entry in
+        preferred answer endpoint list
+        """
+        target_user: Person = random.choice(self.users)
+        ps_api = self.api.person_settings
+        app_settings = ps_api.appservices.read(person_id=target_user.person_id)
+        preferred_answer = ps_api.preferred_answer.read(person_id=target_user.person_id)
+
+        def validate(apps: AppServicesSettings, preferred: PreferredAnswerResponse) -> bool:
+            desktop_app = next((endpoint for endpoint in preferred.endpoints
+                                if endpoint.type == PreferredAnswerEndpointType.application and
+                                endpoint.name == 'Webex Desktop Application'),
+                               None)
+            return apps.desktop_client_enabled == (desktop_app is not None)
+
+        try:
+            self.assertTrue(validate(apps=app_settings, preferred=preferred_answer))
+            # toggle desktop client availability
+            app_settings_update = app_settings.copy(deep=True)
+            app_settings_update.desktop_client_enabled = not app_settings.desktop_client_enabled
+            ps_api.appservices.configure(person_id=target_user.person_id, settings=app_settings_update)
+            app_settings_after = ps_api.appservices.read(person_id=target_user.person_id)
+            self.assertEqual(app_settings_update.desktop_client_enabled, app_settings_after.desktop_client_enabled)
+
+            # get preferred answer settings
+            preferred_answer_after = ps_api.preferred_answer.read(person_id=target_user.person_id)
+
+            # .. and validate
+            self.assertTrue(validate(apps=app_settings_after, preferred=preferred_answer_after))
+        finally:
+            ps_api.appservices.configure(person_id=target_user.person_id, settings=app_settings)
 
 
 class TestCallerIdConfigure(TestCaseWithUsers):

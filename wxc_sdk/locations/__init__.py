@@ -59,6 +59,10 @@ class Location(ApiModel):
     preferred_language: Optional[str]
     #: Location's phone announcement language.
     announcement_language: Optional[str]
+    latitude: Optional[float]
+    longitude: Optional[float]
+    #: Notes
+    notes: Optional[str]
 
     @property
     def location_id_uuid(self) -> str:

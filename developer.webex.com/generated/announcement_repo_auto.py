@@ -7,7 +7,7 @@ from typing import List, Optional
 from pydantic import Field, parse_obj_as
 
 
-__all__ = ['AnnouncementsListResponse', 'BetaFeatures:AnnouncementRepositorywithAnnouncementsRepositoryFeatureApi',
+__all__ = ['AnnouncementsListResponse', 'BetaFeaturesAnnouncementRepositorywithAnnouncementsRepositoryFeatureApi',
            'FeatureReferenceObject', 'FetchDetailsOfbinaryAnnouncementGreetingAtorganizationLevelResponse',
            'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelResponse',
            'FetchRepositoryUsageForAnnouncementsFororganizationResponse', 'LocationObject',
@@ -48,13 +48,13 @@ class FeatureReferenceObject(LocationObject):
 
 class FetchRepositoryUsageForAnnouncementsFororganizationResponse(ApiModel):
     #: Total file size used by announcements in this repository in kilobytes.
-    total_file_size_used_kb: Optional[int] = Field(alias='totalFileSizeUsedKB')
+    total_file_size_used_kb: Optional[int]
     #: Maximum audio file size allowed to upload in kilobytes.
-    max_audio_file_size_allowed_kb: Optional[int] = Field(alias='maxAudioFileSizeAllowedKB')
+    max_audio_file_size_allowed_kb: Optional[int]
     #: Maximum video file size allowed to upload in kilobytes.
-    max_video_file_size_allowed_kb: Optional[int] = Field(alias='maxVideoFileSizeAllowedKB')
+    max_video_file_size_allowed_kb: Optional[int]
     #: Total file size limit for the repository in megabytes.
-    total_file_size_limit_mb: Optional[int]=Field(alias='totalFileSizeLimitMB')
+    total_file_size_limit_mb: Optional[int]
 
 
 class FetchDetailsOfbinaryAnnouncementGreetingAtorganizationLevelResponse(LocationObject):

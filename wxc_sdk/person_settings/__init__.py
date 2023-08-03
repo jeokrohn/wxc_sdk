@@ -22,6 +22,7 @@ from .monitoring import MonitoringApi
 from .numbers import NumbersApi
 from .permissions_in import IncomingPermissionsApi
 from .permissions_out import OutgoingPermissionsApi
+from .preferred_answer import PreferredAnswerApi
 from .privacy import PrivacyApi
 from .push_to_talk import PushToTalkApi
 from .receptionist import ReceptionistApi
@@ -83,8 +84,7 @@ class TelephonyDevice(ApiModel):
     #: This field indicates whether the person or the workspace is the owner of the device, and points to a primary
     #: Line/Port of the device.
     primary_owner: bool
-    # TODO: missing in documentation
-    #: Indicates Hoteling details of a device.
+    #: Hoteling settings, which are available when the device is the user's primary device and device type is PRIMARY
     hoteling: Optional[Hoteling]
     #: Indicates if the line is acting as a primary line or a shared line for this device.
     device_type: PrimaryOrShared = Field(alias='type')
@@ -139,6 +139,8 @@ class PersonSettingsApi(ApiChild, base='people'):
     permissions_in: IncomingPermissionsApi
     #: Person's Outgoing Calling Permissions Settings
     permissions_out: OutgoingPermissionsApi
+    #: Preferred answer endpoint settings
+    preferred_answer: PreferredAnswerApi
     #: Person's Privacy Settings
     privacy: PrivacyApi
     #: Push-to-Talk Settings for a Person
@@ -168,6 +170,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.numbers = NumbersApi(session=session)
         self.permissions_in = IncomingPermissionsApi(session=session)
         self.permissions_out = OutgoingPermissionsApi(session=session)
+        self.preferred_answer = PreferredAnswerApi(session=session)
         self.privacy = PrivacyApi(session=session)
         self.push_to_talk = PushToTalkApi(session=session)
         self.receptionist = ReceptionistApi(session=session)

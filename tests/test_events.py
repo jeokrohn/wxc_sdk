@@ -25,6 +25,8 @@ class TestEvents(TestCaseWithLog):
                                              for r in EventResource])
         events_list: list[list[ComplianceEvent]]
         res_len = max(map(len, (e.name for e in EventResource)))
+        if not any(events_list):
+            self.skipTest('No events found')
         ev_width = ceil(log(max(map(len, events_list))) / log(10))
         for resource, events in zip(EventResource, events_list):
             events.sort(key=lambda e: e.created)

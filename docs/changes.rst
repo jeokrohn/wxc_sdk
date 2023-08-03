@@ -1,6 +1,9 @@
 Release history
 ===============
 
+- feat: preferred answer device settings for calling users :attr:`wxc_sdk.person_settings.PersonSettingsApi.preferred_answer`
+- fix: various updated data types
+
 1.15.0
 ------
 

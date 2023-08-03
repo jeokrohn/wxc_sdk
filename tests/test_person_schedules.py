@@ -1,19 +1,24 @@
 """
 Unit test for person schedules
 """
+import asyncio
 # TODO: testcase for event update
 # TODO test case for event delete
 # TODO test case for schedule delete
 import base64
 import datetime
 import random
+import re
+from collections import defaultdict
 from collections.abc import Iterable
-from concurrent.futures import ThreadPoolExecutor
+from functools import reduce
 from itertools import chain
+from typing import NamedTuple
 
-from wxc_sdk.rest import RestError
+from tests.base import TestCaseWithUsers, async_test, TestWithLocations
 from wxc_sdk.all_types import *
-from tests.base import TestCaseWithUsers
+from wxc_sdk.as_api import AsWebexSimpleApi
+from wxc_sdk.rest import RestError
 
 # prefix for test schedule names
 SCHEDULE_NAME_PREFIX = 'test_'
@@ -32,13 +37,28 @@ def unique_schedules(schedules: Iterable[Schedule]) -> list[Schedule]:
 def debug_schedule_id(schedule_id: str) -> str:
     """
     debug output for schedule id
+    Example:
+        * Y2lzY29zcGFyazovL3VzL1VTRVJfU0NIRURVTEUvVG1GMGFXOXVZV3dnU0c5c2FXUmhlWE09 is base64 decoded to ..
+        * ciscospark://us/USER_SCHEDULE/TmF0aW9uYWwgSG9saWRheXM= where the last part TmF0aW9uYWwgSG9saWRheXM= is
+          decoded to ..
+        * National Holidays .. which apparently is the name of the schedule
 
     :meta private:
     """
     decoded = base64.b64decode(f"{schedule_id}==").decode()
+    # try to decode the last
     decoded_id = base64.b64decode(f'{decoded.split("/")[-1]}').decode()
 
     return f'{schedule_id}, {decoded}, {decoded_id}'
+
+
+async def all_user_schedules(api: AsWebexSimpleApi, users: list[Person])->list[list[Schedule]]:
+    """
+    Get schedules for all users
+    """
+    schedules = await asyncio.gather(*[api.person_settings.schedules.list(obj_id=user.person_id)
+                                       for user in users])
+    return schedules
 
 
 class TestScheduleList(TestCaseWithUsers):
@@ -46,23 +66,37 @@ class TestScheduleList(TestCaseWithUsers):
     Test cases for schedules
     """
 
-    def test_001_list(self):
+    @async_test
+    async def test_001_list(self):
         """
         Try to list all existing schedules for all users
+        Listing schedules at the user level contains location level schedules
         """
-        with ThreadPoolExecutor() as pool:
-            schedules = list(pool.map(lambda user: list(self.api.person_settings.schedules.list(obj_id=user.person_id)),
-                                      self.users))
-        all_schedules = list(chain.from_iterable(schedules))
-        schedule_ids = set((schedule.name, schedule.schedule_id, schedule.schedule_type) for schedule in all_schedules)
-        print(f'got {len(all_schedules)} schedules ({len(schedule_ids)} unique) for {len(self.users)}')
+
+        all_schedules: list[Schedule] = list(chain.from_iterable(await all_user_schedules(self.async_api, self.users)))
+
+        class ScheduleInfo(NamedTuple):
+            name: str
+            id: str
+            type: str
+            level: str
+
+        schedules_by_level: dict[str, list[Schedule]] = reduce(lambda r, el: r[el.level].append(el) or r,
+                                                               all_schedules,
+                                                               defaultdict(list))
+        schedule_ids = set(ScheduleInfo(name=schedule.name, id=schedule.schedule_id, type=schedule.schedule_type,
+                                        level=schedule.level)
+                           for schedule in all_schedules)
+        print(f'got {len(all_schedules)} schedules ({len(schedule_ids)} unique) for {len(self.users)} users')
+        for level, schedules_for_level in schedules_by_level.items():
+            print(f'got {len(schedules_for_level)} schedules at level "{level}"')
 
         if schedule_ids:
-            name_len = max(map(len, (s[0] for s in schedule_ids)))
-            type_len = max(map(len, (s[2] for s in schedule_ids)))
-            decoded_ids = map(lambda s: f'{s[0]:{name_len}}({s[2]:{type_len}}): {debug_schedule_id(s[1])}',
+            name_len = max((len(s.name) for s in schedule_ids))
+            type_len = max((len(s.type) for s in schedule_ids))
+            decoded_ids = map(lambda s: f'{s.name:{name_len}}({s.type:{type_len}})({s.level:5}): {debug_schedule_id(s.id)}',
                               schedule_ids)
-            print('\n'.join(decoded_ids))
+            print('\n'.join(sorted(decoded_ids)))
 
 
 class TestCreateOrUpdate(TestCaseWithUsers):
@@ -75,7 +109,7 @@ class TestCreateOrUpdate(TestCaseWithUsers):
 
     def test_001_create(self):
         """
-        create a user schedule, does it show up at location level
+        create a user schedule, does it show up at location level?
         """
         ps = self.api.person_settings.schedules
         ls = self.api.telephony.schedules
@@ -337,6 +371,7 @@ class TestCreateOrUpdate(TestCaseWithUsers):
                                schedule_id=schedule.schedule_id)
                 print(f'Getting user schedule details for {schedule.name:{name_len}} '
                       f'   failed as expected (is a location schedule)')
+                self.assertEqual('GROUP', schedule.level)
             else:
                 # for schedules which aren't actually location schedules the details call should work
                 ps.details(obj_id=target_user.person_id, schedule_type=schedule.schedule_type,
@@ -431,3 +466,50 @@ class TestCreateOrUpdate(TestCaseWithUsers):
         updated_schedule.name = target_schedule.name
         updated_schedule.schedule_id = target_schedule.schedule_id
         self.assertEqual(target_schedule, updated_schedule)
+
+
+class TestLevel(TestCaseWithUsers, TestWithLocations):
+    """
+    Understand the level attribute in Schedule
+    """
+
+    @async_test
+    async def test_001_level_returned_for_user_list(self):
+        """
+        When listing schedules for users then level is always set to USER or GROUP
+        """
+        schedules = chain.from_iterable(await all_user_schedules(self.async_api, self.users))
+        if not schedules:
+            self.skipTest('No schedules')
+        levels = set(schedule.level for schedule in schedules)
+        self.assertFalse(levels - {'USER', 'GROUP'})
+        no_level = [s for s in schedules if not s.level]
+        if no_level:
+            print('\n'.join(f'{s}' for s in no_level))
+        self.assertFalse(no_level)
+
+    @async_test
+    async def test_002_level_not_returned_for_location_list(self):
+        """
+        When listing schedules for locations then level is never set
+        """
+        schedules = list(chain.from_iterable(await asyncio.gather(
+            *[self.async_api.telephony.schedules.list(obj_id=loc.location_id)
+              for loc in self.locations])))
+        if not schedules:
+            self.skipTest('No schedules')
+        with_level = [s for s in schedules if s.level]
+        if with_level:
+            print('\n'.join(f'{s}' for s in with_level))
+
+        # let's also look at the actual responses
+        # 'https://webexapis.com/v1/telephony/config/locations/{locationId}/schedules'
+        requests = list(self.requests(method='GET',
+                                      url_filter=re.compile(
+                                          r'https://.+/v1/telephony/config/locations/[\w0-9]+/schedules')))
+        schedules_from_body = list(chain.from_iterable(r.response_body['schedules'] for r in requests))
+        schedules_w_level = [s for s in schedules_from_body if 'level' in s]
+        if schedules_w_level:
+            print('\n'.join(f'{s}' for s in schedules_w_level))
+        self.assertFalse(with_level)
+        self.assertFalse(schedules_w_level)

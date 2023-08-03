@@ -85,7 +85,7 @@ class TestVmGroup(TestWithLocations):
             defaultdict(list)
         )
         extensions_by_location: dict[str, list[str]] = reduce(
-            lambda red, elem: red[elem.location.location_id].append(elem.extension) or red,
+            lambda red, elem: red[elem.location.id].append(elem.extension) or red,
             (n for n in numbers if n.extension),
             defaultdict(list)
         )

@@ -295,7 +295,7 @@ class ToUserWithTN(TestCallRouting):
                 telephony_locations: list[TelephonyLocation]
                 numbers = await api.telephony.phone_numbers()
                 numbers: list[NumberListPhoneNumber]
-                main_numbers: dict[str, NumberListPhoneNumber] = {number.location.location_id: number
+                main_numbers: dict[str, NumberListPhoneNumber] = {number.location.id: number
                                                                   for number in numbers if number.main_number}
                 # noinspection PyUnboundLocalVariable
                 return [LocationAndTelephony(location=loc, telephony_location=tel_loc, main_number=nlp.phone_number)

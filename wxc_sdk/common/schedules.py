@@ -242,6 +242,9 @@ class Schedule(ApiModel):
     new_name: Optional[str]
     #: Identifier for a schedule.
     schedule_id: Optional[str] = Field(alias='id')
+    #: listing user schedules returns user and location level schedules. This indicates the level. Can be USER or GROUP
+    #: this attribute only exists when listing schedules at the user level
+    level: Optional[str]
     #: location name, only returned by list() for location schedules
     location_name: Optional[str]
     #: location id, only returned by list() for location schedules

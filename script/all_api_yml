@@ -57,4 +57,7 @@ developer.webex.com/read_api_spec.py --auth developer.webex.com/.env -s "Full AP
 # Device Call Settings
 developer.webex.com/read_api_spec.py --auth developer.webex.com/.env -s "Webex Calling" -t "Device Call Settings" -f developer.webex.com/generated/device_call_settings.yml
 
+# User Call Settings
+developer.webex.com/read_api_spec.py --auth developer.webex.com/.env -s "Full API Reference" -t "User Call Settings" -f developer.webex.com/generated/user_call_settings.yml
+
 for i in developer.webex.com/generated/*.yml; do developer.webex.com/classes.py "$i" -o "${i/.yml/_auto.py}"; done
