@@ -3,6 +3,7 @@ Release history
 
 - feat: preferred answer device settings for calling users :attr:`wxc_sdk.person_settings.PersonSettingsApi.preferred_answer`
 - fix: various updated data types
+- fix: direct transformation of multi word attribute names in CDRs to snake_case to make sure that additional attributes not defined in CDR show up as snake_case
 
 1.15.0
 ------

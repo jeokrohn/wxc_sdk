@@ -9,7 +9,7 @@ from typing import Optional, Union
 
 from dateutil import tz
 from dateutil.parser import isoparse
-from pydantic import Field, root_validator
+from pydantic import Field, root_validator, Extra
 
 from ..api_child import ApiChild
 from ..base import ApiModel, dt_iso_str
@@ -51,6 +51,7 @@ class CDROriginalReason(str, Enum):
     unconditional = 'Unconditional'
     no_answer = 'NoAnswer'
     call_queue = 'CallQueue'
+    hunt_group = 'HuntGroup'
     time_of_day = 'TimeOfDay'
     user_busy = 'UserBusy'
     follow_me = 'FollowMe'
@@ -91,6 +92,7 @@ class CDRRelatedReason(str, Enum):
     anywhere_location = 'AnywhereLocation'
     call_retrieve = 'CallRetrieve'
     deflection = 'Deflection'
+    directed_call_pickup = 'DirectedCallPickup'
 
 
 class CDRUserType(str, Enum):
@@ -131,18 +133,19 @@ def space_separated_to_camel(name: str) -> str:
     return r
 
 
+def normalize_name(name:str)->str:
+    return '_'.join(name.split()).lower()
+
 
 class CDR(ApiModel):
 
     @root_validator(pre=True)
     def force_none(cls, values: dict):
         """
-        Pop all empty strings so that they get caught by Optional[] and convert keys to camelCase
-        :param values:
-        :return:
+        Pop all empty strings so that they get caught by Optional[] and convert keys to proper attribute names
         """
-        # get rid of all empty values and convert to camelCase
-        values = {space_separated_to_camel(k): v for k, v in values.items() if v != '' and v != 'NA'}
+        # get rid of all empty values and convert to snake_case
+        values = {normalize_name(k): v for k, v in values.items() if v != '' and v != 'NA'}
         return values
 
     #: This is the start time of the call, the answer time may be slightly after this. Time is in UTC.
@@ -179,7 +182,7 @@ class CDR(ApiModel):
     #: can be used for end-to-end tracking of a SIP session in IP-based multimedia communication. Each call consists of
     #: two UUIDs known as Local Session ID and Remote Session ID.
     #:   * The Local SessionID is generated from the Originating user agent.
-    local_session_id: Optional[str] = Field(alias='localSessionid')
+    local_session_id: Optional[str] = Field(alias='local_sessionid')
     #: The MAC address of the device, if known.
     device_mac: Optional[str]
     #: Inbound trunk may be presented in Originating and Terminating records.
