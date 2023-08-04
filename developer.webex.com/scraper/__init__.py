@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup, ResultSet, Tag
 from inflection import underscore
 from pydantic import BaseModel, Field, validator, root_validator
 from selenium import webdriver
-from selenium.common import TimeoutException, StaleElementReferenceException
+from selenium.common import TimeoutException, StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver.chromium.webdriver import ChromiumDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -979,9 +979,20 @@ class DevWebexComScraper:
             accept_cookies: WebElement
             # there is a button in there that we need to click
             # button = accept_cookies.find_element(by=By.TAG_NAME, value='button')
-            button = accept_cookies.find_element(by=By.ID, value='onetrust-accept-btn-handler')
-            log('accept cookies')
-            button.click()
+            button = None
+            try:
+                button = accept_cookies.find_element(by=By.ID, value='onetrust-accept-btn-handler')
+            except NoSuchElementException:
+                pass
+            if button is None:
+                try:
+                    button = accept_cookies.find_element(by=By.XPATH,
+                                                         value='//*[@id="onetrust-close-btn-container"]/button')
+                except NoSuchElementException:
+                    pass
+            if button is not None:
+                log('accept cookies')
+                button.click()
 
         # try:
         #     # wait for button to accept cookies to be steady
@@ -1009,8 +1020,9 @@ class DevWebexComScraper:
         section.click()
 
         if self.section == 'Full API Reference':
-            reference_nav_group = next(iter(self.driver.find_elements(by=By.CLASS_NAME,
-                                                                      value='md-sidebar-nav__group--expanded')))
+            # wait for a sidebar group to be present
+            reference_nav_group = WebDriverWait(driver=self.driver, timeout=10).until(
+                method=EC.presence_of_element_located((By.CLASS_NAME, 'md-sidebar-nav__group--expanded')))
         else:
             # after clicking on section an expanded nav group exists
             log('looking for expanded sidebar nav group')
@@ -1036,7 +1048,7 @@ class DevWebexComScraper:
         docs = list(self.docs_from_submenu_items(reference_items))
         return docs
 
-    def param_parser(self, divs: Iterable[Tag], level: int = 0) -> Generator[Parameter, None, None]:
+    def param_parser(self, divs: Iterable[Tag], level: int = 0, path: str = '') -> Generator[Parameter, None, None]:
         """
         Parse parameters from divs
         :param divs:
@@ -1050,7 +1062,7 @@ class DevWebexComScraper:
         def log(msg: str, div: Tag = None, log_level: int = logging.DEBUG):
             div = div or param_div
             name_str = name and f'"{name}", ' or ""
-            self.log(f'      {" " * level}param_parser({div_repr(div)}): {name_str}{msg}',
+            self.log(f'      {" " * level}param_parser({path}{div_repr(div)}): {name_str}{msg}',
                      level=log_level)
 
         def div_generator(div_list: list[Tag]) -> Generator[Tag, None, None]:
@@ -1136,7 +1148,8 @@ class DevWebexComScraper:
             # a classless div is a wrapper for a list of attributes
             if param_div.attrs.get('class', None) is None:
                 # yield members of classless div
-                yield from self.param_parser(param_div.find_all('div', recursive=False),
+                all_divs = param_div.find_all('div', recursive=False)
+                yield from self.param_parser(all_divs,
                                              level=level)
                 # and then continue with the next
                 param_div = next(div_iter, None)
@@ -1187,6 +1200,7 @@ class DevWebexComScraper:
                 log(f'# of spans in type spec: {len(spans)}')
                 assert len(spans) and len(spans) <= 2
                 param_type = spans[0].text
+                log(f'parameter type: {param_type}')
                 if len(spans) == 2:
                     type_spec = spans[1].text
                 else:
@@ -1259,6 +1273,7 @@ class DevWebexComScraper:
                 # get name of attribute from 1st div
                 # <div class="AzemgtvlBWwLVUYkRkbg">primary</div>
                 name = next(childs).text
+                log(f'got name "{name}"')
                 log('flat sequence of divs')
 
                 # next div has a list of spans ...
@@ -1267,26 +1282,50 @@ class DevWebexComScraper:
 
                 # .. and the 1st span has the type
                 param_type = next(spans).text
+                log(f'got parameter type "{param_type}"')
 
                 # ... if there is still one span then that's the type spec
                 span = next(spans, None)
                 type_spec = span and span.text
+                log(f'got type spec "{type_spec}"')
 
                 # the next div has a list of paragraphs with the documentation
                 # <div class="Sj3x8PGVKM_DQu1MaOpF"><p>Flag to indicate if the number is primary or not.</p></div>
                 doc = '\n'.join(p.text
                                 for p in next(childs).find_all('p', recursive=False))
+                log(f'got doc "{doc[:30]}..."')
 
                 # there might be one more div
                 # <div class="Mo4RauPOboRxtDGO9VvT"><span>Possible values: </span><span></span></div>
                 div = next(childs, None)
                 if div:
-                    # ... with a list of spans; add the text in these spans to the doc
-                    spans = iter(div.find_all('span', recursive=False))
-                    doc_line = f'{next(spans).text}{", ".join(t for s in spans if (t := s.text))}'
-                    log(f'enhancing doc string: "{doc_line}"')
-                    doc = '\n'.join((doc, doc_line))
-
+                    # if this div is of the same class as the parameter div then we take this div and all following
+                    # divs of the same class as attributes of this param
+                    param_div_classes = set(param_div.attrs.get('class'))
+                    assert param_div_classes
+                    div_classes = set(div.attrs.get('class'))
+                    common_classes = div_classes & param_div_classes
+                    if common_classes:
+                        attr_divs = [div] + list(childs)
+                        log(f'parsing remaining {len(attr_divs)} child divs as parameter attributes: '
+                            f'{",".join(map(div_repr, attr_divs))}')
+                        param_attrs = list(self.param_parser(attr_divs,
+                                                             level=level + 1)) or None
+                    elif spans := div.find_all('span', recursive=False):
+                        # ... with a list of spans; add the text in these spans to the doc
+                        spans = iter(spans)
+                        try:
+                            doc_line = f'{next(spans).text}{", ".join(t for s in spans if (t := s.text))}'
+                        except StopIteration:
+                            pass
+                        log(f'enhancing doc string: "{doc_line}"')
+                        doc = '\n'.join((doc, doc_line))
+                    else:
+                        raise NotImplementedError('No idea what to do with this div')
+                # now all childs should be consumed
+                unconsumed_childs = list(childs)
+                if unconsumed_childs:
+                    raise NotImplementedError('Not all child divs consumed')
             # if
 
             # look ahead to next div
@@ -1387,7 +1426,7 @@ class DevWebexComScraper:
             self.log(f'  get_method_details("{method_doc.doc}"): {msg}',
                      level=level)
 
-        if False and debugger() and method_doc.doc != 'Reject':
+        if False and debugger() and method_doc.doc != "Retrieve a person's Outgoing Calling Permissions Settings":
             # skip
             return
 
