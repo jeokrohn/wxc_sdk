@@ -66,8 +66,6 @@ class TelephonyLocation(ApiModel):
     charge_number: Optional[str]
     #: IP Address, hostname, or domain, Read-Only
     default_domain: Optional[str]
-    # TODO: add docstring, WXCAPIBULK-302
-    subscription_status: Optional[str]
     #: True if E911 setup is required.
     e911_setup_required: Optional[bool]
 
