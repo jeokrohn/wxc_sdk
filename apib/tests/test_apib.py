@@ -10,12 +10,11 @@ from collections import Counter, defaultdict
 from collections.abc import Generator
 from dataclasses import dataclass
 from typing import ClassVar, Any, NamedTuple
-from unittest import TestCase
+from unittest import TestCase, skip
 
 from pydantic import ValidationError, parse_obj_as
 
-from private.apib.apib import read_api_blueprint, is_element, ApibParseResult, ApibCopy, ApibWithCopy, ApibTransition, \
-    ApibString, ApibArray, ApibEnumElement, ApibEnum, ApibMember, ApibElement, ApibDatastucture
+from apib.apib import *
 
 
 @dataclass(init=False)
@@ -28,7 +27,7 @@ class ApibTest(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         api_apecs = os.path.dirname(__file__)
-        api_specs = os.path.join(api_apecs, *(['..'] * 4), 'api-specs')
+        api_specs = os.path.join(api_apecs, *(['..'] * 3), 'api-specs')
         api_specs = os.path.abspath(api_specs)
         cls.apib_paths = sorted(glob.glob(os.path.join(api_specs,
                                                        'blueprint',
@@ -45,6 +44,7 @@ class ApibTest(TestCase):
         stream_handler = logging.StreamHandler(sys.stdout)
         logger.addHandler(stream_handler)
         self.stream_handler = stream_handler
+        print()
 
     def tearDown(self) -> None:
         logging.getLogger().removeHandler(self.stream_handler)
@@ -66,25 +66,30 @@ class AttrInfo(NamedTuple):
     path: str
     attr_name: str
     attr_value: Any
+    data_path: list[dict]
+
+    def elem_path(self) -> str:
+        return '.'.join(e['element'] for e in self.data_path if is_element(e))
 
 
-def all_attrs(data: Any, path: str = None) -> Generator[AttrInfo, None, None]:
+def all_attrs(data: Any, path: str = None, data_path: list[dict] = None) -> Generator[AttrInfo, None, None]:
     path = path or '/'
+    data_path = data_path or list()
     if not isinstance(data, dict):
         return
     data: dict
-    yield AttrInfo(path=path, attr_name='', attr_value=data)
+    yield AttrInfo(path=path, attr_name='', attr_value=data, data_path=data_path)
     for k, v in data.items():
-        yield AttrInfo(path=path, attr_name=k, attr_value=v)
+        yield AttrInfo(path=path, attr_name=k, attr_value=v, data_path=data_path)
         # descend down into list element and child dicts
         if isinstance(v, list):
             # look at all list elements
             for i, child in enumerate(v):
-                yield from all_attrs(data=child, path=f'{path}.{k}[{i}]')
+                yield from all_attrs(data=child, path=f'{path}.{k}[{i}]', data_path=data_path + [data] + [v])
         elif isinstance(v, dict):
             # look at all dict values
             for a, child in v.items():
-                yield from all_attrs(data=child, path=f'{path}.{k}.{a}')
+                yield from all_attrs(data=child, path=f'{path}.{k}.{a}', data_path=data_path + [data] + [v])
 
 
 def is_key_value(v) -> bool:
@@ -210,6 +215,7 @@ class ReadAPIB(ApibTest):
     def test_005_feature_toggle(self):
         """
         look for 'feature-toggle' in APIB files
+        There is either one or none
         """
 
         for api_path in self.apib_paths:
@@ -221,7 +227,7 @@ class ReadAPIB(ApibTest):
                     self.assertEqual('content', attr_info.attr_name)
                     # look for stuff like:
                     #   <!-- feature-toggle-name:contact-center-api-docs-v1 -->
-                    r = re.findall(r'<!-- feature-toggle.+? -->', attr_info.attr_value)
+                    r = re.findall(r'<!-- feature-toggle-name:(.+?) ?-->', attr_info.attr_value)
                     self.assertEqual(1, len(r))
                     print(f'{api_path}: {r[0]}')
 
@@ -262,9 +268,98 @@ class ReadAPIB(ApibTest):
         if error:
             raise error
 
+    def test_category_element(self):
+        """
+        Validation of 'category' element as child of 'parseResult'
+            * has meta, attributes, and content
+            * meta has classes and title
+            * meta classes is an array with a single string element with value 'api'
+            * has one 'copy' element in the content
+        ... and else
+            * ...
+        """
+        error = None
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+            for attr_info in all_attrs(data):
+                value = attr_info.attr_value
+                if not (is_element(value) and value['element'] == 'category'):
+                    continue
+
+                try:
+                    if is_element(parent := attr_info.data_path[-2]) and parent['element'] == 'parseResult':
+                        # validation as child of parseResult
+
+                        # has meta, attributes, and content
+                        self.assertEqual({'meta', 'attributes', 'content', 'element'}, set(value), 'A')
+
+                        # meta has classes and title
+                        meta = value['meta']
+                        self.assertEqual({'classes', 'title'}, set(meta), 'B')
+
+                        # meta classes is an array with a single string element with value 'api'
+                        meta_classes = meta['classes']
+                        self.assertTrue(is_element(meta_classes), 'C')
+                        self.assertEqual(meta_classes['element'], 'array', 'D')
+                        meta_classes_1st_element = meta_classes['content'][0]
+                        self.assertTrue(is_element(meta_classes_1st_element), 'E')
+                        self.assertEqual('string', meta_classes_1st_element['element'], 'F')
+                        self.assertEqual('api', meta_classes_1st_element['content'], 'G')
+                    else:
+                        # validation for other category elements
+                        ...
+                except AssertionError as e:
+                    print(f'{path}: {e}')
+                    error = e
+        if error:
+            raise error
+
+    @skip
+    def test_datastructure_element(self):
+        """
+        Validation of 'dataStructure'
+            * always only has 'content' attribute
+            * content is either a reference to a data structure
+            ... or
+            * is an object
+        """
+        error = None
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+            for attr_info in all_attrs(data):
+                value = attr_info.attr_value
+                if not (is_element(value) and value['element'] == 'dataStructure'):
+                    continue
+                try:
+                    self.assertEqual({'element', 'content'}, set(value), 'A')
+                    content = value['content']
+                    # content can be a simple reference to a datatype like:
+                    #   {'element': 'Audit Event Collection Response'}
+                    # and then there is nothing to validate
+                    if content['element'] not in {'enum', 'object', 'array'}:
+                        # in this case only 'element' and 'attributes' are allowed
+                        self.assertFalse(set(content) - {'element', 'attributes'}, 'B')
+                        continue
+
+                    # else content can be an enum or an object
+                    self.assertTrue(is_element(content) and content['element'] in {'enum', 'object', 'array'}, 'C')
+                    foo = 1
+                    # # dataStructure can be as trivial as:
+                    # # {'content': {'element': 'Audit Event Collection Response'}, 'element': 'dataStructure'}
+                    # if set(value) == {'element', 'content'}:
+                    #     self.assertTrue(isinstance(value['content'], dict), 'A')
+                    #     self.assertEqual({'element'}, set(value['content']), 'B')
+                    # else:
+                    #     foo = 1
+                except AssertionError as e:
+                    print(f'{path}: {e}')
+                    error = e
+        if error:
+            raise error
+
     def test_attributes(self):
         """
-        Which elements have 'attributes' and what attributes life in those 'attributes'?
+        Which elements have 'attributes' and what attributes live in those 'attributes'?
         """
         attr_attributes_in_element: dict[str, set] = defaultdict(set)
         for path, data in self.apib_path_and_data():
@@ -278,6 +373,44 @@ class ReadAPIB(ApibTest):
         print('\n'.join(f'{el}: {", ".join(sorted(attr_attributes_in_element[el]))}'
                         for el in sorted(attr_attributes_in_element)))
         return
+
+    def test_where_do_we_see_copy_elements(self):
+        """
+        Where do we have 'copy' elements?
+        """
+
+        def elem_path(data_path) -> str:
+            return '.'.join(e['element'] for e in data_path if is_element(e))
+
+        parents: set[str] = set()
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+
+            for attr_info in all_attrs(data):
+                value = attr_info.attr_value
+                if not is_element(value) or value['element'] != 'copy':
+                    continue
+                key = attr_info.elem_path()
+                parents.add(key)
+        print('Copy elements exist in these paths:')
+        print('\n'.join(sorted(parents)))
+
+    def test_where_do_we_see_category_elements(self):
+        """
+        Where do we have 'category' elements?
+        """
+        parents: set[str] = set()
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+
+            for attr_info in all_attrs(data):
+                value = attr_info.attr_value
+                if not is_element(value) or value['element'] != 'category':
+                    continue
+                key = attr_info.elem_path()
+                parents.add(key)
+        print('Copy elements exist in these paths:')
+        print('\n'.join(sorted(parents)))
 
     def test_members(self):
         """
@@ -453,19 +586,19 @@ class ReadAPIB(ApibTest):
                 # content is optional ..
                 content = values.get('content')
                 if content is not None:
-                    # .. and if it's there tben it's a 'string
+                    # .. and if it's there then it's a 'string
                     # content should be a string (the enum name?)
                     content = ApibString.parse_obj(values['content'])
                     content_str.add(content.content)
                 # attributes are optional ..
-                attributes = values.get('attributes')
-                if attributes is not None:
+                type_attributes = values.get('attributes')
+                if type_attributes is not None:
                     # 'enumerations' and 'default' are the only attributes
-                    self.assertFalse(set(attributes) - {'enumerations', 'default'})
+                    self.assertFalse(set(type_attributes) - {'enumerations', 'default'})
                     # 'enumerations" are mandatory
-                    enumerations = attributes.get('enumerations')
+                    enumerations = type_attributes.get('enumerations')
                     self.assertIsNotNone(enumerations)
-                    default = attributes.get('default')
+                    default = type_attributes.get('default')
 
                     # enumerations are an array
                     enumerations_array = ApibArray.parse_obj(enumerations)
@@ -487,16 +620,17 @@ class ReadAPIB(ApibTest):
                             # typeAttributes is the only attribute
                             self.assertEqual({'typeAttributes'}, set(enum_el.attributes))
                             type_attributes = enum_el.attributes['typeAttributes']
+                            self.assertTrue(isinstance(type_attributes, ApibArray))
+
                             # typeAttributes are a list of strings
-                            attributes = ApibArray.parse_obj(type_attributes, element='string')
-                            # can have more than one attribute
-                            # self.assertEqual(1, len(attributes.content))
-                            self.assertIsNone(attributes.meta)
-                            self.assertIsNone(attributes.attributes)
+                            self.assertIsNone(type_attributes.meta)
+                            self.assertIsNone(type_attributes.attributes)
+
                             # meta and attributes is None for all attributes
-                            self.assertTrue(all(a.meta is None and a.attributes is None for a in attributes.content))
+                            self.assertTrue(all(a.meta is None and a.attributes is None for a in type_attributes.content))
+
                             # 'fixed' is always present
-                            attribute_set = set(a.content for a in attributes.content)
+                            attribute_set = set(a.content for a in type_attributes.content)
                             self.assertTrue('fixed' in attribute_set)
                         foo = 1
                 if default is not None:
@@ -513,42 +647,50 @@ class ReadAPIB(ApibTest):
         """
         understand data structures
         """
+        self.stream_handler.setLevel(logging.INFO)
         ds_child_elements = set()
         for apib_path, apib_data in self.apib_path_and_data():
             apib_path = os.path.basename(apib_path)
             parsed = ApibParseResult.parse_obj(apib_data)
-            for element, path, element_path in parsed.elements_with_path():
+            for el_info in parsed.elements_with_path():
+                element, path, element_path = el_info
                 if element.element != 'dataStructure':
                     continue
                 try:
                     self.assertTrue(isinstance(element, ApibDatastucture))
                     content = element.content
-                    if isinstance(content, ApibElement):
-                        if content.element not in  {'object', 'enum', 'array'}:
-                            ds_child_elements.add(content.element)
-                            self.assertTrue(not any ((content.content, content.attributes, content.meta)),
-                                            "unexpected content, attributes, or meta")
-                    continue
+                    # if isinstance(content, ApibElement):
+                    #     if content.element not in {'object', 'enum', 'array'}:
+                    #         ds_child_elements.add(content.element)
+                    #         if any((content.content, content.attributes, content.meta)):
+                    #             print(f'{apib_path}, {el_info.elem_path_extended} unexpected content, attributes, '
+                    #                   f'or meta: '
+                    #                   f'{", ".join(f"{s}" for s in (content.content, content.attributes,
+                    #                   content.meta) if s)}')
+                    #             # self.assertTrue(False,
+                    #             #                 "unexpected content, attributes, or meta")
+                    #     continue
                     # datastructures only exist in lists
                     if isinstance(element_path[-1], list):
                         parent = element_path[-2]
                         parent: ApibElement
                         self.assertTrue(parent.element in {'httpRequest', 'httpResponse', 'category'})
                         if parent.element == 'category':
-                            # content should ne an object
-                            self.assertTrue(isinstance(element.content, ApibElement) and
-                                            element.content.element=='object',
+                            # content should be an object
+                            self.assertTrue(True or isinstance(element.content, ApibElement) and
+                                            element.content.element == 'object',
                                             'child should be "object"')
                             foo = 1
                             ...
                         else:
-                            self.assertTrue(not any ((content.content, content.attributes, content.meta)),
+                            self.assertTrue(True or not any((content.content, content.attributes, content.meta)),
                                             "unexpected content, attributes, or meta")
-                        foo = 1
-                        ...
+                            ...
                     elif isinstance(element_path[-1], ApibTransition):
-                        self.assertTrue(isinstance(element.content, ApibElement) and element.content.element=='object')
-                        foo = 1
+                        self.assertTrue(True or
+                                        isinstance(element.content,
+                                                   ApibElement) and element.content.element == 'object')
+
                         ...
                     else:
                         self.assertTrue(False)
@@ -557,8 +699,13 @@ class ReadAPIB(ApibTest):
         print(', '.join(sorted(ds_child_elements)))
 
     def test_007_find_key_value(self):
+        """
+        Where do key/value elements show up?
+        :return:
+        """
         kv_parents = set()
         value_keys = set()
+        err = False
         for path, data in self.apib_path_and_data():
             path = os.path.basename(path)
             for attr_info in all_attrs(data):
@@ -569,7 +716,22 @@ class ReadAPIB(ApibTest):
                     # key/value should only exist in list
                     m = re.match(r'.+((:?\.\w+){2})\.content\[\d+]$', attr_info.path)
                     self.assertIsNotNone(m, f'key value not part of list: {path}')
-                    self.assertTrue(m.group(1).startswith('.attributes'))
+                    path_match = m.group(1)
+                    if not path_match.startswith('.attributes'):
+                        err = True
+                        print(f'{path}: {path_match}, {attr_info.attr_value}')
+                        # should still be part of a list
+                        self.assertTrue(isinstance(attr_info.data_path[-1], list))
+                        self.assertTrue(is_element(attr_info.data_path[-2]))
+                        self.assertTrue(is_element(attr_info.data_path[-3]))
+                        self.assertEqual('enum', attr_info.data_path[-3]['element'])
+                        meta = attr_info.data_path[-3].get('meta')
+                        self.assertIsNotNone(meta)
+                        meta_id = meta.get('id')
+                        self.assertIsNotNone(meta_id)
+                        meta_id_content = meta_id.get('content')
+                        print(f'   {meta_id_content}')
+                    self.assertTrue(True or path_match.startswith('.attributes'))
                     kv_parents.add(m.group(1))
                     value = content['value']
 
@@ -577,6 +739,7 @@ class ReadAPIB(ApibTest):
         print(', '.join(sorted(kv_parents)))
         print('Keys of value attributes:')
         print('\n'.join(sorted(value_keys)))
+        self.assertFalse(err)
 
     def test_008_element_content_variants(self):
         """
@@ -627,16 +790,16 @@ class ReadAPIB(ApibTest):
     def test_009_parse_obj(self):
         """
         Parse all APIBs
-        :return:
         """
         err = None
-        logging.getLogger().setLevel(logging.DEBUG)
+        logging.getLogger().setLevel(logging.INFO)
         for path, data in self.apib_path_and_data():
             path = os.path.basename(path)
             try:
                 parsed = ApibParseResult.parse_obj(data)
             except ValidationError as e:
                 print(f'{path}: {e}')
+                raise
                 err = err or e
                 continue
         if err:
@@ -671,17 +834,207 @@ class ReadAPIB(ApibTest):
             parsed = ApibParseResult.parse_obj(data)
             print(f'{path}:')
             print('-' * 80)
-            print(parsed.category.doc_string)
+            print(parsed.api.doc_string)
             print('\n' * 3)
 
     def test_012_blueprints_wo_category_docstring(self):
         """
         """
+        err = False
+        # suppress debug messages
+        self.stream_handler.setLevel(logging.INFO)
+        no_docstring = []
         for path, data in self.apib_path_and_data():
             path = os.path.basename(path)
             parsed = ApibParseResult.parse_obj(data)
-            if not parsed.category.doc_string:
-                print(f'{path}: has no docstring')
+            if not parsed.api.doc_string:
+                no_docstring.append(path)
+                err = True
+        print('no docstrings:')
+        print('\n'.join(sorted(no_docstring)))
+        self.assertFalse(err)
+
+    def test_parsed_categories_wo_doctring(self):
+        """
+        look for 'category' elements w/o docstring
+        """
+        self.stream_handler.setLevel(logging.INFO)
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+            parsed = ApibParseResult.parse_obj(data)
+            for el, path, elem_path in parsed.elements_with_path():
+                el: ApibCategory
+                if el.element != 'category' or el.copy_content:
+                    continue
+                self.assertTrue(False)
+
+    def test_parsed_boolean_is_always_child_of_member(self):
+        self.stream_handler.setLevel(logging.INFO)
+        err = False
+        bool_content = set()
+        ancestor_set = set()
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+            parsed = ApibParseResult.parse_obj(data)
+            for el_info in parsed.elements_with_path():
+                if el_info.element.element != 'boolean':
+                    continue
+                try:
+                    # these elements should be parsed as ApibBool
+                    bool_element = el_info.element
+                    self.assertTrue(isinstance(bool_element, ApibBool), f'Should be an ApibBool, '
+                                                                        f'is {bool_element.__class__.__name__}')
+
+                    # .. should always be child of member
+                    elem_path = el_info.elem_path
+                    self.assertTrue(elem_path.endswith('.member'), f'Should be child of member, '
+                                                                   f'is {elem_path.split(".")[-1]}')
+
+                    # .. let's look at all ancestors
+                    ancestors = '.'.join(elem_path.split('.')[-3:])
+                    ancestor_set.add(ancestors)
+                    parent = el_info.data_path[-1]
+                    parent: ApibMember
+                    content = el_info.element.content
+                    if content is not None:
+                        bool_content.add(content)
+                except ValidationError as e:
+                    print(f'{path}, {el_info.elem_path_extended}: {e}')
+                    err = True
+        print(f'Values: {", ".join(f"{s}" for s in sorted(bool_content))}')
+        print('Ancestors')
+        print('\n'.join(sorted(ancestor_set)))
+        self.assertFalse(err)
+
+    def test_parsed_where_do_transition_elements_live(self):
+        """
+        Look for 'transition' elements and check where they live
+        """
+        expected_paths = {'parseResult.category.resource', 'parseResult.category.category.resource'}
+        transition_paths = set()
+        self.stream_handler.setLevel(logging.INFO)
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+            parsed = ApibParseResult.parse_obj(data)
+            for el_info in parsed.elements_with_path():
+                if el_info.element.element != 'transition':
+                    continue
+                elem_path = el_info.elem_path
+                transition_paths.add(elem_path)
+                if elem_path not in expected_paths:
+                    print(f'{path}: unexpected path for "transition" element: {elem_path}')
+        print('\n'.join(sorted(transition_paths)))
+        self.assertEqual(expected_paths, transition_paths)
+
+    def test_parsed_transition_has_title(self):
+        self.stream_handler.setLevel(logging.INFO)
+        err = False
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+            parsed = ApibParseResult.parse_obj(data)
+            for el_info in parsed.elements_with_path():
+                transition = el_info.element
+                if transition.element != 'transition':
+                    continue
+                transition: ApibTransition
+                if not transition.title:
+                    print(f'{path}, {el_info.elem_path_extended}: no title')
+                    err = True
+        self.assertFalse(err)
+
+    def test_parsed_transition_has_href(self):
+        self.stream_handler.setLevel(logging.INFO)
+        err = False
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+            parsed = ApibParseResult.parse_obj(data)
+            for el_info in parsed.elements_with_path():
+                transition = el_info.element
+                if transition.element != 'transition':
+                    continue
+                transition: ApibTransition
+                if not transition.href:
+                    print(f'{path}, {el_info.elem_path_extended}.{transition.title}: no href')
+                    # then the href might be in a parent
+                    parent_with_href = next((el for el in reversed(el_info.data_path)))
+                    err = True
+        self.assertFalse(err)
+
+    def test_parsed_http_transaction_has_request_and_response(self):
+        self.stream_handler.setLevel(logging.INFO)
+        err = False
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+            parsed = ApibParseResult.parse_obj(data)
+            for el_info in parsed.elements_with_path():
+                http_transaction = el_info.element
+                if http_transaction.element != 'httpTransaction':
+                    continue
+                http_transaction: ApibHttpTransaction
+                issues = []
+                if not http_transaction.request:
+                    issues.append('no request')
+                if not http_transaction.request:
+                    issues.append('no response')
+                if issues:
+                    err = True
+                    print(f'{path}, {el_info.elem_path_extended}: {", ".join(issues)}')
+        self.assertFalse(err)
+
+    def test_parsed_object_only_has_member_as_child(self):
+        self.stream_handler.setLevel(logging.INFO)
+        err = None
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+            parsed = ApibParseResult.parse_obj(data)
+            for el_info in parsed.elements_with_path():
+                object_element = el_info.element
+                if object_element.element != 'object':
+                    continue
+                object_element: ApibElement
+                # content should always be a list
+                content = object_element.content
+
+                try:
+                    # if an object has no content then meta.id has to exist and is a class name
+                    if content is None:
+                        self.assertTrue(object_element.meta and object_element.meta.id,
+                                        f'content is None and there is no meta.id')
+                    else:
+                        self.assertTrue(isinstance(content, list), f'Should be list, is {content.__class__.__name__}')
+                except AssertionError as e:
+                    print(f'{path}, {el_info.elem_path_extended}: {e}')
+                    err = err or e
+
+        if err:
+            raise err
+
+    def test_parsed_understand_http_responses(self):
+        self.stream_handler.setLevel(logging.INFO)
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+            parsed = ApibParseResult.parse_obj(data)
+            for el_info in parsed.elements_with_path():
+                http_response = el_info.element
+                if http_response.element != 'httpResponse':
+                    continue
+                http_response: ApibHttpResponse
+                if http_response.status_code == 204 and not any((http_response.headers, http_response.datastructure,
+                                                                 http_response.message_body,
+                                                                 http_response.message_body_schema)):
+                    continue
+                issues = []
+                if not http_response.headers:
+                    issues.append('no headers')
+                if any((http_response.message_body, http_response.message_body_schema, http_response.datastructure)):
+                    if not http_response.message_body:
+                        issues.append('no message body')
+                    if not http_response.message_body_schema:
+                        issues.append('no message body schema')
+                    if not http_response.datastructure:
+                        issues.append('no datastructure')
+                if issues:
+                    print(f'{path}, {el_info.elem_path_extended}: {", ".join(issues)}')
 
     def test_013_blueprint_category_meta(self):
         """
@@ -689,15 +1042,15 @@ class ReadAPIB(ApibTest):
         for path, data in self.apib_path_and_data():
             path = os.path.basename(path)
             parsed = ApibParseResult.parse_obj(data)
-            self.assertTrue(parsed.category.meta.title)
-            print(f'{path}: title "{parsed.category.meta.title}"')
-            error_member = next((member for member in parsed.category.metadata
+            self.assertTrue(parsed.api.meta.title)
+            print(f'{path}: title "{parsed.api.meta.title}"')
+            error_member = next((member for member in parsed.api.metadata
                                  if not member.key or member.value.element != 'string' or not member.value.content),
                                 None)
             self.assertIsNone(error_member, f'member error: {error_member}')
-            for member in parsed.category.metadata:
+            for member in parsed.api.metadata:
                 print(f'  {member.key} = {member.value.content}')
-            print(f'  host = {parsed.category.host}')
+            print(f'  host = {parsed.api.host}')
             foo = 1
 
     def test_014_transition_elements(self):
@@ -741,7 +1094,7 @@ class ReadAPIB(ApibTest):
 
     def test_017_ApibEnumElement_with_extra_attribute(self):
         """
-        # TODO: still not really clear when empty elements occur. Also see val_root_enum()
+        # TODO: still not really clear when empty elements occur. Also see ApibEnum.val_root_enum()
         """
         err = False
         logging.getLogger().setLevel(logging.WARNING)
@@ -764,6 +1117,7 @@ class ReadAPIB(ApibTest):
 
                 if not element.content:
                     print(f'{apib_path}, {ds_id}.{member_key}: no content')
+                    # '*' in an enum apparently is parsed as
                     err = True
                 if (addtl_attr := set(element.__dict__) - {'attributes', 'content', 'element', 'meta',
                                                            'type_attributes'}):

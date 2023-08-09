@@ -41,6 +41,7 @@ webexteamsbot = "^0.1.4"
 
 [tool.poetry.group.dev.dependencies]
 setuptools = "^67.6.0"
+draughtsman = "^0.2.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
