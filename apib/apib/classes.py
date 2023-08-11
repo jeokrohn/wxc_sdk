@@ -11,7 +11,8 @@ __all__ = ['ApibParseResult', 'ApibElement', 'ApibCopy', 'ApibResource', 'ApibMo
            'ApibCategory', 'ApibAnnotation', 'ApibKeyValue', 'ApibWithCopy', 'ApibTransition', 'ApibMember',
            'ApibMeta', 'ApibArray', 'ApibString', 'ApibEnum', 'ApibEnumElement', 'ApibHttpHeaders',
            'ApibWithHeaders', 'ApibHrefMember', 'ApibHttpResponse', 'ApibHttpTransaction', 'ApibHttpRequest',
-           'ApibBool', 'ApibApi', 'ApibHrefVariables']
+           'ApibBool', 'ApibApi', 'ApibHrefVariables', 'ApibNumber', 'ApibSourceMap', 'ApibSourceMapNumber',
+           'AbibSourceMapNumberArray']
 
 log = logging.getLogger(__name__)
 
@@ -118,7 +119,7 @@ class ApibElement(ApibModel):
 
         :param allowed_content: set of 'element' types which are allowed as 'content' items in this class
         :param override_element_type_for: some element types are used in multiple context. If a class with a given
-        'element' type should overrides the standard class for an element type then this parameter is the 'element'
+        'element' type should override the standard class for an element type then this parameter is the 'element'
         type of the parent for which the override should be considered
         """
         cls._allowed_content = allowed_content
@@ -137,7 +138,7 @@ class ApibElement(ApibModel):
         """
         Try to deserialize an object based on the value of 'element' as registered class or ApibEleemnt
         """
-        if element := v.get('element'):
+        if isinstance(v, dict) and (element := v.get('element')):
             if cls._allowed_content and element not in cls._allowed_content:
                 raise ValueError(f"'{element}' not allowed as content for class {cls.__name__}")
             parent_element = cls.element_literal_value()
@@ -181,9 +182,10 @@ class ApibElement(ApibModel):
     @validator('attributes', pre=True)
     def val_attributes(cls, attributes):
         """
-        Validat as dict[str, 'ApibElement'] and try to deserialize values
+        Validate as dict[str, 'ApibElement'] and try to deserialize values
         """
-        attributes = {k: cls.deserialize_element(v) for k, v in attributes.items()}
+        if attributes:
+            attributes = {k: cls.deserialize_element(v) for k, v in attributes.items()}
         return attributes
 
     @classmethod
@@ -269,6 +271,75 @@ class ApibBool(ApibElement):
             if not isinstance(v, int):
                 raise ValueError('content has to be an int')
             v = (v == 1)
+        return v
+
+
+class ApibNumber(ApibElement):
+    element: Literal['number']
+
+    content: Optional[int]
+    default: Optional[int]
+
+    @root_validator(pre=True)
+    def val_root_number(cls, v):
+        """
+        Root validator to parse default from attributes if present
+        """
+        if (attrs := v.get('attributes')) and (default := attrs.get('default')):
+            attrs = attrs.copy()
+            attrs.pop('default')
+            v = v.copy()
+            if attrs:
+                v['attributes'] = attrs
+            else:
+                v.pop('attributes')
+            number = ApibNumber.parse_obj(default)
+            if any((number.attributes, number.meta, number.default)):
+                raise ValueError(f'Unexpected attributes, meta, or default: {number}')
+            v['default'] = number.content
+        return v
+
+
+class ApibSourceMapNumber(ApibNumber, override_element_type_for='sourceMapXYC'):
+    has_attributes = True
+    element: Literal['number']
+
+    line: Optional[int]
+    column: Optional[int]
+
+    @validator('line', 'column', pre=True)
+    def val_line_column(cls, v):
+        v = v.content
+        return v
+
+    @root_validator()
+    def val_root_sourcemap_number(cls, v):
+        return v
+
+
+class AbibSourceMapNumberArray(ApibElement, override_element_type_for='sourceMap'):
+    element: Literal['array']
+    content: list[ApibSourceMapNumber]
+
+
+class ApibSourceMapEntry(ApibModel):
+    start: ApibSourceMapNumber
+    end: ApibSourceMapNumber
+
+    # @root_validator(pre=True)
+    # def val_root_source_map_entry(cls, v):
+    #     return v
+
+
+class ApibSourceMap(ApibElement):
+    element: Literal['sourceMap']
+    content: list[ApibSourceMapEntry]
+
+    @root_validator(pre=True)
+    def val_root_sourcemap(cls, v):
+        parsed_content = parse_obj_as(list[AbibSourceMapNumberArray], v['content'])
+        v = v.copy()
+        v['content'] = [{'start': pc.content[0], 'end': pc.content[1]} for pc in parsed_content]
         return v
 
 
@@ -501,7 +572,24 @@ class ApibApi(ApibCategory, override_element_type_for='parseResult'):
 
 
 class ApibAnnotation(ApibElement):
+    has_attributes = True
     element: Literal['annotation']
+
+    content: str
+    code: int
+    source_map: list[ApibSourceMap] = Field(alias='sourceMap')
+
+    @validator('code', pre=True)
+    def val_code(cls, v):
+        parsed = ApibNumber.parse_obj(v)
+        if parsed.attributes or parsed.meta:
+            raise ValueError(f'unexpected attributes or meta for {cls.__name__}.code')
+        return parsed.content
+
+    @validator('source_map', pre=True)
+    def val_source_map(cls, v):
+        parsed = ApibArray.parse_obj(v)
+        return parsed.content
 
 
 class ApibHrefMember(ApibElement, override_element_type_for='transition'):
@@ -682,7 +770,7 @@ class ApibEnum(ApibElement):
     content: Optional[ApibString]
 
     # Some enumerations have type attributes?
-    enumerations: list[ApibEnumElement]
+    enumerations: Optional[list[ApibEnumElement]]
     default: Optional[ApibString]
 
     @property

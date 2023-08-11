@@ -627,7 +627,8 @@ class ReadAPIB(ApibTest):
                             self.assertIsNone(type_attributes.attributes)
 
                             # meta and attributes is None for all attributes
-                            self.assertTrue(all(a.meta is None and a.attributes is None for a in type_attributes.content))
+                            self.assertTrue(
+                                all(a.meta is None and a.attributes is None for a in type_attributes.content))
 
                             # 'fixed' is always present
                             attribute_set = set(a.content for a in type_attributes.content)
@@ -906,6 +907,40 @@ class ReadAPIB(ApibTest):
         print('\n'.join(sorted(ancestor_set)))
         self.assertFalse(err)
 
+    def test_parsed_number(self):
+        """
+        look at parsed "number" elements
+        """
+        self.stream_handler.setLevel(logging.INFO)
+        err = None
+        number_class_counter = defaultdict(int)
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+            parsed = ApibParseResult.parse_obj(data)
+            for el_info in parsed.elements_with_path():
+                if el_info.element.element != 'number':
+                    continue
+                try:
+                    # these elements should be parsed as ApibNumber
+                    number_element = el_info.element
+                    number_element: ApibNumber
+                    number_class_counter[number_element.__class__.__name__] += 1
+                    self.assertTrue(isinstance(number_element, ApibNumber), f'Should be an ApibNumber, '
+                                                                            f'is {number_element.__class__.__name__}')
+                    self.assertIsNone(number_element.meta, 'Unexpected meta')
+                    self.assertTrue(number_element.content is None or isinstance(number_element.content, int),
+                                    f'Unexpected instance: {number_element.content.__class__.__name__}')
+
+                    if attributes := number_element.attributes:
+                        self.assertEqual({'default'}, set(attributes))
+                    foo = 1
+                except ValidationError as e:
+                    print(f'{path}, {el_info.elem_path_extended}: {e}')
+                    err = err or e
+        print('\n'.join(f'{k}: {v}' for k,v in number_class_counter.items()))
+        if err:
+            raise err
+
     def test_parsed_where_do_transition_elements_live(self):
         """
         Look for 'transition' elements and check where they live
@@ -1036,6 +1071,38 @@ class ReadAPIB(ApibTest):
                 if issues:
                     print(f'{path}, {el_info.elem_path_extended}: {", ".join(issues)}')
 
+    def test_parsed_annotation(self):
+        """
+        check parsed 'annotation' elements
+        """
+        self.stream_handler.setLevel(logging.INFO)
+        err = None
+        meta_classes = set()
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+            parsed = ApibParseResult.parse_obj(data)
+            for el_info in parsed.elements_with_path():
+                annotation = el_info.element
+                if annotation.element.lower() != 'annotation':
+                    continue
+                annotation: ApibAnnotation
+                try:
+                    self.assertIsNone(annotation.attributes)
+                    meta = annotation.meta
+                    self.assertIsNotNone(meta)
+                    self.assertIsNone(meta.id)
+                    self.assertIsNone(meta.description)
+                    self.assertIsNone(meta.title)
+                    self.assertIsNotNone(meta.classes)
+                    meta_classes.update(meta.classes)
+                    self.assertIsNotNone(annotation.code)
+                except AssertionError as e:
+                    print(f'{path}, {el_info.elem_path_extended}: {e}')
+                    err = err or e
+        print(f'meta classes: {", ".join(sorted(meta_classes))}')
+        if err:
+            raise err
+
     def test_013_blueprint_category_meta(self):
         """
         """
@@ -1101,9 +1168,10 @@ class ReadAPIB(ApibTest):
         for apib_path, data in self.apib_path_and_data():
             apib_path = os.path.basename(apib_path)
             parsed = ApibParseResult.parse_obj(data)
-            for element, path, elem_path in ((e, p, ep)
-                                             for e, p, ep in parsed.elements_with_path()
-                                             if isinstance(e, ApibEnumElement)):
+            for el_info in (eli
+                            for eli in parsed.elements_with_path()
+                            if isinstance(eli.element, ApibEnumElement)):
+                element, path, elem_path = el_info
                 element: ApibEnumElement
 
                 member = next((el for el in reversed(elem_path)
