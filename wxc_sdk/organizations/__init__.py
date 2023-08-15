@@ -11,6 +11,7 @@ granted. The authorizing admin must grant the spark-admin:organizations-write sc
 __all__ = ['Organization', 'OrganizationApi']
 
 import datetime
+from typing import Optional
 
 from pydantic import parse_obj_as, Field
 
@@ -25,19 +26,31 @@ class Organization(ApiModel):
     display_name: str
     #: The date and time the organization was created.
     created: datetime.datetime
+    #: The base path to xsi-actions.
+    xsi_actions_endpoint: Optional[str]
+    #: The base path to xsi-events.
+    xsi_events_endpoint: Optional[str]
+    #: The base path to xsi-events-channel.
+    xsi_events_channel_endpoint: Optional[str]
+    #: api- prepended to the bcBaseDomain value for the organization.
+    xsi_domain: Optional[str]
 
 
 class OrganizationApi(ApiChild, base='organizations'):
-    def list(self) -> list[Organization]:
+    def list(self, calling_data: bool = None) -> list[Organization]:
         """
         List all organizations visible by your account. The results will not be paginated.
 
+        :param calling_data: Include XSI endpoint values in the response (if applicable) for the organization.
+            Default: false
+        :type calling_data: bool
         :return: list of Organizations
         """
-        data = self.get(url=self.ep())
+        params = calling_data and {'callingData': 'true'} or None
+        data = self.get(url=self.ep(), params=params)
         return parse_obj_as(list[Organization], data['items'])
 
-    def details(self, org_id: str) -> Organization:
+    def details(self, org_id: str, calling_data: bool = None) -> Organization:
         """
         Get Organization Details
 
@@ -45,11 +58,15 @@ class OrganizationApi(ApiChild, base='organizations'):
 
         :param org_id: The unique identifier for the organization.
         :type org_id: str
+        :param calling_data: Include XSI endpoint values in the response (if applicable) for the organization.
+            Default: false
+        :type calling_data: bool
         :return: org details
         :rtype: :class:`Organization`
         """
         url = self.ep(org_id)
-        data = self.get(url=url)
+        params = calling_data and {'callingData': 'true'} or None
+        data = self.get(url=url, params=params)
         return Organization.parse_obj(data)
 
     def delete(self, org_id: str):

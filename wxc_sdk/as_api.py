@@ -4402,16 +4402,20 @@ class AsMessagesApi(AsApiChild, base='messages'):
 
 
 class AsOrganizationApi(AsApiChild, base='organizations'):
-    async def list(self) -> list[Organization]:
+    async def list(self, calling_data: bool = None) -> list[Organization]:
         """
         List all organizations visible by your account. The results will not be paginated.
 
+        :param calling_data: Include XSI endpoint values in the response (if applicable) for the organization.
+            Default: false
+        :type calling_data: bool
         :return: list of Organizations
         """
-        data = await self.get(url=self.ep())
+        params = calling_data and {'callingData': 'true'} or None
+        data = await self.get(url=self.ep(), params=params)
         return parse_obj_as(list[Organization], data['items'])
 
-    async def details(self, org_id: str) -> Organization:
+    async def details(self, org_id: str, calling_data: bool = None) -> Organization:
         """
         Get Organization Details
 
@@ -4419,11 +4423,15 @@ class AsOrganizationApi(AsApiChild, base='organizations'):
 
         :param org_id: The unique identifier for the organization.
         :type org_id: str
+        :param calling_data: Include XSI endpoint values in the response (if applicable) for the organization.
+            Default: false
+        :type calling_data: bool
         :return: org details
         :rtype: :class:`Organization`
         """
         url = self.ep(org_id)
-        data = await self.get(url=url)
+        params = calling_data and {'callingData': 'true'} or None
+        data = await self.get(url=url, params=params)
         return Organization.parse_obj(data)
 
     async def delete(self, org_id: str):
