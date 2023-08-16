@@ -264,7 +264,7 @@ class CDR(ApiModel):
     #: can be used for end-to-end tracking of a SIP session in IP-based multimedia communication. Each call consists of
     #: two UUIDs known as Local Session ID and Remote Session ID.
     #:   * The Remote SessionID is generated from the Terminating user agent.
-    remote_session_id: Optional[str] = Field(alias='remoteSessionid')
+    remote_session_id: Optional[str] = Field(alias='remote_sessionid')
     #: When the call has been redirected one or more times, this field reports the last redirecting number.
     #: Identifies who last redirected the call. Only applies to call scenarios such as transfer, call forwarded calls,
     #: simultaneous rings, etc.
@@ -286,6 +286,13 @@ class CDR(ApiModel):
     #: Indicates the time at which the call transfer service was invoked during the call. The invocation time is
     #: shown using the UTC/GMT time zone.
     call_transfer_time: Optional[datetime]
+    local_call_id: Optional[str]
+    remote_call_id: Optional[str]
+    network_call_id: Optional[str]
+    related_call_id: Optional[str]
+    user_number: Optional[str]
+    call_outcome: Optional[str]
+    call_outcome_reason: Optional[str]
 
 
 @dataclass(init=False)
