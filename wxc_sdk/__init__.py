@@ -32,7 +32,7 @@ from .workspaces import WorkspacesApi
 from .workspace_settings import WorkspaceSettingsApi
 from dataclasses import dataclass
 
-__all__ = ['WebexSimpleApi']
+__all__ = ['WebexSimpleApi', 'Tokens']
 
 __version__ = '1.15.0'
 

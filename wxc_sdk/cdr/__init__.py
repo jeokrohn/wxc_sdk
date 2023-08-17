@@ -133,7 +133,7 @@ def space_separated_to_camel(name: str) -> str:
     return r
 
 
-def normalize_name(name:str)->str:
+def normalize_name(name: str) -> str:
     return '_'.join(name.split()).lower()
 
 
@@ -286,12 +286,57 @@ class CDR(ApiModel):
     #: Indicates the time at which the call transfer service was invoked during the call. The invocation time is
     #: shown using the UTC/GMT time zone.
     call_transfer_time: Optional[datetime]
+    #: A unique identifier that’s used to correlate CDRs and call legs with each other. This ID is used in
+    # conjunction with:
+    #:  Remote call ID—To identify the remote CDR of a call leg.
+    #:  Transfer related call ID—To identify the call transferred leg.
     local_call_id: Optional[str]
+    #: A unique identifier that’s used to correlate CDRs and call legs with each other. This ID is used in
+    #: conjunction with Local call ID to identity the local CDR of a call leg.
     remote_call_id: Optional[str]
+    #: A unique identifier that shows if other CDRs are in the same call leg. Two CDRs belong in the same call leg if
+    #: they have the same Network call ID.
     network_call_id: Optional[str]
+    #: Call identifier of a different call that was created by this call because of a service activation. The value
+    #: is the same as the Local call ID field of the related call. You can use this field to correlate multiple call
+    #: legs connected through other services.
     related_call_id: Optional[str]
+    #: Represents the E.164 number of the user generating a CDR. If the user has no number assigned to them,
+    #: then their extension will be displayed instead.
     user_number: Optional[str]
+    #: Identifies whether the call was set up or disconnected normally. Possible values are:
+    #:  Success—Call was routed and disconnected successfully. Includes Normal, UserBusy, and NoAnswer scenarios.
+    #:  Failure—Call failed with an internal or external error.
+    #:  Refusal—Call was rejected because of call block or timeout.
+    # You can find more information in the Call outcome reason field.
     call_outcome: Optional[str]
+    #: Additional information about the Call outcome returned. Possible reasons are:
+    #: Success
+    #:  Normal—Call was completed successfully.
+    #:  UserBusy—Call was a success, but the user was busy.
+    #:  NoAnswer—Call was a success, but the user didn't answer.
+    #: Refusal
+    #:  CallRejected—User rejected the call.
+    #:  UnassignedNumber—Dialed number isn't assigned to any user or service.
+    #:  SIP408—Request timed out.
+    #:  InternalRequestTimeout—Request timed out.
+    #:  Q850102ServerTimeout—Server timed out.
+    #:  NoUserResponse—No response from the user.
+    #:  NoAnswerFromUser—No answer from the user.
+    #:  SIP480—Caller was unavailable.
+    #:  SIP487—Request was terminated by the called number.
+    #:  TemporarilyUnavailable—User was temporarily unavailable.
+    #:  AdminCallBlock—Call was rejected.
+    #:  UserCallBlock—Call was rejected.
+    #:  Unreachable—Unable to route the call to the destination.
+    #: Failure
+    #:  DestinationOutOfOrder—Service request failed.
+    #:  SIP501—Invalid method.
+    #:  SIP503—Service was temporarily unavailable.
+    #:  ProtocolError—Unknown release code.
+    #:  SIP606—Some aspect of the session description wasn't acceptable.
+    #:  NoRouteToDestination—No route available to the destination.
+    #:  Internal—Failed because of internal Webex Calling reasons.
     call_outcome_reason: Optional[str]
 
 
