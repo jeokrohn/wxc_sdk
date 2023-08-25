@@ -302,7 +302,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         data = self.post(url, data=data)
         return Workspace.parse_obj(data)
 
-    def details(self, workspace_id) -> Workspace:
+    def details(self, workspace_id, org_id: str = None) -> Workspace:
         """
         Get Workspace Details
 
@@ -314,8 +314,13 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :return: workspace details
         :rtype: :class:`Workspace`
         """
+
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+
         url = self.ep(workspace_id)
-        return Workspace.parse_obj(self.get(url))
+        return Workspace.parse_obj(self.get(url, params=params))
 
     def update(self, workspace_id, settings: Workspace) -> Workspace:
         """
