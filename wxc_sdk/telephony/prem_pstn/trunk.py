@@ -28,6 +28,7 @@ class Trunk(ApiModel):
     location: IdAndName
     in_use: bool
     trunk_type: TrunkType
+    is_restricted_to_dedicated_instance: bool
 
 
 class TrunkDeviceType(ApiModel):
