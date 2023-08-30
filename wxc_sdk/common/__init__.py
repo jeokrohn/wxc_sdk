@@ -161,7 +161,6 @@ class MonitoredMember(ApiModel):
         return isinstance(self.location, IdAndName) and self.location.name or self.location
 
 
-
 class CallParkExtension(ApiModel):
     #: The identifier of the call park extension.
     cpe_id: Optional[str] = Field(alias='id', default=None)
@@ -640,13 +639,13 @@ class MppVlanDevice(EnabledAndValue):
 class WifiAuthenticationMethod(str, Enum):
     #: No authentication.
     none = 'NONE'
-    #: Extensible Authentication Protocol-Flexible Authentication via Secure Tunneling. Requires username and 
-    # password authentication.
+    #: Extensible Authentication Protocol-Flexible Authentication via Secure Tunneling. Requires username and
+    #: password authentication.
     eap_fast = 'EAP_FAST'
     #: Protected Extensible Authentication Protocol - Generic Token Card. Requires username and password authentication.
     peap_gtc = 'PEAP_GTC'
-    #: Protected Extensible Authentication Protocol - Microsoft Challenge Handshake Authentication Protocol version 
-    # 2. Requires username and password authentication.
+    #: Protected Extensible Authentication Protocol - Microsoft Challenge Handshake Authentication Protocol version
+    #: 2. Requires username and password authentication.
     peap_mschapv2 = 'PEAP_MSCHAPV2'
     #: Pre-Shared Key. Requires shared passphrase for authentication.
     psk = 'PSK'
@@ -880,7 +879,7 @@ class MppCustomization(CommonDeviceCustomization):
     vlan: Optional[MppVlanDevice] = None
     #: Specify the Wi-Fi SSID and password for wireless-enabled MPP phones.
     wifi_network: Optional[WifiNetwork] = None
-    migration_url: Optional[str] = None # TODO: undocumented
+    migration_url: Optional[str] = None  # TODO: undocumented
     #: Specify the call history information to use. Only applies to user devices.
     call_history: Optional[CallHistoryMethod] = None
     #: Specify the directory services to use.

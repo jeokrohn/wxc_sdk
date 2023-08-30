@@ -2,9 +2,9 @@
 Forwarding settings and API for call queues, hunt groups, and auto attendants
 """
 import json
-from typing import Optional, Dict
+from typing import Optional
 
-from pydantic import Field, validator
+from pydantic import Field, field_validator
 
 from ..base import ApiModel
 from ..base import SafeEnum as Enum
@@ -105,7 +105,7 @@ class CallForwardingNumber(ApiModel):
     extension: Optional[str] = None
     number_type: CallForwardingNumberType = Field(alias='type')
 
-    @validator('phone_number', pre=True)
+    @field_validator('phone_number', mode='before')
     def validate_phone_number(cls, v):
         """
         Platform returns NANP numbers w/o +
@@ -114,7 +114,7 @@ class CallForwardingNumber(ApiModel):
         """
         return assert_plus1(v)
 
-    def dict(self, *args, **kwargs):
+    def model_dump(self, *args, **kwargs):
         """
         When serializing remove the +1- again
         :param args:
@@ -123,7 +123,7 @@ class CallForwardingNumber(ApiModel):
         """
         number = self.phone_number
         self.phone_number = strip_plus1(number)
-        r = super().dict(*args, **kwargs)
+        r = super().model_dump(*args, **kwargs)
         self.phone_number = number
         return r
 
@@ -143,7 +143,7 @@ class CustomNumbers(ApiModel):
     unavailable_number_enabled: bool = Field(default=False)
     numbers: Optional[list[str]] = None
 
-    @validator('numbers', pre=True)
+    @field_validator('numbers', mode='before')
     def numbers_validator(cls, numbers: list[str]):
         """
         Platform returns NANP numbers w/o +1
@@ -152,7 +152,7 @@ class CustomNumbers(ApiModel):
         """
         return [assert_plus1(number) for number in numbers]
 
-    def dict(self, *args, **kwargs):
+    def model_dump(self, *args, **kwargs):
         """
         When serializing remove the +1- again
         :param args:
@@ -162,7 +162,7 @@ class CustomNumbers(ApiModel):
         numbers = self.numbers
         if numbers:
             self.numbers = [strip_plus1(number) for number in numbers]
-        r = super().dict(*args, **kwargs)
+        r = super().model_dump(*args, **kwargs)
         self.numbers = numbers
         return r
 
@@ -280,9 +280,9 @@ class ForwardingApi:
         url = self._endpoint(location_id=location_id, feature_id=feature_id)
 
         body = {'callForwarding': json.loads(forwarding.model_dump_json(exclude={'rules': {'__all__': {'calls_from',
-                                                                                            'forward_to',
-                                                                                            'calls_to',
-                                                                                            'name'}}}))}
+                                                                                                       'forward_to',
+                                                                                                       'calls_to',
+                                                                                                       'name'}}}))}
         self._session.rest_put(url=url, json=body, params=params)
 
     def create_call_forwarding_rule(self, location_id: str, feature_id: str,

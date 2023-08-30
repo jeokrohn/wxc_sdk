@@ -102,5 +102,5 @@ class PushToTalkApi(PersonSettingsApiChild):
         else:
             body_settings = settings
         body = body_settings.model_dump_json(exclude_none=False,
-                                  exclude_unset=True)
+                                             exclude_unset=True)
         self.put(ep, params=params, data=body)

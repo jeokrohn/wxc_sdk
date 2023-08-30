@@ -219,8 +219,8 @@ class RoomsApi(ApiChild, base='rooms'):
               new information exchanges in this space, while maintaining historical data.
         """
         update: Room
-        data = update.model_dump_json(include={'title', 'classification_id', 'team_id', 'is_locked', 'is_announcement_only',
-                                    'is_read_only'})
+        data = update.model_dump_json(include={'title', 'classification_id', 'team_id', 'is_locked',
+                                               'is_announcement_only', 'is_read_only'})
         if update.id is None:
             raise ValueError('ID has to be set')
         url = self.ep(f'{update.id}')

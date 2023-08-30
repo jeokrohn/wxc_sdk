@@ -5,7 +5,7 @@ from collections.abc import Generator
 from dataclasses import dataclass
 from typing import Optional
 
-from pydantic import Field, root_validator
+from pydantic import Field
 
 from .forwarding import ForwardingApi, FeatureSelector
 from ..api_child import ApiChild
@@ -166,12 +166,12 @@ class AutoAttendant(ApiModel):
         :rtype: str
         """
         return self.model_dump_json(exclude={'auto_attendant_id': True,
-                                  'location_name': True,
-                                  'location_id': True,
-                                  'enabled': True,
-                                  'toll_free_number': True,
-                                  'language': True,
-                                  })
+                                             'location_name': True,
+                                             'location_id': True,
+                                             'enabled': True,
+                                             'toll_free_number': True,
+                                             'language': True,
+                                             })
 
     @staticmethod
     def create(*, name: str, business_schedule: str, phone_number: str = None,

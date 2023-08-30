@@ -201,9 +201,10 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config/devices'):
 
         # create body
         if members_for_update:
-            members = ','.join(m.model_dump_json(include={'member_id', 'port', 't38_fax_compression_enabled', 'primary_owner',
-                                               'line_type', 'line_weight', 'line_label', 'hotline_enabled',
-                                               'hotline_destination', 'allow_call_decline_enabled'})
+            members = ','.join(m.model_dump_json(include={'member_id', 'port', 't38_fax_compression_enabled',
+                                                          'primary_owner', 'line_type', 'line_weight', 'line_label',
+                                                          'hotline_enabled', 'hotline_destination',
+                                                          'allow_call_decline_enabled'})
                                for m in members_for_update)
             body = f'{{"members": [{members}]}}'
         else:

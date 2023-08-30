@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional, Any, List
 
-from pydantic import root_validator, Field
+from pydantic import Field, model_validator
 
 from ..api_child import ApiChild
 from ..base import SafeEnum as Enum
@@ -89,9 +89,7 @@ class Device(ApiModel):
     #: only for 3rd party devices
     sip_user_name: Optional[str] = None
 
-
-
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def pop_place_id(cls, values):
         values.pop('placeId', None)
         return values

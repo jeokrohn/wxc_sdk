@@ -315,9 +315,9 @@ class Schedule(ApiModel):
             for event in working_copy.events or []:
                 event.new_name = event.new_name or event.name
         return working_copy.model_dump_json(exclude={'schedule_id': True,
-                                          'location_name': True,
-                                          'location_id': True,
-                                          'events': {'__all__': {'event_id': True}}})
+                                                     'location_name': True,
+                                                     'location_id': True,
+                                                     'events': {'__all__': {'event_id': True}}})
 
 
 class ScheduleApiBase(str, Enum):

@@ -180,8 +180,8 @@ class CDR(ApiModel):
     international_country: Optional[str] = None
     #: The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call. It
     #: can be used for end-to-end tracking of a SIP session in IP-based multimedia communication. Each call consists of
-    #: two UUIDs known as Local Session ID and Remote Session ID.
-    #:   * The Local SessionID is generated from the Originating user agent.
+    #: two UUIDs known as Local Session ID and Remote Session ID. The Local SessionID is generated from the Originating
+    #: user agent.
     local_session_id: Optional[str] = Field(alias='local_sessionid', default=None)
     #: The MAC address of the device, if known.
     device_mac: Optional[str] = None
@@ -262,8 +262,8 @@ class CDR(ApiModel):
     releasing_party: Optional[str] = None
     #: The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call. It
     #: can be used for end-to-end tracking of a SIP session in IP-based multimedia communication. Each call consists of
-    #: two UUIDs known as Local Session ID and Remote Session ID.
-    #:   * The Remote SessionID is generated from the Terminating user agent.
+    #: two UUIDs known as Local Session ID and Remote Session ID. The Remote SessionID is generated from the
+    #: Terminating user agent.
     remote_session_id: Optional[str] = Field(alias='remote_sessionid', default=None)
     #: When the call has been redirected one or more times, this field reports the last redirecting number.
     #: Identifies who last redirected the call. Only applies to call scenarios such as transfer, call forwarded calls,
@@ -312,31 +312,31 @@ class CDR(ApiModel):
     call_outcome: Optional[str] = None
     #: Additional information about the Call outcome returned. Possible reasons are:
     #: Success
-    #:  Normal—Call was completed successfully.
-    #:  UserBusy—Call was a success, but the user was busy.
-    #:  NoAnswer—Call was a success, but the user didn't answer.
+    #: - Normal—Call was completed successfully.
+    #: - UserBusy—Call was a success, but the user was busy.
+    #: - NoAnswer—Call was a success, but the user didn't answer.
     #: Refusal
-    #:  CallRejected—User rejected the call.
-    #:  UnassignedNumber—Dialed number isn't assigned to any user or service.
-    #:  SIP408—Request timed out.
-    #:  InternalRequestTimeout—Request timed out.
-    #:  Q850102ServerTimeout—Server timed out.
-    #:  NoUserResponse—No response from the user.
-    #:  NoAnswerFromUser—No answer from the user.
-    #:  SIP480—Caller was unavailable.
-    #:  SIP487—Request was terminated by the called number.
-    #:  TemporarilyUnavailable—User was temporarily unavailable.
-    #:  AdminCallBlock—Call was rejected.
-    #:  UserCallBlock—Call was rejected.
-    #:  Unreachable—Unable to route the call to the destination.
+    #: - CallRejected—User rejected the call.
+    #: - UnassignedNumber—Dialed number isn't assigned to any user or service.
+    #: - SIP408—Request timed out.
+    #: - InternalRequestTimeout—Request timed out.
+    #: - Q850102ServerTimeout—Server timed out.
+    #: - NoUserResponse—No response from the user.
+    #: - NoAnswerFromUser—No answer from the user.
+    #: - SIP480—Caller was unavailable.
+    #: - SIP487—Request was terminated by the called number.
+    #: - TemporarilyUnavailable—User was temporarily unavailable.
+    #: - AdminCallBlock—Call was rejected.
+    #: - UserCallBlock—Call was rejected.
+    #: - Unreachable—Unable to route the call to the destination.
     #: Failure
-    #:  DestinationOutOfOrder—Service request failed.
-    #:  SIP501—Invalid method.
-    #:  SIP503—Service was temporarily unavailable.
-    #:  ProtocolError—Unknown release code.
-    #:  SIP606—Some aspect of the session description wasn't acceptable.
-    #:  NoRouteToDestination—No route available to the destination.
-    #:  Internal—Failed because of internal Webex Calling reasons.
+    #: - DestinationOutOfOrder—Service request failed.
+    #: - SIP501—Invalid method.
+    #: - SIP503—Service was temporarily unavailable.
+    #: - ProtocolError—Unknown release code.
+    #: - SIP606—Some aspect of the session description wasn't acceptable.
+    #: - NoRouteToDestination—No route available to the destination.
+    #: - Internal—Failed because of internal Webex Calling reasons.
     call_outcome_reason: Optional[str] = None
 
 

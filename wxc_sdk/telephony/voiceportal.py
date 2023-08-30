@@ -129,7 +129,7 @@ class VoicePortalApi(ApiChild, base='telephony/config/locations'):
         :type org_id: str
         """
         data = json.loads(settings.model_dump_json(exclude={'portal_id': True,
-                                                 'language': True}))
+                                                            'language': True}))
         if passcode is not None:
             data['passcode'] = {'newPasscode': passcode,
                                 'confirmPasscode': passcode}

@@ -23,12 +23,14 @@ def yml_path() -> str:
     """
     return f'{splitext(basename(__file__))[0]}.yml'
 
+
 def env_path() -> str:
     """
     Get path to .env file to read service app settings from
     :return:
     """
     return f'{splitext(basename(__file__))[0]}.env'
+
 
 def read_tokens_from_file() -> Optional[Tokens]:
     """

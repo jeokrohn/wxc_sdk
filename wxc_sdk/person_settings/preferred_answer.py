@@ -59,6 +59,7 @@ class PreferredAnswerApi(ApiChild, base='telephony/config/people'):
         /v1/telephony/calls/answer
 
         This API requires spark:telephony_config_read or spark-admin:telephony_config_read scope.
+
         :param person_id: A unique identifier for the person.
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to

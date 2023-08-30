@@ -1,7 +1,6 @@
 """
 common base for Call Queues and Hunt Groups
 """
-import json
 from base64 import b64decode
 from typing import Optional
 

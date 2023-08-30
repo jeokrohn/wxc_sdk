@@ -1963,6 +1963,30 @@ lint = ["docutils-stubs", "flake8", "mypy"]
 test = ["pytest"]
 
 [[package]]
+name = "test-helper"
+version = "0.2.4"
+description = ""
+optional = false
+python-versions = "^3.9"
+files = []
+develop = false
+
+[package.dependencies]
+aiohttp = "^3.8.3"
+beautifulsoup4 = "^4.11.1"
+geopy = "^2.2.0"
+IMAPClient = "^2.3.1"
+pydantic = "^2.0.0"
+python-dotenv = "^1.0.0"
+requests = "^2.31.0"
+
+[package.source]
+type = "git"
+url = "https://github.com/jeokrohn/test_helper.git"
+reference = "HEAD"
+resolved_reference = "2945783dd37f0f9811a1cc7e7131379271f771a8"
+
+[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -2208,4 +2232,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "b64fd8539245965b4d66d9192b22c2c45e9bdaa8df6e0bd080ff4d07543704ce"
+content-hash = "a4dce5273c9b913cfa48a3a498507b37c2b9a0da1633724a64d3512a2350f7d4"

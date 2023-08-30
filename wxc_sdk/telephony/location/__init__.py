@@ -230,8 +230,8 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         :type org_id: str
         :return:
         """
-        data = settings.model_dump_json(exclude={'location_id', 'name', 'user_limit', 'default_domain', 'subscription_status',
-                                      'e911_setup_required'})
+        data = settings.model_dump_json(exclude={'location_id', 'name', 'user_limit', 'default_domain',
+                                                 'subscription_status', 'e911_setup_required'})
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
         self.put(url=url, data=data, params=params)

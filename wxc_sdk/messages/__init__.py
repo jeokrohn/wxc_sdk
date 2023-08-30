@@ -229,7 +229,7 @@ class MessagesApi(ApiChild, base='messages'):
         if html is not None:
             body['html'] = html
         if attachments is not None:
-            body['attachments'] = [a.dict(by_alias=True) if isinstance(a, MessageAttachment) else a
+            body['attachments'] = [a.model_dump(by_alias=True) if isinstance(a, MessageAttachment) else a
                                    for a in attachments]
         if files is not None:
             body['files'] = files

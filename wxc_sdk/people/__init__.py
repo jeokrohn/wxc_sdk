@@ -300,15 +300,15 @@ class PeopleApi(ApiChild, base='people'):
         params = calling_data and {'callingData': 'true'} or None
         url = self.ep()
         data = settings.model_dump_json(exclude={'person_id': True,
-                                      'created': True,
-                                      'last_modified': True,
-                                      'timezone': True,
-                                      'last_activity': True,
-                                      'sip_addresses': True,
-                                      'status': True,
-                                      'invite_pending': True,
-                                      'login_enabled': True,
-                                      'person_type': True})
+                                                 'created': True,
+                                                 'last_modified': True,
+                                                 'timezone': True,
+                                                 'last_activity': True,
+                                                 'sip_addresses': True,
+                                                 'status': True,
+                                                 'invite_pending': True,
+                                                 'login_enabled': True,
+                                                 'person_type': True})
         return Person.model_validate(self.post(url, data=data, params=params))
 
     def details(self, person_id: str, calling_data: bool = False) -> Person:
@@ -388,14 +388,14 @@ class PeopleApi(ApiChild, base='people'):
 
         # some attributes should not be included in update
         data = person.model_dump_json(exclude={'created': True,
-                                    'last_modified': True,
-                                    'timezone': True,
-                                    'last_activity': True,
-                                    'sip_addresses': True,
-                                    'status': True,
-                                    'invite_pending': True,
-                                    'login_enabled': True,
-                                    'person_type': True})
+                                               'last_modified': True,
+                                               'timezone': True,
+                                               'last_activity': True,
+                                               'sip_addresses': True,
+                                               'status': True,
+                                               'invite_pending': True,
+                                               'login_enabled': True,
+                                               'person_type': True})
         ep = self.ep(path=person.person_id)
         return Person.model_validate(self.put(url=ep, data=data, params=params))
 

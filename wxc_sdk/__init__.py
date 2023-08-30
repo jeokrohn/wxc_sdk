@@ -32,9 +32,9 @@ from .workspaces import WorkspacesApi
 from .workspace_settings import WorkspaceSettingsApi
 from dataclasses import dataclass
 
-__all__ = ['WebexSimpleApi', 'Tokens']
+__all__ = ['WebexSimpleApi']
 
-__version__ = '1.15.0'
+__version__ = '1.16.0'
 
 log = logging.getLogger(__name__)
 

@@ -5,7 +5,7 @@ import json
 from collections.abc import Generator
 from typing import Optional
 
-from pydantic import root_validator
+from pydantic import model_validator
 
 from ..api_child import ApiChild
 from ..base import ApiModel
@@ -38,7 +38,7 @@ class QueueCallerId(ApiModel):
     #: populated
     selected_queue: Optional[AgentQueue] = None
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def root(cls, values):
         """
 
@@ -58,10 +58,10 @@ class QueueCallerId(ApiModel):
 
         :meta private:
         """
-        data = self.dict(include={'queue_caller_id_enabled': True,
-                                  'selected_queue': {'id', 'name'}
-                                  },
-                         by_alias=True)
+        data = self.model_dump(include={'queue_caller_id_enabled': True,
+                                        'selected_queue': {'id', 'name'}
+                                        },
+                               by_alias=True)
         if not self.queue_caller_id_enabled:
             # apparently selectedQueue is still mandatory even if we try to disable agent caller id
             data['selectedQueue'] = {'id': None}

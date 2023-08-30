@@ -105,7 +105,7 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         """
         params = org_id and {'orgId': org_id} or None
         body = route_group.model_dump_json(include={'name': True,
-                                         'local_gateways': {'__all__': {'trunk_id', 'priority'}}})
+                                                    'local_gateways': {'__all__': {'trunk_id', 'priority'}}})
         url = self.ep()
         data = self.post(url=url, params=params, data=body)
         return data['id']

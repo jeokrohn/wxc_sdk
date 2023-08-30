@@ -23,14 +23,13 @@ from unittest import TestCase
 
 import yaml
 from dotenv import load_dotenv
-from pydantic import parse_obj_as, ValidationError, BaseModel, Field, root_validator
+from pydantic import ValidationError, BaseModel, Field, model_validator, TypeAdapter
 from yaml import safe_load
 from yaml.scanner import ScannerError
 
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.all_types import Person
 from wxc_sdk.as_api import AsWebexSimpleApi
-from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.integration import Integration
 from wxc_sdk.licenses import License
 from wxc_sdk.locations import Location
@@ -259,7 +258,7 @@ class LoggedRequest(BaseModel):
     body_line: ClassVar[re.Pattern] = re.compile(r'\s*-+\s*response body')
     end_line: ClassVar[re.Pattern] = re.compile(r'\s*-+\s*end\s*')
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def validate_all(cls, values):
         """
         Validator to populate request, parse the message and set some additional attributes
@@ -496,7 +495,7 @@ class TestWithLocations(TestCaseWithLog):
                                                  for loc in locations], return_exceptions=True)
             # the calling locations are the ones for which we can actually get calling details
             result = [loc for loc, detail in zip(locations, details)
-                    if not isinstance(detail, Exception)]
+                      if not isinstance(detail, Exception)]
             return result
 
         if cls.api is None:
@@ -540,7 +539,7 @@ class TestCaseWithUsers(TestCaseWithLog):
     def users_from_cache(cls) -> UserCache:
         try:
             with open(cls.user_cache_path(), mode='r') as f:
-                cache = parse_obj_as(UserCache, yaml.safe_load(f))
+                cache = TypeAdapter(UserCache).validate_python(yaml.safe_load(f))
             return cache
         except (FileNotFoundError, ValidationError, ScannerError):
             return UserCache()

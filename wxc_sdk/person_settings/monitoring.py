@@ -7,7 +7,7 @@ from pydantic import Field
 
 from .common import PersonSettingsApiChild
 from ..base import ApiModel, webex_id_to_uuid
-from ..common import MonitoredMember, CallParkExtension, IdAndName
+from ..common import MonitoredMember, CallParkExtension
 
 __all__ = ['MonitoredElementMember', 'MonitoredElement', 'Monitoring',
            'MonitoringApi']

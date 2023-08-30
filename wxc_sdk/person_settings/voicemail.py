@@ -136,10 +136,10 @@ class VoicemailApi(PersonSettingsApiChild):
         """
         # some settings can't be part of an update
         data = settings.model_dump_json(exclude={'send_busy_calls': {'greeting_uploaded': True},
-                                      'send_unanswered_calls': {'system_max_number_of_rings': True,
-                                                                'greeting_uploaded': True},
-                                      'voice_message_forwarding_enabled': True
-                                      })
+                                                 'send_unanswered_calls': {'system_max_number_of_rings': True,
+                                                                           'greeting_uploaded': True},
+                                                 'voice_message_forwarding_enabled': True
+                                                 })
         url = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         self.put(url, data=data, params=params)

@@ -864,11 +864,11 @@ class AsGroupsApi(AsApiChild, base='groups'):
         """
         url = self.ep()
         body = settings.model_dump_json(exclude={'group_id': True,
-                                      'members': {'__all__': {'member_type': True,
-                                                              'display_name': True,
-                                                              'operation': True}},
-                                      'created': True,
-                                      'last_modified': True})
+                                                 'members': {'__all__': {'member_type': True,
+                                                                         'display_name': True,
+                                                                         'operation': True}},
+                                                 'created': True,
+                                                 'last_modified': True})
         data = await self.post(url, data=body)
         return Group.model_validate(data)
 
@@ -930,10 +930,10 @@ class AsGroupsApi(AsApiChild, base='groups'):
         url = self.ep(group_id)
         if settings:
             body = settings.model_dump_json(exclude={'group_id': True,
-                                          'members': {'__all__': {'member_type': True,
-                                                                  'display_name': True}},
-                                          'created': True,
-                                          'last_modified': True})
+                                                     'members': {'__all__': {'member_type': True,
+                                                                             'display_name': True}},
+                                                     'created': True,
+                                                     'last_modified': True})
         else:
             body = 'purgeAllValues:{"attributes":["members"]}'
         data = await self.patch(url, data=body)
@@ -4319,7 +4319,7 @@ class AsMessagesApi(AsApiChild, base='messages'):
         if html is not None:
             body['html'] = html
         if attachments is not None:
-            body['attachments'] = [a.dict(by_alias=True) if isinstance(a, MessageAttachment) else a
+            body['attachments'] = [a.model_dump(by_alias=True) if isinstance(a, MessageAttachment) else a
                                    for a in attachments]
         if files is not None:
             body['files'] = files
@@ -4594,15 +4594,15 @@ class AsPeopleApi(AsApiChild, base='people'):
         params = calling_data and {'callingData': 'true'} or None
         url = self.ep()
         data = settings.model_dump_json(exclude={'person_id': True,
-                                      'created': True,
-                                      'last_modified': True,
-                                      'timezone': True,
-                                      'last_activity': True,
-                                      'sip_addresses': True,
-                                      'status': True,
-                                      'invite_pending': True,
-                                      'login_enabled': True,
-                                      'person_type': True})
+                                                 'created': True,
+                                                 'last_modified': True,
+                                                 'timezone': True,
+                                                 'last_activity': True,
+                                                 'sip_addresses': True,
+                                                 'status': True,
+                                                 'invite_pending': True,
+                                                 'login_enabled': True,
+                                                 'person_type': True})
         return Person.model_validate(await self.post(url, data=data, params=params))
 
     async def details(self, person_id: str, calling_data: bool = False) -> Person:
@@ -4682,14 +4682,14 @@ class AsPeopleApi(AsApiChild, base='people'):
 
         # some attributes should not be included in update
         data = person.model_dump_json(exclude={'created': True,
-                                    'last_modified': True,
-                                    'timezone': True,
-                                    'last_activity': True,
-                                    'sip_addresses': True,
-                                    'status': True,
-                                    'invite_pending': True,
-                                    'login_enabled': True,
-                                    'person_type': True})
+                                               'last_modified': True,
+                                               'timezone': True,
+                                               'last_activity': True,
+                                               'sip_addresses': True,
+                                               'status': True,
+                                               'invite_pending': True,
+                                               'login_enabled': True,
+                                               'person_type': True})
         ep = self.ep(path=person.person_id)
         return Person.model_validate(await self.put(url=ep, data=data, params=params))
 
@@ -4915,12 +4915,12 @@ class AsAppServicesApi(AsPersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         data = settings.model_dump_json(include={'ring_devices_for_click_to_dial_calls_enabled': True,
-                                      'ring_devices_for_group_page_enabled': True,
-                                      'ring_devices_for_call_park_enabled': True,
-                                      'desktop_client_enabled': True,
-                                      'tablet_client_enabled': True,
-                                      'mobile_client_enabled': True,
-                                      'browser_client_enabled': True})
+                                                 'ring_devices_for_group_page_enabled': True,
+                                                 'ring_devices_for_call_park_enabled': True,
+                                                 'desktop_client_enabled': True,
+                                                 'tablet_client_enabled': True,
+                                                 'mobile_client_enabled': True,
+                                                 'browser_client_enabled': True})
         await self.put(ep, params=params, data=data)
 
 
@@ -6013,6 +6013,7 @@ class AsPreferredAnswerApi(AsApiChild, base='telephony/config/people'):
         /v1/telephony/calls/answer
 
         This API requires spark:telephony_config_read or spark-admin:telephony_config_read scope.
+
         :param person_id: A unique identifier for the person.
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
@@ -6167,7 +6168,7 @@ class AsPushToTalkApi(AsPersonSettingsApiChild):
         else:
             body_settings = settings
         body = body_settings.model_dump_json(exclude_none=False,
-                                  exclude_unset=True)
+                                             exclude_unset=True)
         await self.put(ep, params=params, data=body)
 
 
@@ -6661,10 +6662,10 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         """
         # some settings can't be part of an update
         data = settings.model_dump_json(exclude={'send_busy_calls': {'greeting_uploaded': True},
-                                      'send_unanswered_calls': {'system_max_number_of_rings': True,
-                                                                'greeting_uploaded': True},
-                                      'voice_message_forwarding_enabled': True
-                                      })
+                                                 'send_unanswered_calls': {'system_max_number_of_rings': True,
+                                                                           'greeting_uploaded': True},
+                                                 'voice_message_forwarding_enabled': True
+                                                 })
         url = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         await self.put(url, data=data, params=params)
@@ -7378,8 +7379,8 @@ class AsRoomsApi(AsApiChild, base='rooms'):
               new information exchanges in this space, while maintaining historical data.
         """
         update: Room
-        data = update.model_dump_json(include={'title', 'classification_id', 'team_id', 'is_locked', 'is_announcement_only',
-                                    'is_read_only'})
+        data = update.model_dump_json(include={'title', 'classification_id', 'team_id', 'is_locked',
+                                               'is_announcement_only', 'is_read_only'})
         if update.id is None:
             raise ValueError('ID has to be set')
         url = self.ep(f'{update.id}')
@@ -7874,9 +7875,9 @@ class AsForwardingApi:
         url = self._endpoint(location_id=location_id, feature_id=feature_id)
 
         body = {'callForwarding': json.loads(forwarding.model_dump_json(exclude={'rules': {'__all__': {'calls_from',
-                                                                                            'forward_to',
-                                                                                            'calls_to',
-                                                                                            'name'}}}))}
+                                                                                                       'forward_to',
+                                                                                                       'calls_to',
+                                                                                                       'name'}}}))}
         await self._session.rest_put(url=url, json=body, params=params)
 
     async def create_call_forwarding_rule(self, location_id: str, feature_id: str,
@@ -10972,7 +10973,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         """
         params = org_id and {'orgId': org_id} or None
         body = route_group.model_dump_json(include={'name': True,
-                                         'local_gateways': {'__all__': {'trunk_id', 'priority'}}})
+                                                    'local_gateways': {'__all__': {'trunk_id', 'priority'}}})
         url = self.ep()
         data = await self.post(url=url, params=params, data=body)
         return data['id']
@@ -12049,9 +12050,10 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
 
         # create body
         if members_for_update:
-            members = ','.join(m.model_dump_json(include={'member_id', 'port', 't38_fax_compression_enabled', 'primary_owner',
-                                               'line_type', 'line_weight', 'line_label', 'hotline_enabled',
-                                               'hotline_destination', 'allow_call_decline_enabled'})
+            members = ','.join(m.model_dump_json(include={'member_id', 'port', 't38_fax_compression_enabled',
+                                                          'primary_owner', 'line_type', 'line_weight', 'line_label',
+                                                          'hotline_enabled', 'hotline_destination',
+                                                          'allow_call_decline_enabled'})
                                for m in members_for_update)
             body = f'{{"members": [{members}]}}'
         else:
@@ -12852,8 +12854,8 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         :type org_id: str
         :return:
         """
-        data = settings.model_dump_json(exclude={'location_id', 'name', 'user_limit', 'default_domain', 'subscription_status',
-                                      'e911_setup_required'})
+        data = settings.model_dump_json(exclude={'location_id', 'name', 'user_limit', 'default_domain',
+                                                 'subscription_status', 'e911_setup_required'})
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
         await self.put(url=url, data=data, params=params)
@@ -13166,7 +13168,7 @@ class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
         :type org_id: str
         """
         data = json.loads(settings.model_dump_json(exclude={'portal_id': True,
-                                                 'language': True}))
+                                                            'language': True}))
         if passcode is not None:
             data['passcode'] = {'newPasscode': passcode,
                                 'confirmPasscode': passcode}

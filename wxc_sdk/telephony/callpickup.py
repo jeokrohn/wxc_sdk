@@ -30,11 +30,11 @@ class CallPickup(ApiModel):
         :rtype: str
         """
         return self.model_dump_json(exclude={'pickup_id': True,
-                                  'location_name': True,
-                                  'location_id': True,
-                                  'agents': {'__all__': {'display_name': True,
-                                                         'email': True,
-                                                         'numbers': True}}})
+                                             'location_name': True,
+                                             'location_id': True,
+                                             'agents': {'__all__': {'display_name': True,
+                                                                    'email': True,
+                                                                    'numbers': True}}})
 
 
 class CallPickupApi(ApiChild, base='telephony/config/callPickups'):

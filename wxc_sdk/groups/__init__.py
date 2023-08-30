@@ -94,11 +94,11 @@ class GroupsApi(ApiChild, base='groups'):
         """
         url = self.ep()
         body = settings.model_dump_json(exclude={'group_id': True,
-                                      'members': {'__all__': {'member_type': True,
-                                                              'display_name': True,
-                                                              'operation': True}},
-                                      'created': True,
-                                      'last_modified': True})
+                                                 'members': {'__all__': {'member_type': True,
+                                                                         'display_name': True,
+                                                                         'operation': True}},
+                                                 'created': True,
+                                                 'last_modified': True})
         data = self.post(url, data=body)
         return Group.model_validate(data)
 
@@ -148,10 +148,10 @@ class GroupsApi(ApiChild, base='groups'):
         url = self.ep(group_id)
         if settings:
             body = settings.model_dump_json(exclude={'group_id': True,
-                                          'members': {'__all__': {'member_type': True,
-                                                                  'display_name': True}},
-                                          'created': True,
-                                          'last_modified': True})
+                                                     'members': {'__all__': {'member_type': True,
+                                                                             'display_name': True}},
+                                                     'created': True,
+                                                     'last_modified': True})
         else:
             body = 'purgeAllValues:{"attributes":["members"]}'
         data = self.patch(url, data=body)

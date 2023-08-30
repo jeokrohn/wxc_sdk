@@ -1,12 +1,13 @@
 """
 Person numbers API
 """
-from pydantic import validator, Field
+from typing import Optional, Literal
+
+from pydantic import Field, field_validator
 
 from .common import PersonSettingsApiChild
 from ..base import ApiModel
 from ..common import RingPattern, PatternAction
-from typing import Optional, Literal
 
 __all__ = ['PersonPhoneNumber', 'PersonNumbers', 'UpdatePersonPhoneNumber', 'UpdatePersonNumbers', 'NumbersApi']
 
@@ -24,7 +25,7 @@ class PersonPhoneNumber(ApiModel):
     #: Optional ring pattern and this is applicable only for alternate numbers.
     ring_pattern: Optional[RingPattern] = None
 
-    @validator('direct_number', pre=True)
+    @field_validator('direct_number', mode='before')
     def validate_direct_number(cls, v):
         # enforce +E.164 numbers
         return v and (v.startswith('+') and v or f'+1{v}')

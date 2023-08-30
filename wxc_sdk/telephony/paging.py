@@ -87,12 +87,12 @@ class Paging(ApiModel):
         :rtype: str
         """
         data = json.loads(self.model_dump_json(exclude={'paging_id': True,
-                                             'toll_free_number': True,
-                                             'language': True,
-                                             'originators': {'__all__': PagingAgent.create_update_exclude()},
-                                             'targets': {'__all__': PagingAgent.create_update_exclude()},
-                                             'location_name': True,
-                                             'location_id': True}))
+                                                        'toll_free_number': True,
+                                                        'language': True,
+                                                        'originators': {'__all__': PagingAgent.create_update_exclude()},
+                                                        'targets': {'__all__': PagingAgent.create_update_exclude()},
+                                                        'location_name': True,
+                                                        'location_id': True}))
 
         # originators and targets are only ID lists
         def to_id(key: str):

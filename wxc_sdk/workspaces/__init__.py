@@ -16,7 +16,7 @@ import json
 from collections.abc import Generator
 from typing import Optional
 
-from pydantic import Field, validator
+from pydantic import Field, field_validator
 
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel, enum_str
@@ -145,7 +145,7 @@ class Workspace(ApiModel):
     #: The supported devices for the workspace.
     supported_devices: Optional[WorkspaceSupportedDevices] = None
 
-    @validator('hotdesking_status', pre=True)
+    @field_validator('hotdesking_status', mode='before')
     def validate_hotdesking_status(cls, value):
         """
         hotdesking_status actually is a string: 'on'/'off'

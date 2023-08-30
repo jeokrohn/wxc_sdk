@@ -6,7 +6,7 @@ import json
 from collections.abc import Generator
 from typing import Optional, Union, ClassVar
 
-from pydantic import Field, root_validator, Extra
+from pydantic import Field, Extra, model_validator
 
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel, webex_id_to_uuid
@@ -175,7 +175,7 @@ class WebhookEvent(Webhook):
     #: generic WebhookEventData instance
     data: Union[WebhookEventDataForbid, dict]
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def parse_data(cls, values):
         """
         Parse 'data' component with the correct registered Subclass

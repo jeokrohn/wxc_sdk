@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import Field, validator
+from pydantic import Field, field_validator
 
 from .common import PersonSettingsApiChild
 from ..base import ApiModel, to_camel, plus1
@@ -40,7 +40,7 @@ class CallerId(ApiModel):
     Caller id settings of a user
     """
 
-    @validator('direct_number', 'location_number', 'mobile_number', 'custom_number', pre=True)
+    @field_validator('direct_number', 'location_number', 'mobile_number', 'custom_number', mode='before')
     def e164(cls, v):
         return plus1(v)
 
@@ -90,7 +90,7 @@ class CallerId(ApiModel):
                                                        **caller_id.configure_params())
 
         """
-        data = self.dict()
+        data = self.model_dump()
         to_keep = {
             'selected',
             'custom_number',

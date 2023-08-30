@@ -100,16 +100,17 @@ class VoicemailGroupDetail(ApiModel):
 
     def json_for_create(self) -> str:
         return self.model_dump_json(exclude_none=True,
-                         include={'name', 'phone_number', 'extension', 'first_name', 'last_name', 'passcode',
-                                  'language_code', 'message_storage', 'notifications', 'fax_message',
-                                  'transfer_to_number', 'email_copy_of_message'})
+                                    include={'name', 'phone_number', 'extension', 'first_name', 'last_name', 'passcode',
+                                             'language_code', 'message_storage', 'notifications', 'fax_message',
+                                             'transfer_to_number', 'email_copy_of_message'})
 
     def json_for_update(self) -> str:
         return self.model_dump_json(exclude_none=True,
-                         include={'name', 'phone_number', 'extension', 'first_name', 'last_name', 'enabled', 'passcode',
-                                  'language_code', 'greeting', 'greeting_description', 'message_storage',
-                                  'notifications', 'fax_message',
-                                  'transfer_to_number', 'email_copy_of_message'})
+                                    include={'name', 'phone_number', 'extension', 'first_name', 'last_name', 'enabled',
+                                             'passcode',
+                                             'language_code', 'greeting', 'greeting_description', 'message_storage',
+                                             'notifications', 'fax_message',
+                                             'transfer_to_number', 'email_copy_of_message'})
 
 
 class VoicemailGroupsApi(ApiChild, base='telephony/config/voicemailGroups'):

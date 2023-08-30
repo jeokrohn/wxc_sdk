@@ -97,9 +97,9 @@ class CallPark(ApiModel):
         :rtype: str
         """
         data = json.loads(self.model_dump_json(exclude={'callpark_id': True,
-                                             'location_name': True,
-                                             'location_id': True,
-                                             'recall': {'hunt_group_name': True}}))
+                                                        'location_name': True,
+                                                        'location_id': True,
+                                                        'recall': {'hunt_group_name': True}}))
         # agents need to be passed as list of IDs only
         if data.get('agents'):
             data['agents'] = [a['id'] for a in data['agents']]

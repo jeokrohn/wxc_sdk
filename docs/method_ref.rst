@@ -431,6 +431,15 @@ The second column of the table has a link to the documentation of the method.
    * - api.person_settings.permissions_out.read
         Retrieve a Person's Outgoing Calling Permissions Settings
      - :meth:`~wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.read`
+   * - api.person_settings.preferred_answer.ep
+        :meta private:
+     - :meth:`~wxc_sdk.person_settings.preferred_answer.PreferredAnswerApi.ep`
+   * - api.person_settings.preferred_answer.modify
+        Modify Preferred Answer Endpoint
+     - :meth:`~wxc_sdk.person_settings.preferred_answer.PreferredAnswerApi.modify`
+   * - api.person_settings.preferred_answer.read
+        Get Preferred Answer Endpoint
+     - :meth:`~wxc_sdk.person_settings.preferred_answer.PreferredAnswerApi.read`
    * - api.person_settings.privacy.configure
         Configure Call Waiting Settings for a Person
      - :meth:`~wxc_sdk.person_settings.privacy.PrivacyApi.configure`
