@@ -17,10 +17,10 @@ class CallForwardingCommon(ApiModel):
     #: call forwarding is enabled or disabled.
     enabled: bool
     #: Destination for call forwarding.
-    destination: Optional[str]
+    destination: Optional[str] = None
     #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal
     #: phone number and that number has the voicemail service enabled.
-    destination_voicemail_enabled: Optional[bool]
+    destination_voicemail_enabled: Optional[bool] = None
 
     @staticmethod
     def default() -> 'CallForwardingCommon':
@@ -44,7 +44,7 @@ class CallForwardingNoAnswer(CallForwardingCommon):
     #: Number of rings before the call will be forwarded if unanswered.
     number_of_rings: int
     # System-wide maximum number of rings allowed for numberOfRings setting.
-    system_max_number_of_rings: Optional[int]
+    system_max_number_of_rings: Optional[int] = None
 
     @staticmethod
     def default() -> 'CallForwardingNoAnswer':
@@ -123,7 +123,7 @@ class PersonForwardingApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return PersonForwardingSetting.parse_obj(self.get(ep, params=params))
+        return PersonForwardingSetting.model_validate(self.get(ep, params=params))
 
     def configure(self, person_id: str, forwarding: PersonForwardingSetting, org_id: str = None):
         """
@@ -155,7 +155,7 @@ class PersonForwardingApi(PersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         # system_max_number_of_ring cannot be used in update
-        data = forwarding.json(
+        data = forwarding.model_dump_json(
             exclude={'call_forwarding':
                          {'no_answer':
                               {'system_max_number_of_rings': True}}})

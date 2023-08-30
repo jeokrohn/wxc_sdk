@@ -10,24 +10,24 @@ __all__ = ['CreateInviteesItem', 'Invitee', 'MeetingInviteesApi', 'CreateMeeting
 
 class Invitee(ApiModel):
     #: Unique identifier for meeting invitee.
-    id: Optional[str]
+    id: Optional[str] = None
     #: Email address for meeting invitee. This attribute can be modified by Update a Meeting Invitee API.
-    email: Optional[str]
+    email: Optional[str] = None
     #: Display name for meeting invitee. This attribute can be modified by Update a Meeting Invitee API.
-    display_name: Optional[str]
+    display_name: Optional[str] = None
     # : Whether or not invitee is a designated alternate host for the meeting. See Add Alternate Hosts for Cisco
     #: Webex Meetings for more details.
-    co_host: Optional[bool]
+    co_host: Optional[bool] = None
     # : Unique identifier for the meeting for which invitees are being requested. The meeting can be a meeting
     #: series, a scheduled meeting, or a meeting instance which has ended or is ongoing.
-    meeting_id: Optional[str]
+    meeting_id: Optional[str] = None
     #: If true, the invitee is a designated panelist for the event meeting.
-    panelist: Optional[bool]
+    panelist: Optional[bool] = None
 
 
 class CreateInviteesItem(ApiModel):
     #: Email address for meeting invitee.
-    email: Optional[str]
+    email: Optional[str] = None
     #: Display name for meeting invitee. The maximum length of displayName is 128 characters. In Webex App,
     #: if the email has been associated with an existing Webex account, the display name associated with the Webex
     #: account will be used; otherwise, the email will be used as displayName. In Webex site, if displayName is
@@ -37,14 +37,14 @@ class CreateInviteesItem(ApiModel):
     #: the displayName shown in the meeting will be the displayName associated with the Webex account; otherwise,
     #: displayName shown in the meeting will be the displayName which is specified by the invitee who does not have a
     #: Webex account.
-    display_name: Optional[str]
+    display_name: Optional[str] = None
     #: Whether or not invitee is a designated alternate host for the meeting. See Add Alternate Hosts for Cisco
     #: Webex Meetings for more details.
-    co_host: Optional[bool]
+    co_host: Optional[bool] = None
     #: If true, send an email to the invitee.
-    send_email: Optional[bool]
+    send_email: Optional[bool] = None
     #: If true, the invitee is a designated panelist for the event meeting.
-    panelist: Optional[bool]
+    panelist: Optional[bool] = None
 
 
 class CreateMeetingInviteeBody(CreateInviteesItem):
@@ -53,11 +53,11 @@ class CreateMeetingInviteeBody(CreateInviteesItem):
     #: series; if it's a scheduled meeting, the meeting invitee is invited to this individual scheduled meeting. It
     #: doesn't apply to an ended or ongoing meeting instance. The meeting ID of a scheduled personal room meeting is
     #: not supported for this API.
-    meeting_id: Optional[str]
+    meeting_id: Optional[str] = None
     #: Email address for the meeting host. This attribute should only be set if the user or application calling the
     #: API has the admin on-behalf-of scopes. When used, the admin may specify the email of a user in a site they
     #: manage to be the meeting host.
-    host_email: Optional[str]
+    host_email: Optional[str] = None
 
 
 class CreateMeetingInviteesBody(ApiModel):
@@ -66,20 +66,20 @@ class CreateMeetingInviteesBody(ApiModel):
     #: meeting series; if it's a scheduled meeting, the meeting invitees are invited to this individual scheduled
     #: meeting. It doesn't apply to an ended or ongoing meeting instance. The meeting ID of a scheduled personal room
     #: meeting is not supported for this API.
-    meeting_id: Optional[str]
+    meeting_id: Optional[str] = None
     #: Email address for the meeting host. This attribute should only be set if the user or application calling the
     #: API has the admin on-behalf-of scopes. When used, the admin may specify the email of a user in a site they
     #: manage to be the meeting host.
-    host_email: Optional[str]
+    host_email: Optional[str] = None
     #: Meeting invitees to be inserted.
-    items: Optional[list[CreateInviteesItem]]
+    items: Optional[list[CreateInviteesItem]] = None
 
 
 class UpdateMeetingInviteeBody(CreateInviteesItem):
     #: Email address for the meeting host. This attribute should only be set if the user or application calling the
     #: API has the admin on-behalf-of scopes. When used, the admin may specify the email of a user in a site they
     #: manage to be the meeting host.
-    host_email: Optional[str]
+    host_email: Optional[str] = None
 
 
 class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
@@ -175,8 +175,8 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         if host_email is not None:
             body.host_email = host_email
         url = self.ep()
-        data = super().post(url=url, data=body.json())
-        return Invitee.parse_obj(data)
+        data = super().post(url=url, data=body.model_dump_json())
+        return Invitee.model_validate(data)
 
     def create_invitees(self, meeting_id: str, items: List[CreateInviteesItem],
                         host_email: str = None) -> List[Invitee]:
@@ -207,7 +207,7 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         if items is not None:
             body.items = items
         url = self.ep('bulkInsert')
-        data = super().post(url=url, data=body.json())
+        data = super().post(url=url, data=body.model_dump_json())
         return data["items"]
 
     def invitee_details(self, meeting_invitee_id: str, host_email: str = None) -> Invitee:
@@ -226,7 +226,7 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
             params['hostEmail'] = host_email
         url = self.ep(f'{meeting_invitee_id}')
         data = super().get(url=url, params=params)
-        return Invitee.parse_obj(data)
+        return Invitee.model_validate(data)
 
     def update(self, meeting_invitee_id: str, email: str, display_name: str = None, co_host: bool = None,
                send_email: bool = None, panelist: bool = None, host_email: str = None) -> Invitee:
@@ -275,8 +275,8 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         if host_email is not None:
             body.host_email = host_email
         url = self.ep(f'{meeting_invitee_id}')
-        data = super().put(url=url, data=body.json())
-        return Invitee.parse_obj(data)
+        data = super().put(url=url, data=body.model_dump_json())
+        return Invitee.model_validate(data)
 
     def delete(self, meeting_invitee_id: str, host_email: str = None, send_email: bool = None):
         """

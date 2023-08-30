@@ -13,13 +13,13 @@ __all__ = ['Team', 'TeamsApi']
 
 class Team(ApiModel):
     #: A unique identifier for the team.
-    id: Optional[str]
+    id: Optional[str] = None
     #: A user-friendly name for the team.
-    name: Optional[str]
+    name: Optional[str] = None
     #: id of the creator
-    creator_id: Optional[str]
+    creator_id: Optional[str] = None
     #: The date and time the team was created.
-    created: Optional[datetime]
+    created: Optional[datetime] = None
 
 
 class TeamsApi(ApiChild, base='teams'):
@@ -52,7 +52,7 @@ class TeamsApi(ApiChild, base='teams'):
             body['name'] = name
         url = self.ep()
         data = super().post(url=url, json=body)
-        return Team.parse_obj(data)
+        return Team.model_validate(data)
 
     def details(self, team_id: str) -> Team:
         """
@@ -64,7 +64,7 @@ class TeamsApi(ApiChild, base='teams'):
         """
         url = self.ep(f'{team_id}')
         data = super().get(url=url)
-        return Team.parse_obj(data)
+        return Team.model_validate(data)
 
     def update(self, team_id: str, name: str) -> Team:
         """
@@ -79,7 +79,7 @@ class TeamsApi(ApiChild, base='teams'):
         body = {'name': name}
         url = self.ep(f'{team_id}')
         data = super().put(url=url, json=body)
-        return Team.parse_obj(data)
+        return Team.model_validate(data)
 
     def delete(self, team_id: str):
         """

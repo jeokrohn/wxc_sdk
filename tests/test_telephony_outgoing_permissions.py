@@ -33,7 +33,7 @@ class TestPermOut(TestWithLocations):
         numbers = tna.read(person_id=target_location.location_id)
         try:
             # change auto transfer number 1
-            update = numbers.copy(deep=True)
+            update = numbers.model_copy(deep=True)
             transfer = f'+496100773{random.randint(0, 9999):03}'
             update.auto_transfer_number1 = transfer
             tna.configure(person_id=target_location.location_id, settings=update)

@@ -22,11 +22,11 @@ __all__ = ['StepExecutionStatus', 'JobExecutionStatus', 'StartJobResponse', 'Job
 
 class StepExecutionStatus(ApiModel):
     #: Unique identifier that identifies each step in a job.
-    id: str
+    id: int
     #: Step execution start time.
     start_time: datetime
     #: Step execution end time.
-    end_time: Optional[datetime]
+    end_time: Optional[datetime] = None
     #: Last updated time for a step.
     last_updated: datetime
     #: Displays status for a step.
@@ -41,11 +41,11 @@ class StepExecutionStatus(ApiModel):
 
 class JobExecutionStatus(ApiModel):
     #: Unique identifier that identifies each instance of the job.
-    id: str
+    id: int
     #: Step execution start time.
-    start_time: Optional[datetime]
+    start_time: Optional[datetime] = None
     #: Step execution end time.
-    end_time: Optional[datetime]
+    end_time: Optional[datetime] = None
     #: Last updated time post one of the step execution completion.
     last_updated: datetime
     #: Displays status for overall steps that are part of the job.
@@ -62,7 +62,7 @@ class JobExecutionStatus(ApiModel):
 
 class StartJobResponse(ApiModel):
     #: Job name.
-    name: Optional[str]
+    name: Optional[str] = None
     #: Unique identifier of the job.
     id: str
     #: Unique identifier to track the flow of HTTP requests.
@@ -74,7 +74,7 @@ class StartJobResponse(ApiModel):
     #: Unique identifier to identify the customer for which the job was run.
     target_customer_id: str
     #: Unique identifier to identify the instance of the job.
-    instance_id: str
+    instance_id: int
     #: Displays the most recent step's execution status. Contains execution statuses of all the steps involve in the
     #: execution of the job.
     job_execution_status: list[JobExecutionStatus]
@@ -89,20 +89,20 @@ class StartJobResponse(ApiModel):
     #: Unique location identifier for which the job was run.
     location_id: str
     #: name of location for which the job was run, only present for target LOCATION
-    location_name: Optional[str]
+    location_name: Optional[str] = None
     #: Displays job completion percentage
-    percentage_complete: str
-    device_count: Optional[int]
+    percentage_complete: int
+    device_count: Optional[int] = None
 
 
 class JobErrorMessage(ApiModel):
     #: Error message.
     description: str
     #: Internal error code.
-    code: Optional[str]
+    code: Optional[str] = None
     #: Message describing the location or point of failure.
-    location: Optional[str]
-    location_id: Optional[str]
+    location: Optional[str] = None
+    location_id: Optional[str] = None
 
 
 class JobError(ApiModel):
@@ -163,9 +163,9 @@ class DeviceSettingsJobsApi(ApiChild, base='telephony/config/jobs/devices/callDe
             body['locationId'] = location_id
             body['locationCustomizationsEnabled'] = customization.custom_enabled
         if customization.custom_enabled or not location_id:
-            body['customizations'] = json.loads(customization.customizations.json())
+            body['customizations'] = json.loads(customization.customizations.model_dump_json())
         data = self.post(url=url, params=params, json=body)
-        return StartJobResponse.parse_obj(data)
+        return StartJobResponse.model_validate(data)
 
     def list(self, org_id: str = None, **params) -> Generator[StartJobResponse, None, None]:
         """
@@ -207,7 +207,7 @@ class DeviceSettingsJobsApi(ApiChild, base='telephony/config/jobs/devices/callDe
         url = self.ep(job_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(url=url, params=params)
-        return StartJobResponse.parse_obj(data)
+        return StartJobResponse.model_validate(data)
 
     def job_errors(self, job_id: str, org_id: str = None) -> Generator[JobErrorItem, None, None]:
         """
@@ -230,89 +230,89 @@ class DeviceSettingsJobsApi(ApiChild, base='telephony/config/jobs/devices/callDe
 
 class NumberItem(ApiModel):
     #: The source location of the numbers to be moved.
-    location_id: Optional[str]
+    location_id: Optional[str] = None
     #: Indicates the numbers to be moved from one location to another location.
-    numbers: Optional[list[str]]
+    numbers: Optional[list[str]] = None
 
 
 class MoveNumberCounts(ApiModel):
     #: Indicates the total number of phone numbers requested to be moved.
-    total_numbers: Optional[int]
+    total_numbers: Optional[int] = None
     #: Indicates the total number of phone numbers successfully deleted.
-    numbers_deleted: Optional[int]
+    numbers_deleted: Optional[int] = None
     #: Indicates the total number of phone numbers successfully moved.
-    numbers_moved: Optional[int]
+    numbers_moved: Optional[int] = None
     #: Indicates the total number of phone numbers failed.
-    numbers_failed: Optional[int]
+    numbers_failed: Optional[int] = None
 
 
 class NumberJob(ApiModel):
     #: Unique identifier of the job.
-    id: Optional[str]
+    id: Optional[str] = None
     #: job name
-    name: Optional[str]
+    name: Optional[str] = None
     #: Job type.
-    job_type: Optional[str]
+    job_type: Optional[str] = None
     #: Unique identifier to track the flow of HTTP requests.
-    tracking_id: Optional[str]
+    tracking_id: Optional[str] = None
     #: Unique identifier to identify which user has run the job.
-    source_user_id: Optional[str]
+    source_user_id: Optional[str] = None
     #: Unique identifier to identify the customer who has run the job.
-    source_customer_id: Optional[str]
+    source_customer_id: Optional[str] = None
     #: Unique identifier to identify the customer for which the job was run.
-    target_customer_id: Optional[str]
+    target_customer_id: Optional[str] = None
     #: Unique identifier to identify the instance of the job.
-    instance_id: Optional[int]
+    instance_id: Optional[int] = None
     #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
     # execution of the job.
-    job_execution_status: Optional[list[JobExecutionStatus]]
+    job_execution_status: Optional[list[JobExecutionStatus]] = None
     #: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
-    latest_execution_status: Optional[str]
+    latest_execution_status: Optional[str] = None
     #: Indicates operation type that was carried out.
-    operation_type: Optional[str]
+    operation_type: Optional[str] = None
     #: Unique location identifier for which the job was run.
-    source_location_id: Optional[str]
+    source_location_id: Optional[str] = None
     #: Unique location identifier for which the numbers have been moved.
-    target_location_id: Optional[str]
+    target_location_id: Optional[str] = None
     #: The location name for which the job was run.
-    source_location_name: Optional[str]
+    source_location_name: Optional[str] = None
     #: The location name for which the numbers have been moved.
-    target_location_name: Optional[str]
+    target_location_name: Optional[str] = None
     #: Job statistics.
-    counts: Optional[MoveNumberCounts]
+    counts: Optional[MoveNumberCounts] = None
 
 
 class ErrorMessageObject(ApiModel):
-    code: Optional[str]
-    description: Optional[str]
+    code: Optional[str] = None
+    description: Optional[str] = None
     #: Error messages describing the location id in which the error occurs. For a move operation this is the target
     # location ID.
-    location_id: Optional[str]
+    location_id: Optional[str] = None
 
 
 class ErrorObject(ApiModel):
     #: HTTP error code.
-    key: Optional[str]
-    message: Optional[list[ErrorMessageObject]]
+    key: Optional[str] = None
+    message: Optional[list[ErrorMessageObject]] = None
 
 
 class ManageNumberErrorItem(ApiModel):
     #: Phone number
-    item: Optional[str]
+    item: Optional[str] = None
     #: Index of error number.
-    item_number: Optional[int]
+    item_number: Optional[int] = None
     #: Unique identifier to track the HTTP requests.
-    tracking_id: Optional[str]
-    error: Optional[ErrorObject]
+    tracking_id: Optional[str] = None
+    error: Optional[ErrorObject] = None
 
 
 class InitiateMoveNumberJobsBody(ApiModel):
     #: Indicates the kind of operation to be carried out.
-    operation: Optional[str]
+    operation: Optional[str] = None
     #: The target location within organization where the unassigned numbers will be moved from the source location.
-    target_location_id: Optional[str]
+    target_location_id: Optional[str] = None
     #: Indicates the numbers to be moved from source to target locations.
-    number_list: Optional[list[NumberItem]]
+    number_list: Optional[list[NumberItem]] = None
 
 
 class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
@@ -359,8 +359,8 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
                                           target_location_id=target_location_id,
                                           number_list=number_list)
         url = self.ep('manageNumbers')
-        data = super().post(url=url, data=body.json())
-        return NumberJob.parse_obj(data)
+        data = super().post(url=url, data=body.model_dump_json())
+        return NumberJob.model_validate(data)
 
     def job_status(self, job_id: str = None) -> NumberJob:
         """
@@ -373,7 +373,7 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         """
         url = self.ep(f'manageNumbers/{job_id}')
         data = super().get(url=url)
-        return NumberJob.parse_obj(data)
+        return NumberJob.model_validate(data)
 
     def pause_job(self, job_id: str = None, org_id: str = None):
         """

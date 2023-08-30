@@ -264,7 +264,7 @@ class TestUpdateSchedule(TestWithTestSchedules):
                                                        schedule_id=target_schedule.schedule_id)
 
         # change all event names: add a leading 'U'
-        update = details.copy(deep=True)
+        update = details.model_copy(deep=True)
         for event in update.events:
             event.new_name = f'U{event.name}'
         new_id = self.api.telephony.schedules.update(schedule=update,
@@ -276,7 +276,7 @@ class TestUpdateSchedule(TestWithTestSchedules):
                                                      schedule_id=new_id)
 
         # restore old settings
-        restore = update.copy(deep=True)
+        restore = update.model_copy(deep=True)
         # update names back to original: swap new name and name for each event
         for event in restore.events:
             event.name, event.new_name = event.new_name, event.name
@@ -288,7 +288,7 @@ class TestUpdateSchedule(TestWithTestSchedules):
         self.assertEqual(len(details.events), len(after.events))
 
         # schedule should not have changed with the exception of events
-        self.assertEqual(details.json(exclude={'events'}), after.json(exclude={'events'}))
+        self.assertEqual(details.model_dump_json(exclude={'events'}), after.model_dump_json(exclude={'events'}))
 
         # for each event
         #   * name should have changed
@@ -296,6 +296,6 @@ class TestUpdateSchedule(TestWithTestSchedules):
         for event, after_event in zip(details.events, after.events):
             self.assertEqual(f'U{event.name}', after_event.name)
             # all event settings with the exception of event_id and name should be identical
-            event_json = event.json(exclude={'event_id', 'name'})
-            after_event_json = after_event.json(exclude={'event_id', 'name'})
+            event_json = event.model_dump_json(exclude={'event_id', 'name'})
+            after_event_json = after_event.model_dump_json(exclude={'event_id', 'name'})
             self.assertEqual(event_json, after_event_json)

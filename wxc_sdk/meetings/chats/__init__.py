@@ -10,31 +10,31 @@ __all__ = ['Sender', 'ChatObject', 'MeetingChatsApi']
 class Sender(ApiModel):
     #: Email address for sender.
     #: Possible values: john.andersen@example.com
-    email: Optional[str]
+    email: Optional[str] = None
     #: Display name for sender.
     #: Possible values: John Andersen
-    display_name: Optional[str]
+    display_name: Optional[str] = None
     #: A unique identifier for the sender.
-    person_id: Optional[str]
+    person_id: Optional[str] = None
     #: The ID of the organization to which the sender belongs.
-    org_id: Optional[str]
+    org_id: Optional[str] = None
 
 
 class ChatObject(ApiModel):
     #: A unique identifier for the chat snippet.
-    id: Optional[str]
+    id: Optional[str] = None
     #: Chat time for the chat snippet in ISO 8601 compliant format.
-    chat_time: Optional[str]
+    chat_time: Optional[str] = None
     #: The text of the chat snippet.
-    text: Optional[str]
+    text: Optional[str] = None
     #: A unique identifier for the meeting instance to which the chat belongs.
-    meeting_id: Optional[str]
+    meeting_id: Optional[str] = None
     #: Whether the type of the chat is private, public or group. Private chat is for the 1:1 chat. Public chat is for the message which is sent to all the people in the meeting. Group chat is for the message which is sent to a small group of people, like a message to "host and presenter".
-    type: Optional[str]
+    type: Optional[str] = None
     #: Information of the sender of the chat snippet.
-    sender: Optional[Sender]
+    sender: Optional[Sender] = None
     #: Information of the receivers of the chat snippet.
-    receivers: Optional[list[Sender]]
+    receivers: Optional[list[Sender]] = None
 
 
 class MeetingChatsApi(ApiChild, base='meetings/postMeetingChats'):

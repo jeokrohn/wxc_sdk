@@ -7,13 +7,11 @@ import io
 import random
 from collections.abc import Generator
 from contextlib import contextmanager
-from io import StringIO
 from itertools import chain
 from unittest import skip
 
 from tests.base import async_test, TestWithLocations
 from wxc_sdk.as_rest import AsRestError
-from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import AnnAudioFile, Greeting, AnnouncementLevel
 from wxc_sdk.locations import Location
 from wxc_sdk.telephony.announcements_repo import RepoAnnouncement
@@ -312,7 +310,7 @@ class RepoUsage(TestWithLocations):
         ann_before = api.announcements_repo.details(announcement_id=target_ann.id)
         try:
             # set a comfort message announcement
-            cq_update = cq_before.copy(deep=True)
+            cq_update = cq_before.model_copy(deep=True)
             cm = cq_update.queue_settings.comfort_message
             cm.audio_announcement_files = [AnnAudioFile(id=target_ann.id)]
             cm.greeting = Greeting.custom
@@ -358,7 +356,7 @@ class RepoUsage(TestWithLocations):
         ann_before = api.announcements_repo.details(announcement_id=target_ann.id)
         try:
             # set the business hours menu greeting
-            aa_update = aa_before.copy(deep=True)
+            aa_update = aa_before.model_copy(deep=True)
             bhm = aa_update.business_hours_menu
             bhm.audio_announcement_file = AnnAudioFile(id=target_ann.id,
                                                        level=AnnouncementLevel.organization)

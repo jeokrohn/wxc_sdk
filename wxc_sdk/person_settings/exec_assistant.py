@@ -57,7 +57,7 @@ class ExecAssistantApi(PersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(ep, params=params)
-        h: _Helper = _Helper.parse_obj(data)
+        h: _Helper = _Helper.model_validate(data)
         return h.exec_type
 
     def configure(self, person_id: str, setting: ExecAssistantType, org_id: str = None):
@@ -83,5 +83,5 @@ class ExecAssistantApi(PersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         h = _Helper(exec_type=setting)
         params = org_id and {'orgId': org_id} or None
-        data = h.json()
+        data = h.model_dump_json()
         self.put(ep, params=params, data=data)

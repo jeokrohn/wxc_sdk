@@ -7,8 +7,8 @@ import os
 from datetime import date
 from typing import Literal, List, Union, Any
 
-from pydantic import BaseModel, Field, parse_obj_as, validator
 import requests
+from pydantic import BaseModel, Field, TypeAdapter, field_validator
 
 HolidayType = Literal['national', 'local', 'religious', 'observance']
 
@@ -34,7 +34,7 @@ class Holiday(BaseModel):
     locations: AllOrAny  # quick and dirty. Don't need more detail right now
     states: AllOrAny  # quick and dirty. Don't need more detail right now
 
-    @validator('date', pre=True)
+    @field_validator('date', mode='before')
     def validate_date(cls, v):
         data = v['datetime']
         r = date(day=data['day'], month=data['month'], year=data['year'])
@@ -93,5 +93,5 @@ class CalendarifiyApi:
         code = data['meta']['code']
         if code != 200:
             raise ApiError(data['meta']['code'], data['meta']['error_type'], data['meta']['error_detail'])
-        result = parse_obj_as(List[Holiday], data['response']['holidays'])
+        result = TypeAdapter(list[Holiday]).validate_python(data['response']['holidays'])
         return result

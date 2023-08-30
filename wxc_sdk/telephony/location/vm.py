@@ -14,7 +14,7 @@ class LocationVoiceMailSettings(ApiModel):
     voicemail settings for a specific location
     """
     #: Set to true to enable voicemail transcription.
-    voicemail_transcription_enabled: Optional[bool]
+    voicemail_transcription_enabled: Optional[bool] = None
 
 
 class LocationVoicemailSettingsApi(ApiChild, base='telephony/config/locations'):
@@ -61,7 +61,7 @@ class LocationVoicemailSettingsApi(ApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
         data = self.get(url, params=params)
-        return LocationVoiceMailSettings.parse_obj(data)
+        return LocationVoiceMailSettings.model_validate(data)
 
     def update(self, location_id: str, settings: LocationVoiceMailSettings, org_id: str = None):
         """
@@ -84,5 +84,5 @@ class LocationVoicemailSettingsApi(ApiChild, base='telephony/config/locations'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
-        body = settings.json()
+        body = settings.model_dump_json()
         self.put(url, params=params, data=body)

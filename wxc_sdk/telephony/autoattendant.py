@@ -66,9 +66,9 @@ class AutoAttendantKeyConfiguration(ApiModel):
     #: Action assigned to specific menu key configuration.
     action: AutoAttendantAction
     #: The description of each menu key.
-    description: Optional[str]
+    description: Optional[str] = None
     #: Value based on actions.
-    value: Optional[str]
+    value: Optional[str] = None
 
     @staticmethod
     def zero_exit() -> 'AutoAttendantKeyConfiguration':
@@ -97,9 +97,9 @@ class AutoAttendantMenu(ApiModel):
     key_configurations: list[AutoAttendantKeyConfiguration]
     #: Announcement Audio File details.
     #: this is deprecated with the availability of the announcement repo start using audio_announcement_file
-    audio_file: Optional[AutoAttendantAudioFile]
+    audio_file: Optional[AutoAttendantAudioFile] = None
     #: Announcement Audio File details.
-    audio_announcement_file: Optional[AnnAudioFile]
+    audio_announcement_file: Optional[AnnAudioFile] = None
 
     @staticmethod
     def default() -> 'AutoAttendantMenu':
@@ -118,45 +118,45 @@ class AutoAttendant(ApiModel):
     Auto attendant details
     """
     #: A unique identifier for the auto attendant.
-    auto_attendant_id: Optional[str] = Field(alias='id')
+    auto_attendant_id: Optional[str] = Field(alias='id', default=None)
     #: Unique name for the auto attendant.
-    name: Optional[str]
+    name: Optional[str] = None
     #: Name of location for auto attendant. (only returned by list())
-    location_name: Optional[str]
+    location_name: Optional[str] = None
     #: ID of location for auto attendant. (only returned by list())
-    location_id: Optional[str]
+    location_id: Optional[str] = None
     #: Flag to indicate if auto attendant number is enabled or not (only returned by details())
-    enabled: Optional[bool]
+    enabled: Optional[bool] = None
     #: Auto attendant phone number. Either phone number or extension should be present as mandatory.
-    phone_number: Optional[str]
+    phone_number: Optional[str] = None
     #: Auto attendant extension. Either phone number or extension should be present as mandatory.
-    extension: Optional[str]
+    extension: Optional[str] = None
     #: Flag to indicate if auto attendant number is toll-free number.
-    toll_free_number: Optional[bool]
+    toll_free_number: Optional[bool] = None
     #: First name defined for an auto attendant. (only returned by details())
-    first_name: Optional[str]
+    first_name: Optional[str] = None
     #: Last name defined for an auto attendant. (only returned by details())
-    last_name: Optional[str]
+    last_name: Optional[str] = None
     #: Alternate numbers defined for the auto attendant. (only returned by details())
-    alternate_numbers: Optional[list[AlternateNumber]]
+    alternate_numbers: Optional[list[AlternateNumber]] = None
     #: Language for the auto attendant.
-    language: Optional[str]
+    language: Optional[str] = None
     #: Language code for the auto attendant.
-    language_code: Optional[str]
+    language_code: Optional[str] = None
     #: Business hours defined for the auto attendant.
-    business_schedule: Optional[str]
+    business_schedule: Optional[str] = None
     #: Holiday defined for the auto attendant.
-    holiday_schedule: Optional[str]
+    holiday_schedule: Optional[str] = None
     #: Extension dialing setting. If the values are not set default will be set as ENTERPRISE.
-    extension_dialing: Optional[Dialing]
+    extension_dialing: Optional[Dialing] = None
     #: Name dialing setting. If the values are not set default will be set as ENTERPRISE.
-    name_dialing: Optional[Dialing]
+    name_dialing: Optional[Dialing] = None
     #: Time zone defined for the auto attendant.
-    time_zone: Optional[str]
+    time_zone: Optional[str] = None
     #: Business hours menu defined for the auto attendant.
-    business_hours_menu: Optional[AutoAttendantMenu]
+    business_hours_menu: Optional[AutoAttendantMenu] = None
     #: After hours menu defined for the auto attendant.
-    after_hours_menu: Optional[AutoAttendantMenu]
+    after_hours_menu: Optional[AutoAttendantMenu] = None
 
     def create_or_update(self) -> str:
         """
@@ -165,7 +165,7 @@ class AutoAttendant(ApiModel):
         :return: JSON
         :rtype: str
         """
-        return self.json(exclude={'auto_attendant_id': True,
+        return self.model_dump_json(exclude={'auto_attendant_id': True,
                                   'location_name': True,
                                   'location_id': True,
                                   'enabled': True,
@@ -305,7 +305,7 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         """
         url = self._endpoint(location_id=location_id, auto_attendant_id=auto_attendant_id)
         params = org_id and {'orgId': org_id} or None
-        return AutoAttendant.parse_obj(self.get(url, params=params))
+        return AutoAttendant.model_validate(self.get(url, params=params))
 
     def create(self, location_id: str, settings: AutoAttendant, org_id: str = None) -> str:
         """

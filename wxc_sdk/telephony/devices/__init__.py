@@ -5,7 +5,7 @@ import json
 from collections.abc import Generator
 from typing import Optional, Union
 
-from pydantic import parse_obj_as, Field, validator
+from pydantic import TypeAdapter, Field, field_validator
 
 from ...api_child import ApiChild
 from ...base import ApiModel, plus1, to_camel
@@ -35,25 +35,25 @@ class MemberCommon(ApiModel):
     member_id: str = Field(alias='id')
     member_type: UserType = Field(default=UserType.people)
     #: First name of a person or workspace.
-    first_name: Optional[str]
+    first_name: Optional[str] = None
     #: Last name of a person or workspace.
-    last_name: Optional[str]
+    last_name: Optional[str] = None
     #: Phone Number of a person or workspace. In some regions phone numbers are not returned in E.164 format. This
     #: will be supported in a future update.
-    phone_number: Optional[str]
+    phone_number: Optional[str] = None
     #: Extension of a person or workspace.
-    extension: Optional[str]
+    extension: Optional[str] = None
     #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device
     #: requires this option. This will override user level compression options.
-    t38_fax_compression_enabled: Optional[bool]
+    t38_fax_compression_enabled: Optional[bool] = None
     #: Line type is used to differentiate Primary and SCA, at which endpoint it is assigned.
     line_type: PrimaryOrShared = Field(default=PrimaryOrShared.primary)
     #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended
     #: to all the endpoints on the device. When set to false, a call decline request only declines the current endpoint.
     allow_call_decline_enabled: Optional[bool] = Field(default=True)
-    location: Optional[IdAndName]
+    location: Optional[IdAndName] = None
 
-    @validator('phone_number', pre=True)
+    @field_validator('phone_number', mode='before')
     def e164(cls, v):
         return plus1(v)
 
@@ -68,21 +68,21 @@ class DeviceMember(MemberCommon):
     #: owner
     line_weight: int = Field(default=1)
     #: Device line label.
-    line_label: Optional[str]
+    line_label: Optional[str] = None
     #: Registration Host IP address for the line port.
-    host_ip: Optional[str] = Field(alias='hostIP')
+    host_ip: Optional[str] = Field(alias='hostIP', default=None)
     #: Registration Remote IP address for the line port.
-    remote_ip: Optional[str] = Field(alias='remoteIP')
+    remote_ip: Optional[str] = Field(alias='remoteIP', default=None)
     #: Enable Hotline. Configure this line to automatically call a predefined number whenever taken off-hook. Once
     #: enabled, the line can only make calls to the predefined number set in hotlineDestination.
     hotline_enabled: bool = Field(default=False)
     #: The preconfigured number for Hotline. Required only if hotlineEnabled is set to true.
-    hotline_destination: Optional[str]
+    hotline_destination: Optional[str] = None
 
     @staticmethod
     def from_available(available: 'AvailableMember') -> 'DeviceMember':
-        data = json.loads(available.json())
-        return DeviceMember.parse_obj(data)
+        data = json.loads(available.model_dump_json())
+        return DeviceMember.model_validate(data)
 
 
 class DeviceMembersResponse(ApiModel):
@@ -94,7 +94,7 @@ class DeviceMembersResponse(ApiModel):
     max_line_count: int
 
     # assert that members are always sorted by port number
-    @validator('members', pre=False)
+    @field_validator('members', mode='after')
     def sort_members(cls, v):
         v.sort(key=lambda dm: dm.port)
         return v
@@ -124,16 +124,16 @@ class MACStatus(ApiModel):
     #: State of the MAC address.
     state: MACState
     #: MAC address validation error code.
-    error_code: Optional[int]
+    error_code: Optional[int] = None
     #: Provides a status message about the MAC address.
-    message: Optional[str]
+    message: Optional[str] = None
 
 
 class MACValidationResponse(ApiModel):
     #: Status of MAC address.
     status: ValidationStatus
     #: Contains an array of all the MAC address provided and their statuses.
-    mac_status: Optional[list[MACStatus]]
+    mac_status: Optional[list[MACStatus]] = None
 
 
 class TelephonyDevicesApi(ApiChild, base='telephony/config/devices'):
@@ -163,7 +163,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config/devices'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(f'{device_id}/members')
         data = self.get(url=url, params=params)
-        return DeviceMembersResponse.parse_obj(data)
+        return DeviceMembersResponse.model_validate(data)
 
     def update_members(self, device_id: str, members: Optional[list[Union[DeviceMember, AvailableMember]]],
                        org_id: str = None):
@@ -189,7 +189,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config/devices'):
             if isinstance(member, AvailableMember):
                 member = DeviceMember.from_available(member)
             else:
-                member = member.copy(deep=True)
+                member = member.model_copy(deep=True)
             members_for_update.append(member)
 
         if members_for_update:
@@ -201,7 +201,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config/devices'):
 
         # create body
         if members_for_update:
-            members = ','.join(m.json(include={'member_id', 'port', 't38_fax_compression_enabled', 'primary_owner',
+            members = ','.join(m.model_dump_json(include={'member_id', 'port', 't38_fax_compression_enabled', 'primary_owner',
                                                'line_type', 'line_weight', 'line_label', 'hotline_enabled',
                                                'hotline_destination', 'allow_call_decline_enabled'})
                                for m in members_for_update)
@@ -284,7 +284,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config/devices'):
             params['orgId'] = org_id
         url = self.ep(f'{device_id}/settings')
         data = self.get(url=url, params=params)
-        return DeviceCustomization.parse_obj(data)
+        return DeviceCustomization.model_validate(data)
 
     def update_device_settings(self, device_id: str, device_model: str, customization: DeviceCustomization,
                                org_id: str = None):
@@ -334,7 +334,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config/devices'):
         if org_id:
             params['orgId'] = org_id
         url = self.ep(f'{device_id}/settings')
-        body = customization.json(include={'customizations', 'custom_enabled'})
+        body = customization.model_dump_json(include={'customizations', 'custom_enabled'})
         self.put(url=url, params=params, data=body)
 
     def dect_devices(self, org_id: str = None) -> list[DectDevice]:
@@ -352,7 +352,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config/devices'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep('dects/supportedDevices')
         data = self.get(url=url, params=params)
-        return parse_obj_as(list[DectDevice], data['devices'])
+        return TypeAdapter(list[DectDevice]).validate_python(data['devices'])
 
     def validate_macs(self, macs: list[str], org_id: str = None) -> MACValidationResponse:
         """
@@ -371,4 +371,4 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config/devices'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep('actions/validateMacs/invoke')
         data = self.post(url=url, params=params, json={'macs': macs})
-        return MACValidationResponse.parse_obj(data)
+        return MACValidationResponse.model_validate(data)

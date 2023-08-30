@@ -44,7 +44,7 @@ class DndApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return DND.parse_obj(self.get(ep, params=params))
+        return DND.model_validate(self.get(ep, params=params))
 
     def configure(self, person_id: str, dnd_settings: DND, org_id: str = None):
         """
@@ -66,4 +66,4 @@ class DndApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        self.put(ep, params=params, data=dnd_settings.json())
+        self.put(ep, params=params, data=dnd_settings.model_dump_json())

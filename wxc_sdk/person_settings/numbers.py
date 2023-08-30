@@ -6,7 +6,7 @@ from pydantic import validator, Field
 from .common import PersonSettingsApiChild
 from ..base import ApiModel
 from ..common import RingPattern, PatternAction
-from typing import Optional
+from typing import Optional, Literal
 
 __all__ = ['PersonPhoneNumber', 'PersonNumbers', 'UpdatePersonPhoneNumber', 'UpdatePersonNumbers', 'NumbersApi']
 
@@ -18,11 +18,11 @@ class PersonPhoneNumber(ApiModel):
     #: Flag to indicate primary number or not.
     primary: bool
     #: Phone Number.
-    direct_number: Optional[str]
+    direct_number: Optional[str] = None
     #: Extension
-    extension: Optional[str]
+    extension: Optional[str] = None
     #: Optional ring pattern and this is applicable only for alternate numbers.
-    ring_pattern: Optional[RingPattern]
+    ring_pattern: Optional[RingPattern] = None
 
     @validator('direct_number', pre=True)
     def validate_direct_number(cls, v):
@@ -45,15 +45,15 @@ class UpdatePersonPhoneNumber(ApiModel):
     Information about a phone number
     """
     #: Flag to indicate primary number or not.
-    primary: bool = Field(const=False, default=False)
+    primary: Literal[False] = Field(default=False)
     #: This is either 'ADD' to add phone numbers or 'DELETE' to remove phone numbers.
     action: PatternAction
     #: Phone numbers that are assigned.
     external: str
     #: Extension that is being assigned.
-    extension: Optional[str]
+    extension: Optional[str] = None
     #: Ring Pattern of this number.
-    ring_pattern: Optional[RingPattern]
+    ring_pattern: Optional[RingPattern] = None
 
 
 class UpdatePersonNumbers(ApiModel):
@@ -61,7 +61,7 @@ class UpdatePersonNumbers(ApiModel):
     Information about person's phone numbers
     """
     #: This enable distinctive ring pattern for the person.
-    enable_distinctive_ring_pattern: Optional[bool]
+    enable_distinctive_ring_pattern: Optional[bool] = None
     #: Information about the number.
     phone_numbers: list[UpdatePersonPhoneNumber]
 
@@ -98,7 +98,7 @@ class NumbersApi(PersonSettingsApiChild):
         if prefer_e164_format is not None:
             params['preferE164Format'] = str(prefer_e164_format).lower()
         ep = self.f_ep(person_id=person_id)
-        return PersonNumbers.parse_obj(self.get(ep, params=params))
+        return PersonNumbers.model_validate(self.get(ep, params=params))
 
     def update(self, person_id: str, update: UpdatePersonNumbers, org_id: str = None):
         """
@@ -120,5 +120,5 @@ class NumbersApi(PersonSettingsApiChild):
         """
         url = self.session.ep(f'telephony/config/people/{person_id}/numbers')
         params = org_id and {'orgId': org_id} or None
-        body = update.json()
+        body = update.model_dump_json()
         self.put(url=url, params=params, data=body)

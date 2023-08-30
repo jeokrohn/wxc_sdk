@@ -51,7 +51,7 @@ class LocationInterceptApi(ApiChild, base='telephony/config/locations'):
         """
         ep = self._endpoint(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
-        return InterceptSetting.parse_obj(self.get(ep, params=params))
+        return InterceptSetting.model_validate(self.get(ep, params=params))
 
     def configure(self, location_id: str, settings: InterceptSetting, org_id: str = None):
         """
@@ -75,5 +75,5 @@ class LocationInterceptApi(ApiChild, base='telephony/config/locations'):
         """
         ep = self._endpoint(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
-        data = settings.json()
+        data = settings.model_dump_json()
         self.put(ep, params=params, data=data)

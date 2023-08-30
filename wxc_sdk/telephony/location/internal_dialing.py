@@ -12,7 +12,7 @@ class InternalDialing(ApiModel):
     #: the selected route group/trunk as premises calls.
     enable_unknown_extension_route_policy: bool
     #: destination for unknown extensions
-    unknown_extension_route_identity: Optional[RouteIdentity]
+    unknown_extension_route_identity: Optional[RouteIdentity] = None
 
 
 class InternalDialingApi(ApiChild, base='telephony/config/locations'):
@@ -43,7 +43,7 @@ class InternalDialingApi(ApiChild, base='telephony/config/locations'):
         url = self.url(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(url=url, params=params)
-        return InternalDialing.parse_obj(data)
+        return InternalDialing.model_validate(data)
 
     def update(self, location_id: str, update: InternalDialing, org_id: str = None):
         """
@@ -64,5 +64,5 @@ class InternalDialingApi(ApiChild, base='telephony/config/locations'):
         """
         url = self.url(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
-        data = update.json(exclude_none=False)
+        data = update.model_dump_json(exclude_none=False)
         self.put(url=url, params=params, data=data)

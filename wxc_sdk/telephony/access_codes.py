@@ -72,7 +72,7 @@ class AccessCodesApi(ApiChild, base='telephony/config/locations'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
-        body = {'accessCodes': [json.loads(ac.json()) for ac in access_codes]}
+        body = {'accessCodes': [json.loads(ac.model_dump_json()) for ac in access_codes]}
         self.post(url, json=body, params=params)
 
     def delete_codes(self, location_id: str, access_codes: list[Union[str, AuthCode]],

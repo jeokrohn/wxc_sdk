@@ -33,7 +33,7 @@ from io import BufferedReader
 from typing import Union, Dict, Optional, Literal, List
 
 from aiohttp import FormData
-from pydantic import parse_obj_as
+from pydantic import TypeAdapter
 
 from wxc_sdk.all_types import *
 from wxc_sdk.as_rest import AsRestSession
@@ -329,9 +329,9 @@ def source_paths() -> list[Path]:
 @dataclass
 class ClassDef:
     class_name: str
-    decorator: Optional[str]
-    module_name: Optional[str]
-    source: Optional[str]
+    decorator: Optional[str] = None
+    module_name: Optional[str] = None
+    source: Optional[str] = None
     base_classes: set[str] = field(default_factory=set)
     is_base_of: set[str] = field(default_factory=set)
 

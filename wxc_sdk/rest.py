@@ -30,7 +30,7 @@ class SingleError(BaseModel):
     Representation of single error in the body of an HTTP error response from Webex
     """
     description: str
-    error_code: Optional[int] = Field(alias='errorCode')
+    error_code: Optional[int] = Field(alias='errorCode', default=None)
 
     @property
     def code(self) -> Optional[int]:
@@ -46,9 +46,9 @@ class ErrorDetail(ApiModel):
     """
     Representation of error details in the body of an HTTP error response from Webex
     """
-    error_code: Optional[int] = Field(alias='errorCode')
+    error_code: Optional[int] = Field(alias='errorCode', default=None)
     message: str  #: error message
-    errors: Optional[list[SingleError]]  #: list of errors; typically has a single entry
+    errors: Optional[list[SingleError]] = None  #: list of errors; typically has a single entry
     tracking_id: str  #: tracking ID of the request
 
     @property
@@ -79,7 +79,7 @@ class RestError(HTTPError):
         super().__init__(msg, response=response)
         # try to parse the body of the API response
         try:
-            self.detail = ErrorDetail.parse_obj(json.loads(response.text))
+            self.detail = ErrorDetail.model_validate(json.loads(response.text))
         except (json.JSONDecodeError, ValidationError):
             self.detail = response.text
 

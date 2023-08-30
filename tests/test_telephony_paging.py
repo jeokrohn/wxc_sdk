@@ -7,7 +7,7 @@ from itertools import groupby
 from typing import ClassVar
 
 from wxc_sdk.all_types import *
-from tests.base import TestCaseWithLog, TestCaseWithUsers
+from tests.base import TestCaseWithLog, TestCaseWithUsers, TestWithLocations
 
 # number of paging groups to create in create many test
 PG_MANY = 100
@@ -45,17 +45,10 @@ class TestPaging(TestCaseWithLog):
 
 
 @dataclass(init=False)
-class TestCreate(TestCaseWithUsers):
+class TestCreate(TestCaseWithUsers, TestWithLocations):
     """
     Test paging group creation
     """
-
-    locations: ClassVar[list[Location]]
-
-    @classmethod
-    def setUpClass(cls) -> None:
-        super().setUpClass()
-        cls.locations = list(cls.api.locations.list())
 
     def test_001_create_simple(self):
         """
@@ -84,7 +77,7 @@ class TestCreate(TestCaseWithUsers):
         # and get details of new paging group using the new id
         details = pgapi.details(location_id=target_location.location_id, paging_id=new_pg_id)
 
-        print(json.dumps(json.loads(details.json()), indent=2))
+        print(json.dumps(json.loads(details.model_dump_json()), indent=2))
 
     def test_002_create_many(self):
         """

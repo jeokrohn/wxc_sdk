@@ -36,10 +36,10 @@ def strip_plus1(number: str) -> str:
 
 class ForwardingRule(ApiModel):
     id: str
-    name: Optional[str]
-    calls_from: Optional[str]
-    forward_to: Optional[str]
-    calls_to: Optional[str]
+    name: Optional[str] = None
+    calls_from: Optional[str] = None
+    forward_to: Optional[str] = None
+    calls_to: Optional[str] = None
     enabled: bool
 
 
@@ -47,7 +47,7 @@ class ForwardingSetting(ApiModel):
     enabled: bool
     ring_reminder_enabled: bool
     send_to_voicemail_enabled: bool
-    destination: Optional[str]
+    destination: Optional[str] = None
 
     @staticmethod
     def default() -> 'ForwardingSetting':
@@ -60,7 +60,7 @@ class ForwardingSetting(ApiModel):
 class CallForwarding(ApiModel):
     always: ForwardingSetting
     selective: ForwardingSetting
-    rules: Optional[list[ForwardingRule]]
+    rules: Optional[list[ForwardingRule]] = None
 
     @staticmethod
     def default() -> 'CallForwarding':
@@ -80,7 +80,7 @@ class ForwardTo(ApiModel):
     Definition of a call forward destination
     """
     selection: ForwardToSelection = Field(default=ForwardToSelection.default_number)
-    phone_number: Optional[str]
+    phone_number: Optional[str] = None
 
 
 class ForwardFromSelection(str, Enum):
@@ -101,8 +101,8 @@ class CallForwardingNumber(ApiModel):
     """
     single number in forwarding calls to definition
     """
-    phone_number: Optional[str]
-    extension: Optional[str]
+    phone_number: Optional[str] = None
+    extension: Optional[str] = None
     number_type: CallForwardingNumberType = Field(alias='type')
 
     @validator('phone_number', pre=True)
@@ -141,7 +141,7 @@ class CustomNumbers(ApiModel):
     """
     private_number_enabled: bool = Field(default=False)
     unavailable_number_enabled: bool = Field(default=False)
-    numbers: Optional[list[str]]
+    numbers: Optional[list[str]] = None
 
     @validator('numbers', pre=True)
     def numbers_validator(cls, numbers: list[str]):
@@ -181,14 +181,14 @@ class ForwardingRuleDetails(ApiModel):
     """
     name: str
     #: A unique identifier for the auto attendant call forward selective rule.
-    id: Optional[str]
+    id: Optional[str] = None
     #: Flag to indicate if always call forwarding selective rule criteria is active. If not set, flag will be set to
     #: false.
     enabled: bool
     #: Name of the holiday schedule which determines when this selective call forwarding rule is in effect.
-    holiday_schedule: Optional[str]
+    holiday_schedule: Optional[str] = None
     #: Name of the location's business schedule which determines when this selective call forwarding rule is in effect.
-    business_schedule: Optional[str]
+    business_schedule: Optional[str] = None
     #: Number to which calls will be forwarded if the rule is of type "Forward To" and the incoming call is matched.
     forward_to: ForwardTo
     #: Comma-separated list of the types of numbers being matched for incoming call destination.
@@ -254,7 +254,7 @@ class ForwardingApi:
         params = org_id and {'orgId': org_id} or {}
         url = self._endpoint(location_id=location_id, feature_id=feature_id)
         data = self._session.rest_get(url=url, params=params)
-        result = CallForwarding.parse_obj(data['callForwarding'])
+        result = CallForwarding.model_validate(data['callForwarding'])
         return result
 
     def update(self, location_id: str, feature_id: str,
@@ -279,7 +279,7 @@ class ForwardingApi:
         params = org_id and {'orgId': org_id} or {}
         url = self._endpoint(location_id=location_id, feature_id=feature_id)
 
-        body = {'callForwarding': json.loads(forwarding.json(exclude={'rules': {'__all__': {'calls_from',
+        body = {'callForwarding': json.loads(forwarding.model_dump_json(exclude={'rules': {'__all__': {'calls_from',
                                                                                             'forward_to',
                                                                                             'calls_to',
                                                                                             'name'}}}))}
@@ -308,7 +308,7 @@ class ForwardingApi:
         """
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path='selectiveRules')
         params = org_id and {'orgId': org_id} or None
-        body = forwarding_rule.json()
+        body = forwarding_rule.model_dump_json()
         data = self._session.rest_post(url=url, data=body, params=params)
         return data['id']
 
@@ -336,7 +336,7 @@ class ForwardingApi:
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path=f'selectiveRules/{rule_id}')
         params = org_id and {'orgId': org_id} or None
         data = self._session.rest_get(url=url, params=params)
-        result = ForwardingRuleDetails.parse_obj(data)
+        result = ForwardingRuleDetails.model_validate(data)
         return result
 
     def update_call_forwarding_rule(self, location_id: str, feature_id: str, rule_id: str,
@@ -367,7 +367,7 @@ class ForwardingApi:
         """
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path=f'selectiveRules/{rule_id}')
         params = org_id and {'orgId': org_id} or None
-        body = forwarding_rule.json(exclude={'id'})
+        body = forwarding_rule.model_dump_json(exclude={'id'})
         data = self._session.rest_put(url=url, params=params, data=body)
         return data['id']
 

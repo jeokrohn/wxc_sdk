@@ -15,27 +15,27 @@ __all__ = ['Membership', 'MembershipsData', 'MembershipApi']
 
 class Membership(ApiModel):
     #: A unique identifier for the membership.
-    id: Optional[str]
+    id: Optional[str] = None
     #: The room ID.
-    room_id: Optional[str]
+    room_id: Optional[str] = None
     #: The person ID.
-    person_id: Optional[str]
+    person_id: Optional[str] = None
     #: The email address of the person.
-    person_email: Optional[str]
+    person_email: Optional[str] = None
     #: The display name of the person.
-    person_display_name: Optional[str]
+    person_display_name: Optional[str] = None
     #: The organization ID of the person.
-    person_org_id: Optional[str]
+    person_org_id: Optional[str] = None
     #: Whether or not the participant is a room moderator.
-    is_moderator: Optional[bool]
+    is_moderator: Optional[bool] = None
     #: Whether or not the direct type room is hidden in the Webex clients.
-    is_room_hidden: Optional[bool]
+    is_room_hidden: Optional[bool] = None
     #: The type of room the membership is associated with.
-    room_type: Optional[RoomType]
+    room_type: Optional[RoomType] = None
     #: Whether or not the participant is a monitoring bot (deprecated).
-    is_monitor: Optional[bool]
+    is_monitor: Optional[bool] = None
     #: The date and time when the membership was created.
-    created: Optional[datetime]
+    created: Optional[datetime] = None
 
 
 class MembershipsData(WebhookEventData, Membership):
@@ -110,7 +110,7 @@ class MembershipApi(ApiChild, base='memberships'):
             body['isModerator'] = is_moderator
         url = self.ep()
         data = super().post(url=url, json=body)
-        return Membership.parse_obj(data)
+        return Membership.model_validate(data)
 
     def details(self, membership_id: str) -> Membership:
         """
@@ -122,7 +122,7 @@ class MembershipApi(ApiChild, base='memberships'):
         """
         url = self.ep(f'{membership_id}')
         data = super().get(url=url)
-        return Membership.parse_obj(data)
+        return Membership.model_validate(data)
 
     def update(self, update: Membership) -> Membership:
         """
@@ -138,12 +138,12 @@ class MembershipApi(ApiChild, base='memberships'):
         :type update: Membership
 
         """
-        data = update.json(include={'is_moderator', 'is_room_hidden'})
+        data = update.model_dump_json(include={'is_moderator', 'is_room_hidden'})
         if update.id is None:
             raise ValueError('ID has to be set')
         url = self.ep(f'{update.id}')
         data = super().put(url=url, data=data)
-        return Membership.parse_obj(data)
+        return Membership.model_validate(data)
 
     def delete(self, membership_id: str):
         """

@@ -13,41 +13,41 @@ __all__ = ['AnswerObject', 'Answers', 'MeetingQandAApi', 'QAObject']
 
 class AnswerObject(ApiModel):
     #: The name of the person who answered the question.
-    display_name: Optional[str]
+    display_name: Optional[str] = None
     #: The email of the person who answered the question.
-    email: Optional[str]
+    email: Optional[str] = None
     #: The ID of the person who answered the question. Only present for authenticated users.
-    person_id: Optional[str]
+    person_id: Optional[str] = None
     #: The content of the answer.
-    answer: Optional[list[str]]
+    answer: Optional[list[str]] = None
     #: Whether or not the question was answered.
-    answered: Optional[bool]
+    answered: Optional[bool] = None
 
 
 class Answers(ApiModel):
     #: The pagination links of the question's answers.
-    links: Optional[LinkRelation]
+    links: Optional[LinkRelation] = None
     #: An array of answer objects for this question.
-    items: Optional[list[AnswerObject]]
+    items: Optional[list[AnswerObject]] = None
 
 
 class QAObject(ApiModel):
     #: A unique identifier for the question.
-    id: Optional[str]
+    id: Optional[str] = None
     #: A unique identifier for the meeting instance to which the Q&A belongs.
-    meeting_id: Optional[str]
+    meeting_id: Optional[str] = None
     #: The total number of attendees in the meeting.
-    total_attendees: Optional[int]
+    total_attendees: Optional[int] = None
     #: The total number of respondents in the meeting.
-    total_respondents: Optional[int]
+    total_respondents: Optional[int] = None
     #: The name of the user who asked the question.
-    display_name: Optional[str]
+    display_name: Optional[str] = None
     #: The email of the user who asked the question.
-    email: Optional[str]
+    email: Optional[str] = None
     #: The question that was asked.
-    question: Optional[str]
+    question: Optional[str] = None
     #: Question's answers.
-    answers: Optional[Answers]
+    answers: Optional[Answers] = None
 
 
 class MeetingQandAApi(ApiChild, base='meetings/q_and_a'):

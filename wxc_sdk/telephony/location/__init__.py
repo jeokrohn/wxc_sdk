@@ -25,9 +25,9 @@ class CallingLineId(ApiModel):
     """
     #: Group calling line ID name. By default it will be org name.
     #: when updating the name make sure to also include the phone number
-    name: Optional[str]
+    name: Optional[str] = None
     #: Directory Number / Main number in E164 Forma
-    phone_number: Optional[str]
+    phone_number: Optional[str] = None
 
 
 class PSTNConnection(ApiModel):
@@ -42,32 +42,32 @@ class PSTNConnection(ApiModel):
 
 class TelephonyLocation(ApiModel):
     #: A unique identifier for the location.
-    location_id: Optional[str] = Field(alias='id')
+    location_id: Optional[str] = Field(alias='id', default=None)
     #: The name of the location.
-    name: Optional[str]
+    name: Optional[str] = None
     #: Location's phone announcement language.
-    announcement_language: Optional[str]
+    announcement_language: Optional[str] = None
     #: Location calling line information.
-    calling_line_id: Optional[CallingLineId]
+    calling_line_id: Optional[CallingLineId] = None
     #: Connection details are only returned for local PSTN types of TRUNK or ROUTE_GROUP.
-    connection: Optional[PSTNConnection]
+    connection: Optional[PSTNConnection] = None
     #: External Caller ID Name value. Unicode characters.
-    external_caller_id_name: Optional[str]
+    external_caller_id_name: Optional[str] = None
     #: Limit on the number of people at the location, Read-Only.
-    user_limit: Optional[int]
+    user_limit: Optional[int] = None
     #: Location Identifier.
-    p_access_network_info: Optional[str]
+    p_access_network_info: Optional[str] = None
     #: Must dial to reach an outside line, default is None.
-    outside_dial_digit: Optional[str]
+    outside_dial_digit: Optional[str] = None
     #: Must dial a prefix when calling between locations having same extension within same location.
-    routing_prefix: Optional[str]
+    routing_prefix: Optional[str] = None
     #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will
     #: include a P-Charge-Info header with the selected number in the SIP INVITE.
-    charge_number: Optional[str]
+    charge_number: Optional[str] = None
     #: IP Address, hostname, or domain, Read-Only
-    default_domain: Optional[str]
+    default_domain: Optional[str] = None
     #: True if E911 setup is required.
-    e911_setup_required: Optional[bool]
+    e911_setup_required: Optional[bool] = None
 
 
 @dataclass(init=False)
@@ -140,7 +140,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         body = {'extensions': extensions}
         params = org_id and {'orgId': org_id} or None
         data = self.post(url=url, params=params, json=body)
-        return ValidateExtensionsResponse.parse_obj(data)
+        return ValidateExtensionsResponse.model_validate(data)
 
     def details(self, location_id: str, org_id: str = None) -> TelephonyLocation:
         """
@@ -161,7 +161,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id}
         url = self.ep(location_id)
         data = self.get(url=url, params=params)
-        return TelephonyLocation.parse_obj(data)
+        return TelephonyLocation.model_validate(data)
 
     def enable_for_calling(self, location: Location, org_id: str = None) -> str:
         """
@@ -176,7 +176,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         """
         params = org_id and {'orgId': org_id}
         url = self.ep()
-        body = location.json()
+        body = location.model_dump_json()
         data = self.post(url=url, data=body, params=params)
         return data['id']
 
@@ -230,7 +230,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         :type org_id: str
         :return:
         """
-        data = settings.json(exclude={'location_id', 'name', 'user_limit', 'default_domain', 'subscription_status',
+        data = settings.model_dump_json(exclude={'location_id', 'name', 'user_limit', 'default_domain', 'subscription_status',
                                       'e911_setup_required'})
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
@@ -286,4 +286,4 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(f'{location_id}/devices/settings')
         data = self.get(url=url, params=params)
-        return DeviceCustomization.parse_obj(data)
+        return DeviceCustomization.model_validate(data)

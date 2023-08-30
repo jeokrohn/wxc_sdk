@@ -25,7 +25,7 @@ class TestRead(TestCaseWithUsers):
         if err:
             raise err
         print(f'Got app services settings for {len(self.users)} users')
-        print('\n'.join(s.json() for s in settings))
+        print('\n'.join(s.model_dump_json() for s in settings))
 
 
 @dataclass(init=False)
@@ -72,7 +72,7 @@ class TestUpdate(TestCaseWithUsers):
             asa = self.api.person_settings.appservices
             user: Person
             before = asa.read(person_id=user.person_id)
-            settings = before.copy(deep=True)
+            settings = before.model_copy(deep=True)
             settings.available_line_count = settings.available_line_count - 1
             asa.configure(person_id=user.person_id, settings=settings)
             after = asa.read(person_id=user.person_id)

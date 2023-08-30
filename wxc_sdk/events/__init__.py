@@ -45,69 +45,69 @@ class EventType(str, Enum):
 
 
 class EventData(ApiModel):
-    id: Optional[str]
-    title: Optional[str]
-    room_id: Optional[str]
-    type: Optional[str]
-    room_type: Optional[str]
-    is_room_hidden: Optional[bool]
-    org_id: Optional[str]
-    text: Optional[str]
-    files: Optional[list[str]]
-    person_id: Optional[str]
-    person_email: Optional[str]
-    person_org_id: Optional[str]
-    person_display_name: Optional[str]
-    is_moderator: Optional[bool]
-    is_monitor: Optional[bool]
-    meeting_id: Optional[str]
-    creator_id: Optional[str]
+    id: Optional[str] = None
+    title: Optional[str] = None
+    room_id: Optional[str] = None
+    type: Optional[str] = None
+    room_type: Optional[str] = None
+    is_room_hidden: Optional[bool] = None
+    org_id: Optional[str] = None
+    text: Optional[str] = None
+    files: Optional[list[str]] = None
+    person_id: Optional[str] = None
+    person_email: Optional[str] = None
+    person_org_id: Optional[str] = None
+    person_display_name: Optional[str] = None
+    is_moderator: Optional[bool] = None
+    is_monitor: Optional[bool] = None
+    meeting_id: Optional[str] = None
+    creator_id: Optional[str] = None
     #: The meeting's host data
-    host: Optional[object]
+    host: Optional[object] = None
     #: Common Identity (CI) authenticated meeting attendees
-    attendees: Optional[list[Any]]
+    attendees: Optional[list[Any]] = None
     #: indicates whether or not the Voice Assistant was enabled during the meeting. If true a transcript should be
     #: available a couple minutes after the meeting ended at the meetingTranscripts resource
-    transcription_enabled: Optional[str]
+    transcription_enabled: Optional[str] = None
     #: indicates if recording was enabled for all or parts of the meeting. If true a recording should be available
     #: shortly after the meeting ended at the recordings resource
-    recording_enabled: Optional[str]
+    recording_enabled: Optional[str] = None
     #: indicates i chat messages were exchanged during the meeting in the meetings client (not the unified client).
     #: If true these messages can be accessed by a compliance officer at the postMeetingsChat resource. Meetings chat
     #: collection must be custom enabled.
-    has_post_meetings_chat: Optional[str]
-    created: Optional[datetime]
-    updated: Optional[datetime]
-    markdown: Optional[str]
-    html: Optional[str]
-    mentioned_people: Optional[list[str]]
-    file_content_url: Optional[str]
-    file_id: Optional[str]
-    page_number: Optional[int]
-    is_locked: Optional[bool]
-    is_public: Optional[bool]
-    made_public: Optional[datetime]
-    is_announcement_only: Optional[bool]
+    has_post_meetings_chat: Optional[str] = None
+    created: Optional[datetime] = None
+    updated: Optional[datetime] = None
+    markdown: Optional[str] = None
+    html: Optional[str] = None
+    mentioned_people: Optional[list[str]] = None
+    file_content_url: Optional[str] = None
+    file_id: Optional[str] = None
+    page_number: Optional[int] = None
+    is_locked: Optional[bool] = None
+    is_public: Optional[bool] = None
+    made_public: Optional[datetime] = None
+    is_announcement_only: Optional[bool] = None
 
 
 class ComplianceEvent(ApiModel):
     #: The unique identifier for the event.
-    id: Optional[str]
+    id: Optional[str] = None
     #: The type of resource in the event.
-    resource: Optional[EventResource]
+    resource: Optional[EventResource] = None
     #: The action which took place in the event.
-    type: Optional[EventType]
+    type: Optional[EventType] = None
     #: The ID of the application for the event.
-    app_id: Optional[str]
+    app_id: Optional[str] = None
     #: The ID of the person who performed the action.
-    actor_id: Optional[str]
+    actor_id: Optional[str] = None
     #: The ID of the organization for the event.
-    org_id: Optional[str]
+    org_id: Optional[str] = None
     #: The date and time of the event.
-    created: Optional[datetime]
+    created: Optional[datetime] = None
     #: The event's data representation. This object will contain the event's resource, such as memberships, messages,
     #: meetings, tabs, rooms or attachmentActions at the time the event took place.
-    data: Optional[EventData]
+    data: Optional[EventData] = None
 
 
 class EventsApi(ApiChild, base='events'):
@@ -159,4 +159,4 @@ class EventsApi(ApiChild, base='events'):
         """
         url = self.ep(f'{event_id}')
         data = super().get(url=url)
-        return ComplianceEvent.parse_obj(data)
+        return ComplianceEvent.model_validate(data)

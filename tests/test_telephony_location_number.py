@@ -141,4 +141,5 @@ class TestAddExisting(NumberTest):
             self.api.telephony.location.number.add(location_id=target.location.location_id,
                                                    phone_numbers=[target.main_number])
         self.assertEqual(409, rest_error.exception.response.status_code)
-        self.assertEqual(25223, rest_error.exception.code)
+        self.assertEqual(8363, rest_error.exception.code)
+        self.assertEqual(25223, rest_error.exception.detail.error_code)

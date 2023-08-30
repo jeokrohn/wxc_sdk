@@ -15,7 +15,7 @@ __all__ = ['VoicePortalSettings', 'FailedAttempts', 'ExpirePasscode', 'PasscodeR
 
 class VoicePortalSettings(ApiModel):
     #: Voice Portal ID
-    portal_id: Optional[str] = Field(alias='id')
+    portal_id: Optional[str] = Field(alias='id', default=None)
     #: Voice Portal Name.
     name: str
     #: Language for audio announcements.
@@ -23,9 +23,9 @@ class VoicePortalSettings(ApiModel):
     #: Language code for voicemail group audio announcement
     language_code: str
     #: Extension of incoming call.
-    extension: Optional[str]
+    extension: Optional[str] = None
     #: Phone Number of incoming call.
-    phone_number: Optional[str]
+    phone_number: Optional[str] = None
     #: Caller ID First Name.
     first_name: str
     #: Caller ID Last Name
@@ -49,7 +49,7 @@ class ExpirePasscode(ApiModel):
 
 class PasscodeRules(ApiModel):
     #: Settings for passcode expiry.
-    expire_passcode: Optional[ExpirePasscode]
+    expire_passcode: Optional[ExpirePasscode] = None
     #: Number of failed attempts allowed.
     failed_attempts: FailedAttempts
     #: Settings for previous passcode usage.
@@ -105,7 +105,7 @@ class VoicePortalApi(ApiChild, base='telephony/config/locations'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
-        return VoicePortalSettings.parse_obj(self.get(url, params=params))
+        return VoicePortalSettings.model_validate(self.get(url, params=params))
 
     def update(self, location_id: str, settings: VoicePortalSettings, passcode: str = None, org_id: str = None):
         """
@@ -128,7 +128,7 @@ class VoicePortalApi(ApiChild, base='telephony/config/locations'):
         :param org_id: Organization to which the voice portal belongs.
         :type org_id: str
         """
-        data = json.loads(settings.json(exclude={'portal_id': True,
+        data = json.loads(settings.model_dump_json(exclude={'portal_id': True,
                                                  'language': True}))
         if passcode is not None:
             data['passcode'] = {'newPasscode': passcode,
@@ -158,4 +158,4 @@ class VoicePortalApi(ApiChild, base='telephony/config/locations'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id, path='passcodeRules')
-        return PasscodeRules.parse_obj(self.get(url, params=params))
+        return PasscodeRules.model_validate(self.get(url, params=params))

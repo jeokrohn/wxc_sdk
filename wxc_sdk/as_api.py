@@ -14,7 +14,7 @@ from io import BufferedReader
 from typing import Union, Dict, Optional, Literal, List
 
 from aiohttp import FormData
-from pydantic import parse_obj_as
+from pydantic import TypeAdapter
 
 from wxc_sdk.all_types import *
 from wxc_sdk.as_rest import AsRestSession
@@ -177,7 +177,7 @@ class AsAttachmentActionsApi(AsApiChild, base='attachment/actions'):
         """
         url = self.ep(f'{action_id}')
         data = await super().get(url=url)
-        return AttachmentAction.parse_obj(data)
+        return AttachmentAction.model_validate(data)
 
 
 class AsDetailedCDRApi(AsApiChild, base='devices'):
@@ -330,9 +330,9 @@ class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/ca
             body['locationId'] = location_id
             body['locationCustomizationsEnabled'] = customization.custom_enabled
         if customization.custom_enabled or not location_id:
-            body['customizations'] = json.loads(customization.customizations.json())
+            body['customizations'] = json.loads(customization.customizations.model_dump_json())
         data = await self.post(url=url, params=params, json=body)
-        return StartJobResponse.parse_obj(data)
+        return StartJobResponse.model_validate(data)
 
     def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[StartJobResponse, None, None]:
         """
@@ -395,7 +395,7 @@ class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/ca
         url = self.ep(job_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(url=url, params=params)
-        return StartJobResponse.parse_obj(data)
+        return StartJobResponse.model_validate(data)
 
     def job_errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
         """
@@ -584,7 +584,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
         url = self.ep(device_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(url=url, params=params)
-        return Device.parse_obj(data)
+        return Device.model_validate(data)
 
     async def delete(self, device_id: str, org_id: str = None):
         """
@@ -626,7 +626,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
         url = self.ep(device_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.patch(url=url, json=body, params=params, content_type='application/json-patch+json')
-        return Device.parse_obj(data)
+        return Device.model_validate(data)
 
     async def activation_code(self, workspace_id: str = None, person_id: str = None, model: str = None,
                         org_id: str = None) -> ActivationCodeResponse:
@@ -656,7 +656,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
             body['model'] = model
         url = self.ep('activationCode')
         data = await self.post(url=url, json=body, params=params)
-        return ActivationCodeResponse.parse_obj(data)
+        return ActivationCodeResponse.model_validate(data)
 
     async def create_by_mac_address(self, mac: str, workspace_id: str = None, person_id: str = None,
                               model: str = None, password: str = None, org_id: str = None) -> Device:
@@ -691,7 +691,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
             body.password = password
         url = self.ep()
         data = await super().post(url=url, json=body, params=params)
-        return Device.parse_obj(data)
+        return Device.model_validate(data)
 
 
 class AsEventsApi(AsApiChild, base='events'):
@@ -775,7 +775,7 @@ class AsEventsApi(AsApiChild, base='events'):
         """
         url = self.ep(f'{event_id}')
         data = await super().get(url=url)
-        return ComplianceEvent.parse_obj(data)
+        return ComplianceEvent.model_validate(data)
 
 
 class AsGroupsApi(AsApiChild, base='groups'):
@@ -863,14 +863,14 @@ class AsGroupsApi(AsApiChild, base='groups'):
         :rtype: :class:`Group`
         """
         url = self.ep()
-        body = settings.json(exclude={'group_id': True,
+        body = settings.model_dump_json(exclude={'group_id': True,
                                       'members': {'__all__': {'member_type': True,
                                                               'display_name': True,
                                                               'operation': True}},
                                       'created': True,
                                       'last_modified': True})
         data = await self.post(url, data=body)
-        return Group.parse_obj(data)
+        return Group.model_validate(data)
 
     async def details(self, group_id: str, include_members: bool = None) -> Group:
         """
@@ -888,7 +888,7 @@ class AsGroupsApi(AsApiChild, base='groups'):
         if include_members is not None:
             params['includeMembers'] = 'true' if include_members else 'false'
         data = await self.get(url, params=params)
-        return Group.parse_obj(data)
+        return Group.model_validate(data)
 
     def members_gen(self, group_id: str, **params) -> AsyncGenerator[GroupMember, None, None]:
         """
@@ -929,7 +929,7 @@ class AsGroupsApi(AsApiChild, base='groups'):
             raise ValueError('settings or remove_all have to be present')
         url = self.ep(group_id)
         if settings:
-            body = settings.json(exclude={'group_id': True,
+            body = settings.model_dump_json(exclude={'group_id': True,
                                           'members': {'__all__': {'member_type': True,
                                                                   'display_name': True}},
                                           'created': True,
@@ -937,7 +937,7 @@ class AsGroupsApi(AsApiChild, base='groups'):
         else:
             body = 'purgeAllValues:{"attributes":["members"]}'
         data = await self.patch(url, data=body)
-        return Group.parse_obj(data)
+        return Group.model_validate(data)
 
     async def delete_group(self, group_id: str):
         """
@@ -1003,7 +1003,7 @@ class AsLicensesApi(AsApiChild, base='licenses'):
         :rtype: License
         """
         ep = self.ep(license_id)
-        return License.parse_obj(await self.get(ep))
+        return License.model_validate(await self.get(ep))
 
 
 class AsLocationsApi(AsApiChild, base='locations'):
@@ -1093,7 +1093,7 @@ class AsLocationsApi(AsApiChild, base='locations'):
         """
         params = org_id and {'orgId': org_id} or None
         ep = self.ep(location_id)
-        return Location.parse_obj(await self.get(ep, params=params))
+        return Location.model_validate(await self.get(ep, params=params))
 
     async def create(self, name: str, time_zone: str, preferred_language: str, announcement_language: str, address1: str,
                city: str, state: str, postal_code: str, country: str, address2: str = None, org_id: str = None) -> str:
@@ -1178,7 +1178,7 @@ class AsLocationsApi(AsApiChild, base='locations'):
         url = self.ep(location_id)
 
         # TODO: this is broken see conversation in "Implementation - Locations as a Common Construct"
-        data = json.loads(settings_copy.json(exclude={'location_id', 'org_id'}, exclude_none=False, exclude_unset=True))
+        data = json.loads(settings_copy.model_dump_json(exclude={'location_id', 'org_id'}, exclude_none=False, exclude_unset=True))
         data['timezone'] = data.pop('timeZone', None)
         await self.put(url=url, json=data, params=params)
 
@@ -1220,8 +1220,8 @@ class AsLocationsApi(AsApiChild, base='locations'):
         if display_name is not None:
             body.display_name = display_name
         url = self.ep(f'{location_id}/floors')
-        data = await super().post(url=url, data=body.json())
-        return Floor.parse_obj(data)
+        data = await super().post(url=url, data=body.model_dump_json())
+        return Floor.model_validate(data)
 
     async def floor_details(self, location_id: str, floor_id: str) -> Floor:
         """
@@ -1237,7 +1237,7 @@ class AsLocationsApi(AsApiChild, base='locations'):
         """
         url = self.ep(f'{location_id}/floors/{floor_id}')
         data = await super().get(url=url)
-        return Floor.parse_obj(data)
+        return Floor.model_validate(data)
 
     async def update_floor(self, location_id: str, floor_id: str, floor_number: int, display_name: str = None) -> Floor:
         """
@@ -1263,8 +1263,8 @@ class AsLocationsApi(AsApiChild, base='locations'):
         if display_name is not None:
             body.display_name = display_name
         url = self.ep(f'{location_id}/floors/{floor_id}')
-        data = await super().put(url=url, data=body.json())
-        return Floor.parse_obj(data)
+        data = await super().put(url=url, data=body.model_dump_json())
+        return Floor.model_validate(data)
 
     async def delete_floor(self, location_id: str, floor_id: str):
         """
@@ -1560,8 +1560,8 @@ class AsMeetingInviteesApi(AsApiChild, base='meetingInvitees'):
         if host_email is not None:
             body.host_email = host_email
         url = self.ep()
-        data = await super().post(url=url, data=body.json())
-        return Invitee.parse_obj(data)
+        data = await super().post(url=url, data=body.model_dump_json())
+        return Invitee.model_validate(data)
 
     async def create_invitees(self, meeting_id: str, items: List[CreateInviteesItem],
                         host_email: str = None) -> List[Invitee]:
@@ -1592,7 +1592,7 @@ class AsMeetingInviteesApi(AsApiChild, base='meetingInvitees'):
         if items is not None:
             body.items = items
         url = self.ep('bulkInsert')
-        data = await super().post(url=url, data=body.json())
+        data = await super().post(url=url, data=body.model_dump_json())
         return data["items"]
 
     async def invitee_details(self, meeting_invitee_id: str, host_email: str = None) -> Invitee:
@@ -1611,7 +1611,7 @@ class AsMeetingInviteesApi(AsApiChild, base='meetingInvitees'):
             params['hostEmail'] = host_email
         url = self.ep(f'{meeting_invitee_id}')
         data = await super().get(url=url, params=params)
-        return Invitee.parse_obj(data)
+        return Invitee.model_validate(data)
 
     async def update(self, meeting_invitee_id: str, email: str, display_name: str = None, co_host: bool = None,
                send_email: bool = None, panelist: bool = None, host_email: str = None) -> Invitee:
@@ -1660,8 +1660,8 @@ class AsMeetingInviteesApi(AsApiChild, base='meetingInvitees'):
         if host_email is not None:
             body.host_email = host_email
         url = self.ep(f'{meeting_invitee_id}')
-        data = await super().put(url=url, data=body.json())
-        return Invitee.parse_obj(data)
+        data = await super().put(url=url, data=body.model_dump_json())
+        return Invitee.model_validate(data)
 
     async def delete(self, meeting_invitee_id: str, host_email: str = None, send_email: bool = None):
         """
@@ -1805,7 +1805,7 @@ class AsMeetingParticipantsApi(AsApiChild, base='meetingParticipants'):
         if emails is not None:
             body.emails = emails
         url = self.ep('query')
-        data = await super().post(url=url, params=params, data=body.json())
+        data = await super().post(url=url, params=params, data=body.model_dump_json())
         # TODO: this is wrong -> fix code generation
         return data["items"]
 
@@ -1828,7 +1828,7 @@ class AsMeetingParticipantsApi(AsApiChild, base='meetingParticipants'):
             params['hostEmail'] = host_email
         url = self.ep(f'{participant_id}')
         data = await super().get(url=url, params=params)
-        return Participant.parse_obj(data)
+        return Participant.model_validate(data)
 
     async def update_participant(self, participant_id: str, muted: bool = None, admit: bool = None,
                            expel: bool = None) -> UpdateParticipantResponse:
@@ -1857,8 +1857,8 @@ class AsMeetingParticipantsApi(AsApiChild, base='meetingParticipants'):
         if expel is not None:
             body.expel = expel
         url = self.ep(f'{participant_id}')
-        data = await super().put(url=url, data=body.json())
-        return UpdateParticipantResponse.parse_obj(data)
+        data = await super().put(url=url, data=body.model_dump_json())
+        return UpdateParticipantResponse.model_validate(data)
 
     async def admit_participants(self, participant_ids: List[str] = None):
         """
@@ -1873,7 +1873,7 @@ class AsMeetingParticipantsApi(AsApiChild, base='meetingParticipants'):
         if participant_ids is not None:
             body.items = participant_ids
         url = self.ep('admit')
-        await super().post(url=url, data=body.json())
+        await super().post(url=url, data=body.model_dump_json())
         return
 
 
@@ -1907,7 +1907,7 @@ class AsMeetingPreferencesApi(AsApiChild, base='meetingPreferences'):
             params['siteUrl'] = site_url
         url = self.ep()
         data = await super().get(url=url, params=params)
-        return MeetingPreferenceDetails.parse_obj(data)
+        return MeetingPreferenceDetails.model_validate(data)
 
     async def personal_meeting_room_options(self, user_email: str = None, site_url: str = None) -> PersonalMeetingRoomOptions:
         """
@@ -1932,7 +1932,7 @@ class AsMeetingPreferencesApi(AsApiChild, base='meetingPreferences'):
             params['siteUrl'] = site_url
         url = self.ep('personalMeetingRoom')
         data = await super().get(url=url, params=params)
-        return PersonalMeetingRoomOptions.parse_obj(data)
+        return PersonalMeetingRoomOptions.model_validate(data)
 
     async def update_personal_meeting_room_options(self, topic: str, host_pin: str, enabled_auto_lock: bool,
                                              auto_lock_minutes: int, enabled_notify_host: bool, support_co_host: bool,
@@ -2014,8 +2014,8 @@ class AsMeetingPreferencesApi(AsApiChild, base='meetingPreferences'):
         if allow_authenticated_devices is not None:
             body.allow_authenticated_devices = allow_authenticated_devices
         url = self.ep('personalMeetingRoom')
-        data = await super().put(url=url, params=params, data=body.json())
-        return PersonalMeetingRoomOptions.parse_obj(data)
+        data = await super().put(url=url, params=params, data=body.model_dump_json())
+        return PersonalMeetingRoomOptions.model_validate(data)
 
     async def audio_options(self, user_email: str = None, site_url: str = None) -> Audio:
         """
@@ -2040,7 +2040,7 @@ class AsMeetingPreferencesApi(AsApiChild, base='meetingPreferences'):
             params['siteUrl'] = site_url
         url = self.ep('audio')
         data = await super().get(url=url, params=params)
-        return Audio.parse_obj(data)
+        return Audio.model_validate(data)
 
     async def update_audio_options(self, user_email: str = None, site_url: str = None,
                              default_audio_type: DefaultAudioType = None, other_teleconference_description: str = None,
@@ -2116,8 +2116,8 @@ class AsMeetingPreferencesApi(AsApiChild, base='meetingPreferences'):
         if mobile_number is not None:
             body.mobile_number = mobile_number
         url = self.ep('audio')
-        data = await super().put(url=url, params=params, data=body.json())
-        return Audio.parse_obj(data)
+        data = await super().put(url=url, params=params, data=body.model_dump_json())
+        return Audio.model_validate(data)
 
     async def video_options(self, user_email: str = None, site_url: str = None) -> list[VideoDevice]:
         """
@@ -2141,7 +2141,7 @@ class AsMeetingPreferencesApi(AsApiChild, base='meetingPreferences'):
             params['siteUrl'] = site_url
         url = self.ep('video')
         data = await super().get(url=url, params=params)
-        return parse_obj_as(list[VideoDevice], data["videoDevices"])
+        return TypeAdapter(list[VideoDevice]).validate_python(data["videoDevices"])
 
     async def update_video_options(self, video_devices: VideoDevice, user_email: str = None,
                              site_url: str = None) -> list[VideoDevice]:
@@ -2172,8 +2172,8 @@ class AsMeetingPreferencesApi(AsApiChild, base='meetingPreferences'):
         if video_devices is not None:
             body.video_devices = video_devices
         url = self.ep('video')
-        data = await super().put(url=url, params=params, data=body.json())
-        return parse_obj_as(list[VideoDevice], data["videoDevices"])
+        data = await super().put(url=url, params=params, data=body.model_dump_json())
+        return TypeAdapter(list[VideoDevice]).validate_python(data["videoDevices"])
 
     async def scheduling_options(self, user_email: str = None, site_url: str = None) -> SchedulingOptions:
         """
@@ -2198,7 +2198,7 @@ class AsMeetingPreferencesApi(AsApiChild, base='meetingPreferences'):
             params['siteUrl'] = site_url
         url = self.ep('schedulingOptions')
         data = await super().get(url=url, params=params)
-        return SchedulingOptions.parse_obj(data)
+        return SchedulingOptions.model_validate(data)
 
     async def update_scheduling_options(self, user_email: str = None, site_url: str = None,
                                   enabled_join_before_host: bool = None, join_before_host_minutes: int = None,
@@ -2249,8 +2249,8 @@ class AsMeetingPreferencesApi(AsApiChild, base='meetingPreferences'):
         if enabled_webex_assistant_by_default is not None:
             body.enabled_webex_assistant_by_default = enabled_webex_assistant_by_default
         url = self.ep('schedulingOptions')
-        data = await super().put(url=url, params=params, data=body.json())
-        return SchedulingOptions.parse_obj(data)
+        data = await super().put(url=url, params=params, data=body.model_dump_json())
+        return SchedulingOptions.model_validate(data)
 
     async def site_list(self, user_email: str = None) -> list[MeetingsSite]:
         """
@@ -2266,7 +2266,7 @@ class AsMeetingPreferencesApi(AsApiChild, base='meetingPreferences'):
             params['userEmail'] = user_email
         url = self.ep('sites')
         data = await super().get(url=url, params=params)
-        return parse_obj_as(list[MeetingsSite], data["sites"])
+        return TypeAdapter(list[MeetingsSite]).validate_python(data["sites"])
 
     async def update_default_site(self, default_site: bool, site_url: str, user_email: str = None) -> MeetingsSite:
         """
@@ -2290,8 +2290,8 @@ class AsMeetingPreferencesApi(AsApiChild, base='meetingPreferences'):
         if site_url is not None:
             body.site_url = site_url
         url = self.ep('sites')
-        data = await super().put(url=url, params=params, data=body.json())
-        return MeetingsSite.parse_obj(data)
+        data = await super().put(url=url, params=params, data=body.model_dump_json())
+        return MeetingsSite.model_validate(data)
 
 
 class AsMeetingQandAApi(AsApiChild, base='meetings/q_and_a'):
@@ -2637,7 +2637,7 @@ class AsMeetingTranscriptsApi(AsApiChild, base=''):
         """
         url = self.ep(f'meetingTranscripts/{transcript_id}/snippets/{snippet_id}')
         data = await super().get(url=url)
-        return TranscriptSnippet.parse_obj(data)
+        return TranscriptSnippet.model_validate(data)
 
     async def update_snippet(self, transcript_id: str, snippet_id: str, text: str, reason: str = None) -> TranscriptSnippet:
         """
@@ -2661,8 +2661,8 @@ class AsMeetingTranscriptsApi(AsApiChild, base=''):
         if reason is not None:
             body.reason = reason
         url = self.ep(f'meetingTranscripts/{transcript_id}/snippets/{snippet_id}')
-        data = await super().put(url=url, data=body.json())
-        return TranscriptSnippet.parse_obj(data)
+        data = await super().put(url=url, data=body.model_dump_json())
+        return TranscriptSnippet.model_validate(data)
 
     async def delete(self, transcript_id: str, reason: str = None, comment: str = None):
         """
@@ -2686,7 +2686,7 @@ class AsMeetingTranscriptsApi(AsApiChild, base=''):
         if comment is not None:
             body.comment = comment
         url = self.ep(f'meetingTranscripts/{transcript_id}')
-        await super().delete(url=url, data=body.json())
+        await super().delete(url=url, data=body.model_dump_json())
         return
 
 
@@ -2987,8 +2987,8 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
         if breakout_sessions is not None:
             body.breakout_sessions = breakout_sessions
         url = self.ep()
-        data = await super().post(url=url, data=body.json())
-        return Meeting.parse_obj(data)
+        data = await super().post(url=url, data=body.model_dump_json())
+        return Meeting.model_validate(data)
 
     async def get(self, meeting_id: str, current: bool = None, host_email: str = None) -> Meeting:
         """
@@ -3016,7 +3016,7 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
             params['hostEmail'] = host_email
         url = self.ep(f'{meeting_id}')
         data = await super().get(url=url, params=params)
-        return Meeting.parse_obj(data)
+        return Meeting.model_validate(data)
 
     def list_gen(self, meeting_number: str = None, web_link: str = None, room_id: str = None, meeting_type: str = None,
              state: str = None, scheduled_type: str = None, current: bool = None, from_: str = None, to_: str = None,
@@ -3536,8 +3536,8 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
         if audio_connection_options is not None:
             body.audio_connection_options = audio_connection_options
         url = self.ep(f'{meeting_id}')
-        data = await super().patch(url=url, data=body.json())
-        return PatchMeetingResponse.parse_obj(data)
+        data = await super().patch(url=url, data=body.model_dump_json())
+        return PatchMeetingResponse.model_validate(data)
 
     async def update(self, meeting_id: str, title: str = None, agenda: str = None, password: str = None, start: str = None,
                end: str = None, timezone: str = None, recurrence: str = None, enabled_auto_record_meeting: bool = None,
@@ -3749,8 +3749,8 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
         if audio_connection_options is not None:
             body.audio_connection_options = audio_connection_options
         url = self.ep(f'{meeting_id}')
-        data = await super().put(url=url, data=body.json())
-        return PatchMeetingResponse.parse_obj(data)
+        data = await super().put(url=url, data=body.model_dump_json())
+        return PatchMeetingResponse.model_validate(data)
 
     async def delete(self, meeting_id: str, host_email: str = None, send_email: bool = None):
         """
@@ -3831,8 +3831,8 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
         if expiration_minutes is not None:
             body.expiration_minutes = expiration_minutes
         url = self.ep('join')
-        data = await super().post(url=url, data=body.json())
-        return JoinMeetingResponse.parse_obj(data)
+        data = await super().post(url=url, data=body.model_dump_json())
+        return JoinMeetingResponse.model_validate(data)
 
     async def update_simultaneous_interpretation(self, meeting_id: str, enabled: bool,
                                            interpreters:
@@ -3858,8 +3858,8 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
         if interpreters is not None:
             body.interpreters = interpreters
         url = self.ep(f'{meeting_id}/simultaneousInterpretation')
-        data = await super().put(url=url, data=body.json())
-        return SimultaneousInterpretation.parse_obj(data)
+        data = await super().put(url=url, data=body.model_dump_json())
+        return SimultaneousInterpretation.model_validate(data)
 
     async def survey(self, meeting_id: str) -> GetMeetingSurveyResponse:
         """
@@ -3873,7 +3873,7 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
         """
         url = self.ep(f'{meeting_id}/survey')
         data = await super().get(url=url)
-        return GetMeetingSurveyResponse.parse_obj(data)
+        return GetMeetingSurveyResponse.model_validate(data)
 
     def list_survey_results_gen(self, meeting_id: str, meeting_start_time_from: str = None,
                             meeting_start_time_to: str = None, **params) -> AsyncGenerator[SurveyResult, None, None]:
@@ -4094,7 +4094,7 @@ class AsMembershipApi(AsApiChild, base='memberships'):
             body['isModerator'] = is_moderator
         url = self.ep()
         data = await super().post(url=url, json=body)
-        return Membership.parse_obj(data)
+        return Membership.model_validate(data)
 
     async def details(self, membership_id: str) -> Membership:
         """
@@ -4106,7 +4106,7 @@ class AsMembershipApi(AsApiChild, base='memberships'):
         """
         url = self.ep(f'{membership_id}')
         data = await super().get(url=url)
-        return Membership.parse_obj(data)
+        return Membership.model_validate(data)
 
     async def update(self, update: Membership) -> Membership:
         """
@@ -4122,12 +4122,12 @@ class AsMembershipApi(AsApiChild, base='memberships'):
         :type update: Membership
 
         """
-        data = update.json(include={'is_moderator', 'is_room_hidden'})
+        data = update.model_dump_json(include={'is_moderator', 'is_room_hidden'})
         if update.id is None:
             raise ValueError('ID has to be set')
         url = self.ep(f'{update.id}')
         data = await super().put(url=url, data=data)
-        return Membership.parse_obj(data)
+        return Membership.model_validate(data)
 
     async def delete(self, membership_id: str):
         """
@@ -4340,7 +4340,7 @@ class AsMessagesApi(AsApiChild, base='messages'):
                 open_file.close()
         else:
             data = await super().post(url=url, json=body)
-        return Message.parse_obj(data)
+        return Message.model_validate(data)
 
     async def edit(self, message: Message) -> Message:
         """
@@ -4369,12 +4369,12 @@ class AsMessagesApi(AsApiChild, base='messages'):
                   NOT contain an html attribute.
                 * html: str: The message, in HTML format. The maximum message length is 7439 bytes.
         """
-        data = message.json(include={'room_id', 'text', 'markdown', 'html'})
+        data = message.model_dump_json(include={'room_id', 'text', 'markdown', 'html'})
         if not message.id:
             raise ValueError('ID has to be set')
         url = self.ep(f'{message.id}')
         data = await super().put(url=url, data=data)
-        return Message.parse_obj(data)
+        return Message.model_validate(data)
 
     async def details(self, message_id: str) -> Message:
         """
@@ -4386,7 +4386,7 @@ class AsMessagesApi(AsApiChild, base='messages'):
         """
         url = self.ep(f'{message_id}')
         data = await super().get(url=url)
-        return Message.parse_obj(data)
+        return Message.model_validate(data)
 
     async def delete(self, message_id: str):
         """
@@ -4413,7 +4413,7 @@ class AsOrganizationApi(AsApiChild, base='organizations'):
         """
         params = calling_data and {'callingData': 'true'} or None
         data = await self.get(url=self.ep(), params=params)
-        return parse_obj_as(list[Organization], data['items'])
+        return TypeAdapter(list[Organization]).validate_python(data['items'])
 
     async def details(self, org_id: str, calling_data: bool = None) -> Organization:
         """
@@ -4432,7 +4432,7 @@ class AsOrganizationApi(AsApiChild, base='organizations'):
         url = self.ep(org_id)
         params = calling_data and {'callingData': 'true'} or None
         data = await self.get(url=url, params=params)
-        return Organization.parse_obj(data)
+        return Organization.model_validate(data)
 
     async def delete(self, org_id: str):
         """
@@ -4593,7 +4593,7 @@ class AsPeopleApi(AsApiChild, base='people'):
         """
         params = calling_data and {'callingData': 'true'} or None
         url = self.ep()
-        data = settings.json(exclude={'person_id': True,
+        data = settings.model_dump_json(exclude={'person_id': True,
                                       'created': True,
                                       'last_modified': True,
                                       'timezone': True,
@@ -4603,7 +4603,7 @@ class AsPeopleApi(AsApiChild, base='people'):
                                       'invite_pending': True,
                                       'login_enabled': True,
                                       'person_type': True})
-        return Person.parse_obj(await self.post(url, data=data, params=params))
+        return Person.model_validate(await self.post(url, data=data, params=params))
 
     async def details(self, person_id: str, calling_data: bool = False) -> Person:
         """
@@ -4625,7 +4625,7 @@ class AsPeopleApi(AsApiChild, base='people'):
         """
         ep = self.ep(path=person_id)
         params = calling_data and {'callingData': 'true'} or None
-        return Person.parse_obj(await self.get(ep, params=params))
+        return Person.model_validate(await self.get(ep, params=params))
 
     async def delete_person(self, person_id: str):
         """
@@ -4681,7 +4681,7 @@ class AsPeopleApi(AsApiChild, base='people'):
             raise ValueError('display_name, first_name, and last_name are required')
 
         # some attributes should not be included in update
-        data = person.json(exclude={'created': True,
+        data = person.model_dump_json(exclude={'created': True,
                                     'last_modified': True,
                                     'timezone': True,
                                     'last_activity': True,
@@ -4691,7 +4691,7 @@ class AsPeopleApi(AsApiChild, base='people'):
                                     'login_enabled': True,
                                     'person_type': True})
         ep = self.ep(path=person.person_id)
-        return Person.parse_obj(await self.put(url=ep, data=data, params=params))
+        return Person.model_validate(await self.put(url=ep, data=data, params=params))
 
     async def me(self, calling_data: bool = False) -> Person:
         """
@@ -4709,7 +4709,7 @@ class AsPeopleApi(AsApiChild, base='people'):
         ep = self.ep('me')
         params = calling_data and {'callingData': 'true'} or None
         data = await self.get(ep, params=params)
-        result = Person.parse_obj(data)
+        result = Person.model_validate(data)
         return result
 
 
@@ -4790,7 +4790,7 @@ class AsAgentCallerIdApi(AsApiChild, base='telephony/config/people'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(person_id=person_id, path='callerId')
         data = await self.get(url=url, params=params)
-        return QueueCallerId.parse_obj(data)
+        return QueueCallerId.model_validate(data)
 
     async def update(self, person_id: str, update: QueueCallerId, org_id: str = None):
         """
@@ -4893,7 +4893,7 @@ class AsAppServicesApi(AsPersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(ep, params=params)
-        return AppServicesSettings.parse_obj(data)
+        return AppServicesSettings.model_validate(data)
 
     async def configure(self, person_id: str, settings: AppServicesSettings, org_id: str = None):
         """
@@ -4914,7 +4914,7 @@ class AsAppServicesApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = settings.json(include={'ring_devices_for_click_to_dial_calls_enabled': True,
+        data = settings.model_dump_json(include={'ring_devices_for_click_to_dial_calls_enabled': True,
                                       'ring_devices_for_group_page_enabled': True,
                                       'ring_devices_for_call_park_enabled': True,
                                       'desktop_client_enabled': True,
@@ -4951,7 +4951,7 @@ class AsBargeApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return BargeSettings.parse_obj(await self.get(ep, params=params))
+        return BargeSettings.model_validate(await self.get(ep, params=params))
 
     async def configure(self, person_id: str, barge_settings: BargeSettings, org_id: str = None):
         """
@@ -4972,7 +4972,7 @@ class AsBargeApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        await self.put(ep, params=params, data=barge_settings.json())
+        await self.put(ep, params=params, data=barge_settings.model_dump_json())
 
 
 class AsCallInterceptApi(AsPersonSettingsApiChild):
@@ -5005,7 +5005,7 @@ class AsCallInterceptApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return InterceptSetting.parse_obj(await self.get(ep, params=params))
+        return InterceptSetting.model_validate(await self.get(ep, params=params))
 
     async def configure(self, person_id: str, intercept: InterceptSetting, org_id: str = None):
         """
@@ -5030,7 +5030,7 @@ class AsCallInterceptApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.loads(intercept.json())
+        data = json.loads(intercept.model_dump_json())
         try:
             # remove attribute not present in update
             data['incoming']['announcements'].pop('fileName', None)
@@ -5110,7 +5110,7 @@ class AsCallRecordingApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return CallRecordingSetting.parse_obj(await self.get(ep, params=params))
+        return CallRecordingSetting.model_validate(await self.get(ep, params=params))
 
     async def configure(self, person_id: str, recording: CallRecordingSetting, org_id: str = None):
         """
@@ -5133,7 +5133,7 @@ class AsCallRecordingApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.loads(recording.json())
+        data = json.loads(recording.model_dump_json())
         for key in ['serviceProvider', 'externalGroup', 'externalIdentifier']:
             # remove attribute not present in update
             data.pop(key, None)
@@ -5222,7 +5222,7 @@ class AsCallerIdApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return CallerId.parse_obj(await self.get(ep, params=params))
+        return CallerId.model_validate(await self.get(ep, params=params))
 
     async def configure(self, person_id: str, org_id: str = None,
                   selected: CallerIdSelectedType = None,
@@ -5271,7 +5271,7 @@ class AsCallerIdApi(AsPersonSettingsApiChild):
 
     async def configure_settings(self, person_id: str, settings: CallerId, org_id: str = None):
         params = org_id and {'orgId': org_id} or None
-        data = settings.json(exclude_unset=True, include={'selected': True,
+        data = settings.model_dump_json(exclude_unset=True, include={'selected': True,
                                                           'custom_number': True,
                                                           'first_name': True,
                                                           'last_name': True,
@@ -5319,7 +5319,7 @@ class AsCallingBehaviorApi(AsPersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(ep, params=params)
-        return CallingBehavior.parse_obj(data)
+        return CallingBehavior.model_validate(data)
 
     async def configure(self, person_id: str, settings: CallingBehavior,
                   org_id: str = None):
@@ -5350,7 +5350,7 @@ class AsCallingBehaviorApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = settings.json(exclude_none=False, exclude={'effective_behavior_type'}, exclude_unset=True)
+        data = settings.model_dump_json(exclude_none=False, exclude={'effective_behavior_type'}, exclude_unset=True)
         await self.put(ep, params=params, data=data)
 
 
@@ -5380,7 +5380,7 @@ class AsDndApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return DND.parse_obj(await self.get(ep, params=params))
+        return DND.model_validate(await self.get(ep, params=params))
 
     async def configure(self, person_id: str, dnd_settings: DND, org_id: str = None):
         """
@@ -5402,7 +5402,7 @@ class AsDndApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        await self.put(ep, params=params, data=dnd_settings.json())
+        await self.put(ep, params=params, data=dnd_settings.model_dump_json())
 
 
 class AsExecAssistantApi(AsPersonSettingsApiChild):
@@ -5435,7 +5435,7 @@ class AsExecAssistantApi(AsPersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(ep, params=params)
-        h: _Helper = _Helper.parse_obj(data)
+        h: _Helper = _Helper.model_validate(data)
         return h.exec_type
 
     async def configure(self, person_id: str, setting: ExecAssistantType, org_id: str = None):
@@ -5461,7 +5461,7 @@ class AsExecAssistantApi(AsPersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         h = _Helper(exec_type=setting)
         params = org_id and {'orgId': org_id} or None
-        data = h.json()
+        data = h.model_dump_json()
         await self.put(ep, params=params, data=data)
 
 
@@ -5551,7 +5551,7 @@ class AsIncomingPermissionsApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return IncomingPermissions.parse_obj(await self.get(ep, params=params))
+        return IncomingPermissions.model_validate(await self.get(ep, params=params))
 
     async def configure(self, person_id: str, settings: IncomingPermissions, org_id: str = None):
         """
@@ -5573,7 +5573,7 @@ class AsIncomingPermissionsApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        await self.put(ep, params=params, data=settings.json())
+        await self.put(ep, params=params, data=settings.model_dump_json())
 
 
 class AsMonitoringApi(AsPersonSettingsApiChild):
@@ -5604,7 +5604,7 @@ class AsMonitoringApi(AsPersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(ep, params=params)
-        return Monitoring.parse_obj(data)
+        return Monitoring.model_validate(data)
 
     async def configure(self, person_id: str, settings: Monitoring, org_id: str = None):
         """
@@ -5674,7 +5674,7 @@ class AsNumbersApi(AsPersonSettingsApiChild):
         if prefer_e164_format is not None:
             params['preferE164Format'] = str(prefer_e164_format).lower()
         ep = self.f_ep(person_id=person_id)
-        return PersonNumbers.parse_obj(await self.get(ep, params=params))
+        return PersonNumbers.model_validate(await self.get(ep, params=params))
 
     async def update(self, person_id: str, update: UpdatePersonNumbers, org_id: str = None):
         """
@@ -5696,7 +5696,7 @@ class AsNumbersApi(AsPersonSettingsApiChild):
         """
         url = self.session.ep(f'telephony/config/people/{person_id}/numbers')
         params = org_id and {'orgId': org_id} or None
-        body = update.json()
+        body = update.model_dump_json()
         await self.put(url=url, params=params, data=body)
 
 
@@ -5727,7 +5727,7 @@ class AsAccessCodesApi(AsPersonSettingsApiChild):
         url = self.f_ep(person_id=workspace_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(url, params=params)
-        return parse_obj_as(list[AuthCode], data['accessCodes'])
+        return TypeAdapter(list[AuthCode]).validate_python(data['accessCodes'])
 
     async def delete_codes(self, workspace_id: str, access_codes: list[Union[str, AuthCode]], org_id: str = None):
         """
@@ -5808,7 +5808,7 @@ class AsTransferNumbersApi(AsPersonSettingsApiChild):
         url = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(url, params=params)
-        return AutoTransferNumbers.parse_obj(data)
+        return AutoTransferNumbers.model_validate(data)
 
     async def configure(self, person_id: str, settings: AutoTransferNumbers, org_id: str = None):
         """
@@ -5831,7 +5831,7 @@ class AsTransferNumbersApi(AsPersonSettingsApiChild):
         """
         url = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        body = settings.json()
+        body = settings.model_dump_json()
         await self.put(url, params=params, data=body)
 
 
@@ -5883,7 +5883,7 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return OutgoingPermissions.parse_obj(await self.get(ep, params=params))
+        return OutgoingPermissions.model_validate(await self.get(ep, params=params))
 
     async def configure(self, person_id: str, settings: OutgoingPermissions, drop_call_types: set[str] = None,
                   org_id: str = None):
@@ -5908,7 +5908,7 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        await self.put(ep, params=params, data=settings.json(drop_call_types=drop_call_types))
+        await self.put(ep, params=params, data=settings.model_dump_json(drop_call_types=drop_call_types))
 
 
 class AsPersonForwardingApi(AsPersonSettingsApiChild):
@@ -5947,7 +5947,7 @@ class AsPersonForwardingApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return PersonForwardingSetting.parse_obj(await self.get(ep, params=params))
+        return PersonForwardingSetting.model_validate(await self.get(ep, params=params))
 
     async def configure(self, person_id: str, forwarding: PersonForwardingSetting, org_id: str = None):
         """
@@ -5979,7 +5979,7 @@ class AsPersonForwardingApi(AsPersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         # system_max_number_of_ring cannot be used in update
-        data = forwarding.json(
+        data = forwarding.model_dump_json(
             exclude={'call_forwarding':
                          {'no_answer':
                               {'system_max_number_of_rings': True}}})
@@ -6023,7 +6023,7 @@ class AsPreferredAnswerApi(AsApiChild, base='telephony/config/people'):
         """
         params = org_id and {'orgId': org_id} or None
         ep = self.ep(person_id=person_id)
-        return PreferredAnswerResponse.parse_obj(await self.get(ep, params=params))
+        return PreferredAnswerResponse.model_validate(await self.get(ep, params=params))
 
     async def modify(self, person_id: str, preferred_answer_endpoint_id: str, org_id: str = None):
         """
@@ -6073,7 +6073,7 @@ class AsPrivacyApi(AsPersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(ep, params=params)
-        return Privacy.parse_obj(data)
+        return Privacy.model_validate(data)
 
     async def configure(self, person_id: str, settings: Privacy, org_id: str = None):
         """
@@ -6097,7 +6097,7 @@ class AsPrivacyApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.loads(settings.json())
+        data = json.loads(settings.model_dump_json())
         if settings.monitoring_agents is not None:
             id_list = []
             for ma in settings.monitoring_agents:
@@ -6136,7 +6136,7 @@ class AsPushToTalkApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return PushToTalkSettings.parse_obj(await self.get(ep, params=params))
+        return PushToTalkSettings.model_validate(await self.get(ep, params=params))
 
     async def configure(self, person_id: str, settings: PushToTalkSettings, org_id: str = None):
         """
@@ -6160,13 +6160,13 @@ class AsPushToTalkApi(AsPersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         if settings.members:
             # for an update member is just a list of IDs
-            body_settings = settings.copy(deep=True)
+            body_settings = settings.model_copy(deep=True)
             members = [m.member_id if isinstance(m, MonitoredMember) else m
                        for m in settings.members]
             body_settings.members = members
         else:
             body_settings = settings
-        body = body_settings.json(exclude_none=False,
+        body = body_settings.model_dump_json(exclude_none=False,
                                   exclude_unset=True)
         await self.put(ep, params=params, data=body)
 
@@ -6200,7 +6200,7 @@ class AsReceptionistApi(AsPersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(ep, params=params)
-        return ReceptionistSettings.parse_obj(data)
+        return ReceptionistSettings.model_validate(data)
 
     async def configure(self, person_id: str, settings: ReceptionistSettings, org_id: str = None):
         """
@@ -6228,7 +6228,7 @@ class AsReceptionistApi(AsPersonSettingsApiChild):
             raise ValueError('when setting members enabled has to be True')
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.loads(settings.json())
+        data = json.loads(settings.model_dump_json())
         if settings.monitored_members is not None:
             id_list = []
             for me in settings.monitored_members:
@@ -6377,7 +6377,7 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id)
         data = await self.get(url, params=params)
-        result = Schedule.parse_obj(data)
+        result = Schedule.model_validate(data)
         return result
 
     async def create(self, obj_id: str, schedule: Schedule, org_id: str = None) -> str:
@@ -6502,7 +6502,7 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
         url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id,
                              event_id=event_id)
         data = await self.get(url, params=params)
-        result = Event.parse_obj(data)
+        result = Event.model_validate(data)
         return result
 
     async def event_create(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
@@ -6536,7 +6536,7 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id,
                              event_id='')
-        data = event.json(exclude={'event_id'})
+        data = event.model_dump_json(exclude={'event_id'})
         data = await self.post(url, data=data, params=params)
         return data['id']
 
@@ -6575,7 +6575,7 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id,
                              event_id=event_id)
-        event_data = event.json(exclude={'event_id'})
+        event_data = event.model_dump_json(exclude={'event_id'})
         data = await self.put(url, data=event_data, params=params)
         return data['id']
 
@@ -6642,7 +6642,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         """
         url = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return VoicemailSettings.parse_obj(await self.get(url, params=params))
+        return VoicemailSettings.model_validate(await self.get(url, params=params))
 
     async def configure(self, person_id: str, settings: VoicemailSettings, org_id: str = None):
         """
@@ -6660,7 +6660,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         :return:
         """
         # some settings can't be part of an update
-        data = settings.json(exclude={'send_busy_calls': {'greeting_uploaded': True},
+        data = settings.model_dump_json(exclude={'send_busy_calls': {'greeting_uploaded': True},
                                       'send_unanswered_calls': {'system_max_number_of_rings': True,
                                                                 'greeting_uploaded': True},
                                       'voice_message_forwarding_enabled': True
@@ -6872,7 +6872,7 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         params = org_id and {'orgId': org_id} or None
         url = self.session.ep(f'telephony/config/people/{person_id}/devices')
         data = await self.get(url=url, params=params)
-        return PersonDevicesResponse.parse_obj(data)
+        return PersonDevicesResponse.model_validate(data)
 
 
 class AsReportsApi(AsApiChild, base='devices'):
@@ -7038,7 +7038,7 @@ class AsReportsApi(AsApiChild, base='devices'):
         #   'https://reportdownload-a.webex.com/api?reportId=Y2lz3ZA',  'Id': 'Y23ZA'}], 'numberOfReports': 1}
         url = self.session.ep(f'reports/{report_id}')
         data = await self.get(url=url)
-        result = Report.parse_obj(data['items'][0])
+        result = Report.model_validate(data['items'][0])
         return result
 
     async def delete(self, report_id: str):
@@ -7127,7 +7127,7 @@ class AsRoomTabsApi(AsApiChild, base='room/tabs'):
             body['displayName'] = display_name
         url = self.ep()
         data = await super().post(url=url, json=body)
-        return RoomTab.parse_obj(data)
+        return RoomTab.model_validate(data)
 
     async def tab_details(self, tab_id: str) -> RoomTab:
         """
@@ -7138,7 +7138,7 @@ class AsRoomTabsApi(AsApiChild, base='room/tabs'):
         """
         url = self.ep(f'{tab_id}')
         data = await super().get(url=url)
-        return RoomTab.parse_obj(data)
+        return RoomTab.model_validate(data)
 
     async def update_tab(self, tab_id: str, room_id: str, content_url: str, display_name: str) -> RoomTab:
         """
@@ -7162,7 +7162,7 @@ class AsRoomTabsApi(AsApiChild, base='room/tabs'):
             body['displayName'] = display_name
         url = self.ep(f'{tab_id}')
         data = await super().put(url=url, json=body)
-        return RoomTab.parse_obj(data)
+        return RoomTab.model_validate(data)
 
     async def delete_tab(self, tab_id: str):
         """
@@ -7325,7 +7325,7 @@ class AsRoomsApi(AsApiChild, base='rooms'):
             body['isAnnouncementOnly'] = is_announcement_only
         url = self.ep()
         data = await super().post(url=url, json=body)
-        return Room.parse_obj(data)
+        return Room.model_validate(data)
 
     async def details(self, room_id: str) -> Room:
         """
@@ -7338,7 +7338,7 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         """
         url = self.ep(f'{room_id}')
         data = await super().get(url=url)
-        return Room.parse_obj(data)
+        return Room.model_validate(data)
 
     async def meeting_details(self, room_id: str) -> GetRoomMeetingDetailsResponse:
         """
@@ -7350,7 +7350,7 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         """
         url = self.ep(f'{room_id}/meetingInfo')
         data = await super().get(url=url)
-        return GetRoomMeetingDetailsResponse.parse_obj(data)
+        return GetRoomMeetingDetailsResponse.model_validate(data)
 
     async def update(self, update: Room) -> Room:
         """
@@ -7378,13 +7378,13 @@ class AsRoomsApi(AsApiChild, base='rooms'):
               new information exchanges in this space, while maintaining historical data.
         """
         update: Room
-        data = update.json(include={'title', 'classification_id', 'team_id', 'is_locked', 'is_announcement_only',
+        data = update.model_dump_json(include={'title', 'classification_id', 'team_id', 'is_locked', 'is_announcement_only',
                                     'is_read_only'})
         if update.id is None:
             raise ValueError('ID has to be set')
         url = self.ep(f'{update.id}')
         data = await super().put(url=url, data=data)
-        return Room.parse_obj(data)
+        return Room.model_validate(data)
 
     async def delete(self, room_id: str):
         """
@@ -7461,7 +7461,7 @@ class AsTeamMembershipsApi(AsApiChild, base='team/memberships'):
             body['isModerator'] = is_moderator
         url = self.ep()
         data = await super().post(url=url, json=body)
-        return TeamMembership.parse_obj(data)
+        return TeamMembership.model_validate(data)
 
     async def details(self, membership_id: str) -> TeamMembership:
         """
@@ -7473,7 +7473,7 @@ class AsTeamMembershipsApi(AsApiChild, base='team/memberships'):
         """
         url = self.ep(f'{membership_id}')
         data = await super().get(url=url)
-        return TeamMembership.parse_obj(data)
+        return TeamMembership.model_validate(data)
 
     async def membership(self, membership_id: str, is_moderator: bool) -> TeamMembership:
         """
@@ -7488,7 +7488,7 @@ class AsTeamMembershipsApi(AsApiChild, base='team/memberships'):
         body = {'isModerator': is_moderator}
         url = self.ep(f'{membership_id}')
         data = await super().put(url=url, json=body)
-        return TeamMembership.parse_obj(data)
+        return TeamMembership.model_validate(data)
 
     async def delete(self, membership_id: str):
         """
@@ -7542,7 +7542,7 @@ class AsTeamsApi(AsApiChild, base='teams'):
             body['name'] = name
         url = self.ep()
         data = await super().post(url=url, json=body)
-        return Team.parse_obj(data)
+        return Team.model_validate(data)
 
     async def details(self, team_id: str) -> Team:
         """
@@ -7554,7 +7554,7 @@ class AsTeamsApi(AsApiChild, base='teams'):
         """
         url = self.ep(f'{team_id}')
         data = await super().get(url=url)
-        return Team.parse_obj(data)
+        return Team.model_validate(data)
 
     async def update(self, team_id: str, name: str) -> Team:
         """
@@ -7569,7 +7569,7 @@ class AsTeamsApi(AsApiChild, base='teams'):
         body = {'name': name}
         url = self.ep(f'{team_id}')
         data = await super().put(url=url, json=body)
-        return Team.parse_obj(data)
+        return Team.model_validate(data)
 
     async def delete(self, team_id: str):
         """
@@ -7748,7 +7748,7 @@ class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
         else:
             url = self.ep(f'locations/{location_id}/announcements/usage')
         data = await super().get(url=url, params=params)
-        return RepositoryUsage.parse_obj(data)
+        return RepositoryUsage.model_validate(data)
 
     async def details(self, announcement_id: str, location_id: str = None, org_id: str = None) -> RepoAnnouncement:
         """
@@ -7771,7 +7771,7 @@ class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
         else:
             url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
         data = await super().get(url=url, params=params)
-        return RepoAnnouncement.parse_obj(data)
+        return RepoAnnouncement.model_validate(data)
 
     async def delete(self, announcement_id: str, location_id: str = None, org_id: str = None):
         """
@@ -7848,7 +7848,7 @@ class AsForwardingApi:
         params = org_id and {'orgId': org_id} or {}
         url = self._endpoint(location_id=location_id, feature_id=feature_id)
         data = await self._session.rest_get(url=url, params=params)
-        result = CallForwarding.parse_obj(data['callForwarding'])
+        result = CallForwarding.model_validate(data['callForwarding'])
         return result
 
     async def update(self, location_id: str, feature_id: str,
@@ -7873,7 +7873,7 @@ class AsForwardingApi:
         params = org_id and {'orgId': org_id} or {}
         url = self._endpoint(location_id=location_id, feature_id=feature_id)
 
-        body = {'callForwarding': json.loads(forwarding.json(exclude={'rules': {'__all__': {'calls_from',
+        body = {'callForwarding': json.loads(forwarding.model_dump_json(exclude={'rules': {'__all__': {'calls_from',
                                                                                             'forward_to',
                                                                                             'calls_to',
                                                                                             'name'}}}))}
@@ -7902,7 +7902,7 @@ class AsForwardingApi:
         """
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path='selectiveRules')
         params = org_id and {'orgId': org_id} or None
-        body = forwarding_rule.json()
+        body = forwarding_rule.model_dump_json()
         data = await self._session.rest_post(url=url, data=body, params=params)
         return data['id']
 
@@ -7930,7 +7930,7 @@ class AsForwardingApi:
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path=f'selectiveRules/{rule_id}')
         params = org_id and {'orgId': org_id} or None
         data = await self._session.rest_get(url=url, params=params)
-        result = ForwardingRuleDetails.parse_obj(data)
+        result = ForwardingRuleDetails.model_validate(data)
         return result
 
     async def update_call_forwarding_rule(self, location_id: str, feature_id: str, rule_id: str,
@@ -7961,7 +7961,7 @@ class AsForwardingApi:
         """
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path=f'selectiveRules/{rule_id}')
         params = org_id and {'orgId': org_id} or None
-        body = forwarding_rule.json(exclude={'id'})
+        body = forwarding_rule.model_dump_json(exclude={'id'})
         data = await self._session.rest_put(url=url, params=params, data=body)
         return data['id']
 
@@ -8104,7 +8104,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
         """
         url = self._endpoint(location_id=location_id, auto_attendant_id=auto_attendant_id)
         params = org_id and {'orgId': org_id} or None
-        return AutoAttendant.parse_obj(await self.get(url, params=params))
+        return AutoAttendant.model_validate(await self.get(url, params=params))
 
     async def create(self, location_id: str, settings: AutoAttendant, org_id: str = None) -> str:
         """
@@ -8340,7 +8340,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         """
         url = self._endpoint(location_id=location_id, callpark_id=callpark_id)
         params = org_id and {'orgId': org_id} or None
-        return CallPark.parse_obj(await self.get(url, params=params))
+        return CallPark.model_validate(await self.get(url, params=params))
 
     async def update(self, location_id: str, callpark_id: str, settings: CallPark, org_id: str = None) -> str:
         """
@@ -8515,7 +8515,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id, path='settings')
-        return LocationCallParkSettings.parse_obj(await self.get(url, params=params))
+        return LocationCallParkSettings.model_validate(await self.get(url, params=params))
 
     async def update_call_park_settings(self, location_id: str, settings: LocationCallParkSettings, org_id: str = None):
         """
@@ -8702,7 +8702,7 @@ class AsCallPickupApi(AsApiChild, base='telephony/config/callPickups'):
         """
         url = self._endpoint(location_id=location_id, pickup_id=pickup_id)
         params = org_id and {'orgId': org_id} or None
-        return CallPickup.parse_obj(await self.get(url, params=params))
+        return CallPickup.model_validate(await self.get(url, params=params))
 
     async def update(self, location_id: str, pickup_id: str, settings: CallPickup, org_id: str = None) -> str:
         """
@@ -8894,7 +8894,7 @@ class AsCQPolicyApi:
         url = self._ep(location_id, queue_id, 'holidayService')
         params = org_id and {'orgId': org_id} or None
         data = await self._session.rest_get(url=url, params=params)
-        return HolidayService.parse_obj(data)
+        return HolidayService.model_validate(data)
 
     async def holiday_service_update(self, location_id: str, queue_id: str, update: HolidayService, org_id: str = None):
         """
@@ -8916,7 +8916,7 @@ class AsCQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'holidayService')
         params = org_id and {'orgId': org_id} or None
-        body = update.json(exclude={'holiday_schedules'})
+        body = update.model_dump_json(exclude={'holiday_schedules'})
         await self._session.rest_put(url=url, params=params, data=body)
 
     async def night_service_detail(self, location_id: str, queue_id: str, org_id: str = None) -> NightService:
@@ -8941,7 +8941,7 @@ class AsCQPolicyApi:
         url = self._ep(location_id, queue_id, 'nightService')
         params = org_id and {'orgId': org_id} or None
         data = await self._session.rest_get(url=url, params=params)
-        return NightService.parse_obj(data)
+        return NightService.model_validate(data)
 
     async def night_service_update(self, location_id: str, queue_id: str, update: NightService, org_id: str = None):
         """
@@ -8964,7 +8964,7 @@ class AsCQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'nightService')
         params = org_id and {'orgId': org_id} or None
-        body = update.json(exclude={'business_hours_schedules'})
+        body = update.model_dump_json(exclude={'business_hours_schedules'})
         await self._session.rest_put(url=url, params=params, data=body)
 
     async def stranded_calls_details(self, location_id: str, queue_id: str, org_id: str = None) -> StrandedCalls:
@@ -8990,7 +8990,7 @@ class AsCQPolicyApi:
         url = self._ep(location_id, queue_id, 'strandedCalls')
         params = org_id and {'orgId': org_id} or None
         data = await self._session.rest_get(url=url, params=params)
-        return StrandedCalls.parse_obj(data)
+        return StrandedCalls.model_validate(data)
 
     async def stranded_calls_update(self, location_id: str, queue_id: str, update: StrandedCalls, org_id: str = None):
         """
@@ -9012,7 +9012,7 @@ class AsCQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'strandedCalls')
         params = org_id and {'orgId': org_id} or None
-        await self._session.rest_put(url=url, params=params, data=update.json())
+        await self._session.rest_put(url=url, params=params, data=update.model_dump_json())
 
     async def forced_forward_details(self, location_id: str, queue_id: str, org_id: str = None) -> ForcedForward:
         """
@@ -9032,7 +9032,7 @@ class AsCQPolicyApi:
         url = self._ep(location_id, queue_id, 'forcedForward')
         params = org_id and {'orgId': org_id} or None
         data = await self._session.rest_get(url=url, params=params)
-        return ForcedForward.parse_obj(data)
+        return ForcedForward.model_validate(data)
 
     async def forced_forward_update(self, location_id: str, queue_id: str, update: ForcedForward, org_id: str = None):
         """
@@ -9056,7 +9056,7 @@ class AsCQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'forcedForward')
         params = org_id and {'orgId': org_id} or None
-        await self._session.rest_put(url=url, params=params, data=update.json())
+        await self._session.rest_put(url=url, params=params, data=update.model_dump_json())
 
 
 class AsCallQueueApi:
@@ -9099,7 +9099,7 @@ class AsCallQueueApi:
         :param queue:
         :return:
         """
-        return queue.json(
+        return queue.model_dump_json(
             exclude={'id': True,
                      'location_name': True,
                      'location_id': True,
@@ -9291,7 +9291,7 @@ class AsCallQueueApi:
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
         params = {'orgId': org_id} if org_id is not None else {}
         data = await self._session.rest_get(url, params=params)
-        result = CallQueue.parse_obj(data)
+        result = CallQueue.model_validate(data)
         result.location_id = location_id
         # noinspection PyTypeChecker
         return result
@@ -9496,7 +9496,7 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony'):
         url = self._endpoint(location_id=location_id, cpe_id=cpe_id)
         params = org_id and {'orgId': org_id} or {}
         data = await self.get(url, params=params)
-        return CallParkExtension.parse_obj(data)
+        return CallParkExtension.model_validate(data)
 
     async def create(self, location_id: str, name: str, extension: str, org_id: str = None, ) -> str:
         """
@@ -9604,7 +9604,7 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
         """
         ep = self.ep('dial')
         data = await self.post(ep, json={'destination': destination})
-        return DialResponse.parse_obj(data)
+        return DialResponse.model_validate(data)
 
     async def answer(self, call_id: str):
         """
@@ -9737,7 +9737,7 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
                 if i and v is not None}
         ep = self.ep('park')
         data = await self.post(ep, json=data)
-        return ParkedAgainst.parse_obj(data)
+        return ParkedAgainst.model_validate(data)
 
     async def retrieve(self, destination: str) -> CallInfo:
         """
@@ -9753,7 +9753,7 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
                 if i and v is not None}
         ep = self.ep('retrieve')
         data = await self.post(ep, json=data)
-        return CallInfo.parse_obj(data)
+        return CallInfo.model_validate(data)
 
     async def start_recording(self, call_id: str):
         """
@@ -9852,7 +9852,7 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
                 if i and v is not None}
         ep = self.ep('pickup')
         data = await self.post(ep, json=data)
-        return CallInfo.parse_obj(data)
+        return CallInfo.model_validate(data)
 
     async def barge_in(self, target: str):
         """
@@ -9869,7 +9869,7 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
                 if i and v is not None}
         ep = self.ep('bargeIn')
         data = await self.post(ep, json=data)
-        return CallInfo.parse_obj(data)
+        return CallInfo.model_validate(data)
 
     def list_calls_gen(self) -> AsyncGenerator[TelephonyCall, None, None]:
         """
@@ -9902,7 +9902,7 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
         """
         ep = self.ep(call_id)
         data = await self.get(ep)
-        return TelephonyCall.parse_obj(data)
+        return TelephonyCall.model_validate(data)
 
     def call_history_gen(self, history_type: Union[str, HistoryType] = None) -> AsyncGenerator[CallHistoryRecord, None, None]:
         """
@@ -10106,7 +10106,7 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
         url = self._endpoint(location_id=location_id, huntgroup_id=huntgroup_id)
         params = org_id and {'orgId': org_id} or {}
         data = await self.get(url, params=params)
-        result = HuntGroup.parse_obj(data)
+        result = HuntGroup.model_validate(data)
         return result
 
     async def update(self, location_id: str, huntgroup_id: str, update: HuntGroup,
@@ -10197,8 +10197,8 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
                                           target_location_id=target_location_id,
                                           number_list=number_list)
         url = self.ep('manageNumbers')
-        data = await super().post(url=url, data=body.json())
-        return NumberJob.parse_obj(data)
+        data = await super().post(url=url, data=body.model_dump_json())
+        return NumberJob.model_validate(data)
 
     async def job_status(self, job_id: str = None) -> NumberJob:
         """
@@ -10211,7 +10211,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         """
         url = self.ep(f'manageNumbers/{job_id}')
         data = await super().get(url=url)
-        return NumberJob.parse_obj(data)
+        return NumberJob.model_validate(data)
 
     async def pause_job(self, job_id: str = None, org_id: str = None):
         """
@@ -10361,7 +10361,7 @@ class AsLocationInterceptApi(AsApiChild, base='telephony/config/locations'):
         """
         ep = self._endpoint(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
-        return InterceptSetting.parse_obj(await self.get(ep, params=params))
+        return InterceptSetting.model_validate(await self.get(ep, params=params))
 
     async def configure(self, location_id: str, settings: InterceptSetting, org_id: str = None):
         """
@@ -10385,7 +10385,7 @@ class AsLocationInterceptApi(AsApiChild, base='telephony/config/locations'):
         """
         ep = self._endpoint(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
-        data = settings.json()
+        data = settings.model_dump_json()
         await self.put(ep, params=params, data=data)
 
 
@@ -10413,7 +10413,7 @@ class AsOrganisationVoicemailSettingsAPI(AsApiChild, base='telephony/config/voic
         """
         params = org_id and {'orgId': org_id} or None
         url = self.ep()
-        return OrganisationVoicemailSettings.parse_obj(await self.get(url, params=params))
+        return OrganisationVoicemailSettings.model_validate(await self.get(url, params=params))
 
     async def update(self, settings: OrganisationVoicemailSettings, org_id: str = None):
         """
@@ -10432,7 +10432,7 @@ class AsOrganisationVoicemailSettingsAPI(AsApiChild, base='telephony/config/voic
         """
         params = org_id and {'orgId': org_id} or None
         url = self.ep()
-        data = settings.json()
+        data = settings.model_dump_json()
         await self.put(url, data=data, params=params)
 
 
@@ -10583,7 +10583,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id, paging_id=paging_id)
-        return Paging.parse_obj(await self.get(url, params=params))
+        return Paging.model_validate(await self.get(url, params=params))
 
     async def update(self, location_id: str, update: Paging, paging_id: str, org_id: str = None):
         """
@@ -10710,7 +10710,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
             'dialPatterns': dial_patterns or []
         }
         data = await self.post(url=url, params=params, json=body)
-        return CreateResponse.parse_obj(data)
+        return CreateResponse.model_validate(data)
 
     async def details(self, dial_plan_id: str, org_id: str = None) -> DialPlan:
         """
@@ -10734,7 +10734,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         url = self.ep(dial_plan_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(url=url, params=params)
-        dp: DialPlan = DialPlan.parse_obj(data)
+        dp: DialPlan = DialPlan.model_validate(data)
         dp.dial_plan_id = dial_plan_id
         return dp
 
@@ -10757,7 +10757,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         """
         url = self.ep(update.dial_plan_id)
         params = org_id and {'orgId': org_id} or None
-        body = update.json(include={'name', 'route_id', 'route_type'})
+        body = update.model_dump_json(include={'name', 'route_id', 'route_type'})
         await self.put(url=url, params=params, data=body)
 
     async def delete_dial_plan(self, dial_plan_id: str, org_id: str = None):
@@ -10867,7 +10867,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         class Body(ApiModel):
             dial_patterns: list[PatternAndAction]
 
-        body = Body(dial_patterns=dial_patterns).json()
+        body = Body(dial_patterns=dial_patterns).model_dump_json()
         await self.put(url=url, params=params, data=body)
 
     async def delete_all_patterns(self, dial_plan_id: str, org_id: str = None):
@@ -10971,7 +10971,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         :rtype: str
         """
         params = org_id and {'orgId': org_id} or None
-        body = route_group.json(include={'name': True,
+        body = route_group.model_dump_json(include={'name': True,
                                          'local_gateways': {'__all__': {'trunk_id', 'priority'}}})
         url = self.ep()
         data = await self.post(url=url, params=params, data=body)
@@ -10997,7 +10997,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         params = org_id and {'orgId': org_id} or None
         url = self.ep(rg_id)
         data = await self.get(url=url, params=params)
-        return RouteGroup.parse_obj(data)
+        return RouteGroup.model_validate(data)
 
     async def update(self, rg_id: str, update: RouteGroup, org_id: str = None):
         """
@@ -11017,7 +11017,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         :type org_id: str
         """
         params = org_id and {'orgId': org_id} or None
-        body = update.json(include={'name': True,
+        body = update.model_dump_json(include={'name': True,
                                     'local_gateways': {'__all__': {'trunk_id', 'priority'}}})
         url = self.ep(rg_id)
         data = await self.post(url=url, params=params, data=body)
@@ -11065,7 +11065,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         params = org_id and {'orgId': org_id} or None
         url = self.ep(f'{rg_id}/usage')
         data = await self.get(url=url, params=params)
-        return RouteGroupUsage.parse_obj(data)
+        return RouteGroupUsage.model_validate(data)
 
     def usage_call_to_extension_gen(self, rg_id: str, org_id: str = None, **params) -> AsyncGenerator[IdAndName, None, None]:
         """
@@ -11340,7 +11340,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         params = org_id and {'orgId': org_id} or None
         url = self.ep(rl_id)
         data = await self.get(url=url, params=params)
-        return RouteListDetail.parse_obj(data)
+        return RouteListDetail.model_validate(data)
 
     async def update(self, rl_id: str, name: str, rg_id: str, org_id: str = None):
         """
@@ -11466,7 +11466,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         class Body(ApiModel):
             numbers: list[NumberAndAction]
 
-        body = Body(numbers=numbers).json()
+        body = Body(numbers=numbers).model_dump_json()
         data = await self.put(url=url, params=params, data=body)
         if data:
             return parse_obj_as(list[UpdateNumbersResponse], data['numberStatus'])
@@ -11615,7 +11615,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         url = self.ep(trunk_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(url=url, params=params)
-        return TrunkDetail.parse_obj(data)
+        return TrunkDetail.model_validate(data)
 
     async def update(self, trunk_id: str, name: str, location_id: str, password: str, trunk_type: TrunkType,
                dual_identity_support_enabled: bool = None, max_concurrent_calls: int = None, org_id: str = None):
@@ -11711,7 +11711,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         url = self.ep(f'{trunk_id}/usage')
         params = org_id and {'orgId': org_id} or None
         data = await self.get(url=url, params=params)
-        return TrunkUsage.parse_obj(data)
+        return TrunkUsage.model_validate(data)
 
     def usage_dial_plan_gen(self, trunk_id: str, org_id: str = None) -> AsyncGenerator[IdAndName, None, None]:
         """
@@ -11929,7 +11929,7 @@ class AsPremisePstnApi(AsApiChild, base='telephony/config/premisePstn'):
         params = org_id and {'orgId': org_id} or None
         body = {'dialPatterns': dial_patterns}
         data = await self.post(url=url, params=params, json=body)
-        return DialPatternValidationResult.parse_obj(data)
+        return DialPatternValidationResult.model_validate(data)
 
 
 class AsPrivateNetworkConnectApi(AsApiChild, base='telephony/config/locations'):
@@ -11958,7 +11958,7 @@ class AsPrivateNetworkConnectApi(AsApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self.session.ep(f'telephony/config/locations/{location_id}/privateNetworkConnect')
         data = await self.get(url, params=params)
-        return parse_obj_as(NetworkConnectionType, data['networkConnectionType'])
+        return TypeAdapter(NetworkConnectionType).validate_python(data['networkConnectionType'])
 
     async def update(self, location_id: str, connection_type: NetworkConnectionType, org_id: str = None):
         """
@@ -12011,7 +12011,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(f'{device_id}/members')
         data = await self.get(url=url, params=params)
-        return DeviceMembersResponse.parse_obj(data)
+        return DeviceMembersResponse.model_validate(data)
 
     async def update_members(self, device_id: str, members: Optional[list[Union[DeviceMember, AvailableMember]]],
                        org_id: str = None):
@@ -12037,7 +12037,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
             if isinstance(member, AvailableMember):
                 member = DeviceMember.from_available(member)
             else:
-                member = member.copy(deep=True)
+                member = member.model_copy(deep=True)
             members_for_update.append(member)
 
         if members_for_update:
@@ -12049,7 +12049,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
 
         # create body
         if members_for_update:
-            members = ','.join(m.json(include={'member_id', 'port', 't38_fax_compression_enabled', 'primary_owner',
+            members = ','.join(m.model_dump_json(include={'member_id', 'port', 't38_fax_compression_enabled', 'primary_owner',
                                                'line_type', 'line_weight', 'line_label', 'hotline_enabled',
                                                'hotline_destination', 'allow_call_decline_enabled'})
                                for m in members_for_update)
@@ -12163,7 +12163,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
             params['orgId'] = org_id
         url = self.ep(f'{device_id}/settings')
         data = await self.get(url=url, params=params)
-        return DeviceCustomization.parse_obj(data)
+        return DeviceCustomization.model_validate(data)
 
     async def update_device_settings(self, device_id: str, device_model: str, customization: DeviceCustomization,
                                org_id: str = None):
@@ -12213,7 +12213,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         if org_id:
             params['orgId'] = org_id
         url = self.ep(f'{device_id}/settings')
-        body = customization.json(include={'customizations', 'custom_enabled'})
+        body = customization.model_dump_json(include={'customizations', 'custom_enabled'})
         await self.put(url=url, params=params, data=body)
 
     async def dect_devices(self, org_id: str = None) -> list[DectDevice]:
@@ -12231,7 +12231,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep('dects/supportedDevices')
         data = await self.get(url=url, params=params)
-        return parse_obj_as(list[DectDevice], data['devices'])
+        return TypeAdapter(list[DectDevice]).validate_python(data['devices'])
 
     async def validate_macs(self, macs: list[str], org_id: str = None) -> MACValidationResponse:
         """
@@ -12250,7 +12250,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config/devices'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep('actions/validateMacs/invoke')
         data = await self.post(url=url, params=params, json={'macs': macs})
-        return MACValidationResponse.parse_obj(data)
+        return MACValidationResponse.model_validate(data)
 
 
 class AsInternalDialingApi(AsApiChild, base='telephony/config/locations'):
@@ -12281,7 +12281,7 @@ class AsInternalDialingApi(AsApiChild, base='telephony/config/locations'):
         url = self.url(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(url=url, params=params)
-        return InternalDialing.parse_obj(data)
+        return InternalDialing.model_validate(data)
 
     async def update(self, location_id: str, update: InternalDialing, org_id: str = None):
         """
@@ -12302,7 +12302,7 @@ class AsInternalDialingApi(AsApiChild, base='telephony/config/locations'):
         """
         url = self.url(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
-        data = update.json(exclude_none=False)
+        data = update.model_dump_json(exclude_none=False)
         await self.put(url=url, params=params, data=data)
 
 
@@ -12349,7 +12349,7 @@ class AsLocationMoHApi(AsApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
         data = await self.get(url, params=params)
-        return LocationMoHSetting.parse_obj(data)
+        return LocationMoHSetting.model_validate(data)
 
     async def update(self, location_id: str, settings: LocationMoHSetting, org_id: str = None) -> LocationMoHSetting:
         """
@@ -12371,7 +12371,7 @@ class AsLocationMoHApi(AsApiChild, base='telephony/config/locations'):
         :return: list of :class:`wxc_sdk.common.CallPark`
         """
         params = org_id and {'orgId': org_id} or None
-        data = settings.json()
+        data = settings.model_dump_json()
         url = self._endpoint(location_id=location_id)
         await self.put(url, params=params, data=data)
 
@@ -12387,7 +12387,7 @@ class AsLocationMoHApi(AsApiChild, base='telephony/config/locations'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
-        body = {'accessCodes': [json.loads(ac.json()) for ac in access_codes]}
+        body = {'accessCodes': [json.loads(ac.model_dump_json()) for ac in access_codes]}
         await self.post(url, json=body, params=params)
 
     async def delete_codes(self, location_id: str, access_codes: list[Union[str, AuthCode]],
@@ -12539,7 +12539,7 @@ class AsLocationVoicemailSettingsApi(AsApiChild, base='telephony/config/location
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
         data = await self.get(url, params=params)
-        return LocationVoiceMailSettings.parse_obj(data)
+        return LocationVoiceMailSettings.model_validate(data)
 
     async def update(self, location_id: str, settings: LocationVoiceMailSettings, org_id: str = None):
         """
@@ -12562,7 +12562,7 @@ class AsLocationVoicemailSettingsApi(AsApiChild, base='telephony/config/location
         """
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
-        body = settings.json()
+        body = settings.model_dump_json()
         await self.put(url, params=params, data=body)
 
 
@@ -12742,7 +12742,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         body = {'extensions': extensions}
         params = org_id and {'orgId': org_id} or None
         data = await self.post(url=url, params=params, json=body)
-        return ValidateExtensionsResponse.parse_obj(data)
+        return ValidateExtensionsResponse.model_validate(data)
 
     async def details(self, location_id: str, org_id: str = None) -> TelephonyLocation:
         """
@@ -12763,7 +12763,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id}
         url = self.ep(location_id)
         data = await self.get(url=url, params=params)
-        return TelephonyLocation.parse_obj(data)
+        return TelephonyLocation.model_validate(data)
 
     async def enable_for_calling(self, location: Location, org_id: str = None) -> str:
         """
@@ -12778,7 +12778,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         """
         params = org_id and {'orgId': org_id}
         url = self.ep()
-        body = location.json()
+        body = location.model_dump_json()
         data = await self.post(url=url, data=body, params=params)
         return data['id']
 
@@ -12852,7 +12852,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         :type org_id: str
         :return:
         """
-        data = settings.json(exclude={'location_id', 'name', 'user_limit', 'default_domain', 'subscription_status',
+        data = settings.model_dump_json(exclude={'location_id', 'name', 'user_limit', 'default_domain', 'subscription_status',
                                       'e911_setup_required'})
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
@@ -12908,7 +12908,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(f'{location_id}/devices/settings')
         data = await self.get(url=url, params=params)
-        return DeviceCustomization.parse_obj(data)
+        return DeviceCustomization.model_validate(data)
 
 
 class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
@@ -13050,7 +13050,7 @@ class AsVoiceMessagingApi(AsApiChild, base='telephony/voiceMessages'):
         """
         url = self.ep('summary')
         data = await super().get(url=url)
-        return MessageSummary.parse_obj(data)
+        return MessageSummary.model_validate(data)
 
     def list_gen(self, **params) -> AsyncGenerator[VoiceMessageDetails, None, None]:
         """
@@ -13142,7 +13142,7 @@ class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
-        return VoicePortalSettings.parse_obj(await self.get(url, params=params))
+        return VoicePortalSettings.model_validate(await self.get(url, params=params))
 
     async def update(self, location_id: str, settings: VoicePortalSettings, passcode: str = None, org_id: str = None):
         """
@@ -13165,7 +13165,7 @@ class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
         :param org_id: Organization to which the voice portal belongs.
         :type org_id: str
         """
-        data = json.loads(settings.json(exclude={'portal_id': True,
+        data = json.loads(settings.model_dump_json(exclude={'portal_id': True,
                                                  'language': True}))
         if passcode is not None:
             data['passcode'] = {'newPasscode': passcode,
@@ -13195,7 +13195,7 @@ class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id, path='passcodeRules')
-        return PasscodeRules.parse_obj(await self.get(url, params=params))
+        return PasscodeRules.model_validate(await self.get(url, params=params))
 
 
 class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
@@ -13286,7 +13286,7 @@ class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id, voicemail_group_id)
         data = await self.get(url=url, params=params)
-        return VoicemailGroupDetail.parse_obj(data)
+        return VoicemailGroupDetail.model_validate(data)
 
     async def update(self, location_id: str, voicemail_group_id: str, settings: VoicemailGroupDetail, org_id: str = None):
         """
@@ -13388,7 +13388,7 @@ class AsVoicemailRulesApi(AsApiChild, base='telephony/config/voicemail/rules'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self.ep()
-        return VoiceMailRules.parse_obj(await self.get(url, params=params))
+        return VoiceMailRules.model_validate(await self.get(url, params=params))
 
     async def update(self, settings: VoiceMailRules, org_id: str = None):
         """
@@ -13412,7 +13412,7 @@ class AsVoicemailRulesApi(AsApiChild, base='telephony/config/voicemail/rules'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self.ep()
-        data = settings.json(exclude={'default_voicemail_pin_rules': True})
+        data = settings.model_dump_json(exclude={'default_voicemail_pin_rules': True})
         await self.put(url, params=params, data=data)
 
 
@@ -13633,7 +13633,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         params['max'] = 1
         url = self.ep(path='numbers')
         data = await self.get(url, params=params)
-        return NumberDetails.parse_obj(data['count'])
+        return NumberDetails.model_validate(data['count'])
 
     async def validate_extensions(self, extensions: list[str]) -> ValidateExtensionsResponse:
         """
@@ -13649,7 +13649,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         """
         url = self.ep(path='actions/validateExtensions/invoke')
         data = await self.post(url, json={'extensions': extensions})
-        return ValidateExtensionsResponse.parse_obj(data)
+        return ValidateExtensionsResponse.model_validate(data)
 
     async def validate_phone_numbers(self, phone_numbers: list[str], org_id: str = None) -> ValidatePhoneNumbersResponse:
         """
@@ -13674,7 +13674,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         body = {'phoneNumbers': phone_numbers}
         params = org_id and {'orgId': org_id} or None
         data = await self.post(url=url, params=params, json=body)
-        return ValidatePhoneNumbersResponse.parse_obj(data)
+        return ValidatePhoneNumbersResponse.model_validate(data)
 
     async def ucm_profiles(self, org_id: str = None) -> list[UCMProfile]:
         """
@@ -13699,7 +13699,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(path='callingProfiles')
         data = await self.get(url, params=params)
-        return parse_obj_as(list[UCMProfile], data['callingProfiles'])
+        return TypeAdapter(list[UCMProfile]).validate_python(data['callingProfiles'])
 
     def route_choices_gen(self, route_group_name: str = None, trunk_name: str = None, order: str = None,
                       org_id: str = None) -> AsyncGenerator[RouteIdentity, None, None]:
@@ -13783,7 +13783,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep('actions/testCallRouting/invoke')
         data = await self.post(url=url, params=params, json=body)
-        return TestCallRoutingResult.parse_obj(data)
+        return TestCallRoutingResult.model_validate(data)
 
     async def supported_devices(self, org_id: str = None) -> list[SupportedDevice]:
         """
@@ -13798,7 +13798,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep('supportedDevices')
         data = await self.get(url=url, params=params)
-        return parse_obj_as(list[SupportedDevice], data['devices'])
+        return TypeAdapter(list[SupportedDevice]).validate_python(data['devices'])
 
     async def device_settings(self, org_id: str = None) -> DeviceCustomization:
         """
@@ -13815,7 +13815,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep('devices/settings')
         data = await self.get(url=url, params=params)
-        return DeviceCustomization.parse_obj(data)
+        return DeviceCustomization.model_validate(data)
 
     async def read_list_of_announcement_languages(self) -> list[AnnouncementLanguage]:
         """
@@ -13827,7 +13827,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         """
         url = self.ep('announcementLanguages')
         data = await super().get(url=url)
-        return parse_obj_as(list[AnnouncementLanguage], data["languages"])
+        return TypeAdapter(list[AnnouncementLanguage]).validate_python(data["languages"])
 
 
 class AsWebhookApi(AsApiChild, base='webhooks'):
@@ -13875,10 +13875,10 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
         """
         params = {to_camel(param): value for i, (param, value) in enumerate(locals().items())
                   if i and value is not None}
-        body = json.loads(WebhookCreate(**params).json())
+        body = json.loads(WebhookCreate(**params).model_dump_json())
         ep = self.ep()
         data = await self.post(ep, json=body)
-        result = Webhook.parse_obj(data)
+        result = Webhook.model_validate(data)
         return result
 
     async def details(self, webhook_id: str) -> Webhook:
@@ -13891,7 +13891,7 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
         :return: Webhook details
         """
         url = self.ep(webhook_id)
-        return Webhook.parse_obj(await self.get(url))
+        return Webhook.model_validate(await self.get(url))
 
     async def update(self, webhook_id: str, update: Webhook) -> Webhook:
         """
@@ -13906,8 +13906,8 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
         :return: updated :class:`Webhook` object
         """
         url = self.ep(webhook_id)
-        webhook_data = update.json(include={'name', 'target_url', 'secret', 'owned_by', 'status'})
-        return Webhook.parse_obj(await self.put(url, data=webhook_data))
+        webhook_data = update.model_dump_json(include={'name', 'target_url', 'secret', 'owned_by', 'status'})
+        return Webhook.model_validate(await self.put(url, data=webhook_data))
 
     async def webhook_delete(self, webhook_id: str):
         """
@@ -13973,7 +13973,7 @@ class AsWorkspaceLocationFloorApi(AsApiChild, base='workspaceLocations'):
         url = self.ep(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.post(url=url, params=params, json=body)
-        return WorkspaceLocationFloor.parse_obj(data)
+        return WorkspaceLocationFloor.model_validate(data)
 
     async def details(self, location_id: str, floor_id: str, org_id: str = None) -> WorkspaceLocationFloor:
         """
@@ -13993,7 +13993,7 @@ class AsWorkspaceLocationFloorApi(AsApiChild, base='workspaceLocations'):
         url = self.ep(location_id=location_id, floor_id=floor_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(url=url, params=params)
-        return WorkspaceLocationFloor.parse_obj(data)
+        return WorkspaceLocationFloor.model_validate(data)
 
     async def update(self, location_id: str, floor_id: str, settings: WorkspaceLocationFloor,
                org_id: str = None) -> WorkspaceLocationFloor:
@@ -14012,11 +14012,11 @@ class AsWorkspaceLocationFloorApi(AsApiChild, base='workspaceLocations'):
         :type org_id: str
         :return: updated workspace location floor
         """
-        data = settings.json(exclude_none=True, exclude_unset=True, exclude={'id', 'location_id'})
+        data = settings.model_dump_json(exclude_none=True, exclude_unset=True, exclude={'id', 'location_id'})
         url = self.ep(location_id=location_id, floor_id=floor_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.put(url=url, data=data, params=params)
-        return WorkspaceLocationFloor.parse_obj(data)
+        return WorkspaceLocationFloor.model_validate(data)
 
     async def delete(self, location_id: str, floor_id: str, org_id: str = None):
         """
@@ -14114,7 +14114,7 @@ class AsWorkspaceLocationApi(AsApiChild, base='workspaceLocations'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep()
         data = await self.post(url=url, json=body, params=params)
-        return WorkspaceLocation.parse_obj(data)
+        return WorkspaceLocation.model_validate(data)
 
     async def details(self, location_id: str, org_id: str = None) -> WorkspaceLocation:
         """
@@ -14131,7 +14131,7 @@ class AsWorkspaceLocationApi(AsApiChild, base='workspaceLocations'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id=location_id)
         data = await self.get(url=url, params=params)
-        return WorkspaceLocation.parse_obj(data)
+        return WorkspaceLocation.model_validate(data)
 
     async def update(self, location_id: str, settings: WorkspaceLocation, org_id: str = None) -> WorkspaceLocation:
         """
@@ -14152,9 +14152,9 @@ class AsWorkspaceLocationApi(AsApiChild, base='workspaceLocations'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id=location_id)
-        body = settings.json(exclude_none=True, exclude_unset=True, exclude={'id'})
+        body = settings.model_dump_json(exclude_none=True, exclude_unset=True, exclude={'id'})
         data = await self.put(url=url, data=body, params=params)
-        return WorkspaceLocation.parse_obj(data)
+        return WorkspaceLocation.model_validate(data)
 
     async def delete(self, location_id: str, org_id: str = None):
         """
@@ -14224,7 +14224,7 @@ class AsWorkspaceDevicesApi(AsApiChild, base='telephony/config/workspaces'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/devices')
-        await super().put(url=url, params=params, data=hoteling.json())
+        await super().put(url=url, params=params, data=hoteling.model_dump_json())
 
 
 class AsWorkspaceNumbersApi(AsApiChild, base='workspaces'):
@@ -14256,7 +14256,7 @@ class AsWorkspaceNumbersApi(AsApiChild, base='workspaces'):
         params = org_id and {'org_id': org_id} or None
         url = self.ep(workspace_id=workspace_id)
         data = await self.get(url=url, params=params)
-        return parse_obj_as(WorkspaceNumbers, data)
+        return TypeAdapter(WorkspaceNumbers).validate_python(data)
 
 
 @dataclass(init=False)
@@ -14432,7 +14432,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         data = settings.update_or_create()
         url = self.ep()
         data = await self.post(url, data=data)
-        return Workspace.parse_obj(data)
+        return Workspace.model_validate(data)
 
     async def details(self, workspace_id) -> Workspace:
         """
@@ -14447,7 +14447,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         :rtype: :class:`Workspace`
         """
         url = self.ep(workspace_id)
-        return Workspace.parse_obj(await self.get(url))
+        return Workspace.model_validate(await self.get(url))
 
     async def update(self, workspace_id, settings: Workspace) -> Workspace:
         """
@@ -14481,7 +14481,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         url = self.ep(workspace_id)
         j_data = settings.update_or_create(for_update=True)
         data = await self.put(url, data=j_data)
-        return Workspace.parse_obj(data)
+        return Workspace.model_validate(data)
 
     async def delete_workspace(self, workspace_id):
         """
@@ -14511,7 +14511,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         """
         url = self.ep(f'{workspace_id}/capabilities')
         data = await super().get(url=url)
-        return CapabilityMap.parse_obj(data["capabilities"])
+        return CapabilityMap.model_validate(data["capabilities"])
 
 
 @dataclass(init=False)

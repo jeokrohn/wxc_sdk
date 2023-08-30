@@ -14,53 +14,53 @@ __all__ = ['GetRoomMeetingDetailsResponse', 'Room', 'RoomsApi']
 
 class Room(ApiModel):
     #: A unique identifier for the room.
-    id: Optional[str]
+    id: Optional[str] = None
     #: A user-friendly name for the room.
-    title: Optional[str]
+    title: Optional[str] = None
     #: The ID for the team with which this room is associated.
-    team_id: Optional[str]
+    team_id: Optional[str] = None
     #: The classificationId for the room.
-    classification_id: Optional[str]
+    classification_id: Optional[str] = None
     #: The room type.
-    type: Optional[RoomType]
+    type: Optional[RoomType] = None
     #: The date and time of the room's last activity.
-    last_activity: Optional[datetime]
+    last_activity: Optional[datetime] = None
     #: The ID of the person who created this room.
-    creator_id: Optional[str]
+    creator_id: Optional[str] = None
     #: The date and time the room was created.
-    created: Optional[datetime]
+    created: Optional[datetime] = None
     #: The ID of the organization which owns this room. See Webex Data in the Compliance Guide for more information.
-    owner_id: Optional[str]
+    owner_id: Optional[str] = None
     #: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in
     # this space, while maintaing historical data.
-    is_read_only: Optional[bool]
+    is_read_only: Optional[bool] = None
     #: Set the space as locked/moderated and the creator becomes a moderator
-    is_locked: Optional[bool]
+    is_locked: Optional[bool] = None
     #: Sets the space into announcement Mode.
-    is_announcement_only: Optional[bool]
+    is_announcement_only: Optional[bool] = None
     #: The room is public and therefore discoverable within the org. Anyone can find and join that room.
-    is_public: Optional[bool]
+    is_public: Optional[bool] = None
     #: Date and time when the room was made public.
-    made_public: Optional[datetime]
+    made_public: Optional[datetime] = None
     #: The description of the space.
-    description: Optional[str]
+    description: Optional[str] = None
 
 
 class GetRoomMeetingDetailsResponse(ApiModel):
     #: A unique identifier for the room.
-    room_id: Optional[str]
+    room_id: Optional[str] = None
     #: The Webex meeting URL for the room.
-    meeting_link: Optional[str]
+    meeting_link: Optional[str] = None
     #: The SIP address for the room.
-    sip_address: Optional[str]
+    sip_address: Optional[str] = None
     #: The Webex meeting number for the room.
-    meeting_number: Optional[str]
+    meeting_number: Optional[str] = None
     #: The Webex meeting ID for the room.
-    meeting_id: Optional[str]
+    meeting_id: Optional[str] = None
     #: The toll-free PSTN number for the room.
-    call_in_toll_free_number: Optional[str]
+    call_in_toll_free_number: Optional[str] = None
     #: The toll (local) PSTN number for the room.
-    call_in_toll_number: Optional[str]
+    call_in_toll_number: Optional[str] = None
 
 
 class RoomsApi(ApiChild, base='rooms'):
@@ -166,7 +166,7 @@ class RoomsApi(ApiChild, base='rooms'):
             body['isAnnouncementOnly'] = is_announcement_only
         url = self.ep()
         data = super().post(url=url, json=body)
-        return Room.parse_obj(data)
+        return Room.model_validate(data)
 
     def details(self, room_id: str) -> Room:
         """
@@ -179,7 +179,7 @@ class RoomsApi(ApiChild, base='rooms'):
         """
         url = self.ep(f'{room_id}')
         data = super().get(url=url)
-        return Room.parse_obj(data)
+        return Room.model_validate(data)
 
     def meeting_details(self, room_id: str) -> GetRoomMeetingDetailsResponse:
         """
@@ -191,7 +191,7 @@ class RoomsApi(ApiChild, base='rooms'):
         """
         url = self.ep(f'{room_id}/meetingInfo')
         data = super().get(url=url)
-        return GetRoomMeetingDetailsResponse.parse_obj(data)
+        return GetRoomMeetingDetailsResponse.model_validate(data)
 
     def update(self, update: Room) -> Room:
         """
@@ -219,13 +219,13 @@ class RoomsApi(ApiChild, base='rooms'):
               new information exchanges in this space, while maintaining historical data.
         """
         update: Room
-        data = update.json(include={'title', 'classification_id', 'team_id', 'is_locked', 'is_announcement_only',
+        data = update.model_dump_json(include={'title', 'classification_id', 'team_id', 'is_locked', 'is_announcement_only',
                                     'is_read_only'})
         if update.id is None:
             raise ValueError('ID has to be set')
         url = self.ep(f'{update.id}')
         data = super().put(url=url, data=data)
-        return Room.parse_obj(data)
+        return Room.model_validate(data)
 
     def delete(self, room_id: str):
         """

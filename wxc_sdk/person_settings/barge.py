@@ -45,7 +45,7 @@ class BargeApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return BargeSettings.parse_obj(self.get(ep, params=params))
+        return BargeSettings.model_validate(self.get(ep, params=params))
 
     def configure(self, person_id: str, barge_settings: BargeSettings, org_id: str = None):
         """
@@ -66,4 +66,4 @@ class BargeApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        self.put(ep, params=params, data=barge_settings.json())
+        self.put(ep, params=params, data=barge_settings.model_dump_json())

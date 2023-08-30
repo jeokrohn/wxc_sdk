@@ -51,7 +51,7 @@ class NotificationRepeat(ApiModel):
 
 class Notification(ApiModel):
     #: Type of pause/resume notification.
-    notification_type: Optional[NotificationType] = Field(alias='type')
+    notification_type: Optional[NotificationType] = Field(alias='type', default=None)
     #: true when the notification feature is in effect. false indicates notification is disabled.
     enabled: bool
 
@@ -62,10 +62,10 @@ class StartStopAnnouncement(ApiModel):
     """
     #: When true, an announcement is played when call recording starts and an announcement is played when call
     #:  recording ends for internal calls.
-    internal_calls_enabled: Optional[bool]
+    internal_calls_enabled: Optional[bool] = None
     #: When true, an announcement is played when call recording starts and an announcement is played when call
     #: recording ends for PSTN calls.
-    pstn_calls_enabled: Optional[bool]
+    pstn_calls_enabled: Optional[bool] = None
 
 
 class CallRecordingSetting(ApiModel):
@@ -83,13 +83,13 @@ class CallRecordingSetting(ApiModel):
     #: Beep sound plays periodically.
     repeat: NotificationRepeat
     #: Name of the service provider providing call recording service.
-    service_provider: Optional[str]
+    service_provider: Optional[str] = None
     #: Group utilized by the service provider providing call recording service
-    external_group: Optional[str]
+    external_group: Optional[str] = None
     #: Unique person identifier utilized by the service provider providing call recording service.
-    external_identifier: Optional[str]
+    external_identifier: Optional[str] = None
     #: Call Recording starts and stops announcement settings.
-    start_stop_announcement: Optional[StartStopAnnouncement]
+    start_stop_announcement: Optional[StartStopAnnouncement] = None
 
     @staticmethod
     def default() -> 'CallRecordingSetting':
@@ -134,7 +134,7 @@ class CallRecordingApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return CallRecordingSetting.parse_obj(self.get(ep, params=params))
+        return CallRecordingSetting.model_validate(self.get(ep, params=params))
 
     def configure(self, person_id: str, recording: CallRecordingSetting, org_id: str = None):
         """
@@ -157,7 +157,7 @@ class CallRecordingApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.loads(recording.json())
+        data = json.loads(recording.model_dump_json())
         for key in ['serviceProvider', 'externalGroup', 'externalIdentifier']:
             # remove attribute not present in update
             data.pop(key, None)

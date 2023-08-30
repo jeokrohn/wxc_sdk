@@ -1,15 +1,13 @@
 """
 Test CDR API
 """
-import asyncio
 from collections import defaultdict
 from datetime import datetime, timedelta
 from functools import reduce
 
 from dateutil.tz import tz
 
-from tests.base import TestCaseWithLog, async_test
-from wxc_sdk.as_rest import AsRestError
+from tests.base import TestCaseWithLog
 from wxc_sdk.cdr import CDR
 from wxc_sdk.rest import RestError
 

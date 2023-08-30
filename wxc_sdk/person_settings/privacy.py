@@ -16,14 +16,14 @@ class Privacy(ApiModel):
     Person privacy settings
     """
     #: When true auto attendant extension dialing will be enabled.
-    aa_extension_dialing_enabled: Optional[bool]
+    aa_extension_dialing_enabled: Optional[bool] = None
     #: When true auto attendant dialing by first or last name will be enabled.
-    aa_naming_dialing_enabled: Optional[bool]
+    aa_naming_dialing_enabled: Optional[bool] = None
     #: When true phone status directory privacy will be enabled.
-    enable_phone_status_directory_privacy: Optional[bool]
+    enable_phone_status_directory_privacy: Optional[bool] = None
     #: List of people that are being monitored.
     #: for updates IDs can be used directly instead of :class:`wxc_sdk.common.PersonPlaceAgent` objects
-    monitoring_agents: Optional[list[Union[str, PersonPlaceAgent]]]
+    monitoring_agents: Optional[list[Union[str, PersonPlaceAgent]]] = None
 
 
 class PrivacyApi(PersonSettingsApiChild):
@@ -55,7 +55,7 @@ class PrivacyApi(PersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(ep, params=params)
-        return Privacy.parse_obj(data)
+        return Privacy.model_validate(data)
 
     def configure(self, person_id: str, settings: Privacy, org_id: str = None):
         """
@@ -79,7 +79,7 @@ class PrivacyApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.loads(settings.json())
+        data = json.loads(settings.model_dump_json())
         if settings.monitoring_agents is not None:
             id_list = []
             for ma in settings.monitoring_agents:

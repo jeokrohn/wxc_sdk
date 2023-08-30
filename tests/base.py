@@ -107,7 +107,7 @@ def get_tokens() -> Optional[Tokens]:
     # noinspection PyShadowingNames
     def write_tokens(*, tokens: Tokens):
         with open(yml_path(), mode='w') as f:
-            yaml.dump(json.loads(tokens.json()), f)
+            yaml.dump(json.loads(tokens.model_dump_json()), f)
         return
 
     # read tokens from file
@@ -115,7 +115,7 @@ def get_tokens() -> Optional[Tokens]:
     try:
         with open(yml_path(), mode='r') as f:
             data = safe_load(f)
-            tokens = Tokens.parse_obj(data)
+            tokens = Tokens.model_validate(data)
     except Exception as e:
         log.debug(f'failed to read tokens from file: {e}')
         tokens = None
@@ -233,17 +233,17 @@ class LoggedRequest(BaseModel):
     status: int
     response: str
     time_ms: float
-    parsed_url: Optional[urllib.parse.ParseResult]
+    parsed_url: Optional[urllib.parse.ParseResult] = None
     url_query: dict = Field(default_factory=dict)
-    url_dict: Optional[dict]  # groupdict() of match on url_filter if one was provided
+    url_dict: Optional[dict] = None  # groupdict() of match on url_filter if one was provided
     #: request headers
-    headers: Optional[dict]
+    headers: Optional[dict] = None
     #: request body
-    request_body: Optional[Union[dict, str]]
+    request_body: Optional[Union[dict, str]] = None
     #: response headers
-    response_headers: Optional[dict]
+    response_headers: Optional[dict] = None
     #: response body
-    response_body: Optional[Union[dict, str]]
+    response_body: Optional[Union[dict, str]] = None
     record: logging.LogRecord
 
     # regular expressions to match on reqeust record
@@ -549,7 +549,7 @@ class TestCaseWithUsers(TestCaseWithLog):
     def dump_users(cls, cache: UserCache):
         cache.last_access = datetime.utcnow()
         with open(cls.user_cache_path(), mode='w') as f:
-            yaml.safe_dump(json.loads(cache.json()), f)
+            yaml.safe_dump(json.loads(cache.model_dump_json()), f)
 
     @classmethod
     def setUpClass(cls) -> None:

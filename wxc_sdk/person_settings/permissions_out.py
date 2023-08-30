@@ -10,7 +10,7 @@ import json
 from dataclasses import dataclass
 from typing import Optional, Union
 
-from pydantic import validator, parse_obj_as, root_validator
+from pydantic import field_validator, TypeAdapter, model_validator
 
 from .common import PersonSettingsApiChild
 from ..base import ApiModel
@@ -77,7 +77,7 @@ class CallingPermissions(ApiModel):
         extra = 'allow'
         ...
 
-    @root_validator
+    @model_validator(mode='before')
     def rv(cls, v):
         """
 
@@ -86,23 +86,23 @@ class CallingPermissions(ApiModel):
         Make sure that values for unknown call types are also parsed into CallTypePermission instances
         """
         for call_type in v:
-            if call_type not in cls.__fields__:
+            if call_type not in cls.model_fields:
                 # try to parse unknown call type into CallTypePermission instance
-                v[call_type] = CallTypePermission.parse_obj(v[call_type])
+                v[call_type] = CallTypePermission.model_validate(v[call_type])
         return v
 
-    internal_call: Optional[CallTypePermission]
-    local: Optional[CallTypePermission]
-    toll_free: Optional[CallTypePermission]
-    toll: Optional[CallTypePermission]
-    national: Optional[CallTypePermission]
-    international: Optional[CallTypePermission]
-    operator_assisted: Optional[CallTypePermission]
-    chargeable_directory_assisted: Optional[CallTypePermission]
-    special_services_i: Optional[CallTypePermission]
-    special_services_ii: Optional[CallTypePermission]
-    premium_services_i: Optional[CallTypePermission]
-    premium_services_ii: Optional[CallTypePermission]
+    internal_call: Optional[CallTypePermission] = None
+    local: Optional[CallTypePermission] = None
+    toll_free: Optional[CallTypePermission] = None
+    toll: Optional[CallTypePermission] = None
+    national: Optional[CallTypePermission] = None
+    international: Optional[CallTypePermission] = None
+    operator_assisted: Optional[CallTypePermission] = None
+    chargeable_directory_assisted: Optional[CallTypePermission] = None
+    special_services_i: Optional[CallTypePermission] = None
+    special_services_ii: Optional[CallTypePermission] = None
+    premium_services_i: Optional[CallTypePermission] = None
+    premium_services_ii: Optional[CallTypePermission] = None
 
     def for_call_type(self, call_type: OutgoingPermissionCallType) -> Optional[CallTypePermission]:
         """
@@ -130,7 +130,7 @@ class CallingPermissions(ApiModel):
         :rtype: CallingPermissions
         """
         init_dict = {call_type: CallTypePermission(action=Action.allow, transfer_enabled=True)
-                     for call_type in CallingPermissions.__fields__}
+                     for call_type in CallingPermissions.model_fields}
         return CallingPermissions(**init_dict)
 
     @staticmethod
@@ -156,11 +156,11 @@ class OutgoingPermissions(ApiModel):
     Person's Outgoing Permission Settings
     """
     #: When true, indicates that this user uses the specified calling permissions when placing outbound calls.
-    use_custom_enabled: Optional[bool]
+    use_custom_enabled: Optional[bool] = None
     #: Specifies the outbound calling permissions settings.
-    calling_permissions: Optional[CallingPermissions]
+    calling_permissions: Optional[CallingPermissions] = None
 
-    @validator('calling_permissions', pre=True)
+    @field_validator('calling_permissions', mode='before')
     def transform_calling_permissions(cls, v):
         """
         calling permissions are returned by the API as a list of triples:
@@ -199,7 +199,7 @@ class OutgoingPermissions(ApiModel):
         return r
 
     # noinspection PyMethodOverriding
-    def json(self, drop_call_types: set[str] = None) -> str:
+    def model_dump_json(self, drop_call_types: set[str] = None) -> str:
         """
 
         :meta private:
@@ -209,14 +209,15 @@ class OutgoingPermissions(ApiModel):
         if drop_call_types is None:
             # default call types to be excluded from updates
             drop_call_types = {'url_dialing', 'unknown', 'casual'}
-        data = self.dict(exclude={'calling_permissions'}, by_alias=True)
+        data = self.model_dump(exclude={'calling_permissions'}, by_alias=True)
         if self.calling_permissions is not None:
             permissions = []
-            for call_type, call_type_permission in self.calling_permissions.__dict__.items():
+            # for call_type, call_type_permission in self.calling_permissions.__dict__.items():
+            for call_type, call_type_permission in self.calling_permissions:
                 call_type_permission: CallTypePermission
                 if not call_type_permission or (call_type in drop_call_types):
                     continue
-                ct_dict = call_type_permission.dict(by_alias=True)
+                ct_dict = call_type_permission.model_dump(by_alias=True)
                 ct_dict['callType'] = call_type.upper()
                 permissions.append(ct_dict)
             data['callingPermissions'] = permissions
@@ -229,13 +230,13 @@ class AutoTransferNumbers(ApiModel):
     """
     #: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_1 will be transferred to
     #: this number
-    auto_transfer_number1: Optional[str]
+    auto_transfer_number1: Optional[str] = None
     #: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_2 will be transferred to
     #: this number
-    auto_transfer_number2: Optional[str]
+    auto_transfer_number2: Optional[str] = None
     #: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_3 will be transferred to
     #: this number
-    auto_transfer_number3: Optional[str]
+    auto_transfer_number3: Optional[str] = None
 
     @property
     def configure_unset_numbers(self) -> 'AutoTransferNumbers':
@@ -247,10 +248,10 @@ class AutoTransferNumbers(ApiModel):
         :return: auto transfer numbers with empty strings instead of None
         :rtype: :class:`AutoTransferNumbers`
         """
-        data = self.dict()
+        data = self.model_dump()
         for k in data:
             data[k] = data[k] or ''
-        return AutoTransferNumbers.parse_obj(data)
+        return AutoTransferNumbers.model_validate(data)
 
 
 class TransferNumbersApi(PersonSettingsApiChild):
@@ -281,7 +282,7 @@ class TransferNumbersApi(PersonSettingsApiChild):
         url = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(url, params=params)
-        return AutoTransferNumbers.parse_obj(data)
+        return AutoTransferNumbers.model_validate(data)
 
     def configure(self, person_id: str, settings: AutoTransferNumbers, org_id: str = None):
         """
@@ -304,7 +305,7 @@ class TransferNumbersApi(PersonSettingsApiChild):
         """
         url = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        body = settings.json()
+        body = settings.model_dump_json()
         self.put(url, params=params, data=body)
 
 
@@ -335,7 +336,7 @@ class AccessCodesApi(PersonSettingsApiChild):
         url = self.f_ep(person_id=workspace_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(url, params=params)
-        return parse_obj_as(list[AuthCode], data['accessCodes'])
+        return TypeAdapter(list[AuthCode]).validate_python(data['accessCodes'])
 
     def delete_codes(self, workspace_id: str, access_codes: list[Union[str, AuthCode]], org_id: str = None):
         """
@@ -437,7 +438,7 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return OutgoingPermissions.parse_obj(self.get(ep, params=params))
+        return OutgoingPermissions.model_validate(self.get(ep, params=params))
 
     def configure(self, person_id: str, settings: OutgoingPermissions, drop_call_types: set[str] = None,
                   org_id: str = None):
@@ -462,4 +463,4 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        self.put(ep, params=params, data=settings.json(drop_call_types=drop_call_types))
+        self.put(ep, params=params, data=settings.model_dump_json(drop_call_types=drop_call_types))

@@ -21,82 +21,82 @@ from wxc_sdk.webhook import WebhookEventData
 
 class AdaptiveCardBody(ApiModel):
     #: Possible values: TextBlock
-    type: Optional[str]
+    type: Optional[str] = None
     #: Possible values: Adaptive Cards
-    text: Optional[str]
+    text: Optional[str] = None
     #: Possible values: large
-    size: Optional[str]
+    size: Optional[str] = None
 
 
 class AdaptiveCardAction(ApiModel):
     #: Possible values: Action.OpenUrl
-    type: Optional[str]
+    type: Optional[str] = None
     #: Possible values: http://adaptivecards.io
-    url: Optional[str]
+    url: Optional[str] = None
     #: Possible values: Learn More
-    title: Optional[str]
+    title: Optional[str] = None
 
 
 class AdaptiveCard(ApiModel):
     #: Must be AdaptiveCard.
-    type: Optional[str]
+    type: Optional[str] = None
     #: Adaptive Card schema version.
-    version: Optional[str]
+    version: Optional[str] = None
     #: The card's elements.
-    body: Optional[list[AdaptiveCardBody]]
+    body: Optional[list[AdaptiveCardBody]] = None
     #: The card's actions.
-    actions: Optional[list[AdaptiveCardAction]]
+    actions: Optional[list[AdaptiveCardAction]] = None
 
 
 class MessageAttachment(ApiModel):
     #: The content type of the attachment.
-    content_type: Optional[str]
+    content_type: Optional[str] = None
     #: Adaptive Card content.
-    content: Optional[AdaptiveCard]
+    content: Optional[AdaptiveCard] = None
 
 
 class Message(ApiModel):
     #: The unique identifier for the message.
-    id: Optional[str]
+    id: Optional[str] = None
     #: The unique identifier for the parent message.
-    parent_id: Optional[str]
+    parent_id: Optional[str] = None
     #: The room ID of the message.
-    room_id: Optional[str]
+    room_id: Optional[str] = None
     #: The type of room.
-    room_type: Optional[RoomType]
+    room_type: Optional[RoomType] = None
     #: The message, in plain text. If markdown is specified this parameter may be optionally used to provide
     #: alternate text for UI clients that do not support rich text. The maximum message length is 7439 bytes.
-    text: Optional[str]
+    text: Optional[str] = None
     #: The message, in Markdown format. If this attribute is set ensure that the request does NOT contain an html
     #: attribute.
-    markdown: Optional[str]
+    markdown: Optional[str] = None
     #: The text content of the message, in HTML format. This read-only property is used by the Webex clients.
-    html: Optional[str]
+    html: Optional[str] = None
     #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads,
     #: see Message Attachments.
-    files: Optional[list[str]]
+    files: Optional[list[str]] = None
     #: The person ID of the message author.
-    person_id: Optional[str]
+    person_id: Optional[str] = None
     #: The email address of the message author.
-    person_email: Optional[str]
+    person_email: Optional[str] = None
     #: The person ID of the recipient when sending a private 1:1 message.
-    to_person_id: Optional[str]
+    to_person_id: Optional[str] = None
     #: The email address of the recipient when sending a private 1:1 message.
-    to_person_email: Optional[str]
+    to_person_email: Optional[str] = None
     #: People IDs for anyone mentioned in the message.
-    mentioned_people: Optional[list[str]]
+    mentioned_people: Optional[list[str]] = None
     #: Group names for the groups mentioned in the message.
-    mentioned_groups: Optional[list[str]]
+    mentioned_groups: Optional[list[str]] = None
     #: Message content attachments attached to the message. See the Cards Guide for more information.
-    attachments: Optional[list[MessageAttachment]]
+    attachments: Optional[list[MessageAttachment]] = None
     #: The date and time the message was created.
-    created: Optional[datetime]
+    created: Optional[datetime] = None
     #: The date and time that the message was last edited by the author. This field is only present when the message
     #: contents have changed.
-    updated: Optional[datetime]
+    updated: Optional[datetime] = None
     #: true if the audio file is a voice clip recorded by the client; false if the audio file is a standard audio
     #: file not posted using the voice clip feature.
-    is_voice_clip: Optional[bool]
+    is_voice_clip: Optional[bool] = None
 
 
 class MessagesData(WebhookEventData):
@@ -106,10 +106,10 @@ class MessagesData(WebhookEventData):
     resource = 'messages'
     id: str
     room_id: str
-    room_type: Optional[RoomType]
-    person_id: Optional[str]
-    person_email: Optional[str]
-    created: Optional[datetime]
+    room_type: Optional[RoomType] = None
+    person_id: Optional[str] = None
+    person_email: Optional[str] = None
+    created: Optional[datetime] = None
 
 
 class MessagesApi(ApiChild, base='messages'):
@@ -250,7 +250,7 @@ class MessagesApi(ApiChild, base='messages'):
                 open_file.close()
         else:
             data = super().post(url=url, json=body)
-        return Message.parse_obj(data)
+        return Message.model_validate(data)
 
     def edit(self, message: Message) -> Message:
         """
@@ -279,12 +279,12 @@ class MessagesApi(ApiChild, base='messages'):
                   NOT contain an html attribute.
                 * html: str: The message, in HTML format. The maximum message length is 7439 bytes.
         """
-        data = message.json(include={'room_id', 'text', 'markdown', 'html'})
+        data = message.model_dump_json(include={'room_id', 'text', 'markdown', 'html'})
         if not message.id:
             raise ValueError('ID has to be set')
         url = self.ep(f'{message.id}')
         data = super().put(url=url, data=data)
-        return Message.parse_obj(data)
+        return Message.model_validate(data)
 
     def details(self, message_id: str) -> Message:
         """
@@ -296,7 +296,7 @@ class MessagesApi(ApiChild, base='messages'):
         """
         url = self.ep(f'{message_id}')
         data = super().get(url=url)
-        return Message.parse_obj(data)
+        return Message.model_validate(data)
 
     def delete(self, message_id: str):
         """

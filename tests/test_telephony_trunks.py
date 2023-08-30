@@ -7,9 +7,9 @@ from random import choice
 from typing import ClassVar
 from unittest import skip
 
-from tests.base import TestCaseWithLog, async_test
+from tests.base import TestCaseWithLog, async_test, TestWithLocations
 from wxc_sdk.rest import RestError
-from wxc_sdk.telephony.prem_pstn.trunk import TrunkType, TrunkDetail
+from wxc_sdk.telephony.prem_pstn.trunk import TrunkType, TrunkDetail, Trunk
 
 
 class TestListTrunks(TestCaseWithLog):
@@ -26,7 +26,7 @@ class TestListTrunks(TestCaseWithLog):
         print(f'Got {len(trunks)} trunks')
 
 
-class TestCreate(TestCaseWithLog):
+class TestCreate(TestWithLocations):
     """
     Test cases to create trunks
     """
@@ -34,7 +34,6 @@ class TestCreate(TestCaseWithLog):
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
-        cls.locations = list(cls.api.locations.list())
         cls.trunks = list(cls.api.telephony.prem_pstn.trunk.list())
 
     def test_001_create(self):
@@ -63,12 +62,21 @@ class TestDetails(TestCaseWithLog):
     Tests on trunk details
     """
 
-    def test_001_get_all_details(self):
-        api = self.api.telephony.prem_pstn.trunk
-        trunks = list(api.list())
-        with ThreadPoolExecutor() as pool:
-            details = list(pool.map(lambda t: api.details(trunk_id=t.trunk_id),
-                                    trunks))
+    @async_test
+    async def test_001_get_all_details(self):
+        api = self.async_api.telephony.prem_pstn.trunk
+        trunks = await api.list()
+        details = await asyncio.gather(*[api.details(trunk_id=trunk.trunk_id)
+                                         for trunk in trunks],
+                                       return_exceptions=True)
+        err = None
+        for trunk, detail in zip(trunks, details):
+            trunk: Trunk
+            if isinstance(detail, Exception):
+                err = err or detail
+                print(f'trunk {trunk.name}/{trunk.location.name}: {detail}')
+        if err:
+            raise err
         print(f'Got details for {len(trunks)} trunks')
 
 

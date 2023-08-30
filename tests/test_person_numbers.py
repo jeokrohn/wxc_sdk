@@ -45,7 +45,7 @@ class TestRead(TestCaseWithUsers):
         for request in requests:
             user = user_dict[request.url_dict['user_id']]
             direct_numbers = [dn for pn in request.response_body['phoneNumbers']
-                              if (dn := pn['directNumber'])]
+                              if (dn := pn.get('directNumber'))]
             non_e14 = [n for n in direct_numbers
                        if not n.startswith('+')]
             if non_e14:

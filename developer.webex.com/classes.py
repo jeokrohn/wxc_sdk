@@ -46,7 +46,7 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 from typing import List, Optional
-from pydantic import Field, parse_obj_as
+from pydantic import Field, TypeAdapter
 """
 
 
@@ -85,8 +85,8 @@ def setup_logging(console_level: int = logging.INFO,
 class APIMethod:
     name: str
     methods_details: MethodDetails
-    body_class: Optional[Class]
-    response_class: Optional[Class]
+    body_class: Optional[Class] = None
+    response_class: Optional[Class] = None
 
     METHOD = '''
     def {method_name}(self{param_list}){return_type}:
@@ -282,7 +282,7 @@ class APIMethod:
                         base_type = self.response_class.attributes[0].param_class.name
                         # we need to deserialize a list fo something
                         return_type = python_type(base_type)
-                        result = f'return parse_obj_as(list[{return_type}], data["' \
+                        result = f'return TypeAdapter(list[{return_type}].validate_python(data["' \
                                  f'{to_camel(self.response_class.attributes[0].name)}"])'
                         return_type = f'list[{return_type}]'
                     else:
@@ -295,7 +295,7 @@ class APIMethod:
                     if attr.param_class:
                         # we need to deserialize a single object
                         return_type = python_type(attr.param_class.name)
-                        result = f'return {return_type}.parse_obj(data["{to_camel(attr.name)}"])'
+                        result = f'return {return_type}.model_validate(data["{to_camel(attr.name)}"])'
                     else:
                         return_type = python_type(attr.type)
                         result = f'return data["{to_camel(attr.name)}"]'
@@ -303,7 +303,7 @@ class APIMethod:
                 # the result has multiple attributes -> needs to be parsed as object
                 result_type = python_type(self.response_class.name)
                 return_type = f'{result_type}'
-                result = f'return {result_type}.parse_obj(data)'
+                result = f'return {result_type}.model_validate(data)'
             return_type = f' -> {return_type}'
         else:
             if http_method == 'get':
@@ -334,7 +334,7 @@ class API:
     Representation of an APi object
     """
     section: str
-    doc: Optional[str]
+    doc: Optional[str] = None
     methods: list[APIMethod] = field(default_factory=list)
 
     @staticmethod

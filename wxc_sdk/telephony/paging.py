@@ -17,17 +17,17 @@ __all__ = ['PagingApi', 'Paging', 'PagingAgent']
 
 class PagingAgent(ApiModel):
     #: Agents ID
-    agent_id: Optional[str] = Field(alias='id')
+    agent_id: Optional[str] = Field(alias='id', default=None)
     #: Agents first name. Minimum length is 1. Maximum length is 30.
-    first_name: Optional[str]
+    first_name: Optional[str] = None
     #: Agents last name. Minimum length is 1. Maximum length is 30.
-    last_name: Optional[str]
+    last_name: Optional[str] = None
     #: Type of the person or workspace.
-    agent_type: Optional[UserType] = Field(alias='type')
+    agent_type: Optional[UserType] = Field(alias='type', default=None)
     #: Agents phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is mandatory.
-    phone_number: Optional[str]
+    phone_number: Optional[str] = None
     #: Agents extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
-    extension: Optional[str]
+    extension: Optional[str] = None
 
     @classmethod
     def create_update_exclude(cls) -> dict:
@@ -45,39 +45,39 @@ class PagingAgent(ApiModel):
 
 class Paging(ApiModel):
     #: A unique identifier for the paging group.
-    paging_id: Optional[str] = Field(alias='id')
+    paging_id: Optional[str] = Field(alias='id', default=None)
     #: Whether or not the paging group is enabled.
-    enabled: Optional[bool]
+    enabled: Optional[bool] = None
     #: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
-    name: Optional[str]
+    name: Optional[str] = None
     #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is
     #: mandatory.
-    phone_number: Optional[str]
+    phone_number: Optional[str] = None
     #: Paging group extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
-    extension: Optional[str]
+    extension: Optional[str] = None
     #: is the phone numer a toll free number?
-    toll_free_number: Optional[bool]
+    toll_free_number: Optional[bool] = None
     #: Paging language. Minimum length is 1. Maximum length is 40.
-    language: Optional[str]
+    language: Optional[str] = None
     #: Language code.
-    language_code: Optional[str]
+    language_code: Optional[str] = None
     #: First name that displays when a group page is performed. Minimum length is 1. Maximum length is 30.
-    first_name: Optional[str]
+    first_name: Optional[str] = None
     #: Last name that displays when a group page is performed. Minimum length is 1. Maximum length is 30.
-    last_name: Optional[str]
+    last_name: Optional[str] = None
     #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator
     #: ID.
-    originator_caller_id_enabled: Optional[bool]
+    originator_caller_id_enabled: Optional[bool] = None
     #: An array of people and/or workspaces, who may originate pages to this paging group.
-    originators: Optional[list[PagingAgent]]
+    originators: Optional[list[PagingAgent]] = None
     #: An array of people, workspaces and virtual lines IDs will add to a paging group as paging call targets.
-    targets: Optional[list[PagingAgent]]
+    targets: Optional[list[PagingAgent]] = None
     #: Name of location for paging group. Only present in list() response.
     #: When creating a paging group then this is a list of agent IDs. The details() call returns detailed agent
     #: information
-    location_name: Optional[str]
+    location_name: Optional[str] = None
     #: ID of location for paging group. Only present in list() response.
-    location_id: Optional[str]
+    location_id: Optional[str] = None
 
     def create_or_update(self) -> str:
         """
@@ -86,7 +86,7 @@ class Paging(ApiModel):
         :return: JSON
         :rtype: str
         """
-        data = json.loads(self.json(exclude={'paging_id': True,
+        data = json.loads(self.model_dump_json(exclude={'paging_id': True,
                                              'toll_free_number': True,
                                              'language': True,
                                              'originators': {'__all__': PagingAgent.create_update_exclude()},
@@ -241,7 +241,7 @@ class PagingApi(ApiChild, base='telephony/config'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id, paging_id=paging_id)
-        return Paging.parse_obj(self.get(url, params=params))
+        return Paging.model_validate(self.get(url, params=params))
 
     def update(self, location_id: str, update: Paging, paging_id: str, org_id: str = None):
         """

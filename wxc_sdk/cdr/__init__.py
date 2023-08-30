@@ -9,7 +9,7 @@ from typing import Optional, Union
 
 from dateutil import tz
 from dateutil.parser import isoparse
-from pydantic import Field, root_validator, Extra
+from pydantic import Field, model_validator
 
 from ..api_child import ApiChild
 from ..base import ApiModel, dt_iso_str
@@ -139,7 +139,7 @@ def normalize_name(name: str) -> str:
 
 class CDR(ApiModel):
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def force_none(cls, values: dict):
         """
         Pop all empty strings so that they get caught by Optional[] and convert keys to proper attribute names
@@ -149,75 +149,75 @@ class CDR(ApiModel):
         return values
 
     #: This is the start time of the call, the answer time may be slightly after this. Time is in UTC.
-    start_time: Optional[datetime]
+    start_time: Optional[datetime] = None
     #: The time the call was answered. Time is in UTC.
-    answer_time: Optional[datetime]
+    answer_time: Optional[datetime] = None
     #: The length of the call in seconds.
-    duration: Optional[int]
+    duration: Optional[int] = None
     #: Whether the call leg was answered. For example, in a hunt group case, some legs will be unanswered,
     # and one will be answered.
-    answered: Optional[bool]
+    answered: Optional[bool] = None
     #: Whether the call was inbound or outbound. The possible values are:
-    direction: Optional[Union[CDRDirection, str]]
+    direction: Optional[Union[CDRDirection, str]] = None
     #: For incoming calls, the calling line ID of the user. For outgoing calls, it's the calling line ID of the
     #: called party.
-    called_line_id: Optional[str]
+    called_line_id: Optional[str] = None
     #: SIP Call ID used to identify the call. You can share the Call ID with Cisco TAC to help them pinpoint a call
     # if necessary.
-    call_id: Optional[str]
+    call_id: Optional[str] = None
     #: For incoming calls, the calling line ID of the calling party. For outgoing calls, it's the calling line ID of
     # the user.
-    calling_line_id: Optional[str]
+    calling_line_id: Optional[str] = None
     #: Type of call. For example:
-    call_type: Optional[CDRCallType]
+    call_type: Optional[CDRCallType] = None
     #: The type of client that the user (creating this record) is using to make or receive the call. For example:
-    client_type: Optional[CDRClientType]
+    client_type: Optional[CDRClientType] = None
     #: The version of the client that the user (creating this record) is using to make or receive the call.
-    client_version: Optional[str]
+    client_version: Optional[str] = None
     #: Correlation ID to tie together multiple call legs of the same call session.
-    correlation_id: Optional[str]
+    correlation_id: Optional[str] = None
     #: The country code of the dialed number. This is only populated for international calls.
-    international_country: Optional[str]
+    international_country: Optional[str] = None
     #: The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call. It
     #: can be used for end-to-end tracking of a SIP session in IP-based multimedia communication. Each call consists of
     #: two UUIDs known as Local Session ID and Remote Session ID.
     #:   * The Local SessionID is generated from the Originating user agent.
-    local_session_id: Optional[str] = Field(alias='local_sessionid')
+    local_session_id: Optional[str] = Field(alias='local_sessionid', default=None)
     #: The MAC address of the device, if known.
-    device_mac: Optional[str]
+    device_mac: Optional[str] = None
     #: Inbound trunk may be presented in Originating and Terminating records.
-    inbound_trunk: Optional[str]
+    inbound_trunk: Optional[str] = None
     #: A unique identifier for the organization that made the call. This is a unique identifier across Cisco.
-    org_uuid: Optional[str]
+    org_uuid: Optional[str] = None
     #: Populated for calls that transfer, hold, wait, and so on. For example:
-    original_reason: Optional[CDROriginalReason]
+    original_reason: Optional[CDROriginalReason] = None
     #: The operating system that the app was running on, if available.
-    os_type: Optional[str]
+    os_type: Optional[str] = None
     #: Outbound trunk may be presented in Originating and Terminating records.
-    outbound_trunk: Optional[str]
+    outbound_trunk: Optional[str] = None
     #: Populated for calls that transfer, hold, wait, and so on. For example:
-    redirect_reason: Optional[CDRRedirectReason]
+    redirect_reason: Optional[CDRRedirectReason] = None
     #: Populated for calls that transfer, hold, wait, and so on. For example:
-    related_reason: Optional[CDRRelatedReason]
+    related_reason: Optional[CDRRelatedReason] = None
     #: A unique ID for this particular record. This can be used when processing records to aid in deduplication.
-    report_id: Optional[str]
+    report_id: Optional[str] = None
     #: The time this report was created. Time is in UTC.
-    report_time: Optional[datetime]
+    report_time: Optional[datetime] = None
     #: If present, this field's only reported in Originating records. Route group identifies the route group used for
     #: outbound calls routed via a route group to Premises-based PSTN or an on-prem deployment integrated with Webex
     #: Calling (dial plan or unknown extension).
-    route_group: Optional[str]
+    route_group: Optional[str] = None
     #: The main number for the user's site where the call was made or received.
-    site_main_number: Optional[str]
+    site_main_number: Optional[str] = None
     #: Site timezone is the offset in minutes from UTC time of the user's timezone.
-    site_timezone: Optional[str]
+    site_timezone: Optional[str] = None
     #: If the call is TO or FROM a mobile phone using Webex Go, the Client type will show SIP, and Sub client type
     #: will show MOBILE_NETWORK.
-    sub_client_type: Optional[str]
+    sub_client_type: Optional[str] = None
     #: A unique identifier for the user associated with the call. This is a unique identifier across Cisco products.
-    user_uuid: Optional[str]
+    user_uuid: Optional[str] = None
     #: The user who made or received the call.
-    user: Optional[str]
+    user: Optional[str] = None
     #: The type of user (user or workspace) that made or received the call. For example:
     #:  * AutomatedAttendantVideo
     #:  * Anchor
@@ -231,15 +231,15 @@ class CDR(ApiModel):
     #:  * CallCenterStandard
     #:  * VoiceXML
     #:  * RoutePoint
-    user_type: Optional[CDRUserType]
+    user_type: Optional[CDRUserType] = None
     #: For incoming calls, the telephone number of the user. For outgoing calls, it's the telephone number of the
     #: called party.
-    called_number: Optional[str]
+    called_number: Optional[str] = None
     #: For incoming calls, the telephone number of the calling party. For outgoing calls, it's the telephone number
     #: of the user.
-    calling_number: Optional[str]
+    calling_number: Optional[str] = None
     #: Location of the report.
-    location: Optional[str]
+    location: Optional[str] = None
     #: Dialed digits
     #: The keypad digits as dialed by the user, before pre-translations. This field reports multiple call dial
     #: possibilities:
@@ -252,64 +252,64 @@ class CDR(ApiModel):
     #: also reported, as well as the digits dialed thereafter. Note that when pre-translations have no effect,
     #: the dialed digits field contains the same data as the called number field. This field is only used for
     #: originating (outgoing) Calls and is not available for terminating (incoming) Calls.
-    dialed_digits: Optional[str]
+    dialed_digits: Optional[str] = None
     #: Indicates which party released the call first. The possible values are:
     #:
     #: Local: Used when the local user has released the call first.
     #: Remote: Used when the far end party releases the call first.
     #: Unknown: Used when the call has partial information or is unable to gather enough information about the party
     #: who released the call. It could be because of situations like force lock or because of a session audit failure.
-    releasing_party: Optional[str]
+    releasing_party: Optional[str] = None
     #: The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call. It
     #: can be used for end-to-end tracking of a SIP session in IP-based multimedia communication. Each call consists of
     #: two UUIDs known as Local Session ID and Remote Session ID.
     #:   * The Remote SessionID is generated from the Terminating user agent.
-    remote_session_id: Optional[str] = Field(alias='remote_sessionid')
+    remote_session_id: Optional[str] = Field(alias='remote_sessionid', default=None)
     #: When the call has been redirected one or more times, this field reports the last redirecting number.
     #: Identifies who last redirected the call. Only applies to call scenarios such as transfer, call forwarded calls,
     #: simultaneous rings, etc.
-    redirecting_number: Optional[str]
+    redirecting_number: Optional[str] = None
     #: A unique identifier for the site associated with the call. Unique across Cisco products.
-    site_uuid: Optional[str]
+    site_uuid: Optional[str] = None
     #: A unique identifier for the user's department name.
-    department_id: Optional[str]
+    department_id: Optional[str] = None
     #: Transfer related call ID is used as a call identifier of the other call involved in the transfer. You can share
     #: this ID with Cisco TAC to help them pinpoint parties who are involved during a call transfer.
-    transfer_related_call_id: Optional[str]
+    transfer_related_call_id: Optional[str] = None
     #: The user who made or received the call.
-    user: Optional[str]
+    user: Optional[str] = None
     #: The authorization code admin created for a location or site for users to use. Collected by the
     #: Account/Authorization Codes or Enhanced Outgoing Calling Plan services.
-    authorization_code: Optional[str]
+    authorization_code: Optional[str] = None
     #: The device model type the user is using to make or receive the call.
-    model: Optional[str]
+    model: Optional[str] = None
     #: Indicates the time at which the call transfer service was invoked during the call. The invocation time is
     #: shown using the UTC/GMT time zone.
-    call_transfer_time: Optional[datetime]
+    call_transfer_time: Optional[datetime] = None
     #: A unique identifier that’s used to correlate CDRs and call legs with each other. This ID is used in
     # conjunction with:
     #:  Remote call ID—To identify the remote CDR of a call leg.
     #:  Transfer related call ID—To identify the call transferred leg.
-    local_call_id: Optional[str]
+    local_call_id: Optional[str] = None
     #: A unique identifier that’s used to correlate CDRs and call legs with each other. This ID is used in
     #: conjunction with Local call ID to identity the local CDR of a call leg.
-    remote_call_id: Optional[str]
+    remote_call_id: Optional[str] = None
     #: A unique identifier that shows if other CDRs are in the same call leg. Two CDRs belong in the same call leg if
     #: they have the same Network call ID.
-    network_call_id: Optional[str]
+    network_call_id: Optional[str] = None
     #: Call identifier of a different call that was created by this call because of a service activation. The value
     #: is the same as the Local call ID field of the related call. You can use this field to correlate multiple call
     #: legs connected through other services.
-    related_call_id: Optional[str]
+    related_call_id: Optional[str] = None
     #: Represents the E.164 number of the user generating a CDR. If the user has no number assigned to them,
     #: then their extension will be displayed instead.
-    user_number: Optional[str]
+    user_number: Optional[str] = None
     #: Identifies whether the call was set up or disconnected normally. Possible values are:
     #:  Success—Call was routed and disconnected successfully. Includes Normal, UserBusy, and NoAnswer scenarios.
     #:  Failure—Call failed with an internal or external error.
     #:  Refusal—Call was rejected because of call block or timeout.
     # You can find more information in the Call outcome reason field.
-    call_outcome: Optional[str]
+    call_outcome: Optional[str] = None
     #: Additional information about the Call outcome returned. Possible reasons are:
     #: Success
     #:  Normal—Call was completed successfully.
@@ -337,7 +337,7 @@ class CDR(ApiModel):
     #:  SIP606—Some aspect of the session description wasn't acceptable.
     #:  NoRouteToDestination—No route available to the destination.
     #:  Internal—Failed because of internal Webex Calling reasons.
-    call_outcome_reason: Optional[str]
+    call_outcome_reason: Optional[str] = None
 
 
 @dataclass(init=False)

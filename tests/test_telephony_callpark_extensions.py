@@ -37,5 +37,5 @@ class TestCPE(TestWithLocations):
         cpe_id = create_call_park_extension(api=self.api, location_id=location.location_id)
         cpe = cp.details(location_id=location.location_id, cpe_id=cpe_id)
         print(f'New call park extension in location "{location.name}":')
-        print(dumps(loads(cpe.json()), indent=2))
+        print(dumps(loads(cpe.model_dump_json()), indent=2))
 

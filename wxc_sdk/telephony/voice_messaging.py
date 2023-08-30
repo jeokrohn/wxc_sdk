@@ -19,47 +19,47 @@ __all__ = ['MessageSummary', 'VoiceMailPartyInformation', 'VoiceMessageDetails',
 # noinspection DuplicatedCode
 class VoiceMailPartyInformation(ApiModel):
     #: The party's name. Only present when the name is available and privacy is not enabled.
-    name: Optional[str]
+    name: Optional[str] = None
     #: The party's number. Only present when the number is available and privacy is not enabled. The number can be
     #: digits or a URI. Some examples for number include: 1234, 2223334444, +12223334444, and user@company.domain.
-    number: Optional[str]
+    number: Optional[str] = None
     #: The party's person ID. Only present when the person ID is available and privacy is not enabled.
-    person_id: Optional[str]
+    person_id: Optional[str] = None
     #: The party's place ID. Only present when the place ID is available and privacy is not enabled.
-    place_id: Optional[str]
+    place_id: Optional[str] = None
     #: Indicates whether privacy is enabled for the name, number and personId/placeId.
-    privacy_enabled: Optional[bool]
+    privacy_enabled: Optional[bool] = None
 
 
 class VoiceMessageDetails(ApiModel):
     #: The message identifier of the voicemail message.
-    id: Optional[str]
+    id: Optional[str] = None
     #:  The duration (in seconds) of the voicemail message.  Duration is not present for a FAX message.
-    duration: Optional[int]
+    duration: Optional[int] = None
     #: The calling party's details. For example, if user A calls user B and leaves a voicemail message, then A is the
     #: calling party.
-    calling_party: Optional[VoiceMailPartyInformation]
+    calling_party: Optional[VoiceMailPartyInformation] = None
     #: true if the voicemail message is urgent.
-    urgent: Optional[bool]
+    urgent: Optional[bool] = None
     #: true if the voicemail message is confidential.
-    confidential: Optional[bool]
+    confidential: Optional[bool] = None
     #: true if the voicemail message has been read.
-    read: Optional[bool]
+    read: Optional[bool] = None
     #: Number of pages for the FAX.  Only set for a FAX.
-    fax_page_count: Optional[int]
+    fax_page_count: Optional[int] = None
     #: The date and time the voicemail message was created.
-    created: Optional[str]
+    created: Optional[str] = None
 
 
 class MessageSummary(ApiModel):
     #: The number of new (unread) voicemail messages.
-    new_messages: Optional[int]
+    new_messages: Optional[int] = None
     #: The number of old (read) voicemail messages.
-    old_messages: Optional[int]
+    old_messages: Optional[int] = None
     #: The number of new (unread) urgent voicemail messages.
-    new_urgent_messages: Optional[int]
+    new_urgent_messages: Optional[int] = None
     #: The number of old (read) urgent voicemail messages.
-    old_urgent_messages: Optional[int]
+    old_urgent_messages: Optional[int] = None
 
 
 class VoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
@@ -75,7 +75,7 @@ class VoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
         """
         url = self.ep('summary')
         data = super().get(url=url)
-        return MessageSummary.parse_obj(data)
+        return MessageSummary.model_validate(data)
 
     def list(self, **params) -> Generator[VoiceMessageDetails, None, None]:
         """

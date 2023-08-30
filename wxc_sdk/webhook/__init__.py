@@ -64,9 +64,9 @@ class WebhookCreate(ApiModel):
     target_url: str
     resource: WebhookResource
     event: WebhookEventType
-    filter: Optional[str]
-    secret: Optional[str]
-    owned_by: Optional[str]
+    filter: Optional[str] = None
+    secret: Optional[str] = None
+    owned_by: Optional[str] = None
 
 
 class WebhookStatus(str, Enum):
@@ -76,27 +76,27 @@ class WebhookStatus(str, Enum):
 
 class Webhook(ApiModel):
     #: The unique identifier for the webhook.
-    webhook_id: Optional[str] = Field(alias='id')
+    webhook_id: Optional[str] = Field(alias='id', default=None)
     #: A user-friendly name for the webhook.
     name: str
     #: The URL that receives POST requests for each event.
     target_url: str
     #: The resource type for the webhook. Creating a webhook requires 'read' scope on the resource the webhook is for.
-    resource: Optional[WebhookResource]
+    resource: Optional[WebhookResource] = None
     #: The event type for the Webhook.
-    event: Optional[WebhookEventType]
+    event: Optional[WebhookEventType] = None
     #: The filter that defines the webhook scope.
-    filter: Optional[str]
+    filter: Optional[str] = None
     #: The secret used to generate payload signature.
-    secret: Optional[str]
+    secret: Optional[str] = None
     #: The status of the webhook. Use active to reactivate a disabled webhook.
     status: WebhookStatus
     #: The date and time the webhook was created.
     created: datetime.datetime
-    org_id: Optional[str]
-    created_by: Optional[str]
-    app_id: Optional[str]
-    owned_by: Optional[str]
+    org_id: Optional[str] = None
+    created_by: Optional[str] = None
+    app_id: Optional[str] = None
+    owned_by: Optional[str] = None
 
     @property
     def app_id_uuid(self) -> str:
@@ -169,7 +169,7 @@ class WebhookEvent(Webhook):
     """
     A webhook event. Can be used in to parse data posted to a webhook handler
     """
-    actor_id: Optional[str]
+    actor_id: Optional[str] = None
     #: resource specific event data; for registered subclasses of :class:`wwx_sdk.webhook.WebhookEventData` an
     #: instance of this subclass is returned. If no class is registered for the given resource, then data is returned as
     #: generic WebhookEventData instance
@@ -184,7 +184,7 @@ class WebhookEvent(Webhook):
         """
         if (v_data := values.get('data')) and (v_resource := values.get('resource')):
             if target_class := WebhookEventDataForbid.registered_subclass(v_resource):
-                parsed = target_class.parse_obj(v_data)
+                parsed = target_class.model_validate(v_data)
                 values['data'] = parsed
         return values
 
@@ -224,10 +224,10 @@ class WebhookApi(ApiChild, base='webhooks'):
         """
         params = {to_camel(param): value for i, (param, value) in enumerate(locals().items())
                   if i and value is not None}
-        body = json.loads(WebhookCreate(**params).json())
+        body = json.loads(WebhookCreate(**params).model_dump_json())
         ep = self.ep()
         data = self.post(ep, json=body)
-        result = Webhook.parse_obj(data)
+        result = Webhook.model_validate(data)
         return result
 
     def details(self, webhook_id: str) -> Webhook:
@@ -240,7 +240,7 @@ class WebhookApi(ApiChild, base='webhooks'):
         :return: Webhook details
         """
         url = self.ep(webhook_id)
-        return Webhook.parse_obj(self.get(url))
+        return Webhook.model_validate(self.get(url))
 
     def update(self, webhook_id: str, update: Webhook) -> Webhook:
         """
@@ -255,8 +255,8 @@ class WebhookApi(ApiChild, base='webhooks'):
         :return: updated :class:`Webhook` object
         """
         url = self.ep(webhook_id)
-        webhook_data = update.json(include={'name', 'target_url', 'secret', 'owned_by', 'status'})
-        return Webhook.parse_obj(self.put(url, data=webhook_data))
+        webhook_data = update.model_dump_json(include={'name', 'target_url', 'secret', 'owned_by', 'status'})
+        return Webhook.model_validate(self.put(url, data=webhook_data))
 
     def webhook_delete(self, webhook_id: str):
         """

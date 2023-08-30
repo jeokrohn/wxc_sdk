@@ -12,15 +12,15 @@ __all__ = ['CallPickup', 'CallPickupApi']
 
 class CallPickup(ApiModel):
     #: A unique identifier for the call pickup.
-    pickup_id: Optional[str] = Field(alias='id')
+    pickup_id: Optional[str] = Field(alias='id', default=None)
     #: Unique name for the call pickup. The maximum length is 80.
-    name: Optional[str]
+    name: Optional[str] = None
     #: Name of location for call pickup.
-    location_name: Optional[str]
+    location_name: Optional[str] = None
     #: ID of location for call pickup.
-    location_id: Optional[str]
+    location_id: Optional[str] = None
     #: An Array of ID strings of people, workspaces and virtual lines that are eligible to receive calls.
-    agents: Optional[list[PersonPlaceAgent]]
+    agents: Optional[list[PersonPlaceAgent]] = None
 
     def create_or_update(self) -> str:
         """
@@ -29,7 +29,7 @@ class CallPickup(ApiModel):
         :return: JSON
         :rtype: str
         """
-        return self.json(exclude={'pickup_id': True,
+        return self.model_dump_json(exclude={'pickup_id': True,
                                   'location_name': True,
                                   'location_id': True,
                                   'agents': {'__all__': {'display_name': True,
@@ -167,7 +167,7 @@ class CallPickupApi(ApiChild, base='telephony/config/callPickups'):
         """
         url = self._endpoint(location_id=location_id, pickup_id=pickup_id)
         params = org_id and {'orgId': org_id} or None
-        return CallPickup.parse_obj(self.get(url, params=params))
+        return CallPickup.model_validate(self.get(url, params=params))
 
     def update(self, location_id: str, pickup_id: str, settings: CallPickup, org_id: str = None) -> str:
         """

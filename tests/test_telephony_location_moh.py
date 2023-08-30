@@ -3,12 +3,11 @@ Test cases UCM profiles
 """
 import asyncio
 import random
-from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 
+from tests.base import TestWithLocations, async_test
 from wxc_sdk.locations import Location
 from wxc_sdk.telephony.location.moh import LocationMoHSetting
-from tests.base import TestWithLocations, async_test
 
 
 class Test(TestWithLocations):

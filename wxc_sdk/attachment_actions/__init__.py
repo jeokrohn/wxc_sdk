@@ -13,19 +13,19 @@ __all__ = ['AttachmentActionsApi', 'AttachmentAction', 'AttachmentActionData']
 
 class AttachmentAction(ApiModel):
     #: A unique identifier for the action.
-    id: Optional[str]
+    id: Optional[str] = None
     #: The ID of the person who performed the action.
-    person_id: Optional[str]
+    person_id: Optional[str] = None
     #: The ID of the room in which the action was performed.
-    room_id: Optional[str]
+    room_id: Optional[str] = None
     #: the type of action performed.
     type: Literal['submit']
     #: The ID of the message which contains the attachment.
-    message_id: Optional[str]
+    message_id: Optional[str] = None
     #: The attachment action's inputs.
     inputs: dict
     #: The date and time the action was created.
-    created: Optional[datetime]
+    created: Optional[datetime] = None
 
 
 class AttachmentActionData(WebhookEventData):
@@ -57,4 +57,4 @@ class AttachmentActionsApi(ApiChild, base='attachment/actions'):
         """
         url = self.ep(f'{action_id}')
         data = super().get(url=url)
-        return AttachmentAction.parse_obj(data)
+        return AttachmentAction.model_validate(data)

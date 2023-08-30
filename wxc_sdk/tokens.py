@@ -14,14 +14,14 @@ class Tokens(BaseModel):
     """
     Webex tokens
     """
-    access_token: Optional[str]  #: access token
-    expires_in: Optional[int]  #: remaining lifetime at time of token creation
-    expires_at: Optional[datetime.datetime]  #: expiration, calculated at time of token creation
-    refresh_token: Optional[str]  #: refresh token
-    refresh_token_expires_in: Optional[int]   # remaining lifetime of refresh token at time of token creation
-    refresh_token_expires_at: Optional[datetime.datetime]   #: expiration, calculated at time of token creation
-    token_type: Optional[Literal['Bearer']]
-    scope: Optional[str]
+    access_token: Optional[str] = None  #: access token
+    expires_in: Optional[int] = None  #: remaining lifetime at time of token creation
+    expires_at: Optional[datetime.datetime] = None  #: expiration, calculated at time of token creation
+    refresh_token: Optional[str] = None  #: refresh token
+    refresh_token_expires_in: Optional[int] = None   # remaining lifetime of refresh token at time of token creation
+    refresh_token_expires_at: Optional[datetime.datetime] = None   #: expiration, calculated at time of token creation
+    token_type: Optional[Literal['Bearer']] = None
+    scope: Optional[str] = None
 
     def json(self, *args, **kwargs):
         """
@@ -31,7 +31,7 @@ class Tokens(BaseModel):
         exclude = kwargs.get('exclude', set())
         exclude.update(('expires_in', 'refresh_token_expires_in'))
         kwargs['exclude'] = exclude
-        return super().json(*args, **kwargs)
+        return super().model_dump_json(*args, **kwargs)
 
     def update(self, new_tokes: 'Tokens'):
         """

@@ -143,7 +143,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(rl_id)
         data = self.get(url=url, params=params)
-        return RouteListDetail.parse_obj(data)
+        return RouteListDetail.model_validate(data)
 
     def update(self, rl_id: str, name: str, rg_id: str, org_id: str = None):
         """
@@ -242,7 +242,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         class Body(ApiModel):
             numbers: list[NumberAndAction]
 
-        body = Body(numbers=numbers).json()
+        body = Body(numbers=numbers).model_dump_json()
         data = self.put(url=url, params=params, data=body)
         if data:
             return parse_obj_as(list[UpdateNumbersResponse], data['numberStatus'])

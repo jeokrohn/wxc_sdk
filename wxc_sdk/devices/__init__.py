@@ -30,11 +30,11 @@ class Device(ApiModel):
     #: A friendly name for the device
     display_name: str
     #: The workspace associated with the device.
-    workspace_id: Optional[str]
+    workspace_id: Optional[str] = None
     #: The workspace location associated with the device.
-    workspace_location_id: Optional[str]
+    workspace_location_id: Optional[str] = None
     #: The person associated with the device.
-    person_id: Optional[str]
+    person_id: Optional[str] = None
     #: The organization associated with the device
     org_id: str
     #: The capabilities of the device.
@@ -51,43 +51,43 @@ class Device(ApiModel):
     #: Tags assigned to the device.
     tags: list[str]
     #: The current IP address of the device.
-    ip: Optional[str]
+    ip: Optional[str] = None
     #: The current network connectivty for the device.
-    active_interface: Optional[str]
+    active_interface: Optional[str] = None
     #: The unique address for the network adapter.
-    mac: Optional[str]
+    mac: Optional[str] = None
     #: The primary SIP address to dial this device.
-    primary_sip_url: Optional[str]
+    primary_sip_url: Optional[str] = None
     #: All SIP addresses to dial this device.
     sip_urls: list[Any]
-    error_codes: Optional[list[Any]]
+    error_codes: Optional[list[Any]] = None
     #: Serial number for the device.
-    serial: Optional[str]
+    serial: Optional[str] = None
     #: The operating system name data and version tag.
-    software: Optional[str]
+    software: Optional[str] = None
     #: The upgrade channel the device is assigned to.
-    upgrade_channel: Optional[str]
+    upgrade_channel: Optional[str] = None
     #: The date and time that the device was registered, in ISO8601 format.
-    created: Optional[datetime]
+    created: Optional[datetime] = None
     #: The date and time that the device was first seen, in ISO8601 format.
-    first_seen: Optional[datetime]
+    first_seen: Optional[datetime] = None
     #: The date and time that the device was last seen, in ISO8601 format.
-    last_seen: Optional[datetime]
+    last_seen: Optional[datetime] = None
     #: Device manager(s)
-    managed_by: Optional[str]
+    managed_by: Optional[str] = None
     #: Manufacturer of the device
     #: only for 3rd party devices
-    manufacturer: Optional[str]
+    manufacturer: Optional[str] = None
     #: The Line/Port identifies a device endpoint in standalone mode or a SIP URI public identity in IMS mode
     #: only for 3rd party devices
-    line_port: Optional[str]
+    line_port: Optional[str] = None
     #: Contains the body of the HTTP response received following the request to the Console API.
     #: Not set if the response has no body.
     #: only for 3rd party devices
-    outbound_proxy: Optional[str]
+    outbound_proxy: Optional[str] = None
     #: SIP authentication user name for the owner of the device.
     #: only for 3rd party devices
-    sip_user_name: Optional[str]
+    sip_user_name: Optional[str] = None
 
 
 
@@ -208,7 +208,7 @@ class DevicesApi(ApiChild, base='devices'):
         url = self.ep(device_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(url=url, params=params)
-        return Device.parse_obj(data)
+        return Device.model_validate(data)
 
     def delete(self, device_id: str, org_id: str = None):
         """
@@ -250,7 +250,7 @@ class DevicesApi(ApiChild, base='devices'):
         url = self.ep(device_id)
         params = org_id and {'orgId': org_id} or None
         data = self.patch(url=url, json=body, params=params, content_type='application/json-patch+json')
-        return Device.parse_obj(data)
+        return Device.model_validate(data)
 
     def activation_code(self, workspace_id: str = None, person_id: str = None, model: str = None,
                         org_id: str = None) -> ActivationCodeResponse:
@@ -280,7 +280,7 @@ class DevicesApi(ApiChild, base='devices'):
             body['model'] = model
         url = self.ep('activationCode')
         data = self.post(url=url, json=body, params=params)
-        return ActivationCodeResponse.parse_obj(data)
+        return ActivationCodeResponse.model_validate(data)
 
     def create_by_mac_address(self, mac: str, workspace_id: str = None, person_id: str = None,
                               model: str = None, password: str = None, org_id: str = None) -> Device:
@@ -315,4 +315,4 @@ class DevicesApi(ApiChild, base='devices'):
             body.password = password
         url = self.ep()
         data = super().post(url=url, json=body, params=params)
-        return Device.parse_obj(data)
+        return Device.model_validate(data)

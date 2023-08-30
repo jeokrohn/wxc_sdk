@@ -2,7 +2,7 @@
 Numbers API for Workspaces
 """
 
-from pydantic import parse_obj_as
+from pydantic import TypeAdapter
 
 from ...api_child import ApiChild
 from ...base import ApiModel
@@ -51,4 +51,4 @@ class WorkspaceNumbersApi(ApiChild, base='workspaces'):
         params = org_id and {'org_id': org_id} or None
         url = self.ep(workspace_id=workspace_id)
         data = self.get(url=url, params=params)
-        return parse_obj_as(WorkspaceNumbers, data)
+        return TypeAdapter(WorkspaceNumbers).validate_python(data)

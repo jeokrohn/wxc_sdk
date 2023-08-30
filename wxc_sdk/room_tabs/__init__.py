@@ -15,19 +15,19 @@ from wxc_sdk.common import RoomType
 
 class RoomTab(ApiModel):
     #: A unique identifier for the Room Tab.
-    id: Optional[str]
+    id: Optional[str] = None
     #: A unique identifier for the room.
-    room_id: Optional[str]
+    room_id: Optional[str] = None
     #: The room type.
-    room_type: Optional[RoomType]
+    room_type: Optional[RoomType] = None
     #: URL of the Room Tab. Must use https protocol.
-    content_url: Optional[str]
+    content_url: Optional[str] = None
     #: User-friendly name for the room tab.
-    display_name: Optional[str]
+    display_name: Optional[str] = None
     #: The person ID of the person who created this Room Tab.
-    creator_id: Optional[str]
+    creator_id: Optional[str] = None
     #: The date and time when the Room Tab was created.
-    created: Optional[datetime]
+    created: Optional[datetime] = None
 
 
 class RoomTabsApi(ApiChild, base='room/tabs'):
@@ -70,7 +70,7 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
             body['displayName'] = display_name
         url = self.ep()
         data = super().post(url=url, json=body)
-        return RoomTab.parse_obj(data)
+        return RoomTab.model_validate(data)
 
     def tab_details(self, tab_id: str) -> RoomTab:
         """
@@ -81,7 +81,7 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
         """
         url = self.ep(f'{tab_id}')
         data = super().get(url=url)
-        return RoomTab.parse_obj(data)
+        return RoomTab.model_validate(data)
 
     def update_tab(self, tab_id: str, room_id: str, content_url: str, display_name: str) -> RoomTab:
         """
@@ -105,7 +105,7 @@ class RoomTabsApi(ApiChild, base='room/tabs'):
             body['displayName'] = display_name
         url = self.ep(f'{tab_id}')
         data = super().put(url=url, json=body)
-        return RoomTab.parse_obj(data)
+        return RoomTab.model_validate(data)
 
     def delete_tab(self, tab_id: str):
         """

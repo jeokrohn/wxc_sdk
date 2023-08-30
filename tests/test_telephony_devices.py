@@ -16,7 +16,7 @@ from unittest import skip
 from tests.base import TestCaseWithLog, TestWithLocations, async_test
 from tests.testutil import calling_users
 from wxc_sdk.as_api import AsWebexSimpleApi
-from wxc_sdk.common import UserType, ValidationStatus, DeviceCustomization, DisplayNameSelection
+from wxc_sdk.common import UserType, ValidationStatus, DeviceCustomization, DisplayNameSelection, PrimaryOrShared
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings import PersonDevicesResponse, TelephonyDevice
@@ -49,7 +49,7 @@ class DeviceSettings(TestWithLocations):
         """
         settings = self.api.telephony.device_settings()
         print('Got org level settings')
-        print(dumps(loads(settings.json()), indent=2))
+        print(dumps(loads(settings.model_dump_json()), indent=2))
 
     @TestCaseWithLog.async_test
     async def test_002_location_level(self):
@@ -131,7 +131,6 @@ class ValidateMac(TestCaseWithLog):
         self.assertEqual(MACState.unavailable, r.mac_status[0].state)
         self.assertEqual(5675, r.mac_status[0].error_code)
 
-
     @skip('Takes too long')
     @async_test
     async def test_006_docker_macs(self):
@@ -140,39 +139,38 @@ class ValidateMac(TestCaseWithLog):
         """
         docker_oui = '02423b'
         macs_to_check = 100
+
         # scan a bunch of macs for each 4th octet
-        async def scan_range(index:int)->str:
+        async def scan_range(index: int) -> str:
             prefix = f'{docker_oui}{index:02x}'
             # we want to check the top and bottom x MACs
             check_macs = [f'{prefix}{i:04x}' for i in range(macs_to_check)]
-            check_macs.extend(f'{prefix}{255-i:04x}' for i in range(macs_to_check))
+            check_macs.extend(f'{prefix}{255 - i:04x}' for i in range(macs_to_check))
 
             validation = await self.async_api.telephony.devices.validate_macs(macs=check_macs)
             if validation.status == ValidationStatus.ok:
                 return ''
             return validation
 
-
         results = await asyncio.gather(*[scan_range(i) for i in range(256)])
 
     @skip('Takes too long')
     @async_test
     async def test_007_all_docker_macs(self):
-        def batches(seq: Iterable, batch_size:int):
+        def batches(seq: Iterable, batch_size: int):
             it = iter(seq)
             itb = [it] * batch_size
             return zip_longest(*itb)
 
-        macs_to_check = (f'02423b{i:06x}' for i in range(0, 2**24, 64))
+        macs_to_check = (f'02423b{i:06x}' for i in range(0, 2 ** 24, 64))
         tasks = [self.async_api.telephony.devices.validate_macs([m for m in batch if m])
                  for batch in batches(macs_to_check, 200)]
         results = await asyncio.gather(*tasks,
                                        return_exceptions=True)
         results: list[MACValidationResponse]
-        nok = [result for result in results if isinstance(result, MACValidationResponse) and result.status != ValidationStatus.ok]
+        nok = [result for result in results if
+               isinstance(result, MACValidationResponse) and result.status != ValidationStatus.ok]
         foo = 1
-
-
 
 
 class Members(TestCaseWithLog):
@@ -342,6 +340,7 @@ class TestAddMember(TestsWithDevices):
     """
     Test related to device members
     """
+
     # TODO: add virtual lines as members
     # TODO: verify available members semantics; since inter-location line sharing is now allowed I'd like to
     #  understand what actually gets returned as "available". ... or what is "unavailable
@@ -357,8 +356,8 @@ class TestAddMember(TestsWithDevices):
             """
 
             def eq_json(dm: DeviceMember) -> str:
-                return dm.json(exclude={'host_ip', 'remote_ip', 'first_name', 'last_name', 'phone_number',
-                                        'extension'})
+                return dm.model_dump_json(exclude={'host_ip', 'remote_ip', 'first_name', 'last_name', 'phone_number',
+                                                   'extension'})
 
             return eq_json(a) == eq_json(b)
 
@@ -419,10 +418,20 @@ class TestDeviceSettings(TestsWithDevices):
 
     @TestsWithDevices.async_test
     async def test_001_get_device_settings(self):
+        # device settings can only be read for primary devices
+        devices = [device for device in self.devices if device.device_type==PrimaryOrShared.primary]
         tasks = [self.async_api.telephony.devices.device_settings(device_id=device.device_id,
                                                                   device_model=device.model)
-                 for device in self.devices]
-        settings = await asyncio.gather(*tasks)
+                 for device in devices]
+        settings = await asyncio.gather(*tasks, return_exceptions=True)
+        err = None
+        for device, setting in zip(self.devices, settings):
+            device: TelephonyDevice
+            if isinstance(setting, Exception):
+                print(f'{device.model}, {device.device_type}: {setting}')
+                err = err or setting
+        if err:
+            raise err
 
     @TestsWithDevices.async_test
     async def test_002_update(self):
@@ -430,15 +439,16 @@ class TestDeviceSettings(TestsWithDevices):
         get device settings of a specific device and update that at the device level
         """
         # get device settings for all devices
+        devices = [device for device in self.devices if device.device_type==PrimaryOrShared.primary]
         with self.no_log():
             # noinspection PyTypeChecker
             settings = await asyncio.gather(
                 *[self.async_api.telephony.devices.device_settings(device_id=device.device_id,
                                                                    device_model=device.model)
-                  for device in self.devices])
+                  for device in devices])
         settings: list[DeviceCustomization]
         # pick a device
-        mpps = [device for device, setting in zip(self.devices, settings)
+        mpps = [device for device, setting in zip(devices, settings)
                 if setting.customizations.mpp]
         if not mpps:
             self.skipTest('Need at least one MPP to run the test')
@@ -448,7 +458,7 @@ class TestDeviceSettings(TestsWithDevices):
         before = self.api.telephony.devices.device_settings(device_id=target_device.device_id,
                                                             device_model=target_device.model)
         print(f'Updating display name format for {target_device.mac}')
-        update = before.copy(deep=True)
+        update = before.model_copy(deep=True)
         update.customizations.mpp.display_name_format = DisplayNameSelection.person_last_then_first_name
         update.custom_enabled = True
         self.api.telephony.devices.update_device_settings(device_id=target_device.device_id,
@@ -473,12 +483,13 @@ class TestDeviceSettings(TestsWithDevices):
         get devices with device level customizations
         """
         # get device settings for all devices
+        devices = [device for device in self.devices if device.device_type == PrimaryOrShared.primary]
         with self.no_log():
             # noinspection PyTypeChecker
             settings = await asyncio.gather(
                 *[self.async_api.telephony.devices.device_settings(device_id=device.device_id,
                                                                    device_model=device.model)
-                  for device in self.devices])
+                  for device in devices])
         settings: list[DeviceCustomization]
 
         devices_with_device_level_customization = [(device, setting)
@@ -508,7 +519,7 @@ class Jobs(TestCaseWithLog):
             print('not ready; sleep for 2 seconds...')
             sleep(2)
             job = self.api.telephony.jobs.device_settings.get_status(job_id=job.id)
-        print(json.dumps(json.loads(job.json()), indent=2))
+        print(json.dumps(json.loads(job.model_dump_json()), indent=2))
         self.assertEqual('COMPLETED', job.latest_execution_status)
 
     def test_001_list(self):
@@ -567,7 +578,7 @@ class Jobs(TestCaseWithLog):
         location_settings = self.api.telephony.location.device_settings(location_id=target_location.location_id)
 
         print(f'Location level device customization enabled: {location_settings.custom_enabled}')
-        new_settings = location_settings.copy(deep=True)
+        new_settings = location_settings.model_copy(deep=True)
         new_settings.custom_enabled = False
         job = self.api.telephony.jobs.device_settings.change(location_id=target_location.location_id,
                                                              customization=new_settings)
@@ -588,7 +599,7 @@ class Jobs(TestCaseWithLog):
         location_settings = self.api.telephony.location.device_settings(location_id=target_location.location_id)
 
         print(f'Location level device customization enabled: {location_settings.custom_enabled}')
-        new_settings = location_settings.copy(deep=True)
+        new_settings = location_settings.model_copy(deep=True)
         new_settings.custom_enabled = not new_settings.custom_enabled
         job = self.api.telephony.jobs.device_settings.change(location_id=target_location.location_id,
                                                              customization=new_settings)

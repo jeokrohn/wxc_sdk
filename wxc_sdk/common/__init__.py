@@ -2,9 +2,9 @@
 Common date types and APIs
 """
 from datetime import datetime
-from typing import Optional, Any
+from typing import Optional, Any, Union
 
-from pydantic import Field, root_validator, validator
+from pydantic import Field, field_validator, model_validator
 
 from ..base import ApiModel, webex_id_to_uuid
 from ..base import SafeEnum as Enum
@@ -38,11 +38,11 @@ class IdAndName(IdOnly):
 
 class LinkRelation(ApiModel):
     #: Link relation describing how the target resource is related to the current context (conforming with RFC5998).
-    rel: Optional[str]
+    rel: Optional[str] = None
     #: Target resource URI (conforming with RFC5998).
-    href: Optional[str]
+    href: Optional[str] = None
     #: Target resource method (conforming with RFC5998).
-    method: Optional[str]
+    method: Optional[str] = None
 
 
 class RoomType(str, Enum):
@@ -59,9 +59,9 @@ class UserType(str, Enum):
 
 
 class UserBase(ApiModel):
-    first_name: Optional[str]
-    last_name: Optional[str]
-    user_type: Optional[UserType] = Field(alias='type')
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    user_type: Optional[UserType] = Field(alias='type', default=None)
 
 
 class RingPattern(str, Enum):
@@ -83,12 +83,12 @@ class AlternateNumber(ApiModel):
     Hunt group or call queue alternate number
     """
     #: Alternate phone number for the hunt group or call queue
-    phone_number: Optional[str]
+    phone_number: Optional[str] = None
     #: Ring pattern for when this alternate number is called. Only available when distinctiveRing is enabled for the
     #: hunt group.
-    ring_pattern: Optional[RingPattern]
+    ring_pattern: Optional[RingPattern] = None
     #: Flag: phone_number is a toll free number
-    toll_free_number: Optional[bool]
+    toll_free_number: Optional[bool] = None
 
 
 class Greeting(str, Enum):
@@ -106,11 +106,11 @@ class UserNumber(ApiModel):
     phone number of the person or workspace.
     """
     #: Phone number of person or workspace. Either phoneNumber or extension is mandatory
-    external: Optional[str]
+    external: Optional[str] = None
     #: Extension of person or workspace. Either phoneNumber or extension is mandatory.
-    extension: Optional[str]
+    extension: Optional[str] = None
     #: Flag to indicate primary phone.
-    primary: Optional[bool]
+    primary: Optional[bool] = None
 
 
 class PersonPlaceAgent(UserBase):
@@ -120,12 +120,12 @@ class PersonPlaceAgent(UserBase):
     #: ID of person or workspace.
     agent_id: str = Field(alias='id')
     #: Display name of person or workspace.
-    display_name: Optional[str]
+    display_name: Optional[str] = None
     #: Email of the person or workspace.
-    email: Optional[str]
+    email: Optional[str] = None
     #: List of phone numbers of the person or workspace.
-    numbers: Optional[list[UserNumber]]
-    location: Optional[IdAndName]
+    numbers: Optional[list[UserNumber]] = None
+    location: Optional[IdAndName] = None
 
 
 class MonitoredMember(ApiModel):
@@ -133,38 +133,48 @@ class MonitoredMember(ApiModel):
     a monitored user or place
     """
     #: The identifier of the monitored person.
-    member_id: Optional[str] = Field(alias='id')
+    member_id: Optional[str] = Field(alias='id', default=None)
     #: The last name of the monitored person or place.
-    last_name: Optional[str]
+    last_name: Optional[str] = None
     #: The first name of the monitored person or place.
-    first_name: Optional[str]
+    first_name: Optional[str] = None
     #: The display name of the monitored person or place.
-    display_name: Optional[str]
+    display_name: Optional[str] = None
     #: Indicates whether type is PEOPLE or PLACE.
-    member_type: Optional[UserType] = Field(alias='type')
+    member_type: Optional[UserType] = Field(alias='type', default=None)
     #: The email address of the monitored person or place.
-    email: Optional[str]
+    email: Optional[str] = None
     #: The list of phone numbers of the monitored person or place.
-    numbers: Optional[list[UserNumber]]
+    numbers: Optional[list[UserNumber]] = None
+    # location can be either a location name or an id and name instance
+    location: Optional[Union[str, IdAndName]] = None
 
     @property
     def ci_member_id(self) -> Optional[str]:
         return self.member_id and webex_id_to_uuid(self.member_id)
 
+    @property
+    def location_name(self) -> str:
+        """
+        Apparently location attribute is either the location name or an IdAndName instance
+        """
+        return isinstance(self.location, IdAndName) and self.location.name or self.location
+
+
 
 class CallParkExtension(ApiModel):
     #: The identifier of the call park extension.
-    cpe_id: Optional[str] = Field(alias='id')
+    cpe_id: Optional[str] = Field(alias='id', default=None)
     #: The name to describe the call park extension.
-    name: Optional[str]
+    name: Optional[str] = None
     #: The extension number for this call park extension.
-    extension: Optional[str]
+    extension: Optional[str] = None
     #: The location name where the call park extension is.
-    location_name: Optional[str]
+    location_name: Optional[str] = None
     #: The location ID for the location.
-    location_id: Optional[str]
+    location_id: Optional[str] = None
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def fix_location_name(cls, values):
         """
 
@@ -225,7 +235,7 @@ class DialPatternValidate(ApiModel):
 
 class RouteIdentity(ApiModel):
     route_id: str = Field(alias='id')
-    name: Optional[str]
+    name: Optional[str] = None
     route_type: RouteType = Field(alias='type')
 
 
@@ -269,8 +279,8 @@ class ValidateExtensionStatus(ApiModel):
     #: Indicate the status for the given extension id .
     state: ValidateExtensionStatusState
     #: Error Code .
-    error_code: Optional[int]
-    message: Optional[str]
+    error_code: Optional[int] = None
+    message: Optional[str] = None
 
     @property
     def ok(self):
@@ -279,7 +289,7 @@ class ValidateExtensionStatus(ApiModel):
 
 class ValidateExtensionsResponse(ApiModel):
     status: ValidationStatus
-    extension_status: Optional[list[ValidateExtensionStatus]]
+    extension_status: Optional[list[ValidateExtensionStatus]] = None
 
     @property
     def ok(self) -> bool:
@@ -318,7 +328,7 @@ class ValidatePhoneNumbersResponse(ApiModel):
     #: This indicates the status of the numbers.
     status: ValidationStatus
     #: This is an array of number objects with number details.
-    phone_numbers: Optional[list[ValidatePhoneNumberStatus]]
+    phone_numbers: Optional[list[ValidatePhoneNumberStatus]] = None
 
     @property
     def ok(self) -> bool:
@@ -340,12 +350,12 @@ class VoicemailMessageStorage(ApiModel):
     Settings for message storage
     """
     #: When true desktop phone will indicate there are new voicemails.
-    mwi_enabled: Optional[bool]
+    mwi_enabled: Optional[bool] = None
     #: Designates which type of voicemail message storage is used.
-    storage_type: Optional[StorageType]
+    storage_type: Optional[StorageType] = None
     #: External email address to which the new voicemail audio will be sent. A value for this field must be provided
     # in the request if a storageType of EXTERNAL is given in the request.
-    external_email: Optional[str]
+    external_email: Optional[str] = None
 
 
 class VoicemailEnabled(ApiModel):
@@ -358,7 +368,7 @@ class VoicemailNotifications(VoicemailEnabled):
     """
     #: Email address to which the notification will be sent. For text messages, use an email to text message gateway
     #: like 2025551212@txt.att.net.
-    destination: Optional[str]
+    destination: Optional[str] = None
 
 
 class VoicemailFax(VoicemailEnabled):
@@ -366,10 +376,10 @@ class VoicemailFax(VoicemailEnabled):
     Fax message settings
     """
     #: Designates optional extension for fax.
-    extension: Optional[str]
+    extension: Optional[str] = None
     #: Designates phone number for fax. A value for this field must be provided in the request if faxMessage enabled
     #: field is given as true in the request.
-    phone_number: Optional[str]
+    phone_number: Optional[str] = None
 
 
 class VoicemailTransferToNumber(VoicemailEnabled):
@@ -377,7 +387,7 @@ class VoicemailTransferToNumber(VoicemailEnabled):
     Settings for voicemail caller to transfer to a different number by pressing zero (0).
     """
     #: Number voicemail caller will be transferred to when they press zero (0).
-    destination: Optional[str]
+    destination: Optional[str] = None
 
 
 class VoicemailCopyOfMessage(VoicemailEnabled):
@@ -385,7 +395,7 @@ class VoicemailCopyOfMessage(VoicemailEnabled):
     Settings for sending a copy of new voicemail message audio via email.
     """
     #: Email address to which the new voicemail audio will be sent.
-    email_id: Optional[str]
+    email_id: Optional[str] = None
 
 
 class AudioCodecPriority(ApiModel):
@@ -395,11 +405,11 @@ class AudioCodecPriority(ApiModel):
     #: Indicates the selection of an Audio Code Priority Object.
     selection: str
     #: Indicates the primary Audio Codec.
-    primary: Optional[str]
+    primary: Optional[str] = None
     #: Indicates the secondary Audio Codec.
-    secondary: Optional[str]
+    secondary: Optional[str] = None
     #: Indicates the tertiary Audio Codec.
-    tertiary: Optional[str]
+    tertiary: Optional[str] = None
 
 
 class AtaDtmfMode(str, Enum):
@@ -430,7 +440,7 @@ class VlanSetting(ApiModel):
     #: The value of the VLAN Object
     value: int
     #: Indicates the PC port value of a VLAN object for an MPP object
-    pc_port: Optional[int]
+    pc_port: Optional[int] = None
 
 
 class CommonDeviceCustomization(ApiModel):
@@ -445,7 +455,7 @@ class CommonDeviceCustomization(ApiModel):
     #: Specify a numeric Virtual LAN ID for devices.
     vlan: VlanSetting
     #: Enable/disable automatic nightly configuration resync of the device.
-    nightly_resync_enabled: Optional[bool]
+    nightly_resync_enabled: Optional[bool] = None
 
 
 class AtaCustomization(CommonDeviceCustomization):
@@ -486,13 +496,6 @@ class BacklightTimer68XX78XX(str, Enum):
     off = 'OFF'
 
 
-class BacklightTimer(str, Enum):
-    one_min = 'ONE_MIN'
-    five_min = 'FIVE_MIN'
-    thirty_min = 'THIRTY_MIN'
-    always_on = 'ALWAYS_ON'
-
-
 class Background(str, Enum):
     #: Indicates that there will be no background image set for the devices.
     no_background = 'NONE'
@@ -511,7 +514,7 @@ class BackgroundSelection(ApiModel):
     Background selection for MPP devices
     """
     image: Background
-    custom_url: Optional[str]
+    custom_url: Optional[str] = None
 
 
 class DisplayNameSelection(str, Enum):
@@ -615,23 +618,23 @@ class WifiNetwork(ApiModel):
     #: Authentication method of wifi network.
     authentication_method: str
     #: SSID name of the wifi network.
-    ssid_name: Optional[str]
+    ssid_name: Optional[str] = None
     #: User ID of the wifi network.
-    user_id: Optional[str]
+    user_id: Optional[str] = None
 
 
 class UsbPortsObject(ApiModel):
     #: New Control to Enable/Disable the side USB port.
-    enabled: Optional[bool]
+    enabled: Optional[bool] = None
     #: Enable/disable use of the side USB port on the MPP device. Enabled by default.
-    side_usb_enabled: Optional[bool]
+    side_usb_enabled: Optional[bool] = None
     #: Enable/disable use of the rear USB port on the MPP device.
-    rear_usb_enabled: Optional[bool]
+    rear_usb_enabled: Optional[bool] = None
 
 
 class MppVlanDevice(EnabledAndValue):
     #: Indicates the PC port value of a VLAN object for an MPP object.
-    pc_port: Optional[int]
+    pc_port: Optional[int] = None
 
 
 class WifiAuthenticationMethod(str, Enum):
@@ -667,17 +670,17 @@ class DirectoryMethod(str, Enum):
 
 class VolumeSettings(ApiModel):
     #: Specify a ringer volume level through a numeric value between 0 and 15.
-    ringer_volume: Optional[int]
+    ringer_volume: Optional[int] = None
     #: Specify a speaker volume level through a numeric value between 0 and 15.
-    speaker_volume: Optional[int]
+    speaker_volume: Optional[int] = None
     #: Specify a handset volume level through a numeric value between 0 and 15.
-    handset_volume: Optional[int]
+    handset_volume: Optional[int] = None
     #: Specify a headset volume level through a numeric value between 0 and 15.
-    headset_volume: Optional[int]
+    headset_volume: Optional[int] = None
     #: Enable/disable the wireless headset hookswitch control.
-    e_hook_enabled: Optional[bool]
+    e_hook_enabled: Optional[bool] = None
     #: Enable/disable to preserve the existing values on the phone and not the values defined for the device settings.
-    allow_end_user_override_enabled: Optional[bool]
+    allow_end_user_override_enabled: Optional[bool] = None
 
 
 class CallForwardExpandedSoftKey(str, Enum):
@@ -695,21 +698,21 @@ class HttpProxyMode(str, Enum):
 
 class HttpProxy(ApiModel):
     #: Mode of the HTTP proxy.
-    mode: Optional[HttpProxyMode]
+    mode: Optional[HttpProxyMode] = None
     #: Enable/disable auto discovery of the URL.
-    auto_discovery_enabled: Optional[bool]
+    auto_discovery_enabled: Optional[bool] = None
     #: Specify the host URL if the HTTP mode is set to MANUAL.
-    host: Optional[str]
+    host: Optional[str] = None
     #: Specify the port if the HTTP mode is set to MANUAL.
-    port: Optional[str]
+    port: Optional[str] = None
     #: Specify PAC URL if auto discovery is disabled.
-    pack_url: Optional[str]
+    pack_url: Optional[str] = None
     #: Enable/disable authentication settings.
-    auth_settings_enabled: Optional[bool]
+    auth_settings_enabled: Optional[bool] = None
     #: Specify a username if authentication settings are enabled.
-    username: Optional[str]
+    username: Optional[str] = None
     #: Specify a password if authentication settings are enabled.
-    password: Optional[str]
+    password: Optional[str] = None
 
 
 class BluetoothMode(str, Enum):
@@ -720,93 +723,93 @@ class BluetoothMode(str, Enum):
 
 class BluetoothSetting(ApiModel):
     #: Enable/disable Bluetooth.
-    enabled: Optional[bool]
+    enabled: Optional[bool] = None
     #: Select a Bluetooth mode.
-    mode: Optional[BluetoothMode]
+    mode: Optional[BluetoothMode] = None
 
 
 class NoiseCancellation(ApiModel):
     #: Enable/disable the Noise Cancellation.
-    enabled: Optional[bool]
+    enabled: Optional[bool] = None
     #: Enable/disable to preserve the existing values on the phone and not the value defined for the device setting.
-    allow_end_user_override_enabled: Optional[bool]
+    allow_end_user_override_enabled: Optional[bool] = None
 
 
 class SoftKeyMenu(ApiModel):
     #: Specify the idle key list.
-    idle_key_list: Optional[str]
+    idle_key_list: Optional[str] = None
     #: Specify the off hook key list.
-    off_hook_key_list: Optional[str]
+    off_hook_key_list: Optional[str] = None
     #: Specify the dialing input key list.
-    dialing_input_key_list: Optional[str]
+    dialing_input_key_list: Optional[str] = None
     #: Specify the progressing key list.
-    progressing_key_list: Optional[str]
+    progressing_key_list: Optional[str] = None
     #: Specify the connected key list.
-    connected_key_list: Optional[str]
+    connected_key_list: Optional[str] = None
     #: Specify the connected video key list.
-    connected_video_key_list: Optional[str]
+    connected_video_key_list: Optional[str] = None
     #: Start the transfer key list.
-    start_transfer_key_list: Optional[str]
+    start_transfer_key_list: Optional[str] = None
     #: Start the conference key list.
-    start_conference_key_list: Optional[str]
+    start_conference_key_list: Optional[str] = None
     #: Specify the conferencing key list.
-    conferencing_key_list: Optional[str]
+    conferencing_key_list: Optional[str] = None
     #: Specify the releasing key list.
-    releasing_key_list: Optional[str]
+    releasing_key_list: Optional[str] = None
     #: Specify the hold key list.
-    hold_key_list: Optional[str]
+    hold_key_list: Optional[str] = None
     #: Specify the ringing key list.
-    ringing_key_list: Optional[str]
+    ringing_key_list: Optional[str] = None
     #: Specify the shared active key list.
-    shared_active_key_list: Optional[str]
+    shared_active_key_list: Optional[str] = None
     #: Specify the shared held key list.
-    shared_held_key_list: Optional[str]
+    shared_held_key_list: Optional[str] = None
 
 
 class PskObject(ApiModel):
     #: Specify PSK1.
-    psk1: Optional[str]
+    psk1: Optional[str] = None
     #: Specify PSK2.
-    psk2: Optional[str]
+    psk2: Optional[str] = None
     #: Specify PSK3.
-    psk3: Optional[str]
+    psk3: Optional[str] = None
     #: Specify PSK4.
-    psk4: Optional[str]
+    psk4: Optional[str] = None
     #: Specify PSK5.
-    psk5: Optional[str]
+    psk5: Optional[str] = None
     #: Specify PSK6.
-    psk6: Optional[str]
+    psk6: Optional[str] = None
     #: Specify PSK7.
-    psk7: Optional[str]
+    psk7: Optional[str] = None
     #: Specify PSK8.
-    psk8: Optional[str]
+    psk8: Optional[str] = None
     #: Specify PSK9.
-    psk9: Optional[str]
+    psk9: Optional[str] = None
     #: Specify PSK10.
-    psk10: Optional[str]
+    psk10: Optional[str] = None
     #: Specify PSK11.
-    psk11: Optional[str]
+    psk11: Optional[str] = None
     #: Specify PSK12.
-    psk12: Optional[str]
+    psk12: Optional[str] = None
     #: Specify PSK13.
-    psk13: Optional[str]
+    psk13: Optional[str] = None
     #: Specify PSK14.
-    psk14: Optional[str]
+    psk14: Optional[str] = None
     #: Specify PSK15.
-    psk15: Optional[str]
+    psk15: Optional[str] = None
     #: Specify PSK16.
-    psk16: Optional[str]
+    psk16: Optional[str] = None
 
 
 class SoftKeyLayout(ApiModel):
     #: Customize SoftKey menu settings.
-    soft_key_menu: Optional[SoftKeyMenu]
+    soft_key_menu: Optional[SoftKeyMenu] = None
     #: Customize PSK.
-    psk: Optional[PskObject]
+    psk: Optional[PskObject] = None
     #: Default SoftKey menu settings.
-    soft_key_menu_defaults: Optional[SoftKeyMenu]
+    soft_key_menu_defaults: Optional[SoftKeyMenu] = None
     #: Default PSK.
-    psk_defaults: Optional[PskObject]
+    psk_defaults: Optional[PskObject] = None
 
 
 class BackgroundImageColor(str, Enum):
@@ -841,9 +844,9 @@ class MppCustomization(CommonDeviceCustomization):
     #: Enable/disable Do-Not-Disturb capabilities for Multi-Platform Phones.
     dnd_services_enabled: bool
     #: Chooses the location of the Call Queue Agent Login/Logout softkey on Multi-Platform Phones.
-    display_callqueue_agent_softkeys: Optional[DisplayCallqueueAgentSoftkey]
+    display_callqueue_agent_softkeys: Optional[DisplayCallqueueAgentSoftkey] = None
     #: Choose the duration (in hours) of Hoteling guest login.
-    hoteling_guest_association_timer: Optional[int]
+    hoteling_guest_association_timer: Optional[int] = None
     #: Holds the Acd object value.
     acd: AcdCustomization
     #: Indicates the short inter digit timer value.
@@ -858,7 +861,7 @@ class MppCustomization(CommonDeviceCustomization):
     #: Enable/disable user-level access to the web interface of Multi-Platform Phones.
     mpp_user_web_access_enabled: bool
     #: Select up to 10 Multicast Group URLs (each with a unique Listening Port).
-    multicast: Optional[list[str]]
+    multicast: Optional[list[str]] = None
     #: Specify the amount of time (in seconds) that a phone can remain off-hook.
     off_hook_timer: int
     #: Select the language for your MPP phone. Setting this overrides the default language setting in place for your
@@ -869,53 +872,54 @@ class MppCustomization(CommonDeviceCustomization):
     #: Specify the amount of inactive time needed (in seconds) before the phone’s screen saver activates.
     screen_timeout: EnabledAndValue
     #: Enable/disable the use of the USB ports on Multi-Platform phones.
-    usb_ports_enabled: Optional[bool]
+    usb_ports_enabled: Optional[bool] = None
     #: By default the Side USB port is enabled to support KEMs and other peripheral devices. Use the option to disable
     #: use of this port.
-    usb_ports: Optional[UsbPortsObject]
+    usb_ports: Optional[UsbPortsObject] = None
     #: Specify a numeric Virtual LAN ID for devices.
-    vlan: Optional[MppVlanDevice]
+    vlan: Optional[MppVlanDevice] = None
     #: Specify the Wi-Fi SSID and password for wireless-enabled MPP phones.
-    wifi_network: Optional[WifiNetwork]
+    wifi_network: Optional[WifiNetwork] = None
+    migration_url: Optional[str] = None # TODO: undocumented
     #: Specify the call history information to use. Only applies to user devices.
-    call_history: Optional[CallHistoryMethod]
+    call_history: Optional[CallHistoryMethod] = None
     #: Specify the directory services to use.
-    contacts: Optional[DirectoryMethod]
+    contacts: Optional[DirectoryMethod] = None
     #: Enable/disable the availability of the webex meetings functionality from the phone.
-    webex_meetings_enabled: Optional[bool]
+    webex_meetings_enabled: Optional[bool] = None
     #: Specify all volume level values on the phone.
-    volume_settings: Optional[VolumeSettings]
+    volume_settings: Optional[VolumeSettings] = None
     #: Specify the call forward expanded soft key behavior.
-    cf_expanded_soft_key: Optional[CallForwardExpandedSoftKey]
+    cf_expanded_soft_key: Optional[CallForwardExpandedSoftKey] = None
     #: Specify HTTP Proxy values.
-    http_proxy: Optional[HttpProxy]
+    http_proxy: Optional[HttpProxy] = None
     #: Enable/disable the visibility of the bluetooth menu on the MPP device.
-    bluetooth: Optional[BluetoothSetting]
+    bluetooth: Optional[BluetoothSetting] = None
     #: Enable/disable the use of the PC passthrough ethernet port on supported phone models.
-    pass_through_port_enabled: Optional[bool]
+    pass_through_port_enabled: Optional[bool] = None
     #: Enable/disable the ability for an end user to set a local password on the phone to restrict local access to the
     #: device.
-    user_password_override_enabled: Optional[bool]
+    user_password_override_enabled: Optional[bool] = None
     #: Enable/disable the default screen behavior when inbound calls are received.
-    active_call_focus_enabled: Optional[bool]
+    active_call_focus_enabled: Optional[bool] = None
     #: Enable/disable peer firmware sharing.
-    peer_firmware_enabled: Optional[bool]
+    peer_firmware_enabled: Optional[bool] = None
     #: Enable/disable local noise cancellation on active calls from the device.
-    noise_cancellation: Optional[NoiseCancellation]
+    noise_cancellation: Optional[NoiseCancellation] = None
     #: Enable/disable visibility of the Accessibility Voice Feedback menu on the MPP device.
-    voice_feedback_accessibility_enabled: Optional[bool]
+    voice_feedback_accessibility_enabled: Optional[bool] = None
     #: Enable/disable availability of dial assist feature on the phone.
-    dial_assist_enabled: Optional[bool]
+    dial_assist_enabled: Optional[bool] = None
     #: Specify the number of calls per unique line appearance on the phone.
-    calls_per_line: Optional[int]
+    calls_per_line: Optional[int] = None
     #: Enable/disable the visual indication of missed calls.
-    missed_call_notification_enabled: Optional[bool]
+    missed_call_notification_enabled: Optional[bool] = None
     #: Specify the softkey layout per phone menu state.
-    soft_key_layout: Optional[SoftKeyLayout]
+    soft_key_layout: Optional[SoftKeyLayout] = None
     #: Specify the image option for the MPP 8875 phone background.
-    background_image8875: Optional[BackgroundImageColor]
+    background_image8875: Optional[BackgroundImageColor] = None
     #: Specify the use of the backlight feature on 6800 nad 7800 series devices.
-    backlight_timer_68xx78xx: Optional[BacklightTimer68XX78XX] = Field(alias='backlightTimer68XX78XX')
+    backlight_timer_68xx78xx: Optional[BacklightTimer68XX78XX] = Field(alias='backlightTimer68XX78XX', default=None)
 
     # !!
     # #: Specify the Wi-Fi SSID and password for wireless-enabled MPP phones.
@@ -939,10 +943,10 @@ class DeviceCustomizations(ApiModel):
     At the device level only one of ata, dect, and mpp is set. At location and org level all three
     customizations are set.
     """
-    ata: Optional[AtaCustomization]
-    dect: Optional[DectCustomization]
-    mpp: Optional[MppCustomization]
-    wifi: Optional[WifiCustomization]
+    ata: Optional[AtaCustomization] = None
+    dect: Optional[DectCustomization] = None
+    mpp: Optional[MppCustomization] = None
+    wifi: Optional[WifiCustomization] = None
 
 
 class DeviceCustomization(ApiModel):
@@ -950,7 +954,7 @@ class DeviceCustomization(ApiModel):
     Device customization
     """
 
-    @validator('last_update_time', pre=True)
+    @field_validator('last_update_time', mode='before')
     def update_time(cls, v):
         """
 
@@ -970,13 +974,13 @@ class DeviceCustomization(ApiModel):
     #: If true - customized at this level.
     #: If false - not customized, using higher level config (location or org).
     #: Only present in location and device level customization response
-    custom_enabled: Optional[bool]
+    custom_enabled: Optional[bool] = None
     #: Indicates the progress of the device update. Not present at device level
-    update_in_progress: Optional[bool]
+    update_in_progress: Optional[bool] = None
     #: Indicates the device count. Not present at device level
-    device_count: Optional[int]
+    device_count: Optional[int] = None
     #: Indicates the last updated time.
-    last_update_time: Optional[datetime]
+    last_update_time: Optional[datetime] = None
 
 
 class PrimaryOrShared(str, Enum):
@@ -1015,10 +1019,10 @@ class AnnAudioFile(ApiModel):
     """
     #: A unique identifier for the announcement. name, mediaFileType, level are mandatory if id is not provided for
     #: uploading an announcement.
-    id: Optional[str]
+    id: Optional[str] = None
     #: Name of the file.
-    file_name: Optional[str]
+    file_name: Optional[str] = None
     #: Media Type of the audio file.
-    media_file_type: Optional[MediaFileType]
+    media_file_type: Optional[MediaFileType] = None
     #: Audio announcement file type location.
-    level: Optional[AnnouncementLevel]
+    level: Optional[AnnouncementLevel] = None

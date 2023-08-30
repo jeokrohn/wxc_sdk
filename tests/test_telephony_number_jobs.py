@@ -190,7 +190,7 @@ class TestMoveNumbers(TestWithLocations):
             for jes in job.job_execution_status)
         if not completed:
             print('Job not completed successfully:')
-            print(dumps(loads(job.json()), indent=2))
+            print(dumps(loads(job.model_dump_json()), indent=2))
             job_errors = list(self.api.telephony.jobs.manage_numbers.list_job_errors(job_id=job.id))
             for error in job_errors:
                 print(f'{error.item}: {error.error.message[0].code} ({error.error.message[0].description})')
@@ -239,7 +239,7 @@ class TestMoveNumbers(TestWithLocations):
                                             numbers=new_tns)])
         rest_error: RestError = exc.exception
         self.assertEqual(412, rest_error.response.status_code)
-        detail: ManageNumberErrorItem = ManageNumberErrorItem.parse_obj(loads(rest_error.detail))
+        detail: ManageNumberErrorItem = ManageNumberErrorItem.model_validate(loads(rest_error.detail))
         self.assertEqual('BATCH-1017031', detail.error.message[0].code)
         return
 

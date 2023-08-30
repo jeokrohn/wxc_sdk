@@ -102,7 +102,7 @@ class TestCreate(TestWithLocations):
             aa_id = ata.create(location_id=target_location.location_id,
                                settings=aa_settings)
             details = ata.details(location_id=target_location.location_id, auto_attendant_id=aa_id)
-            print(json.dumps(json.loads(details.json()), indent=2))
+            print(json.dumps(json.loads(details.model_dump_json()), indent=2))
             print(f'Created AA: {aa_id}')
 
             # clean up, remove AA again

@@ -9,38 +9,38 @@ from ...base import ApiModel
 
 class ClosedCaption(ApiModel):
     #: A unique identifier for the closed caption.
-    id: Optional[str]
+    id: Optional[str] = None
     #: Unique identifier for the meeting instance which the closed captions belong to.
-    meeting_id: Optional[str]
+    meeting_id: Optional[str] = None
     #: The download link for the closed caption vtt file.
-    vtt_download_link: Optional[str]
+    vtt_download_link: Optional[str] = None
     #: The download link for the closed caption txt file.
-    txt_download_link: Optional[str]
+    txt_download_link: Optional[str] = None
     #: Start time for the meeting closed caption in ISO 8601 compliant format.
-    start: Optional[str]
+    start: Optional[str] = None
 
 
 class CCSnippet(ApiModel):
     #: A unique identifier for the closed caption snippet.
-    id: Optional[str]
+    id: Optional[str] = None
     #: Unique identifier for the meeting instance which the closed captions belong to.
-    meeting_id: Optional[str]
+    meeting_id: Optional[str] = None
     #: Text for the snippet.
-    text: Optional[str]
+    text: Optional[str] = None
     #: Name of the person who spoke.
-    person_name: Optional[str]
+    person_name: Optional[str] = None
     #: Email address of the person who spoke.
-    person_email: Optional[str]
+    person_email: Optional[str] = None
     #: The unique identifier for the person speaking.
-    people_id: Optional[str]
+    people_id: Optional[str] = None
     #: Start time for the snippet.
-    start: Optional[str]
+    start: Optional[str] = None
     #: Offset from the beginning of the closed captions in milliseconds indicating the start time of the snippet.
-    offset_millisecond: Optional[str]
+    offset_millisecond: Optional[str] = None
     #: Duration of the snippet in milliseconds.
-    duration_millisecond: Optional[str]
+    duration_millisecond: Optional[str] = None
     #: Original language of the snippet.
-    language: Optional[str]
+    language: Optional[str] = None
 
 
 class MeetingClosedCaptionsApi(ApiChild, base='meetingClosedCaptions'):

@@ -63,11 +63,11 @@ class Hoteling(ApiModel):
     #: host(workspace device) and use this device
     #: as if it were their own. This is useful when traveling to a remote office but still needing to place/receive
     #: calls with their telephone number and access features normally available to them on their office phone.
-    enabled: Optional[bool]
+    enabled: Optional[bool] = None
     #: Enable limiting the time a guest can use the device. The time limit is configured via guestHoursLimit.
-    limit_guest_use: Optional[bool]
+    limit_guest_use: Optional[bool] = None
     #: Time Limit in hours until hoteling is enabled. Mandatory if limitGuestUse is enabled.
-    guest_hours_limit: Optional[int]
+    guest_hours_limit: Optional[int] = None
 
 
 class TelephonyDevice(ApiModel):
@@ -78,14 +78,14 @@ class TelephonyDevice(ApiModel):
     #: Identifier for device model.
     model: str
     #: MAC address of device.
-    mac: Optional[str]
+    mac: Optional[str] = None
     #: IP address of device.
-    ip_address: Optional[str]
+    ip_address: Optional[str] = None
     #: This field indicates whether the person or the workspace is the owner of the device, and points to a primary
     #: Line/Port of the device.
     primary_owner: bool
     #: Hoteling settings, which are available when the device is the user's primary device and device type is PRIMARY
-    hoteling: Optional[Hoteling]
+    hoteling: Optional[Hoteling] = None
     #: Indicates if the line is acting as a primary line or a shared line for this device.
     device_type: PrimaryOrShared = Field(alias='type')
     #: Owner of device.
@@ -212,4 +212,4 @@ class PersonSettingsApi(ApiChild, base='people'):
         params = org_id and {'orgId': org_id} or None
         url = self.session.ep(f'telephony/config/people/{person_id}/devices')
         data = self.get(url=url, params=params)
-        return PersonDevicesResponse.parse_obj(data)
+        return PersonDevicesResponse.model_validate(data)

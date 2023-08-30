@@ -14,25 +14,25 @@ class AppServicesSettings(ApiModel):
     Person app services settings
     """
     #: When true, indicates to ring devices for outbound Click to Dial calls.
-    ring_devices_for_click_to_dial_calls_enabled: Optional[bool]
+    ring_devices_for_click_to_dial_calls_enabled: Optional[bool] = None
     #: When true, indicates to ring devices for inbound Group Pages.
-    ring_devices_for_group_page_enabled: Optional[bool]
+    ring_devices_for_group_page_enabled: Optional[bool] = None
     #: When true, indicates to ring devices for Call Park recalled.
-    ring_devices_for_call_park_enabled: Optional[bool]
+    ring_devices_for_call_park_enabled: Optional[bool] = None
     #: Indicates that the desktop Webex Calling application is enabled for use.
-    desktop_client_enabled: Optional[bool]
+    desktop_client_enabled: Optional[bool] = None
     #: desktop client id
-    desktop_client_id: Optional[str]
+    desktop_client_id: Optional[str] = None
     #: Indicates that the tablet Webex Calling application is enabled for use.
-    tablet_client_enabled: Optional[bool]
+    tablet_client_enabled: Optional[bool] = None
     #: indicates that the mobile Webex Calling application is enabled for use.
-    mobile_client_enabled: Optional[bool]
+    mobile_client_enabled: Optional[bool] = None
     #: Number of available device licenses for assigning devices/apps.
     #: this value cannot be updated
-    available_line_count: Optional[int]
+    available_line_count: Optional[int] = None
     #: Indicates that the browser Webex Calling application is enabled for use.
-    browser_client_enabled: Optional[bool]
-    browser_client_id: Optional[str]
+    browser_client_enabled: Optional[bool] = None
+    browser_client_id: Optional[str] = None
 
 
 class AppServicesApi(PersonSettingsApiChild):
@@ -62,7 +62,7 @@ class AppServicesApi(PersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(ep, params=params)
-        return AppServicesSettings.parse_obj(data)
+        return AppServicesSettings.model_validate(data)
 
     def configure(self, person_id: str, settings: AppServicesSettings, org_id: str = None):
         """
@@ -83,7 +83,7 @@ class AppServicesApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = settings.json(include={'ring_devices_for_click_to_dial_calls_enabled': True,
+        data = settings.model_dump_json(include={'ring_devices_for_click_to_dial_calls_enabled': True,
                                       'ring_devices_for_group_page_enabled': True,
                                       'ring_devices_for_call_park_enabled': True,
                                       'desktop_client_enabled': True,

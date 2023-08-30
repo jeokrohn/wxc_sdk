@@ -42,11 +42,11 @@ class License(ApiModel):
     #: Total number of license units consumed.
     consumed_units: int
     #: The subscription ID associated with this license. This ID is used in other systems, such as Webex Control Hub.
-    subscription_id: Optional[str]
+    subscription_id: Optional[str] = None
     #: The Webex Meetings site associated with this license.
-    site_url: Optional[str]
+    site_url: Optional[str] = None
     #: The type of site associated with this license.
-    site_type: Optional[SiteType]
+    site_type: Optional[SiteType] = None
 
     @property
     def webex_calling(self) -> bool:
@@ -105,4 +105,4 @@ class LicensesApi(ApiChild, base='licenses'):
         :rtype: License
         """
         ep = self.ep(license_id)
-        return License.parse_obj(self.get(ep))
+        return License.model_validate(self.get(ep))

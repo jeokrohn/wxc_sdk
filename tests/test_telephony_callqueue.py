@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from operator import attrgetter
 from re import match
 from typing import ClassVar
+from unittest import skip
 
 from wxc_sdk.all_types import *
 from wxc_sdk.telephony.callqueue import CQRoutingType
@@ -14,6 +15,7 @@ from wxc_sdk.telephony.callqueue.policies import HolidayService, CPActionType, S
     StrandedCalls, StrandedCallsAction, ForcedForward
 from tests.base import TestCaseWithLog, async_test, TestWithLocations, TestCaseWithUsers
 from tests.testutil import available_extensions_gen, get_or_create_holiday_schedule, get_or_create_business_schedule
+from wxc_sdk.telephony.hg_and_cq import CallingLineIdPolicy
 
 # number of call queues to create by create many test
 CQ_MANY = 100
@@ -50,6 +52,7 @@ class TestCreate(TestWithLocations, TestCaseWithUsers):
     Test call queue creation
     """
 
+    #@skip('TODO: to create a CQ we need a TN in the location so that we can properly set the caller ID for the CQ')
     def test_001_create_simple(self):
         """
         create a simple call queue
@@ -73,6 +76,7 @@ class TestCreate(TestWithLocations, TestCaseWithUsers):
         # settings for new call queue
         settings = CallQueue(name=new_name,
                              extension=extension,
+                             calling_line_id_policy=CallingLineIdPolicy.location_number,
                              call_policies=CallQueueCallPolicies.default(),
                              queue_settings=QueueSettings.default(queue_size=10),
                              phone_number_for_outgoing_calls_enabled=True,
@@ -84,7 +88,7 @@ class TestCreate(TestWithLocations, TestCaseWithUsers):
         # and get details of new queue using the queue id
         details = tcq.details(location_id=target_location.location_id,
                               queue_id=new_queue)
-        print(json.dumps(json.loads(details.json()), indent=2))
+        print(json.dumps(json.loads(details.model_dump_json()), indent=2))
 
     def test_002_duplicate_call_queue(self):
         """
@@ -108,7 +112,7 @@ class TestCreate(TestWithLocations, TestCaseWithUsers):
               f'as call queue "{new_name}" ({extension})')
         target_queue_details = tcq.details(location_id=target_queue.location_id,
                                            queue_id=target_queue.id)
-        settings = target_queue_details.copy(deep=True)
+        settings = target_queue_details.model_copy(deep=True)
         settings.extension = extension
         settings.phone_number = ''
         settings.name = new_name
@@ -116,7 +120,7 @@ class TestCreate(TestWithLocations, TestCaseWithUsers):
                             settings=settings)
         try:
             details = tcq.details(location_id=target_queue.location_id, queue_id=new_id)
-            print(json.dumps(json.loads(details.json()), indent=2))
+            print(json.dumps(json.loads(details.model_dump_json()), indent=2))
 
             # details of new queue should be identical to existing with a few exceptions
             details.name = target_queue_details.name
@@ -173,6 +177,7 @@ class TestCreate(TestWithLocations, TestCaseWithUsers):
             # settings for new call queue
             settings = CallQueue(name=queue_name,
                                  extension=extension,
+                                 calling_line_id_policy=CallingLineIdPolicy.location_number,
                                  call_policies=CallQueueCallPolicies.default(),
                                  queue_settings=QueueSettings.default(queue_size=10),
                                  phone_number_for_outgoing_calls_enabled=True,
@@ -249,7 +254,7 @@ class TestUpdate(TestWithQueues):
         details.location_name = target.location_name
         print(f'Updating call queue "{target.name}" ({target.extension}) in location "{target.location_name}"')
         try:
-            yield details.copy(deep=True)
+            yield details.model_copy(deep=True)
         finally:
             if restore:
                 self.api.telephony.callqueue.update(location_id=target.location_id,
@@ -427,7 +432,7 @@ class TestUpdate(TestWithQueues):
             # Don't mess with rules in this test
             before.rules = None
 
-            forwarding = before.copy(deep=True)
+            forwarding = before.model_copy(deep=True)
             forwarding.selective.enabled = False
             try:
                 if forwarding.always.enabled:
@@ -492,7 +497,7 @@ class TestUpdate(TestWithQueues):
             # validate # of rules
             after = fapi.settings(location_id=target.location_id,
                                   feature_id=target.id)
-            print(json.dumps(json.loads(after.json()), indent=2))
+            print(json.dumps(json.loads(after.model_dump_json()), indent=2))
             # only one rule should be left
             self.assertEqual(1, len(after.rules))
 
@@ -505,7 +510,7 @@ class TestUpdate(TestWithQueues):
             fapi = self.api.telephony.callqueue.forwarding
             before = fapi.settings(location_id=target.location_id,
                                    feature_id=target.id)
-            forwarding: CallForwarding = before.copy(deep=True)
+            forwarding: CallForwarding = before.model_copy(deep=True)
             if forwarding.selective.enabled:
                 # disable selective forwarding
                 forwarding.selective.enabled = False
@@ -529,7 +534,7 @@ class TestUpdate(TestWithQueues):
                 fapi.update(location_id=target.location_id, feature_id=target.id, forwarding=forwarding)
             after = fapi.settings(location_id=target.location_id,
                                   feature_id=target.id)
-            print(json.dumps(json.loads(after.json()), indent=2))
+            print(json.dumps(json.loads(after.model_dump_json()), indent=2))
 
         return
 
@@ -615,7 +620,7 @@ class TestCallQueuePolicies(TestWithQueues):
         target: CallQueue = random.choice(self.queues)
         details = self.api.telephony.callqueue.policy.holiday_service_details(location_id=target.location_id,
                                                                               queue_id=target.id)
-        print(json.dumps(json.loads(details.json()), indent=2))
+        print(json.dumps(json.loads(details.model_dump_json()), indent=2))
 
     def test_002_holiday_service_update(self):
         """
@@ -660,7 +665,7 @@ class TestCallQueuePolicies(TestWithQueues):
         target: CallQueue = random.choice(self.queues)
         details = self.api.telephony.callqueue.policy.night_service_detail(location_id=target.location_id,
                                                                            queue_id=target.id)
-        print(json.dumps(json.loads(details.json()), indent=2))
+        print(json.dumps(json.loads(details.model_dump_json()), indent=2))
 
     def test_004_force_night_service_enabled(self):
         """
@@ -706,7 +711,7 @@ class TestCallQueuePolicies(TestWithQueues):
         target: CallQueue = random.choice(self.queues)
         details = self.api.telephony.callqueue.policy.stranded_calls_details(location_id=target.location_id,
                                                                              queue_id=target.id)
-        print(json.dumps(json.loads(details.json()), indent=2))
+        print(json.dumps(json.loads(details.model_dump_json()), indent=2))
 
     def test_006_stranded_calls_busy(self):
         """
@@ -743,7 +748,7 @@ class TestCallQueuePolicies(TestWithQueues):
         target: CallQueue = random.choice(self.queues)
         details = self.api.telephony.callqueue.policy.forced_forward_details(location_id=target.location_id,
                                                                              queue_id=target.id)
-        print(json.dumps(json.loads(details.json()), indent=2))
+        print(json.dumps(json.loads(details.model_dump_json()), indent=2))
 
     def test_008_forced_forward_enabled(self):
         """

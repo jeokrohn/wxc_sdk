@@ -70,7 +70,7 @@ class TestReports(TestCaseWithLog):
         report_id = self.api.reports.create(template_id=cdr_template.id, start_date=start_date, end_date=end_date)
         details = self.api.reports.details(report_id=report_id)
         print('created report')
-        print(json.dumps(json.loads(details.json()), indent=2))
+        print(json.dumps(json.loads(details.model_dump_json()), indent=2))
 
     def test_007_download_latest_cdr(self):
         """

@@ -23,19 +23,19 @@ class CallBounce(ApiModel):
     Settings for when the call into the call queue is not answered.
     """
     #: If enabled, bounce calls after the set number of rings.
-    enabled: Optional[bool] = Field(alias='callBounceEnabled')
+    enabled: Optional[bool] = Field(alias='callBounceEnabled', default=None)
     #: Number of rings after which to bounce call, if call bounce is enabled.
-    max_rings: Optional[int] = Field(alias='callBounceMaxRings')
+    max_rings: Optional[int] = Field(alias='callBounceMaxRings', default=None)
     #: Bounce if agent becomes unavailable.
-    agent_unavailable_enabled: Optional[bool]
+    agent_unavailable_enabled: Optional[bool] = None
     #: Alert agent if call on hold more than alert_agent_max_seconds.
-    alert_agent_enabled: Optional[bool]
+    alert_agent_enabled: Optional[bool] = None
     #: Number of second after which to alert agent if alertAgentEnabled.
-    alert_agent_max_seconds: Optional[int]
+    alert_agent_max_seconds: Optional[int] = None
     #: Bounce if call on hold more than on_hold_max_seconds
-    on_hold_enabled: Optional[bool] = Field(alias='callBounceOnHoldEnabled')
+    on_hold_enabled: Optional[bool] = Field(alias='callBounceOnHoldEnabled', default=None)
     #: Number of second after which to bounce if on_hold_enabled.
-    on_hold_max_seconds: Optional[int] = Field(alias='callBounceOnHoldMaxSeconds')
+    on_hold_max_seconds: Optional[int] = Field(alias='callBounceOnHoldMaxSeconds', default=None)
 
     @staticmethod
     def default() -> 'CallBounce':
@@ -56,7 +56,7 @@ class DistinctiveRing(ApiModel):
     enabled: bool
     #: Ring pattern for when this callqueue is called. Only available when distinctiveRing is enabled for the call
     #: queue.
-    ring_pattern: Optional[RingPattern]
+    ring_pattern: Optional[RingPattern] = None
 
     @staticmethod
     def default() -> 'DistinctiveRing':
@@ -84,13 +84,13 @@ class CallQueueCallPolicies(ApiModel):
     Policy controlling how calls are routed to agents.
     """
     #: Call routing type to use to dispatch calls to agents.
-    routing_type: Optional[CQRoutingType]
+    routing_type: Optional[CQRoutingType] = None
     #: Call routing policy to use to dispatch calls to agents.
-    policy: Optional[Policy]
+    policy: Optional[Policy] = None
     #: Settings for when the call into the call queue is not answered.
-    call_bounce: Optional[CallBounce]
+    call_bounce: Optional[CallBounce] = None
     #: Whether or not the call queue has the distinctive ring option enabled.
-    distinctive_ring: Optional[DistinctiveRing]
+    distinctive_ring: Optional[DistinctiveRing] = None
 
     @staticmethod
     def default() -> 'CallQueueCallPolicies':
@@ -126,28 +126,28 @@ class OverflowSetting(ApiModel):
     Settings for incoming calls exceed queueSize.
     """
     #: How to handle new calls when the queue is full.
-    action: Optional[OverflowAction]
+    action: Optional[OverflowAction] = None
     #: When true, forward all calls to a voicemail service of an internal number. This option is ignored when an
     #: external transfer_number is entered.
-    send_to_voicemail: Optional[bool]
+    send_to_voicemail: Optional[bool] = None
     #: Destination number for overflow calls when action is set to TRANSFER_TO_PHONE_NUMBER.
-    transfer_number: Optional[str]
+    transfer_number: Optional[str] = None
     #: True: transfer number is set
-    is_transfer_number_set: Optional[bool]
+    is_transfer_number_set: Optional[bool] = None
     #: After calls wait for the configured number of seconds and no agent is available, the overflow treatment
     #: is triggered.
-    overflow_after_wait_enabled: Optional[bool]
+    overflow_after_wait_enabled: Optional[bool] = None
     #: Number of seconds to wait before the overflow treatment is triggered when no agent is available.
-    overflow_after_wait_time: Optional[int]
+    overflow_after_wait_time: Optional[int] = None
     #: Indicate overflow audio to be played, otherwise callers will hear the hold music until the call is answered
     #: by a user.
-    play_overflow_greeting_enabled: Optional[bool]
+    play_overflow_greeting_enabled: Optional[bool] = None
     #: How to handle new calls when the queue is full.
-    greeting: Optional[Greeting]
+    greeting: Optional[Greeting] = None
     #: Array of announcement files to be played as overflow greetings. These files are from the list of announcement
     #:  files associated with this call queue. For CUSTOM announcement, a minimum of 1 file is mandatory,
     #:  and the maximum is 4.
-    audio_announcement_files: Optional[list[AnnAudioFile]]
+    audio_announcement_files: Optional[list[AnnAudioFile]] = None
 
     @staticmethod
     def default() -> 'OverflowSetting':
@@ -170,30 +170,30 @@ class WaitMode(str, Enum):
 
 class WaitMessageSetting(ApiModel):
     #: If enabled play Wait Message.
-    enabled: Optional[bool]
+    enabled: Optional[bool] = None
     #: Estimated wait message operating mode. Supported values TIME and POSITION.
-    wait_mode: Optional[WaitMode]
+    wait_mode: Optional[WaitMode] = None
     #: The number of minutes for which the estimated wait is played. The minimum time is 10 minutes. The maximum time
     #: is 100 minutes.
-    handling_time: Optional[int]
+    handling_time: Optional[int] = None
     #: The default number of call handling minutes. The minimum time is 1 minutes, The maximum time is 100 minutes.
-    default_handling_time: Optional[int]
+    default_handling_time: Optional[int] = None
     #: The number of the position for which the estimated wait is played. The minimum positions are 10, The maximum
     #: positions are 100.
-    queue_position: Optional[int]
+    queue_position: Optional[int] = None
     #: Play time / Play position High Volume.
-    high_volume_message_enabled: Optional[bool]
+    high_volume_message_enabled: Optional[bool] = None
     #: The number of estimated waiting times in seconds. The minimum time is 10 seconds. The maximum time is 600
     #: seconds.
-    estimated_waiting_time: Optional[int]
+    estimated_waiting_time: Optional[int] = None
     #: Callback options enabled/disabled. Default value is false.
-    callback_option_enabled: Optional[bool]
+    callback_option_enabled: Optional[bool] = None
     #: The minimum estimated callback times in minutes. The default value is 30.
-    minimum_estimated_callback_time: Optional[int]
+    minimum_estimated_callback_time: Optional[int] = None
     #: The international numbers for callback is enabled/disabled. The default value is false.
-    international_callback_enabled: Optional[bool]
+    international_callback_enabled: Optional[bool] = None
     #: Play updated estimated wait message.
-    play_updated_estimated_wait_message: Optional[str]
+    play_updated_estimated_wait_message: Optional[bool] = None
 
     @staticmethod
     def default():
@@ -252,28 +252,28 @@ class QueueSettings(ApiModel):
     # (max 50).
     queue_size: int
     #: Play ringing tone to callers when their call is set to an available agent.
-    call_offer_tone_enabled: Optional[bool]
+    call_offer_tone_enabled: Optional[bool] = None
     #: Reset caller statistics upon queue entry.
-    reset_call_statistics_enabled: Optional[bool]
+    reset_call_statistics_enabled: Optional[bool] = None
     #: Settings for incoming calls exceed queue_size.
-    overflow: Optional[OverflowSetting]
+    overflow: Optional[OverflowSetting] = None
     #: Notify the caller with either their estimated wait time or position in the queue. If this option is enabled, it
     #: plays after the welcome message and before the comfort message. By default, it is not enabled.
-    wait_message: Optional[WaitMessageSetting]
+    wait_message: Optional[WaitMessageSetting] = None
     #: Play a message when callers first reach the queue. For example, “Thank you for calling. An agent will be with
     #: you shortly.” It can be set as mandatory. If the mandatory option is not selected and a caller reaches the
     #: call queue while there is an available agent, the caller will not hear this announcement and is transferred to
     #: an agent. The welcome message feature is enabled by default.
-    welcome_message: Optional[WelcomeMessageSetting]
+    welcome_message: Optional[WelcomeMessageSetting] = None
     #: Play a message after the welcome message and before hold music. This is typically a CUSTOM announcement that
     #:  plays information, such as current promotions or information about products and services.
-    comfort_message: Optional[ComfortMessageSetting]
+    comfort_message: Optional[ComfortMessageSetting] = None
     #: Play music after the comforting message in a repetitive loop.
-    moh_message: Optional[MohMessageSetting]
+    moh_message: Optional[MohMessageSetting] = None
     #: Comfort message bypass settings
-    comfort_message_bypass: Optional[ComfortMessageBypass]
+    comfort_message_bypass: Optional[ComfortMessageBypass] = None
     #: whisper message to identify the queue for incoming calls.
-    whisper_message: Optional[AudioSource]
+    whisper_message: Optional[AudioSource] = None
 
     @staticmethod
     def default(*, queue_size: int) -> 'QueueSettings':
@@ -292,15 +292,15 @@ class CallQueue(HGandCQ):
     Call queue details
     """
     #: Policy controlling how calls are routed to agents.
-    call_policies: Optional[CallQueueCallPolicies]
+    call_policies: Optional[CallQueueCallPolicies] = None
     #: Overall call queue settings.
-    queue_settings: Optional[QueueSettings]
+    queue_settings: Optional[QueueSettings] = None
     #: whether ot not call waiting for agents is enabled
-    allow_call_waiting_for_agents_enabled: Optional[bool]
+    allow_call_waiting_for_agents_enabled: Optional[bool] = None
     #: Whether or not to allow agents to join or unjoin a queue
-    allow_agent_join_enabled: Optional[bool]
+    allow_agent_join_enabled: Optional[bool] = None
     #: Allow queue phone number for outgoing calls
-    phone_number_for_outgoing_calls_enabled: Optional[bool]
+    phone_number_for_outgoing_calls_enabled: Optional[bool] = None
 
     @staticmethod
     def exclude_update_or_create() -> dict:
@@ -407,7 +407,7 @@ class CallQueueApi:
         :param queue:
         :return:
         """
-        return queue.json(
+        return queue.model_dump_json(
             exclude={'id': True,
                      'location_name': True,
                      'location_id': True,
@@ -567,7 +567,7 @@ class CallQueueApi:
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
         params = {'orgId': org_id} if org_id is not None else {}
         data = self._session.rest_get(url, params=params)
-        result = CallQueue.parse_obj(data)
+        result = CallQueue.model_validate(data)
         result.location_id = location_id
         # noinspection PyTypeChecker
         return result

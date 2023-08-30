@@ -21,8 +21,8 @@ class TestRead(TestCaseWithUsers):
         with ThreadPoolExecutor() as pool:
             settings = list(pool.map(lambda user: ptt.read(person_id=user.person_id),
                                      self.users))
-        print(f'Got PTTsettings for {len(self.users)} users')
-        print('\n'.join(s.json() for s in settings))
+        print(f'Got PTT settings for {len(self.users)} users')
+        print('\n'.join(s.model_dump_json() for s in settings))
 
 
 @dataclass(init=False)
