@@ -21,7 +21,7 @@ class TestRead(TestCaseWithUsers):
             settings = list(pool.map(lambda user: pi.read(person_id=user.person_id),
                                      self.users))
         print(f'Got incoming permissions for {len(self.users)} users')
-        print('\n'.join(f'{user.display_name}: {s.json()}' for user, s in zip(self.users, settings)))
+        print('\n'.join(f'{user.display_name}: {s.model_dump_json()}' for user, s in zip(self.users, settings)))
 
 
 class TestUpdate(TestCaseWithUsers):
@@ -50,7 +50,7 @@ class TestUpdate(TestCaseWithUsers):
             pi = self.api.person_settings.permissions_in
             user: Person
             before = pi.read(person_id=user.person_id)
-            settings: IncomingPermissions = before.copy(deep=True)
+            settings: IncomingPermissions = before.model_copy(deep=True)
             settings.use_custom_enabled = not settings.use_custom_enabled
             pi.configure(person_id=user.person_id, settings=settings)
             after = pi.read(person_id=user.person_id)
@@ -64,7 +64,7 @@ class TestUpdate(TestCaseWithUsers):
             pi = self.api.person_settings.permissions_in
             user: Person
             before = pi.read(person_id=user.person_id)
-            settings: IncomingPermissions = before.copy(deep=True)
+            settings: IncomingPermissions = before.model_copy(deep=True)
             settings.use_custom_enabled = True
             et = before.external_transfer
             for v in ExternalTransfer:

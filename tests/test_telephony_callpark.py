@@ -105,7 +105,7 @@ class TestCreate(TestWithLocations):
 
         details = cpa.details(location_id=target_location.location_id, callpark_id=new_id)
         print('New call park')
-        print(json.dumps(json.loads(details.json()), indent=2))
+        print(json.dumps(json.loads(details.model_dump_json()), indent=2))
 
     @async_test
     async def test_002_many(self):
@@ -225,7 +225,7 @@ class TestCreate(TestWithLocations):
 
         details = cpa.details(location_id=target_location.location_id, callpark_id=new_id)
         print('New call park')
-        print(json.dumps(json.loads(details.json()), indent=2))
+        print(json.dumps(json.loads(details.model_dump_json()), indent=2))
 
 
 @dataclass(init=False)

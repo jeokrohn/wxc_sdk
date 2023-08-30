@@ -78,7 +78,7 @@ class RecurWeekly(ApiModel):
     Specifies the event recur weekly on the designated days of the week
     """
     #: Specifies the number of weeks between the start of each recurrence.
-    recur_interval: Optional[int]
+    recur_interval: Optional[int] = None
     sunday: bool = Field(default=False)
     monday: bool = Field(default=False)
     tuesday: bool = Field(default=False)
@@ -147,23 +147,23 @@ class Recurrence(ApiModel):
     """
     #: True if the event repeats forever. Requires either recurDaily or recurWeekly to be specified.
     #: user and location schedules
-    recur_for_ever: Optional[bool]
+    recur_for_ever: Optional[bool] = None
     #: End date for the recurring event in the format of YYYY-MM-DD. Requires either recur_daily or recur_weekly to
     #: be specified. User and location schedules
-    recur_end_date: Optional[datetime.date]
+    recur_end_date: Optional[datetime.date] = None
     #: End recurrence after the event has repeated the specified number of times. Requires either
     #: recur_daily or recur_weekly to be specified. User schedules only.
-    recur_end_of_occurrence: Optional[int]
+    recur_end_of_occurrence: Optional[int] = None
     #: Specifies the number of days between the start of each recurrence and is not allowed with recurWeekly.
     #: Only allowed for user schedules
-    recur_daily: Optional[RecurDaily]
+    recur_daily: Optional[RecurDaily] = None
     #: Specifies the event recur weekly on the designated days of the week and is not allowed with recur_daily.
     #: allowed for user and location schedules
-    recur_weekly: Optional[RecurWeekly]
+    recur_weekly: Optional[RecurWeekly] = None
     #: only allowed for location schedules
-    recur_yearly_by_date: Optional[RecurYearlyByDate]
+    recur_yearly_by_date: Optional[RecurYearlyByDate] = None
     #: only allowed for location schedules
-    recur_yearly_by_day: Optional[RecurYearlyByDay]
+    recur_yearly_by_day: Optional[RecurYearlyByDay] = None
 
     @staticmethod
     def every_week(day: Union[ScheduleDay, datetime.date]) -> 'Recurrence':
@@ -180,27 +180,27 @@ class Recurrence(ApiModel):
 
 class Event(ApiModel):
     #: unique id of the event
-    event_id: Optional[str] = Field(alias='id')
+    event_id: Optional[str] = Field(alias='id', default=None)
     #: Name for the event.
     name: str
     #: new name for the event, only used in updates
-    new_name: Optional[str]
+    new_name: Optional[str] = None
     #: Start date of the event, or first occurrence if repeating. This field is required
     #: if all_day_enabled field is present.
-    start_date: Optional[datetime.date]
+    start_date: Optional[datetime.date] = None
     #: End date of the event, or first occurrence if repeating, in the format of YYYY-MM-DD. This field is required
     #: if all_day_enabled field is present.
-    end_date: Optional[datetime.date]
+    end_date: Optional[datetime.date] = None
     #: Start time of the event. This field is required if all_day_enabled
     #: field is false or omitted.
-    start_time: Optional[datetime.time]
+    start_time: Optional[datetime.time] = None
     #: End time of the event. This field is required if all_day_enabled field
     #: is false or omitted.
-    end_time: Optional[datetime.time]
+    end_time: Optional[datetime.time] = None
     #: True if it is all-day event.
-    all_day_enabled: Optional[bool]
+    all_day_enabled: Optional[bool] = None
     #: Recurrence scheme for an event.
-    recurrence: Optional[Recurrence]
+    recurrence: Optional[Recurrence] = None
 
     class Config:
         json_encoders = {
@@ -237,22 +237,22 @@ class Event(ApiModel):
 
 class Schedule(ApiModel):
     #: Name for the schedule.
-    name: Optional[str]
+    name: Optional[str] = None
     #: new name for the schedule. Only used in update()
-    new_name: Optional[str]
+    new_name: Optional[str] = None
     #: Identifier for a schedule.
-    schedule_id: Optional[str] = Field(alias='id')
+    schedule_id: Optional[str] = Field(alias='id', default=None)
     #: listing user schedules returns user and location level schedules. This indicates the level. Can be USER or GROUP
     #: this attribute only exists when listing schedules at the user level
-    level: Optional[str]
+    level: Optional[str] = None
     #: location name, only returned by list() for location schedules
-    location_name: Optional[str]
+    location_name: Optional[str] = None
     #: location id, only returned by list() for location schedules
-    location_id: Optional[str]
+    location_id: Optional[str] = None
     #: Indicates the schedule type whether businessHours or holidays
     schedule_type: ScheduleType = Field(alias='type')
     #: Indicates a list of events.
-    events: Optional[list[Event]]
+    events: Optional[list[Event]] = None
 
     class Config:
         json_encoders = {
@@ -310,11 +310,11 @@ class Schedule(ApiModel):
 
         :meta private:
         """
-        working_copy = self.copy(deep=True)
+        working_copy = self.model_copy(deep=True)
         if update:
             for event in working_copy.events or []:
                 event.new_name = event.new_name or event.name
-        return working_copy.json(exclude={'schedule_id': True,
+        return working_copy.model_dump_json(exclude={'schedule_id': True,
                                           'location_name': True,
                                           'location_id': True,
                                           'events': {'__all__': {'event_id': True}}})
@@ -430,7 +430,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id)
         data = self.get(url, params=params)
-        result = Schedule.parse_obj(data)
+        result = Schedule.model_validate(data)
         return result
 
     def create(self, obj_id: str, schedule: Schedule, org_id: str = None) -> str:
@@ -555,7 +555,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id,
                              event_id=event_id)
         data = self.get(url, params=params)
-        result = Event.parse_obj(data)
+        result = Event.model_validate(data)
         return result
 
     def event_create(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
@@ -589,7 +589,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id,
                              event_id='')
-        data = event.json(exclude={'event_id'})
+        data = event.model_dump_json(exclude={'event_id'})
         data = self.post(url, data=data, params=params)
         return data['id']
 
@@ -628,7 +628,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id,
                              event_id=event_id)
-        event_data = event.json(exclude={'event_id'})
+        event_data = event.model_dump_json(exclude={'event_id'})
         data = self.put(url, data=event_data, params=params)
         return data['id']
 

@@ -2,7 +2,7 @@
 Private network connect API
 """
 
-from pydantic import parse_obj_as
+from pydantic import TypeAdapter
 
 from ..api_child import ApiChild
 from ..base import SafeEnum as Enum
@@ -46,7 +46,7 @@ class PrivateNetworkConnectApi(ApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self.session.ep(f'telephony/config/locations/{location_id}/privateNetworkConnect')
         data = self.get(url, params=params)
-        return parse_obj_as(NetworkConnectionType, data['networkConnectionType'])
+        return TypeAdapter(NetworkConnectionType).validate_python(data['networkConnectionType'])
 
     def update(self, location_id: str, connection_type: NetworkConnectionType, org_id: str = None):
         """

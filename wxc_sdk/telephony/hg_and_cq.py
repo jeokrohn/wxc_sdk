@@ -1,6 +1,7 @@
 """
 common base for Call Queues and Hunt Groups
 """
+import json
 from base64 import b64decode
 from typing import Optional
 
@@ -26,23 +27,23 @@ class AlternateNumberSettings(ApiModel):
     #: ringing patterns set for Alternate Number.
     distinctive_ring_enabled: bool = Field(default=True)
     #: Specifies up to 10 numbers which can each have an overriden distinctive ring setting.
-    alternate_numbers: Optional[list[AlternateNumber]]
+    alternate_numbers: Optional[list[AlternateNumber]] = None
 
 
 class Agent(UserBase):
     #: ID of person, workspace or virtual line.
     agent_id: str = Field(alias='id')
     #: Extension of person or workspace.
-    extension: Optional[str]
+    extension: Optional[str] = None
     #: Phone number of person or workspace.
-    phone_number: Optional[str]
+    phone_number: Optional[str] = None
     #: Weight of person, workspace or virtual line. Only applied when call policy is WEIGHTED.
-    weight: Optional[str]
+    weight: Optional[str] = None
     #: Skill level of person, workspace or virtual line. Only applied when the call routingType is SKILL_BASED.
-    skill_level: Optional[int]
+    skill_level: Optional[int] = None
     #: Indicates the join status of the agent for this queue. Only for call queues
-    join_enabled: Optional[bool]
-    location: Optional[IdAndName]
+    join_enabled: Optional[bool] = None
+    location: Optional[IdAndName] = None
 
     @property
     def cpapi_id(self) -> str:
@@ -51,7 +52,7 @@ class Agent(UserBase):
 
 class CallingLineIdPolicy(str, Enum):
     direct_line = 'DIRECT_LINE'
-    location_numer = 'LOCATION_NUMBER'
+    location_number = 'LOCATION_NUMBER'
     customer = 'CUSTOM'
 
 
@@ -60,38 +61,38 @@ class HGandCQ(ApiModel):
     Common attributes of hunt groups and call queues
     """
     #: Unique name
-    name: Optional[str]
+    name: Optional[str] = None
     #: Unique identified
-    id: Optional[str]
-    location_name: Optional[str]  # only returned by list()
-    location_id: Optional[str]  # # only returned by list()
+    id: Optional[str] = None
+    location_name: Optional[str] = None  # only returned by list()
+    location_id: Optional[str] = None  # # only returned by list()
     #: Primary phone number
-    phone_number: Optional[str]
+    phone_number: Optional[str] = None
     #: Extension
-    extension: Optional[str]
-    calling_line_id_policy: Optional[CallingLineIdPolicy]
-    calling_line_id_phone_number: Optional[str]
+    extension: Optional[str] = None
+    calling_line_id_policy: Optional[CallingLineIdPolicy] = None
+    calling_line_id_phone_number: Optional[str] = None
     #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
     #: number will reach the same greeting and each menu will function identically to the main number. The alternate
     #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
-    alternate_number_settings: Optional[AlternateNumberSettings]
+    alternate_number_settings: Optional[AlternateNumberSettings] = None
     #: enabled flag
-    enabled: Optional[bool]
+    enabled: Optional[bool] = None
     #: True: phone_number is toll_free
-    toll_free_number: Optional[bool]
+    toll_free_number: Optional[bool] = None
     #: Language for call queue.
-    language: Optional[str]
+    language: Optional[str] = None
     #: Language code.
-    language_code: Optional[str]
+    language_code: Optional[str] = None
     #: First name to be shown when calls are forwarded out. Defaults to ".".
-    first_name: Optional[str]
+    first_name: Optional[str] = None
     #: Last name to be shown when calls are forwarded out. Defaults to the phone number if set,
     #: otherwise defaults to name.
-    last_name: Optional[str]
+    last_name: Optional[str] = None
     #: Time zone for the call queue.
-    time_zone: Optional[str]
+    time_zone: Optional[str] = None
     #: People, workspaces and virtual lines that are eligible to receive calls.
-    agents: Optional[list[Agent]]
+    agents: Optional[list[Agent]] = None
 
     @property
     def cpapi_id(self):
@@ -134,7 +135,7 @@ class HGandCQ(ApiModel):
         :return: JSON
         :rtype: str
         """
-        return self.json(exclude=self.exclude_update_or_create())
+        return self.model_dump_json(exclude=self.exclude_update_or_create())
 
 
 class Policy(str, Enum):

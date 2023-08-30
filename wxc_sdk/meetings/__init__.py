@@ -49,17 +49,17 @@ class ScheduledType(str, Enum):
 
 class InviteeForCreateMeeting(ApiModel):
     #: Email address of meeting invitee.
-    email: Optional[str]
+    email: Optional[str] = None
     #: Display name of meeting invitee. The maximum length of displayName is 128 characters. If not specified but the
     #: email has been registered, user's registered name for the email will be taken as displayName. If not specified
     #: and the email hasn't been registered, the email will be taken as displayName.
-    display_name: Optional[str]
+    display_name: Optional[str] = None
     #: Whether or not invitee is allowed to be a cohost for the meeting. coHost for each invitee is true by default if
     #: roomId is specified when creating a meeting, and anyone in the invitee list that is not qualified to be a cohost
     #: will be invited as a non-cohost invitee.
-    co_host: Optional[bool]
+    co_host: Optional[bool] = None
     #: Whether or not an invitee is allowed to be a panelist. Only applies to webinars.
-    panelist: Optional[bool]
+    panelist: Optional[bool] = None
 
 
 class Type(str, Enum):
@@ -99,30 +99,30 @@ class AutoRegistrationResult(str, Enum):
 
 class ApprovalRule(ApiModel):
     #: Judgment expression for approval rules.
-    condition: Optional[AnswerCondition]
+    condition: Optional[AnswerCondition] = None
     #: The keyword for the approval rule. If the rule matches the keyword, the corresponding action will be executed.
-    value: Optional[str]
+    value: Optional[str] = None
     #: The automatic approval result for the approval rule.
-    result: Optional[AutoRegistrationResult]
+    result: Optional[AutoRegistrationResult] = None
     #: Whether to check the case of values.
-    match_case: Optional[bool]
+    match_case: Optional[bool] = None
 
 
 class CustomizedQuestionForCreateMeeting(ApiModel):
     #: Title of the customized question.
-    question: Optional[str]
+    question: Optional[str] = None
     #: Whether or not the customized question is required to be answered by participants.
-    required: Optional[bool]
+    required: Optional[bool] = None
     #: Type of the question being asked.
-    type: Optional[Type]
+    type: Optional[Type] = None
     #: The maximum length of a string that can be entered by the user, ranging from 0 to 999. Only required by
     #: singleLineTextBox and multiLineTextBox.
-    max_length: Optional[int]
+    max_length: Optional[int] = None
     #: The content of options. Required if the question type is one of checkbox, dropdownList, or radioButtons.
     #: The content of the option.
-    options: Optional[list[object]]
+    options: Optional[list[object]] = None
     #: The automatic approval rules for customized questions.
-    rules: Optional[list[ApprovalRule]]
+    rules: Optional[list[ApprovalRule]] = None
 
 
 class ApprovalQuestion(str, Enum):
@@ -154,79 +154,79 @@ class ApprovalQuestion(str, Enum):
 
 class StandardRegistrationApproveRule(ApprovalRule):
     #: Name for standard question.
-    question: Optional[ApprovalQuestion]
+    question: Optional[ApprovalQuestion] = None
     #: The priority number of the approval rule. Approval rules for standard questions and custom questions need to be
     #: ordered together.
-    order: Optional[int]
+    order: Optional[int] = None
 
 
 class Registration(ApiModel):
     #: Whether or not meeting registration requests are accepted automatically.
-    auto_accept_request: Optional[bool]
+    auto_accept_request: Optional[bool] = None
     #: Whether or not a registrant's first name is required for meeting registration.
-    require_first_name: Optional[bool]
+    require_first_name: Optional[bool] = None
     #: Whether or not a registrant's last name is required for meeting registration.
-    require_last_name: Optional[bool]
+    require_last_name: Optional[bool] = None
     #: Whether or not a registrant's email is required for meeting registration.
-    require_email: Optional[bool]
+    require_email: Optional[bool] = None
     #: Whether or not a registrant's job title is required for meeting registration.
-    require_job_title: Optional[bool]
+    require_job_title: Optional[bool] = None
     #: Whether or not a registrant's company name is required for meeting registration.
-    require_company_name: Optional[bool]
+    require_company_name: Optional[bool] = None
     #: Whether or not a registrant's first address field is required for meeting registration.
-    require_address1: Optional[bool]
+    require_address1: Optional[bool] = None
     #: Whether or not a registrant's second address field is required for meeting registration.
-    require_address2: Optional[bool]
+    require_address2: Optional[bool] = None
     #: Whether or not a registrant's city is required for meeting registration.
-    require_city: Optional[bool]
+    require_city: Optional[bool] = None
     #: Whether or not a registrant's state is required for meeting registration.
-    require_state: Optional[bool]
+    require_state: Optional[bool] = None
     #: Whether or not a registrant's postal code is required for meeting registration.
-    require_zip_code: Optional[bool]
+    require_zip_code: Optional[bool] = None
     #: Whether or not a registrant's country or region is required for meeting registration.
-    require_country_region: Optional[bool]
+    require_country_region: Optional[bool] = None
     #: Whether or not a registrant's work phone number is required for meeting registration.
-    require_work_phone: Optional[bool]
+    require_work_phone: Optional[bool] = None
     #: Whether or not a registrant's fax number is required for meeting registration.
-    require_fax: Optional[bool]
+    require_fax: Optional[bool] = None
     #: The maximum number of meeting registrations. Only applies to meetings. Webinars use a default value of 10000. If
     #: the maximum capacity of attendees for a webinar is less than 10000, e.g. 3000, then at most 3000 registrants can
     #: join this webinar.
-    max_register_num: Optional[int]
+    max_register_num: Optional[int] = None
     #: Customized questions for meeting registration.
-    customized_questions: Optional[list[CustomizedQuestionForCreateMeeting]]
+    customized_questions: Optional[list[CustomizedQuestionForCreateMeeting]] = None
     #: The approval rules for standard questions.
-    rules: Optional[list[StandardRegistrationApproveRule]]
+    rules: Optional[list[StandardRegistrationApproveRule]] = None
 
 
 class InterpreterForSimultaneousInterpretation(ApiModel):
     #: Unique identifier for meeting interpreter.
-    id: Optional[str]
+    id: Optional[str] = None
     #: Forms a set of simultaneous interpretation channels together with languageCode2. Standard language format from
     #: ISO 639-1 code. Read ISO 639-1 for details.
-    language_code1: Optional[str]
+    language_code1: Optional[str] = None
     #: Forms a set of simultaneous interpretation channels together with languageCode1. Standard language format from
     #: ISO 639-1 code. Read ISO 639-1 for details.
-    language_code2: Optional[str]
+    language_code2: Optional[str] = None
     #: Email address of meeting interpreter.
-    email: Optional[str]
+    email: Optional[str] = None
     #: Display name of meeting interpreter.
-    display_name: Optional[str]
+    display_name: Optional[str] = None
 
 
 class SimultaneousInterpretation(ApiModel):
     #: Whether or not simultaneous interpretation is enabled.
-    enabled: Optional[bool]
+    enabled: Optional[bool] = None
     #: Interpreters for meeting.
-    interpreters: Optional[list[InterpreterForSimultaneousInterpretation]]
+    interpreters: Optional[list[InterpreterForSimultaneousInterpretation]] = None
 
 
 class BreakoutSession(ApiModel):
     #: Name for breakout session.
-    name: Optional[str]
+    name: Optional[str] = None
     #: Invitees for breakout session. Please note that one invitee cannot be assigned to more than one breakout
     #: session.
-    invitees: Optional[list[str]]
+    invitees: Optional[list[str]] = None
 
 
 class UnlockedMeetingJoinSecurity(str, Enum):
@@ -249,70 +249,70 @@ class NoteType(str, Enum):
 
 class MeetingOptions(ApiModel):
     #: Whether or not to allow any attendee to chat in the meeting. Also depends on the session type.
-    enabled_chat: Optional[bool]
+    enabled_chat: Optional[bool] = None
     #: Whether or not to allow any attendee to have video in the meeting. Also depends on the session type.
-    enabled_video: Optional[bool]
+    enabled_video: Optional[bool] = None
     #: Whether or not to allow any attendee to poll in the meeting. Can only be set true for a webinar. The value of
     #: this attribute depends on the session type for a meeting. Please contact your site admin if this attribute is
     #: not available.
-    enabled_polling: Optional[bool]
+    enabled_polling: Optional[bool] = None
     #: Whether or not to allow any attendee to take notes in the meeting. The value of this attribute also depends on
     #: the session type.
-    enabled_note: Optional[bool]
+    enabled_note: Optional[bool] = None
     #: Whether note taking is enabled. If the value of enabledNote is false, users can not set this attribute and get
     #: default value allowAll.
-    note_type: Optional[NoteType]
+    note_type: Optional[NoteType] = None
     #: Whether or not to allow any attendee to have closed captions in the meeting. The value of this attribute also
     #: depends on the session type.
-    enabled_closed_captions: Optional[bool]
+    enabled_closed_captions: Optional[bool] = None
     #: Whether or not to allow any attendee to transfer files in the meeting. The value of this attribute also depends
     #: on the session type.
-    enabled_file_transfer: Optional[bool]
+    enabled_file_transfer: Optional[bool] = None
     #: Whether or not to allow any attendee to share Universal Communications Format media files in the meeting. The
     #: value of this attribute also depends on the sessionType.
-    enabled_ucf_rich_media: Optional[bool]
+    enabled_ucf_rich_media: Optional[bool] = None
 
 
 class AttendeePrivileges(ApiModel):
     #: Whether or not to allow any attendee to share content in the meeting.
-    enabled_share_content: Optional[bool]
+    enabled_share_content: Optional[bool] = None
     #: Whether or not to allow any attendee to save shared documents, slides, or whiteboards when they are shared as
     #: files in the content viewer instead of in a window or application.
-    enabled_save_document: Optional[bool]
+    enabled_save_document: Optional[bool] = None
     #: Whether or not to allow any attendee to print shared documents, slides, or whiteboards when they are shared as
     #: files in the content viewer instead of in a window or application.
-    enabled_print_document: Optional[bool]
+    enabled_print_document: Optional[bool] = None
     #: Whether or not to allow any attendee to annotate shared documents, slides, or whiteboards when they are shared
     #: as files in the content viewer instead of in a window or application.
-    enabled_annotate: Optional[bool]
+    enabled_annotate: Optional[bool] = None
     #: Whether or not to allow any attendee to view participants.
-    enabled_view_participant_list: Optional[bool]
+    enabled_view_participant_list: Optional[bool] = None
     #: Whether or not to allow any attendee to see a small preview image of any page of shared documents or slides when
     #: they are shared as files in the content viewer instead of in a window or application.
-    enabled_view_thumbnails: Optional[bool]
+    enabled_view_thumbnails: Optional[bool] = None
     #: Whether or not to allow any attendee to control applications, web browsers, or desktops remotely.
-    enabled_remote_control: Optional[bool]
+    enabled_remote_control: Optional[bool] = None
     #: Whether or not to allow any attendee to view any shared documents or slides when they are shared as files in the
     #: content viewer instead of in a window or application.
-    enabled_view_any_document: Optional[bool]
+    enabled_view_any_document: Optional[bool] = None
     #: Whether or not to allow any attendee to scroll through any page of shared documents or slides when they are
     #: shared as files in the content viewer instead of in a window or application.
-    enabled_view_any_page: Optional[bool]
+    enabled_view_any_page: Optional[bool] = None
     #: Whether or not to allow any attendee to contact the operator privately.
-    enabled_contact_operator_privately: Optional[bool]
+    enabled_contact_operator_privately: Optional[bool] = None
     #: Whether or not to allow any attendee to chat with the host in private.
-    enabled_chat_host: Optional[bool]
+    enabled_chat_host: Optional[bool] = None
     #: Whether or not to allow any attendee to chat with the presenter in private.
-    enabled_chat_presenter: Optional[bool]
+    enabled_chat_presenter: Optional[bool] = None
     #: Whether or not to allow any attendee to chat with other participants in private.
-    enabled_chat_other_participants: Optional[bool]
+    enabled_chat_other_participants: Optional[bool] = None
 
 
 class TrackingCodeItem(ApiModel):
     #: Name of the tracking code. The name cannot be empty and the maximum size is 120 characters.
-    name: Optional[str]
+    name: Optional[str] = None
     #: Value for the tracking code. value cannot be empty and the maximum size is 120 characters.
-    value: Optional[str]
+    value: Optional[str] = None
 
 
 class AudioConnectionType(str, Enum):
@@ -338,32 +338,32 @@ class EntryAndExitTone(str, Enum):
 
 class AudioConnectionOptions(ApiModel):
     #: Choose how meeting attendees join the audio portion of the meeting.
-    audio_connection_type: Optional[AudioConnectionType]
+    audio_connection_type: Optional[AudioConnectionType] = None
     #: Whether or not to show toll-free call-in numbers.
-    enabled_toll_free_call_in: Optional[bool]
+    enabled_toll_free_call_in: Optional[bool] = None
     #: Whether or not to show global call-in numbers to attendees.
-    enabled_global_call_in: Optional[bool]
+    enabled_global_call_in: Optional[bool] = None
     #: Whether or not to allow attendees to receive a call-back and call-in is available. Can only be set true for a
     #: webinar.
-    enabled_audience_call_back: Optional[bool]
+    enabled_audience_call_back: Optional[bool] = None
     #: Select the sound you want users who have a phone audio connection to hear when someone enters or exits the
     #: meeting.
-    entry_and_exit_tone: Optional[EntryAndExitTone]
+    entry_and_exit_tone: Optional[EntryAndExitTone] = None
     #: Whether or not to allow the host to unmute participants.
-    allow_host_to_unmute_participants: Optional[bool]
+    allow_host_to_unmute_participants: Optional[bool] = None
     #: Whether or not to allow attendees to unmute themselves.
-    allow_attendee_to_unmute_self: Optional[bool]
+    allow_attendee_to_unmute_self: Optional[bool] = None
     #: Whether or not to auto-mute attendees when attendees enter meetings.
-    mute_attendee_upon_entry: Optional[bool]
+    mute_attendee_upon_entry: Optional[bool] = None
 
 
 class PatchMeetingBody(ApiModel):
     #: Meeting title. The title can be a maximum of 128 characters long.
-    title: Optional[str]
+    title: Optional[str] = None
     #: Meeting agenda. The agenda can be a maximum of 1300 characters long.
-    agenda: Optional[str]
+    agenda: Optional[str] = None
     #: Meeting password. Must conform to the site's password complexity settings. Read password management for details.
-    password: Optional[str]
+    password: Optional[str] = None
     #: Date and time for the start of meeting in any ISO 8601 compliant format. start cannot be before current date and
     #: time or after end. Duration between start and end cannot be shorter than 10 minutes or longer than 24 hours.
     #: Refer to the Webex Meetings guide for more information about restrictions on updating date and time for a
@@ -373,7 +373,7 @@ class PatchMeetingBody(ApiModel):
     #: For instance, if the current time is 2022-03-01T10:32:16.657+08:00, start of 2022-03-01T10:32:28.076+08:00 or
     #: 2022-03-01T10:32:41+08:00 will be adjusted to 2022-03-01T10:33:00+08:00, and start of
     #: 2022-03-01T11:32:28.076+08:00 or 2022-03-01T11:32:41+08:00 will be adjusted to 2022-03-01T11:32:00+08:00.
-    start: Optional[str]
+    start: Optional[str] = None
     #: Date and time for the end of meeting in any ISO 8601 compliant format. end cannot be before current date and
     #: time or before start. Duration between start and end cannot be shorter than 10 minutes or longer than 24 hours.
     #: Refer to the Webex Meetings guide for more information about restrictions on updating date and time for a
@@ -381,91 +381,91 @@ class PatchMeetingBody(ApiModel):
     #: seconds or milliseconds. Therefore, end will be adjusted with seconds and milliseconds stripped off. For
     #: instance, end of 2022-03-01T11:52:28.076+08:00 or 2022-03-01T11:52:41+08:00 will be adjusted to
     #: 2022-03-01T11:52:00+08:00.
-    end: Optional[str]
+    end: Optional[str] = None
     #: Time zone in which the meeting was originally scheduled (conforming with the IANA time zone database).
-    timezone: Optional[str]
+    timezone: Optional[str] = None
     #: Meeting series recurrence rule (conforming with RFC 2445). Applies only to a recurring meeting series, not to a
     #: meeting series with only one scheduled meeting. Multiple days or dates for monthly or yearly recurrence rule are
     #: not supported, only the first day or date specified is taken. For example,
     #: "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it will be partially supported as
     #: "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
-    recurrence: Optional[str]
+    recurrence: Optional[str] = None
     #: Whether or not meeting is recorded automatically.
-    enabled_auto_record_meeting: Optional[bool]
+    enabled_auto_record_meeting: Optional[bool] = None
     #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
     #: meeting. The target site is specified by siteUrl parameter when creating the meeting; if not specified, it's
     #: user's preferred site.
-    allow_any_user_to_be_co_host: Optional[bool]
+    allow_any_user_to_be_co_host: Optional[bool] = None
     #: Whether or not to allow any attendee to join the meeting before the host joins the meeting.
-    enabled_join_before_host: Optional[bool]
+    enabled_join_before_host: Optional[bool] = None
     #: Whether or not to allow any attendee to connect audio in the meeting before the host joins the meeting. This
     #: attribute is only applicable if the enabledJoinBeforeHost attribute is set to true.
-    enable_connect_audio_before_host: Optional[bool]
+    enable_connect_audio_before_host: Optional[bool] = None
     #: The number of minutes an attendee can join the meeting before the meeting start time and the host joins. This
     #: attribute is only applicable if the enabledJoinBeforeHost attribute is set to true. Valid options are 0, 5, 10
     #: and 15. Default is 0 if not specified.
-    join_before_host_minutes: Optional[int]
+    join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
-    exclude_password: Optional[bool]
+    exclude_password: Optional[bool] = None
     #: Whether or not to allow the meeting to be listed on the public calendar.
-    public_meeting: Optional[bool]
+    public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host.
-    reminder_time: Optional[int]
+    reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
-    unlocked_meeting_join_security: Optional[UnlockedMeetingJoinSecurity]
+    unlocked_meeting_join_security: Optional[UnlockedMeetingJoinSecurity] = None
     #: Unique identifier for a meeting session type for the user. This attribute is required while scheduling webinar
     #: meeting. All available meeting session types enabled for the user can be retrieved by List Meeting Session Types
     #: API.
-    session_type_id: Optional[int]
+    session_type_id: Optional[int] = None
     #: Whether or not webcast view is enabled.
-    enabled_webcast_view: Optional[bool]
+    enabled_webcast_view: Optional[bool] = None
     #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read
     #: password management for details. If not specified, a random password conforming to the site's password rules
     #: will be generated automatically.
-    panelist_password: Optional[str]
+    panelist_password: Optional[str] = None
     #: Whether or not to automatically lock the meeting after it starts.
-    enable_automatic_lock: Optional[bool]
+    enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it.
-    automatic_lock_minutes: Optional[int]
+    automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by siteUrl parameter when creating the meeting; if not specified, it's
     #: user's preferred site.
-    allow_first_user_to_be_co_host: Optional[bool]
+    allow_first_user_to_be_co_host: Optional[bool] = None
     #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
     #: without a prompt.
-    allow_authenticated_devices: Optional[bool]
+    allow_authenticated_devices: Optional[bool] = None
     #: Whether or not to send emails to host and invitees. It is an optional field and default value is true.
-    send_email: Optional[bool]
+    send_email: Optional[bool] = None
     #: Email address for the meeting host. This attribute should only be set if the user or application calling the API
     #: has the admin-level scopes. When used, the admin may specify the email of a user in a site they manage to be the
     #: meeting host.
-    host_email: Optional[str]
+    host_email: Optional[str] = None
     #: URL of the Webex site which the meeting is updated on. If not specified, the meeting is created on user's
     #: preferred site. All available Webex sites and preferred site of the user can be retrieved by Get Site List API.
-    site_url: Optional[str]
+    site_url: Optional[str] = None
     #: Meeting Options.
-    meeting_options: Optional[MeetingOptions]
+    meeting_options: Optional[MeetingOptions] = None
     #: Attendee Privileges.
-    attendee_privileges: Optional[AttendeePrivileges]
+    attendee_privileges: Optional[AttendeePrivileges] = None
     #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs,
     #: Salesforce Opportunity IDs, etc. The integration application queries meetings by a key in its own domain. The
     #: maximum size of integrationTags is 3 and each item of integrationTags can be a maximum of 64 characters long.
     #: Please note that an empty or null integrationTags will delete all existing integration tags for the meeting
     #: implicitly. Developer can update integration tags for a meetingSeries but he cannot update it for a
     #: scheduledMeeting or a meeting instance.
-    integration_tags: Optional[list[str]]
+    integration_tags: Optional[list[str]] = None
     #: Whether or not breakout sessions are enabled. If the value of enabledBreakoutSessions is false, users can not
     #: set breakout sessions. If the value of enabledBreakoutSessions is true, users can update breakout sessions using
     #: the Update Breakout Sessions API. Updating breakout sessions are not supported by this API.
-    enabled_breakout_sessions: Optional[bool]
+    enabled_breakout_sessions: Optional[bool] = None
     #: Tracking codes information. All available tracking codes and their options for the specified site can be
     #: retrieved by List Meeting Tracking Codes API. If an optional tracking code is missing from the trackingCodes
     #: array and there's a default option for this tracking code, the default option is assigned automatically. If the
     #: inputMode of a tracking code is select, its value must be one of the site-level options or the user-level value.
     #: Tracking code is not supported for a personal room meeting or an ad-hoc space meeting.
-    tracking_codes: Optional[list[TrackingCodeItem]]
+    tracking_codes: Optional[list[TrackingCodeItem]] = None
     #: Audio connection options.
-    audio_connection_options: Optional[AudioConnectionOptions]
+    audio_connection_options: Optional[AudioConnectionOptions] = None
 
 
 class MeetingType(str, Enum):
@@ -506,58 +506,58 @@ class MeetingState(str, Enum):
 class CallInNumbers(ApiModel):
     #: Label for the call-in number.
     #: Possible values: Call-in toll-free number (US/Canada)
-    label: Optional[str]
+    label: Optional[str] = None
     #: Call-in number to join the teleconference from a phone.
     #: Possible values: 123456789
-    call_in_number: Optional[str]
+    call_in_number: Optional[str] = None
     #: Type of toll for the call-in number.
     #: Possible values: toll, tollFree
-    toll_type: Optional[str]
+    toll_type: Optional[str] = None
 
 
 class MeetingTelephony(ApiModel):
     #: Code for authenticating a user to join teleconference. Users join the teleconference using the call-in number or
     #: the global call-in number, followed by the value of the accessCode.
-    access_code: Optional[str]
+    access_code: Optional[str] = None
     #: Array of call-in numbers for joining a teleconference from a phone.
-    call_in_numbers: Optional[list[CallInNumbers]]
+    call_in_numbers: Optional[list[CallInNumbers]] = None
     #: HATEOAS information of global call-in numbers for joining a teleconference from a phone.
-    links: Optional[list[LinkRelation]]
+    links: Optional[list[LinkRelation]] = None
 
 
 class Meeting(ApiModel):
     #: Unique identifier for meeting. For a meeting series, the id is used to identify the entire series. For scheduled
     #: meetings from a series, the id is used to identify that scheduled meeting. For a meeting instance that is in
     #: progress or has concluded, the id is used to identify that instance.
-    id: Optional[str]
+    id: Optional[str] = None
     #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting
     #: instances which have ended.
-    meeting_number: Optional[str]
+    meeting_number: Optional[str] = None
     #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the Update a Meeting API.
-    title: Optional[str]
+    title: Optional[str] = None
     #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a
     #: meeting series or a scheduled meeting using the Update a Meeting API.
-    agenda: Optional[str]
+    agenda: Optional[str] = None
     #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to
     #: meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the Update
     #: a Meeting API.
-    password: Optional[str]
+    password: Optional[str] = None
     #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting
     #: series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended.
-    phone_and_video_system_password: Optional[str]
+    phone_and_video_system_password: Optional[str] = None
     #: Meeting type.
-    meeting_type: Optional[MeetingType]
+    meeting_type: Optional[MeetingType] = None
     #: Meeting state.
-    state: Optional[MeetingState]
+    state: Optional[MeetingState] = None
     #: Time zone of start and end, conforming with the IANA time zone database.
-    timezone: Optional[str]
+    timezone: Optional[str] = None
     #: Start time for meeting in ISO 8601 compliant format. If the meetingType of a meeting is meetingSeries, start is
     #: the scheduled start time of the first occurrence of this series. If the meeting is a meeting series and the
     #: current filter is true, start is the date and time the upcoming or ongoing meeting of the series starts. If the
     #: meetingType of a meeting is scheduledMeeting, start is the scheduled start time of this occurrence. If the
     #: meetingType of a meeting is meeting, start is the actual start time of the meeting instance. Can be modified for
     #: a meeting series or a scheduled meeting using the Update a Meeting API.
-    start: Optional[str]
+    start: Optional[str] = None
     #: End time for a meeting in ISO 8601 compliant format. If the meetingType of a meeting is meetingSeries, end is
     #: the scheduled end time of the first occurrence of this series. If the meeting is a meeting series and the
     #: current filter is true, end is the date and time the upcoming or ongoing meeting of the series ends. If the
@@ -565,159 +565,159 @@ class Meeting(ApiModel):
     #: meetingType of a meeting is meeting, end is the actual end time of the meeting instance. If a meeting instance
     #: is in progress, end is not available. Can be modified for a meeting series or a scheduled meeting using the
     #: Update a Meeting API.
-    end: Optional[str]
+    end: Optional[str] = None
     #: Meeting series recurrence rule (conforming with RFC 2445). Applies only to a recurring meeting series, not to a
     #: meeting series with only one scheduled meeting. Can be modified for a meeting series using the Update a Meeting
     #: API. Multiple days or dates for monthly or yearly recurrence rule are not supported, only the first day or date
     #: specified is taken. For example, "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10,11,12" is not supported and it
     #: will be partially supported as "FREQ=MONTHLY;INTERVAL=1;COUNT=10;BYMONTHDAY=10".
-    recurrence: Optional[str]
+    recurrence: Optional[str] = None
     #: Unique identifier for the meeting host.
-    host_user_id: Optional[str]
+    host_user_id: Optional[str] = None
     #: Display name for the meeting host.
-    host_display_name: Optional[str]
+    host_display_name: Optional[str] = None
     #: Email address for the meeting host.
-    host_email: Optional[str]
+    host_email: Optional[str] = None
     #: Key for joining the meeting as host.
-    host_key: Optional[str]
+    host_key: Optional[str] = None
     #: Site URL for the meeting.
-    site_url: Optional[str]
+    site_url: Optional[str] = None
     #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or
     #: join.
-    web_link: Optional[str]
+    web_link: Optional[str] = None
     #: SIP address for callback from a video system.
-    sip_address: Optional[str]
+    sip_address: Optional[str] = None
     #: IP address for callback from a video system.
-    dial_in_ip_address: Optional[str]
+    dial_in_ip_address: Optional[str] = None
     #: Room ID of the associated Webex space. Only applies to ad-hoc meetings and space meetings.
-    room_id: Optional[str]
+    room_id: Optional[str] = None
     #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting
     #: using the Update a Meeting API.
-    enabled_auto_record_meeting: Optional[bool]
+    enabled_auto_record_meeting: Optional[bool] = None
     #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
     #: meeting. The target site is specified by a siteUrl parameter when creating the meeting. If not specified, it's a
     #: user's preferred site. The allowAnyUserToBeCoHost attribute can be modified for a meeting series or a scheduled
     #: meeting using the Update a Meeting API.
-    allow_any_user_to_be_co_host: Optional[bool]
+    allow_any_user_to_be_co_host: Optional[bool] = None
     #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The
     #: enabledJoinBeforeHost attribute can be modified for a meeting series or a scheduled meeting using the Update a
     #: Meeting API.
-    enabled_join_before_host: Optional[bool]
+    enabled_join_before_host: Optional[bool] = None
     #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if
     #: the enabledJoinBeforeHost attribute is set to true. The enableConnectAudioBeforeHost attribute can be modified
     #: for a meeting series or a scheduled meeting using the Update a Meeting API.
-    enable_connect_audio_before_host: Optional[bool]
+    enable_connect_audio_before_host: Optional[bool] = None
     #: Number of minutes an attendee can join the meeting before the meeting start time and the host joins. Only
     #: applicable if the enabledJoinBeforeHost attribute is set to true. The joinBeforeHostMinutes attribute can be
     #: modified for a meeting series or a scheduled meeting using the Update a Meeting API. Valid options are 0, 5, 10
     #: and 15. Default is 0 if not specified.
-    join_before_host_minutes: Optional[int]
+    join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
-    exclude_password: Optional[bool]
+    exclude_password: Optional[bool] = None
     #: Whether or not to allow the meeting to be listed on the public calendar.
-    public_meeting: Optional[bool]
+    public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host.
-    reminder_time: Optional[int]
+    reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
-    unlocked_meeting_join_security: Optional[UnlockedMeetingJoinSecurity]
+    unlocked_meeting_join_security: Optional[UnlockedMeetingJoinSecurity] = None
     #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar
     #: meeting. All available meeting session types enabled for the user can be retrieved using the List Meeting
     #: Session Types API.
-    session_type_id: Optional[int]
+    session_type_id: Optional[int] = None
     #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's personal
     #: room.
-    scheduled_type: Optional[ScheduledType]
+    scheduled_type: Optional[ScheduledType] = None
     #: Whether or not webcast view is enabled.
-    enabled_webcast_view: Optional[bool]
+    enabled_webcast_view: Optional[bool] = None
     #: Password for panelists of a webinar meeting. Must conform to the site's password complexity settings. Read
     #: password management for details. If not specified, a random password conforming to the site's password rules
     #: will be generated automatically.
-    panelist_password: Optional[str]
+    panelist_password: Optional[str] = None
     #: 8-digit numeric panelist password to join a webinar meeting from audio and video devices.
-    phone_and_video_system_panelist_password: Optional[str]
+    phone_and_video_system_panelist_password: Optional[str] = None
     #: Whether or not to automatically lock the meeting after it starts.
-    enable_automatic_lock: Optional[bool]
+    enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it.
-    automatic_lock_minutes: Optional[int]
+    automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by the siteUrl parameter when creating the meeting. If not specified, it's
     #: a user's preferred site. The allowFirstUserToBeCoHost attribute can be modified for a meeting series or a
     #: scheduled meeting uisng the Update a Meeting API.
-    allow_first_user_to_be_co_host: Optional[bool]
+    allow_first_user_to_be_co_host: Optional[bool] = None
     #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
     #: without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the Update a
     #: Meeting API.
-    allow_authenticated_devices: Optional[bool]
+    allow_authenticated_devices: Optional[bool] = None
     #: Information for callbacks from a meeting to phone or for joining a teleconference using a phone.
-    telephony: Optional[MeetingTelephony]
+    telephony: Optional[MeetingTelephony] = None
     #: Meeting options.
-    meeting_options: Optional[MeetingOptions]
+    meeting_options: Optional[MeetingOptions] = None
     #: Attendee Privileges.
-    attendee_privileges: Optional[AttendeePrivileges]
+    attendee_privileges: Optional[AttendeePrivileges] = None
     #: Meeting registration. When this option is enabled, meeting invitees must register personal information in order
     #: to join the meeting. Meeting invitees will receive an email with a registration link for the registration. When
     #: the registration form has been submitted and approved, an email with a real meeting link will be received. By
     #: clicking that link the meeting invitee can join the meeting. Please note that meeting registration does not
     #: apply to a meeting when it's a recurring meeting with a recurrence field or no password, or the Join Before Host
     #: option is enabled for the meeting. See Register for a Meeting in Cisco Webex Meetings for details.
-    registration: Optional[Registration]
+    registration: Optional[Registration] = None
     #: External keys created by an integration application in its own domain, for example Zendesk ticket IDs, Jira IDs,
     #: Salesforce Opportunity IDs, etc.
-    integration_tags: Optional[list[str]]
+    integration_tags: Optional[list[str]] = None
     #: Simultaneous interpretation information for the meeting.
-    simultaneous_interpretation: Optional[SimultaneousInterpretation]
+    simultaneous_interpretation: Optional[SimultaneousInterpretation] = None
     #: Tracking codes information.
-    tracking_codes: Optional[list[TrackingCodeItem]]
+    tracking_codes: Optional[list[TrackingCodeItem]] = None
     #: Audio connection options.
-    audio_connection_options: Optional[AudioConnectionOptions]
+    audio_connection_options: Optional[AudioConnectionOptions] = None
     #: If true, the meeting is ad-hoc.
-    adhoc: Optional[bool]
+    adhoc: Optional[bool] = None
 
 
 class ScheduledMeeting(ApiModel):
     #: Unique identifier for meeting. For a meeting series, the id is used to identify the entire series. For scheduled
     #: meetings from a series, the id is used to identify that scheduled meeting. For a meeting instance that is in
     #: progress or has concluded, the id is used to identify that instance.
-    id: Optional[str]
+    id: Optional[str] = None
     #: Unique identifier for meeting series. It only apples to scheduled meeting and meeting instance. If it's a
     #: scheduled meeting from a series or a meeting instance that is happening or has happened, the meetingSeriesId is
     #: the id of the primary series.
-    meeting_series_id: Optional[str]
+    meeting_series_id: Optional[str] = None
     #: Unique identifier for scheduled meeting which current meeting is associated with. It only apples to meeting
     #: instance which is happening or has happened. It's the id of the scheduled meeting this instance is associated
     #: with.
-    scheduled_meeting_id: Optional[str]
+    scheduled_meeting_id: Optional[str] = None
     #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting
     #: instances which have ended.
-    meeting_number: Optional[str]
+    meeting_number: Optional[str] = None
     #: Meeting title. Can be modified for a meeting series or a scheduled meeting using the Update a Meeting API.
-    title: Optional[str]
+    title: Optional[str] = None
     #: Meeting agenda. The agenda can be a maximum of 1300 characters long. This attribute can be modified for a
     #: meeting series or a scheduled meeting using the Update a Meeting API.
-    agenda: Optional[str]
+    agenda: Optional[str] = None
     #: Meeting password. Applies to meeting series, scheduled meetings, and in-progress meeting instances, but not to
     #: meeting instances which have ended. Can be modified for a meeting series or a scheduled meeting using the Update
     #: a Meeting API.
-    password: Optional[str]
+    password: Optional[str] = None
     #: 8-digit numeric password used to join a meeting from audio and video devices. This attribute applies to meeting
     #: series, scheduled meetings, and in-progress meeting instances, but not to meeting instances which have ended.
-    phone_and_video_system_password: Optional[str]
+    phone_and_video_system_password: Optional[str] = None
     #: Meeting type.
-    meeting_type: Optional[MeetingType]
+    meeting_type: Optional[MeetingType] = None
     #: Meeting state.
-    state: Optional[MeetingState]
+    state: Optional[MeetingState] = None
     #: This state only applies to scheduled meeting. Flag identifying whether or not the scheduled meeting has been
     #: modified.
-    is_modified: Optional[bool]
+    is_modified: Optional[bool] = None
     #: Time zone of start and end, conforming with the IANA time zone database.
-    timezone: Optional[str]
+    timezone: Optional[str] = None
     #: Start time for meeting in ISO 8601 compliant format. If the meetingType of a meeting is meetingSeries, start is
     #: the scheduled start time of the first occurrence of this series. If the meeting is a meeting series and the
     #: current filter is true, start is the date and time the upcoming or ongoing meeting of the series starts. If the
     #: meetingType of a meeting is scheduledMeeting, start is the scheduled start time of this occurrence. If the
     #: meetingType of a meeting is meeting, start is the actual start time of the meeting instance. Can be modified for
     #: a meeting series or a scheduled meeting using the Update a Meeting API.
-    start: Optional[str]
+    start: Optional[str] = None
     #: End time for a meeting in ISO 8601 compliant format. If the meetingType of a meeting is meetingSeries, end is
     #: the scheduled end time of the first occurrence of this series. If the meeting is a meeting series and the
     #: current filter is true, end is the date and time the upcoming or ongoing meeting of the series ends. If the
@@ -725,89 +725,89 @@ class ScheduledMeeting(ApiModel):
     #: meetingType of a meeting is meeting, end is the actual end time of the meeting instance. If a meeting instance
     #: is in progress, end is not available. Can be modified for a meeting series or a scheduled meeting using the
     #: Update a Meeting API.
-    end: Optional[str]
+    end: Optional[str] = None
     #: Unique identifier for the meeting host.
-    host_user_id: Optional[str]
+    host_user_id: Optional[str] = None
     #: Display name for the meeting host.
-    host_display_name: Optional[str]
+    host_display_name: Optional[str] = None
     #: Email address for the meeting host.
-    host_email: Optional[str]
+    host_email: Optional[str] = None
     #: Key for joining the meeting as host.
-    host_key: Optional[str]
+    host_key: Optional[str] = None
     #: Site URL for the meeting.
-    site_url: Optional[str]
+    site_url: Optional[str] = None
     #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or
     #: join.
-    web_link: Optional[str]
+    web_link: Optional[str] = None
     #: SIP address for callback from a video system.
-    sip_address: Optional[str]
+    sip_address: Optional[str] = None
     #: IP address for callback from a video system.
-    dial_in_ip_address: Optional[str]
+    dial_in_ip_address: Optional[str] = None
     #: Room ID of the associated Webex space. Only applies to ad-hoc meetings and space meetings.
-    room_id: Optional[str]
+    room_id: Optional[str] = None
     #: Whether or not meeting is recorded automatically. Can be modified for a meeting series or a scheduled meeting
     #: using the Update a Meeting API.
-    enabled_auto_record_meeting: Optional[bool]
+    enabled_auto_record_meeting: Optional[bool] = None
     #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
     #: meeting. The target site is specified by a siteUrl parameter when creating the meeting. If not specified, it's a
     #: user's preferred site. The allowAnyUserToBeCoHost attribute can be modified for a meeting series or a scheduled
     #: meeting using the Update a Meeting API.
-    allow_any_user_to_be_co_host: Optional[bool]
+    allow_any_user_to_be_co_host: Optional[bool] = None
     #: Whether or not to allow any attendee to join the meeting before the host joins the meeting. The
     #: enabledJoinBeforeHost attribute can be modified for a meeting series or a scheduled meeting using the Update a
     #: Meeting API.
-    enabled_join_before_host: Optional[bool]
+    enabled_join_before_host: Optional[bool] = None
     #: Whether or not to allow any attendee to connect to audio before the host joins the meeting. Only applicable if
     #: the enabledJoinBeforeHost attribute is set to true. The enableConnectAudioBeforeHost attribute can be modified
     #: for a meeting series or a scheduled meeting using the Update a Meeting API.
-    enable_connect_audio_before_host: Optional[bool]
+    enable_connect_audio_before_host: Optional[bool] = None
     #: The number of minutes an attendee can join the meeting before the meeting start time and the host joins. This
     #: attribute is only applicable if the enabledJoinBeforeHost attribute is set to true. The joinBeforeHostMinutes
     #: attribute can be modified for meeting series or scheduled meeting by Update a Meeting API. Valid options are 0,
     #: 5, 10 and 15. Default is 0 if not specified.
-    join_before_host_minutes: Optional[int]
+    join_before_host_minutes: Optional[int] = None
     #: Whether or not to exclude the meeting password from the email invitation.
-    exclude_password: Optional[bool]
+    exclude_password: Optional[bool] = None
     #: Whether or not to allow the meeting to be listed on the public calendar.
-    public_meeting: Optional[bool]
+    public_meeting: Optional[bool] = None
     #: The number of minutes before the meeting begins, that an email reminder is sent to the host.
-    reminder_time: Optional[int]
+    reminder_time: Optional[int] = None
     #: Specifies how the people who aren't on the invite can join the unlocked meeting.
-    unlocked_meeting_join_security: Optional[UnlockedMeetingJoinSecurity]
+    unlocked_meeting_join_security: Optional[UnlockedMeetingJoinSecurity] = None
     #: Unique identifier for a meeting session type for the user. This attribute is required when scheduling a webinar
     #: meeting. All available meeting session types enabled for the user can be retrieved using the List Meeting
     #: Session Types API.
-    session_type_id: Optional[int]
+    session_type_id: Optional[int] = None
     #: Specifies whether the meeting is a regular meeting, a webinar, or a meeting scheduled in the user's personal
     #: room.
-    scheduled_type: Optional[ScheduledType]
+    scheduled_type: Optional[ScheduledType] = None
     #: Whether or not webcast view is enabled.
-    enabled_webcast_view: Optional[bool]
+    enabled_webcast_view: Optional[bool] = None
     #: Password for panelists of webinar meeting. Must conform to the site's password complexity settings. Read
     #: password management for details. If not specified, a random password conforming to the site's password rules
     #: will be generated automatically.
-    panelist_password: Optional[str]
+    panelist_password: Optional[str] = None
     #: 8-digit numeric panelist password to join webinar meeting from audio and video devices.
-    phone_and_video_system_panelist_password: Optional[str]
+    phone_and_video_system_panelist_password: Optional[str] = None
     #: Whether or not to automatically lock the meeting after it starts.
-    enable_automatic_lock: Optional[bool]
+    enable_automatic_lock: Optional[bool] = None
     #: The number of minutes after the meeting begins, for automatically locking it.
-    automatic_lock_minutes: Optional[int]
+    automatic_lock_minutes: Optional[int] = None
     #: Whether or not to allow the first attendee of the meeting with a host account on the target site to become a
     #: cohost. The target site is specified by the siteUrl parameter when creating the meeting. If not specified, it's
     #: a user's preferred site. The allowFirstUserToBeCoHost attribute can be modified for a meeting series or a
     #: scheduled meeting uisng the Update a Meeting API.
-    allow_first_user_to_be_co_host: Optional[bool]
+    allow_first_user_to_be_co_host: Optional[bool] = None
     #: Whether or not to allow authenticated video devices in the meeting's organization to start or join the meeting
     #: without a prompt. This attribute can be modified for a meeting series or a scheduled meeting using the Update a
     #: Meeting API.
-    allow_authenticated_devices: Optional[bool]
+    allow_authenticated_devices: Optional[bool] = None
     #: Information for callbacks from a meeting to phone or for joining a teleconference using a phone.
-    telephony: Optional[MeetingTelephony]
+    telephony: Optional[MeetingTelephony] = None
     #: Meeting Options.
-    meeting_options: Optional[MeetingOptions]
+    meeting_options: Optional[MeetingOptions] = None
     #: Attendee Privileges.
-    attendee_privileges: Optional[AttendeePrivileges]
+    attendee_privileges: Optional[AttendeePrivileges] = None
     #: Meeting registration. When this option is enabled, meeting invitees must register personal information to join
     #: the meeting. Meeting invitees will receive an email with a registration link for the registration. When the
     #: registration form has been submitted and approved, an email with a real meeting link will be received. By
@@ -816,25 +816,25 @@ class ScheduledMeeting(ApiModel):
     #: option is enabled for the meeting. See Register for a Meeting in Cisco Webex Meetings for details. +
     #: autoAcceptRequest: false (boolean,optional) - Whether or not meeting registration requests are accepted
     #: automatically.
-    registration: Optional[Registration]
+    registration: Optional[Registration] = None
     #: External keys created by an integration application in its domain, for example, Zendesk ticket IDs, Jira IDs,
     #: Salesforce Opportunity IDs, etc.
-    integration_tags: Optional[list[str]]
+    integration_tags: Optional[list[str]] = None
     #: Whether or not breakout sessions are enabled.
-    enabled_breakout_sessions: Optional[bool]
+    enabled_breakout_sessions: Optional[bool] = None
     #: HATEOAS Breakout Sessions information for meeting.
-    links: Optional[list[LinkRelation]]
+    links: Optional[list[LinkRelation]] = None
     #: Tracking codes information.
-    tracking_codes: Optional[list[TrackingCodeItem]]
+    tracking_codes: Optional[list[TrackingCodeItem]] = None
     #: Audio connection options.
-    audio_connection_options: Optional[AudioConnectionOptions]
+    audio_connection_options: Optional[AudioConnectionOptions] = None
 
 
 class PatchMeetingResponse(Meeting):
     #: Whether or not breakout sessions are enabled.
-    enabled_breakout_sessions: Optional[bool]
+    enabled_breakout_sessions: Optional[bool] = None
     #: HATEOAS Breakout Sessions information for meeting.
-    links: Optional[list[LinkRelation]]
+    links: Optional[list[LinkRelation]] = None
 
 
 class QuestionType(str, Enum):
@@ -853,76 +853,76 @@ class QuestionType(str, Enum):
 class QuestionOption(ApiModel):
     #: The unique id of options.
     #: Possible values: 1
-    id: Optional[int]
+    id: Optional[int] = None
     #: The content of the option.
     #: Possible values: green
-    value: Optional[str]
+    value: Optional[str] = None
 
 
 class Question(ApiModel):
     #: Unique identifier for the question.
-    id: Optional[int]
+    id: Optional[int] = None
     #: Details for the question.
-    question: Optional[str]
+    question: Optional[str] = None
     #: Type for the question.
-    type: Optional[QuestionType]
+    type: Optional[QuestionType] = None
     #: The lowest score of the rating question. This attribute will be ingnored, if the value of type attribute is not
     #: rating.
-    from_score: Optional[int]
+    from_score: Optional[int] = None
     #: The lowest score label of the rating question. This attribute will be ingnored, if the value of type attribute
     #: is not rating.
-    from_label: Optional[str]
+    from_label: Optional[str] = None
     #: The highest score of the rating question. This attribute will be ingnored, if the value of type attribute is not
     #: rating.
-    to_score: Optional[int]
+    to_score: Optional[int] = None
     #: The highest score label of the rating question. This attribute will be ingnored, if the value of type attribute
     #: is not rating.
-    to_label: Optional[str]
+    to_label: Optional[str] = None
     #: Options for the question. This attribute will be ingnored, if the value of type attribute is text or rating.
-    options: Optional[list[QuestionOption]]
+    options: Optional[list[QuestionOption]] = None
 
 
 class QuestionAnswer(ApiModel):
     #: Unique identifier for the question option. This attribute will be ingnored, if the value of type attribute is
     #: text or rating.
-    option_id: Optional[int]
+    option_id: Optional[int] = None
     #: The user's answers for the question.
-    answer: Optional[str]
+    answer: Optional[str] = None
 
 
 class QuestionWithAnswers(ApiModel):
     #: Unique identifier for the question.
-    id: Optional[int]
+    id: Optional[int] = None
     #: Details for the question.
-    question: Optional[str]
+    question: Optional[str] = None
     #: Type for the question.
-    type: Optional[QuestionType]
+    type: Optional[QuestionType] = None
     #: The user's answers for the question.
-    answers: Optional[list[QuestionAnswer]]
+    answers: Optional[list[QuestionAnswer]] = None
 
 
 class SurveyResult(ApiModel):
     #: Unique identifier for the survey result.
-    id: Optional[str]
+    id: Optional[str] = None
     #: Name for the survey.
-    survey_name: Optional[str]
+    survey_name: Optional[str] = None
     #: Unique identifier for the meeting.
-    meeting_id: Optional[str]
+    meeting_id: Optional[str] = None
     #: Email address of the user who submits the survey.
-    email: Optional[str]
+    email: Optional[str] = None
     #: Name of the user who submits the survey.
-    display_name: Optional[str]
+    display_name: Optional[str] = None
     #: The time when the user submits the survey.
-    create_time: Optional[str]
+    create_time: Optional[str] = None
     #: User's answers for the questions
-    questions: Optional[list[QuestionWithAnswers]]
+    questions: Optional[list[QuestionWithAnswers]] = None
 
 
 class TrackingCodeOption(ApiModel):
     #: The value of a tracking code option. value cannot be empty and the maximum size is 120 characters.
-    value: Optional[str]
+    value: Optional[str] = None
     #: Whether or not the option is the default option of a tracking code.
-    default_value: Optional[bool]
+    default_value: Optional[bool] = None
 
 
 class InputMode(str, Enum):
@@ -966,25 +966,25 @@ class TrackingCodeType(str, Enum):
 
 class CreateMeetingBody(PatchMeetingBody):
     #: Whether or not to create an ad-hoc meeting for the room specified by roomId. When true, roomId is required.
-    adhoc: Optional[bool]
+    adhoc: Optional[bool] = None
     #: Unique identifier for the Webex space which the meeting is to be associated with. It can be retrieved by List
     #: Rooms. roomId is required when adhoc is true. When roomId is specified, the parameter hostEmail will be ignored.
-    room_id: Optional[str]
+    room_id: Optional[str] = None
     #: Unique identifier for meeting template. Please note that start and end are optional when templateId is
     #: specified. The list of meeting templates that is available for the authenticated user can be retrieved from List
     #: Meeting Templates. This parameter is ignored for an ad-hoc meeting.
-    template_id: Optional[str]
+    template_id: Optional[str] = None
     #: When set as an attribute in a POST request body, specifies whether it's a regular meeting, a webinar, or a
     #: meeting scheduled in the user's personal room. If not specified, it's a regular meeting by default. The default
     #: value for an ad-hoc meeting is meeting and the user's input value will be ignored.
-    scheduled_type: Optional[ScheduledType]
+    scheduled_type: Optional[ScheduledType] = None
     #: Invitees for meeting. The maximum size of invitees is 1000. If roomId is specified and invitees is missing, all
     #: the members in the space are invited implicitly. If both roomId and invitees are specified, only those in the
     #: invitees list are invited. coHost for each invitee is true by default if roomId is specified when creating a
     #: meeting, and anyone in the invitee list that is not qualified to be a cohost will be invited as a non-cohost
     #: invitee. The user's input value will be ignored for an ad-hoc meeting and the the members of the room specified
     #: by roomId except "me" will be used by default.
-    invitees: Optional[list[InviteeForCreateMeeting]]
+    invitees: Optional[list[InviteeForCreateMeeting]] = None
     #: Meeting registration. When this option is enabled, meeting invitees must register personal information to join
     #: the meeting. Meeting invitees will receive an email with a registration link for the registration. When the
     #: registration form has been submitted and approved, an email with a real meeting link will be received. By
@@ -992,83 +992,83 @@ class CreateMeetingBody(PatchMeetingBody):
     #: apply to a meeting when it's a recurring meeting with a recurrence field or no password, or the Join Before Host
     #: option is enabled for the meeting. See Register for a Meeting in Cisco Webex Meetings for details. This
     #: parameter is ignored for an ad-hoc meeting.
-    registration: Optional[Registration]
+    registration: Optional[Registration] = None
     #: Simultaneous interpretation information for a meeting.
-    simultaneous_interpretation: Optional[SimultaneousInterpretation]
+    simultaneous_interpretation: Optional[SimultaneousInterpretation] = None
     #: Breakout sessions are smaller groups that are split off from the main meeting or webinar. They allow a subset of
     #: participants to collaborate and share ideas over audio and video. Use breakout sessions for workshops,
     #: classrooms, or for when you need a moment to talk privately with a few participants outside of the main session.
     #: Please note that maximum number of breakout sessions in a meeting or webinar is 100. In webinars, if hosts
     #: preassign attendees to breakout sessions, the role of attendee will be changed to panelist. Breakout session is
     #: not supported for a meeting with simultaneous interpretation.
-    breakout_sessions: Optional[list[BreakoutSession]]
+    breakout_sessions: Optional[list[BreakoutSession]] = None
 
 
 class JoinMeetingBody(ApiModel):
     #: Unique identifier for the meeting. This parameter applies to meeting series and scheduled meetings. It doesn't
     #: apply to ended or in-progress meeting instances. Please note that currently meeting ID of a scheduled personal
     #: room meeting is also supported for this API.
-    meeting_id: Optional[str]
+    meeting_id: Optional[str] = None
     #: Meeting number. Applies to meeting series, scheduled meeting, and meeting instances, but not to meeting
     #: instances which have ended.
-    meeting_number: Optional[str]
+    meeting_number: Optional[str] = None
     #: Link to a meeting information page where the meeting client is launched if the meeting is ready to start or
     #: join.
-    web_link: Optional[str]
+    web_link: Optional[str] = None
     #: Whether or not to redirect to joinLink. It is an optional field and default value is true.
-    join_directly: Optional[bool]
+    join_directly: Optional[bool] = None
     #: Email address of meeting participant. If the user is a guest issuer, email is required.
-    email: Optional[str]
+    email: Optional[str] = None
     #: Display name of meeting participant. The maximum length of displayName is 128 characters. If the user is a guest
     #: issuer, displayName is required.
-    display_name: Optional[str]
+    display_name: Optional[str] = None
     #: It's required when the meeting is protected by a password and the current user is not privileged to view it if
     #: they are not a host, cohost or invitee of the meeting.
-    password: Optional[str]
+    password: Optional[str] = None
     #: Expiration duration of joinLink in minutes. Must be between 1 and 60.
-    expiration_minutes: Optional[int]
+    expiration_minutes: Optional[int] = None
 
 
 class JoinMeetingResponse(ApiModel):
     #: The link can directly join or host the meeting.
-    join_link: Optional[str]
+    join_link: Optional[str] = None
     #: Expiration time of joinLink.
-    expiration: Optional[str]
+    expiration: Optional[str] = None
 
 
 class GetMeetingSurveyResponse(ApiModel):
     #: Unique identifier for the survey.
-    id: Optional[str]
+    id: Optional[str] = None
     #: Name for the survey.
-    survey_name: Optional[str]
+    survey_name: Optional[str] = None
     #: Unique identifier for the meeting.
-    meeting_id: Optional[str]
+    meeting_id: Optional[str] = None
     #: Description for the survey.
-    description: Optional[str]
+    description: Optional[str] = None
     #: Whether the survey allows attendees to submit anonymously.
-    allow_anonymous_submit: Optional[bool]
+    allow_anonymous_submit: Optional[bool] = None
     #: Questions for the survey.
-    questions: Optional[list[Question]]
+    questions: Optional[list[Question]] = None
 
 
 class TrackingCode(ApiModel):
     #: Unique identifier for the tracking code.
-    id: Optional[str]
+    id: Optional[str] = None
     #: Name for the tracking code.
-    name: Optional[str]
+    name: Optional[str] = None
     #: Site URL for the tracking code.
-    site_url: Optional[str]
+    site_url: Optional[str] = None
     #: Tracking code option list. The options here differ from those in the site-level tracking codes and the
     #: user-level tracking codes. It is the result of a selective combination of the two. If there's user-level value
     #: for a tracking code, the user-level value becomes the default option for the tracking code, and the site-level
     #: default value becomes non-default.
-    options: Optional[list[TrackingCodeOption]]
+    options: Optional[list[TrackingCodeOption]] = None
     #: The input mode in which the tracking code value can be assigned.
-    input_mode: Optional[InputMode]
+    input_mode: Optional[InputMode] = None
     #: Service for schedule or sign up pages
-    service: Optional[MeetingService]
+    service: Optional[MeetingService] = None
     #: Type for meeting scheduler or meeting start pages.
-    type: Optional[TrackingCodeType]
+    type: Optional[TrackingCodeType] = None
 
 
 @dataclass(init=False)
@@ -1369,8 +1369,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         if breakout_sessions is not None:
             body.breakout_sessions = breakout_sessions
         url = self.ep()
-        data = super().post(url=url, data=body.json())
-        return Meeting.parse_obj(data)
+        data = super().post(url=url, data=body.model_dump_json())
+        return Meeting.model_validate(data)
 
     def get(self, meeting_id: str, current: bool = None, host_email: str = None) -> Meeting:
         """
@@ -1398,7 +1398,7 @@ class MeetingsApi(ApiChild, base='meetings'):
             params['hostEmail'] = host_email
         url = self.ep(f'{meeting_id}')
         data = super().get(url=url, params=params)
-        return Meeting.parse_obj(data)
+        return Meeting.model_validate(data)
 
     def list(self, meeting_number: str = None, web_link: str = None, room_id: str = None, meeting_type: str = None,
              state: str = None, scheduled_type: str = None, current: bool = None, from_: str = None, to_: str = None,
@@ -1764,8 +1764,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         if audio_connection_options is not None:
             body.audio_connection_options = audio_connection_options
         url = self.ep(f'{meeting_id}')
-        data = super().patch(url=url, data=body.json())
-        return PatchMeetingResponse.parse_obj(data)
+        data = super().patch(url=url, data=body.model_dump_json())
+        return PatchMeetingResponse.model_validate(data)
 
     def update(self, meeting_id: str, title: str = None, agenda: str = None, password: str = None, start: str = None,
                end: str = None, timezone: str = None, recurrence: str = None, enabled_auto_record_meeting: bool = None,
@@ -1977,8 +1977,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         if audio_connection_options is not None:
             body.audio_connection_options = audio_connection_options
         url = self.ep(f'{meeting_id}')
-        data = super().put(url=url, data=body.json())
-        return PatchMeetingResponse.parse_obj(data)
+        data = super().put(url=url, data=body.model_dump_json())
+        return PatchMeetingResponse.model_validate(data)
 
     def delete(self, meeting_id: str, host_email: str = None, send_email: bool = None):
         """
@@ -2059,8 +2059,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         if expiration_minutes is not None:
             body.expiration_minutes = expiration_minutes
         url = self.ep('join')
-        data = super().post(url=url, data=body.json())
-        return JoinMeetingResponse.parse_obj(data)
+        data = super().post(url=url, data=body.model_dump_json())
+        return JoinMeetingResponse.model_validate(data)
 
     def update_simultaneous_interpretation(self, meeting_id: str, enabled: bool,
                                            interpreters:
@@ -2086,8 +2086,8 @@ class MeetingsApi(ApiChild, base='meetings'):
         if interpreters is not None:
             body.interpreters = interpreters
         url = self.ep(f'{meeting_id}/simultaneousInterpretation')
-        data = super().put(url=url, data=body.json())
-        return SimultaneousInterpretation.parse_obj(data)
+        data = super().put(url=url, data=body.model_dump_json())
+        return SimultaneousInterpretation.model_validate(data)
 
     def survey(self, meeting_id: str) -> GetMeetingSurveyResponse:
         """
@@ -2101,7 +2101,7 @@ class MeetingsApi(ApiChild, base='meetings'):
         """
         url = self.ep(f'{meeting_id}/survey')
         data = super().get(url=url)
-        return GetMeetingSurveyResponse.parse_obj(data)
+        return GetMeetingSurveyResponse.model_validate(data)
 
     def list_survey_results(self, meeting_id: str, meeting_start_time_from: str = None,
                             meeting_start_time_to: str = None, **params) -> Generator[SurveyResult, None, None]:

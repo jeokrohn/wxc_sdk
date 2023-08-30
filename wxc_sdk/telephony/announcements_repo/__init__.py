@@ -22,46 +22,46 @@ __all__ = ['RepoAnnouncement', 'AnnouncementsRepositoryApi', 'RepositoryUsage', 
 class FeatureReference(ApiModel):
     #: Unique identifier of the call feature referenced. The call Feature can be Auto Attendant, Call Queue or Music
     #: On hold.
-    id: Optional[str]
+    id: Optional[str] = None
     #: Name of the call feature referenced.
-    name: Optional[str]
+    name: Optional[str] = None
     #: Resource Type of the call feature.
-    type: Optional[str]
+    type: Optional[str] = None
     #: Unique identifier of the location.
-    location_id: Optional[str]
+    location_id: Optional[str] = None
     #: Location name of the announcement file.
-    location_name: Optional[str]
+    location_name: Optional[str] = None
 
 
 class RepoAnnouncement(IdAndName):
     #: File name of the uploaded binary announcement greeting.
-    file_name: Optional[str]
+    file_name: Optional[str] = None
     #: Size of the file in kilobytes.
-    file_size: Optional[int]
+    file_size: Optional[int] = None
     #: Media file type of the announcement file.
-    media_file_type: Optional[MediaFileType]
+    media_file_type: Optional[MediaFileType] = None
     #: LastUpdated timestamp (in UTC format) of the announcement.
-    last_updated: Optional[datetime]
+    last_updated: Optional[datetime] = None
     #: The level at which this announcement exists.
-    level: Optional[AnnouncementLevel]
+    level: Optional[AnnouncementLevel] = None
     #: The details of location at which this announcement exists.
-    location: Optional[IdAndName]
+    location: Optional[IdAndName] = None
     #: The below is not returned by list(), only by details()
     #: Reference count of the call features this announcement is assigned to.
-    feature_reference_count: Optional[int]
+    feature_reference_count: Optional[int] = None
     #: Call features referenced by this announcement.
-    feature_references: Optional[list[FeatureReference]]
+    feature_references: Optional[list[FeatureReference]] = None
 
 
 class RepositoryUsage(ApiModel):
     #: Total file size used by announcements in this repository in kilobytes.
-    total_file_size_used_kb: Optional[int] = Field(alias='totalFileSizeUsedKB')
+    total_file_size_used_kb: Optional[int] = Field(alias='totalFileSizeUsedKB', default=None)
     #: Maximum audio file size allowed to upload in kilobytes.
-    max_audio_file_size_allowed_kb: Optional[int] = Field(alias='maxAudioFileSizeAllowedKB')
+    max_audio_file_size_allowed_kb: Optional[int] = Field(alias='maxAudioFileSizeAllowedKB', default=None)
     #: Maximum video file size allowed to upload in kilobytes.
-    max_video_file_size_allowed_kb: Optional[int] = Field(alias='maxVideoFileSizeAllowedKB')
+    max_video_file_size_allowed_kb: Optional[int] = Field(alias='maxVideoFileSizeAllowedKB', default=None)
     #: Total file size limit for the repository in megabytes.
-    total_file_size_limit_mb: Optional[int] = Field(alias='totalFileSizeLimitMB')
+    total_file_size_limit_mb: Optional[int] = Field(alias='totalFileSizeLimitMB', default=None)
 
 
 class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
@@ -267,7 +267,7 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         else:
             url = self.ep(f'locations/{location_id}/announcements/usage')
         data = super().get(url=url, params=params)
-        return RepositoryUsage.parse_obj(data)
+        return RepositoryUsage.model_validate(data)
 
     def details(self, announcement_id: str, location_id: str = None, org_id: str = None) -> RepoAnnouncement:
         """
@@ -290,7 +290,7 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         else:
             url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
         data = super().get(url=url, params=params)
-        return RepoAnnouncement.parse_obj(data)
+        return RepoAnnouncement.model_validate(data)
 
     def delete(self, announcement_id: str, location_id: str = None, org_id: str = None):
         """

@@ -45,4 +45,4 @@ class WorkspaceDevicesApi(ApiChild, base='telephony/config/workspaces'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/devices')
-        super().put(url=url, params=params, data=hoteling.json())
+        super().put(url=url, params=params, data=hoteling.model_dump_json())

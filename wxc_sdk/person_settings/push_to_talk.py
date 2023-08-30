@@ -34,14 +34,14 @@ class PushToTalkSettings(ApiModel):
     """
     #: Set to true to enable the Push-to-Talk feature. When enabled, a person receives a Push-to-Talk call and
     #: answers the call automatically.
-    allow_auto_answer: Optional[bool]
+    allow_auto_answer: Optional[bool] = None
     #: Specifies the connection type to be used.
-    connection_type: Optional[PTTConnectionType]
+    connection_type: Optional[PTTConnectionType] = None
     #: Specifies the access type to be applied when evaluating the member list.
-    access_type: Optional[PushToTalkAccessType]
+    access_type: Optional[PushToTalkAccessType] = None
     #: List of people that are allowed or disallowed to interact using the Push-to-Talk feature.
     #: can be just a member id for a configure() call
-    members: Optional[list[Union[str, MonitoredMember]]]
+    members: Optional[list[Union[str, MonitoredMember]]] = None
 
 
 class PushToTalkApi(PersonSettingsApiChild):
@@ -71,7 +71,7 @@ class PushToTalkApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return PushToTalkSettings.parse_obj(self.get(ep, params=params))
+        return PushToTalkSettings.model_validate(self.get(ep, params=params))
 
     def configure(self, person_id: str, settings: PushToTalkSettings, org_id: str = None):
         """
@@ -95,12 +95,12 @@ class PushToTalkApi(PersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         if settings.members:
             # for an update member is just a list of IDs
-            body_settings = settings.copy(deep=True)
+            body_settings = settings.model_copy(deep=True)
             members = [m.member_id if isinstance(m, MonitoredMember) else m
                        for m in settings.members]
             body_settings.members = members
         else:
             body_settings = settings
-        body = body_settings.json(exclude_none=False,
+        body = body_settings.model_dump_json(exclude_none=False,
                                   exclude_unset=True)
         self.put(ep, params=params, data=body)

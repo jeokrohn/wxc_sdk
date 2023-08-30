@@ -13,17 +13,17 @@ __all__ = ['DialPlan', 'CreateResponse', 'PatternAndAction', 'DialPlanApi']
 
 class DialPlan(ApiModel):
     #: Unique identifier for the dial plan.
-    dial_plan_id: Optional[str] = Field(alias='id')
+    dial_plan_id: Optional[str] = Field(alias='id', default=None)
     #: A unique name for the dial plan.
-    name: Optional[str]
+    name: Optional[str] = None
     #: ID of route type associated with the dial plan.
     route_id: str
     #: Name of route type associated with the dial plan.
-    route_name: Optional[str]
+    route_name: Optional[str] = None
     #: Route Type associated with the dial plan.
     route_type: RouteType
     #: Customer information.
-    customer: Optional[Customer]
+    customer: Optional[Customer] = None
 
 
 class CreateResponse(ApiModel):
@@ -121,7 +121,7 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
             'dialPatterns': dial_patterns or []
         }
         data = self.post(url=url, params=params, json=body)
-        return CreateResponse.parse_obj(data)
+        return CreateResponse.model_validate(data)
 
     def details(self, dial_plan_id: str, org_id: str = None) -> DialPlan:
         """
@@ -145,7 +145,7 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         url = self.ep(dial_plan_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(url=url, params=params)
-        dp: DialPlan = DialPlan.parse_obj(data)
+        dp: DialPlan = DialPlan.model_validate(data)
         dp.dial_plan_id = dial_plan_id
         return dp
 
@@ -168,7 +168,7 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         """
         url = self.ep(update.dial_plan_id)
         params = org_id and {'orgId': org_id} or None
-        body = update.json(include={'name', 'route_id', 'route_type'})
+        body = update.model_dump_json(include={'name', 'route_id', 'route_type'})
         self.put(url=url, params=params, data=body)
 
     def delete_dial_plan(self, dial_plan_id: str, org_id: str = None):
@@ -248,7 +248,7 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         class Body(ApiModel):
             dial_patterns: list[PatternAndAction]
 
-        body = Body(dial_patterns=dial_patterns).json()
+        body = Body(dial_patterns=dial_patterns).model_dump_json()
         self.put(url=url, params=params, data=body)
 
     def delete_all_patterns(self, dial_plan_id: str, org_id: str = None):

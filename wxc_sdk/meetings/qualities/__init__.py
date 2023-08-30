@@ -27,103 +27,103 @@ class TransportType(str, Enum):
 
 class VideoIn(ApiModel):
     #: The sampling interval, in seconds, of the downstream video quality data.
-    sampling_interval: Optional[int]
+    sampling_interval: Optional[int] = None
     #: The date and time when this video session started.
-    start_time: Optional[str]
+    start_time: Optional[str] = None
     #: The date and time when this video session ended.
-    end_time: Optional[str]
+    end_time: Optional[str] = None
     #: The percentage of video packet loss, as a float between 0.0 and 100.0, during each sampling interval.
-    packet_loss: Optional[list[int]]
+    packet_loss: Optional[list[int]] = None
     #: The average latency, in milliseconds, during each sampling interval.
-    latency: Optional[list[int]]
+    latency: Optional[list[int]] = None
     #: The pixel height of the incoming video.
-    resolution_height: Optional[list[int]]
+    resolution_height: Optional[list[int]] = None
     #: The frames per second of the incoming video.
-    frame_rate: Optional[list[int]]
+    frame_rate: Optional[list[int]] = None
     #: The bit rate of the incoming video.
-    media_bit_rate: Optional[list[int]]
+    media_bit_rate: Optional[list[int]] = None
     #: The incoming video codec.
-    codec: Optional[str]
+    codec: Optional[str] = None
     #: The incoming video jitter.
-    jitter: Optional[list[int]]
+    jitter: Optional[list[int]] = None
     #: The network protocol used for video transmission.
-    transport_type: Optional[TransportType]
+    transport_type: Optional[TransportType] = None
 
 
 class QualityResources(ApiModel):
     #: The average percent CPU for the process.
-    process_average_cpu: Optional[list[int]]
+    process_average_cpu: Optional[list[int]] = None
     #: The max percent CPU for the process.
-    process_max_cpu: Optional[list[int]]
+    process_max_cpu: Optional[list[int]] = None
     #: The average percent CPU for the system.
-    system_average_cpu: Optional[list[int]]
+    system_average_cpu: Optional[list[int]] = None
     #: The max percent CPU for the system.
-    system_max_cpu: Optional[list[int]]
+    system_max_cpu: Optional[list[int]] = None
 
 
 class MediaSessionQuality(ApiModel):
     #: The meeting identifier for the specific meeting instance.
-    meeting_instance_id: Optional[str]
+    meeting_instance_id: Optional[str] = None
     #: The display name of the participant of this media session.
-    webex_user_name: Optional[str]
+    webex_user_name: Optional[str] = None
     #: The email address of the participant of this media session.
-    webex_user_email: Optional[str]
+    webex_user_email: Optional[str] = None
     #: The date and time when this participant joined the meeting.
-    join_time: Optional[str]
+    join_time: Optional[str] = None
     #: The date and time when this participant left the meeting.
-    leave_time: Optional[str]
+    leave_time: Optional[str] = None
     #: The join meeting time of the participant.
-    join_meeting_time: Optional[str]
+    join_meeting_time: Optional[str] = None
     #: The type of the client (and OS) used by this media session.
-    client_type: Optional[str]
+    client_type: Optional[str] = None
     #: The version of the client used by this media session.
-    client_version: Optional[str]
+    client_version: Optional[str] = None
     #: The operating system used for the client.
-    os_type: Optional[str]
+    os_type: Optional[str] = None
     #: The version of the operating system used for the client.
-    os_version: Optional[str]
+    os_version: Optional[str] = None
     #: The type of hardware used to attend the meeting
-    hardware_type: Optional[str]
+    hardware_type: Optional[str] = None
     #: A description of the speaker used in the meeting.
-    speaker_name: Optional[str]
+    speaker_name: Optional[str] = None
     #: The type of network.
-    network_type: Optional[NetworkType]
+    network_type: Optional[NetworkType] = None
     #: The local IP address of the client.
-    local_ip: Optional[str]
+    local_ip: Optional[str] = None
     #: The public IP address of the client.
-    public_ip: Optional[str]
+    public_ip: Optional[str] = None
     #: The masked local IP address of the client.
-    masked_local_ip: Optional[str]
+    masked_local_ip: Optional[str] = None
     #: The masked public IP address of the client.
-    masked_public_ip: Optional[str]
+    masked_public_ip: Optional[str] = None
     #: A description of the camera used in the meeting.
-    camera: Optional[str]
+    camera: Optional[str] = None
     #: A description of the microphone used in the meeting.
-    microphone: Optional[str]
+    microphone: Optional[str] = None
     #: The server region.
-    server_region: Optional[str]
+    server_region: Optional[str] = None
     #: The video mesh cluster name.
-    video_mesh_cluster: Optional[str]
+    video_mesh_cluster: Optional[str] = None
     #: The video mesh server name.
-    video_mesh_server: Optional[str]
+    video_mesh_server: Optional[str] = None
     #: Identifies the participant.
-    participant_id: Optional[str]
+    participant_id: Optional[str] = None
     #: Identifies a specific session the participant has in a given meeting.
-    participant_session_id: Optional[str]
+    participant_session_id: Optional[str] = None
     #: The collection of downstream (sent to the client) video quality data.
-    video_in: Optional[list[VideoIn]]
+    video_in: Optional[list[VideoIn]] = None
     #: The collection of upstream (sent from the client) video quality data.
-    video_out: Optional[list[VideoIn]]
+    video_out: Optional[list[VideoIn]] = None
     #: The collection of downstream (sent to the client) audio quality data.
-    audio_in: Optional[list[VideoIn]]
+    audio_in: Optional[list[VideoIn]] = None
     #: The collection of upstream (sent from the client) audio quality data.
-    audio_out: Optional[list[VideoIn]]
+    audio_out: Optional[list[VideoIn]] = None
     #: The collection of downstream (sent to the client) share quality data.
-    share_in: Optional[list[VideoIn]]
+    share_in: Optional[list[VideoIn]] = None
     #: The collection of upstream (sent from the client) share quality data.
-    share_out: Optional[list[VideoIn]]
+    share_out: Optional[list[VideoIn]] = None
     #: Device resources such as CPU and memory.
-    resources: Optional[list[QualityResources]]
+    resources: Optional[list[QualityResources]] = None
 
 
 class MeetingQualitiesApi(ApiChild, base=''):

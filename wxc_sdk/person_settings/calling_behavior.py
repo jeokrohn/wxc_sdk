@@ -29,12 +29,12 @@ class BehaviorType(str, Enum):
 class CallingBehavior(ApiModel):
     #: The current Calling Behavior setting for the person. If null, the effective Calling Behavior will be the
     #: Organization's current default.
-    behavior_type: Optional[BehaviorType]
+    behavior_type: Optional[BehaviorType] = None
     #: The effective Calling Behavior setting for the person, will be the organization's default Calling Behavior if
     #: the user's behaviorType is set to null.
-    effective_behavior_type: Optional[BehaviorType]
+    effective_behavior_type: Optional[BehaviorType] = None
     #: The UC Manager Profile ID.
-    profile_id: Optional[str]
+    profile_id: Optional[str] = None
 
 
 class CallingBehaviorApi(PersonSettingsApiChild):
@@ -73,7 +73,7 @@ class CallingBehaviorApi(PersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(ep, params=params)
-        return CallingBehavior.parse_obj(data)
+        return CallingBehavior.model_validate(data)
 
     def configure(self, person_id: str, settings: CallingBehavior,
                   org_id: str = None):
@@ -104,5 +104,5 @@ class CallingBehaviorApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = settings.json(exclude_none=False, exclude={'effective_behavior_type'}, exclude_unset=True)
+        data = settings.model_dump_json(exclude_none=False, exclude={'effective_behavior_type'}, exclude_unset=True)
         self.put(ep, params=params, data=data)

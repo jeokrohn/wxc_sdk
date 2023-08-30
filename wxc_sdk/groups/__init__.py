@@ -15,30 +15,30 @@ __all__ = ['GroupMember', 'Group', 'GroupsApi']
 
 class GroupMember(ApiModel):
     #: Person ID of the group member.
-    member_id: Optional[str] = Field(alias='id')
+    member_id: Optional[str] = Field(alias='id', default=None)
     #: Member type.
-    member_type: Optional[str] = Field(alias='type')
-    display_name: Optional[str]
+    member_type: Optional[str] = Field(alias='type', default=None)
+    display_name: Optional[str] = None
     # only used in updates. 'delete' to delete a member
-    operation: Optional[str]
+    operation: Optional[str] = None
 
 
 class Group(ApiModel):
     #: A unique identifier for the group.
-    group_id: Optional[str] = Field(alias='id')
+    group_id: Optional[str] = Field(alias='id', default=None)
     #: The name of the group.
-    display_name: Optional[str]
+    display_name: Optional[str] = None
     #: An array of members
-    members: Optional[list[GroupMember]]
+    members: Optional[list[GroupMember]] = None
     #: The ID of the organization to which this group belongs.
-    org_id: Optional[str]
-    description: Optional[str]
+    org_id: Optional[str] = None
+    description: Optional[str] = None
     #: The timestamp indicating creation date/time of group
-    created: Optional[datetime.datetime]
+    created: Optional[datetime.datetime] = None
     #: The timestamp indicating lastModification time of group
-    last_modified: Optional[datetime.datetime]
-    member_size: Optional[int]
-    usage: Optional[str]
+    last_modified: Optional[datetime.datetime] = None
+    member_size: Optional[int] = None
+    usage: Optional[str] = None
 
 
 class GroupsApi(ApiChild, base='groups'):
@@ -93,14 +93,14 @@ class GroupsApi(ApiChild, base='groups'):
         :rtype: :class:`Group`
         """
         url = self.ep()
-        body = settings.json(exclude={'group_id': True,
+        body = settings.model_dump_json(exclude={'group_id': True,
                                       'members': {'__all__': {'member_type': True,
                                                               'display_name': True,
                                                               'operation': True}},
                                       'created': True,
                                       'last_modified': True})
         data = self.post(url, data=body)
-        return Group.parse_obj(data)
+        return Group.model_validate(data)
 
     def details(self, group_id: str, include_members: bool = None) -> Group:
         """
@@ -118,7 +118,7 @@ class GroupsApi(ApiChild, base='groups'):
         if include_members is not None:
             params['includeMembers'] = 'true' if include_members else 'false'
         data = self.get(url, params=params)
-        return Group.parse_obj(data)
+        return Group.model_validate(data)
 
     def members(self, group_id: str, **params) -> Generator[GroupMember, None, None]:
         """
@@ -147,7 +147,7 @@ class GroupsApi(ApiChild, base='groups'):
             raise ValueError('settings or remove_all have to be present')
         url = self.ep(group_id)
         if settings:
-            body = settings.json(exclude={'group_id': True,
+            body = settings.model_dump_json(exclude={'group_id': True,
                                           'members': {'__all__': {'member_type': True,
                                                                   'display_name': True}},
                                           'created': True,
@@ -155,7 +155,7 @@ class GroupsApi(ApiChild, base='groups'):
         else:
             body = 'purgeAllValues:{"attributes":["members"]}'
         data = self.patch(url, data=body)
-        return Group.parse_obj(data)
+        return Group.model_validate(data)
 
     def delete_group(self, group_id: str):
         """

@@ -1,3 +1,4 @@
+import asyncio
 import json
 import random
 from concurrent.futures import ThreadPoolExecutor
@@ -5,7 +6,7 @@ from contextlib import contextmanager
 from typing import ClassVar
 
 from wxc_sdk.all_types import *
-from tests.base import TestCaseWithLog, TestCaseWithUsers, TestWithLocations
+from tests.base import TestCaseWithLog, TestCaseWithUsers, TestWithLocations, async_test
 from tests.testutil import available_extensions_gen
 
 # number of huntgroups to create my create many test
@@ -25,16 +26,25 @@ class TestList(TestCaseWithLog):
         print(f'Total number of queues read with pagination: {len(queues_pag)}')
         self.assertEqual(len(hg_list), len(queues_pag))
 
-    def test_002_all_details(self):
+    @async_test
+    async def test_002_all_details(self):
         """
         get details of all hunt groups
         """
-        hapi = self.api.telephony.huntgroup
-        hg_list = list(hapi.list())
-        with ThreadPoolExecutor() as pool:
-            details = list(pool.map(
-                lambda hg: hapi.details(location_id=hg.location_id, huntgroup_id=hg.id),
-                hg_list))
+        hapi = self.async_api.telephony.huntgroup
+        hg_list = await hapi.list()
+        details = await asyncio.gather(*[hapi.details(location_id=hg.location_id,
+                                                      huntgroup_id=hg.id)
+                                         for hg in hg_list],
+                                       return_exceptions=True)
+        err = None
+        for hg, detail in zip(hg_list, details):
+            hg: HuntGroup
+            if isinstance(detail, Exception):
+                err = err or detail
+                print(f'{hg.name}/{hg.location_name}: {detail}')
+        if err:
+            raise err
         print(f'Got details for {len(details)} hunt groups')
 
 
@@ -73,7 +83,7 @@ class TestCreate(TestWithLocations, TestCaseWithUsers):
 
         # and get details of new queue using the queue id
         details = hapi.details(location_id=target_location.location_id, huntgroup_id=new_hg_id)
-        print(json.dumps(json.loads(details.json()), indent=2))
+        print(json.dumps(json.loads(details.model_dump_json()), indent=2))
 
     def test_002_duplicate_hg(self):
         """
@@ -100,7 +110,7 @@ class TestCreate(TestWithLocations, TestCaseWithUsers):
         print(f'Creating copy of hunt group "{target_hg.name}" in location "{target_hg.location_name}" '
               f'as hunt group "{new_name}" ({extension})')
         target_hg_details = hapi.details(location_id=target_hg.location_id, huntgroup_id=target_hg.id)
-        settings = target_hg_details.copy(deep=True)
+        settings = target_hg_details.model_copy(deep=True)
         settings.extension = extension
         settings.phone_number = ''
         settings.name = new_name
@@ -114,7 +124,7 @@ class TestCreate(TestWithLocations, TestCaseWithUsers):
         details.id = target_hg_details.id
         self.assertEqual(target_hg_details, details)
 
-        print(json.dumps(json.loads(details.json()), indent=2))
+        print(json.dumps(json.loads(details.model_dump_json()), indent=2))
 
     def test_003_create_many(self):
         """
@@ -206,7 +216,7 @@ class TestUpdate(TestCaseWithUsers):
         details.location_name = target.location_name
         print(f'Updating hunt group "{target.name}" ({target.extension}) in location "{target.location_name}"')
         try:
-            yield details.copy(deep=True)
+            yield details.model_copy(deep=True)
         finally:
             self.api.telephony.huntgroup.update(location_id=target.location_id,
                                                 huntgroup_id=target.id, update=details)

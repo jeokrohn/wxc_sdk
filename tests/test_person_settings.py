@@ -359,7 +359,7 @@ class TestConfigure(TestCaseWithUsers):
         try:
             self.assertTrue(validate(apps=app_settings, preferred=preferred_answer))
             # toggle desktop client availability
-            app_settings_update = app_settings.copy(deep=True)
+            app_settings_update = app_settings.model_copy(deep=True)
             app_settings_update.desktop_client_enabled = not app_settings.desktop_client_enabled
             ps_api.appservices.configure(person_id=target_user.person_id, settings=app_settings_update)
             app_settings_after = ps_api.appservices.read(person_id=target_user.person_id)
@@ -469,7 +469,7 @@ class TestCallerIdConfigure(TestCaseWithUsers):
                                                                owner_type=OwnerType.people)
         # group phone numbers by location
         numbers_by_location: dict[str, list[NumberListPhoneNumber]] = reduce(
-            lambda red, r: red[r.location.location_id].append(r) or red,
+            lambda red, r: red[r.location.id].append(r) or red,
             numbers, defaultdict(list))
         # pick random number(and user) from users within locations with at least two users
         target_number: NumberListPhoneNumber = random.choice(list(chain.from_iterable(number_list
@@ -479,7 +479,7 @@ class TestCallerIdConfigure(TestCaseWithUsers):
 
         # pick second number and user with number in same location
         second_number: NumberListPhoneNumber = random.choice(
-            [n for n in numbers_by_location[target_number.location.location_id]
+            [n for n in numbers_by_location[target_number.location.id]
              if n.owner.owner_id != target_number.owner.owner_id])
         # try to set the caller id of owner of 1st number
         api = self.async_api.person_settings.caller_id
@@ -506,7 +506,7 @@ class TestCallerIdConfigure(TestCaseWithUsers):
             update = CallerId(selected=before.selected, first_name='foo')
             api.configure_settings(person_id=user.person_id, settings=update)
             after = api.read(person_id=user.person_id)
-        expected = before.copy(deep=True)
+        expected = before.model_copy(deep=True)
         expected.first_name = update.first_name
         self.assertEqual(expected, after)
 
@@ -522,7 +522,7 @@ class TestCallerIdConfigure(TestCaseWithUsers):
                               block_in_forward_calls_enabled=not before.block_in_forward_calls_enabled)
             api.configure_settings(person_id=user.person_id, settings=update)
             after = api.read(person_id=user.person_id)
-        expected = before.copy(deep=True)
+        expected = before.model_copy(deep=True)
         expected.block_in_forward_calls_enabled = update.block_in_forward_calls_enabled
         self.assertEqual(expected, after)
 
@@ -539,7 +539,7 @@ class TestCallerIdConfigure(TestCaseWithUsers):
                               custom_external_caller_id_name='foo custom')
             api.configure_settings(person_id=user.person_id, settings=update)
             after = api.read(person_id=user.person_id)
-        expected = before.copy(deep=True)
+        expected = before.model_copy(deep=True)
         expected.external_caller_id_name_policy = update.external_caller_id_name_policy
         expected.custom_external_caller_id_name = update.custom_external_caller_id_name
         self.assertEqual(expected, after)

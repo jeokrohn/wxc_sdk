@@ -69,7 +69,7 @@ class TestWorkspaceLocations(TestCaseWithLog):
         """
         wsl = create_random_wsl(api=self.api)
         try:
-            update = wsl.copy(deep=True)
+            update = wsl.model_copy(deep=True)
             notes = f'Random text {uuid.uuid4()}'
             update.notes = notes
             update_result = self.api.workspace_locations.update(location_id=wsl.id, settings=update)
@@ -93,7 +93,7 @@ class TestWorkspaceLocations(TestCaseWithLog):
             with_notes = self.api.workspace_locations.update(location_id=wsl.id, settings=wsl)
             self.assertEqual(notes, with_notes.notes)
             # now try to clear notes
-            update = with_notes.copy(deep=True)
+            update = with_notes.model_copy(deep=True)
             update.notes = None
             after = self.api.workspace_locations.update(location_id=wsl.id, settings=update)
             self.assertIsNone(after.notes)
@@ -145,7 +145,7 @@ class TestWorkspaceLocations(TestCaseWithLog):
                                                                display_name='1st floor')
             try:
                 new_dn = 'foo'
-                update = floor.copy(deep=True)
+                update = floor.model_copy(deep=True)
                 update.display_name = new_dn
                 updated = self.api.workspace_locations.floors.update(location_id=wsl.id,
                                                                      floor_id=floor.id,

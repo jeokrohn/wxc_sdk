@@ -33,11 +33,11 @@ class WorkspaceLocation(ApiModel):
     #: The location city name.
     city_name: str
     #: The location longitude.
-    longitude: Optional[float]
+    longitude: Optional[float] = None
     #: The location latitude.
-    latitude: Optional[float]
+    latitude: Optional[float] = None
     #: Notes associated to the location.
-    notes: Optional[str]
+    notes: Optional[str] = None
 
     @property
     def id_uuid(self) -> str:
@@ -103,7 +103,7 @@ class WorkspaceLocationFloorApi(ApiChild, base='workspaceLocations'):
         url = self.ep(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
         data = self.post(url=url, params=params, json=body)
-        return WorkspaceLocationFloor.parse_obj(data)
+        return WorkspaceLocationFloor.model_validate(data)
 
     def details(self, location_id: str, floor_id: str, org_id: str = None) -> WorkspaceLocationFloor:
         """
@@ -123,7 +123,7 @@ class WorkspaceLocationFloorApi(ApiChild, base='workspaceLocations'):
         url = self.ep(location_id=location_id, floor_id=floor_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(url=url, params=params)
-        return WorkspaceLocationFloor.parse_obj(data)
+        return WorkspaceLocationFloor.model_validate(data)
 
     def update(self, location_id: str, floor_id: str, settings: WorkspaceLocationFloor,
                org_id: str = None) -> WorkspaceLocationFloor:
@@ -142,11 +142,11 @@ class WorkspaceLocationFloorApi(ApiChild, base='workspaceLocations'):
         :type org_id: str
         :return: updated workspace location floor
         """
-        data = settings.json(exclude_none=True, exclude_unset=True, exclude={'id', 'location_id'})
+        data = settings.model_dump_json(exclude_none=True, exclude_unset=True, exclude={'id', 'location_id'})
         url = self.ep(location_id=location_id, floor_id=floor_id)
         params = org_id and {'orgId': org_id} or None
         data = self.put(url=url, data=data, params=params)
-        return WorkspaceLocationFloor.parse_obj(data)
+        return WorkspaceLocationFloor.model_validate(data)
 
     def delete(self, location_id: str, floor_id: str, org_id: str = None):
         """
@@ -222,7 +222,7 @@ class WorkspaceLocationApi(ApiChild, base='workspaceLocations'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep()
         data = self.post(url=url, json=body, params=params)
-        return WorkspaceLocation.parse_obj(data)
+        return WorkspaceLocation.model_validate(data)
 
     def details(self, location_id: str, org_id: str = None) -> WorkspaceLocation:
         """
@@ -239,7 +239,7 @@ class WorkspaceLocationApi(ApiChild, base='workspaceLocations'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id=location_id)
         data = self.get(url=url, params=params)
-        return WorkspaceLocation.parse_obj(data)
+        return WorkspaceLocation.model_validate(data)
 
     def update(self, location_id: str, settings: WorkspaceLocation, org_id: str = None) -> WorkspaceLocation:
         """
@@ -260,9 +260,9 @@ class WorkspaceLocationApi(ApiChild, base='workspaceLocations'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id=location_id)
-        body = settings.json(exclude_none=True, exclude_unset=True, exclude={'id'})
+        body = settings.model_dump_json(exclude_none=True, exclude_unset=True, exclude={'id'})
         data = self.put(url=url, data=body, params=params)
-        return WorkspaceLocation.parse_obj(data)
+        return WorkspaceLocation.model_validate(data)
 
     def delete(self, location_id: str, org_id: str = None):
         """

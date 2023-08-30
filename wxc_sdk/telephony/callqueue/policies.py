@@ -53,20 +53,20 @@ class HolidayService(ApiModel):
     #: Whether or not the call queue holiday service routing policy is enabled.
     holiday_service_enabled: bool
     #: Specifies call processing action type.
-    action: Optional[CPActionType]
+    action: Optional[CPActionType] = None
     #: Specifies whether the schedule mentioned in holidayScheduleName is org or location specific.
     #: (Must be from holidaySchedules list)
-    holiday_schedule_level: Optional[ScheduleLevel]
+    holiday_schedule_level: Optional[ScheduleLevel] = None
     #: Name of the schedule configured for a holiday service as one of from holidaySchedules list.
-    holiday_schedule_name: Optional[str]
+    holiday_schedule_name: Optional[str] = None
     #: Call gets transferred to this number when action is set to TRANSFER. This can also be an extension.
-    transfer_phone_number: Optional[str]
+    transfer_phone_number: Optional[str] = None
     #: Specifies if an announcement plays to callers before applying the action.
     play_announcement_before_enabled: bool
     #: Specifies what type of announcement to be played.
-    audio_message_selection: Optional[Greeting]
+    audio_message_selection: Optional[Greeting] = None
     #: List of Announcement Audio Files when audioMessageSelection is CUSTOM.
-    audio_files: Optional[list[AnnAudioFile]]
+    audio_files: Optional[list[AnnAudioFile]] = None
     #: Lists the pre-configured holiday schedules.
     holiday_schedules: list[CQHolidaySchedule] = Field(default_factory=list)
 
@@ -88,30 +88,30 @@ class NightService(ApiModel):
     #: Whether or not the call queue night service routing policy is enabled.
     night_service_enabled: bool
     #: Specifies call processing action type.
-    action: Optional[CPActionType]
+    action: Optional[CPActionType] = None
     #: Call gets transferred to this number when action is set to TRANSFER. This can also be an extension.
-    transfer_phone_number: Optional[str]
+    transfer_phone_number: Optional[str] = None
     #: Specifies if an announcement plays to callers before applying the action.
     play_announcement_before_enabled: bool
     #: Specifies the type of announcements to played.
-    announcement_mode: Optional[AnnouncementMode]
+    announcement_mode: Optional[AnnouncementMode] = None
     #: Specifies what type of announcement to be played.
-    audio_message_selection: Optional[Greeting]
+    audio_message_selection: Optional[Greeting] = None
     #: List of Announcement Audio Files when audioMessageSelection is CUSTOM.
-    audio_files: Optional[list[AnnAudioFile]]
+    audio_files: Optional[list[AnnAudioFile]] = None
     #: Name of the schedule configured for a night service as one of from businessHourSchedules list.
-    business_hours_name: Optional[str]
+    business_hours_name: Optional[str] = None
     #: Specifies whether the above mentioned schedule is org or location specific.
     #: (Must be from businessHourSchedules list).
-    business_hours_level: Optional[ScheduleLevel]
+    business_hours_level: Optional[ScheduleLevel] = None
     #: Lists the pre-configured business hour schedules.
     business_hour_schedules: list[CQHolidaySchedule] = Field(default_factory=list)
     #: Force night service regardless of business hour schedule.
-    force_night_service_enabled: Optional[bool]
+    force_night_service_enabled: Optional[bool] = None
     #: Specifies what type of announcement to be played when announcementMode is MANUAL.
-    manual_audio_message_selection: Optional[Greeting]
+    manual_audio_message_selection: Optional[Greeting] = None
     #: List Of Audio Files.
-    manual_audio_files: Optional[list[AnnAudioFile]]
+    manual_audio_files: Optional[list[AnnAudioFile]] = None
 
 
 class StrandedCallsAction(str, Enum):
@@ -140,12 +140,12 @@ class StrandedCalls(ApiModel):
     Call Queue Holiday Service details
     """
     #: Specifies call processing action type.
-    action: Optional[StrandedCallsAction]
+    action: Optional[StrandedCallsAction] = None
     #: Call gets transferred to this number when action is set to TRANSFER. This can also be an extension.
-    transfer_phone_number: Optional[str]
-    audio_message_selection: Optional[Greeting]
+    transfer_phone_number: Optional[str] = None
+    audio_message_selection: Optional[Greeting] = None
     #: List of Announcement Audio Files when audioMessageSelection is CUSTOM.
-    audio_files: Optional[list[AnnAudioFile]]
+    audio_files: Optional[list[AnnAudioFile]] = None
 
 
 class ForcedForward(ApiModel):
@@ -155,13 +155,13 @@ class ForcedForward(ApiModel):
     #: Whether or not the call queue forced forward routing policy setting is enabled.
     forced_forward_enabled: bool
     #: All incoming calls are forwarded to this number. This can also be an extension.
-    transfer_phone_number: Optional[str]
+    transfer_phone_number: Optional[str] = None
     #: Specifies if an announcement plays to callers before applying the action.
-    play_announcement_before_enabled: Optional[bool]
+    play_announcement_before_enabled: Optional[bool] = None
     #: Specifies what type of announcement to be played.
-    audio_message_selection: Optional[Greeting]
+    audio_message_selection: Optional[Greeting] = None
     #: List of Announcement Audio Files when audioMessageSelection is CUSTOM.
-    audio_files: Optional[list[AnnAudioFile]]
+    audio_files: Optional[list[AnnAudioFile]] = None
 
 
 @dataclass(init=False)
@@ -195,7 +195,7 @@ class CQPolicyApi:
         url = self._ep(location_id, queue_id, 'holidayService')
         params = org_id and {'orgId': org_id} or None
         data = self._session.rest_get(url=url, params=params)
-        return HolidayService.parse_obj(data)
+        return HolidayService.model_validate(data)
 
     def holiday_service_update(self, location_id: str, queue_id: str, update: HolidayService, org_id: str = None):
         """
@@ -217,7 +217,7 @@ class CQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'holidayService')
         params = org_id and {'orgId': org_id} or None
-        body = update.json(exclude={'holiday_schedules'})
+        body = update.model_dump_json(exclude={'holiday_schedules'})
         self._session.rest_put(url=url, params=params, data=body)
 
     def night_service_detail(self, location_id: str, queue_id: str, org_id: str = None) -> NightService:
@@ -242,7 +242,7 @@ class CQPolicyApi:
         url = self._ep(location_id, queue_id, 'nightService')
         params = org_id and {'orgId': org_id} or None
         data = self._session.rest_get(url=url, params=params)
-        return NightService.parse_obj(data)
+        return NightService.model_validate(data)
 
     def night_service_update(self, location_id: str, queue_id: str, update: NightService, org_id: str = None):
         """
@@ -265,7 +265,7 @@ class CQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'nightService')
         params = org_id and {'orgId': org_id} or None
-        body = update.json(exclude={'business_hours_schedules'})
+        body = update.model_dump_json(exclude={'business_hours_schedules'})
         self._session.rest_put(url=url, params=params, data=body)
 
     def stranded_calls_details(self, location_id: str, queue_id: str, org_id: str = None) -> StrandedCalls:
@@ -291,7 +291,7 @@ class CQPolicyApi:
         url = self._ep(location_id, queue_id, 'strandedCalls')
         params = org_id and {'orgId': org_id} or None
         data = self._session.rest_get(url=url, params=params)
-        return StrandedCalls.parse_obj(data)
+        return StrandedCalls.model_validate(data)
 
     def stranded_calls_update(self, location_id: str, queue_id: str, update: StrandedCalls, org_id: str = None):
         """
@@ -313,7 +313,7 @@ class CQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'strandedCalls')
         params = org_id and {'orgId': org_id} or None
-        self._session.rest_put(url=url, params=params, data=update.json())
+        self._session.rest_put(url=url, params=params, data=update.model_dump_json())
 
     def forced_forward_details(self, location_id: str, queue_id: str, org_id: str = None) -> ForcedForward:
         """
@@ -333,7 +333,7 @@ class CQPolicyApi:
         url = self._ep(location_id, queue_id, 'forcedForward')
         params = org_id and {'orgId': org_id} or None
         data = self._session.rest_get(url=url, params=params)
-        return ForcedForward.parse_obj(data)
+        return ForcedForward.model_validate(data)
 
     def forced_forward_update(self, location_id: str, queue_id: str, update: ForcedForward, org_id: str = None):
         """
@@ -357,4 +357,4 @@ class CQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'forcedForward')
         params = org_id and {'orgId': org_id} or None
-        self._session.rest_put(url=url, params=params, data=update.json())
+        self._session.rest_put(url=url, params=params, data=update.model_dump_json())

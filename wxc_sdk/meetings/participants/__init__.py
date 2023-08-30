@@ -45,129 +45,129 @@ class AudioType(str, Enum):
 
 class InProgressDevice(ApiModel):
     #: An internal ID that is associated with each join.
-    correlation_id: Optional[str]
+    correlation_id: Optional[str] = None
     #: The type of device.
-    device_type: Optional[str]
+    device_type: Optional[str] = None
     #: The audio type that the participant is using.
-    audio_type: Optional[AudioType]
+    audio_type: Optional[AudioType] = None
     #: The time the device joined the meeting. If the field is non-existent or shows 1970-01-01T00:00:00.000Z the
     #: meeting may be still ongoing and the joinedTime will be filled in after the meeting ended. If you need real-time
     #: joined events, please refer to the webhooks guide.
-    joined_time: Optional[str]
+    joined_time: Optional[str] = None
     #: The time the device left the meeting, leftTime is the exact moment when a specific device left the meeting. If
     #: the field is non-existent or shows 1970-01-01T00:00:00.000Z the meeting may be still ongoing and the leftTime
     #: will be filled in after the meeting ended. If you need real-time left events, please refer to the webhooks
     #: guide.
-    left_time: Optional[str]
+    left_time: Optional[str] = None
 
 
 class MeetingDevice(InProgressDevice):
     #: The duration in seconds the device stayed in the meeting.
-    duration_second: Optional[int]
+    duration_second: Optional[int] = None
     #: The PSTN call type in which the device joined the meeting.
-    call_type: Optional[MeetingCallType]
+    call_type: Optional[MeetingCallType] = None
     #: The PSTN phone number from which the device joined the meeting. Only compliance officer can retrieve the
     #: phoneNumber. The meeting host and admin users cannot retrieve it. NOTE: The phoneNumber will be returned after
     #: the meeting ends; it is not returned while the meeting is in progress.
-    phone_number: Optional[str]
+    phone_number: Optional[str] = None
 
 
 class Participant(ApiModel):
     #: The ID that identifies the meeting and the participant.
-    id: Optional[str]
+    id: Optional[str] = None
     #: The ID that identifies the organization. It only applies to participants of ongoing meetings.
-    org_id: Optional[str]
+    org_id: Optional[str] = None
     #: Whether or not the participant is the host of the meeting.
-    host: Optional[bool]
+    host: Optional[bool] = None
     #: Whether or not the participant has host privilege in the meeting.
-    co_host: Optional[bool]
+    co_host: Optional[bool] = None
     #: Whether or not the participant is the team space moderator. This field returns only if the meeting is associated
     #: with a Webex space.
-    space_moderator: Optional[bool]
+    space_moderator: Optional[bool] = None
     #: The email address of the participant.
-    email: Optional[str]
+    email: Optional[str] = None
     #: The name of the participant.
-    display_name: Optional[str]
+    display_name: Optional[str] = None
     #: Whether or not the participant is invited to the meeting.
-    invitee: Optional[bool]
+    invitee: Optional[bool] = None
     #: Whether or not the participant's audio is muted.
-    muted: Optional[bool]
+    muted: Optional[bool] = None
     #: The status of the participant's video.
-    video: Optional[VideoState]
+    video: Optional[VideoState] = None
     #: The status of the participant in the meeting.
-    state: Optional[ParticipantState]
+    state: Optional[ParticipantState] = None
     #: The time the participant joined the meeting. If the field is non-existent or shows 1970-01-01T00:00:00.000Z the
     #: meeting may be still ongoing and the joinedTime will be filled in after the meeting ended. If you need real-time
     #: join events, please refer to the webhooks guide.
-    joined_time: Optional[str]
+    joined_time: Optional[str] = None
     #: The time the participant left the meeting. If the field is non-existent or shows 1970-01-01T00:00:00.000Z the
     #: meeting may be still ongoing and the leftTime will be filled in after the meeting ended. If you need real-time
     #: left events, please refer to the webhooks guide.
-    left_time: Optional[str]
+    left_time: Optional[str] = None
     #: The site URL.
-    site_url: Optional[str]
+    site_url: Optional[str] = None
     #: A unique identifier for the meeting which the participant belongs to.
-    meeting_id: Optional[str]
+    meeting_id: Optional[str] = None
     #: The email address of the host.
-    host_email: Optional[str]
-    devices: Optional[list[MeetingDevice]]
+    host_email: Optional[str] = None
+    devices: Optional[list[MeetingDevice]] = None
     #: The source ID of the participant. The sourceId is from the Create Invitation Sources API.
-    source_id: Optional[str]
+    source_id: Optional[str] = None
 
 
 class QueryMeetingParticipantsWithEmailBody(ApiModel):
     #: Participants email list
     #: Possible values: a@example.com
-    emails: Optional[list[str]]
+    emails: Optional[list[str]] = None
 
 
 class UpdateParticipantBody(ApiModel):
     #: The value is true or false, and means to mute or unmute the audio of a participant.
-    muted: Optional[bool]
+    muted: Optional[bool] = None
     #: The value can be true or false. The value of true is to admit a participant to the meeting if the participant is
     #: in the lobby, No-Op if the participant is not in the lobby or when the value is set to false.
-    admit: Optional[bool]
+    admit: Optional[bool] = None
     #: The attribute is exclusive and its value can be true or false. The value of true means that the participant will
     #: be expelled from the meeting, the value of false means No-Op.
-    expel: Optional[bool]
+    expel: Optional[bool] = None
 
 
 class UpdateParticipantResponse(ApiModel):
     #: The participant ID that identifies the meeting and the participant.
-    id: Optional[str]
+    id: Optional[str] = None
     #: The ID that identifies the organization.
-    org_id: Optional[str]
+    org_id: Optional[str] = None
     #: Whether or not the participant is the host of the meeting.
-    host: Optional[bool]
+    host: Optional[bool] = None
     #: Whether or not the participant has host privilege in the meeting.
-    co_host: Optional[bool]
+    co_host: Optional[bool] = None
     #: Whether or not the participant is the team space moderator. This field returns only if the meeting is associated
     #: with a Webex space.
-    space_moderator: Optional[bool]
+    space_moderator: Optional[bool] = None
     #: The email address of the participant.
-    email: Optional[str]
+    email: Optional[str] = None
     #: The name of the participant.
-    display_name: Optional[str]
+    display_name: Optional[str] = None
     #: Whether or not the participant is invited to the meeting.
-    invitee: Optional[bool]
+    invitee: Optional[bool] = None
     #: The status of the participant's video.
-    video: Optional[VideoState]
+    video: Optional[VideoState] = None
     #: Whether or not the participant's audio is muted.
-    muted: Optional[bool]
+    muted: Optional[bool] = None
     #: The status of the participant in the meeting.
-    state: Optional[ParticipantState]
+    state: Optional[ParticipantState] = None
     #: The site URL.
-    site_url: Optional[str]
+    site_url: Optional[str] = None
     #: A unique identifier for the meeting which the participant belongs to.
-    meeting_id: Optional[str]
+    meeting_id: Optional[str] = None
     #: The email address of the host.
-    host_email: Optional[str]
-    devices: Optional[list[InProgressDevice]]
+    host_email: Optional[str] = None
+    devices: Optional[list[InProgressDevice]] = None
 
 
 class AdmitParticipantsBody(ApiModel):
     #: The ID that identifies the meeting participant.
-    items: Optional[list[str]]
+    items: Optional[list[str]] = None
 
 
 class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
@@ -250,7 +250,7 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
         if emails is not None:
             body.emails = emails
         url = self.ep('query')
-        data = super().post(url=url, params=params, data=body.json())
+        data = super().post(url=url, params=params, data=body.model_dump_json())
         # TODO: this is wrong -> fix code generation
         return data["items"]
 
@@ -273,7 +273,7 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
             params['hostEmail'] = host_email
         url = self.ep(f'{participant_id}')
         data = super().get(url=url, params=params)
-        return Participant.parse_obj(data)
+        return Participant.model_validate(data)
 
     def update_participant(self, participant_id: str, muted: bool = None, admit: bool = None,
                            expel: bool = None) -> UpdateParticipantResponse:
@@ -302,8 +302,8 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
         if expel is not None:
             body.expel = expel
         url = self.ep(f'{participant_id}')
-        data = super().put(url=url, data=body.json())
-        return UpdateParticipantResponse.parse_obj(data)
+        data = super().put(url=url, data=body.model_dump_json())
+        return UpdateParticipantResponse.model_validate(data)
 
     def admit_participants(self, participant_ids: List[str] = None):
         """
@@ -318,5 +318,5 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
         if participant_ids is not None:
             body.items = participant_ids
         url = self.ep('admit')
-        super().post(url=url, data=body.json())
+        super().post(url=url, data=body.model_dump_json())
         return

@@ -81,20 +81,20 @@ class ApiModel(BaseModel):
 
     class Config:
         alias_generator = to_camel  # alias is camelcase version of attribute name
-        allow_population_by_field_name = True
+        populate_by_name = True
         #: set to 'forbid' if run in unittest to catch schema issues during tests
         #: else set to 'allow'
         extra = 'forbid' if 'unittest' in sys.modules or 'pytest' in sys.modules else 'allow'
         # store values instead of enum types
         use_enum_values = True
 
-    def json(self, *args, exclude_none=True, by_alias=True, **kwargs) -> str:
-        return super().json(*args, exclude_none=exclude_none, by_alias=by_alias, **kwargs)
+    def model_dump_json(self, *args, exclude_none=True, by_alias=True, **kwargs) -> str:
+        return super().model_dump_json(*args, exclude_none=exclude_none, by_alias=by_alias, **kwargs)
 
     @classmethod
-    def parse_obj(cls, obj):
+    def model_validate(cls, obj):
         try:
-            r = super().parse_obj(obj)
+            r = super().model_validate(obj)
         except ValidationError as e:
             raise e
         return r
@@ -106,7 +106,7 @@ class CodeAndReason(ApiModel):
 
 
 class ApiModelWithErrors(ApiModel):
-    errors: Optional[dict[str, CodeAndReason]]
+    errors: Optional[dict[str, CodeAndReason]] = None
 
 
 def plus1(v: Optional[str]) -> str:

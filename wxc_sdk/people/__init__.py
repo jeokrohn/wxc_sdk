@@ -47,7 +47,7 @@ class PhoneNumber(ApiModel):
     """
     number_type: PhoneNumberType = Field(alias='type')
     value: str
-    primary: Optional[bool]
+    primary: Optional[bool] = None
 
 
 class SipType(str, Enum):
@@ -93,22 +93,22 @@ class PersonType(str, Enum):
 class PersonAddress(ApiModel):
     #: The type of address
     #: Possible values: work
-    type: Optional[str]
+    type: Optional[str] = None
     #: The user's country
     #: Possible values: US
-    country: Optional[str]
+    country: Optional[str] = None
     #: the user's locality, often city
     #: Possible values: Milpitas
-    locality: Optional[str]
+    locality: Optional[str] = None
     #: the user's region, often state
     #: Possible values: California
-    region: Optional[str]
+    region: Optional[str] = None
     #: the user's street
     #: Possible values: 1099 Bird Ave.
-    street_address: Optional[str]
+    street_address: Optional[str] = None
     #: the user's postal or zip code
     #: Possible values: 99212
-    postal_code: Optional[str]
+    postal_code: Optional[str] = None
 
 
 class Person(ApiModelWithErrors):
@@ -116,71 +116,71 @@ class Person(ApiModelWithErrors):
     Webex person
     """
     #: A unique identifier for the person.
-    person_id: Optional[str] = Field(alias='id')
+    person_id: Optional[str] = Field(alias='id', default=None)
     #: The email addresses of the person.
-    emails: Optional[list[str]]
+    emails: Optional[list[str]] = None
     #: Phone numbers for the person.
-    phone_numbers: Optional[list[PhoneNumber]]
+    phone_numbers: Optional[list[PhoneNumber]] = None
     #: The Webex Calling extension for the person. Only applies to a person with a Webex Calling license
-    extension: Optional[str]
+    extension: Optional[str] = None
     #: The ID of the location for this person retrieved from BroadCloud.
-    location_id: Optional[str]
+    location_id: Optional[str] = None
     #: The full name of the person.
-    display_name: Optional[str]
+    display_name: Optional[str] = None
     #: The nickname of the person if configured. If no nickname is configured for the person, this field will not
     #: be present.
-    nick_name: Optional[str]
+    nick_name: Optional[str] = None
     #: first_name: Optional[str]
-    first_name: Optional[str]
+    first_name: Optional[str] = None
     #: The last name of the person.
-    last_name: Optional[str]
+    last_name: Optional[str] = None
     #: The URL to the person's avatar in PNG format
-    avatar: Optional[str]
+    avatar: Optional[str] = None
     #: The ID of the organization to which this person belongs.
-    org_id: Optional[str]
+    org_id: Optional[str] = None
     #: An array of role strings representing the roles to which this person belongs.
-    roles: Optional[list[str]]
+    roles: Optional[list[str]] = None
     #: An array of license strings allocated to this person.
-    licenses: Optional[list[str]]
+    licenses: Optional[list[str]] = None
     #: The business department the user belongs to.
-    department: Optional[str]
+    department: Optional[str] = None
     #: A manager identifier.
-    manager: Optional[str]
+    manager: Optional[str] = None
     #: Person Id of the manager
-    manager_id: Optional[str]
+    manager_id: Optional[str] = None
     #: the person's title
-    title: Optional[str]
+    title: Optional[str] = None
     #: Person's address
-    addresses: Optional[list[PersonAddress]]
+    addresses: Optional[list[PersonAddress]] = None
     #: One or several site names where this user has an attendee role. Append #attendee to the sitename (eg:
     # mysite.webex.com#attendee)
     #: Possible values: mysite.webex.com#attendee
-    site_urls: Optional[list[str]]
+    site_urls: Optional[list[str]] = None
     #: The date and time the person was created.
-    created: Optional[datetime.datetime]
+    created: Optional[datetime.datetime] = None
     #: The date and time the person was last changed.
-    last_modified: Optional[datetime.datetime]
+    last_modified: Optional[datetime.datetime] = None
     #: The time zone of the person if configured. If no timezone is configured on the account, this field will not be
     #: present
-    timezone: Optional[str]
+    timezone: Optional[str] = None
     #: The date and time of the person's last activity within Webex. This will only be returned for people within
     #: your organization or an organization you manage. Presence information will not be shown if the authenticated
     #: user has disabled status sharing.
-    last_activity: Optional[str]
+    last_activity: Optional[str] = None
     #: The users sip addresses. Read-only.
-    sip_addresses: Optional[list[SipAddress]]
+    sip_addresses: Optional[list[SipAddress]] = None
     #: The current presence status of the person. This will only be returned for people within your organization or an
     #: organization you manage. Presence information will not be shown if the authenticated user has disabled status
     #: sharing.
-    status: Optional[PeopleStatus]
+    status: Optional[PeopleStatus] = None
     #: Whether or not an invite is pending for the user to complete account activation. This property is only returned
     #: if the authenticated user is an admin user for the person's organization.
-    invite_pending: Optional[bool]
+    invite_pending: Optional[bool] = None
     #: Whether or not the user is allowed to use Webex. This property is only returned if the authenticated user is an
     #: admin user for the person's organization.
-    login_enabled: Optional[bool]
+    login_enabled: Optional[bool] = None
     #: The type of person account, such as person or bot.
-    person_type: Optional[PersonType] = Field(alias='type')
+    person_type: Optional[PersonType] = Field(alias='type', default=None)
 
     @property
     def person_id_uuid(self) -> str:
@@ -299,7 +299,7 @@ class PeopleApi(ApiChild, base='people'):
         """
         params = calling_data and {'callingData': 'true'} or None
         url = self.ep()
-        data = settings.json(exclude={'person_id': True,
+        data = settings.model_dump_json(exclude={'person_id': True,
                                       'created': True,
                                       'last_modified': True,
                                       'timezone': True,
@@ -309,7 +309,7 @@ class PeopleApi(ApiChild, base='people'):
                                       'invite_pending': True,
                                       'login_enabled': True,
                                       'person_type': True})
-        return Person.parse_obj(self.post(url, data=data, params=params))
+        return Person.model_validate(self.post(url, data=data, params=params))
 
     def details(self, person_id: str, calling_data: bool = False) -> Person:
         """
@@ -331,7 +331,7 @@ class PeopleApi(ApiChild, base='people'):
         """
         ep = self.ep(path=person_id)
         params = calling_data and {'callingData': 'true'} or None
-        return Person.parse_obj(self.get(ep, params=params))
+        return Person.model_validate(self.get(ep, params=params))
 
     def delete_person(self, person_id: str):
         """
@@ -387,7 +387,7 @@ class PeopleApi(ApiChild, base='people'):
             raise ValueError('display_name, first_name, and last_name are required')
 
         # some attributes should not be included in update
-        data = person.json(exclude={'created': True,
+        data = person.model_dump_json(exclude={'created': True,
                                     'last_modified': True,
                                     'timezone': True,
                                     'last_activity': True,
@@ -397,7 +397,7 @@ class PeopleApi(ApiChild, base='people'):
                                     'login_enabled': True,
                                     'person_type': True})
         ep = self.ep(path=person.person_id)
-        return Person.parse_obj(self.put(url=ep, data=data, params=params))
+        return Person.model_validate(self.put(url=ep, data=data, params=params))
 
     def me(self, calling_data: bool = False) -> Person:
         """
@@ -415,5 +415,5 @@ class PeopleApi(ApiChild, base='people'):
         ep = self.ep('me')
         params = calling_data and {'callingData': 'true'} or None
         data = self.get(ep, params=params)
-        result = Person.parse_obj(data)
+        result = Person.model_validate(data)
         return result

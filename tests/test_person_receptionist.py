@@ -23,7 +23,7 @@ class TestRead(TestCaseWithUsers):
             settings = list(pool.map(lambda user: rc.read(person_id=user.person_id),
                                      self.users))
         print(f'Got receptionist client settings for {len(self.users)} users')
-        print('\n'.join(s.json() for s in settings))
+        print('\n'.join(s.model_dump_json() for s in settings))
         for user, setting in zip(self.users, settings):
             if not setting.enabled:
                 continue
@@ -96,7 +96,7 @@ class TestRead(TestCaseWithUsers):
             # ths is what we want to add
             new_monitoring = [user.person_id
                               for user in to_add]
-            settings = before.copy(deep=True)
+            settings = before.model_copy(deep=True)
             settings.enabled = True
             settings.monitored_members = (settings.monitored_members or []) + new_monitoring
 
@@ -150,7 +150,7 @@ class TestRead(TestCaseWithUsers):
             # ths is what we want to add
             new_monitoring = [u.person_id
                               for u in to_add]
-            settings = before.copy(deep=True)
+            settings = before.model_copy(deep=True)
             settings.enabled = True
             settings.monitored_members = (settings.monitored_members or []) + new_monitoring
 

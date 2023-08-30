@@ -96,7 +96,7 @@ class CallparkExtensionApi(ApiChild, base='telephony'):
         url = self._endpoint(location_id=location_id, cpe_id=cpe_id)
         params = org_id and {'orgId': org_id} or {}
         data = self.get(url, params=params)
-        return CallParkExtension.parse_obj(data)
+        return CallParkExtension.model_validate(data)
 
     def create(self, location_id: str, name: str, extension: str, org_id: str = None, ) -> str:
         """

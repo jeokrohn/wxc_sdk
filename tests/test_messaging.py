@@ -13,7 +13,7 @@ from random import choice, sample, shuffle
 from typing import ClassVar
 from unittest import skip
 
-from pydantic import parse_obj_as
+from pydantic import TypeAdapter
 
 from tests.base import TestCaseWithUsersAndSpaces, TestCaseWithLog
 from wxc_sdk.common import RoomType
@@ -88,7 +88,7 @@ class TestMessages(TestCaseWithUsersAndSpaces):
                 }
             }
         ]
-        atts = parse_obj_as(list[MessageAttachment], attachments)
+        atts = TypeAdapter(list[MessageAttachment]).validate_python(attachments)
         foo = 1
 
 
@@ -155,7 +155,7 @@ class TestRooms(TestCaseWithLog):
         title = next(new_names)
         new_room = self.api.rooms.create(title=title)
         print(f'Created space "{title}"')
-        print(json.dumps(json.loads(new_room.json(by_alias=True)), indent=2))
+        print(json.dumps(json.loads(new_room.model_dump_json(by_alias=True)), indent=2))
 
     def test_003_details(self):
         """

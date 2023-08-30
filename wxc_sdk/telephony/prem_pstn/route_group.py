@@ -13,21 +13,21 @@ __all__ = ['RGTrunk', 'RouteGroup', 'RouteGroupUsage', 'UsageRouteLists', 'Route
 
 class RGTrunk(ApiModel):
     trunk_id: str = Field(alias='id')
-    name: Optional[str]
-    location_id: Optional[str]
+    name: Optional[str] = None
+    location_id: Optional[str] = None
     priority: int
 
 
 class RouteGroup(ApiModel):
     # only returned in list() not in detail
-    rg_id: Optional[str] = Field(alias='id')
+    rg_id: Optional[str] = Field(alias='id', default=None)
     name: str
     #: only returned by list() not as part of detail()
-    in_use: Optional[bool]
+    in_use: Optional[bool] = None
     #: only returned by detail()
-    organization: Optional[Customer]
+    organization: Optional[Customer] = None
     #: only returned by detail()
-    local_gateways: Optional[list[RGTrunk]]
+    local_gateways: Optional[list[RGTrunk]] = None
 
 
 class RouteGroupUsage(ApiModel):
@@ -104,7 +104,7 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         :rtype: str
         """
         params = org_id and {'orgId': org_id} or None
-        body = route_group.json(include={'name': True,
+        body = route_group.model_dump_json(include={'name': True,
                                          'local_gateways': {'__all__': {'trunk_id', 'priority'}}})
         url = self.ep()
         data = self.post(url=url, params=params, data=body)
@@ -130,7 +130,7 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(rg_id)
         data = self.get(url=url, params=params)
-        return RouteGroup.parse_obj(data)
+        return RouteGroup.model_validate(data)
 
     def update(self, rg_id: str, update: RouteGroup, org_id: str = None):
         """
@@ -150,7 +150,7 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         :type org_id: str
         """
         params = org_id and {'orgId': org_id} or None
-        body = update.json(include={'name': True,
+        body = update.model_dump_json(include={'name': True,
                                     'local_gateways': {'__all__': {'trunk_id', 'priority'}}})
         url = self.ep(rg_id)
         data = self.post(url=url, params=params, data=body)
@@ -198,7 +198,7 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(f'{rg_id}/usage')
         data = self.get(url=url, params=params)
-        return RouteGroupUsage.parse_obj(data)
+        return RouteGroupUsage.model_validate(data)
 
     def usage_call_to_extension(self, rg_id: str, org_id: str = None, **params) -> Generator[IdAndName, None, None]:
         """

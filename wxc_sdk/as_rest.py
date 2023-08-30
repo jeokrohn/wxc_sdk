@@ -28,15 +28,15 @@ log = logging.getLogger(__name__)
 
 class AsErrorMessage(ApiModel):
     description: str
-    code: Optional[int]
-    error_code: Optional[int]
+    code: Optional[int] = None
+    error_code: Optional[int] = None
 
 
 class AsSingleError(ApiModel):
     """
     Representation of single error in the body of an HTTP error response from Webex
     """
-    key: Optional[str]
+    key: Optional[str] = None
     message: list[AsErrorMessage]
 
     @property
@@ -63,12 +63,12 @@ class AsErrorDetail(ApiModel):
     Representation of error details in the body of an HTTP error response from Webex. There are several variants of
     error responses. This model tries to generalize them
     """
-    error: Optional[list[AsSingleError]]
-    error_code: Optional[int]
-    tracking_id: Optional[str]
+    error: Optional[list[AsSingleError]] = None
+    error_code: Optional[int] = None
+    tracking_id: Optional[str] = None
     #
-    message: Optional[str]
-    errors: Optional[list[AsErrorMessage]]
+    message: Optional[str] = None
+    errors: Optional[list[AsErrorMessage]] = None
 
     @property
     def description(self) -> str:
@@ -97,7 +97,7 @@ class AsRestError(ClientResponseError):
                  detail: Any = None) -> None:
         super().__init__(request_info, history, code=code, status=status, message=message, headers=headers)
         try:
-            self.detail = AsErrorDetail.parse_obj(detail)
+            self.detail = AsErrorDetail.model_validate(detail)
         except ValidationError:
             self.detail = detail
         # TODO: implement equivalent to __init__ in sync implementation

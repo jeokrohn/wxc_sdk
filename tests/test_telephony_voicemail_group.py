@@ -364,7 +364,7 @@ class TestVmGroup(TestWithLocations):
                 api.update(location_id=group.location_id, voicemail_group_id=group.group_id, settings=settings)
                 # get updated info and make sure that the updated worked
                 after = api.details(location_id=group.location_id, voicemail_group_id=group.group_id)
-                expected = details.copy(deep=True)
+                expected = details.model_copy(deep=True)
                 expected.enabled = enabled
                 self.assertEqual(expected, after)
             finally:

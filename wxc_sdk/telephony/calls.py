@@ -34,14 +34,14 @@ class TelephonyParty(ApiModel):
     Representation of a calling/called party of a Webex Calling call
     """
     #: The party's name. Only present when the name is available and privacy is not enabled.
-    name: Optional[str]
+    name: Optional[str] = None
     #: The party's number. Only present when the number is available and privacy is not enabled. The number can be
     #: digits or a URI. Some examples for number include: 1234, 2223334444, +12223334444, \*73, user@company.domain
     number: str
     #: The party's person ID. Only present when the person ID is available and privacy is not enabled.
-    person_id: Optional[str]
+    person_id: Optional[str] = None
     #: The party's place ID. Only present when the place ID is available and privacy is not enabled.
-    place_id: Optional[str]
+    place_id: Optional[str] = None
     #: Indicates whether privacy is enabled for the name, number and personId/placeId.
     privacy_enabled: str
     #: The call type for the party.
@@ -121,9 +121,9 @@ class TelephonyCall(ApiModel):
     Representation of a Webex Calling call
     """
     # In events the property is "callId"
-    id_call_id: Optional[str] = Field(alias='callId')
+    id_call_id: Optional[str] = Field(alias='callId', default=None)
     # ..while the telephony API uses "id"
-    id_id: Optional[str] = Field(alias='id')
+    id_id: Optional[str] = Field(alias='id', default=None)
 
     # .. but this should handle that
     @property
@@ -145,23 +145,23 @@ class TelephonyCall(ApiModel):
     remote_party: TelephonyParty
     #: The appearance value for the call. The appearance value can be used to display the user's calls in an order
     #: consistent with the user's devices. Only present when the call has an appearance value assigned.
-    appearance: Optional[int]
+    appearance: Optional[int] = None
     #: The date and time the call was created.
     created: datetime.datetime
     #: The date and time the call was answered. Only present when the call has been answered.
-    answered: Optional[datetime.datetime]
+    answered: Optional[datetime.datetime] = None
     #: The list of details for previous redirections of the incoming call ordered from most recent to least recent.
     #: For example, if user B forwards an incoming call to user C, then a redirection entry is present for B's
     #: forwarding in C's incoming call details. Only present when there were previous redirections and the incoming
     #: call's state is alerting.
     redirections: list[Redirection] = Field(default_factory=list)
     #: The recall details for the incoming call. Only present when the incoming call is for a recall.
-    recall: Optional[Recall]
+    recall: Optional[Recall] = None
     #: The call's current recording state. Only present when the user's call recording has been invoked during the
     #: life of the call.
-    recording_state: Optional[RecordingState]
+    recording_state: Optional[RecordingState] = None
     #: The date and time the call was disconnected
-    disconnected: Optional[datetime.datetime]
+    disconnected: Optional[datetime.datetime] = None
 
 
 class TelephonyEventData(WebhookEventData, TelephonyCall):
@@ -209,11 +209,11 @@ class CallHistoryRecord(ApiModel):
     #: The type of call history record.
     call_type: HistoryType = Field(alias='type')
     #: The name of the called/calling party. Only present when the name is available and privacy is not enabled.
-    name: Optional[str]
+    name: Optional[str] = None
     #: The number of the called/calling party. Only present when the number is available and privacy is not enabled.
     #: The number can be digits or a URI. Some examples for number include: 1234, 2223334444, +12223334444, \*73,
     #: user@company.domain
-    number: Optional[str]
+    number: Optional[str] = None
     #: Indicates whether privacy is enabled for the name and number.
     privacy_enabled: bool
     #: The date and time the call history record was created. For a placed call history record, this is when the call
@@ -227,16 +227,16 @@ class ParkedAgainst(ApiModel):
     The details of where the call has been parked.
     """
     #: The party's name. Only present when the name is available and privacy is not enabled.
-    name: Optional[str]
+    name: Optional[str] = None
     #: The party's number. Only present when the number is available and privacy is not enabled. The number can be
     #: digits or a URI. Some examples for number include: 1234, 2223334444, +12223334444, \*73, user@company.domain
-    number: Optional[str]
+    number: Optional[str] = None
     #: The party's person ID. Only present when the person ID is available and privacy is not enabled.
-    person_id: Optional[str]
+    person_id: Optional[str] = None
     #: The party's place ID. Only present when the place ID is available and privacy is not enabled.
-    place_id: Optional[str]
+    place_id: Optional[str] = None
     #: Indicates whether privacy is enabled for the name, number and personId/placeId.
-    privacy_enabled: Optional[bool]
+    privacy_enabled: Optional[bool] = None
     #: The call type for the party.
     call_type: CallType
 
@@ -265,7 +265,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
         """
         ep = self.ep('dial')
         data = self.post(ep, json={'destination': destination})
-        return DialResponse.parse_obj(data)
+        return DialResponse.model_validate(data)
 
     def answer(self, call_id: str):
         """
@@ -398,7 +398,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
                 if i and v is not None}
         ep = self.ep('park')
         data = self.post(ep, json=data)
-        return ParkedAgainst.parse_obj(data)
+        return ParkedAgainst.model_validate(data)
 
     def retrieve(self, destination: str) -> CallInfo:
         """
@@ -414,7 +414,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
                 if i and v is not None}
         ep = self.ep('retrieve')
         data = self.post(ep, json=data)
-        return CallInfo.parse_obj(data)
+        return CallInfo.model_validate(data)
 
     def start_recording(self, call_id: str):
         """
@@ -513,7 +513,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
                 if i and v is not None}
         ep = self.ep('pickup')
         data = self.post(ep, json=data)
-        return CallInfo.parse_obj(data)
+        return CallInfo.model_validate(data)
 
     def barge_in(self, target: str):
         """
@@ -530,7 +530,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
                 if i and v is not None}
         ep = self.ep('bargeIn')
         data = self.post(ep, json=data)
-        return CallInfo.parse_obj(data)
+        return CallInfo.model_validate(data)
 
     def list_calls(self) -> Generator[TelephonyCall, None, None]:
         """
@@ -553,7 +553,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
         """
         ep = self.ep(call_id)
         data = self.get(ep)
-        return TelephonyCall.parse_obj(data)
+        return TelephonyCall.model_validate(data)
 
     def call_history(self, history_type: Union[str, HistoryType] = None) -> Generator[CallHistoryRecord, None, None]:
         """

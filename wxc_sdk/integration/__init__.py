@@ -127,7 +127,7 @@ class Integration:
 
         response.raise_for_status()
         json_data = response.json()
-        tokens = Tokens.parse_obj(json_data)
+        tokens = Tokens.model_validate(json_data)
         tokens.set_expiration()
         return tokens
 
@@ -156,7 +156,7 @@ class Integration:
             tokens.access_token = None
             raise
         else:
-            new_tokens = Tokens.parse_obj(json_data)
+            new_tokens = Tokens.model_validate(json_data)
             new_tokens: Tokens
             new_tokens.set_expiration()
             tokens.update(new_tokens)
@@ -323,14 +323,14 @@ class Integration:
 
         def write_tokens(tokens_to_cache: Tokens):
             with open(yml_path, mode='w') as f:
-                yaml.safe_dump(json.loads(tokens_to_cache.json()), f)
+                yaml.safe_dump(json.loads(tokens_to_cache.model_dump_json()), f)
             return
 
         def read_tokens() -> Optional[Tokens]:
             try:
                 with open(yml_path, mode='r') as f:
                     data = yaml.safe_load(f)
-                    tokens_read = Tokens.parse_obj(data)
+                    tokens_read = Tokens.model_validate(data)
             except Exception as e:
                 log.info(f'failed to read tokens from file: {e}')
                 tokens_read = None

@@ -10,7 +10,7 @@ from typing import Union, Optional, NamedTuple, ClassVar, overload
 
 from bs4 import BeautifulSoup, ResultSet, Tag
 from inflection import underscore
-from pydantic import BaseModel, Field, validator, root_validator
+from pydantic import BaseModel, Field, model_validator, field_validator
 from selenium import webdriver
 from selenium.common import TimeoutException, StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver.chromium.webdriver import ChromiumDriver
@@ -147,9 +147,9 @@ class SectionDoc(BaseModel):
     #: menu text from the menu at the left under Reference linking to the page with the list of methods
     menu_text: str
     #: header from the section page on the right
-    header: Optional[str]
+    header: Optional[str] = None
     #: documentation from section page on the right
-    doc: Optional[str]
+    doc: Optional[str] = None
     #: list of methods parsed from the page
     methods: list[MethodDoc]
 
@@ -163,7 +163,7 @@ class AttributeInfo:
 class Parameter(BaseModel):
     name: str
     type: str
-    type_spec: Optional[str]
+    type_spec: Optional[str] = None
     doc: str
     # parsed from params-type-non-object: probably an enum
     param_attrs: Optional[list['Parameter']] = Field(default_factory=list)
@@ -183,7 +183,7 @@ class Parameter(BaseModel):
             return f'{name}_'
         return name
 
-    @validator('param_attrs', 'param_object')
+    @field_validator('param_attrs', 'param_object', mode='after')
     def attrs_and_object(cls, v):
         if not v:
             return list()
@@ -196,11 +196,11 @@ class Parameter(BaseModel):
         for p in self.param_object or list():
             yield from p.attributes(path=f'{path}/{self.name}/object')
 
-    def dict(self, exclude=None, **kwargs):
-        return super().dict(exclude={'param_class'}, **kwargs)
+    def model_dump(self, exclude=None, **kwargs):
+        return super().model_dump(exclude={'param_class'}, **kwargs)
 
-    def json(self, exclude=None, **kwargs):
-        return super().dict(exclude={'param_class'}, **kwargs)
+    def model_dump_json(self, exclude=None, **kwargs):
+        return super().model_dump_json(exclude={'param_class'}, **kwargs)
 
 
 def break_lines(line: str, line_start: str, first_line_prefix: str = None) -> Generator[str, None, None]:
@@ -580,7 +580,7 @@ class DocMethodDetails(BaseModel):
     #: dictionary indexed by menu text with list of methods in that section
     docs: dict[str, SectionDetails] = Field(default_factory=dict)
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def backward_compatibility(cls, values):
         """
         docs used to be a dict of list of methods.
@@ -600,10 +600,10 @@ class DocMethodDetails(BaseModel):
     @staticmethod
     def from_yml(path: str):
         with open(path, mode='r') as f:
-            return DocMethodDetails.parse_obj(safe_load(f))
+            return DocMethodDetails.model_validate(safe_load(f))
 
     def to_yml(self, path: Optional[str] = None) -> Optional[str]:
-        data = self.dict()
+        data = self.model_dump()
         if path:
             with open(path, mode='w') as f:
                 if self.info:
@@ -625,8 +625,8 @@ class DocMethodDetails(BaseModel):
             for md in method_details.methods:
                 yield from md.attributes(path=f'{method_details_key}')
 
-    def dict(self, exclude=None, **kwargs):
-        return super().dict(exclude={'info'}, by_alias=True, **kwargs)
+    def mode_dump(self, exclude=None, **kwargs):
+        return super().model_dump(exclude={'info'}, by_alias=True, **kwargs)
 
 
 # noinspection PyShadowingNames

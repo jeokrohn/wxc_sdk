@@ -18,52 +18,52 @@ __all__ = ['ValidationRules', 'ReportTemplate', 'Report', 'ReportsApi', 'Calling
 
 class ValidationRules(ApiModel):
     #: Field on which validation rule is applied
-    field: Optional[str]
+    field: Optional[str] = None
     #: Whether the above field is required
-    required: Optional[str]
+    required: Optional[str] = None
 
 
 class ReportTemplate(ApiModel):
     #: Unique identifier representing a report.
-    id: Optional[int] = Field(alias='Id')
+    id: Optional[int] = Field(alias='Id', default=None)
     #: Name of the template.
-    title: Optional[str]
+    title: Optional[str] = None
     #: The service to which the report belongs.
-    service: Optional[str]
+    service: Optional[str] = None
     #: Maximum date range for reports belonging to this template.
-    max_days: Optional[int]
-    start_date: Optional[date]
-    end_date: Optional[date]
+    max_days: Optional[int] = None
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
     #: Generated reports belong to which field.
-    identifier: Optional[str]
+    identifier: Optional[str] = None
     #: an array of validation rules
-    validations: Optional[list[ValidationRules]]
+    validations: Optional[list[ValidationRules]] = None
 
 
 class Report(ApiModel):
     #: Unique identifier for the report.
-    id: Optional[str] = Field(alias='Id')
+    id: Optional[str] = Field(alias='Id', default=None)
     #: Name of the template to which this report belongs.
-    title: Optional[str]
+    title: Optional[str] = None
     #: The service to which the report belongs.
-    service: Optional[str]
+    service: Optional[str] = None
     #: The data in this report belongs to dates greater than or equal to this.
-    start_date: Optional[date]
+    start_date: Optional[date] = None
     #: The data in this report belongs to dates smaller than or equal to this.
-    end_date: Optional[date]
+    end_date: Optional[date] = None
     #: The site to which this report belongs to. This only exists if the report belongs to service Webex.
-    site_list: Optional[str]
+    site_list: Optional[str] = None
     #: Time of creation for this report.
-    created: Optional[datetime]
+    created: Optional[datetime] = None
     #: The person who created the report.
-    created_by: Optional[str]
+    created_by: Optional[str] = None
     #: Whether this report was scheduled from API or Control Hub.
-    schedule_from: Optional[str]
+    schedule_from: Optional[str] = None
     #: Completion status of this report.
-    status: Optional[str]
-    download_domain: Optional[str]
+    status: Optional[str] = None
+    download_domain: Optional[str] = None
     #: The link from which the report can be downloaded.
-    download_url: Optional[str] = Field(alias='downloadURL')
+    download_url: Optional[str] = Field(alias='downloadURL', default=None)
 
 
 class CallingCDR(CDR):
@@ -88,7 +88,7 @@ class CallingCDR(CDR):
 
         """
         for record in dicts:
-            yield cls.parse_obj(record)
+            yield cls.model_validate(record)
 
 
 @dataclass(init=False)
@@ -220,7 +220,7 @@ class ReportsApi(ApiChild, base='devices'):
         #   'https://reportdownload-a.webex.com/api?reportId=Y2lz3ZA',  'Id': 'Y23ZA'}], 'numberOfReports': 1}
         url = self.session.ep(f'reports/{report_id}')
         data = self.get(url=url)
-        result = Report.parse_obj(data['items'][0])
+        result = Report.model_validate(data['items'][0])
         return result
 
     def delete(self, report_id: str):

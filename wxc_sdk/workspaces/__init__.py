@@ -75,12 +75,12 @@ class CalendarType(str, Enum):
 
 
 class WorkspaceEmail(ApiModel):
-    email_address: Optional[str]
+    email_address: Optional[str] = None
 
 
 class Calendar(WorkspaceEmail):
     #: Calendar type. Calendar of type none does not include an emailAddress field.
-    calendar_type: Optional[CalendarType] = Field(alias='type')
+    calendar_type: Optional[CalendarType] = Field(alias='type', default=None)
 
 
 class WorkspaceSupportedDevices(str, Enum):
@@ -90,19 +90,23 @@ class WorkspaceSupportedDevices(str, Enum):
 
 class WorkspaceWebexCalling(ApiModel):
     #: End user phone number in Cisco Unified CM.
-    phone_number: Optional[str]
+    phone_number: Optional[str] = None
     #: End user extension in Cisco Unified CM.
-    extension: Optional[str]
+    extension: Optional[str] = None
     #: Calling location ID.
-    location_id: Optional[str]
+    location_id: Optional[str] = None
 
 
 class WorkspaceCalling(ApiModel):
-    type: Optional[CallingType]
+    type: Optional[CallingType] = None
     #: The webexCalling object only applies when calling type is webexCalling.
     #: due to a backend limitation this information is never returned by the workspace API and only has to be used when
     #: creating a workspace
-    webex_calling: Optional[WorkspaceWebexCalling]
+    webex_calling: Optional[WorkspaceWebexCalling] = None
+
+
+class DeviceHostedMeetings(ApiModel):
+    enabled: bool
 
 
 class Workspace(ApiModel):
@@ -110,35 +114,36 @@ class Workspace(ApiModel):
     Workspace details
     """
     #: Unique identifier for the Workspace.
-    workspace_id: Optional[str] = Field(alias='id')
+    workspace_id: Optional[str] = Field(alias='id', default=None)
     #: OrgId associate with the workspace.
-    org_id: Optional[str]
+    org_id: Optional[str] = None
     #: Location associated with the workspace.
-    workspace_location_id: Optional[str]
+    workspace_location_id: Optional[str] = None
     #: Floor associated with the workspace.
-    floor_id: Optional[str]
+    floor_id: Optional[str] = None
     #: A friendly name for the workspace.
-    display_name: Optional[str]
+    display_name: Optional[str] = None
     #: How many people the workspace is suitable for.
-    capacity: Optional[int]
+    capacity: Optional[int] = None
     #: The workspace type.
-    workspace_type: Optional[WorkSpaceType] = Field(alias='type')
+    workspace_type: Optional[WorkSpaceType] = Field(alias='type', default=None)
     #: SipUrl to call all the devices associated with the workspace.
-    sip_address: Optional[str]
+    sip_address: Optional[str] = None
     #: The date and time that the workspace was registered
-    created: Optional[datetime.datetime]
+    created: Optional[datetime.datetime] = None
     #: Calling type.
-    calling: Optional[WorkspaceCalling]
+    calling: Optional[WorkspaceCalling] = None
     #: The hybridCalling object only applies when calling type is hybridCalling.
-    hybrid_calling: Optional[WorkspaceEmail]
+    hybrid_calling: Optional[WorkspaceEmail] = None
     #: Calendar type. Calendar of type none does not include an emailAddress field.
-    calendar: Optional[Calendar]
+    calendar: Optional[Calendar] = None
     #: Notes associated to the workspace.
-    notes: Optional[str]
+    notes: Optional[str] = None
     #: Hot desking status of the workspace.
-    hotdesking_status: Optional[bool]
+    hotdesking_status: Optional[bool] = None
+    device_hosted_meetings: Optional[DeviceHostedMeetings] = None
     #: The supported devices for the workspace.
-    supported_devices: Optional[WorkspaceSupportedDevices]
+    supported_devices: Optional[WorkspaceSupportedDevices] = None
 
     @validator('hotdesking_status', pre=True)
     def validate_hotdesking_status(cls, value):
@@ -151,13 +156,13 @@ class Workspace(ApiModel):
             return value
         return value == 'on'
 
-    def json(self, *args, exclude_none=True, by_alias=True, **kwargs) -> str:
+    def model_dump_json(self, *args, exclude_none=True, by_alias=True, **kwargs) -> str:
         """
         restore calling type
 
         :meta private:
         """
-        j_data = json.loads(super().json(*args, exclude_none=exclude_none, by_alias=by_alias, **kwargs))
+        j_data = json.loads(super().model_dump_json(*args, exclude_none=exclude_none, by_alias=by_alias, **kwargs))
         if self.hotdesking_status is not None:
             j_data['hotdeskingStatus'] = 'on' if self.hotdesking_status else 'off'
         return json.dumps(j_data)
@@ -169,11 +174,11 @@ class Workspace(ApiModel):
         :meta private:
         """
         # supported device cannot be changed later
-        return self.json(exclude={'workspace_id': True,
-                                  'sip_address': True,
-                                  'created': True,
-                                  'hybrid_calling': True,
-                                  'supported_devices': for_update})
+        return self.model_dump_json(exclude={'workspace_id': True,
+                                             'sip_address': True,
+                                             'created': True,
+                                             'hybrid_calling': True,
+                                             'supported_devices': for_update})
 
     @staticmethod
     def create(*, display_name: str) -> 'Workspace':
@@ -186,26 +191,26 @@ class Workspace(ApiModel):
 
 class SupportAndConfiguredInfo(ApiModel):
     #: Is the workspace capability supported or not.
-    supported: Optional[bool]
+    supported: Optional[bool] = None
     #: Is the workspace capability configured or not.
-    configured: Optional[bool]
+    configured: Optional[bool] = None
 
 
 class CapabilityMap(ApiModel):
     #: Occupancy detection.
-    occupancy_detection: Optional[SupportAndConfiguredInfo]
+    occupancy_detection: Optional[SupportAndConfiguredInfo] = None
     #: Presence detection.
-    presence_detection: Optional[SupportAndConfiguredInfo]
+    presence_detection: Optional[SupportAndConfiguredInfo] = None
     #: Ambient noise.
-    ambient_noise: Optional[SupportAndConfiguredInfo]
+    ambient_noise: Optional[SupportAndConfiguredInfo] = None
     #: Sound level.
-    sound_level: Optional[SupportAndConfiguredInfo]
+    sound_level: Optional[SupportAndConfiguredInfo] = None
     #: Temperature.
-    temperature: Optional[SupportAndConfiguredInfo]
+    temperature: Optional[SupportAndConfiguredInfo] = None
     #: Air quality.
-    air_quality: Optional[SupportAndConfiguredInfo]
+    air_quality: Optional[SupportAndConfiguredInfo] = None
     #: Relative humidity.
-    relative_humidity: Optional[SupportAndConfiguredInfo]
+    relative_humidity: Optional[SupportAndConfiguredInfo] = None
 
 
 class WorkspacesApi(ApiChild, base='workspaces'):
@@ -300,7 +305,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         data = settings.update_or_create()
         url = self.ep()
         data = self.post(url, data=data)
-        return Workspace.parse_obj(data)
+        return Workspace.model_validate(data)
 
     def details(self, workspace_id) -> Workspace:
         """
@@ -315,7 +320,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :rtype: :class:`Workspace`
         """
         url = self.ep(workspace_id)
-        return Workspace.parse_obj(self.get(url))
+        return Workspace.model_validate(self.get(url))
 
     def update(self, workspace_id, settings: Workspace) -> Workspace:
         """
@@ -349,7 +354,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         url = self.ep(workspace_id)
         j_data = settings.update_or_create(for_update=True)
         data = self.put(url, data=j_data)
-        return Workspace.parse_obj(data)
+        return Workspace.model_validate(data)
 
     def delete_workspace(self, workspace_id):
         """
@@ -379,4 +384,4 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         """
         url = self.ep(f'{workspace_id}/capabilities')
         data = super().get(url=url)
-        return CapabilityMap.parse_obj(data["capabilities"])
+        return CapabilityMap.model_validate(data["capabilities"])

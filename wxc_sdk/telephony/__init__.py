@@ -5,7 +5,7 @@ from collections.abc import Generator
 from dataclasses import dataclass
 from typing import Optional
 
-from pydantic import Field, parse_obj_as, validator
+from pydantic import Field, TypeAdapter, field_validator
 
 from .access_codes import AccessCodesApi
 from .announcements_repo import AnnouncementsRepositoryApi
@@ -70,13 +70,13 @@ class NumberOwner(ApiModel):
     Owner of a phone number
     """
     #: ID of the owner to which PSTN Phone number is assigned.
-    owner_id: Optional[str] = Field(alias='id')
+    owner_id: Optional[str] = Field(alias='id', default=None)
     #: Type of the PSTN phone number's owner
-    owner_type: Optional[OwnerType] = Field(alias='type')
+    owner_type: Optional[OwnerType] = Field(alias='type', default=None)
     #: Last name of the PSTN phone number's owner
-    last_name: Optional[str]
+    last_name: Optional[str] = None
     #: First name of the PSTN phone number's owner
-    first_name: Optional[str]
+    first_name: Optional[str] = None
 
 
 class NumberListPhoneNumberType(str, Enum):
@@ -89,19 +89,19 @@ class NumberListPhoneNumber(ApiModel):
     Phone Number
     """
     #: A unique identifier for the PSTN phone number.
-    phone_number: Optional[str]
+    phone_number: Optional[str] = None
     #: Extension for a PSTN phone number.
-    extension: Optional[str]
+    extension: Optional[str] = None
     #: Phone number's state.
-    state: Optional[NumberState]
+    state: Optional[NumberState] = None
     #: Type of phone number.
-    phone_number_type: Optional[NumberListPhoneNumberType]
+    phone_number_type: Optional[NumberListPhoneNumberType] = None
     #: Indicates if the phone number is used as location clid.
     main_number: bool
     #: Indicates if a phone number is a toll free number.
     toll_free_number: bool
     location: IdAndName
-    owner: Optional[NumberOwner]
+    owner: Optional[NumberOwner] = None
 
 
 class NumberType(str, Enum):
@@ -114,7 +114,7 @@ class NumberDetails(ApiModel):
     un_assigned: int
     in_active: int
     extension_only: int
-    toll_free_numbers: Optional[int]
+    toll_free_numbers: Optional[int] = None
     total: int
 
 
@@ -155,21 +155,21 @@ class CallSourceInfo(ApiModel):
     #: When originatorType is "trunk", originatorId is a valid trunk, this trunk belongs to a route group which is
     #: assigned to a route list with the name routeListA, and originatorNumber is a number assigned to routeListA.
     #: routeListA is returned here. This element is returned when callSourceType is ROUTE_LIST.
-    route_list_name: Optional[str]
+    route_list_name: Optional[str] = None
     #: route list id
-    route_list_id: Optional[str]
+    route_list_id: Optional[str] = None
     #: When originatorType is "trunk", originatorId is a valid trunk with name trunkA, trunkA belongs to a route group
     #: which is assigned to a route list with name routeListA, trunkA is also assigned to dialPlanA as routing choice,
     #: dialPlanA has dialPattern xxxx assigned. If the originatorNumber match the dialPattern xxxx, dialPlanA is
     #: returned. This element is returned when callSourceType is DIAL_PATTERN.
-    dial_plan_name: Optional[str]
+    dial_plan_name: Optional[str] = None
     #: When originatorType is "trunk", originatorId is a valid trunk with the name trunkA, trunkA belongs to a route
     #: group which is assigned to a route list with the name routeListA, trunkA is also assigned to dialPlanA as routing
     #: choice, dialPlanA has dialPattern xxxx assigned. If the originatorNumber match the dialPattern xxxx, dialPattern
     #: xxxx is returned. This element is returned when callSourceType is DIAL_PATTERN.
-    dial_pattern: Optional[str]
+    dial_pattern: Optional[str] = None
     #: dial plan id
-    dial_plan_id: Optional[str]
+    dial_plan_id: Optional[str] = None
 
 
 class DestinationType(str, Enum):
@@ -204,14 +204,14 @@ class DestinationType(str, Enum):
 
 
 class LocationAndNumbers(ApiModel):
-    @validator('phone_number', pre=True)
+    @field_validator('phone_number', mode='before')
     def e164(cls, v):
         return plus1(v)
 
     location_name: str
     location_id: str
-    phone_number: Optional[str]
-    extension: Optional[str]
+    phone_number: Optional[str] = None
+    extension: Optional[str] = None
 
 
 class HostedUserDestination(LocationAndNumbers):
@@ -251,14 +251,14 @@ class HostedFeatureDestination(LocationAndNumbers):
 
 
 class TrunkDestination(ApiModel):
-    trunk_name: Optional[str]
-    trunk_id: Optional[str]
-    route_group_name: Optional[str]
-    route_group_id: Optional[str]
+    trunk_name: Optional[str] = None
+    trunk_id: Optional[str] = None
+    route_group_name: Optional[str] = None
+    route_group_id: Optional[str] = None
     #: location of the trunk, required if trunkName is returned
-    trunk_location_name: Optional[str]
+    trunk_location_name: Optional[str] = None
     #: location id of the trunk, required if trunkName is returned
-    trunk_location_id: Optional[str]
+    trunk_location_id: Optional[str] = None
 
 
 class PbxUserDestination(TrunkDestination):
@@ -289,14 +289,14 @@ class VirtualExtensionDestination(LocationAndNumbers, TrunkDestination):
 
 class VirtualExtensionRange(LocationAndNumbers, TrunkDestination):
     #: Virtual extension range ID.
-    id: Optional[str]
+    id: Optional[str] = None
     #: Virtual extension range name.
-    name: Optional[str]
+    name: Optional[str] = None
     #: Prefix that the virtual extension range is associated with (Note: Standard mode must have leading '+' in prefix;
     #: BCD/Enhanced mode can have any valid prefix).
-    prefix: Optional[str]
+    prefix: Optional[str] = None
     #: Pattern associated with the virtual extension range.
-    pattern: Optional[str]
+    pattern: Optional[str] = None
 
 
 class RouteListDestination(ApiModel):
@@ -328,43 +328,43 @@ class EmergencyDestination(TrunkDestination):
 
 class TestCallRoutingResult(ApiModel):
     #: Language for call queue.
-    language: Optional[str]
+    language: Optional[str] = None
     #: Time zone for the call queue.
-    time_zone: Optional[str]
+    time_zone: Optional[str] = None
     #: This data object is only returned when originatorNumber is specified in the request.
-    call_source_info: Optional[CallSourceInfo]
+    call_source_info: Optional[CallSourceInfo] = None
     #: Matching destination type for the call.
     destination_type: DestinationType
     #: FAC code if destinationType is FAC. The routing address will be returned for all other destination types.
     routing_address: str
     #: Outside access code.
-    outside_access_code: Optional[str]
+    outside_access_code: Optional[str] = None
     #: true if the call would be rejected.
     is_rejected: bool
     #: This data object is returned when destinationType is HOSTED_USER.
-    hosted_user: Optional[HostedUserDestination] = Field(alias='hostedAgent')
+    hosted_user: Optional[HostedUserDestination] = Field(alias='hostedAgent', default=None)
     #: This data object is returned when destinationType is HOSTED_FEATURE.
-    hosted_feature: Optional[HostedFeatureDestination]
+    hosted_feature: Optional[HostedFeatureDestination] = None
     #: This data object is returned when destinationType is PBX_USER.
-    pbx_user: Optional[PbxUserDestination]
+    pbx_user: Optional[PbxUserDestination] = None
     #: This data object is returned when destinationType is PSTN_NUMBER.
-    pstn_number: Optional[PstnNumberDestination]
+    pstn_number: Optional[PstnNumberDestination] = None
     #: This data object is returned when destinationType is VIRTUAL_EXTENSION.
-    virtual_extension: Optional[VirtualExtensionDestination]
+    virtual_extension: Optional[VirtualExtensionDestination] = None
     #: Returned when destinationType is VIRTUAL_EXTENSION_RANGE.
-    virtual_extension_range: Optional[VirtualExtensionRange]
+    virtual_extension_range: Optional[VirtualExtensionRange] = None
     #: This data object is returned when destinationType is ROUTE_LIST.
-    route_list: Optional[RouteListDestination]
+    route_list: Optional[RouteListDestination] = None
     #: This data object is returned when destinationType is FAC.
-    feature_access_code: Optional[FeatureAccessCodeDestination]
+    feature_access_code: Optional[FeatureAccessCodeDestination] = None
     #: This data object is returned when destinationType is EMERGENCY.
-    emergency: Optional[EmergencyDestination]
+    emergency: Optional[EmergencyDestination] = None
     #: This data object is returned when destinationType is REPAIR.
-    repair: Optional[TrunkDestination]
+    repair: Optional[TrunkDestination] = None
     #: This data object is returned when destinationType is UNKNOWN_EXTENSION.
-    unknown_extension: Optional[TrunkDestination]
+    unknown_extension: Optional[TrunkDestination] = None
     #: This data object is returned when destinationType is UNKNOWN_NUMBER.
-    unknown_number: Optional[TrunkDestination]
+    unknown_number: Optional[TrunkDestination] = None
 
 
 class DeviceType(str, Enum):
@@ -382,6 +382,7 @@ class DeviceManufacturer(str, Enum):
 class DeviceManagedBy(str, Enum):
     cisco = 'CISCO'
     customer = 'CUSTOMER'
+    partner = 'PARTNER'
 
 
 class OnboardingMethod(str, Enum):
@@ -412,31 +413,34 @@ class SupportedDevice(ApiModel):
     #: Indicates whether Kem support is enabled or not.
     kem_support_enabled: bool
     #: Module count.
-    kem_module_count: Optional[int]
+    kem_module_count: Optional[int] = None
     #: Key expansion module type of the device.
-    kem_module_type: Optional[list[str]]
+    kem_module_type: Optional[list[str]] = None
     #: Enables / Disables the upgrade channel.
-    upgrade_channel_enabled: Optional[bool]
+    upgrade_channel_enabled: Optional[bool] = None
     #: The default upgrade channel.
-    default_upgrade_channel: Optional[str]
+    default_upgrade_channel: Optional[str] = None
     #: Enables / disables the additional primary line appearances.
-    additional_primary_line_appearances_enabled: Optional[bool]
+    additional_primary_line_appearances_enabled: Optional[bool] = None
     #: Enables / disables Basic emergency nomadic.
-    basic_emergency_nomadic_enabled: Optional[bool]
+    basic_emergency_nomadic_enabled: Optional[bool] = None
     #: Enables / disables customized behavior support on devices
-    customized_behaviors_enabled: Optional[bool]
+    customized_behaviors_enabled: Optional[bool] = None
     #: Enables / disables configuring port support on device.
-    allow_configure_ports_enabled: Optional[bool]
+    allow_configure_ports_enabled: Optional[bool] = None
     #: Enables / disables customizable line label.
-    customizable_line_label_enabled: Optional[bool]
-    supports_line_port_reordering_enabled: Optional[bool]
+    customizable_line_label_enabled: Optional[bool] = None
+    supports_line_port_reordering_enabled: Optional[bool] = None
+    port_number_support_enabled: Optional[bool] = None
+    t38_enabled: Optional[bool] = None
+    call_declined_enabled: Optional[bool] = None
 
 
 class AnnouncementLanguage(ApiModel):
     #: Language name.
-    name: Optional[str]
+    name: Optional[str] = None
     #: Language Code
-    code: Optional[str]
+    code: Optional[str] = None
 
 
 @dataclass(init=False)
@@ -588,7 +592,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         params['max'] = 1
         url = self.ep(path='numbers')
         data = self.get(url, params=params)
-        return NumberDetails.parse_obj(data['count'])
+        return NumberDetails.model_validate(data['count'])
 
     def validate_extensions(self, extensions: list[str]) -> ValidateExtensionsResponse:
         """
@@ -604,7 +608,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         """
         url = self.ep(path='actions/validateExtensions/invoke')
         data = self.post(url, json={'extensions': extensions})
-        return ValidateExtensionsResponse.parse_obj(data)
+        return ValidateExtensionsResponse.model_validate(data)
 
     def validate_phone_numbers(self, phone_numbers: list[str], org_id: str = None) -> ValidatePhoneNumbersResponse:
         """
@@ -629,7 +633,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         body = {'phoneNumbers': phone_numbers}
         params = org_id and {'orgId': org_id} or None
         data = self.post(url=url, params=params, json=body)
-        return ValidatePhoneNumbersResponse.parse_obj(data)
+        return ValidatePhoneNumbersResponse.model_validate(data)
 
     def ucm_profiles(self, org_id: str = None) -> list[UCMProfile]:
         """
@@ -654,7 +658,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(path='callingProfiles')
         data = self.get(url, params=params)
-        return parse_obj_as(list[UCMProfile], data['callingProfiles'])
+        return TypeAdapter(list[UCMProfile]).validate_python(data['callingProfiles'])
 
     def route_choices(self, route_group_name: str = None, trunk_name: str = None, order: str = None,
                       org_id: str = None) -> Generator[RouteIdentity, None, None]:
@@ -713,7 +717,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep('actions/testCallRouting/invoke')
         data = self.post(url=url, params=params, json=body)
-        return TestCallRoutingResult.parse_obj(data)
+        return TestCallRoutingResult.model_validate(data)
 
     def supported_devices(self, org_id: str = None) -> list[SupportedDevice]:
         """
@@ -728,7 +732,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep('supportedDevices')
         data = self.get(url=url, params=params)
-        return parse_obj_as(list[SupportedDevice], data['devices'])
+        return TypeAdapter(list[SupportedDevice]).validate_python(data['devices'])
 
     def device_settings(self, org_id: str = None) -> DeviceCustomization:
         """
@@ -745,7 +749,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep('devices/settings')
         data = self.get(url=url, params=params)
-        return DeviceCustomization.parse_obj(data)
+        return DeviceCustomization.model_validate(data)
 
     def read_list_of_announcement_languages(self) -> list[AnnouncementLanguage]:
         """
@@ -757,4 +761,4 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         """
         url = self.ep('announcementLanguages')
         data = super().get(url=url)
-        return parse_obj_as(list[AnnouncementLanguage], data["languages"])
+        return TypeAdapter(list[AnnouncementLanguage]).validate_python(data["languages"])

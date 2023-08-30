@@ -4,7 +4,7 @@ Meetings preferences API
 
 from typing import Optional
 
-from pydantic import parse_obj_as
+from pydantic import TypeAdapter
 
 from ...api_child import ApiChild
 from ...base import ApiModel
@@ -20,83 +20,83 @@ __all__ = ['Audio', 'CallInNumber', 'CoHost', 'DefaultAudioType', 'MeetingPrefer
 class CoHost(ApiModel):
     #: Email address for cohost. This attribute can be modified with the Update Personal Meeting Room Options API.
     #: Possible values: john.andersen@example.com
-    email: Optional[str]
+    email: Optional[str] = None
     #: Display name for cohost. This attribute can be modified with the Update Personal Meeting Room Options API.
     #: Possible values: John Andersen
-    display_name: Optional[str]
+    display_name: Optional[str] = None
 
 
 class CallInNumber(ApiModel):
     #: Label for call-in number.
     #: Possible values: Call-in toll-free number (US/Canada)
-    label: Optional[str]
+    label: Optional[str] = None
     #: Call-in number to join teleconference from a phone.
     #: Possible values: 123456789
-    call_in_number: Optional[str]
+    call_in_number: Optional[str] = None
     #: Type of toll for the call-in number.
     #: Possible values: toll, tollFree
-    toll_type: Optional[str]
+    toll_type: Optional[str] = None
 
 
 class Telephony(ApiModel):
     #: Code for authenticating a user to join teleconference. Users join the teleconference using the call-in number or
     #: the global call-in number, followed by the value of the accessCode.
-    access_code: Optional[str]
+    access_code: Optional[str] = None
     #: Array of call-in numbers for joining teleconference from a phone.
-    call_in_numbers: Optional[list[CallInNumber]]
+    call_in_numbers: Optional[list[CallInNumber]] = None
     #: HATEOAS information of global call-in numbers for joining teleconference from a phone.
-    links: Optional[list[LinkRelation]]
+    links: Optional[list[LinkRelation]] = None
 
 
 class PersonalMeetingRoom(ApiModel):
     #: Personal Meeting Room topic. The length of topic must be between 1 and 128 characters. This attribute can be
     #: modified with the Update Personal Meeting Room Options API.
-    topic: Optional[str]
+    topic: Optional[str] = None
     #: PIN for joining the room as host. The host PIN must be digits of a predefined length, e.g. 4 digits. It cannot
     #: contain sequential digits, such as 1234 or 4321, or repeated digits of the predefined length, such as 1111. The
     #: predefined length for host PIN can be viewed in user's My Personal Room page. This attribute can be modified
     #: with the Update Personal Meeting Room Options API.
-    host_pin: Optional[str]
+    host_pin: Optional[str] = None
     #: PIN for joining the room as host. The host PIN must be digits of a predefined length, e.g. 4 digits. It cannot
     #: contain sequential digits, such as 1234 or 4321, or repeated digits of the predefined length, such as 1111. The
     #: predefined length for host PIN can be viewed in user's My Personal Room page. This attribute can be modified
     #: with the Update Personal Meeting Room Options API.
-    host_pin: Optional[str]
+    host_pin: Optional[str] = None
     #: Personal Meeting Room link. It cannot be empty. Note: This is a read-only attribute.
-    personal_meeting_room_link: Optional[str]
+    personal_meeting_room_link: Optional[str] = None
     #: Option to automatically lock the Personal Room a number of minutes after a meeting starts. When a room is
     #: locked, invitees cannot enter until the owner admits them. The period after which the meeting is locked is
     #: defined by autoLockMinutes. This attribute can be modified with the Update Personal Meeting Room Options API.
-    enabled_auto_lock: Optional[bool]
+    enabled_auto_lock: Optional[bool] = None
     #: Number of minutes after which the Personal Room is locked if enabledAutoLock is enabled. Valid options are 0, 5,
     #: 10, 15 and 20. This attribute can be modified with the Update Personal Meeting Room Options API.
-    auto_lock_minutes: Optional[int]
+    auto_lock_minutes: Optional[int] = None
     #: Flag to enable notifying the owner of a Personal Room when someone enters the Personal Room lobby while the
     #: owner is not in the room. This attribute can be modified with the Update Personal Meeting Room Options API.
-    enabled_notify_host: Optional[bool]
+    enabled_notify_host: Optional[bool] = None
     #: Flag allowing other invitees to host a meeting in the Personal Room without the owner. This attribute can be
     #: modified with the Update Personal Meeting Room Options API.
-    support_co_host: Optional[bool]
+    support_co_host: Optional[bool] = None
     #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
     #: Personal Room. The target site is user's preferred site. This attribute can be modified with the Update Personal
     #: Meeting Room Options API.
-    support_anyone_as_co_host: Optional[bool]
+    support_anyone_as_co_host: Optional[bool] = None
     #: Whether or not to allow the first attendee with a host account on the target site to become a cohost when
     #: joining the Personal Room. The target site is user's preferred site. This attribute can be modified with the
     #: Update Personal Meeting Room Options API.
-    allow_first_user_to_be_co_host: Optional[bool]
+    allow_first_user_to_be_co_host: Optional[bool] = None
     #: Whether or not to allow authenticated video devices in the user's organization to start or join the meeting
     #: without a prompt. This attribute can be modified with the Update Personal Meeting Room Options API.
-    allow_authenticated_devices: Optional[bool]
+    allow_authenticated_devices: Optional[bool] = None
     #: Array defining cohosts for the room if both supportAnyoneAsCoHost and allowFirstUserToBeCoHost are false This
     #: attribute can be modified with the Update Personal Meeting Room Options API.
-    co_hosts: Optional[list[CoHost]]
+    co_hosts: Optional[list[CoHost]] = None
     #: SIP address for callback from a video system.
-    sip_address: Optional[str]
+    sip_address: Optional[str] = None
     #: IP address for callback from a video system.
-    dial_in_ip_address: Optional[str]
+    dial_in_ip_address: Optional[str] = None
     #: Information for callbacks from meeting to phone or for joining a teleconference using a phone.
-    telephony: Optional[Telephony]
+    telephony: Optional[Telephony] = None
 
 
 class DefaultAudioType(str, Enum):
@@ -112,66 +112,66 @@ class DefaultAudioType(str, Enum):
 
 class OfficeNumber(ApiModel):
     #: Country code for the phone number. This attribute can be modified with the with the Update Audio Options API.
-    country_code: Optional[str]
+    country_code: Optional[str] = None
     #: Phone number. It cannot be longer than 30 characters. This attribute can be modified with the with the Update
     #: Audio Options API.
-    number: Optional[str]
+    number: Optional[str] = None
     #: Flag identifying the phone number as the one that will be used to dial into a teleconference. This attribute can
     #: be modified with the with the Update Audio Options API.
-    enabled_call_in_authentication: Optional[bool]
+    enabled_call_in_authentication: Optional[bool] = None
     #: Flag to enable/disable Call Me number display on the meeting client. This attribute can be modified with the
     #: with the Update Audio Options API. Note: This feature is only effective if the site supports the Call Me
     #: feature.
-    enabled_call_me: Optional[bool]
+    enabled_call_me: Optional[bool] = None
 
 
 class Audio(ApiModel):
     #: Default audio type. This attribute can be modified with the with the Update Audio Options API.
-    default_audio_type: Optional[DefaultAudioType]
+    default_audio_type: Optional[DefaultAudioType] = None
     #: Phone number and other information for the teleconference provider to be used, along with instructions for
     #: invitees. This attribute can be modified with the with the Update Audio Options API.
-    other_teleconference_description: Optional[str]
+    other_teleconference_description: Optional[str] = None
     #: Flag to enable/disable global call ins. Note: If the site does not support global call-ins, you cannot set this
     #: option. This attribute can be modified with the with the Update Audio Options API.
-    enabled_global_call_in: Optional[bool]
+    enabled_global_call_in: Optional[bool] = None
     #: Flag to enable/disable call-ins from toll-free numbers. Note: If the site does not support calls from toll-free
     #: numbers, you cannot set this option. This attribute can be modified with the with the Update Audio Options API.
-    enabled_toll_free: Optional[bool]
+    enabled_toll_free: Optional[bool] = None
     #: Flag to enable/disable automatically connecting to audio using a computer. The meeting host can enable/disable
     #: this option. When this option is set to true, the user is automatically connected to audio via a computer when
     #: they start or join a Webex Meetings meeting on a desktop. This attribute can be modified with the
     #: Update Audio Options API.
-    enabled_auto_connection: Optional[bool]
+    enabled_auto_connection: Optional[bool] = None
     #: PIN to provide a secondary level of authentication for calls where the host is using the phone and may need to
     #: invite additional invitees. It must be exactly 4 digits. It cannot contain sequential digits, such as 1234 or
     #: 4321, or repeat a digit 4 times, such as 1111. This attribute can be modified with the with the Update Audio
     #: Options API.
-    audio_pin: Optional[str]
+    audio_pin: Optional[str] = None
     #: Office phone number. We recommend that phone numbers be specified to facilitate connecting via audio. This
     #: attribute can be modified with the with the Update Audio Options API.
-    office_number: Optional[OfficeNumber]
+    office_number: Optional[OfficeNumber] = None
     #: Mobile phone number. We recommend that phone numbers be specified to facilitate connecting via audio. This
     #: attribute can be modified with the with the Update Audio Options API.
-    mobile_number: Optional[OfficeNumber]
+    mobile_number: Optional[OfficeNumber] = None
 
 
 class VideoDevice(ApiModel):
     #: Video system name. It cannot be empty. This attribute can be modified with the Update Video Options API.
     #: Possible values: device1
-    device_name: Optional[str]
+    device_name: Optional[str] = None
     #: Video address. It cannot be empty and must be in valid email format. This attribute can be modified with the
     #: Update Video Options API.
     #: Possible values: device1@example.com
-    device_address: Optional[str]
+    device_address: Optional[str] = None
     #: Flag identifying the device as the default video device. If user's video device list is not empty, one and only
     #: one device must be set as default. This attribute can be modified with the Update Video Options API.
     #: Possible values:
-    is_default: Optional[bool]
+    is_default: Optional[bool] = None
 
 
 class Video(ApiModel):
     #: Array of video devices. This attribute can be modified with the Update Video Options API.
-    video_devices: Optional[list[VideoDevice]]
+    video_devices: Optional[list[VideoDevice]] = None
 
 
 class SchedulingOptions(ApiModel):
@@ -179,95 +179,95 @@ class SchedulingOptions(ApiModel):
     #: defined by autoLockMinutes. This attribute can be modified with the Update Scheduling Options API. Note: This
     #: feature is only effective if the site supports the Join Before Host feature. This attribute can be modified with
     #: the Update Scheduling Options API.
-    enabled_join_before_host: Optional[bool]
+    enabled_join_before_host: Optional[bool] = None
     #: Number of minutes before the start time that an invitee can join a meeting if enabledJoinBeforeHost is true.
     #: Valid options are 0, 5, 10 and 15. This attribute can be modified with the Update Scheduling Options API.
-    join_before_host_minutes: Optional[int]
+    join_before_host_minutes: Optional[int] = None
     #: Flag to enable/disable the automatic sharing of the meeting recording with invitees when it is available. This
     #: attribute can be modified with the Update Scheduling Options API.
-    enabled_auto_share_recording: Optional[bool]
+    enabled_auto_share_recording: Optional[bool] = None
     #: Flag to automatically enable Webex Assistant whenever you start a meeting. This attribute can be modified with
     #: the Update Scheduling Options API.
-    enabled_webex_assistant_by_default: Optional[bool]
+    enabled_webex_assistant_by_default: Optional[bool] = None
 
 
 class MeetingsSite(ApiModel):
     #: Access URL for the site. Note: This is a read-only attribute. The value can be assigned as user's default site
     #: with the Update Default Site API.
     #: Possible values: site1-example.webex.com
-    site_url: Optional[str]
+    site_url: Optional[str] = None
     #: Flag identifying the site as the default site. Users can list meetings and recordings, and create meetings on
     #: the default site.
     #: Possible values:
-    default: Optional[bool]
+    default: Optional[bool] = None
 
 
 class UpdatePersonalMeetingRoomOptionsBody(ApiModel):
     #: Personal Meeting Room topic to be updated.
-    topic: Optional[str]
+    topic: Optional[str] = None
     #: Updated PIN for joining the room as host. The host PIN must be digits of a predefined length, e.g. 4 digits. It
     #: cannot contain sequential digits, such as 1234 or 4321, or repeated digits of the predefined length, such as
     #: 1111. The predefined length for host PIN can be viewed in user's My Personal Room page and it can only be
     #: changed by site administrator.
-    host_pin: Optional[str]
+    host_pin: Optional[str] = None
     #: Update for option to automatically lock the Personal Room a number of minutes after a meeting starts. When a
     #: room is locked, invitees cannot enter until the owner admits them. The period after which the meeting is locked
     #: is defined by autoLockMinutes.
-    enabled_auto_lock: Optional[bool]
+    enabled_auto_lock: Optional[bool] = None
     #: Updated number of minutes after which the Personal Room is locked if enabledAutoLock is enabled. Valid options
     #: are 0, 5, 10, 15 and 20.
-    auto_lock_minutes: Optional[int]
+    auto_lock_minutes: Optional[int] = None
     #: Update for flag to enable notifying the owner of a Personal Room when someone enters the Personal Room lobby
     #: while the owner is not in the room.
-    enabled_notify_host: Optional[bool]
+    enabled_notify_host: Optional[bool] = None
     #: Update for flag allowing other invitees to host a meetingCoHost in the Personal Room without the owner.
-    support_co_host: Optional[bool]
+    support_co_host: Optional[bool] = None
     #: Whether or not to allow any attendee with a host account on the target site to become a cohost when joining the
     #: Personal Room. The target site is user's preferred site.
-    support_anyone_as_co_host: Optional[bool]
+    support_anyone_as_co_host: Optional[bool] = None
     #: Whether or not to allow the first attendee with a host account on the target site to become a cohost when
     #: joining the Personal Room. The target site is user's preferred site.
-    allow_first_user_to_be_co_host: Optional[bool]
+    allow_first_user_to_be_co_host: Optional[bool] = None
     #: Whether or not to allow authenticated video devices in the user's organization to start or join the meeting
     #: without a prompt.
-    allow_authenticated_devices: Optional[bool]
+    allow_authenticated_devices: Optional[bool] = None
     #: Updated array defining cohosts for the room if both supportAnyoneAsCoHost and allowFirstUserToBeCoHost are false
-    co_hosts: Optional[list[CoHost]]
+    co_hosts: Optional[list[CoHost]] = None
 
 
 class PersonalMeetingRoomOptions(UpdatePersonalMeetingRoomOptionsBody):
     #: Personal Meeting Room link. It cannot be empty. Note: This is a read-only attribute.
-    personal_meeting_room_link: Optional[str]
+    personal_meeting_room_link: Optional[str] = None
     #: SIP address for callback from a video system.
-    sip_address: Optional[str]
+    sip_address: Optional[str] = None
     #: IP address for callback from a video system.
-    dial_in_ip_address: Optional[str]
+    dial_in_ip_address: Optional[str] = None
     #: Information for callbacks from meeting to phone or for joining a teleconference using a phone.
-    telephony: Optional[Telephony]
+    telephony: Optional[Telephony] = None
 
 
 class MeetingPreferenceDetails(ApiModel):
     #: Personal Meeting Room options.
-    personal_meeting_room: Optional[PersonalMeetingRoom]
+    personal_meeting_room: Optional[PersonalMeetingRoom] = None
     #: Audio Preferences. Note: These audio settings do not apply to Personal Room meetings
-    audio: Optional[Audio]
+    audio: Optional[Audio] = None
     #: Information for video conferencing systems used to connect to Webex meetings. Note: The Call My Video System
     #: feature is available only if it has been purchased for your site and your administrator has enabled it.
-    video: Optional[Video]
+    video: Optional[Video] = None
     #: Meeting scheduling options.
-    scheduling_options: Optional[SchedulingOptions]
+    scheduling_options: Optional[SchedulingOptions] = None
     #: List of user's Webex meeting sites including default site.
-    sites: Optional[list[MeetingsSite]]
+    sites: Optional[list[MeetingsSite]] = None
 
 
 class VideoOptions(ApiModel):
     #: Array of video devices. This attribute can be modified with the Update Video Options API.
-    video_devices: Optional[list[VideoDevice]]
+    video_devices: Optional[list[VideoDevice]] = None
 
 
 class UpdateDefaultSiteBody(ApiModel):
     #: Access URL for the site.
-    site_url: Optional[str]
+    site_url: Optional[str] = None
 
 
 class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
@@ -300,7 +300,7 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             params['siteUrl'] = site_url
         url = self.ep()
         data = super().get(url=url, params=params)
-        return MeetingPreferenceDetails.parse_obj(data)
+        return MeetingPreferenceDetails.model_validate(data)
 
     def personal_meeting_room_options(self, user_email: str = None, site_url: str = None) -> PersonalMeetingRoomOptions:
         """
@@ -325,7 +325,7 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             params['siteUrl'] = site_url
         url = self.ep('personalMeetingRoom')
         data = super().get(url=url, params=params)
-        return PersonalMeetingRoomOptions.parse_obj(data)
+        return PersonalMeetingRoomOptions.model_validate(data)
 
     def update_personal_meeting_room_options(self, topic: str, host_pin: str, enabled_auto_lock: bool,
                                              auto_lock_minutes: int, enabled_notify_host: bool, support_co_host: bool,
@@ -407,8 +407,8 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
         if allow_authenticated_devices is not None:
             body.allow_authenticated_devices = allow_authenticated_devices
         url = self.ep('personalMeetingRoom')
-        data = super().put(url=url, params=params, data=body.json())
-        return PersonalMeetingRoomOptions.parse_obj(data)
+        data = super().put(url=url, params=params, data=body.model_dump_json())
+        return PersonalMeetingRoomOptions.model_validate(data)
 
     def audio_options(self, user_email: str = None, site_url: str = None) -> Audio:
         """
@@ -433,7 +433,7 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             params['siteUrl'] = site_url
         url = self.ep('audio')
         data = super().get(url=url, params=params)
-        return Audio.parse_obj(data)
+        return Audio.model_validate(data)
 
     def update_audio_options(self, user_email: str = None, site_url: str = None,
                              default_audio_type: DefaultAudioType = None, other_teleconference_description: str = None,
@@ -509,8 +509,8 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
         if mobile_number is not None:
             body.mobile_number = mobile_number
         url = self.ep('audio')
-        data = super().put(url=url, params=params, data=body.json())
-        return Audio.parse_obj(data)
+        data = super().put(url=url, params=params, data=body.model_dump_json())
+        return Audio.model_validate(data)
 
     def video_options(self, user_email: str = None, site_url: str = None) -> list[VideoDevice]:
         """
@@ -534,7 +534,7 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             params['siteUrl'] = site_url
         url = self.ep('video')
         data = super().get(url=url, params=params)
-        return parse_obj_as(list[VideoDevice], data["videoDevices"])
+        return TypeAdapter(list[VideoDevice]).validate_python(data["videoDevices"])
 
     def update_video_options(self, video_devices: VideoDevice, user_email: str = None,
                              site_url: str = None) -> list[VideoDevice]:
@@ -565,8 +565,8 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
         if video_devices is not None:
             body.video_devices = video_devices
         url = self.ep('video')
-        data = super().put(url=url, params=params, data=body.json())
-        return parse_obj_as(list[VideoDevice], data["videoDevices"])
+        data = super().put(url=url, params=params, data=body.model_dump_json())
+        return TypeAdapter(list[VideoDevice]).validate_python(data["videoDevices"])
 
     def scheduling_options(self, user_email: str = None, site_url: str = None) -> SchedulingOptions:
         """
@@ -591,7 +591,7 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             params['siteUrl'] = site_url
         url = self.ep('schedulingOptions')
         data = super().get(url=url, params=params)
-        return SchedulingOptions.parse_obj(data)
+        return SchedulingOptions.model_validate(data)
 
     def update_scheduling_options(self, user_email: str = None, site_url: str = None,
                                   enabled_join_before_host: bool = None, join_before_host_minutes: int = None,
@@ -642,8 +642,8 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
         if enabled_webex_assistant_by_default is not None:
             body.enabled_webex_assistant_by_default = enabled_webex_assistant_by_default
         url = self.ep('schedulingOptions')
-        data = super().put(url=url, params=params, data=body.json())
-        return SchedulingOptions.parse_obj(data)
+        data = super().put(url=url, params=params, data=body.model_dump_json())
+        return SchedulingOptions.model_validate(data)
 
     def site_list(self, user_email: str = None) -> list[MeetingsSite]:
         """
@@ -659,7 +659,7 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             params['userEmail'] = user_email
         url = self.ep('sites')
         data = super().get(url=url, params=params)
-        return parse_obj_as(list[MeetingsSite], data["sites"])
+        return TypeAdapter(list[MeetingsSite]).validate_python(data["sites"])
 
     def update_default_site(self, default_site: bool, site_url: str, user_email: str = None) -> MeetingsSite:
         """
@@ -683,5 +683,5 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
         if site_url is not None:
             body.site_url = site_url
         url = self.ep('sites')
-        data = super().put(url=url, params=params, data=body.json())
-        return MeetingsSite.parse_obj(data)
+        data = super().put(url=url, params=params, data=body.model_dump_json())
+        return MeetingsSite.model_validate(data)

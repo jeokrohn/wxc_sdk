@@ -12,29 +12,29 @@ __all__ = ['VirtualLine', 'VirtualLinesApi']
 
 class VirtualLine(ApiModel):
     #: A unique identifier for the virtual line.
-    id: Optional[str]
+    id: Optional[str] = None
     #: Last name for virtual line.
-    last_name: Optional[str]
+    last_name: Optional[str] = None
     #: First name for virtual line.
-    first_name: Optional[str]
+    first_name: Optional[str] = None
     #: callerIdLastName for virtual line.
-    caller_id_last_name: Optional[str]
+    caller_id_last_name: Optional[str] = None
     #: callerIdFirstName for virtual line.
-    caller_id_first_name: Optional[str]
+    caller_id_first_name: Optional[str] = None
     #: callerIdNumber for virtual line.
-    caller_id_number: Optional[str]
+    caller_id_number: Optional[str] = None
     #: externalCallerIdNamePolicy for the virtual line.
-    external_caller_id_name_policy: Optional[ExternalCallerIdNamePolicy]
+    external_caller_id_name_policy: Optional[ExternalCallerIdNamePolicy] = None
     #: customExternalCallerIdName for virtual line.
-    custom_external_caller_id_name: Optional[str]
+    custom_external_caller_id_name: Optional[str] = None
     #: Calling details of virtual line.
-    number: Optional[UserNumber]
+    number: Optional[UserNumber] = None
     #: Location details of virtual line.
-    location: Optional[IdAndName]
+    location: Optional[IdAndName] = None
     #: Number of devices assigned to a virtual line.
-    number_of_devices_assigned: Optional[int]
+    number_of_devices_assigned: Optional[int] = None
     #: Type of billing plan.
-    billing_plan: Optional[str]
+    billing_plan: Optional[str] = None
 
 
 @dataclass(init=False)

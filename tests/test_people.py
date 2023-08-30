@@ -104,7 +104,7 @@ class TestPeople(TestCaseWithLog):
         settings = Person(first_name='test', last_name=f'foo{index:03}', emails=[email])
         new_user = self.api.people.create(settings=settings)
         print(f'Created new user: {settings.first_name} {settings.last_name} {settings.emails[0]}')
-        print(json.dumps(json.loads(new_user.json()), indent=2))
+        print(json.dumps(json.loads(new_user.model_dump_json()), indent=2))
 
         # clean up: delete the user again
         self.api.people.delete_person(person_id=new_user.person_id)

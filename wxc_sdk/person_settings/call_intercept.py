@@ -30,22 +30,22 @@ class InterceptNumber(ApiModel):
     Information about a number announcement.
     """
     #: If true, the caller will hear this number when the call is intercepted.
-    enabled: Optional[bool]
+    enabled: Optional[bool] = None
     #: number caller will hear announced.
-    destination: Optional[str]
+    destination: Optional[str] = None
 
 
 class InterceptAnnouncements(ApiModel):
     """
     Settings related to how incoming calls are handled when the intercept feature is enabled.
     """
-    greeting: Optional[Greeting]
+    greeting: Optional[Greeting] = None
     #: Filename of custom greeting, will be an empty string if no custom greeting has been uploaded.
-    file_name: Optional[str]
+    file_name: Optional[str] = None
     #: Information about the new number announcement.
-    new_number: Optional[InterceptNumber]
+    new_number: Optional[InterceptNumber] = None
     #: Information about how the call will be handled if zero (0) is pressed.
-    zero_transfer: Optional[InterceptNumber]
+    zero_transfer: Optional[InterceptNumber] = None
 
     @staticmethod
     def default() -> 'InterceptAnnouncements':
@@ -60,11 +60,11 @@ class InterceptSettingIncoming(ApiModel):
     """
     Settings related to how incoming calls are handled when the intercept feature is enabled.
     """
-    intercept_type: Optional[InterceptTypeIncoming] = Field(alias='type')
+    intercept_type: Optional[InterceptTypeIncoming] = Field(alias='type', default=None)
     #: If true, the destination will be the person's voicemail.
-    voicemail_enabled: Optional[bool]
+    voicemail_enabled: Optional[bool] = None
     #: Settings related to how incoming calls are handled when the intercept feature is enabled.
-    announcements: Optional[InterceptAnnouncements]
+    announcements: Optional[InterceptAnnouncements] = None
 
     @staticmethod
     def default() -> 'InterceptSettingIncoming':
@@ -83,12 +83,12 @@ class InterceptTypeOutgoing(str, Enum):
 
 
 class InterceptSettingOutgoing(ApiModel):
-    intercept_type: Optional[InterceptTypeOutgoing] = Field(alias='type')
+    intercept_type: Optional[InterceptTypeOutgoing] = Field(alias='type', default=None)
     #: If true, when the person attempts to make an outbound call, a system default message is played and the call is
     #: made to the destination phone number
-    transfer_enabled: Optional[bool]
+    transfer_enabled: Optional[bool] = None
     #: Number to which the outbound call be transferred.
-    destination: Optional[str]
+    destination: Optional[str] = None
 
     @staticmethod
     def default() -> 'InterceptSettingOutgoing':
@@ -103,11 +103,11 @@ class InterceptSetting(ApiModel):
     A person's call intercept settings
     """
     #: true if call intercept is enabled.
-    enabled: Optional[bool]
+    enabled: Optional[bool] = None
     #: Settings related to how incoming calls are handled when the intercept feature is enabled.
-    incoming: Optional[InterceptSettingIncoming]
+    incoming: Optional[InterceptSettingIncoming] = None
     #: Settings related to how outgoing calls are handled when the intercept feature is enabled.
-    outgoing: Optional[InterceptSettingOutgoing]
+    outgoing: Optional[InterceptSettingOutgoing] = None
 
     @staticmethod
     def default() -> 'InterceptSetting':
@@ -149,7 +149,7 @@ class CallInterceptApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return InterceptSetting.parse_obj(self.get(ep, params=params))
+        return InterceptSetting.model_validate(self.get(ep, params=params))
 
     def configure(self, person_id: str, intercept: InterceptSetting, org_id: str = None):
         """
@@ -174,7 +174,7 @@ class CallInterceptApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.loads(intercept.json())
+        data = json.loads(intercept.model_dump_json())
         try:
             # remove attribute not present in update
             data['incoming']['announcements'].pop('fileName', None)

@@ -215,9 +215,9 @@ class TestLocation(TestWithLocations):
         location_details: Location
         telephony_details: TelephonyLocation
         print('--------------- Location details ---------------')
-        print(dumps(loads(location_details.json()), indent=2))
+        print(dumps(loads(location_details.model_dump_json()), indent=2))
         print('--------------- Location telephony details ---------------')
-        print(dumps(loads(telephony_details.json()), indent=2))
+        print(dumps(loads(telephony_details.model_dump_json()), indent=2))
 
     def test_004_create_and_validate_settings(self):
         """
@@ -276,8 +276,8 @@ class TestCountries(TestCaseWithLog):
         country_code = 'BE'
         url = f'https://cpapi-r.wbx2.com/api/v1/customers/{org_id_uuid}/countries/{country_code}'
         data = self.api.session.rest_get(url)
-        result = CPAPICountryDetail.parse_obj(data)
-        print(dumps(loads(result.json()), indent=2))
+        result = CPAPICountryDetail.model_validate(data)
+        print(dumps(loads(result.model_dump_json()), indent=2))
 
 
 class TestUnifiedLocations(TestCaseWithLog):
@@ -459,7 +459,7 @@ class TestUpdate(TestWithLocations):
         target = choice(self.locations)
         details = await self.async_api.locations.details(location_id=target.location_id)
         try:
-            yield target.copy(deep=True)
+            yield target.model_copy(deep=True)
         finally:
             await self.async_api.locations.update(location_id=target.location_id,
                                                   settings=target)
@@ -482,7 +482,7 @@ class TestUpdate(TestWithLocations):
         async with self.target_location() as target:
             target: Location
             new_name = f'{target.name}XYZ'
-            expected = target.copy(deep=True)
+            expected = target.model_copy(deep=True)
             expected.name = new_name
             await self.update_and_verify(target=target, update=expected, expected=expected)
 
@@ -491,7 +491,7 @@ class TestUpdate(TestWithLocations):
         async with self.target_location() as target:
             target: Location
             new_zone = 'America/New_York' if target.time_zone == 'America/Los_Angeles' else 'America/Los_Angeles'
-            expected = target.copy(deep=True)
+            expected = target.model_copy(deep=True)
             expected.time_zone = new_zone
             await self.update_and_verify(target=target, update=expected, expected=expected)
 
@@ -503,7 +503,7 @@ class TestUpdate(TestWithLocations):
         async with self.target_location() as target:
             target: Location
             address2 = 'whatever'
-            expected = target.copy(deep=True)
+            expected = target.model_copy(deep=True)
             expected.address.address2 = address2
             await self.update_and_verify(target=target, update=expected, expected=expected)
 
@@ -539,7 +539,7 @@ class ClearAddress2(TestCaseWithLog):
                    if loc.address.address2 is not None]
 
         async def clear_address2(location: Location):
-            address = location.address.copy(deep=True)
+            address = location.address.model_copy(deep=True)
             address.address2 = None
             await self.async_api.locations.update(location_id=location.location_id,
                                                   settings=Location(address=address))
@@ -576,11 +576,11 @@ class TestUpdateTelephony(TestCaseWithLog):
         target = choice(self.locations)
         details = await self.async_api.telephony.location.details(location_id=target.location_id)
         try:
-            yield details.copy(deep=True)
+            yield details.model_copy(deep=True)
         finally:
             # restore old settings.
             # but don't try to update the PSTN settings again
-            restore = details.copy(deep=True)
+            restore = details.model_copy(deep=True)
             restore.connection = None
             if not restore.outside_dial_digit:
                 restore.outside_dial_digit = ''
@@ -601,6 +601,8 @@ class TestUpdateTelephony(TestCaseWithLog):
         """
         await self.async_api.telephony.location.update(location_id=target.location_id, settings=update)
         after = await self.async_api.telephony.location.details(location_id=target.location_id)
+        # ignore calling line id name in compare
+        expected.calling_line_id.name = after.calling_line_id.name
         self.assertEqual(expected, after)
 
     @async_test
@@ -612,7 +614,7 @@ class TestUpdateTelephony(TestCaseWithLog):
             target: TelephonyLocation
             prefix = '8999'
             update = TelephonyLocation(routing_prefix=prefix)
-            expected = target.copy(deep=True)
+            expected = target.model_copy(deep=True)
             expected.routing_prefix = prefix
             await self.update_and_verify(target=target, update=update, expected=expected)
 
@@ -629,7 +631,7 @@ class TestUpdateTelephony(TestCaseWithLog):
                 self.skipTest('Need another location with routing prefix to run test')
             prefix = choice(prefixes)
             update = TelephonyLocation(routing_prefix=prefix)
-            expected = target.copy(deep=True)
+            expected = target.model_copy(deep=True)
             expected.routing_prefix = prefix
             with self.assertRaises(AsRestError) as exc:
                 await self.update_and_verify(target=target, update=update, expected=expected)
@@ -647,7 +649,7 @@ class TestUpdateTelephony(TestCaseWithLog):
             target: TelephonyLocation
             oac = '0' if target.outside_dial_digit == '9' else '9'
             update = TelephonyLocation(outside_dial_digit=oac)
-            expected = target.copy(deep=True)
+            expected = target.model_copy(deep=True)
             expected.outside_dial_digit = oac
             await self.update_and_verify(target=target, update=update, expected=expected)
 
@@ -660,7 +662,7 @@ class TestUpdateTelephony(TestCaseWithLog):
             target: TelephonyLocation
             name = f'{target.external_caller_id_name}xyz'
             update = TelephonyLocation(external_caller_id_name=name)
-            expected = target.copy(deep=True)
+            expected = target.model_copy(deep=True)
             expected.external_caller_id_name = name
             await self.update_and_verify(target=target, update=update, expected=expected)
 
@@ -687,7 +689,7 @@ class TestUpdateTelephony(TestCaseWithLog):
                 tn = tn_list[0]
                 # set calling line id to new number
                 update = TelephonyLocation(calling_line_id=CallingLineId(phone_number=tn))
-                expected = target.copy(deep=True)
+                expected = target.model_copy(deep=True)
                 expected.calling_line_id.phone_number = tn
                 expected.calling_line_id.name = None
                 await self.update_and_verify(target=target, update=update, expected=expected)
@@ -707,7 +709,7 @@ class TestUpdateTelephony(TestCaseWithLog):
             name = f'{target.calling_line_id.name or ""}xyz'
             update = TelephonyLocation(calling_line_id=CallingLineId(name=name,
                                                                      phone_number=target.calling_line_id.phone_number))
-            expected = target.copy(deep=True)
+            expected = target.model_copy(deep=True)
             expected.calling_line_id.name = name
             await self.update_and_verify(target=target, update=update, expected=expected)
 

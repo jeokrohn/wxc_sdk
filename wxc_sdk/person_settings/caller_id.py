@@ -45,33 +45,33 @@ class CallerId(ApiModel):
         return plus1(v)
 
     #: Allowed types for the selected field.
-    caller_id_types: Optional[list[CallerIdSelectedType]] = Field(alias='types')
+    caller_id_types: Optional[list[CallerIdSelectedType]] = Field(alias='types', default=None)
     #: Which type of outgoing Caller ID will be used.
     selected: CallerIdSelectedType
     #: Direct number which will be shown if DIRECT_LINE is selected.
-    direct_number: Optional[str]
+    direct_number: Optional[str] = None
     #: Extension number which will be shown if DIRECT_LINE is selected.
-    extension_number: Optional[str]
+    extension_number: Optional[str] = None
     #: Location number which will be shown if LOCATION_NUMBER is selected.
-    location_number: Optional[str]
+    location_number: Optional[str] = None
     #: True id the location number is toll free
-    toll_free_location_number: Optional[bool]
+    toll_free_location_number: Optional[bool] = None
     #: Mobile number which will be shown if MOBILE_NUMBER is selected.
-    mobile_number: Optional[str]
+    mobile_number: Optional[str] = None
     #: This value must be an assigned number from the person's location.
-    custom_number: Optional[str]
+    custom_number: Optional[str] = None
     #: Person's Caller ID first name. Characters of %, +, \`, \" and Unicode characters are not allowed.
-    first_name: Optional[str]
+    first_name: Optional[str] = None
     #: Person's Caller ID last name. Characters of %, +, \`, \" and Unicode characters are not allowed.
-    last_name: Optional[str]
+    last_name: Optional[str] = None
     #: block caller id in forwarded calls
-    block_in_forward_calls_enabled: Optional[bool]
+    block_in_forward_calls_enabled: Optional[bool] = None
     #: Designates which type of External Caller ID Name policy is used. Default is DIRECT_LINE.
-    external_caller_id_name_policy: Optional[ExternalCallerIdNamePolicy]
+    external_caller_id_name_policy: Optional[ExternalCallerIdNamePolicy] = None
     #: Custom External Caller Name, which will be shown if External Caller ID Name is OTHER.
-    custom_external_caller_id_name: Optional[str]
+    custom_external_caller_id_name: Optional[str] = None
     #: location external caller ID name
-    location_external_caller_id_name: Optional[str]
+    location_external_caller_id_name: Optional[str] = None
 
     def configure_params(self) -> dict:
         """
@@ -127,7 +127,7 @@ class CallerIdApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return CallerId.parse_obj(self.get(ep, params=params))
+        return CallerId.model_validate(self.get(ep, params=params))
 
     def configure(self, person_id: str, org_id: str = None,
                   selected: CallerIdSelectedType = None,
@@ -176,7 +176,7 @@ class CallerIdApi(PersonSettingsApiChild):
 
     def configure_settings(self, person_id: str, settings: CallerId, org_id: str = None):
         params = org_id and {'orgId': org_id} or None
-        data = settings.json(exclude_unset=True, include={'selected': True,
+        data = settings.model_dump_json(exclude_unset=True, include={'selected': True,
                                                           'custom_number': True,
                                                           'first_name': True,
                                                           'last_name': True,

@@ -27,11 +27,11 @@ class RecallHuntGroup(ApiModel):
     Recall options that are added to call park.
     """
     #: Alternate user which is a hunt group id for call park recall alternate destination.
-    hunt_group_id: Optional[str]
+    hunt_group_id: Optional[str] = None
     #: Unique name for the hunt group.
-    hunt_group_name: Optional[str]
+    hunt_group_name: Optional[str] = None
     #: Call park recall option.
-    option: Optional[CallParkRecall]
+    option: Optional[CallParkRecall] = None
 
     @staticmethod
     def default() -> 'RecallHuntGroup':
@@ -59,21 +59,21 @@ class CallPark(ApiModel):
     Call Park
     """
     #: A unique identifier for the call park.
-    callpark_id: Optional[str] = Field(alias='id')
+    callpark_id: Optional[str] = Field(alias='id', default=None)
     #: Unique name for the call park. The maximum length is 80.
-    name: Optional[str]
+    name: Optional[str] = None
     #: Name of location for call park
-    location_name: Optional[str]
+    location_name: Optional[str] = None
     #: ID of location for call park.
-    location_id: Optional[str]
+    location_id: Optional[str] = None
     #: Recall options that are added to call park.
-    recall: Optional[RecallHuntGroup]
+    recall: Optional[RecallHuntGroup] = None
     #: People, including workspaces, that are eligible to receive calls.
-    agents: Optional[list[PersonPlaceAgent]]
+    agents: Optional[list[PersonPlaceAgent]] = None
     #: Whether or not the calls will be parked on agents as a destination.
-    park_on_agents_enabled: Optional[bool]
+    park_on_agents_enabled: Optional[bool] = None
     #: Array of call park extensions assigned to a call park.
-    call_park_extensions: Optional[list[CallParkExtension]]
+    call_park_extensions: Optional[list[CallParkExtension]] = None
 
     @staticmethod
     def default(*, name: str) -> 'CallPark':
@@ -96,7 +96,7 @@ class CallPark(ApiModel):
         :return: JSON
         :rtype: str
         """
-        data = json.loads(self.json(exclude={'callpark_id': True,
+        data = json.loads(self.model_dump_json(exclude={'callpark_id': True,
                                              'location_name': True,
                                              'location_id': True,
                                              'recall': {'hunt_group_name': True}}))
@@ -115,13 +115,13 @@ class CallParkSettings(ApiModel):
     Setting controlling call park behavior.
     """
     #: Ring pattern for when this callpark is called.
-    ring_pattern: Optional[RingPattern]
+    ring_pattern: Optional[RingPattern] = None
     #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up within the
     #: set time, then the call will be recalled based on the Call Park Recall setting.
-    recall_time: Optional[int]
+    recall_time: Optional[int] = None
     #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up, the call
     #: will revert back to the hunt group (after the person who parked the call is alerted).
-    hunt_wait_time: Optional[int]
+    hunt_wait_time: Optional[int] = None
 
     @staticmethod
     def default() -> 'CallParkSettings':
@@ -137,9 +137,9 @@ class CallParkSettings(ApiModel):
 
 class LocationCallParkSettings(ApiModel):
     #: Recall options that are added to call park.
-    call_park_recall: Optional[RecallHuntGroup]
+    call_park_recall: Optional[RecallHuntGroup] = None
     #: Setting controlling call park behavior.
-    call_park_settings: Optional[CallParkSettings]
+    call_park_settings: Optional[CallParkSettings] = None
 
     @staticmethod
     def default() -> 'LocationCallParkSettings':
@@ -158,7 +158,7 @@ class LocationCallParkSettings(ApiModel):
         :return: JSON
         :rtype: str
         """
-        return self.json(exclude={'call_park_recall': {'hunt_group_name': True}})
+        return self.model_dump_json(exclude={'call_park_recall': {'hunt_group_name': True}})
 
 
 class CallParkApi(ApiChild, base='telephony/config/callParks'):
@@ -291,7 +291,7 @@ class CallParkApi(ApiChild, base='telephony/config/callParks'):
         """
         url = self._endpoint(location_id=location_id, callpark_id=callpark_id)
         params = org_id and {'orgId': org_id} or None
-        return CallPark.parse_obj(self.get(url, params=params))
+        return CallPark.model_validate(self.get(url, params=params))
 
     def update(self, location_id: str, callpark_id: str, settings: CallPark, org_id: str = None) -> str:
         """
@@ -403,7 +403,7 @@ class CallParkApi(ApiChild, base='telephony/config/callParks'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id, path='settings')
-        return LocationCallParkSettings.parse_obj(self.get(url, params=params))
+        return LocationCallParkSettings.model_validate(self.get(url, params=params))
 
     def update_call_park_settings(self, location_id: str, settings: LocationCallParkSettings, org_id: str = None):
         """

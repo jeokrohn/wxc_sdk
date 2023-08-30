@@ -31,7 +31,7 @@ class TestList(TestCaseWithLog):
     def test_001_list(self):
         workspaces = list(self.api.workspaces.list())
         print(f'got {len(workspaces)} workspaces')
-        print('\n'.join(w.json() for w in workspaces))
+        print('\n'.join(w.model_dump_json() for w in workspaces))
 
 
 class TestDetails(TestCaseWithLog):
@@ -112,7 +112,7 @@ class TestOutgoingPermissionsAutoTransferNumbers(TestCaseWithLog):
             numbers = tna.read(person_id=target_ws.workspace_id)
             try:
                 # change auto transfer number 1
-                update = numbers.copy(deep=True)
+                update = numbers.model_copy(deep=True)
                 transfer = f'+4961007739{random.randint(0, 999):03}'
                 update.auto_transfer_number1 = transfer
                 tna.configure(person_id=target_ws.workspace_id, settings=update)
@@ -139,7 +139,7 @@ class TestOutgoingPermissionsAutoTransferNumbers(TestCaseWithLog):
             numbers = tna.read(person_id=target_ws.workspace_id)
             try:
                 # change auto transfer number 1
-                update = numbers.copy(deep=True)
+                update = numbers.model_copy(deep=True)
                 transfer = f'+496100773{random.randint(0, 9999):03}'
                 update.auto_transfer_number1 = transfer
                 tna.configure(person_id=target_ws.workspace_id, settings=update)
@@ -210,7 +210,7 @@ class TestCreate(TestWithLocations):
         settings.notes = 'test_001_trivial: no calling location, room devices'
         workspace = ws.create(settings=settings)
         print(f'new workspace:')
-        print(json.dumps(json.loads(workspace.json()), indent=2))
+        print(json.dumps(json.loads(workspace.model_dump_json()), indent=2))
         self.assertEqual(name, workspace.display_name)
 
     def test_002_edge_for_devices(self):
@@ -224,7 +224,7 @@ class TestCreate(TestWithLocations):
                              notes='test_002_edge_for_devices: edge for devices')
         workspace = ws.create(settings=settings)
         print(f'new workspace:')
-        print(json.dumps(json.loads(workspace.json()), indent=2))
+        print(json.dumps(json.loads(workspace.model_dump_json()), indent=2))
         self.assertEqual(name, workspace.display_name)
 
     def test_003_create_workspace_with_webex_calling(self):
@@ -245,7 +245,7 @@ class TestCreate(TestWithLocations):
                                                         notes=f'test_003_create_workspace_with_webex_calling: phones, '
                                                               f'location "{target_location.name}"')
         print(f'Created workspace "{workspace.display_name}" in location "{target_location.name}" ')
-        print(json.dumps(json.loads(workspace.json()), indent=2))
+        print(json.dumps(json.loads(workspace.model_dump_json()), indent=2))
         # due to a limitation the workspace object returned does not have 'webex_calling' populated
         # let's check nonetheless which extension got assigned
         numbers = list(self.api.telephony.phone_numbers(owner_id=workspace.workspace_id))
@@ -295,11 +295,11 @@ class TestCreate(TestWithLocations):
                   f'calling, tried to upgrade to calling in location "{target_location.name}"')
         workspace = self.api.workspaces.create(settings=new_workspace)
         print(f'new workspace:')
-        print(json.dumps(json.loads(workspace.json()), indent=2))
+        print(json.dumps(json.loads(workspace.model_dump_json()), indent=2))
 
         # get details and try to upgrade to calling
         details = self.api.workspaces.details(workspace_id=workspace.workspace_id)
-        update = details.copy(deep=True)
+        update = details.model_copy(deep=True)
         # update.workspace_location_id = wsl.id
         update.calling = WorkspaceCalling(
             type=CallingType.webex,
@@ -310,7 +310,7 @@ class TestCreate(TestWithLocations):
         after = self.api.workspaces.update(workspace_id=workspace.workspace_id,
                                                    settings=update)
         print(f'after update:')
-        print(json.dumps(json.loads(after.json()), indent=2))
+        print(json.dumps(json.loads(after.model_dump_json()), indent=2))
 
         # also as a side effect the workspace location id should get set
         self.assertIsNotNone(after.workspace_location_id)
@@ -358,7 +358,7 @@ class TestCreate(TestWithLocations):
             notes=f'test_006_create_workspace_with_webex_calling_room: room devices, '
                   f'location "{target_location.name}"')
         print(f'Created workspace "{workspace.display_name}" in location "{target_location.name}" ')
-        print(json.dumps(json.loads(workspace.json()), indent=2))
+        print(json.dumps(json.loads(workspace.model_dump_json()), indent=2))
         # due to a limitation the workspace object returned does not have 'webex_calling' populated
         # let's check nonetheless which extension got assigned
         numbers = list(self.api.telephony.phone_numbers(owner_id=workspace.workspace_id))
@@ -416,18 +416,18 @@ class TestCreate(TestWithLocations):
                     location_id=target_location.location_id)))
         workspace = self.api.workspaces.create(settings=new_workspace)
         print(f'new workspace:')
-        print(json.dumps(json.loads(workspace.json()), indent=2))
+        print(json.dumps(json.loads(workspace.model_dump_json()), indent=2))
 
         # get details and try to downgrade to free calling
         details = self.api.workspaces.details(workspace_id=workspace.workspace_id)
-        update = details.copy(deep=True)
+        update = details.model_copy(deep=True)
         update.calling = WorkspaceCalling(
             type=CallingType.free)
         print(f'Updating workspace "{name}" in location "{target_location.name}" ')
         after = self.api.workspaces.update(workspace_id=workspace.workspace_id,
                                                    settings=update)
         print(f'after update:')
-        print(json.dumps(json.loads(after.json()), indent=2))
+        print(json.dumps(json.loads(after.model_dump_json()), indent=2))
 
         # the workspace location id should still be set
         self.assertIsNotNone(after.workspace_location_id)
@@ -470,11 +470,11 @@ class TestCreate(TestWithLocations):
                     location_id=target_location.location_id)))
         workspace = self.api.workspaces.create(settings=new_workspace)
         print(f'new workspace:')
-        print(json.dumps(json.loads(workspace.json()), indent=2))
+        print(json.dumps(json.loads(workspace.model_dump_json()), indent=2))
 
         # get details and try to downgrade to free calling
         details = self.api.workspaces.details(workspace_id=workspace.workspace_id)
-        update = details.copy(deep=True)
+        update = details.model_copy(deep=True)
         update.calling = WorkspaceCalling(
             type=CallingType.free)
         print(f'Updating workspace "{name}" in location "{target_location.name}" ')
@@ -516,7 +516,7 @@ class TestUpdate(TestCaseWithLog):
         ws = self.api.workspaces
         with self.target(no_edge=True) as target_ws:
             target_ws: Workspace
-            settings: Workspace = target_ws.copy(deep=True)
+            settings: Workspace = target_ws.model_copy(deep=True)
             new_name = next(new_workspace_names(api=self.api))
             settings.display_name = new_name
             after = ws.update(workspace_id=target_ws.workspace_id,

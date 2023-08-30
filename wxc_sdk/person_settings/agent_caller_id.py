@@ -18,13 +18,13 @@ class AgentQueue(ApiModel):
     Available queue
     """
     #: Indicates the Call Queue's unique identifier.
-    id: Optional[str]
+    id: Optional[str] = None
     #: Indicates the Call Queue's name.
-    name: Optional[str]
+    name: Optional[str] = None
     #: When not null, indicates the Call Queue's phone number.
-    phone_number: Optional[str]
+    phone_number: Optional[str] = None
     #: When not null, indicates the Call Queue's extension number.
-    extension: Optional[str]
+    extension: Optional[str] = None
 
 
 class QueueCallerId(ApiModel):
@@ -33,10 +33,10 @@ class QueueCallerId(ApiModel):
     """
     #: When true, indicates that this agent is using the selectedQueue for its Caller ID. When false, indicates that
     #: it is using the agent's configured Caller ID.
-    queue_caller_id_enabled: Optional[bool]
+    queue_caller_id_enabled: Optional[bool] = None
     #: It is empty object when queueCallerIdEnabled is false. When queueCallerIdEnabled is true this data must be
     #: populated
-    selected_queue: Optional[AgentQueue]
+    selected_queue: Optional[AgentQueue] = None
 
     @root_validator(pre=True)
     def root(cls, values):
@@ -123,7 +123,7 @@ class AgentCallerIdApi(ApiChild, base='telephony/config/people'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(person_id=person_id, path='callerId')
         data = self.get(url=url, params=params)
-        return QueueCallerId.parse_obj(data)
+        return QueueCallerId.model_validate(data)
 
     def update(self, person_id: str, update: QueueCallerId, org_id: str = None):
         """

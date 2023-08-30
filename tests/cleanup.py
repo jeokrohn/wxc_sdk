@@ -101,7 +101,7 @@ async def main():
                                         if agent.agent_id == dustin.person_id), None) is not None]
 
                 def queue_wo_dustin(cq: CallQueue) -> CallQueue:
-                    wo_dustin = cq.copy(deep=True)
+                    wo_dustin = cq.model_copy(deep=True)
                     wo_dustin.agents = [agent for agent in cq.agents if agent.agent_id != dustin.person_id]
                     return wo_dustin
 

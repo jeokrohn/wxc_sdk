@@ -28,15 +28,15 @@ class LocationAddress(ApiModel):
     #: address line 1
     address1: str
     #: address line 2
-    address2: Optional[str]
+    address2: Optional[str] = None
     #: city
     city: str
     #: state
-    state: Optional[str]
+    state: Optional[str] = None
     #: ZIP/Postal code
-    postal_code: Optional[str]
+    postal_code: Optional[str] = None
     #: country
-    country: Optional[str]
+    country: Optional[str] = None
 
 
 class Location(ApiModel):
@@ -44,25 +44,25 @@ class Location(ApiModel):
     Webex location
     """
     #: A unique identifier for the location.
-    location_id: Optional[str] = Field(alias='id')
+    location_id: Optional[str] = Field(alias='id', default=None)
     #: The name of the location.
-    name: Optional[str]
+    name: Optional[str] = None
     #: The ID of the organization to which this location belongs.
-    org_id: Optional[str]
+    org_id: Optional[str] = None
     #: The address of the location, :class:`LocationAddress`
-    address: Optional[LocationAddress]
+    address: Optional[LocationAddress] = None
     #: Time zone associated with this location. Refer to this link (
     #: https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone)
     #: for the format.
-    time_zone: Optional[str]
+    time_zone: Optional[str] = None
     #: Default email language.
-    preferred_language: Optional[str]
+    preferred_language: Optional[str] = None
     #: Location's phone announcement language.
-    announcement_language: Optional[str]
-    latitude: Optional[float]
-    longitude: Optional[float]
+    announcement_language: Optional[str] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
     #: Notes
-    notes: Optional[str]
+    notes: Optional[str] = None
 
     @property
     def location_id_uuid(self) -> str:
@@ -81,16 +81,16 @@ class Location(ApiModel):
 
 class CreateLocationFloorBody(ApiModel):
     #: The floor number.
-    floor_number: Optional[int]
+    floor_number: Optional[int] = None
     #: The floor display name.
-    display_name: Optional[str]
+    display_name: Optional[str] = None
 
 
 class Floor(CreateLocationFloorBody):
     #: Unique identifier for the floor.
-    id: Optional[str]
+    id: Optional[str] = None
     #: Unique identifier for the location.
-    location_id: Optional[str]
+    location_id: Optional[str] = None
 
 
 class LocationsApi(ApiChild, base='locations'):
@@ -156,7 +156,7 @@ class LocationsApi(ApiChild, base='locations'):
         """
         params = org_id and {'orgId': org_id} or None
         ep = self.ep(location_id)
-        return Location.parse_obj(self.get(ep, params=params))
+        return Location.model_validate(self.get(ep, params=params))
 
     def create(self, name: str, time_zone: str, preferred_language: str, announcement_language: str, address1: str,
                city: str, state: str, postal_code: str, country: str, address2: str = None, org_id: str = None) -> str:
@@ -241,7 +241,7 @@ class LocationsApi(ApiChild, base='locations'):
         url = self.ep(location_id)
 
         # TODO: this is broken see conversation in "Implementation - Locations as a Common Construct"
-        data = json.loads(settings_copy.json(exclude={'location_id', 'org_id'}, exclude_none=False, exclude_unset=True))
+        data = json.loads(settings_copy.model_dump_json(exclude={'location_id', 'org_id'}, exclude_none=False, exclude_unset=True))
         data['timezone'] = data.pop('timeZone', None)
         self.put(url=url, json=data, params=params)
 
@@ -283,8 +283,8 @@ class LocationsApi(ApiChild, base='locations'):
         if display_name is not None:
             body.display_name = display_name
         url = self.ep(f'{location_id}/floors')
-        data = super().post(url=url, data=body.json())
-        return Floor.parse_obj(data)
+        data = super().post(url=url, data=body.model_dump_json())
+        return Floor.model_validate(data)
 
     def floor_details(self, location_id: str, floor_id: str) -> Floor:
         """
@@ -300,7 +300,7 @@ class LocationsApi(ApiChild, base='locations'):
         """
         url = self.ep(f'{location_id}/floors/{floor_id}')
         data = super().get(url=url)
-        return Floor.parse_obj(data)
+        return Floor.model_validate(data)
 
     def update_floor(self, location_id: str, floor_id: str, floor_number: int, display_name: str = None) -> Floor:
         """
@@ -326,8 +326,8 @@ class LocationsApi(ApiChild, base='locations'):
         if display_name is not None:
             body.display_name = display_name
         url = self.ep(f'{location_id}/floors/{floor_id}')
-        data = super().put(url=url, data=body.json())
-        return Floor.parse_obj(data)
+        data = super().put(url=url, data=body.model_dump_json())
+        return Floor.model_validate(data)
 
     def delete_floor(self, location_id: str, floor_id: str):
         """

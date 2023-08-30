@@ -24,7 +24,7 @@ class TestRead(TestCaseWithUsers):
         target_user = self.users[0]
         print(f'Trying to get calling behavior for {target_user.display_name}({target_user.emails[0]})')
         settings = await cb.read(person_id=target_user.person_id)
-        print(f'Got settings: {settings.json()}')
+        print(f'Got settings: {settings.model_dump_json()}')
         self.assertTrue(settings.effective_behavior_type is not None)
 
     @async_test
@@ -46,7 +46,7 @@ class TestRead(TestCaseWithUsers):
         settings_ok: list[CallingBehavior]
 
         print(f'Got calling behavior for {len(settings_ok)} users')
-        print('\n'.join(s.json(exclude_none=False) for s in settings_ok))
+        print('\n'.join(s.model_dump_json(exclude_none=False) for s in settings_ok))
         self.assertTrue(all(isinstance(s, CallingBehavior) and s.effective_behavior_type is not None
                             for s in settings),
                         'invalid/incomplete calling behavior for at least one user')

@@ -13,7 +13,7 @@ __all__ = ['Organization', 'OrganizationApi']
 import datetime
 from typing import Optional
 
-from pydantic import parse_obj_as, Field
+from pydantic import TypeAdapter, Field
 
 from ..api_child import ApiChild
 from ..base import ApiModel
@@ -27,13 +27,13 @@ class Organization(ApiModel):
     #: The date and time the organization was created.
     created: datetime.datetime
     #: The base path to xsi-actions.
-    xsi_actions_endpoint: Optional[str]
+    xsi_actions_endpoint: Optional[str] = None
     #: The base path to xsi-events.
-    xsi_events_endpoint: Optional[str]
+    xsi_events_endpoint: Optional[str] = None
     #: The base path to xsi-events-channel.
-    xsi_events_channel_endpoint: Optional[str]
+    xsi_events_channel_endpoint: Optional[str] = None
     #: api- prepended to the bcBaseDomain value for the organization.
-    xsi_domain: Optional[str]
+    xsi_domain: Optional[str] = None
 
 
 class OrganizationApi(ApiChild, base='organizations'):
@@ -48,7 +48,7 @@ class OrganizationApi(ApiChild, base='organizations'):
         """
         params = calling_data and {'callingData': 'true'} or None
         data = self.get(url=self.ep(), params=params)
-        return parse_obj_as(list[Organization], data['items'])
+        return TypeAdapter(list[Organization]).validate_python(data['items'])
 
     def details(self, org_id: str, calling_data: bool = None) -> Organization:
         """
@@ -67,7 +67,7 @@ class OrganizationApi(ApiChild, base='organizations'):
         url = self.ep(org_id)
         params = calling_data and {'callingData': 'true'} or None
         data = self.get(url=url, params=params)
-        return Organization.parse_obj(data)
+        return Organization.model_validate(data)
 
     def delete(self, org_id: str):
         """

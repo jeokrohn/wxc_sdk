@@ -15,7 +15,7 @@ class CDR(ApiModel):
     answer_time: Optional[str] = Field(alias='Answer time')
     #: Whether the call leg was answered. For example, in a hunt group case, some legs will be unanswered, and one will
     #: be answered.
-    answered: Optional[str]
+    answered: Optional[str] = None
     #: The authorization code admin created for a location or site for users to use. Collected by the
     #: Account/Authorization Codes or Enhanced Outgoing Calling Plan services.
     authorization_code: Optional[str] = Field(alias='Authorization code')
@@ -76,9 +76,9 @@ class CDR(ApiModel):
     #: Whether the call was inbound or outbound. The possible values are:
     #:   * ORIGINATING
     #:   * TERMINATING
-    direction: Optional[str]
+    direction: Optional[str] = None
     #: The length of the call in seconds.
-    duration: Optional[int]
+    duration: Optional[int] = None
     #: Inbound trunk may be presented in Originating and Terminating records.
     inbound_trunk: Optional[str] = Field(alias='Inbound trunk')
     #: The country code of the dialed number. This is only populated for international calls.
@@ -89,9 +89,9 @@ class CDR(ApiModel):
     #:   * The Local SessionID is generated from the Originating user agent.
     local_session_id: Optional[str] = Field(alias='Local SessionID')
     #: Location of the report.
-    location: Optional[str]
+    location: Optional[str] = None
     #: The device model type the user is using to make or receive the call.
-    model: Optional[str]
+    model: Optional[str] = None
     #: A unique identifier for the organization that made the call. This is a unique identifier across Cisco.
     org_uuid: Optional[str] = Field(alias='Org UUID')
     #: Call redirection reason for the original called number. For example:
@@ -192,7 +192,7 @@ class CDR(ApiModel):
     #: this ID with Cisco TAC to help them pinpoint parties who are involved during a call transfer.
     transfer_related_call_id: Optional[str] = Field(alias='Transfer related call ID')
     #: The user who made or received the call.
-    user: Optional[str]
+    user: Optional[str] = None
     #: The type of user (user or workspace) that made or received the call. For example:
     #:   * AutomatedAttendantVideo
     #:   * Anchor
@@ -212,7 +212,7 @@ class CDR(ApiModel):
 
 
 class GetDetailedCallHistoryResponse(ApiModel):
-    items: Optional[list[CDR]]
+    items: Optional[list[CDR]] = None
 
 
 class WebexCallingDetailedCallHistoryApi(ApiChild, base=''):

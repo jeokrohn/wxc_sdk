@@ -27,7 +27,7 @@ class PreferredAnswerEndpoint(ApiModel):
 
 class PreferredAnswerResponse(ApiModel):
     #: Person’s preferred answer endpoint.
-    preferred_answer_endpoint_id: Optional[str]
+    preferred_answer_endpoint_id: Optional[str] = None
     #: Array of endpoints available to the person.
     endpoints: list[PreferredAnswerEndpoint]
 
@@ -69,7 +69,7 @@ class PreferredAnswerApi(ApiChild, base='telephony/config/people'):
         """
         params = org_id and {'orgId': org_id} or None
         ep = self.ep(person_id=person_id)
-        return PreferredAnswerResponse.parse_obj(self.get(ep, params=params))
+        return PreferredAnswerResponse.model_validate(self.get(ep, params=params))
 
     def modify(self, person_id: str, preferred_answer_endpoint_id: str, org_id: str = None):
         """

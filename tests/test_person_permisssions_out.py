@@ -21,12 +21,12 @@ class PermissionsOutMixin(TestCaseWithUsers):
         settings: list[OutgoingPermissions] = await asyncio.gather(*tasks)
 
         # explicitly defined call types are the defined attributes of CallingPermissions
-        explicit_call_types = set(CallingPermissions.__fields__)
+        explicit_call_types = set(CallingPermissions.model_fields)
 
         # identify unknown call types: attributes of returned settings that are not explicitly defined
         unknown_call_types = set()
         for setting in settings:
-            unknown_call_types.update(set(setting.calling_permissions.__dict__) - explicit_call_types)
+            unknown_call_types.update(set(cp for cp, _ in setting.calling_permissions) - explicit_call_types)
 
         return settings, unknown_call_types
 
@@ -58,8 +58,9 @@ class TestRead(PermissionsOutMixin):
         with ThreadPoolExecutor() as pool:
             settings = list(pool.map(lambda user: po.read(person_id=user.person_id),
                                      self.users))
+        settings: list[OutgoingPermissions]
         print(f'Got outgoing permissions for {len(self.users)} users')
-        print('\n'.join(f'{user.display_name}: {s.json()}' for user, s in zip(self.users, settings)))
+        print('\n'.join(f'{user.display_name}: {s.model_dump_json()}' for user, s in zip(self.users, settings)))
 
     @TestCaseWithUsers.async_test
     async def test_002_check_unknown_call_types(self):
@@ -88,7 +89,7 @@ class TestRead(PermissionsOutMixin):
             settings = list(pool.map(lambda user: po.read(person_id=user.person_id),
                                      self.users))
         print(f'Got outgoing permissions for {len(self.users)} users')
-        print('\n'.join(f'{user.display_name}: {s.json()}' for user, s in zip(self.users, settings)))
+        print('\n'.join(f'{user.display_name}: {s.model_dump_json()}' for user, s in zip(self.users, settings)))
 
         def get_numbers(person: Person):
             # /v1/workspaces/{workspaceId}/features/outgoingPermission/autoTransferNumbers
@@ -113,7 +114,7 @@ class TestUnknownCallTypes(PermissionsOutMixin):
         # get unknown call types by reading person outgoing permission settings
         with self.no_log():
             _, call_types = await self.get_permissions_and_unknown_call_types()
-        call_types |= set(CallingPermissions.__fields__)
+        call_types |= set(CallingPermissions.model_fields)
         # pick a random user
         with self.target_user() as user:
             user: Person
@@ -151,7 +152,7 @@ class TestUpdate(PermissionsOutMixin):
             po = self.api.person_settings.permissions_out
             user: Person
             before = po.read(person_id=user.person_id)
-            settings: OutgoingPermissions = before.copy(deep=True)
+            settings: OutgoingPermissions = before.model_copy(deep=True)
             settings.use_custom_enabled = not settings.use_custom_enabled
             po.configure(person_id=user.person_id, settings=settings)
             after = po.read(person_id=user.person_id)
@@ -165,7 +166,7 @@ class TestUpdate(PermissionsOutMixin):
             po = self.api.person_settings.permissions_out
             user: Person
             before = po.read(person_id=user.person_id)
-            settings: OutgoingPermissions = before.copy(deep=True)
+            settings: OutgoingPermissions = before.model_copy(deep=True)
             # enable custom settings
             settings.use_custom_enabled = True
             # toggle transfer enabled for toll calls
@@ -188,7 +189,7 @@ class TestUpdate(PermissionsOutMixin):
             po = self.api.person_settings.permissions_out
             user: Person
             before = po.read(person_id=user.person_id)
-            settings: OutgoingPermissions = before.copy(deep=True)
+            settings: OutgoingPermissions = before.model_copy(deep=True)
             settings.use_custom_enabled = True
             for call_type in OutgoingPermissionCallType:
                 permissions = settings.calling_permissions.for_call_type(call_type)
@@ -205,7 +206,7 @@ class TestUpdate(PermissionsOutMixin):
             po = self.api.person_settings.permissions_out
             user: Person
             before = po.read(person_id=user.person_id)
-            settings: OutgoingPermissions = before.copy(deep=True)
+            settings: OutgoingPermissions = before.model_copy(deep=True)
             settings.use_custom_enabled = True
             for call_type in OutgoingPermissionCallType:
                 permissions = settings.calling_permissions.for_call_type(call_type)
@@ -224,7 +225,7 @@ class TestUpdate(PermissionsOutMixin):
             before = po.read(person_id=user.person_id)
             last_error = None
             for call_type in OutgoingPermissionCallType:
-                settings: OutgoingPermissions = before.copy(deep=True)
+                settings: OutgoingPermissions = before.model_copy(deep=True)
                 settings.use_custom_enabled = True
                 permissions = settings.calling_permissions.for_call_type(call_type)
                 permissions.transfer_enabled = False

@@ -7,17 +7,15 @@ from pydantic import Field
 
 from .common import PersonSettingsApiChild
 from ..base import ApiModel, webex_id_to_uuid
-from ..common import MonitoredMember, CallParkExtension
+from ..common import MonitoredMember, CallParkExtension, IdAndName
 
 __all__ = ['MonitoredElementMember', 'MonitoredElement', 'Monitoring',
            'MonitoringApi']
 
 
 class MonitoredElementMember(MonitoredMember):
-    #: The location name where the call park extension is.
-    location_name: Optional[str] = Field(alias='location')
     #: The location ID for the location.
-    location_id: Optional[str]
+    location_id: Optional[str] = None
 
     @property
     def ci_location_id(self) -> Optional[str]:
@@ -26,17 +24,17 @@ class MonitoredElementMember(MonitoredMember):
 
 class MonitoredElement(ApiModel):
     #: monitored person or place
-    member: Optional[MonitoredElementMember]
+    member: Optional[MonitoredElementMember] = None
     #: monitored call park extension
-    cpe: Optional[CallParkExtension] = Field(alias='callparkextension')
+    cpe: Optional[CallParkExtension] = Field(alias='callparkextension', default=None)
 
 
 class Monitoring(ApiModel):
     #: Call park notification is enabled or disabled.
-    call_park_notification_enabled: Optional[bool]
+    call_park_notification_enabled: Optional[bool] = None
     #: Settings of monitored elements which can be person, place, or call park extension.
     #: for updates IDs can be used directly instead of :class:`MonitoredElement` objects
-    monitored_elements: Optional[list[Union[str, MonitoredElement]]]
+    monitored_elements: Optional[list[Union[str, MonitoredElement]]] = None
 
     @property
     def monitored_cpes(self) -> list[CallParkExtension]:
@@ -77,7 +75,7 @@ class MonitoringApi(PersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(ep, params=params)
-        return Monitoring.parse_obj(data)
+        return Monitoring.model_validate(data)
 
     def configure(self, person_id: str, settings: Monitoring, org_id: str = None):
         """

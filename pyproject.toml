@@ -18,8 +18,7 @@ aiohttp = "^3.8.1"
 python-dateutil = "^2.8.2"
 aenum = "^3.1.11"
 PyYAML = "^6.0"
-# TODO typing-extensions 4.6.0 breaks Literals in pydantic models
-# typing-extensions = "<4.6.0"
+imapclient = "^2.3.1"
 
 [tool.poetry.dev-dependencies]
 Sphinx = "^4.4.0"
@@ -34,7 +33,7 @@ beautifulsoup4 = "^4.11.1"
 matplotlib = "^3.6.1"
 selenium = "^4.5.0"
 inflection = "^0.5.1"
-# test_helper = { git = "https://github.com/jeokrohn/test_helper.git" }
+test_helper = { git = "https://github.com/jeokrohn/test_helper.git" }
 geopy = "^2.2.0"
 backoff = "^2.2.1"
 webexteamsbot = "^0.1.4"

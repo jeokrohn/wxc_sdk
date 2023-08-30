@@ -2,15 +2,13 @@
 Test for privacy settings
 """
 import asyncio
+import base64
 import random
-from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from dataclasses import dataclass
-from wxc_sdk.all_types import Person, Privacy
-
-import base64
 
 from tests.base import TestCaseWithUsers, async_test
+from wxc_sdk.all_types import Person, Privacy
 
 
 class TestRead(TestCaseWithUsers):

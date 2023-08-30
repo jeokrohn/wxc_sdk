@@ -19,10 +19,10 @@ class ReceptionistSettings(ApiModel):
     user's receptionist client settings
     """
     #: Set to true to enable the Receptionist Client feature.
-    enabled: Optional[bool] = Field(alias='receptionEnabled')
+    enabled: Optional[bool] = Field(alias='receptionEnabled', default=None)
     #: List of people and/or workspaces to monitor.
     #: for updates can be a list of IDs
-    monitored_members: Optional[list[Union[str, MonitoredMember]]]
+    monitored_members: Optional[list[Union[str, MonitoredMember]]] = None
 
 
 class ReceptionistApi(PersonSettingsApiChild):
@@ -54,7 +54,7 @@ class ReceptionistApi(PersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(ep, params=params)
-        return ReceptionistSettings.parse_obj(data)
+        return ReceptionistSettings.model_validate(data)
 
     def configure(self, person_id: str, settings: ReceptionistSettings, org_id: str = None):
         """
@@ -82,7 +82,7 @@ class ReceptionistApi(PersonSettingsApiChild):
             raise ValueError('when setting members enabled has to be True')
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.loads(settings.json())
+        data = json.loads(settings.model_dump_json())
         if settings.monitored_members is not None:
             id_list = []
             for me in settings.monitored_members:

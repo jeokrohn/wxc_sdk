@@ -141,7 +141,7 @@ class FireHose(Flask):
         post_data = request.json
         log.debug(dumps(post_data, indent=2))
         try:
-            wh_event: WebhookEvent = WebhookEvent.parse_obj(post_data)
+            wh_event: WebhookEvent = WebhookEvent.model_validate(post_data)
             log.debug(f'{wh_event}')
             log.debug(f'{wh_event.resource} parsed as {wh_event.data.__class__.__name__}')
         except Exception as e:

@@ -17,20 +17,20 @@ class NoAnswer(ApiModel):
     Settings for when the call into the hunt group is not answered.
     """
     #: If enabled, advance to next agent after the next_agent_rings has occurred.
-    next_agent_enabled: Optional[bool]
+    next_agent_enabled: Optional[bool] = None
     #: Number of rings before call will be forwarded if unanswered and nextAgentEnabled is true.
-    next_agent_rings: Optional[int]
+    next_agent_rings: Optional[int] = None
     #: If true, forwards unanswered calls to the destination after the number of rings occurs.
-    forward_enabled: Optional[bool]
+    forward_enabled: Optional[bool] = None
     #: Destination if forward_enabled is True.
-    destination: Optional[str]
+    destination: Optional[str] = None
     #: Number of rings before forwarding calls if forward_enabled is true.
-    number_of_rings: Optional[int]
+    number_of_rings: Optional[int] = None
     #: System-wide maximum number of rings allowed for number_of_rings setting.
-    system_max_number_of_rings: Optional[int]
+    system_max_number_of_rings: Optional[int] = None
     #: If destination_voicemail_enabled is true, enables and disables sending incoming to destination number's
     #: voicemail if the destination is an internal phone number and that number has the voicemail service enabled.
-    destination_voicemail_enabled: Optional[bool]
+    destination_voicemail_enabled: Optional[bool] = None
 
     @staticmethod
     def default() -> 'NoAnswer':
@@ -51,12 +51,12 @@ class BusinessContinuity(ApiModel):
     #: calls that aren't answered due to a network outage, or all agents of the hunt group are busy and the Advance
     #: when the busy option is also enabled. For persons only using a mobile device, calls won't be diverted, if there
     #: is a network outage.
-    enabled: Optional[bool]
+    enabled: Optional[bool] = None
     #: Destination for Business Continuity.
-    destination: Optional[str]
+    destination: Optional[str] = None
     #: Indicates enabled or disabled state of sending diverted incoming calls to the destination number's voicemail if
     #: the destination is an internal phone number and that number has the voicemail service enabled.
-    destination_voicemail_enabled: Optional[bool]
+    destination_voicemail_enabled: Optional[bool] = None
 
     @staticmethod
     def default() -> 'BusinessContinuity':
@@ -69,16 +69,16 @@ class HGCallPolicies(ApiModel):
     Policy controlling how calls are routed to agents.
     """
     #: Call routing policy to use to dispatch calls to agents.
-    policy: Optional[Policy]
+    policy: Optional[Policy] = None
     #: If false, then the option is treated as "Advance when busy": the hunt group won’t ring agents when they’re on
     #: a call and will advance to the next agent. If a hunt group agent has call waiting enabled and the call is
     #: advanced to them, then the call will wait until that hunt group agent isn’t busy.
-    waiting_enabled: Optional[bool]
+    waiting_enabled: Optional[bool] = None
     #: Settings for when the call into the hunt group is not answered.
-    no_answer: Optional[NoAnswer]
+    no_answer: Optional[NoAnswer] = None
     #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for
     #: any reason, such as power outage, failed Internet connection, or wiring problem.
-    business_continuity: Optional[BusinessContinuity]
+    business_continuity: Optional[BusinessContinuity] = None
 
     @staticmethod
     def default() -> 'HGCallPolicies':
@@ -95,11 +95,11 @@ class HuntGroup(HGandCQ):
     #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each
     #: number will reach the same greeting and each menu will function identically to the main number. The alternate
     #: numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
-    alternate_numbers: Optional[list[AlternateNumber]]
+    alternate_numbers: Optional[list[AlternateNumber]] = None
     #: Policy controlling how calls are routed to agents.
-    call_policies: Optional[HGCallPolicies]
+    call_policies: Optional[HGCallPolicies] = None
     # TODO: undocumented
-    addressAgents: Any
+    address_agents: Optional[Any] = None
 
     @staticmethod
     def exclude_update_or_create() -> dict:
@@ -114,7 +114,8 @@ class HuntGroup(HGandCQ):
                                  {'no_answer': {'system_max_number_of_rings': True}},
                              'alternate_numbers':
                                  {'__all__':
-                                      {'toll_free_number': True}}})
+                                      {'toll_free_number': True}},
+                             'address_agents': True})
         return base_exclude
 
     @staticmethod
@@ -280,7 +281,7 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
         url = self._endpoint(location_id=location_id, huntgroup_id=huntgroup_id)
         params = org_id and {'orgId': org_id} or {}
         data = self.get(url, params=params)
-        result = HuntGroup.parse_obj(data)
+        result = HuntGroup.model_validate(data)
         return result
 
     def update(self, location_id: str, huntgroup_id: str, update: HuntGroup,

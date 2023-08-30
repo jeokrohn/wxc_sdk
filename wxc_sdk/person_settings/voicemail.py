@@ -20,9 +20,9 @@ class VoicemailEnabledWithGreeting(VoicemailEnabled):
     Voicemail enablement setting with greeting details
     """
     #: DEFAULT indicates the default greeting will be played. CUSTOM indicates a custom .wav file will be played.
-    greeting: Optional[Greeting]
+    greeting: Optional[Greeting] = None
     #: Indicates a custom greeting has been uploaded.
-    greeting_uploaded: Optional[bool]
+    greeting_uploaded: Optional[bool] = None
 
 
 class UnansweredCalls(VoicemailEnabledWithGreeting):
@@ -30,9 +30,9 @@ class UnansweredCalls(VoicemailEnabledWithGreeting):
     Voicemail enablement settungs for unsanswered cals
     """
     #: Number of rings before unanswered call will be sent to voicemail.
-    number_of_rings: Optional[int]
+    number_of_rings: Optional[int] = None
     #: System-wide maximum number of rings allowed for number_of_rings setting.
-    system_max_number_of_rings: Optional[int]
+    system_max_number_of_rings: Optional[int] = None
 
 
 class VoicemailSettings(ApiModel):
@@ -40,24 +40,24 @@ class VoicemailSettings(ApiModel):
     User's voicemail settings
     """
     #: Voicemail is enabled or disabled.
-    enabled: Optional[bool]
+    enabled: Optional[bool] = None
     #: Settings for sending all calls to voicemail.
-    send_all_calls: Optional[VoicemailEnabled]
+    send_all_calls: Optional[VoicemailEnabled] = None
     #: Settings for sending calls to voicemail when the line is busy.
-    send_busy_calls: Optional[VoicemailEnabledWithGreeting]
+    send_busy_calls: Optional[VoicemailEnabledWithGreeting] = None
     #: Settings for sending calls to voicemail when call is unanswered
-    send_unanswered_calls: Optional[UnansweredCalls]
+    send_unanswered_calls: Optional[UnansweredCalls] = None
     #: Settings for notifications when there are any new voicemails.
-    notifications: Optional[VoicemailNotifications]
+    notifications: Optional[VoicemailNotifications] = None
     #: Settings for voicemail caller to transfer to a different number by pressing zero (0).
-    transfer_to_number: Optional[VoicemailTransferToNumber]
+    transfer_to_number: Optional[VoicemailTransferToNumber] = None
     #: Settings for sending a copy of new voicemail message audio via email.
-    email_copy_of_message: Optional[VoicemailCopyOfMessage]
+    email_copy_of_message: Optional[VoicemailCopyOfMessage] = None
     #: Settings for message storage
-    message_storage: Optional[VoicemailMessageStorage]
+    message_storage: Optional[VoicemailMessageStorage] = None
     #: Fax message settings
-    fax_message: Optional[VoicemailFax]
-    voice_message_forwarding_enabled: Optional[bool]
+    fax_message: Optional[VoicemailFax] = None
+    voice_message_forwarding_enabled: Optional[bool] = None
 
     @staticmethod
     def default() -> 'VoicemailSettings':
@@ -117,7 +117,7 @@ class VoicemailApi(PersonSettingsApiChild):
         """
         url = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return VoicemailSettings.parse_obj(self.get(url, params=params))
+        return VoicemailSettings.model_validate(self.get(url, params=params))
 
     def configure(self, person_id: str, settings: VoicemailSettings, org_id: str = None):
         """
@@ -135,7 +135,7 @@ class VoicemailApi(PersonSettingsApiChild):
         :return:
         """
         # some settings can't be part of an update
-        data = settings.json(exclude={'send_busy_calls': {'greeting_uploaded': True},
+        data = settings.model_dump_json(exclude={'send_busy_calls': {'greeting_uploaded': True},
                                       'send_unanswered_calls': {'system_max_number_of_rings': True,
                                                                 'greeting_uploaded': True},
                                       'voice_message_forwarding_enabled': True

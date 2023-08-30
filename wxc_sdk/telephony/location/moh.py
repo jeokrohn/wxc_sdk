@@ -30,12 +30,12 @@ class LocationMoHSetting(ApiModel):
     location's music on hold settings.
     """
     #: If enabled, music will be played when call is placed on hold.
-    call_hold_enabled: Optional[bool]
+    call_hold_enabled: Optional[bool] = None
     #: If enabled, music will be played when call is parked.
-    call_park_enabled: Optional[bool]
+    call_park_enabled: Optional[bool] = None
     #: Greeting type for the location.
-    greeting: Optional[LocationMoHGreetingType]
-    audio_file: Optional[AnnAudioFile]
+    greeting: Optional[LocationMoHGreetingType] = None
+    audio_file: Optional[AnnAudioFile] = None
 
 
 class LocationMoHApi(ApiChild, base='telephony/config/locations'):
@@ -81,7 +81,7 @@ class LocationMoHApi(ApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
         data = self.get(url, params=params)
-        return LocationMoHSetting.parse_obj(data)
+        return LocationMoHSetting.model_validate(data)
 
     def update(self, location_id: str, settings: LocationMoHSetting, org_id: str = None) -> LocationMoHSetting:
         """
@@ -103,7 +103,7 @@ class LocationMoHApi(ApiChild, base='telephony/config/locations'):
         :return: list of :class:`wxc_sdk.common.CallPark`
         """
         params = org_id and {'orgId': org_id} or None
-        data = settings.json()
+        data = settings.model_dump_json()
         url = self._endpoint(location_id=location_id)
         self.put(url, params=params, data=data)
 
@@ -119,7 +119,7 @@ class LocationMoHApi(ApiChild, base='telephony/config/locations'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
-        body = {'accessCodes': [json.loads(ac.json()) for ac in access_codes]}
+        body = {'accessCodes': [json.loads(ac.model_dump_json()) for ac in access_codes]}
         self.post(url, json=body, params=params)
 
     def delete_codes(self, location_id: str, access_codes: list[Union[str, AuthCode]],

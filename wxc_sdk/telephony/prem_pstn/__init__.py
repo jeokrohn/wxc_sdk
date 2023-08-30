@@ -70,4 +70,4 @@ class PremisePstnApi(ApiChild, base='telephony/config/premisePstn'):
         params = org_id and {'orgId': org_id} or None
         body = {'dialPatterns': dial_patterns}
         data = self.post(url=url, params=params, json=body)
-        return DialPatternValidationResult.parse_obj(data)
+        return DialPatternValidationResult.model_validate(data)

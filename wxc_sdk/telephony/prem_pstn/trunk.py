@@ -28,6 +28,7 @@ class Trunk(ApiModel):
     location: IdAndName
     in_use: bool
     trunk_type: TrunkType
+    is_restricted_to_dedicated_instance: bool
 
 
 class TrunkDeviceType(ApiModel):
@@ -77,7 +78,7 @@ class OutboundProxy(ApiModel):
     dns_type: str
     outbound_proxy: str
     srv_prefix: str
-    cname_records: Optional[list[CnameRecord]]
+    cname_records: Optional[list[CnameRecord]] = None
     attachment_updated: bool
 
 
@@ -108,13 +109,14 @@ class TrunkDetail(ApiModel):
     #: Device type associated with trunk.
     device_type: str
     #: FQDN or SRV address. Required to create a static certificate-based trunk.
-    address: Optional[str]
+    address: Optional[str] = None
     #: Domain name. Required to create a static certificate based trunk
-    domain: Optional[str]
+    domain: Optional[str] = None
     #: FQDN port. Required to create a static certificate-based trunk.
-    port: Optional[int]
+    port: Optional[int] = None
     #: Max Concurrent call. Required to create a static certificate based trunk.
     max_concurrent_calls: int
+    is_restricted_to_dedicated_instance: Optional[bool] = False
 
 
 class TrunkUsage(ApiModel):
@@ -230,7 +232,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         url = self.ep(trunk_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(url=url, params=params)
-        return TrunkDetail.parse_obj(data)
+        return TrunkDetail.model_validate(data)
 
     def update(self, trunk_id: str, name: str, location_id: str, password: str, trunk_type: TrunkType,
                dual_identity_support_enabled: bool = None, max_concurrent_calls: int = None, org_id: str = None):
@@ -326,7 +328,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         url = self.ep(f'{trunk_id}/usage')
         params = org_id and {'orgId': org_id} or None
         data = self.get(url=url, params=params)
-        return TrunkUsage.parse_obj(data)
+        return TrunkUsage.model_validate(data)
 
     def usage_dial_plan(self, trunk_id: str, org_id: str = None) -> Generator[IdAndName, None, None]:
         """

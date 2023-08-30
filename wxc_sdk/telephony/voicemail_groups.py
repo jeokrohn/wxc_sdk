@@ -25,9 +25,9 @@ class VoicemailGroup(ApiModel):
     #: location id
     location_id: str
     #: Extension of the voicemail group.
-    extension: Optional[str]
+    extension: Optional[str] = None
     #: Phone number of the voicemail group.
-    phone_number: Optional[str]
+    phone_number: Optional[str] = None
     #: If enabled, incoming calls are sent to voicemail.
     enabled: bool
     #: Flag to indicate if the number is toll free.
@@ -36,43 +36,43 @@ class VoicemailGroup(ApiModel):
 
 class VoicemailGroupDetail(ApiModel):
     #: UUID of voicemail group of a particular location.
-    group_id: Optional[str] = Field(alias='id')
+    group_id: Optional[str] = Field(alias='id', default=None)
     #: Name of the voicemail group.
-    name: Optional[str]
+    name: Optional[str] = None
     #: Voicemail group phone number.
-    phone_number: Optional[str]
+    phone_number: Optional[str] = None
     #: Voicemail group extension number.
-    extension: Optional[str]
+    extension: Optional[str] = None
     #: Voicemail group toll free number.
-    toll_free_number: Optional[bool]
+    toll_free_number: Optional[bool] = None
     #: Voicemail group caller id first name.
-    first_name: Optional[str]
+    first_name: Optional[str] = None
     #: Voicemail group called id last name.
-    last_name: Optional[str]
+    last_name: Optional[str] = None
     #: passcode
-    passcode: Optional[int]
+    passcode: Optional[int] = None
     #: Enable/disable voicemail group.
-    enabled: Optional[bool]
+    enabled: Optional[bool] = None
     #: Language for voicemail group audio announcement.
-    language_code: Optional[str]
+    language_code: Optional[str] = None
     #: Set voicemail group greeting typ
-    greeting: Optional[Greeting]
+    greeting: Optional[Greeting] = None
     #: Enabled if CUSTOM greeting is previously uploaded.
-    greeting_uploaded: Optional[bool]
+    greeting_uploaded: Optional[bool] = None
     #: CUSTOM greeting for previously uploaded.
-    greeting_description: Optional[str]
+    greeting_description: Optional[str] = None
     #: Message storage information
-    message_storage: Optional[VoicemailMessageStorage]
+    message_storage: Optional[VoicemailMessageStorage] = None
     #: Message notifications
-    notifications: Optional[VoicemailNotifications]
+    notifications: Optional[VoicemailNotifications] = None
     #: Fax message receive settings
-    fax_message: Optional[VoicemailFax]
+    fax_message: Optional[VoicemailFax] = None
     #: Transfer message information
-    transfer_to_number: Optional[VoicemailTransferToNumber]
+    transfer_to_number: Optional[VoicemailTransferToNumber] = None
     #: Message copy information
-    email_copy_of_message: Optional[VoicemailCopyOfMessage]
+    email_copy_of_message: Optional[VoicemailCopyOfMessage] = None
     #: Enable/disable to forward voice message.
-    voice_message_forwarding_enabled: Optional[bool]
+    voice_message_forwarding_enabled: Optional[bool] = None
 
     @staticmethod
     def create(name: str, extension: str, first_name: str, last_name: str, passcode: int, language_code: str = 'en_us',
@@ -99,13 +99,13 @@ class VoicemailGroupDetail(ApiModel):
                                     email_copy_of_message=VoicemailCopyOfMessage(enabled=False))
 
     def json_for_create(self) -> str:
-        return self.json(exclude_none=True,
+        return self.model_dump_json(exclude_none=True,
                          include={'name', 'phone_number', 'extension', 'first_name', 'last_name', 'passcode',
                                   'language_code', 'message_storage', 'notifications', 'fax_message',
                                   'transfer_to_number', 'email_copy_of_message'})
 
     def json_for_update(self) -> str:
-        return self.json(exclude_none=True,
+        return self.model_dump_json(exclude_none=True,
                          include={'name', 'phone_number', 'extension', 'first_name', 'last_name', 'enabled', 'passcode',
                                   'language_code', 'greeting', 'greeting_description', 'message_storage',
                                   'notifications', 'fax_message',
@@ -175,7 +175,7 @@ class VoicemailGroupsApi(ApiChild, base='telephony/config/voicemailGroups'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id, voicemail_group_id)
         data = self.get(url=url, params=params)
-        return VoicemailGroupDetail.parse_obj(data)
+        return VoicemailGroupDetail.model_validate(data)
 
     def update(self, location_id: str, voicemail_group_id: str, settings: VoicemailGroupDetail, org_id: str = None):
         """

@@ -90,7 +90,7 @@ def get_tokens() -> Optional[Tokens]:
         try:
             with open(yml_path(), mode='r') as f:
                 data = safe_load(f)
-                tokens_read = Tokens.parse_obj(data)
+                tokens_read = Tokens.model_validate(data)
         except Exception as e:
             log.info(f'failed to read tokens from file: {e}')
             tokens_read = None

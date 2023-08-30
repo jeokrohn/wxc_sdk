@@ -19,9 +19,9 @@ class OrganisationVoicemailSettings(ApiModel):
     number_of_days_for_message_expiry: int
     #: When enabled, all read and unread voicemail messages will be deleted based on the time frame you set. When
     #:  disabled, all unread voicemail messages will be kept.
-    strict_deletion_enabled: Optional[bool]
+    strict_deletion_enabled: Optional[bool] = None
     #: When enabled, people in the organization can configure the email forwarding of voicemails.
-    voice_message_forwarding_enabled: Optional[bool]
+    voice_message_forwarding_enabled: Optional[bool] = None
 
     @staticmethod
     def default() -> 'OrganisationVoicemailSettings':
@@ -55,7 +55,7 @@ class OrganisationVoicemailSettingsAPI(ApiChild, base='telephony/config/voicemai
         """
         params = org_id and {'orgId': org_id} or None
         url = self.ep()
-        return OrganisationVoicemailSettings.parse_obj(self.get(url, params=params))
+        return OrganisationVoicemailSettings.model_validate(self.get(url, params=params))
 
     def update(self, settings: OrganisationVoicemailSettings, org_id: str = None):
         """
@@ -74,5 +74,5 @@ class OrganisationVoicemailSettingsAPI(ApiChild, base='telephony/config/voicemai
         """
         params = org_id and {'orgId': org_id} or None
         url = self.ep()
-        data = settings.json()
+        data = settings.model_dump_json()
         self.put(url, data=data, params=params)

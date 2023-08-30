@@ -10,21 +10,21 @@ __all__ = ['TeamMembership', 'TeamMembershipsApi']
 
 class TeamMembership(ApiModel):
     #: A unique identifier for the team membership.
-    id: Optional[str]
+    id: Optional[str] = None
     #: The team ID.
-    team_id: Optional[str]
+    team_id: Optional[str] = None
     #: The person ID.
-    person_id: Optional[str]
+    person_id: Optional[str] = None
     #: The email address of the person.
-    person_email: Optional[str]
+    person_email: Optional[str] = None
     #: The display name of the person.
-    person_display_name: Optional[str]
+    person_display_name: Optional[str] = None
     #: The organization ID of the person.
-    person_org_id: Optional[str]
+    person_org_id: Optional[str] = None
     #: Whether or not the participant is a team moderator.
-    is_moderator: Optional[bool]
+    is_moderator: Optional[bool] = None
     #: The date and time when the team membership was created.
-    created: Optional[datetime]
+    created: Optional[datetime] = None
 
 
 class TeamMembershipsApi(ApiChild, base='team/memberships'):
@@ -73,7 +73,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
             body['isModerator'] = is_moderator
         url = self.ep()
         data = super().post(url=url, json=body)
-        return TeamMembership.parse_obj(data)
+        return TeamMembership.model_validate(data)
 
     def details(self, membership_id: str) -> TeamMembership:
         """
@@ -85,7 +85,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         """
         url = self.ep(f'{membership_id}')
         data = super().get(url=url)
-        return TeamMembership.parse_obj(data)
+        return TeamMembership.model_validate(data)
 
     def membership(self, membership_id: str, is_moderator: bool) -> TeamMembership:
         """
@@ -100,7 +100,7 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         body = {'isModerator': is_moderator}
         url = self.ep(f'{membership_id}')
         data = super().put(url=url, json=body)
-        return TeamMembership.parse_obj(data)
+        return TeamMembership.model_validate(data)
 
     def delete(self, membership_id: str):
         """

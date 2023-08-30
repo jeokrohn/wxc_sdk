@@ -21,58 +21,58 @@ class TranscriptStatus(str, Enum):
 
 class Transcript(ApiModel):
     #: A unique identifier for the transcript.
-    id: Optional[str]
+    id: Optional[str] = None
     #: URL of the Webex site from which the API lists meeting transcripts.
-    site_url: Optional[str]
+    site_url: Optional[str] = None
     #: Start time for the meeting transcript in ISO 8601 compliant format.
-    start_time: Optional[str]
+    start_time: Optional[str] = None
     #: The meeting's topic.
-    meeting_topic: Optional[str]
+    meeting_topic: Optional[str] = None
     #: Unique identifier for the meeting instance to which the transcripts belong.
-    meeting_id: Optional[str]
+    meeting_id: Optional[str] = None
     #: Unique identifier for scheduled meeting with which the current meeting is associated. Only apples to a meeting
     #: instance which is happening or has happened. This is the id of the scheduled meeting with which the instance is
     #: associated.
-    scheduled_meeting_id: Optional[str]
+    scheduled_meeting_id: Optional[str] = None
     #: Unique identifier for the parent meeting series to which the recording belongs.
-    meeting_series_id: Optional[str]
+    meeting_series_id: Optional[str] = None
     #: Unique identifier for the meeting host.
-    host_user_id: Optional[str]
+    host_user_id: Optional[str] = None
     #: The download link for the transcript vtt file.
-    vtt_download_link: Optional[str]
+    vtt_download_link: Optional[str] = None
     #: The download link for the transcript txt file.
-    txt_download_link: Optional[str]
-    status: Optional[TranscriptStatus]
+    txt_download_link: Optional[str] = None
+    status: Optional[TranscriptStatus] = None
 
 
 class TranscriptSnippet(ApiModel):
     #: A unique identifier for the snippet.
-    id: Optional[str]
+    id: Optional[str] = None
     #: Text for the snippet.
-    text: Optional[str]
+    text: Optional[str] = None
     #: Name of the person generating the speech for the snippet.
-    person_name: Optional[str]
+    person_name: Optional[str] = None
     #: Email address of the person generating the speech for the snippet.
-    person_email: Optional[str]
+    person_email: Optional[str] = None
     #: Offset from the beginning of the parent transcript in milliseconds indicating the start time of the snippet.
-    offset_millisecond: Optional[int]
+    offset_millisecond: Optional[int] = None
     #: Duration of the snippet in milliseconds.
-    duration_millisecond: Optional[int]
+    duration_millisecond: Optional[int] = None
 
 
 class UpdateTranscriptSnippetBody(ApiModel):
     #: Reason for snippet update; only required for Compliance Officers.
-    reason: Optional[str]
+    reason: Optional[str] = None
     #: Text for the snippet.
-    text: Optional[str]
+    text: Optional[str] = None
 
 
 class DeleteTranscriptBody(ApiModel):
     #: Reason for deleting a transcript. Only required when a Compliance Officer is operating on another user's
     #: transcript.
-    reason: Optional[str]
+    reason: Optional[str] = None
     #: Explanation for deleting a transcript. The comment can be a maximum of 255 characters long.
-    comment: Optional[str]
+    comment: Optional[str] = None
 
 
 class MeetingTranscriptsApi(ApiChild, base=''):
@@ -209,7 +209,7 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         """
         url = self.ep(f'meetingTranscripts/{transcript_id}/snippets/{snippet_id}')
         data = super().get(url=url)
-        return TranscriptSnippet.parse_obj(data)
+        return TranscriptSnippet.model_validate(data)
 
     def update_snippet(self, transcript_id: str, snippet_id: str, text: str, reason: str = None) -> TranscriptSnippet:
         """
@@ -233,8 +233,8 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         if reason is not None:
             body.reason = reason
         url = self.ep(f'meetingTranscripts/{transcript_id}/snippets/{snippet_id}')
-        data = super().put(url=url, data=body.json())
-        return TranscriptSnippet.parse_obj(data)
+        data = super().put(url=url, data=body.model_dump_json())
+        return TranscriptSnippet.model_validate(data)
 
     def delete(self, transcript_id: str, reason: str = None, comment: str = None):
         """
@@ -258,5 +258,5 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         if comment is not None:
             body.comment = comment
         url = self.ep(f'meetingTranscripts/{transcript_id}')
-        super().delete(url=url, data=body.json())
+        super().delete(url=url, data=body.model_dump_json())
         return

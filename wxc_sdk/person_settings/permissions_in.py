@@ -86,7 +86,7 @@ class IncomingPermissionsApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        return IncomingPermissions.parse_obj(self.get(ep, params=params))
+        return IncomingPermissions.model_validate(self.get(ep, params=params))
 
     def configure(self, person_id: str, settings: IncomingPermissions, org_id: str = None):
         """
@@ -108,4 +108,4 @@ class IncomingPermissionsApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        self.put(ep, params=params, data=settings.json())
+        self.put(ep, params=params, data=settings.model_dump_json())

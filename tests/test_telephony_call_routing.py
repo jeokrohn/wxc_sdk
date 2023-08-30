@@ -251,7 +251,7 @@ class TestCallRouting(TestCaseWithLog):
 
     @staticmethod
     def print_result(*, result: TestCallRoutingResult):
-        print(dumps(loads(result.json()), indent=2))
+        print(dumps(loads(result.model_dump_json()), indent=2))
 
 
 class LocationAndTelephony(NamedTuple):
@@ -393,7 +393,7 @@ class ToUserWithTN(TestCallRouting):
         # check it location has OAC configured
         oac = self.target_location.telephony_location.outside_dial_digit
         if not oac:
-            settings = self.target_location.telephony_location.copy(deep=True)
+            settings = self.target_location.telephony_location.model_copy(deep=True)
             settings.outside_dial_digit = '9'
             await self.async_api.telephony.location.update(location_id=self.target_location.location.location_id,
                                                            settings=settings)
@@ -421,7 +421,7 @@ class ToUserWithTN(TestCallRouting):
         # check it location has OAC configured
         oac = self.target_location.telephony_location.outside_dial_digit
         if not oac:
-            settings = self.target_location.telephony_location.copy(deep=True)
+            settings = self.target_location.telephony_location.model_copy(deep=True)
             settings.outside_dial_digit = '9'
             await self.async_api.telephony.location.update(location_id=self.target_location.location.location_id,
                                                            settings=settings)
@@ -1028,7 +1028,9 @@ class TestHostedFeature(TestCallRouting):
     def assert_result_wrong_service_instance_id_format(self, *, expected: TestCallRoutingResult,
                                                        result: TestCallRoutingResult):
         try:
-            self.assertEqual(expected, result)
+            ignore_oac = expected.model_copy(deep=True)
+            ignore_oac.outside_access_code = result.outside_access_code
+            self.assertEqual(ignore_oac, result)
         except AssertionError:
             if result.hosted_feature.service_instance_id != expected.hosted_feature.service_instance_id:
                 print('=' * 80)

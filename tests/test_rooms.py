@@ -13,4 +13,4 @@ class TestRooms(TestCaseWithLog):
         name = f'public {uuid.uuid4()}'
         new_space = self.api.rooms.create(title=name, is_public=True, description=f'This is space "{name}"')
         details = self.api.rooms.details(room_id=new_space.id)
-        print(json.dumps(json.loads(details.json()), indent=2))
+        print(json.dumps(json.loads(details.model_dump_json()), indent=2))
