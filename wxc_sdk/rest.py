@@ -411,7 +411,7 @@ class RestSession(Session):
         if model is None or not issubclass(model, ApiModel):
             model = noop
         else:
-            model = model.parse_obj
+            model = model.model_validate
 
         while url:
             # not needed any more, WXCAPIBULK-27 has been fixed

@@ -14,7 +14,7 @@ from random import choice
 from typing import ClassVar, NamedTuple, Any
 from unittest import skip
 
-from pydantic import parse_obj_as
+from pydantic import TypeAdapter
 from test_helper.randomlocation import RandomLocation, NpaInfo, Address
 
 from tests.base import TestCaseWithLog, async_test, TestWithLocations
@@ -263,7 +263,7 @@ class TestCountries(TestCaseWithLog):
         org_id_uuid = webex_id_to_uuid(me.org_id)
         url = f'https://cpapi-r.wbx2.com/api/v1/customers/{org_id_uuid}/countries'
         data = self.api.session.rest_get(url)
-        countries = parse_obj_as(list[CodeAndName], data['countries'])
+        countries = TypeAdapter(list[CodeAndName]).validate_python(data['countries'])
         countries.sort(key=attrgetter('name'))
         print('\n'.join(f'{c.code}: {c.name}' for c in countries))
 

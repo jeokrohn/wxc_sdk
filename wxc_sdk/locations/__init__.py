@@ -12,7 +12,7 @@ import json
 from collections.abc import Generator
 from typing import Optional, List
 
-from pydantic import Field, parse_obj_as
+from pydantic import Field, TypeAdapter
 
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel, webex_id_to_uuid
@@ -233,7 +233,7 @@ class LocationsApi(ApiChild, base='locations'):
         :param org_id: Update location common attributes for this organization
         :type org_id: str
         """
-        settings_copy = settings.copy(deep=True)
+        settings_copy = settings.model_copy(deep=True)
         if settings_copy.address and not settings_copy.address.address2:
             settings_copy.address.address2 = None
 
@@ -260,7 +260,7 @@ class LocationsApi(ApiChild, base='locations'):
         """
         url = self.ep(f'{location_id}/floors')
         data = super().get(url=url)
-        return parse_obj_as(list[Floor], data["items"])
+        return TypeAdapter(list[Floor]).validate_python(data["items"])
 
     def create_floor(self, location_id: str, floor_number: int, display_name: str = None) -> Floor:
         """

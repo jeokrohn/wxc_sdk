@@ -6,7 +6,7 @@ Use Access Codes to bypass the set permissions for all persons/workspaces at thi
 import json
 from typing import Union
 
-from pydantic import parse_obj_as
+from pydantic import TypeAdapter
 
 from ..api_child import ApiChild
 from ..common import AuthCode
@@ -57,7 +57,7 @@ class AccessCodesApi(ApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
         data = self.get(url, params=params)
-        return parse_obj_as(list[AuthCode], data['accessCodes'])
+        return TypeAdapter(list[AuthCode]).validate_python(data['accessCodes'])
 
     def create(self, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> list[AuthCode]:
         """

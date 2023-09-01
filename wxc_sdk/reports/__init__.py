@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from datetime import datetime, date
 from typing import Optional
 
-from pydantic import Field, parse_obj_as
+from pydantic import Field, TypeAdapter
 
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
@@ -126,7 +126,7 @@ class ReportsApi(ApiChild, base='devices'):
         #   "startDate", "endDate" not documented
         url = self.session.ep('report/templates')
         data = self.get(url=url)
-        result = parse_obj_as(list[ReportTemplate], data['items'])
+        result = TypeAdapter(list[ReportTemplate]).validate_python(data['items'])
         return result
 
     def list(self, report_id: str = None, service: str = None, template_id: str = None, from_date: date = None,

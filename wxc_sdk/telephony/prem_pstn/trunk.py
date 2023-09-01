@@ -2,7 +2,7 @@ from collections.abc import Generator
 from dataclasses import dataclass
 from typing import List, Any, Optional
 
-from pydantic import parse_obj_as, Field
+from pydantic import Field, TypeAdapter
 
 from ...api_child import ApiChild
 from ...base import SafeEnum as Enum
@@ -305,7 +305,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         params = org_id and {'orgId': org_id} or None
         ep = self.ep('trunkTypes')
         data = self.get(url=ep, params=params)
-        return parse_obj_as(list[TrunkTypeWithDeviceType], data['trunkTypes'])
+        return TypeAdapter(list[TrunkTypeWithDeviceType]).validate_python(data['trunkTypes'])
 
     def usage(self, trunk_id: str, org_id: str = None) -> TrunkUsage:
         """

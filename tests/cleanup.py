@@ -21,7 +21,6 @@ from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.common import NumberState
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
-from wxc_sdk.telephony.announcements_repo import RepoAnnouncement
 from wxc_sdk.telephony.callqueue import CallQueue
 
 TO_DELETE = re.compile(r'^(?:(?:\w{2}_|many_|test_|test_ann_|test_user_|workspace test |CPE )\d{3})|National Holidays$')

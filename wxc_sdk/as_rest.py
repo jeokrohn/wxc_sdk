@@ -403,7 +403,7 @@ class AsRestSession(ClientSession):
         if model is None or not issubclass(model, ApiModel):
             model = noop
         else:
-            model = model.parse_obj
+            model = model.model_validate
 
         while url:
             log.debug(f'{self}.pagination: getting {url}')

@@ -1170,7 +1170,7 @@ class AsLocationsApi(AsApiChild, base='locations'):
         :param org_id: Update location common attributes for this organization
         :type org_id: str
         """
-        settings_copy = settings.copy(deep=True)
+        settings_copy = settings.model_copy(deep=True)
         if settings_copy.address and not settings_copy.address.address2:
             settings_copy.address.address2 = None
 
@@ -1197,7 +1197,7 @@ class AsLocationsApi(AsApiChild, base='locations'):
         """
         url = self.ep(f'{location_id}/floors')
         data = await super().get(url=url)
-        return parse_obj_as(list[Floor], data["items"])
+        return TypeAdapter(list[Floor]).validate_python(data["items"])
 
     async def create_floor(self, location_id: str, floor_number: int, display_name: str = None) -> Floor:
         """
@@ -6910,7 +6910,7 @@ class AsReportsApi(AsApiChild, base='devices'):
         #   "startDate", "endDate" not documented
         url = self.session.ep('report/templates')
         data = await self.get(url=url)
-        result = parse_obj_as(list[ReportTemplate], data['items'])
+        result = TypeAdapter(list[ReportTemplate]).validate_python(data['items'])
         return result
 
     def list_gen(self, report_id: str = None, service: str = None, template_id: str = None, from_date: date = None,
@@ -11470,7 +11470,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
         body = Body(numbers=numbers).model_dump_json()
         data = await self.put(url=url, params=params, data=body)
         if data:
-            return parse_obj_as(list[UpdateNumbersResponse], data['numberStatus'])
+            return TypeAdapter(list[UpdateNumbersResponse]).validate_python(data['numberStatus'])
         else:
             return []
 
@@ -11689,7 +11689,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         params = org_id and {'orgId': org_id} or None
         ep = self.ep('trunkTypes')
         data = await self.get(url=ep, params=params)
-        return parse_obj_as(list[TrunkTypeWithDeviceType], data['trunkTypes'])
+        return TypeAdapter(list[TrunkTypeWithDeviceType]).validate_python(data['trunkTypes'])
 
     async def usage(self, trunk_id: str, org_id: str = None) -> TrunkUsage:
         """

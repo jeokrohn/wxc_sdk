@@ -2,7 +2,7 @@ from collections.abc import Generator
 from dataclasses import dataclass
 from typing import List
 
-from pydantic import Field, parse_obj_as
+from pydantic import Field, TypeAdapter
 
 from ...api_child import ApiChild
 from ...base import to_camel, ApiModel
@@ -245,7 +245,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         body = Body(numbers=numbers).model_dump_json()
         data = self.put(url=url, params=params, data=body)
         if data:
-            return parse_obj_as(list[UpdateNumbersResponse], data['numberStatus'])
+            return TypeAdapter(list[UpdateNumbersResponse]).validate_python(data['numberStatus'])
         else:
             return []
 
