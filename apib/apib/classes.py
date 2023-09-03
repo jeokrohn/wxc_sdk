@@ -1,9 +1,10 @@
 import logging
+
 from collections import defaultdict
 from itertools import chain
 from typing import Literal, Any, Optional, Union, ClassVar, Generator, NamedTuple
 
-from pydantic import BaseModel, Extra, validator, root_validator, Field, parse_obj_as, ValidationError
+from pydantic import BaseModel, Extra, validator, model_validator, Field, parse_obj_as, field_validator, TypeAdapter
 
 from apib.apib import is_element
 
@@ -26,25 +27,26 @@ ApibKeyValue = Any
 
 
 class ApibMeta(ApibModel):
-    classes: Optional[list[str]]
-    title: Optional[str]
-    description: Optional[str]
-    id: Optional[str]
+    classes: Optional[list[str]] = None
+    title: Optional[str] = None
+    description: Optional[str] = None
+    id: Optional[str] = None
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def val_root_meta(cls, data):
+        log.debug(f'{data}')
         try:
             data = data.copy()
             if classes := data.get('classes'):
                 # parse as 'array' of 'string' objects
-                array = ApibArray.parse_obj(classes, element='string')
+                array = ApibArray.model_validate(classes, element='string')
                 # .. and extract the values
                 data['classes'] = [e.content for e in array.content]
                 if len(data['classes']) != 1:
                     raise ValueError('foo')
             for str_field in ('title', 'description', 'id'):
                 if str_value := data.get(str_field):
-                    data[str_field] = ApibString.parse_obj(str_value).content
+                    data[str_field] = ApibString.model_validate(str_value).content
         except Exception as e:
             log.error(f'val_root_meta: failed, {e}')
             raise
@@ -83,9 +85,9 @@ class ElementInfo(NamedTuple):
 
 class ApibElement(ApibModel):
     element: str
-    content: Optional[Union[int, str, ApibKeyValue, 'ApibElement', list['ApibElement']]]
-    attributes: Optional[dict[str, 'ApibElement']]
-    meta: Optional[ApibMeta]
+    content: Optional[Union[int, str, ApibKeyValue, 'ApibElement', list['ApibElement']]] = None
+    attributes: Optional[dict[str, 'ApibElement']] = None
+    meta: Optional[ApibMeta] = None
 
     #: if set to true then attributes are moved "up" and will show up as attributes of model
     has_attributes: ClassVar[bool] = False
@@ -99,8 +101,9 @@ class ApibElement(ApibModel):
         """
         determine the Literal restriction value of the 'element' field .. if any
         """
-        field_element = cls.__fields__['element']
-        element_type = field_element.type_
+        field_element = cls.model_fields['element']
+        element_type = field_element.annotation
+        # element_type = field_element.type_
         try:
             element_origin = element_type.__origin__
         except AttributeError:
@@ -110,8 +113,12 @@ class ApibElement(ApibModel):
             return element_value
         return None
 
-    @classmethod
     def __init_subclass__(cls, allowed_content: set[str] = None, override_element_type_for: str = None):
+        super().__init_subclass__()
+        return
+
+    @classmethod
+    def __pydantic_init_subclass__(cls, allowed_content: set[str] = None, override_element_type_for: str = None):
         """
         We want to keep track of all subclasses that have a fixed element value (Literal).
         This registry is used when deserializing 'element' objects to determine the class of childs in the 'content'
@@ -123,13 +130,17 @@ class ApibElement(ApibModel):
         type of the parent for which the override should be considered
         """
         cls._allowed_content = allowed_content
+        # register this class
+        # * either globally -> element type = '*'
+        # * or as factory within a given context
+        override_element_type_for = override_element_type_for or '*'
         element_value = cls.element_literal_value()
         if element_value is None:
             return
         # register this class
         # * either globally -> element type = '*'
         # * or as factory within a given context
-        override_element_type_for = override_element_type_for or '*'
+        log.debug(f'{override_element_type_for}/{element_value}: {cls.__name__}')
         cls._element_registry[override_element_type_for][element_value] = cls
         return
 
@@ -147,13 +158,13 @@ class ApibElement(ApibModel):
                 element_cls = cls._element_registry['*'].get(element)
             if element_cls is None:
                 log.debug(f'content element with unregistered "element": {element}')
-                parsed = ApibElement.parse_obj(v)
+                parsed = ApibElement.model_validate(v)
             else:
-                parsed = element_cls.parse_obj(v)
+                parsed = element_cls.model_validate(v)
             return parsed
         return v
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def val_root_element(cls, data):
         try:
             if cls.has_attributes:
@@ -163,7 +174,7 @@ class ApibElement(ApibModel):
             raise
         return data
 
-    @validator('content', pre=True)
+    @field_validator('content', mode='before')
     def val_content_element(cls, content):
         """
         Content can be (among other options):
@@ -179,7 +190,7 @@ class ApibElement(ApibModel):
             content = [cls.deserialize_element(item) for item in content]
         return content
 
-    @validator('attributes', pre=True)
+    @field_validator('attributes', mode='before')
     def val_attributes(cls, attributes):
         """
         Validate as dict[str, 'ApibElement'] and try to deserialize values
@@ -190,12 +201,10 @@ class ApibElement(ApibModel):
 
     @classmethod
     def move_attributes_up(cls, data: dict) -> dict:
-        if (attributes := data.get('attributes')) is None:
+        if not isinstance(data, dict) or data.get('attributes') is None:
             return data
         data = data.copy()
-        data.pop('attributes')
-        for k, v in attributes.items():
-            data[k] = v
+        data.update(data.pop('attributes'))
         return data
 
     def elements(self) -> Generator['ApibElement', None, None]:
@@ -250,9 +259,9 @@ class ApibElement(ApibModel):
 
 class ApibString(ApibElement):
     element: Literal['string']
-    content: Optional[str]
+    content: Optional[str] = None
 
-    @validator('content', pre=False)
+    @field_validator('content', mode='after')
     def content_string_val(cls, v):
         if isinstance(v, int):
             v = f'{v}'
@@ -263,9 +272,9 @@ class ApibString(ApibElement):
 
 class ApibBool(ApibElement):
     element: Literal['boolean']
-    content: Optional[bool]
+    content: Optional[bool] = None
 
-    @validator('content', pre=False)
+    @field_validator('content', mode='after')
     def content_bool(cls, v):
         if v is not None:
             if not isinstance(v, int):
@@ -277,15 +286,15 @@ class ApibBool(ApibElement):
 class ApibNumber(ApibElement):
     element: Literal['number']
 
-    content: Optional[int]
-    default: Optional[int]
+    content: Optional[float] = None
+    default: Optional[float] = None
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def val_root_number(cls, v):
         """
         Root validator to parse default from attributes if present
         """
-        if (attrs := v.get('attributes')) and (default := attrs.get('default')):
+        if isinstance(v, dict) and (attrs := v.get('attributes')) and (default := attrs.get('default')):
             attrs = attrs.copy()
             attrs.pop('default')
             v = v.copy()
@@ -293,7 +302,7 @@ class ApibNumber(ApibElement):
                 v['attributes'] = attrs
             else:
                 v.pop('attributes')
-            number = ApibNumber.parse_obj(default)
+            number = ApibNumber.model_validate(default)
             if any((number.attributes, number.meta, number.default)):
                 raise ValueError(f'Unexpected attributes, meta, or default: {number}')
             v['default'] = number.content
@@ -304,16 +313,12 @@ class ApibSourceMapNumber(ApibNumber, override_element_type_for='sourceMapXYC'):
     has_attributes = True
     element: Literal['number']
 
-    line: Optional[int]
-    column: Optional[int]
+    line: Optional[int] = None
+    column: Optional[int] = None
 
-    @validator('line', 'column', pre=True)
+    @field_validator('line', 'column', mode='before')
     def val_line_column(cls, v):
-        v = v.content
-        return v
-
-    @root_validator()
-    def val_root_sourcemap_number(cls, v):
+        v = ApibNumber.model_validate(v).content
         return v
 
 
@@ -321,12 +326,18 @@ class AbibSourceMapNumberArray(ApibElement, override_element_type_for='sourceMap
     element: Literal['array']
     content: list[ApibSourceMapNumber]
 
+    @model_validator(mode='before')
+    def val_root_sourcemap_number_array(cls, v):
+        v = v.copy()
+        v['content'] = TypeAdapter(list[ApibSourceMapNumber]).validate_python(v['content'])
+        return v
+
 
 class ApibSourceMapEntry(ApibModel):
     start: ApibSourceMapNumber
     end: ApibSourceMapNumber
 
-    # @root_validator(pre=True)
+    # @model_validator(mode='before')
     # def val_root_source_map_entry(cls, v):
     #     return v
 
@@ -335,9 +346,9 @@ class ApibSourceMap(ApibElement):
     element: Literal['sourceMap']
     content: list[ApibSourceMapEntry]
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def val_root_sourcemap(cls, v):
-        parsed_content = parse_obj_as(list[AbibSourceMapNumberArray], v['content'])
+        parsed_content = TypeAdapter(list[AbibSourceMapNumberArray]).validate_python(v['content'])
         v = v.copy()
         v['content'] = [{'start': pc.content[0], 'end': pc.content[1]} for pc in parsed_content]
         return v
@@ -350,7 +361,7 @@ class WithTypeAttributes(ApibElement):
     has_attributes = True
     type_attributes: set[str] = Field(alias='typeAttributes', default_factory=set)
 
-    @validator('type_attributes', pre=True)
+    @field_validator('type_attributes', mode='before')
     def val_type_attributes(cls, v):
         """
         Type attributes are something like:
@@ -358,7 +369,7 @@ class WithTypeAttributes(ApibElement):
         :param v:
         :return:
         """
-        v = ApibArray.parse_obj(v, element='string')
+        v = ApibArray.model_validate(v, element='string')
         if any(s.meta or s.attributes for s in v.content):
             raise ValueError(f'Can\'t create set from list with non trivial strings: {v}')
         v = set(s.content for s in v.content)
@@ -374,7 +385,7 @@ class ApibEnumElement(ApibString, WithTypeAttributes, override_element_type_for=
         extra = Extra.allow
         # TODO: check for extra fields?? 'samples' seems to be a candidate
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def val_root_enum(cls, data):
         # apparently a "*" in an enum is parsed as:
         #   {
@@ -436,8 +447,8 @@ class ApibArray(ApibElement):
     element: Literal['array']
 
     @classmethod
-    def parse_obj(cls, data: Any, element: str = None) -> 'ApibArray':
-        parsed = super().parse_obj(data)
+    def model_validate(cls, data: Any, element: str = None) -> 'ApibArray':
+        parsed = super().model_validate(data)
         parsed.content = parsed.content or list()
         if e := next((c for c in parsed.content if element and element != c.element), None):
             raise ValueError(f"Unexpected element '{e.element}', expected: {element}")
@@ -458,11 +469,11 @@ class ApibMember(ApibElement):
     def as_dict(self) -> dict:
         return {self.key: self.value.content}
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def val_root_member(cls, values):
         try:
             values = values.copy()
-            values['key'] = ApibString.parse_obj(values['content']['key']).content
+            values['key'] = ApibString.model_validate(values['content']['key']).content
             value = ApibElement.deserialize_element(values['content']['value'])
             values['value'] = value
             values.pop('content')
@@ -480,21 +491,17 @@ class ApibHrefVariables(ApibElement):
 class ApibResource(ApibElement):
     element: Literal['resource']
     has_attributes = True
-    href: Optional[str]
-    href_variables: Optional[ApibHrefVariables] = Field(alias='hrefVariables')
+    href: Optional[str] = None
+    href_variables: Optional[ApibHrefVariables] = Field(alias='hrefVariables', default=None)
 
-    @root_validator(pre=True)
-    def val_root_resoource(cls, v):
-        return v
-
-    @validator('href', pre=True)
+    @field_validator('href', mode='before')
     def vaL_href(cls, v):
-        v = ApibString.parse_obj(v)
+        v = ApibString.model_validate(v)
         return v.content
 
 
 class ApibWithCopy(ApibElement):
-    @validator('content', pre=False)
+    @field_validator('content', mode='after')
     def max_one_copy_in_content(cls, content):
         if isinstance(content, list):
             copy_elements = sum(isinstance(c, ApibCopy) for c in content)
@@ -511,15 +518,15 @@ class ApibWithCopy(ApibElement):
 class ApibCategory(ApibWithCopy,
                    allowed_content={'content', 'copy', 'resource', 'category', 'dataStructure'}):
     element: Literal['category']
-    metadata: Optional[list[ApibMember]]
+    metadata: Optional[list[ApibMember]] = None
     content: list[ApibElement]
 
     has_attributes = True
 
-    @validator('metadata', pre=True)
+    @field_validator('metadata', mode='before')
     def val_metadata(cls, data):
         # parse as Array ..
-        data = ApibArray.parse_obj(data, element='member')
+        data = ApibArray.model_validate(data, element='member')
         # .. and then actually return the parsed array
         return data.content
 
@@ -533,9 +540,86 @@ class ApibDatastucture(ApibElement):
     def ds_id(self) -> Optional[str]:
         return (self.content and self.content.meta and self.content.meta.id) or None
 
-    @validator('content')
-    def val_ds_content(cls, v: ApibElement):
+
+class ApibHrefMember(ApibElement, override_element_type_for='transition'):
+    element: Literal['member']
+    type_attributes: set[str] = Field(alias='typeAttributes')
+
+    key: str
+    value: Optional[Union[str, ApibElement]] = None
+
+    has_attributes = True
+
+    @model_validator(mode='before')
+    def val_root_member(cls, data):
+        try:
+            data = data.copy()
+            content = data.get('content')
+            if content is None:
+                raise ValueError(f'missing content in {cls.__name__}')
+            # content should be a dict with key, value
+            if set(content) != {'key', 'value'}:
+                raise ValueError(f'Unexpected keys in content for {cls.__name__}: {sorted(set(content))}')
+
+            key = ApibString.model_validate(content['key']).content
+            if not isinstance(key, str):
+                raise ValueError(f'key is not a string: {type(key)}')
+            data['key'] = key
+            value = ApibElement.deserialize_element(content['value'])
+            if isinstance(value, ApibString):
+                value = value.content
+            if value is not None:
+                data['value'] = value
+            data.pop('content')
+        except Exception as e:
+            log.error(f'val_root_member failed: {e}')
+            raise
+
+        return data
+
+    @field_validator('type_attributes', mode='before')
+    def val_type_attributes(cls, v):
+        """
+        Type attributes are something like:
+            {'content': [{'content': 'required', 'element': 'string'}], 'element': 'array'}
+        :param v:
+        :return:
+        """
+        v = ApibArray.model_validate(v, element='string')
+        if any(s.meta or s.attributes for s in v.content):
+            raise ValueError(f'Can\'t create set from list with non trivial strings: {v}')
+        v = set(s.content for s in v.content)
         return v
+
+
+class ApibTransition(ApibElement, allowed_content={'copy', 'httpTransaction'}):
+    element: Literal['transition']
+    href: Optional[str] = None
+    href_variables: list[ApibHrefMember] = Field(alias='hrefVariables', default_factory=list)
+    data: Optional[ApibDatastucture] = None
+
+    has_attributes = True
+
+    @field_validator('href', mode='before')
+    def val_href(cls, v):
+        """
+        href is an ApibString
+        :param v:
+        :return:
+        """
+        v = ApibString.model_validate(v)
+        return v.content
+
+    @field_validator('href_variables', mode='before')
+    def val_href_variables(cls, v):
+        if (element := v.get('element')) != 'hrefVariables':
+            raise ValueError(f"unexpected 'element' value for hrefVariables: '{element}'")
+        v = TypeAdapter(list[ApibHrefMember]).validate_python(v['content'])
+        return v
+
+    @property
+    def title(self) -> Optional[str]:
+        return (self.meta and self.meta.title) or None
 
 
 class ApibApi(ApibCategory, override_element_type_for='parseResult'):
@@ -558,17 +642,19 @@ class ApibApi(ApibCategory, override_element_type_for='parseResult'):
 
     @property
     def data_structures(self) -> list[ApibDatastucture]:
-        # data stuctures live in a category element in the content
+        # data structures live in a category element in the content
         return list(chain.from_iterable(c.content for c in self.content if isinstance(c, ApibCategory)))
 
-    @root_validator
-    def val_is_api(cls, values):
+    @property
+    def transitions(self) -> list[ApibTransition]:
+        return list(chain.from_iterable(c.content for c in self.content if isinstance(c, ApibResource)))
+
+    @model_validator(mode='after')
+    def val_is_api(cls, api: 'ApibApi'):
         # verify that this really an api definition by looking for 'api' in meta.classes
-        meta = values.get('meta')
-        meta: ApibMeta
-        if not (meta and meta.classes and 'api' in meta.classes):
+        if api.meta.meta_class != 'api':
             raise ValueError('not an api')
-        return values
+        return api
 
 
 class ApibAnnotation(ApibElement):
@@ -579,97 +665,17 @@ class ApibAnnotation(ApibElement):
     code: int
     source_map: list[ApibSourceMap] = Field(alias='sourceMap')
 
-    @validator('code', pre=True)
+    @field_validator('code', mode='before')
     def val_code(cls, v):
-        parsed = ApibNumber.parse_obj(v)
+        parsed = ApibNumber.model_validate(v)
         if parsed.attributes or parsed.meta:
             raise ValueError(f'unexpected attributes or meta for {cls.__name__}.code')
         return parsed.content
 
-    @validator('source_map', pre=True)
+    @field_validator('source_map', mode='before')
     def val_source_map(cls, v):
-        parsed = ApibArray.parse_obj(v)
+        parsed = ApibArray.model_validate(v)
         return parsed.content
-
-
-class ApibHrefMember(ApibElement, override_element_type_for='transition'):
-    element: Literal['member']
-    type_attributes: set[str] = Field(alias='typeAttributes')
-
-    key: str
-    value: Optional[Union[str, ApibElement]]
-
-    has_attributes = True
-
-    @root_validator(pre=True)
-    def val_root_member(cls, data):
-        try:
-            content = data.get('content')
-            if content is None:
-                raise ValueError(f'missing content in {cls.__name__}')
-            # content should be a dict with key, value
-            if set(content) != {'key', 'value'}:
-                raise ValueError(f'Unexpected keys in content for {cls.__name__}: {sorted(set(content))}')
-
-            key = ApibString.parse_obj(content['key']).content
-            if not isinstance(key, str):
-                raise ValueError(f'key is not a string: {type(key)}')
-            data['key'] = key
-            value = ApibElement.deserialize_element(content['value'])
-            if isinstance(value, ApibString):
-                value = value.content
-            if value is not None:
-                data['value'] = value
-            data.pop('content')
-        except Exception as e:
-            log.error(f'val_root_member failed: {e}')
-            raise
-
-        return data
-
-    @validator('type_attributes', pre=True)
-    def val_type_attributes(cls, v):
-        """
-        Type attributes are something like:
-            {'content': [{'content': 'required', 'element': 'string'}], 'element': 'array'}
-        :param v:
-        :return:
-        """
-        v = ApibArray.parse_obj(v, element='string')
-        if any(s.meta or s.attributes for s in v.content):
-            raise ValueError(f'Can\'t create set from list with non trivial strings: {v}')
-        v = set(s.content for s in v.content)
-        return v
-
-
-class ApibTransition(ApibElement, allowed_content={'copy', 'httpTransaction'}):
-    element: Literal['transition']
-    href: Optional[str]
-    href_variables: list[ApibHrefMember] = Field(alias='hrefVariables', default_factory=list)
-    data: Optional[ApibDatastucture]
-
-    has_attributes = True
-
-    @validator('href', pre=True)
-    def val_href(cls, v):
-        """
-        href is an ApibString
-        :param v:
-        :return:
-        """
-        v = ApibString.parse_obj(v)
-        return v.content
-
-    @validator('href_variables', pre=True)
-    def val_href_variables(cls, v):
-        if (element := v.get('element')) != 'hrefVariables':
-            raise ValueError(f"unexpected 'element' value for hrefVariables: '{element}'")
-        v = parse_obj_as(list[ApibHrefMember], v['content'])
-        return v
-
-    @property
-    def title(self) -> Optional[str]:
-        return (self.meta and self.meta.title) or None
 
 
 class ApibHttpHeaders(ApibElement, allowed_content={'member'}):
@@ -679,16 +685,16 @@ class ApibHttpHeaders(ApibElement, allowed_content={'member'}):
 
 class ApibWithHeaders(ApibElement):
     has_attributes = True
-    headers: Optional[dict[str, str]]
+    headers: Optional[dict[str, str]] = None
 
-    @validator('headers', pre=True)
+    @field_validator('headers', mode='before')
     def val_headers(cls, data):
         """
         This is a 'httpHeaders' element. Content of which is a list of "member" items with key/value content
         :param data:
         :return:
         """
-        parsed = ApibHttpHeaders.parse_obj(data)
+        parsed = ApibHttpHeaders.model_validate(data)
         parsed: ApibHttpHeaders
         e = next((member for member in parsed.content
                   if not isinstance(member, ApibMember) or not member.key or \
@@ -705,11 +711,12 @@ class ApibHttpRequest(ApibWithHeaders):
 
     method: str
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def val_root_http_request(cls, data):
         try:
+            data = cls.move_attributes_up(data)
             data = data.copy()
-            data['method'] = ApibString.parse_obj(data['method']).content
+            data['method'] = ApibString.model_validate(data['method']).content
         except Exception as e:
             log.error(f'val_root_http_request failed: {e}')
             raise
@@ -720,15 +727,16 @@ class ApibHttpResponse(ApibWithHeaders):
     element: Literal['httpResponse']
     has_attributes = True
 
-    status_code: Optional[int] = Field(alias='statusCode')
+    status_code: Optional[int] = Field(alias='statusCode', default=None)
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def val_root_http_response(cls, data):
         try:
+            data = cls.move_attributes_up(data)
             status_code = data.get('statusCode')
             if status_code is not None:
                 data = data.copy()
-                data['statusCode'] = int(ApibString.parse_obj(status_code).content)
+                data['statusCode'] = int(ApibString.model_validate(status_code).content)
         except Exception as e:
             log.error(f'val_root_http_response failed: {e}')
             raise
@@ -767,32 +775,33 @@ class ApibHttpTransaction(ApibElement):
 class ApibEnum(ApibElement):
     has_attributes = True
     element: Literal['enum']
-    content: Optional[ApibString]
+    content: Optional[ApibString] = None
 
     # Some enumerations have type attributes?
-    enumerations: Optional[list[ApibEnumElement]]
-    default: Optional[ApibString]
+    enumerations: Optional[list[ApibEnumElement]] = None
+    default: Optional[ApibString] = None
 
     @property
     def enum_values(self) -> list[str]:
         return [e.content for e in self.enumerations.content]
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def val_root_enum(cls, data):
         try:
+            data = cls.move_attributes_up(data)
             default = data.get('default')
             enumerations = data.get('enumerations')
             if default or enumerations:
-                data.copy()
+                data = data.copy()
             if default:
-                parsed_default = ApibElement.parse_obj(default)
+                parsed_default = ApibElement.model_validate(default)
                 if parsed_default.element != 'enum':
                     raise ValueError(f'"enum" element expected for default; got {parsed_default.element}')
                 if not isinstance(parsed_default.content, ApibString):
                     raise ValueError(f'Did not get "string" element for default: {default}')
                 data['default'] = parsed_default.content
             if enumerations:
-                parsed_list = parse_obj_as(list[ApibEnumElement], enumerations['content'])
+                parsed_list = TypeAdapter(list[ApibEnumElement]).validate_python(enumerations['content'])
                 if parsed_list and not (le := parsed_list[-1]).content:
                     if le.attributes or le.meta:
                         raise ValueError()
@@ -809,7 +818,7 @@ class ApibEnum(ApibElement):
 
         return data
 
-    @root_validator(pre=False)
+    @model_validator(mode='after')
     def val_root_enum_post(cls, data):
         return data
 
@@ -821,15 +830,11 @@ class ApibParseResult(ApibElement, allowed_content={'category', 'annotation'}):
     def api(self) -> ApibApi:
         return next(c for c in self.content if isinstance(c, ApibApi))
 
-    @property
-    def annotations(self) -> list[ApibAnnotation, None, None]:
-        return [c for c in self.content if isinstance(c, ApibAnnotation)]
-
-    @root_validator(pre=False)
-    def val_root_parse_result(cls, values):
+    @model_validator(mode='after')
+    def val_root_parse_result(cls, parse_result: 'ApibParseResult'):
         # make sure we have exactly one 'category' element
         try:
-            content = values.get('content')
+            content = parse_result.content
             if content:
                 content: list[ApibElement]
                 if sum(v.element == 'category' for v in content) != 1:
@@ -837,43 +842,8 @@ class ApibParseResult(ApibElement, allowed_content={'category', 'annotation'}):
         except Exception as e:
             log.error(f'val_root_parse_result failed: {e}')
             raise
-        return values
+        return parse_result
 
     @classmethod
-    def parse_obj(cls, *args, **kwargs) -> 'ApibParseResult':
-        return super().parse_obj(*args, **kwargs)
-
-
-def test_root_validator():
-    class Root(BaseModel):
-        content: Any
-
-        @root_validator(pre=True)
-        def val_root(cls, data):
-            print(f'{cls.__name__}.Root.val_root: {data}')
-            return data
-
-        @validator('content', pre=False)
-        def val_content_root(cls, v):
-            print(f'{cls.__name__}.Root.val_content_root: {v}')
-            return v
-
-    class Derived(Root):
-        @root_validator(pre=True)
-        def val_root_derived(cls, data):
-            # data = super().val_root(data)
-            print(f'{cls.__name__}.Derived.val_root_d: {data}')
-            return data
-
-        @validator('content', pre=False)
-        def val_content_derived(cls, v):
-            print(f'{cls.__name__}.Derived.val_content_derived: {v}')
-            return v
-
-    data = {'content': 'fghjk'}
-    parsed = Derived.parse_obj(data)
-    print(parsed)
-
-
-if __name__ == '__main__':
-    test_root_validator()
+    def model_validate(cls, *args, **kwargs) -> 'ApibParseResult':
+        return super().model_validate(*args, **kwargs)

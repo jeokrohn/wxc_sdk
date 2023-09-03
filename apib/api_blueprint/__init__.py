@@ -1,17 +1,16 @@
 """
 Helper to read apib files
 """
-import json
 import logging
 import re
-import subprocess
-import sys
 import typing
 from collections import defaultdict
 from dataclasses import dataclass
 from typing import Optional, Any, ClassVar
 
-from pydantic import BaseModel, root_validator, Extra, Field, ValidationError
+from pydantic import BaseModel, model_validator, Extra, Field, ValidationError
+
+from apib.apib import ApibApi
 
 node_log = logging.getLogger(f'{__name__}.Node')
 
@@ -82,8 +81,8 @@ class Node(BaseModel):
         cls._node_class = node_class
         return
 
-    @root_validator(pre=False)
-    def node_post(cls, values):
+    @model_validator(mode='after')
+    def node_post(cls, values:'Node'):
         """
         Post validator, check node class (optional)
         :param values:
@@ -95,8 +94,8 @@ class Node(BaseModel):
                 raise ValueError(f'Wrong class: {classes}, expected: {cls._node_class}')
         return values
 
-    @root_validator(pre=True)
-    def node(cls, values):
+    @model_validator(mode='before')
+    def val_root_node(cls, values):
         """
         Pre validator
         """
@@ -112,7 +111,8 @@ class Node(BaseModel):
         else:
             node_log.debug(f'node({cls.__name__}) : no class var "element"')
 
-        class_fields = cls.__fields__
+        # TODO: validate
+        class_fields = cls.model_fields
 
         # move 'attributes' up if no field 'attributes' is explicitly defined
         if 'attributes' not in class_fields and (attrs := values.pop('attributes', None)):
@@ -198,7 +198,7 @@ class Node(BaseModel):
     @classmethod
     def parse_obj(cls: typing.Type['Model'], obj: Any) -> 'Model':
         try:
-            return super().parse_obj(obj)
+            return super().model_validate(obj)
         except ValidationError as e:
             foo = 1
             raise
@@ -209,7 +209,7 @@ class SourceMapNumber(Node, element='number'):
     line: int
     column: int
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def source_map_number(cls, values: dict) -> dict:
         if not isinstance(values['line'], int) or not isinstance(values['column'], int):
             foo = 1
@@ -219,7 +219,7 @@ class SourceMapNumber(Node, element='number'):
 class SourceMap(Node, element='sourceMap'):
     lines: list[list[SourceMapNumber]] = Field(alias='array')
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def source_map(cls, values: dict) -> dict:
         return values
 
@@ -230,7 +230,7 @@ class Annotation(Node, element='annotation'):
     code: int
     source_map: list[SourceMap] = Field(alias='sourceMap')
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def annotation(cls, values: dict) -> dict:
         return values
 
@@ -245,7 +245,7 @@ class Member(Node, element='member', node_class='user'):
     key: str
     value: str
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def member(cls, values: dict) -> dict:
         return values
 
@@ -263,12 +263,12 @@ class MemberNode(Node, element='member'):
     key: str
     value: typing.Union[str, int, bool, 'ObjectNode', Any]
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def member_node(cls, values):
         cls.update_forward_refs()
         return values
 
-    @root_validator
+    @model_validator(mode='after')
     def member_node_post(cls, values):
         return values
 
@@ -278,7 +278,7 @@ class DataStructureNode(Node):
     # we want to move the id meta.id element up
     id: Optional[str]
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def id_from_meta(cls, values: dict) -> dict:
         meta = values.get('meta')
         if meta:
@@ -294,14 +294,14 @@ class DataStructureNode(Node):
 class ObjectNode(DataStructureNode, element='object'):
     members: Optional[list[MemberNode]] = Field(alias='member')
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def object_node(cls, values):
         node_log.debug(f'{cls.__name__}.object_node: {values}')
         if (member := values.get('member')) is not None and not isinstance(member, list):
             node_log.error(f'{cls.__name__}: "member" is not a list: {member}')
         return values
 
-    @root_validator
+    @model_validator(mode='after')
     def object_node_post(cls, values):
         return values
 
@@ -312,7 +312,7 @@ class Enumeration(BaseModel):
     value: Optional[str] = Field(alias='content')
     attributes: Optional[list[str]]
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def enumeration(cls, values: dict) -> dict:
         """
         pull typeAttributes up
@@ -341,7 +341,7 @@ class Enumeration(BaseModel):
 class EnumNode(DataStructureNode, element='enum'):
     enumerations: list[Enumeration]
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def enum_node(cls, values: dict) -> dict:
         return values
 
@@ -353,7 +353,7 @@ class DataStructure(Node, element='category'):
     objects: Optional[list[ObjectNode]] = Field(alias='object', default_factory=list)
     enums: Optional[list[EnumNode]] = Field(alias='enum', default_factory=list)
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def data_structure(cls, values: dict) -> dict:
         # data has a bunch of "dataStructure" nodes. Each dataStructure node has single element content: object or euzm
         # we want to get rid of the datsStructure nodes and instead want list of nodes by element type under
@@ -374,7 +374,7 @@ class HrefVariable(Node, element='member'):
     key: str
     value: Any  # TODO: need to figure out what is possible here
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def href_variable(cls, values):
         node_log.debug(f'{cls.__name__} pre: values: {values}')
         return values
@@ -388,7 +388,7 @@ class HttpResponse(Node, element='httpResponse'):
     status_code: Optional[int] = Field(alias='statusCode')
     data_structure: Optional[str] = Field(alias='dataStructure')
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def http_response(cls, values):
         node_log.debug(f'{cls.__name__} pre: value: {values}')
         # 'dataStructure' can be the name of a dataStructure
@@ -403,7 +403,7 @@ class HttpResponse(Node, element='httpResponse'):
             values['dataStructure'] = content['element']
         return values
 
-    @root_validator(pre=False)
+    @model_validator(mode='after')
     def http_response_post(cls, values):
         node_log.debug(f'{cls.__name__} post: values: {values}')
         return values
@@ -415,12 +415,12 @@ class HttpTransaction(Node, element='httpTransaction'):
     http_request: HttpRequest = Field(alias='httpRequest')
     http_response: HttpResponse = Field(alias='httpResponse')
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def http_transaction(cls, values):
         node_log.debug(f'{cls.__name__}: value: {values}')
         return values
 
-    @root_validator(pre=False)
+    @model_validator(mode='after')
     def http_transaction_post(cls, values):
         node_log.debug(f'{cls.__name__}: value: {values}')
         return values
@@ -433,7 +433,7 @@ class Method(Node, element='transition'):
     href_variables: Optional[list[HrefVariable]] = Field(alias='hrefVariables')
     http_transaction: HttpTransaction = Field(alias='httpTransaction')
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def method(cls, values):
         try:
             values['hrefVariables'] = values['hrefVariables']['content']
@@ -457,7 +457,7 @@ class Resource(Node, element='resource'):
 class MetaInfo(Node):
     classes: list[str]
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def meta_info(cls, values):
         return values
 
@@ -467,7 +467,7 @@ class ResourceGroup(Node, element='category'):
     title: Optional[str]
     resources: list[Resource] = Field(alias='resource')
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def resource_group(cls, values: dict) -> dict:
         return values
 
@@ -479,7 +479,7 @@ class ApiSpec(Node, element='category', node_class='api'):
     resource: Optional[list[Resource]]
     metadata: Optional[list[Member]]
 
-    @root_validator(pre=True)
+    @model_validator(mode='before')
     def api_spec(cls, values: dict) -> dict:
         # each "category" entry has a class definition in the meta attribute like this:
         # {'element': 'category', 'meta': {'classes': {'element': 'array', 'content': [{'element': 'string',
@@ -487,7 +487,7 @@ class ApiSpec(Node, element='category', node_class='api'):
         categories = values.pop('category', [])
         categories_by_class = defaultdict(list)
         for category in categories:
-            meta: MetaInfo = MetaInfo.parse_obj(category['meta'])
+            meta: MetaInfo = MetaInfo.model_validate(category['meta'])
             category_class = meta.classes and len(meta.classes) == 1 and meta.classes[0]
             category_class = category_class or 'no_class'
             categories_by_class[category_class].append(category)
@@ -502,7 +502,7 @@ class ParseResult(Node, element='parseResult'):
     """
     The root parse results object
     """
-    api: ApiSpec = Field(alias='category')
+    api: ApibApi = Field(alias='category')
     annotation: Optional[list[Annotation]]
 
 

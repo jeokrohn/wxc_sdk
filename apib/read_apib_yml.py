@@ -58,7 +58,7 @@ def parse_one(path: str):
     with open(yml_path, mode='w') as f:
         yaml.safe_dump(data, f)
     try:
-        parsed = ParseResult.parse_obj(data)
+        parsed = ParseResult.model_validate(data)
     except Exception as e:
         print(f'{path} failed: {e}')
         parsed = None
@@ -94,7 +94,7 @@ def main():
     # data = read_api_blueprint('api-specs-master/blueprint/webexapis.com/v1/devices-with-wxc-devices-displayed.apib')
     # print_metas(data)
     analyze_content(data)
-    parsed = ParseResult.parse_obj(data)
+    parsed = ParseResult.model_validate(data)
     validate_parse_result(parsed)
 
     foo = 1
