@@ -207,9 +207,6 @@ class LocationsApi(ApiChild, base='locations'):
                 address[p] = v
             else:
                 body[p] = v
-        # TODO: this is broken see conversation in "Implementation - Locations as a Common Construct"
-        if (tz := body.pop('timeZone', None)) is not None:
-            body['timezone'] = tz
         body['address'] = address
         params = org_id and {'orgId': org_id} or None
         url = self.ep()
@@ -240,13 +237,9 @@ class LocationsApi(ApiChild, base='locations'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
 
-        # TODO: this is broken see conversation in "Implementation - Locations as a Common Construct"
-        data = json.loads(settings_copy.model_dump_json(exclude={'location_id', 'org_id'}, exclude_none=False, exclude_unset=True))
-        data['timezone'] = data.pop('timeZone', None)
+        data = json.loads(settings_copy.model_dump_json(exclude={'location_id', 'org_id'}, exclude_none=False,
+                                                        exclude_unset=True))
         self.put(url=url, json=data, params=params)
-
-        # data = settings_copy.json(exclude={'location_id', 'org_id'}, exclude_none=False, exclude_unset=True)
-        # self.put(url=url, data=data, params=params)
 
     def list_floors(self, location_id: str) -> List[Floor]:
         """
