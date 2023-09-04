@@ -1,6 +1,10 @@
 Release history
 ===============
 
+1.16.1
+------
+- leftovers from pydantic v2 transition
+
 1.16.0
 ------
 - upgrading to pydantic v2, see: https://docs.pydantic.dev/latest/migration/
