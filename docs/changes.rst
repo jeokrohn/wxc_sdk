@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- feat: device configurations API :attr:`wxc_sdk.WebexSimpleApi.device_configurations`
+
 1.16.1
 ------
 - leftovers from pydantic v2 transition

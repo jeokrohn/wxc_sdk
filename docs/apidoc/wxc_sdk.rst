@@ -15,6 +15,7 @@ Subpackages
    wxc_sdk.attachment_actions
    wxc_sdk.cdr
    wxc_sdk.common
+   wxc_sdk.device_configurations
    wxc_sdk.devices
    wxc_sdk.events
    wxc_sdk.groups

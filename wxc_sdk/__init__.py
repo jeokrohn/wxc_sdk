@@ -7,6 +7,7 @@ from typing import Union
 
 from .attachment_actions import AttachmentActionsApi
 from .cdr import DetailedCDRApi
+from .device_configurations import DeviceConfigurationsApi
 from .devices import DevicesApi
 from .events import EventsApi
 from .groups import GroupsApi
@@ -50,6 +51,8 @@ class WebexSimpleApi:
     attachment_actions: AttachmentActionsApi
     #: CDR API :class:`cdr.DetailedCDRApi`
     cdr: DetailedCDRApi
+    #: device configurations API :class:`device_configurations.DeviceConfigurationsApi`
+    device_configurations: DeviceConfigurationsApi
     #: devices API :class:`devices.DevicesApi`
     devices: DevicesApi
     #: events API; :class:`events.EventsApi`
@@ -117,6 +120,7 @@ class WebexSimpleApi:
         session = RestSession(tokens=tokens, concurrent_requests=concurrent_requests, retry_429=retry_429)
         self.attachment_actions = AttachmentActionsApi(session=session)
         self.cdr = DetailedCDRApi(session=session)
+        self.device_configurations = DeviceConfigurationsApi(session=session)
         self.devices = DevicesApi(session=session)
         self.events = EventsApi(session=session)
         self.groups = GroupsApi(session=session)

@@ -54,16 +54,16 @@ __all__ = ['AsAccessCodesApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi', 'AsAnn
            'AsApiChild', 'AsAppServicesApi', 'AsAttachmentActionsApi', 'AsAutoAttendantApi', 'AsBargeApi',
            'AsCQPolicyApi', 'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi', 'AsCallQueueApi',
            'AsCallRecordingApi', 'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallingBehaviorApi',
-           'AsCallparkExtensionApi', 'AsCallsApi', 'AsDetailedCDRApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi',
-           'AsDialPlanApi', 'AsDndApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi',
-           'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi',
-           'AsLicensesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
-           'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsManageNumbersJobsApi', 'AsMeetingChatsApi',
-           'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
-           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
-           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi', 'AsNumbersApi',
-           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi', 'AsPagingApi',
-           'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
+           'AsCallparkExtensionApi', 'AsCallsApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi',
+           'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDialPlanApi', 'AsDndApi', 'AsEventsApi',
+           'AsExecAssistantApi', 'AsForwardingApi', 'AsGroupsApi', 'AsHotelingApi', 'AsHuntGroupApi',
+           'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationInterceptApi',
+           'AsLocationMoHApi', 'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi',
+           'AsManageNumbersJobsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi',
+           'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi',
+           'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsMonitoringApi',
+           'AsNumbersApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOutgoingPermissionsApi',
+           'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
            'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi',
            'AsPushToTalkApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi', 'AsReportsApi',
            'AsRestSession', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsScheduleApi',
@@ -284,6 +284,56 @@ class AsDetailedCDRApi(AsApiChild, base='devices'):
         params['endTime'] = guess_datetime(end_time)
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=CDR, params=params, item_key='items')]
+
+
+class AsDeviceConfigurationsApi(AsApiChild, base='deviceConfigurations'):
+    """
+    The Device Configurations API allows developers to view and modify configurations on Webex Rooms devices, as well as
+    other devices that use the configuration service.
+
+    Viewing the list of all device configurations in an organization requires an administrator auth token with the
+    spark-admin:devices_read scope. Adding, updating, or deleting configurations for devices in an organization requires
+    an administrator auth token with both the spark-admin:devices_write and the spark-admin:devices_read scope.
+    """
+
+    async def list(self, device_id: str, key: str = None) -> DeviceConfigurationResponse:
+        """
+        Lists all device configurations associated with the given device ID. Administrators can list configurations
+        for all devices within an organization.
+
+        :param device_id: List device configurations by device ID.
+        :param key: This can optionally be used to filter configurations. Keys are composed of segments. It's
+            possible to use absolute paths, wildcards or ranges.
+
+            Absolute gives only one configuration as a result. Conference.MaxReceiveCallRate for example gives the
+            ConferenceMaxReceiveCallRate configuration.
+
+            Wildcards (*) can specify multiple configurations with shared segments. Audio.Ultrasound.* for example
+            will filter on all Audio Ultrasound configurations.
+
+            Range ([number]) can be used to filter numbered segments. FacilityService.Service[1].Name for instance
+            only shows the first FacilityService Service Name configuration, FacilityService.Service[*].Name shows all,
+            FacilityService.Service[1..3].Name shows the first three and FacilityService.Service[2..n].Name shows all
+            starting at 2.
+
+        :return: device configurations
+        """
+        params = key and {'key': key} or dict()
+        params['deviceId'] = device_id
+        data = await self.get(self.ep(), params=params)
+        return DeviceConfigurationResponse.model_validate(data)
+
+    async def update(self, device_id: str, operations: List[DeviceConfigurationOperation]) -> DeviceConfigurationResponse:
+        """
+        Update Device Configurations
+
+        :param device_id: Update device configurations by device ID.
+        :param operations: list if operations to apply
+        """
+        body = [op.for_update() for op in operations]
+        data = await self.patch(self.ep(), json=body, content_type='application/json-patch+json',
+                          params={'deviceId': device_id})
+        return DeviceConfigurationResponse.model_validate(data)
 
 
 class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/callDeviceSettings'):
@@ -1144,9 +1194,6 @@ class AsLocationsApi(AsApiChild, base='locations'):
                 address[p] = v
             else:
                 body[p] = v
-        # TODO: this is broken see conversation in "Implementation - Locations as a Common Construct"
-        if (tz := body.pop('timeZone', None)) is not None:
-            body['timezone'] = tz
         body['address'] = address
         params = org_id and {'orgId': org_id} or None
         url = self.ep()
@@ -1177,13 +1224,9 @@ class AsLocationsApi(AsApiChild, base='locations'):
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
 
-        # TODO: this is broken see conversation in "Implementation - Locations as a Common Construct"
-        data = json.loads(settings_copy.model_dump_json(exclude={'location_id', 'org_id'}, exclude_none=False, exclude_unset=True))
-        data['timezone'] = data.pop('timeZone', None)
+        data = json.loads(settings_copy.model_dump_json(exclude={'location_id', 'org_id'}, exclude_none=False,
+                                                        exclude_unset=True))
         await self.put(url=url, json=data, params=params)
-
-        # data = settings_copy.json(exclude={'location_id', 'org_id'}, exclude_none=False, exclude_unset=True)
-        # await self.put(url=url, data=data, params=params)
 
     async def list_floors(self, location_id: str) -> List[Floor]:
         """
@@ -14526,6 +14569,8 @@ class AsWebexSimpleApi:
     attachment_actions: AsAttachmentActionsApi
     #: CDR API :class:`AsDetailedCDRApi`
     cdr: AsDetailedCDRApi
+    #: device configurations API :class:`AsDeviceConfigurationsApi`
+    device_configurations: AsDeviceConfigurationsApi
     #: devices API :class:`AsDevicesApi`
     devices: AsDevicesApi
     #: events API; :class:`AsEventsApi`
@@ -14593,6 +14638,7 @@ class AsWebexSimpleApi:
         session = AsRestSession(tokens=tokens, concurrent_requests=concurrent_requests, retry_429=retry_429)
         self.attachment_actions = AsAttachmentActionsApi(session=session)
         self.cdr = AsDetailedCDRApi(session=session)
+        self.device_configurations = AsDeviceConfigurationsApi(session=session)
         self.devices = AsDevicesApi(session=session)
         self.events = AsEventsApi(session=session)
         self.groups = AsGroupsApi(session=session)

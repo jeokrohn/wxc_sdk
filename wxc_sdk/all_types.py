@@ -20,7 +20,10 @@ from wxc_sdk.common import AcdCustomization, AlternateNumber, AnnAudioFile, Anno
     WifiCustomization, WifiNetwork
 from wxc_sdk.common.schedules import Event, RecurWeekly, RecurYearlyByDate, RecurYearlyByDay, Recurrence,\
     Schedule, ScheduleApiBase, ScheduleDay, ScheduleMonth, ScheduleType, ScheduleTypeOrStr, ScheduleWeek
-from wxc_sdk.devices import ActivationCodeResponse, Device, TagOp
+from wxc_sdk.device_configurations import DeviceConfiguration, DeviceConfigurationOperation,\
+    DeviceConfigurationResponse, DeviceConfigurationSource, DeviceConfigurationSourceEditability,\
+    DeviceConfigurationSources
+from wxc_sdk.devices import ActivationCodeResponse, Device, ProductType, TagOp
 from wxc_sdk.events import ComplianceEvent, EventData, EventResource, EventType
 from wxc_sdk.groups import Group, GroupMember
 from wxc_sdk.licenses import License, SiteType
@@ -173,6 +176,8 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'CreateMeetingInviteeBody', 'CreateMeetingInviteesBody', 'CreateResponse', 'CustomNumbers', 'Customer',
            'CustomizedQuestionForCreateMeeting', 'DND', 'DectCustomization', 'DectDevice', 'DefaultAudioType',
            'DefaultVoicemailPinRules', 'DeleteTranscriptBody', 'DestinationType', 'Device', 'DeviceActivationState',
+           'DeviceConfiguration', 'DeviceConfigurationOperation', 'DeviceConfigurationResponse',
+           'DeviceConfigurationSource', 'DeviceConfigurationSourceEditability', 'DeviceConfigurationSources',
            'DeviceCustomization', 'DeviceCustomizations', 'DeviceManagedBy', 'DeviceManufacturer', 'DeviceMember',
            'DeviceMembersResponse', 'DeviceOwner', 'DeviceStatus', 'DeviceType', 'DialPatternStatus',
            'DialPatternValidate', 'DialPatternValidationResult', 'DialPlan', 'DialResponse', 'Dialing',
@@ -211,7 +216,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'AdaptiveCard
            'PersonPhoneNumber', 'PersonPlaceAgent', 'PersonSettingsApiChild', 'PersonType', 'PersonalMeetingRoom',
            'PersonalMeetingRoomOptions', 'Personality', 'PhoneLanguage', 'PhoneNumber', 'PhoneNumberType',
            'PinLength', 'Policy', 'PreferredAnswerEndpoint', 'PreferredAnswerEndpointType', 'PreferredAnswerResponse',
-           'PrimaryOrShared', 'Privacy', 'PskObject', 'PstnNumberDestination', 'PushToTalkAccessType',
+           'PrimaryOrShared', 'Privacy', 'ProductType', 'PskObject', 'PstnNumberDestination', 'PushToTalkAccessType',
            'PushToTalkSettings', 'QAObject', 'QualityResources', 'QueryMeetingParticipantsWithEmailBody', 'Question',
            'QuestionAnswer', 'QuestionOption', 'QuestionType', 'QuestionWithAnswers', 'QueueCallerId',
            'QueueSettings', 'RETRY_429_MAX_WAIT', 'RGTrunk', 'Recall', 'RecallHuntGroup', 'ReceptionistSettings',
