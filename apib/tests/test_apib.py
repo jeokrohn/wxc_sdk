@@ -716,6 +716,53 @@ class ReadAPIB(ApibTest):
                     raise e
         print(', '.join(sorted(ds_child_elements)))
 
+    def test_object(self):
+        """
+        Try to understand 'object' elements
+        """
+        err = None
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+
+            for attr_info in all_attrs(data):
+                attr_data = attr_info.attr_value
+                if not isinstance(attr_data, dict) or attr_data.get('element') != 'object':
+                    continue
+                try:
+                    # should not have attributes
+                    self.assertTrue('attributes' not in attr_data, 'does have attributes')
+                    meta = attr_data.get('meta')
+                    # meta is optional
+                    if meta:
+                        # .. and if it's there should have 'id'
+                        self.assertEqual({'id'}, set(meta), 'meta should only have id entry')
+                        meta_id = meta['id']
+                        self.assertEqual('string', meta_id['element'], 'meta id should be string')
+                        self.assertTrue(isinstance(meta_id['content'], str), 'meta id content should be str')
+                    content = attr_data.get('content')
+                    if content is None:
+                        # if there is no content then we have meta meeeting above rules
+                        self.assertTrue(meta, 'object w/o content should have meta')
+                    else:
+                        # content should be list
+                        self.assertTrue(isinstance(content, list), 'content not a list')
+                        # all list entries should be 'member'
+                        self.assertTrue(all(m['element'] == 'member' for m in content),
+                                        'list entries not all member elements')
+                except AssertionError as e:
+                    # let's try to find an 'copy' element' somewhere up
+                    # copy_elem = next((next((le
+                    #                     for le in e
+                    #                     if isinstance(le, dict) and le['element'] == 'copy'), None)
+                    #               for e in reversed(attr_info.data_path)
+                    #               if isinstance(e, list)), None)
+                    # copy_elem_content = copy_elem['content']
+                    print(f'!!!!         {path}/{attr_info.path}: {e}')
+                    err = err or e
+        if err:
+            raise err
+        return
+
     def test_007_find_key_value(self):
         """
         Where do key/value elements show up?
@@ -954,7 +1001,7 @@ class ReadAPIB(ApibTest):
                 except ValidationError as e:
                     print(f'{path}, {el_info.elem_path_extended}: {e}')
                     err = err or e
-        print('\n'.join(f'{k}: {v}' for k,v in number_class_counter.items()))
+        print('\n'.join(f'{k}: {v}' for k, v in number_class_counter.items()))
         if err:
             raise err
 
@@ -1188,7 +1235,7 @@ class ReadAPIB(ApibTest):
                     # only attribute is 'typeAttributes'
                     attributes = object_element.attributes
                     if attributes:
-                        self.assertFalse(set(attributes)-{'typeAttributes'})
+                        self.assertFalse(set(attributes) - {'typeAttributes'})
                     # self.assertIsNone(attributes)
                     foo = 1
 
@@ -1375,6 +1422,46 @@ class ReadAPIB(ApibTest):
         print(sub)
 
     def test_validate_sourcemap(self):
-        data = [{'element': 'array', 'content': [{'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 204}, 'column': {'element': 'number', 'content': 7}}, 'content': 8988}, {'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 204}, 'column': {'element': 'number', 'content': 11}}, 'content': 5}]}, {'element': 'array', 'content': [{'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 205}, 'column': {'element': 'number', 'content': 9}}, 'content': 9001}, {'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 205}, 'column': {'element': 'number', 'content': 10}}, 'content': 2}]}, {'element': 'array', 'content': [{'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 206}, 'column': {'element': 'number', 'content': 9}}, 'content': 9011}, {'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 206}, 'column': {'element': 'number', 'content': 110}}, 'content': 102}]}, {'element': 'array', 'content': [{'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 207}, 'column': {'element': 'number', 'content': 9}}, 'content': 9121}, {'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 207}, 'column': {'element': 'number', 'content': 38}}, 'content': 30}]}, {'element': 'array', 'content': [{'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 208}, 'column': {'element': 'number', 'content': 9}}, 'content': 9159}, {'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 208}, 'column': {'element': 'number', 'content': 10}}, 'content': 2}]}]
+        data = [{'element': 'array', 'content': [{'element': 'number',
+                                                  'attributes': {'line': {'element': 'number', 'content': 204},
+                                                                 'column': {'element': 'number', 'content': 7}},
+                                                  'content': 8988}, {'element': 'number', 'attributes': {
+            'line': {'element': 'number', 'content': 204}, 'column': {'element': 'number', 'content': 11}},
+                                                                     'content': 5}]}, {'element': 'array', 'content': [
+            {'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 205},
+                                                 'column': {'element': 'number', 'content': 9}}, 'content': 9001},
+            {'element': 'number', 'attributes': {'line': {'element': 'number', 'content': 205},
+                                                 'column': {'element': 'number', 'content': 10}}, 'content': 2}]},
+                {'element': 'array', 'content': [{'element': 'number',
+                                                  'attributes': {'line': {'element': 'number', 'content': 206},
+                                                                 'column': {'element': 'number', 'content': 9}},
+                                                  'content': 9011}, {'element': 'number', 'attributes': {
+                    'line': {'element': 'number', 'content': 206}, 'column': {'element': 'number', 'content': 110}},
+                                                                     'content': 102}]}, {'element': 'array',
+                                                                                         'content': [
+                                                                                             {'element': 'number',
+                                                                                              'attributes': {'line': {
+                                                                                                  'element': 'number',
+                                                                                                  'content': 207},
+                                                                                                  'column': {
+                                                                                                      'element':
+                                                                                                          'number',
+                                                                                                      'content': 9}},
+                                                                                              'content': 9121},
+                                                                                             {'element': 'number',
+                                                                                              'attributes': {'line': {
+                                                                                                  'element': 'number',
+                                                                                                  'content': 207},
+                                                                                                  'column': {
+                                                                                                      'element':
+                                                                                                          'number',
+                                                                                                      'content': 38}},
+                                                                                              'content': 30}]},
+                {'element': 'array', 'content': [{'element': 'number',
+                                                  'attributes': {'line': {'element': 'number', 'content': 208},
+                                                                 'column': {'element': 'number', 'content': 9}},
+                                                  'content': 9159}, {'element': 'number', 'attributes': {
+                    'line': {'element': 'number', 'content': 208}, 'column': {'element': 'number', 'content': 10}},
+                                                                     'content': 2}]}]
         parsed_content = TypeAdapter(list[AbibSourceMapNumberArray]).validate_python(data)
         print(parsed_content)
