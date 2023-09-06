@@ -4,7 +4,8 @@ from collections import defaultdict
 from itertools import chain
 from typing import Literal, Any, Optional, Union, ClassVar, Generator, NamedTuple
 
-from pydantic import BaseModel, Extra, validator, model_validator, Field, parse_obj_as, field_validator, TypeAdapter
+from pydantic import BaseModel, Extra, validator, model_validator, Field, parse_obj_as, field_validator, TypeAdapter, \
+    ValidationError
 
 from apib.apib import is_element
 
@@ -13,7 +14,7 @@ __all__ = ['ApibParseResult', 'ApibElement', 'ApibCopy', 'ApibResource', 'ApibMo
            'ApibMeta', 'ApibArray', 'ApibString', 'ApibEnum', 'ApibEnumElement', 'ApibHttpHeaders',
            'ApibWithHeaders', 'ApibHrefMember', 'ApibHttpResponse', 'ApibHttpTransaction', 'ApibHttpRequest',
            'ApibBool', 'ApibApi', 'ApibHrefVariables', 'ApibNumber', 'ApibSourceMap', 'ApibSourceMapNumber',
-           'AbibSourceMapNumberArray']
+           'AbibSourceMapNumberArray', 'ApibObject']
 
 log = logging.getLogger(__name__)
 
@@ -590,6 +591,16 @@ class ApibHrefMember(ApibElement, override_element_type_for='transition'):
             raise ValueError(f'Can\'t create set from list with non trivial strings: {v}')
         v = set(s.content for s in v.content)
         return v
+
+
+class ApibObject(WithTypeAttributes):
+    element: Literal['object']
+
+    @model_validator(mode='after')
+    def val_root_object(cls, o: 'ApibObject'):
+        if o.type_attributes and o.type_attributes != {'fixedType'}:
+            raise ValidationError(f'unexpected type attributes: {o.type_attributes}')
+        return o
 
 
 class ApibTransition(ApibElement, allowed_content={'copy', 'httpTransaction'}):

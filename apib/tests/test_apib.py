@@ -716,53 +716,6 @@ class ReadAPIB(ApibTest):
                     raise e
         print(', '.join(sorted(ds_child_elements)))
 
-    def test_object(self):
-        """
-        Try to understand 'object' elements
-        """
-        err = None
-        for path, data in self.apib_path_and_data():
-            path = os.path.basename(path)
-
-            for attr_info in all_attrs(data):
-                attr_data = attr_info.attr_value
-                if not isinstance(attr_data, dict) or attr_data.get('element') != 'object':
-                    continue
-                try:
-                    # should not have attributes
-                    self.assertTrue('attributes' not in attr_data, 'does have attributes')
-                    meta = attr_data.get('meta')
-                    # meta is optional
-                    if meta:
-                        # .. and if it's there should have 'id'
-                        self.assertEqual({'id'}, set(meta), 'meta should only have id entry')
-                        meta_id = meta['id']
-                        self.assertEqual('string', meta_id['element'], 'meta id should be string')
-                        self.assertTrue(isinstance(meta_id['content'], str), 'meta id content should be str')
-                    content = attr_data.get('content')
-                    if content is None:
-                        # if there is no content then we have meta meeeting above rules
-                        self.assertTrue(meta, 'object w/o content should have meta')
-                    else:
-                        # content should be list
-                        self.assertTrue(isinstance(content, list), 'content not a list')
-                        # all list entries should be 'member'
-                        self.assertTrue(all(m['element'] == 'member' for m in content),
-                                        'list entries not all member elements')
-                except AssertionError as e:
-                    # let's try to find an 'copy' element' somewhere up
-                    # copy_elem = next((next((le
-                    #                     for le in e
-                    #                     if isinstance(le, dict) and le['element'] == 'copy'), None)
-                    #               for e in reversed(attr_info.data_path)
-                    #               if isinstance(e, list)), None)
-                    # copy_elem_content = copy_elem['content']
-                    print(f'!!!!         {path}/{attr_info.path}: {e}')
-                    err = err or e
-        if err:
-            raise err
-        return
-
     def test_007_find_key_value(self):
         """
         Where do key/value elements show up?
@@ -919,19 +872,32 @@ class ReadAPIB(ApibTest):
         print('\n'.join(sorted(no_docstring)))
         self.assertFalse(err)
 
-    def test_parsed_categories_wo_doctring(self):
+    def test_parsed_categories_check_meta_classes(self):
         """
         look for 'category' elements w/o docstring
         """
         self.stream_handler.setLevel(logging.INFO)
+        meta_classes = set()
+        err = None
+        print()
         for path, data in self.apib_path_and_data():
             path = os.path.basename(path)
             parsed = ApibParseResult.model_validate(data)
-            for el, path, elem_path in parsed.elements_with_path():
-                el: ApibCategory
+            for el_info in parsed.elements_with_path():
+                el = el_info.element
                 if el.element != 'category' or el.copy_content:
                     continue
-                self.assertTrue(False)
+                el: ApibCategory
+                try:
+                    self.assertIsNotNone(el.meta, 'missing meta')
+                    meta_classes.add(el.meta.meta_class)
+                    self.assertEqual('dataStructures', el.meta.meta_class, 'unexpected meta class')
+                except AssertionError as e:
+                    print(f'{path}, {el_info.elem_path_extended}: {e}')
+                    err = err or e
+        print(f'meta classes: {", ".join(sorted(meta_classes))}')
+        if err:
+            raise err
 
     def test_parsed_boolean_is_always_child_of_member(self):
         self.stream_handler.setLevel(logging.INFO)
@@ -1108,6 +1074,69 @@ class ReadAPIB(ApibTest):
         if err:
             raise err
 
+    def test_parsed_object(self):
+        """
+        check parsed 'object' elements
+        """
+        self.stream_handler.setLevel(logging.INFO)
+        err = None
+        meta_classes = set()
+        parents = set()
+        content_types = set()
+        content_list_members = set()
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+            parsed = ApibParseResult.model_validate(data)
+            for el_info in parsed.elements_with_path():
+                object_element: ApibObject = el_info.element
+                if object_element.element.lower() != 'object':
+                    continue
+                try:
+                    content = object_element.content
+                    meta = object_element.meta
+                    if not (object_element.content or object_element.attributes or object_element.meta or
+                            object_element.type_attributes):
+                        # with no content and no meta this is a "generic" object -> Any
+                        # example:
+                        #  - outboundProxy (object, optional) - Contains ...
+                        # this is acceptable
+                        continue
+                    if not content:
+                        # w/o content there has to be meta with an id and nothing else
+                        # in that case the id is the name of the class
+                        self.assertTrue(meta, 'W/o content there has to be meta')
+                        self.assertTrue(meta.id and not (meta.classes or meta.description or meta.title),
+                                        f'unexpected meta: {meta}')
+                    else:
+                        # content is always a list
+                        content_types.add(content.__class__.__name__)
+                        self.assertEqual('list', content.__class__.__name__,
+                                         f'content is not a list: {content.__class__.__name__}')
+                        list_entry_elements = set(c.element for c in content)
+                        content_list_members.update(list_entry_elements)
+                        # list entries are 'member' or 'select'
+                        unexpected_elements = list_entry_elements - {'member', 'select'}
+                        self.assertFalse(unexpected_elements,
+                                         f'unexpected list entry element: '
+                                         f'{", ".join(unexpected_elements)}')
+
+                    if object_element.type_attributes:
+                        self.assertEqual({'fixedType'}, object_element.type_attributes, 'unexpected type_attributes')
+
+                    # collect parents
+                    parent = el_info.elem_path.split('.')[-1]
+                    parents.add(parent)
+                except AssertionError as e:
+                    print(f'{path}, {el_info.elem_path_extended}: {e}')
+                    err = err or e
+        print(f'content types: {", ".join(sorted(content_types))}')
+        print(f'content list members: {", ".join(sorted(content_list_members))}')
+        print(f'parents: {", ".join(sorted(parents))}')
+        print('Type attributes')
+
+        if err:
+            raise err
+
     def test_parsed_understand_http_responses(self):
         self.stream_handler.setLevel(logging.INFO)
         for path, data in self.apib_path_and_data():
@@ -1202,51 +1231,6 @@ class ReadAPIB(ApibTest):
                     print(f'{path}, {el_info.elem_path_extended}: {e}')
                     err = err or e
         print(f'meta classes: {", ".join(sorted(meta_classes))}')
-        print(f'parents: {", ".join(sorted(parents))}')
-
-        if err:
-            raise err
-
-    def test_parsed_object(self):
-        """
-        check parsed 'object' elements
-        """
-        self.stream_handler.setLevel(logging.INFO)
-        err = None
-        meta_classes = set()
-        parents = set()
-        content_types = set()
-        content_list_members = set()
-        for path, data in self.apib_path_and_data():
-            path = os.path.basename(path)
-            parsed = ApibParseResult.model_validate(data)
-            for el_info in parsed.elements_with_path():
-                object_element = el_info.element
-                if object_element.element.lower() != 'object':
-                    continue
-                try:
-                    content = object_element.content
-                    # content is always a list
-                    if content:
-                        content_types.add(content.__class__.__name__)
-                        self.assertEqual('list', content.__class__.__name__)
-                        content_list_members.update(c.element for c in content)
-
-                    # only attribute is 'typeAttributes'
-                    attributes = object_element.attributes
-                    if attributes:
-                        self.assertFalse(set(attributes) - {'typeAttributes'})
-                    # self.assertIsNone(attributes)
-                    foo = 1
-
-                    # collect parents
-                    parent = el_info.elem_path.split('.')[-1]
-                    parents.add(parent)
-                except AssertionError as e:
-                    print(f'{path}, {el_info.elem_path_extended}: {e}')
-                    err = err or e
-        print(f'content types: {", ".join(sorted(content_types))}')
-        print(f'content list members: {", ".join(sorted(content_list_members))}')
         print(f'parents: {", ".join(sorted(parents))}')
 
         if err:
