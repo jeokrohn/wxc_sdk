@@ -29,7 +29,7 @@ class CodeGenerator:
         return self.parse_result.api.doc_string
 
     def endpoints(self) -> Generator[Endpoint, None, None]:
-        for transition in self.parse_result.api.transitions:
+        for transition in self.parse_result.api.transitions():
             foo = 1
         foo = 1
         ...
