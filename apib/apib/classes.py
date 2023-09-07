@@ -240,6 +240,9 @@ class ApibElement(ApibModel):
                 for i, e in enumerate(v):
                     if isinstance(e, ApibElement):
                         yield from e.elements_with_path(f'{path}.{k}[{i}]', elem_path)
+                    else:
+                        log.warning(f'content list member is not an ApibElement: {path}.{k}[{i}]: '
+                                    f'{e.__class__.__name__} ')
                 elem_path.pop()
         elem_path.pop()
 

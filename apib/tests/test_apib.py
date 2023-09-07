@@ -1449,3 +1449,18 @@ class ReadAPIB(ApibTest):
                                                                      'content': 2}]}]
         parsed_content = TypeAdapter(list[AbibSourceMapNumberArray]).validate_python(data)
         print(parsed_content)
+
+    def test_parsed_structure(self):
+        """
+        understand the structure of APIB files
+        """
+        logging.getLogger().setLevel(logging.WARNING)
+        for apib_path, data in self.apib_path_and_data():
+            apib_path = os.path.basename(apib_path)
+            parsed = ApibParseResult.model_validate(data)
+            for el_info in parsed.elements_with_path():
+                element, path, elem_path = el_info
+                depth = sum(1 for el in elem_path if isinstance(el, ApibElement))
+                index = (((elem_path and isinstance(elem_path[-1], list)) or None) and
+                         next((i for i, el in enumerate(elem_path[-1]) if el == element), None))
+                print(f'{apib_path}: {depth * "  "}{path}')
