@@ -3,6 +3,7 @@ import logging
 from collections import defaultdict
 from dataclasses import dataclass, field
 from itertools import chain
+from operator import attrgetter
 from typing import Literal, Any, Optional, Union, ClassVar, Generator, NamedTuple
 
 import dateutil.parser
@@ -600,6 +601,22 @@ class Attribute(NamedTuple):
                 python_type = 'list[str]'
                 sample = ", ".join(f"'{c.content}'" for c in value.content if c.content is not None)
                 sample = sample and f'[{sample}]'
+            elif array_element_type == 'number':
+                content = value.content[0]
+                python_type = f'list[{content.content.__class__.__name__}]'
+                sample = f'[{", ".join(f"{c.content}" for c in value.content)}]'
+            elif array_element_type == 'object':
+                # array of some object
+                if not isinstance(value.content, list) or len(value.content) != 1:
+                    raise ValueError(f'Well, this is unwxpdected: {value.content}')
+                content: ApibObject = value.content[0]
+                referenced_class = f'{class_name}{name[0].upper()}{name[1:]}'
+                python_type = f'list[{referenced_class}]'
+                new_classes, class_attributes = python_class_attributes(basename=referenced_class,
+                                                                        members=content.content)
+                classes.extend(new_classes)
+                classes.append(PythonClass(name=referenced_class, attributes=class_attributes,
+                                           description=value.description, is_enum=False, baseclass=None))
             else:
                 # array of some type
                 # references class is that type
@@ -632,9 +649,9 @@ class Attribute(NamedTuple):
             python_type = f'{class_name}{name[0].upper()}{name[1:]}'
             sample = value.content and value.content.content
             referenced_class = python_type
-            class_attributes = [Attribute(name=e.content,python_type=simple_python_type(e.element),
-                                           docstring=e.description,sample=None,referenced_class=None)
-                                 for e in value.enumerations]
+            class_attributes = [Attribute(name=e.content, python_type=simple_python_type(e.element),
+                                          docstring=e.description, sample=None, referenced_class=None)
+                                for e in value.enumerations]
             classes.append(PythonClass(name=referenced_class, attributes=class_attributes,
                                        description=value.description, is_enum=True, baseclass=None))
         elif value.element == 'boolean':
@@ -662,6 +679,180 @@ class PythonClass:
     description: str = field(default=None)
     is_enum: bool = field(default=None)
     baseclass: str = field(default=None)
+
+
+@dataclass
+class PythonClassRegistry:
+    _classes: dict[str, PythonClass] = field(default_factory=dict, repr=False)
+
+    def add(self, pc: PythonClass):
+        self._classes[pc.name] = pc
+
+    def classes(self) -> Generator[PythonClass, None, None]:
+        visited = set()
+
+        def yield_from_classname(class_name: Optional[str]) -> Generator[PythonClass, None, None]:
+            if class_name is None:
+                return
+
+            # decend down into baseclasses if there are no attributes
+            while True:
+                if (c := self._classes.get(class_name)) is None:
+                    log.error(f'class "{class_name}" not found')
+                    return
+                if c.baseclass and not c.attributes:
+                    class_name = c.baseclass
+                    continue
+                break
+
+            yield from yield_classes(c)
+            return
+
+        def yield_classes(p_class: PythonClass) -> Generator[PythonClass, None, None]:
+            yield from yield_from_classname(p_class.baseclass)
+            for attr in p_class.attributes:
+                yield from yield_from_classname(attr.referenced_class)
+
+            if p_class.name not in visited:
+                visited.add(p_class.name)
+                yield p_class
+
+        for pc_name in self._classes:
+            yield from yield_from_classname(pc_name)
+
+    def dereferenced_class_name(self, class_name) -> str:
+        while True:
+            pc = self._classes.get(class_name)
+            if not pc:
+                return class_name
+            if pc.baseclass and not pc.attributes:
+                class_name = pc.baseclass
+                continue
+            return class_name
+
+    def attribute_python_type(self, attribute: Attribute):
+        if not attribute.referenced_class:
+            return attribute.python_type
+        class_name = self.dereferenced_class_name(attribute.referenced_class)
+        if class_name != attribute.referenced_class:
+            return attribute.python_type.replace(attribute.referenced_class, class_name)
+        return attribute.python_type
+
+    def eliminate_redundancies(self):
+        """
+        Find classes that are equivalent and then remove the redundant definitions
+        """
+
+        # two classes are equivalent if
+        #   * they have the same attribute names
+        #   * attribute classes are identical
+        #   * ..oor attribute classes are equivalent
+        def attribute_key(pc: PythonClass) -> str:
+            key = '/'.join(sorted(attr.name for attr in pc.attributes))
+            return f'{pc.is_enum}/{key}'
+
+        def classes_equivalent(pc1: PythonClass, pc2: PythonClass) -> bool:
+            if pc1.is_enum != pc2.is_enum:
+                return False
+            if pc1.is_enum:
+                if attribute_key(pc1) == attribute_key(pc2):
+                    # make pc2 redundant
+                    pc2.baseclass = pc1.name
+                    pc2.attributes = None
+                    return True
+                return False
+            if len(pc1.attributes)!=len(pc2.attributes):
+                return False
+            # compare attributes
+            for attr1, attr2 in zip(sorted(pc1.attributes, key=attrgetter('name')),
+                                    sorted(pc2.attributes, key=attrgetter('name'))):
+                attr1: Attribute
+                attr2: Attribute
+                attr1_type = self.attribute_python_type(attr1)
+                attr2_type = self.attribute_python_type(attr2)
+                if attr1_type != attr2_type:
+                    # maybe both attributes reference equivalent classes?
+                    if attr1.referenced_class and attr2.referenced_class:
+                        class1 = self.dereferenced_class_name(attr1.referenced_class)
+                        class2 = self.dereferenced_class_name(attr2.referenced_class)
+                        if class1 == class2:
+                            continue
+                        ref1 = self._classes.get(class1)
+                        ref2 = self._classes.get(class2)
+
+                        if all((ref1, ref2)) and classes_equivalent(ref1, ref2):
+                            attr1_type = self.attribute_python_type(attr1)
+                            attr2_type = self.attribute_python_type(attr2)
+                            if attr1_type != attr2_type:
+                                return False
+                            continue
+                    return False
+            # make pc2 redundant
+            pc2.baseclass = pc1.name
+            pc2.attributes = None
+            return True
+
+        # start by grouping all Python classes by their attribute_key
+        class_groups: dict[str, list[PythonClass]] = defaultdict(list)
+        for pc in self._classes.values():
+            class_groups[attribute_key(pc)].append(pc)
+        for attr_key in sorted(class_groups, key=lambda k: len(class_groups[k]), reverse=True):
+            candidates = class_groups[attr_key]
+            # we don't need to look at classes that are already optimized
+            candidates = [c for c in candidates if not c.baseclass or c.attributes]
+            if len(candidates) == 1:
+                continue
+            if attr_key.split('/')[0] == 'True':
+                # if all are enums then there is nothing more to check and all but one are redundant
+                keep = min((c.name for c in candidates), key=len)
+                for c in candidates:
+                    if c.name == keep:
+                        continue
+                    # mark the classes as redundant
+                    c.attributes = None
+                    c.baseclass = keep
+            else:
+                # here we need to check all attributes
+                for i, candidate1 in enumerate(candidates[:-1]):
+                    if candidate1.baseclass and not candidate1.attributes:
+                        continue
+                    for candidate2 in candidates[i+1:]:
+                        if candidate2.baseclass and not candidate2.attributes:
+                            continue
+                        # check classes for equivalency; if equivalent candidate2 is made redundant
+                        classes_equivalent(candidate1, candidate2)
+                    # for
+                # for
+            # if
+        # now we can still try to find classes hat have common attributes
+        common_attributes: dict[int, dict[str, dict[str, PythonClass]]] = defaultdict(lambda: defaultdict(dict))
+        p_classes = list(self._classes.values())
+        for i, class1 in enumerate(p_classes[:-1]):
+            if class1.baseclass and not class1.attributes:
+                continue
+            attr1 = set(a.name for a in class1.attributes)
+            for class2 in p_classes[i+1:]:
+                if class2.baseclass and not class2.attributes:
+                    continue
+                attr2 = set(a.name for a in class2.attributes)
+                common_attr = attr1 & attr2
+                # for now we only want to consider full subclasses; one class doesn't have more than the common
+                # attributes
+                if len(class1.attributes)!=len(common_attr) and len(class2.attributes)!=len(common_attr):
+                    continue
+                # we only want to look at cases where we have at least 2 common attributes
+                if len(common_attr) < 3:
+                    continue
+                if common_attr:
+                    common_key = "/".join(sorted(common_attr))
+                    class_dict = common_attributes[len(common_attr)][common_key]
+                    class_dict[class1.name] = class1
+                    class_dict[class2.name] = class2
+                # if
+            # for
+        # for
+        foo = 1
+        ...
 
 
 def python_class_attributes(basename: str, members: list['ApibMember']) -> tuple[list[PythonClass], list[Attribute]]:
