@@ -15,7 +15,7 @@ from unittest import TestCase, skip
 from pydantic import ValidationError, parse_obj_as, BaseModel, model_validator, TypeAdapter
 
 from apib.apib import *
-from apib.apib.classes import PythonClass, PythonClassRegistry
+from apib.python_class import PythonClass, PythonClassRegistry
 
 
 @dataclass(init=False)
@@ -1467,14 +1467,12 @@ class ReadAPIB(ApibTest):
                 print(f'{apib_path}: {depth * "  "}{path}')
 
     def test_parsed_python_classes(self):
-        logging.getLogger().setLevel(logging.WARNING)
-        err = None
-        class_collection: dict[str, list[PythonClass]] = defaultdict(list)
+        logging.getLogger().setLevel(logging.INFO)
 
         for apib_path, data in self.apib_path_and_data():
             apib_path = os.path.basename(apib_path)
-            if apib_path != 'features-call-queue.apib':
-                continue
+            # if apib_path != 'features-call-queue.apib':
+            #     continue
             parsed = ApibParseResult.model_validate(data)
             class_registry = PythonClassRegistry()
             list(map(class_registry.add, parsed.python_classes()))
