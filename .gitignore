@@ -153,3 +153,4 @@ cython_debug/
 /developer.webex.com/auto.py
 
 /apib/apib_yml
+/apib/tests/generated/

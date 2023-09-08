@@ -3,12 +3,19 @@ from collections import defaultdict
 from collections.abc import Generator
 from dataclasses import dataclass, field
 from functools import partial
+from itertools import chain
 from operator import attrgetter
+from re import subn, sub
 from typing import Any, Optional
 
 __all__ = ['PythonClass', 'PythonClassRegistry', 'Attribute']
 
 log = logging.getLogger(__name__)
+
+CLASS_TEMPLATE = """
+class {class_name}{baseclass}:
+{attributes}
+"""
 
 
 @dataclass
@@ -22,6 +29,36 @@ class Attribute:
     sample: Any
     referenced_class: str
 
+    def source(self, for_enum: bool) -> str:
+        if self.docstring:
+            lines = [f'#: {ls}' for line in self.docstring.strip().splitlines()
+                     if (ls := line.strip())]
+        else:
+            lines = []
+        if for_enum:
+            name = self.name.lower()
+            if name == 'none':
+                name = 'none_'
+            name, _ = subn(r'[^a-z0-9]', '_', name)
+            name = sub('^([0-9])', '_\\1', name)
+            value = self.name
+            value = value.replace("'", '')
+            lines.append(f"{name} = '{value}'")
+            foo = 1
+        else:
+            attr_name = self.name
+            if attr_name in {'from'}:
+                attr_name = f'{attr_name}_'
+            if self.sample:
+                lines.append(f'#: example: {self.sample}')
+            line = f'{attr_name}: Optional[{self.python_type}]'
+            if attr_name == self.name:
+                line = f'{line} = None'
+            else:
+                line = f"{line} = Field(alias='{self.name}', default=None)"
+            lines.append(line)
+        return '\n'.join(lines)
+
 
 @dataclass
 class PythonClass:
@@ -33,6 +70,29 @@ class PythonClass:
     description: str = field(default=None)
     is_enum: bool = field(default=None)
     baseclass: str = field(default=None)
+
+    def source(self) -> Optional[str]:
+        """
+        Source code for this class or None
+        """
+        if self.baseclass and not self.attributes:
+            return None
+        baseclass = ''
+        if self.is_enum:
+            baseclass = 'str, Enum'
+        else:
+            baseclass = self.baseclass or 'ApiModel'
+        baseclass = baseclass and f'({baseclass})'
+        if not self.attributes:
+            attribute_sources = ('...', )
+        else:
+            attribute_sources = chain.from_iterable(map(str.splitlines,
+                                                        (f'{a.source(self.is_enum)}' for a in self.attributes)))
+
+        result = CLASS_TEMPLATE.format(class_name=self.name,
+                                       baseclass=baseclass,
+                                       attributes='\n'.join(f'    {line}' for line in attribute_sources)).strip()
+        return result
 
 
 @dataclass
@@ -180,6 +240,11 @@ class PythonClassRegistry:
                     break
                 # if
             # for
+        # now go through all attributes and update the types
+        for pc in self.classes():
+            if pc.is_enum or not pc.attributes:
+                continue
+            list(map(self.attribute_python_type, pc.attributes))
         return
         # TODO: might need some logic to work with super-classes
         #   instead of creating child classes it might actually be better to always use the class with the superset

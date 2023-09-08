@@ -1481,5 +1481,7 @@ class ReadAPIB(ApibTest):
             class_registry.eliminate_redundancies()
             p_classes_after = list(class_registry.classes())
             print(f'{apib_path}: {len(p_classes_after)} classes after removing redundancies')
+            # try to generate source for all of them
+            list(map(PythonClass.source, p_classes_after))
             foo = 1
 
