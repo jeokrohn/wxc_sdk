@@ -11062,10 +11062,9 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         """
         params = org_id and {'orgId': org_id} or None
         body = update.model_dump_json(include={'name': True,
-                                    'local_gateways': {'__all__': {'trunk_id', 'priority'}}})
+                                               'local_gateways': {'__all__': {'trunk_id', 'priority'}}})
         url = self.ep(rg_id)
-        data = await self.post(url=url, params=params, data=body)
-        await self.put(url=url, params=params, data=data)
+        await self.put(url=url, params=params, data=body)
 
     async def delete_route_group(self, rg_id: str, org_id: str = None):
         """
