@@ -8,7 +8,7 @@ or deleting all devices in an organization requires an administrator auth token 
 scope. Generating an activation code requires an auth token with the identity:placeonetimepassword_create scope.
 """
 
-__all__ = ['DevicesApi', 'Device', 'TagOp', 'ActivationCodeResponse', 'ProductType']
+__all__ = ['DevicesApi', 'Device', 'TagOp', 'ActivationCodeResponse', 'ProductType', 'ConnectionStatus']
 
 from collections.abc import Generator
 from dataclasses import dataclass
@@ -26,7 +26,16 @@ from ..telephony.jobs import DeviceSettingsJobsApi
 
 class ProductType(str, Enum):
     phone = 'phone'
-    rooomdesk = 'roomdesk'
+    roomdesk = 'roomdesk'
+
+
+class ConnectionStatus(str, Enum):
+    connected = 'connected'
+    disconnected = 'disconnected'
+    connected_with_issues = 'connected_with_issues'
+    offline_expired = 'offline_expired'
+    activating = 'activating'
+    unknown = 'unknown'
 
 
 class Device(ApiModel):
@@ -48,7 +57,7 @@ class Device(ApiModel):
     #: against this device.
     permissions: list[str]
     #: The connection status of the device.
-    connection_status: str
+    connection_status: ConnectionStatus
     #: The product name. A display friendly version of the device's model.
     product: str
     #: The product type.

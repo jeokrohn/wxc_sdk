@@ -6,6 +6,7 @@ Release history
 1.16.1
 ------
 - leftovers from pydantic v2 transition
+- new type: :class:`wxc_sdk.devices.ConnectionStatus` for :attr:`wxc_sdk.devices.Device.connection_status`
 
 1.16.0
 ------
