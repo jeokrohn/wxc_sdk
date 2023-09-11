@@ -1,8 +1,11 @@
+import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from random import choice
 
-from tests.base import TestCaseWithLog
+from tests.base import TestCaseWithLog, TestWithLocations, async_test
+from wxc_sdk.rest import RestError
 from wxc_sdk.telephony.prem_pstn.route_group import RGTrunk, RouteGroup
+from wxc_sdk.telephony.prem_pstn.trunk import Trunk, TrunkType
 
 
 class TestList(TestCaseWithLog):
@@ -30,7 +33,7 @@ class TestCreate(TestCaseWithLog):
         # create a rg with a single trunk
         print(f'Creating route group "{rg_name}" in location "{trunk.location.name}"')
         rg = RouteGroup(name=rg_name,
-                        local_gateways=[RGTrunk(trunk_id=trunk.trunk_id,
+                        local_gateways=[RGTrunk(id=trunk.trunk_id,
                                                 priority=1, name='ff', location_id='sas')])
         rg_id = self.api.telephony.prem_pstn.route_group.create(route_group=rg)
         try:
@@ -38,6 +41,86 @@ class TestCreate(TestCaseWithLog):
         finally:
             # clean up: delete the route group again
             self.api.telephony.prem_pstn.route_group.delete_route_group(rg_id=rg_id)
+
+
+class TestTrunksPerRouteGroup(TestWithLocations):
+
+    @async_test
+    async def test_001_trunks_per_route_group(self):
+        """
+        How many trunks can we add to a given route group?
+        """
+        # pick a target location
+        target_location = choice(self.locations)
+
+        # get existing trunks and route groups
+        trunks, route_groups = await asyncio.gather(
+            self.async_api.telephony.prem_pstn.trunk.list(),
+            self.async_api.telephony.prem_pstn.route_group.list()
+        )
+        trunks: list[Trunk]
+        route_groups: list[RouteGroup]
+
+        # names for new trunks
+        new_trunk_names = (name for i in range(1000)
+                           if (name := f'{target_location.name} {i:03}') not in set(t.name for t in trunks))
+
+        # list of ids of created trunks
+        created_trunk_ids = []
+
+        # create a trunk in target location
+        def create_trunk() -> str:
+            trunk_name = next(new_trunk_names)
+            password = self.api.telephony.location.generate_password(location_id=target_location.location_id)
+            new_trunk_id = self.api.telephony.prem_pstn.trunk.create(name=trunk_name,
+                                                                     location_id=target_location.location_id,
+                                                                     password=password,
+                                                                     trunk_type=TrunkType.registering)
+            print(f'created trunk "{trunk_name}" in location "{target_location.name}"')
+            created_trunk_ids.append(new_trunk_id)
+            return new_trunk_id
+
+        trunk_id = create_trunk()
+        rg_id = None
+        trunk_count = None
+        with self.assertRaises(RestError) as exc:
+            try:
+                # create a route group with that trunk
+                rg_name = next(name for i in range(1, 1000)
+                               if (name := f'{target_location.name} {i:03}') not in set(rg.name for rg in route_groups))
+
+                rg = RouteGroup(name=rg_name,
+                                local_gateways=[RGTrunk(id=trunk_id,
+                                                        priority=1)])
+                rg_id = self.api.telephony.prem_pstn.route_group.create(route_group=rg)
+                print(f'Created RG "{rg_name}": 1 trunk')
+
+                # continue adding trunks (up to 25) to RG until that fails
+                for trunk_count in range(2, 26):
+                    create_trunk()
+                    rg = RouteGroup(name=rg_name,
+                                    local_gateways=[RGTrunk(id=trunk_id,
+                                                            priority=1)
+                                                    for trunk_id in created_trunk_ids])
+                    self.api.telephony.prem_pstn.route_group.update(rg_id=rg_id, update=rg)
+                    print(f'Updated RG "{rg_name}": {len(created_trunk_ids)} trunks')
+            finally:
+                # clean up
+
+                # delete route group
+                if rg_id:
+                    self.api.telephony.prem_pstn.route_group.delete_route_group(rg_id=rg_id)
+
+                # delete all trunks we created
+                await asyncio.gather(*[self.async_api.telephony.prem_pstn.trunk.delete_trunk(trunk_id=trunk_id)
+                                       for trunk_id in created_trunk_ids])
+
+        rest_error: RestError = exc.exception
+        self.assertEqual(400, rest_error.response.status_code, 'unexpected status code')
+        self.assertEqual(25043, rest_error.code, 'unexpected error code')
+        self.assertEqual('10', rest_error.description.split()[-1][:-1], 'unexpected error description')
+
+        self.assertEqual(trunk_count, 11, 'expected to be able to assign 10 trunks exactly')
 
 
 class TestDetail(TestCaseWithLog):
