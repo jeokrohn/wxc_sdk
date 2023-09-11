@@ -181,6 +181,7 @@ class Person(ApiModelWithErrors):
     login_enabled: Optional[bool] = None
     #: The type of person account, such as person or bot.
     person_type: Optional[PersonType] = Field(alias='type', default=None)
+    user_name: Optional[str] = None
 
     @property
     def person_id_uuid(self) -> str:
