@@ -25,12 +25,6 @@ class PersonPhoneNumber(ApiModel):
     #: Optional ring pattern and this is applicable only for alternate numbers.
     ring_pattern: Optional[RingPattern] = None
 
-    @field_validator('direct_number', mode='before')
-    def validate_direct_number(cls, v):
-        # enforce +E.164 numbers
-        return v and (v.startswith('+') and v or f'+1{v}')
-
-
 class PersonNumbers(ApiModel):
     """
     Information about person's phone numbers

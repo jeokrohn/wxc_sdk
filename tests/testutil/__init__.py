@@ -10,8 +10,9 @@ from dataclasses import dataclass
 from datetime import date
 from functools import reduce
 from itertools import zip_longest, chain
+from operator import attrgetter
 from random import randint
-from typing import Generator
+from typing import Generator, Optional
 
 from test_helper.digittree import DigitTree
 from test_helper.randomlocation import RandomLocation, Address
@@ -30,7 +31,7 @@ __all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'Locatio
            'calling_users', 'available_numbers', 'available_extensions_gen', 'get_or_create_holiday_schedule',
            'get_or_create_business_schedule', 'random_users', 'create_call_park_extension',
            'as_available_extensions_gen', 'create_random_wsl', 'available_mac_address', 'new_workspace_names',
-           'TEST_WORKSPACES_PREFIX', 'create_workspace_with_webex_calling']
+           'TEST_WORKSPACES_PREFIX', 'create_workspace_with_webex_calling', 'get_calling_license']
 
 from wxc_sdk.telephony.devices import MACState
 
@@ -211,6 +212,17 @@ def calling_users(*, api: WebexSimpleApi) -> list[Person]:
     return users
 
 
+def get_calling_license(*, api: WebexSimpleApi, prefer_basic: bool = True) -> Optional[str]:
+    """
+    Get id of available calling license
+    """
+    licenses = [lic for lic in api.licenses.list() if lic.webex_calling and not lic.webex_calling_workspaces]
+    licenses.sort(key=attrgetter('webex_calling_professional'), reverse=not prefer_basic)
+    licence = next((lic for lic in licenses
+                    if lic.consumed_units < lic.total_units), None)
+    return licence and licence.license_id
+
+
 def get_or_create_holiday_schedule(*, api: WebexSimpleApi, location_id: str) -> Schedule:
     """
     Create a holiday schedule in given location
@@ -365,7 +377,7 @@ def new_workspace_names(api: WebexSimpleApi) -> Generator[str, None, None]:
 
 def create_workspace_with_webex_calling(api: WebexSimpleApi, target_location: Location,
                                         supported_devices: WorkspaceSupportedDevices,
-                                        **kwargs)->Workspace:
+                                        **kwargs) -> Workspace:
     """
     create a workspace with webex calling in given location
     """
