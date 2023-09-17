@@ -676,7 +676,7 @@ class ReadAPIB(ApibTest):
                 if element.element != 'dataStructure':
                     continue
                 try:
-                    self.assertTrue(isinstance(element, ApibDatastucture))
+                    self.assertTrue(isinstance(element, ApibDatastructure))
                     content = element.content
                     # if isinstance(content, ApibElement):
                     #     if content.element not in {'object', 'enum', 'array'}:
@@ -811,14 +811,13 @@ class ReadAPIB(ApibTest):
         Parse all APIBs
         """
         err = None
-        logging.getLogger().setLevel(logging.DEBUG)
+        logging.getLogger().setLevel(logging.INFO)
         for path, data in self.apib_path_and_data():
             path = os.path.basename(path)
             try:
                 parsed = ApibParseResult.model_validate(data)
             except ValidationError as e:
                 print(f'{path}: {e}')
-                raise
                 err = err or e
                 continue
         if err:
@@ -986,6 +985,8 @@ class ReadAPIB(ApibTest):
                 if el_info.element.element != 'transition':
                     continue
                 elem_path = el_info.elem_path
+                if elem_path == 'parseResult.category.category.resource':
+                    print(el_info.elem_path_extended)
                 transition_paths.add(elem_path)
                 if elem_path not in expected_paths:
                     print(f'{path}: unexpected path for "transition" element: {elem_path}')

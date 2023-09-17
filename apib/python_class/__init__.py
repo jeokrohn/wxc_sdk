@@ -8,7 +8,11 @@ from operator import attrgetter
 from re import subn, sub
 from typing import Any, Optional
 
-__all__ = ['PythonClass', 'PythonClassRegistry', 'Attribute']
+__all__ = ['PythonClass', 'PythonClassRegistry', 'Attribute', 'Endpoint', 'Parameter']
+
+import dateutil.parser
+
+from apib.apib import ApibDatastructure, ApibObject, ApibEnum, ApibParseResult, ApibMember, words_to_camel
 
 log = logging.getLogger(__name__)
 
@@ -16,6 +20,28 @@ CLASS_TEMPLATE = """
 class {class_name}{baseclass}:
 {attributes}
 """
+
+
+@dataclass
+class Parameter:
+    """
+    One Parameter
+    """
+    name: str
+    python_type: str
+    docstring: str
+    sample: Any
+    optional: bool
+
+
+@dataclass
+class Endpoint:
+    name: str
+    method: str = field(default=None)
+    url: str = field(default=None)
+    href_parameter: list[Parameter] = field(default_factory=list)
+    body_parameter: list[Parameter] = field(default_factory=list)
+    result: str = field(default=None)
 
 
 @dataclass
@@ -28,6 +54,29 @@ class Attribute:
     docstring: str
     sample: Any
     referenced_class: str
+
+    # TODO: is this still needed?
+    # @classmethod
+    # def data_structure_class_attributes(cls, ds: ApibDatastucture) -> Generator['Attribute', None, None]:
+    #     if not ds.is_class:
+    #         return
+    #     if ds.superclass:
+    #         members = ds.content.content
+    #     else:
+    #         members = ds.content.content
+    #     if not members:
+    #         return
+    #     for member in members:
+    #         yield Attribute.from_member(ds.python_name, member)
+
+    @classmethod
+    def from_enum(cls, enum_element: ApibEnum) -> Generator['Attribute', None, None]:
+        """
+        Gnerator for attributes from an ApibEnum
+        """
+        for e in enum_element.enumerations:
+            yield Attribute(name=e.content, python_type=simple_python_type(e.element),
+                            docstring=e.description, sample=None, referenced_class=None)
 
     def source(self, for_enum: bool) -> str:
         if self.docstring:
@@ -84,7 +133,7 @@ class PythonClass:
             baseclass = self.baseclass or 'ApiModel'
         baseclass = baseclass and f'({baseclass})'
         if not self.attributes:
-            attribute_sources = ('...', )
+            attribute_sources = ('...',)
         else:
             attribute_sources = chain.from_iterable(map(str.splitlines,
                                                         (f'{a.source(self.is_enum)}' for a in self.attributes)))
@@ -94,6 +143,53 @@ class PythonClass:
                                        attributes='\n'.join(f'    {line}' for line in attribute_sources)).strip()
         return result
 
+    @classmethod
+    def from_data_structure(cls, ds: ApibDatastructure) -> Generator['PythonClass', None, None]:
+        """
+        :return:
+        """
+        # content can be 'object' or 'enum'
+        content = ds.content
+        content_element = content and content.element
+        python_name = ds.python_name
+        baseclass = ds.baseclass
+        if not content_element:
+            raise ValueError('content element should not be None')
+        elif content_element == 'object':
+            content: ApibObject
+            # get attributes from object content
+            classes, attributes = python_class_attributes(basename=ds.python_name,
+                                                          members=content.content)
+            yield from classes
+            yield PythonClass(name=python_name, attributes=attributes, description=None, is_enum=False,
+                              baseclass=baseclass)
+
+        elif content_element == 'enum':
+            content: ApibEnum
+            attributes = list(Attribute.from_enum(content))
+            yield PythonClass(name=python_name, attributes=attributes, is_enum=True)
+        else:
+            classes, attributes = python_class_attributes(basename=ds.python_name,
+                                                          members=content.content)
+            yield from classes
+            yield PythonClass(name=python_name, attributes=attributes, description=None, is_enum=False,
+                              baseclass=baseclass)
+
+    @classmethod
+    def from_parse_result(cls, parse_result: ApibParseResult) -> Generator['PythonClass', None, None]:
+        """
+        All Python classes (implicit and explict and classes used in results of endpoint calls)
+        """
+        for ds in parse_result.api.data_structures():
+            yield from PythonClass.from_data_structure(ds)
+
+        # also go through transitions and look at response datastructures
+        for transition in parse_result.api.transitions():
+            response = transition.http_transaction.response
+            ds = response and response.datastructure
+            if ds:
+                yield from PythonClass.from_data_structure(ds)
+
 
 @dataclass
 class PythonClassRegistry:
@@ -101,6 +197,11 @@ class PythonClassRegistry:
 
     def add(self, pc: PythonClass):
         self._classes[pc.name] = pc
+
+    def get(self, class_name: str)->Optional[PythonClass]:
+        if pc := self._classes.get(class_name):
+            _, pc = self.dereferenced_class(pc.name)
+        return pc
 
     def classes(self) -> Generator[PythonClass, None, None]:
         visited = set()
@@ -276,3 +377,126 @@ class PythonClassRegistry:
                 # if
             # for
         # for
+
+
+def simple_python_type(t: str) -> str:
+    if t == 'string':
+        return 'str'
+    elif t == 'number':
+        return 'int'
+    else:
+        raise ValueError(f'unexpected simple type: {t}')
+
+
+def classes_and_attribute_from_member(class_name: str, member: ApibMember) \
+        -> tuple[list['PythonClass'], Attribute]:
+    if member.element != 'member':
+        log.warning(f'Not implemented, member element: {member.element}')
+        return [], None
+        # TODO: implement this case
+    classes = []
+    name = member.key
+    value = member.value
+    docstring = member.meta and member.meta.description
+    referenced_class = None
+    if value.element == 'string':
+        sample = value.content
+        # could be a datetime
+        if sample is None:
+            python_type = 'str'
+        else:
+            try:
+                dateutil.parser.parse(sample)
+                python_type = 'datetime'
+            except (OverflowError, dateutil.parser.ParserError):
+                # probably a string
+                python_type = 'str'
+    elif value.element == 'array':
+        sample = None
+        if not isinstance(value.content, list):
+            raise ValueError('unexpected content for list')
+        if not value.content:
+            array_element_type = 'string'
+        else:
+            array_element_type = value.content[0].element
+        if array_element_type == 'string':
+            python_type = 'list[str]'
+            sample = ", ".join(f"'{c.content}'" for c in value.content if c.content is not None)
+            sample = sample and f'[{sample}]'
+        elif array_element_type == 'number':
+            content = value.content[0]
+            python_type = f'list[{content.content.__class__.__name__}]'
+            sample = f'[{", ".join(f"{c.content}" for c in value.content)}]'
+        elif array_element_type == 'object':
+            # array of some object
+            if not isinstance(value.content, list) or len(value.content) != 1:
+                raise ValueError(f'Well, this is unwxpdected: {value.content}')
+            content: ApibObject = value.content[0]
+            referenced_class = f'{class_name}{name[0].upper()}{name[1:]}'
+            python_type = f'list[{referenced_class}]'
+            new_classes, class_attributes = python_class_attributes(basename=referenced_class,
+                                                                    members=content.content)
+            classes.extend(new_classes)
+            classes.append(PythonClass(name=referenced_class, attributes=class_attributes,
+                                       description=value.description, is_enum=False, baseclass=None))
+        else:
+            # array of some type
+            # references class is that type
+            referenced_class = words_to_camel(array_element_type)
+            # .. and the Python type is a list of that type
+            python_type = f'list[{referenced_class}]'
+    elif value.element == 'object':
+        # we need a class with these attributes
+        python_type = f'{class_name}{name[0].upper()}{name[1:]}'
+        sample = None
+        referenced_class = python_type
+        new_classes, class_attributes = python_class_attributes(basename=referenced_class, members=value.content)
+        classes.extend(new_classes)
+        classes.append(PythonClass(name=referenced_class, attributes=class_attributes,
+                                   description=value.description, is_enum=False, baseclass=None))
+    elif value.element == 'number':
+        # can be int or float
+        if value.content is None:
+            python_type = 'int'
+        else:
+            try:
+                int(value.content)
+                python_type = 'int'
+            except ValueError:
+                python_type = 'float'
+        sample = value.content
+    elif value.element == 'enum':
+        value: ApibEnum
+        # we need an implicit enum class
+        python_type = f'{class_name}{name[0].upper()}{name[1:]}'
+        sample = value.content and value.content.content
+        referenced_class = python_type
+        class_attributes = list(Attribute.from_enum(value))
+        classes.append(PythonClass(name=referenced_class, attributes=class_attributes,
+                                   description=value.description, is_enum=True, baseclass=None))
+    elif value.element == 'boolean':
+        python_type = 'bool'
+        sample = value.content
+    else:
+        # this might be a reference to a class
+        python_type = words_to_camel(value.element)
+        referenced_class = python_type
+        try:
+            sample = value.content and value.content.content
+        except AttributeError:
+            sample = None
+    return classes, Attribute(name=name, python_type=python_type, docstring=docstring, sample=sample,
+                              referenced_class=referenced_class)
+
+
+def python_class_attributes(basename: str, members: list[ApibMember]) -> tuple[list[PythonClass], list[Attribute]]:
+    classes = []
+    attributes = []
+    if not members:
+        return classes, attributes
+    for member in members:
+        new_classes, attribute = classes_and_attribute_from_member(basename, member)
+        classes.extend(new_classes)
+        if attribute:
+            attributes.append(attribute)
+    return classes, attributes
