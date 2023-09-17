@@ -376,8 +376,19 @@ class WithTypeAttributes(ApibElement):
     """
     Mixin to support 'typeAttributes' attribute
     """
-    has_attributes = True
     type_attributes: set[str] = Field(alias='typeAttributes', default_factory=set)
+
+    @model_validator(mode='before')
+    def val_root_type_attributes(cls, values):
+        values = values.copy()
+        # try to pull typeAttributes
+        if (attributes := values.get('attributes')) and (typeAttributes := attributes.pop('typeAttributes', None)):
+            values['typeAttributes'] = typeAttributes
+            if not attributes:
+                values.pop('attributes')
+            else:
+                log.warning(f'{cls.__name__} with unconsumed attributes: {", ".join(attributes)}')
+        return values
 
     @field_validator('type_attributes', mode='before')
     def val_type_attributes(cls, v):
@@ -478,11 +489,10 @@ class ApibCopy(ApibElement):
     content: str
 
 
-class ApibMember(ApibElement):
+class ApibMember(WithTypeAttributes):
     element: Literal['member']
     key: str
     value: Optional[Union[str, ApibElement]] = None
-    type_attributes: set[str] = Field(alias='typeAttributes', default_factory=set)
 
     @property
     def as_dict(self) -> dict:
@@ -502,29 +512,7 @@ class ApibMember(ApibElement):
             log.error(f'val_root_member failed: {e}')
             raise
 
-        # try to pull typeAttributes
-        if (attributes:=values.get('attributes')) and (typeAttributes:=attributes.pop('typeAttributes', None)):
-            values['typeAttributes'] = typeAttributes
-            if not attributes:
-                values.pop('attributes')
-            else:
-                log.warning(f'member with unconsumed attributes: {", ".join(attributes)}')
         return values
-
-    @field_validator('type_attributes', mode='before')
-    def val_type_attributes(cls, v):
-        """
-        Type attributes are something like:
-            {'content': [{'content': 'required', 'element': 'string'}], 'element': 'array'}
-        :param v:
-        :return:
-        """
-        v = ApibArray.model_validate(v, element='string')
-        if any(s.meta or s.attributes for s in v.content):
-            raise ValueError(f'Can\'t create set from list with non trivial strings: {v}')
-        v = set(s.content for s in v.content)
-        return v
-
 
 class ApibHrefVariables(ApibElement):
     element: Literal['hrefVariables']
@@ -675,7 +663,7 @@ class ApibObject(WithTypeAttributes):
     element: Literal['object']
 
     # TODO: Why is this union needed? Looks likes sometimes there is a 'select' child element?
-    content: list[ApibMember] = Field(default_factory=list)
+    content: list[Union[ApibMember, ApibElement]] = Field(default_factory=list)
 
     @model_validator(mode='after')
     def val_root_object(cls, o: 'ApibObject'):
