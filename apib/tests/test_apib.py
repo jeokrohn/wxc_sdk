@@ -1242,9 +1242,10 @@ class ReadAPIB(ApibTest):
         """
         check parsed 'select' elements
         """
-        self.stream_handler.setLevel(logging.INFO)
+        self.stream_handler.setLevel(logging.ERROR)
         err = None
         parents = set()
+        member_value_types = set()
         for path, data in self.apib_path_and_data():
             path = os.path.basename(path)
             parsed = ApibParseResult.model_validate(data)
@@ -1253,43 +1254,78 @@ class ReadAPIB(ApibTest):
                 if select_element.element.lower() != 'select':
                     continue
                 try:
+                    print(f'{path}: {el_info.elem_path_extended}')
                     content = select_element.content
+
                     # content is always a list
-                    self.assertEqual('list', content.__class__.__name__)
+                    self.assertEqual('list', content.__class__.__name__,
+                                     'content not a list')
+
                     # there are no attributes
-                    self.assertIsNone(select_element.attributes)
+                    self.assertIsNone(select_element.attributes,
+                                      'attributes not None')
                     # no meta
-                    self.assertIsNone(select_element.meta)
+                    self.assertIsNone(select_element.meta,
+                                      'meta not None')
 
                     # collect parents
                     parent = el_info.elem_path.split('.')[-1]
                     parents.add(parent)
 
                     # childs are 'option' elements
-                    self.assertTrue(all(c.element == 'option' for c in content))
+                    self.assertTrue(all(c.element == 'option' for c in content),
+                                    'Not all elements are \'option\' elements')
 
                     for option_element in content:
-                        self.assertTrue(isinstance(option_element.content, list))
-                        self.assertEqual(1, len(option_element.content))
-                        member = option_element.content[0]
-                        self.assertEqual('member', member.element)
+                        # # 'option' element content is a single element list
+                        # self.assertTrue(isinstance(option_element.content, list),
+                        #                 'option element content not a list')
+                        # self.assertEqual(1, len(option_element.content),
+                        #                  'option element content list length')
+
+                        # ... and the element in that list is a 'member'
+                        member = option_element.content
+                        self.assertEqual('member', member.element,
+                                         'option element content list element not a \'member\' element')
                         member: ApibMember
-                        self.assertIsNone(member.attributes)
-                        self.assertIsNone(member.content)
+
+                        # ... w/o attributes and content
+                        self.assertIsNone(member.attributes,
+                                          'option element content list element has attributes')
+                        self.assertIsNone(member.content,
+                                          'option element content list element has content')
+
+                        # ... but meta can exist
                         member_meta = member.meta
                         # meta can exist
                         if member_meta:
                             # .. and only has a description
-                            self.assertIsNone(member_meta.classes)
-                            self.assertIsNone(member_meta.id)
-                            self.assertIsNone(member_meta.title)
-                            self.assertIsNotNone(member_meta.description)
-                        self.assertIsNotNone(member.key)
+                            self.assertIsNone(member_meta.classes,
+                                              'meta classes')
+                            self.assertIsNone(member_meta.id,
+                                              'meta id')
+                            self.assertIsNone(member_meta.title,
+                                              'meta title')
+                            self.assertIsNotNone(member_meta.description,
+                                                 'meta description')
+                        # and there is always a key
+                        self.assertIsNotNone(member.key, 'no key')
 
+                        # ... the key is always 'value'
+                        self.assertEqual('value', member.key)
+
+                        # member value can be ....
+                        member_value_types.add(member.value.element)
+
+                        # should not have attributes
+                        self.assertIsNone(member.attributes,
+                                          'member attributes')
+                    # for
                 except AssertionError as e:
                     print(f'{path}, {el_info.elem_path_extended}: {e}')
                     err = err or e
         print(f'parents: {", ".join(sorted(parents))}')
+        print(f'member value types: {", ".join(sorted(member_value_types))}')
 
         if err:
             raise err
@@ -1467,6 +1503,7 @@ class ReadAPIB(ApibTest):
                          next((i for i, el in enumerate(elem_path[-1]) if el == element), None))
                 print(f'{apib_path}: {depth * "  "}{path}')
 
+    @skip('ApibParseResult has no python_classes(); result of refactoring')
     def test_parsed_python_classes(self):
         logging.getLogger().setLevel(logging.INFO)
 

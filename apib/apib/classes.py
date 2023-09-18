@@ -13,14 +13,16 @@ __all__ = ['ApibParseResult', 'ApibElement', 'ApibCopy', 'ApibResource', 'ApibMo
            'ApibMeta', 'ApibArray', 'ApibString', 'ApibEnum', 'ApibEnumElement', 'ApibHttpHeaders',
            'ApibWithHeaders', 'ApibHrefMember', 'ApibHttpResponse', 'ApibHttpTransaction', 'ApibHttpRequest',
            'ApibBool', 'ApibApi', 'ApibHrefVariables', 'ApibNumber', 'ApibSourceMap', 'ApibSourceMapNumber',
-           'AbibSourceMapNumberArray', 'ApibObject', 'words_to_camel']
+           'AbibSourceMapNumberArray', 'ApibObject', 'words_to_camel', 'ApibSourceMapEntry', 'ApibOption',
+           'ApibSelect']
 
 log = logging.getLogger(__name__)
 
 
 def words_to_camel(s: str) -> str:
-    def cap_first(s:str)->str:
+    def cap_first(s: str) -> str:
         return f'{s[0].upper()}{s[1:]}'
+
     r = ''.join(cap_first(w) for w in s.split())
     return r
 
@@ -82,7 +84,7 @@ class ElementInfo(NamedTuple):
                 e: ApibElement
                 to_yield = e.element
                 if meta := e.meta:
-                    addtl = '/'.join(s for s in (meta.id, meta.meta_class, meta.title) if s)
+                    addtl = '/'.join(s for s in (meta.id, meta.meta_class, meta.title, meta.description) if s)
                     if addtl:
                         to_yield = f'{to_yield}({addtl})'
                 yield to_yield
@@ -92,7 +94,7 @@ class ElementInfo(NamedTuple):
 
 class ApibElement(ApibModel):
     element: str
-    content: Optional[Union[int, str, ApibKeyValue, 'ApibElement', list['ApibElement']]] = None
+    content: Optional[Union[int, str, bool, float, ApibKeyValue, 'ApibElement', list['ApibElement']]] = None
     attributes: Optional[dict[str, 'ApibElement']] = None
     meta: Optional[ApibMeta] = None
 
@@ -514,6 +516,34 @@ class ApibMember(WithTypeAttributes):
 
         return values
 
+
+class ApibOption(ApibElement):
+    element: Literal['option']
+    content: ApibMember
+
+    @model_validator(mode='before')
+    def root_val_option(cls, values):
+        # content should be a single element list
+        if not (content := values.get('content')) or not isinstance(content, list) or len(content) != 1:
+            raise ValueError(f'content should be single element list: {content}')
+        values = values.copy()
+        values['content'] = content[0]
+        return values
+
+    @property
+    def option_text(self) -> Optional[str]:
+        return self.content.meta and self.content.meta.description
+
+    @property
+    def value(self) -> Union[Any]:
+        return self.content.value.content
+
+
+class ApibSelect(ApibElement):
+    element: Literal['select']
+    content: list[ApibOption]
+
+
 class ApibHrefVariables(ApibElement):
     element: Literal['hrefVariables']
     content: list['ApibMember']
@@ -577,7 +607,7 @@ class ApibDatastructure(ApibElement):
 
     @property
     def python_name(self) -> Optional[str]:
-        if self.content and self.content.meta and (name:=self.content.meta.id):
+        if self.content and self.content.meta and (name := self.content.meta.id):
             return words_to_camel(name)
         return None
 
@@ -663,7 +693,7 @@ class ApibObject(WithTypeAttributes):
     element: Literal['object']
 
     # TODO: Why is this union needed? Looks likes sometimes there is a 'select' child element?
-    content: list[Union[ApibMember, ApibElement]] = Field(default_factory=list)
+    content: list[Union[ApibMember, ApibSelect]] = Field(default_factory=list)
 
     @model_validator(mode='after')
     def val_root_object(cls, o: 'ApibObject'):
@@ -702,12 +732,12 @@ class ApibTransition(ApibElement, allowed_content={'copy', 'httpTransaction'}):
         return (self.meta and self.meta.title) or None
 
     @property
-    def docstring(self)->Optional[str]:
+    def docstring(self) -> Optional[str]:
         copy_element = self.find_content_by_element('copy')
         return copy_element and copy_element.content
 
     @property
-    def http_transaction(self)->'ApibHttpTransaction':
+    def http_transaction(self) -> 'ApibHttpTransaction':
         return self.find_content_by_element('httpTransaction')
 
 
@@ -938,4 +968,3 @@ class ApibParseResult(ApibElement, allowed_content={'category', 'annotation'}):
     @classmethod
     def model_validate(cls, *args, **kwargs) -> 'ApibParseResult':
         return super().model_validate(*args, **kwargs)
-
