@@ -2,14 +2,14 @@ import re
 from collections.abc import Generator
 from dataclasses import dataclass
 from itertools import chain
-from typing import NamedTuple
+from typing import NamedTuple, Union
 from urllib.parse import urljoin
 
 import dateutil.parser
 
 from apib.apib import read_api_blueprint, ApibParseResult
-from apib.apib.classes import ApibHrefMember, ApibElement, ApibEnum, ApibDatastructure, ApibObject, ApibString, \
-    ApibBool, ApibNumber, ApibArray
+from apib.apib.classes import ApibElement, ApibEnum, ApibDatastructure, ApibObject, ApibString, \
+    ApibBool, ApibNumber, ApibArray, ApibSelect, ApibMember
 from apib.python_class import PythonClassRegistry, Endpoint, Parameter, PythonClass, Attribute, \
     classes_and_attribute_from_member, simple_python_type
 
@@ -61,7 +61,28 @@ class CodeGenerator:
         source = source.strip() + '\n'
         return source
 
-    def param_from_member(self, endpoint_name: str, member: ApibHrefMember) -> Parameter:
+    def param_from_member_or_select(self, endpoint_name: str, member: Union[ApibMember, ApibSelect]) -> Parameter:
+
+        if not (isinstance(member, ApibMember) or isinstance(member, ApibSelect)):
+            raise TypeError(f'unexpected parameter type: {member.__class__.__name__}')
+
+        if isinstance(member, ApibSelect):
+            member: ApibSelect
+            name = member.option_key
+            docstring = member.description
+            # collect all types
+            types = [simple_python_type(option.content.value.element, option.content.value.content)
+                     for option in member.content]
+            python_type = f'Union[{", ".join(sorted(set(types)))}]'
+            text_of_options = '\n'.join(f'{option.content.value.content} ({t})'
+                                        for option, t in zip(member.content, types))
+            docstring = '\n'.join(l for l in chain((docstring, 'One of:'),
+                                                   (f'  * {tl}' for tl in text_of_options.splitlines()))
+                                  if l is not None)
+
+            parameter = Parameter(name=name, python_type=python_type, docstring=docstring,
+                                  optional=False, sample=None)
+            return parameter
 
         # determine parameter name, ... and avoid reserved names
         name = member.key
@@ -71,12 +92,12 @@ class CodeGenerator:
         docstring = member.description
         sample = member.value
         if member.meta is None:
-            type_hint = ''
+            type_hint = None
         else:
             type_hint = member.meta.title
         optional = 'required' not in member.type_attributes
 
-        # now try to determine the actual Python type ans sample value
+        # now try to determine the actual Python type and sample value
         type_hint_lower = type_hint and type_hint.lower()
         python_type = ''
 
@@ -109,28 +130,19 @@ class CodeGenerator:
                 # create a class on the fly
                 class_name = ''.join(map(str.capitalize, endpoint_name.split('_')))
                 class_name = f'{class_name}{name[0].upper()}{name[1:]}'
-                class_attributes= []
+                class_attributes = []
                 for sample_member in sample.content:
                     classes, attribute = classes_and_attribute_from_member(class_name=class_name,
                                                                            member=sample_member)
                     # register classes
                     list(map(self.class_registry.add, classes))
                     class_attributes.append(attribute)
-                new_class = PythonClass(name=class_name, description=docstring, is_enum=True,
+                new_class = PythonClass(name=class_name, description=docstring, is_enum=False,
                                         attributes=class_attributes)
                 # and register that
                 self.class_registry.add(new_class)
                 sample = ''
                 python_type = class_name
-            elif isinstance(sample, ApibElement) and not any((sample.content, sample.attributes, sample.meta)):
-                # in this case the element is a lass name
-                class_name = sample.element.replace(' ', '')
-                # this class should exist
-                if self.class_registry.get(class_name):
-                    python_type = class_name
-                    sample = ''
-                else:
-                    raise KeyError(f'Unknown class: {class_name}')
             elif isinstance(sample, ApibArray):
                 try:
                     python_type = simple_python_type(sample.content[0].element)
@@ -144,19 +156,58 @@ class CodeGenerator:
                 else:
                     # hopefully we can figure out the type of the array elements. For this we expect the
                     # sample content to have exactly one ApibElement entry
-                    if len(sample.content)==1 and isinstance(arr_element:=sample.content[0], ApibElement):
+                    if len(sample.content) != 1:
+                        raise NotImplementedError(f'Unexpected sample: {sample}')
+                    arr_element = sample.content[0]
+                    if not isinstance(arr_element, ApibElement):
+                        raise NotImplementedError(f'Unexpected sample: {sample}')
+                    if isinstance(arr_element, ApibObject):
+                        # create a class on the fly
+                        class_name = ''.join(map(str.capitalize, endpoint_name.split('_')))
+                        class_name = f'{class_name}{name[0].upper()}{name[1:]}'
+                        class_attributes = []
+                        for sample_member in arr_element.content:
+                            classes, attribute = classes_and_attribute_from_member(class_name=class_name,
+                                                                                   member=sample_member)
+                            # register classes
+                            list(map(self.class_registry.add, classes))
+                            class_attributes.append(attribute)
+                        new_class = PythonClass(name=class_name, description=docstring, is_enum=False,
+                                                attributes=class_attributes)
+                        # and register that
+                        self.class_registry.add(new_class)
+                        sample = ''
+                        python_type = f'list[{class_name}]'
+                    else:
                         # this is an array of a class instance and the arr_element has the class name
                         class_name = arr_element.element.replace(' ', '')
                         # this class has to exist
-                        if pc:=self.class_registry.get(class_name):
+                        if pc := self.class_registry.get(class_name):
                             python_type = f'list[{pc.name}]'
                             sample = ''
                         else:
                             raise KeyError(f'Unknown class: {class_name}')
+            elif isinstance(sample, ApibElement):
+                # in this case the element is a class name
+                class_name = sample.element.replace(' ', '')
+                # this class should exist
+                if not self.class_registry.get(class_name):
+                    raise KeyError(f'Unknown class: {class_name}')
+                else:
+                    python_type = class_name
+                    if sample.meta:
+                        raise NotImplementedError()
+                    if (sample.attributes and
+                            (unexpected_attributes := set(sample.attributes) - {'typeAttributes', 'default',
+                                                                                'enumerations'})):
+                        raise NotImplementedError(f'Unexpected sample attributes: '
+                                                  f'{", ".join(sorted(unexpected_attributes))}')
+                    if sample.content:
+                        sample = sample.content.content
                     else:
-                        NotImplementedError('Unexpected!')
+                        sample = ''
             else:
-                raise NotImplementedError()
+                raise NotImplementedError(f'unhandled sample: {sample}')
         elif type_hint_lower == 'string' or type_hint_lower is None:
             # could be a datetime
             if sample is None:
@@ -245,7 +296,7 @@ class CodeGenerator:
             response_datastructure = response.datastructure
             href_parameter = []
             for href_variable in transition.href_variables:
-                param = self.param_from_member(endpoint_name=name, member=href_variable)
+                param = self.param_from_member_or_select(endpoint_name=name, member=href_variable)
                 href_parameter.append(param)
 
             # TODO: body parameter, from request
@@ -257,8 +308,8 @@ class CodeGenerator:
                     # The object should have all attributes
                     body_content: ApibObject
                     # ApibObject has a list of members
-                    body_parameter = [self.param_from_member(endpoint_name=name, member=member)
-                                  for member in body_content.content]
+                    body_parameter = [self.param_from_member_or_select(endpoint_name=name, member=member)
+                                      for member in body_content.content]
                 elif isinstance(body_content, ApibElement) and not any((body_content.content,
                                                                         body_content.meta)):
                     # this might be a class name
@@ -267,7 +318,7 @@ class CodeGenerator:
                     # type attributes is the only acceptable attribute
                     optional = False
                     if body_content.attributes:
-                        if set(body_content.attributes)!={'typeAttributes'}:
+                        if set(body_content.attributes) != {'typeAttributes'}:
                             raise KeyError(f'Only typeAttributes are acceptable, got: '
                                            f'{", ".join(sorted(body_content.attributes))}')
                         type_attributes = set(ta.content for ta in body_content.attributes['typeAttributes'].content)

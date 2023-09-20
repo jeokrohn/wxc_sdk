@@ -72,7 +72,7 @@ class Attribute:
     @classmethod
     def from_enum(cls, enum_element: ApibEnum) -> Generator['Attribute', None, None]:
         """
-        Gnerator for attributes from an ApibEnum
+        Generator for attributes from an ApibEnum
         """
         for e in enum_element.enumerations:
             yield Attribute(name=e.content, python_type=simple_python_type(e.element),
@@ -379,13 +379,22 @@ class PythonClassRegistry:
         # for
 
 
-def simple_python_type(t: str) -> str:
-    if t == 'string':
+def simple_python_type(type_hint: str, value: Any=None) -> str:
+    if type_hint == 'string':
         return 'str'
-    elif t == 'number':
+    elif type_hint == 'number':
+        # could be float or int
+        if value is not None:
+            try:
+                float(value)
+            except ValueError:
+                return 'int'
+            return 'float'
         return 'int'
+    elif type_hint == 'boolean':
+        return 'bool'
     else:
-        raise ValueError(f'unexpected simple type: {t}')
+        raise ValueError(f'unexpected simple type: {type_hint}')
 
 
 def classes_and_attribute_from_member(class_name: str, member: ApibMember) \
@@ -439,6 +448,17 @@ def classes_and_attribute_from_member(class_name: str, member: ApibMember) \
             classes.extend(new_classes)
             classes.append(PythonClass(name=referenced_class, attributes=class_attributes,
                                        description=value.description, is_enum=False, baseclass=None))
+        elif array_element_type == 'enum':
+            # array of enum
+            if not isinstance(value.content, list) or len(value.content) != 1:
+                raise ValueError(f'Well, this is unexpected: {value.content}')
+            # create enum on the fly
+            content: ApibEnum = value.content[0]
+            referenced_class = f'{class_name}{name[0].upper()}{name[1:]}'
+            python_type = f'list[{referenced_class}]'
+            class_attributes = list(Attribute.from_enum(content))
+            classes.append(PythonClass(name=referenced_class, attributes=class_attributes,
+                                       description=value.description, is_enum=True, baseclass=None))
         else:
             # array of some type
             # references class is that type
