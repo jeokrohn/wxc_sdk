@@ -11,7 +11,7 @@ from apib.apib import is_element
 __all__ = ['ApibParseResult', 'ApibElement', 'ApibCopy', 'ApibResource', 'ApibModel', 'ApibDatastructure',
            'ApibCategory', 'ApibAnnotation', 'ApibKeyValue', 'ApibWithCopy', 'ApibTransition', 'ApibMember',
            'ApibMeta', 'ApibArray', 'ApibString', 'ApibEnum', 'ApibEnumElement', 'ApibHttpHeaders',
-           'ApibWithHeaders', 'ApibHrefMember', 'ApibHttpResponse', 'ApibHttpTransaction', 'ApibHttpRequest',
+           'ApibWithHeaders', 'ApibHttpResponse', 'ApibHttpTransaction', 'ApibHttpRequest',
            'ApibBool', 'ApibApi', 'ApibHrefVariables', 'ApibNumber', 'ApibSourceMap', 'ApibSourceMapNumber',
            'AbibSourceMapNumberArray', 'ApibObject', 'words_to_camel', 'ApibSourceMapEntry', 'ApibOption',
            'ApibSelect']
@@ -501,20 +501,35 @@ class ApibMember(WithTypeAttributes):
         return {self.key: self.value.content}
 
     @model_validator(mode='before')
-    def val_root_member(cls, values):
-        if not isinstance(values, dict):
-            return values
+    def val_root_member(cls, data):
+        if not isinstance(data, dict):
+            return
         try:
-            values = values.copy()
-            values['key'] = ApibString.model_validate(values['content']['key']).content
-            value = ApibElement.deserialize_element(values['content']['value'])
-            values['value'] = value
-            values.pop('content')
+            data = data.copy()
+            content = data.get('content')
+            if content is None:
+                raise ValueError(f'missing content in {cls.__name__}')
+
+            # content should be a dict with key, value
+            if set(content) != {'key', 'value'}:
+                raise ValueError(f'Unexpected keys in content for {cls.__name__}: {sorted(set(content))}')
+
+            key = ApibString.model_validate(content['key']).content
+            if not isinstance(key, str):
+                raise ValueError(f'key is not a string: {type(key)}')
+            data['key'] = key
+            value = ApibElement.deserialize_element(content['value'])
+            # if isinstance(value, ApibString):
+            #     value = value.content
+            if value is not None:
+                data['value'] = value
+            data.pop('content')
+
         except Exception as e:
             log.error(f'val_root_member failed: {e}')
             raise
 
-        return values
+        return data
 
 
 class ApibOption(ApibElement):
@@ -542,6 +557,17 @@ class ApibOption(ApibElement):
 class ApibSelect(ApibElement):
     element: Literal['select']
     content: list[ApibOption]
+
+    @model_validator(mode='after')
+    def val_root_select(cls, data: 'ApibSelect'):
+        option_keys = set(option.content.key for option in data.content)
+        if len(option_keys) != 1:
+            raise ValueError(f'only expected one value in all options. Got: {", ".join(sorted(option_keys))}')
+        return data
+
+    @property
+    def option_key(self) -> str:
+        return self.content[0].content.key
 
 
 class ApibHrefVariables(ApibElement):
@@ -637,58 +663,6 @@ class ApibDatastructure(ApibElement):
         return refs
 
 
-# TODO: do we really still need this? Can't we just use ApibMember?
-class ApibHrefMember(ApibElement, override_element_type_for='transition'):
-    element: Literal['member']
-    type_attributes: set[str] = Field(alias='typeAttributes')
-
-    key: str
-    value: Optional[Union[str, ApibElement]] = None
-
-    has_attributes = True
-
-    @model_validator(mode='before')
-    def val_root_member(cls, data):
-        try:
-            data = data.copy()
-            content = data.get('content')
-            if content is None:
-                raise ValueError(f'missing content in {cls.__name__}')
-            # content should be a dict with key, value
-            if set(content) != {'key', 'value'}:
-                raise ValueError(f'Unexpected keys in content for {cls.__name__}: {sorted(set(content))}')
-
-            key = ApibString.model_validate(content['key']).content
-            if not isinstance(key, str):
-                raise ValueError(f'key is not a string: {type(key)}')
-            data['key'] = key
-            value = ApibElement.deserialize_element(content['value'])
-            if isinstance(value, ApibString):
-                value = value.content
-            if value is not None:
-                data['value'] = value
-            data.pop('content')
-        except Exception as e:
-            log.error(f'val_root_member failed: {e}')
-            raise
-
-        return data
-
-    @field_validator('type_attributes', mode='before')
-    def val_type_attributes(cls, v):
-        """
-        Type attributes are something like:
-            {'content': [{'content': 'required', 'element': 'string'}], 'element': 'array'}
-        :param v:
-        :return:
-        """
-        v = ApibArray.model_validate(v, element='string')
-        if any(s.meta or s.attributes for s in v.content):
-            raise ValueError(f'Can\'t create set from list with non trivial strings: {v}')
-        v = set(s.content for s in v.content)
-        return v
-
-
 class ApibObject(WithTypeAttributes):
     element: Literal['object']
 
@@ -705,7 +679,7 @@ class ApibObject(WithTypeAttributes):
 class ApibTransition(ApibElement, allowed_content={'copy', 'httpTransaction'}):
     element: Literal['transition']
     href: Optional[str] = None
-    href_variables: list[ApibHrefMember] = Field(alias='hrefVariables', default_factory=list)
+    href_variables: list[ApibMember] = Field(alias='hrefVariables', default_factory=list)
     data: Optional[ApibDatastructure] = None
 
     has_attributes = True
@@ -724,7 +698,7 @@ class ApibTransition(ApibElement, allowed_content={'copy', 'httpTransaction'}):
     def val_href_variables(cls, v):
         if (element := v.get('element')) != 'hrefVariables':
             raise ValueError(f"unexpected 'element' value for hrefVariables: '{element}'")
-        v = TypeAdapter(list[ApibHrefMember]).validate_python(v['content'])
+        v = TypeAdapter(list[ApibMember]).validate_python(v['content'])
         return v
 
     @property
