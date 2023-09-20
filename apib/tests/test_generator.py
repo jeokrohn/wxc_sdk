@@ -3,7 +3,6 @@ Unittests for code generation
 """
 import logging
 import os
-from os.path import splitext, dirname
 
 from apib.generator import CodeGenerator
 from apib.tests.test_apib import ApibTest
