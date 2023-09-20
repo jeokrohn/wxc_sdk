@@ -210,7 +210,7 @@ class PythonClassRegistry:
             if class_name is None:
                 return
 
-            # decend down into baseclasses if there are no attributes
+            # descend down into baseclasses if there are no attributes
             _, c = self.dereferenced_class(class_name)
             if c is None:
                 return

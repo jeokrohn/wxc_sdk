@@ -35,3 +35,27 @@ class GeneratorTest(ApibTest):
             apib_path = os.path.basename(apib_path)
             for ep in code_gen.endpoints():
                 print(ep)
+
+    def test_003_generate_class_sources_with_endpoints(self):
+        logging.getLogger().setLevel(logging.INFO)
+
+        for apib_path in self.apib_paths:
+            code_gen = CodeGenerator()
+            code_gen.read_blueprint(apib_path)
+            classes_after_reading_blueprint = len(code_gen.class_registry.classes())
+
+            list(code_gen.endpoints())
+            classes_after_generating_endpoints = len(code_gen.class_registry.classes())
+
+            code_gen.class_registry.eliminate_redundancies()
+            classes_after_generating_endpoints_no_redundancies = len(code_gen.class_registry.classes())
+
+            apib_path = os.path.basename(apib_path)
+
+            print(f'{apib_path}: {classes_after_reading_blueprint}, {classes_after_generating_endpoints}, '
+                  f'{classes_after_generating_endpoints_no_redundancies}')
+            py_path = os.path.join(os.path.dirname(__file__),
+                                   'generated',
+                                   f'{os.path.splitext(apib_path)[0]}_auto.py')
+            with open(py_path, mode='w') as f:
+                f.write(code_gen.source())

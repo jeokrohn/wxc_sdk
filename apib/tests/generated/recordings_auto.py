@@ -1,0 +1,199 @@
+from datetime import datetime
+from typing import Optional
+
+from pydantic import Field
+
+from wxc_sdk.base import ApiModel
+from wxc_sdk.base import SafeEnum as Enum
+
+
+__auto__ = ['BulkPurgeRecordingObject', 'BulkRestoreRecordingObject', 'BulkSoftDeleteRecordingObject', 'DeleteRecordingObject', 'RecordingObject', 'RecordingObjectFormat', 'RecordingObjectServiceType', 'RecordingObjectStatus', 'RecordingObjectWithDirectDownloadLinks', 'RecordingObjectWithDirectDownloadLinksStatus', 'RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks']
+
+
+class RecordingObjectFormat(str, Enum):
+    #: Recording file format is MP4.
+    mp4 = 'MP4'
+    #: Recording file format is ARF, a private format of Webex recordings. This format requires the Cisco ARF recording player.
+    arf = 'ARF'
+
+
+class RecordingObjectServiceType(str, Enum):
+    #: The service type for the recording is meeting.
+    meetingcenter = 'MeetingCenter'
+    #: The service type for the recording is the event.
+    eventcenter = 'EventCenter'
+    #: The service type for the recording is the training session.
+    trainingcenter = 'TrainingCenter'
+    #: The service type for the recording is the support meeting.
+    supportcenter = 'SupportCenter'
+
+
+class RecordingObjectStatus(str, Enum):
+    #: Recording is available.
+    available = 'available'
+    #: Recording has been moved into recycle bin.
+    deleted = 'deleted'
+    none_ = 'none'
+
+
+class RecordingObject(ApiModel):
+    #: A unique identifier for the recording.
+    #: example: 4f914b1dfe3c4d11a61730f18c0f5387
+    id: Optional[str] = None
+    #: Unique identifier for the parent ended meeting instance which the recording belongs to.
+    #: example: f91b6edce9864428af084977b7c68291_I_166641849979635652
+    meetingId: Optional[str] = None
+    #: Unique identifier for the parent scheduled meeting which the recording belongs to.
+    #: example: f91b6edce9864428af084977b7c68291_I_166641849979635652
+    scheduledMeetingId: Optional[str] = None
+    #: Unique identifier for the parent meeting series which the recording belongs to.
+    #: example: f91b6edce9864428af084977b7c68291
+    meetingSeriesId: Optional[str] = None
+    #: The recording's topic.
+    #: example: John's Meeting
+    topic: Optional[str] = None
+    #: The date and time recording was created in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. Please note that it's not the time the record button was clicked in meeting but the time the recording file was generated offline.
+    #: example: 2019-01-27T17:43:24Z
+    createTime: Optional[datetime] = None
+    #: The date and time recording started in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. It indicates when the record button was clicked in the meeting.
+    #: example: 2019-01-27T17:40:20Z
+    timeRecorded: Optional[datetime] = None
+    #: Site URL for the recording.
+    #: example: site4-example.webex.com
+    siteUrl: Optional[str] = None
+    #: The download link for recording. This attribute is not available if **Prevent downloading** has been turned on for the recording being requested. The **Prevent downloading** option can be viewed and set by a site admin on [Control Hub](https://help.webex.com/en-us/article/sxdj4ab/Manage-Security-for-a-Cisco-Webex-Site-in-Cisco-Webex-Control-Hub).
+    #: example: https://site4-example.webex.com/site4/lsr.php?RCID=60b864cc80aa5b44fc9769c8305b98b7
+    downloadUrl: Optional[str] = None
+    #: The playback link for recording.
+    #: example: https://site4-example.webex.com/site4/ldr.php?RCID=7a8a476b29a32cd1e06dfa6c81970f19
+    playbackUrl: Optional[str] = None
+    #: The recording's password.
+    #: example: BgJep@43
+    password: Optional[str] = None
+    #: example: MP4
+    format: Optional[RecordingObjectFormat] = None
+    #: The service type for the recording.
+    #: example: MeetingCenter
+    serviceType: Optional[RecordingObjectServiceType] = None
+    #: The duration of the recording, in seconds.
+    #: example: 4472.0
+    durationSeconds: Optional[int] = None
+    #: The size of the recording file, in bytes.
+    #: example: 248023188.0
+    sizeBytes: Optional[int] = None
+    #: Whether or not the recording has been shared to the current user.
+    shareToMe: Optional[bool] = None
+    #: External keys of the parent meeting created by an integration application. They could be Zendesk ticket IDs, Jira IDs, Salesforce Opportunity IDs, etc. The integration application queries recordings by a key in its own domain.
+    integrationTags: Optional[list[str]] = None
+    status: Optional[RecordingObjectStatus] = None
+
+
+class RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks(ApiModel):
+    #: The download link for recording MP4/ARF file without HTML page rendering in browser or HTTP redirect. Expires 3 hours after the API request.
+    recordingDownloadLink: Optional[str] = None
+    #: The download link for recording audio file without HTML page rendering in browser or HTTP redirect. This attribute is not available if **Prevent Downloading** has been turned on for the recording being requested. Expires 3 hours after the API request.
+    audioDownloadLink: Optional[str] = None
+    #: The download link for recording transcript file without HTML page rendering in browser or HTTP redirect. This attribute is not available if **Prevent Downloading** has been turned on for the recording being requested. Expires 3 hours after the API request.
+    transcriptDownloadLink: Optional[str] = None
+    #: The date and time when `recordingDownloadLink`, `audioDownloadLink`, and `transcriptDownloadLink` expire in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
+    expiration: Optional[str] = None
+
+
+class RecordingObjectWithDirectDownloadLinksStatus(str, Enum):
+    #: Recording is available.
+    available = 'available'
+    #: Recording has been moved to the recycle bin.
+    deleted = 'deleted'
+    #: Recording has been purged from the recycle bin. Please note that only a compliance officer can access recordings with a `purged` status.
+    purged = 'purged'
+    none_ = 'none'
+
+
+class RecordingObjectWithDirectDownloadLinks(ApiModel):
+    #: A unique identifier for recording.
+    #: example: 7ee40776779243b4b3da448d941b34dc
+    id: Optional[str] = None
+    #: Unique identifier for the parent ended meeting instance which the recording belongs to.
+    #: example: f91b6edce9864428af084977b7c68291_I_166641849979635652
+    meetingId: Optional[str] = None
+    #: Unique identifier for the parent scheduled meeting which the recording belongs to.
+    #: example: f91b6edce9864428af084977b7c68291_I_166641849979635652
+    scheduledMeetingId: Optional[str] = None
+    #: Unique identifier for the parent meeting series which the recording belongs to.
+    #: example: f91b6edce9864428af084977b7c68291
+    meetingSeriesId: Optional[str] = None
+    #: The recording's topic.
+    #: example: John's Meeting
+    topic: Optional[str] = None
+    #: The date and time recording was created in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. Please note that it's not the time the record button was clicked in meeting but the time the recording file was generated offline.
+    #: example: 2019-01-27T17:43:24Z
+    createTime: Optional[datetime] = None
+    #: The date and time recording started in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format. It indicates when the record button was clicked in the meeting.
+    #: example: 2019-01-27T17:40:20Z
+    timeRecorded: Optional[datetime] = None
+    #: Site URL for the recording.
+    #: example: site4-example.webex.com
+    siteUrl: Optional[str] = None
+    #: The download link for the recording. This attribute is not available if `prevent downloading` has been turned on for the recording being requested. The `prevent downloading` option can be viewed and set on page when editing a recording.
+    #: example: https://site4-example.webex.com/site4/lsr.php?RCID=60b864cc80aa5b44fc9769c8305b98b7
+    downloadUrl: Optional[str] = None
+    #: The playback link for recording.
+    #: example: https://site4-example.webex.com/site4/ldr.php?RCID=7a8a476b29a32cd1e06dfa6c81970f19
+    playbackUrl: Optional[str] = None
+    #: The recording's password.
+    #: example: BgJep@43
+    password: Optional[str] = None
+    #: example: MP4
+    format: Optional[RecordingObjectFormat] = None
+    #: example: MeetingCenter
+    serviceType: Optional[RecordingObjectServiceType] = None
+    #: The duration of the recording in seconds.
+    #: example: 4472.0
+    durationSeconds: Optional[int] = None
+    #: The size of the recording file in bytes.
+    #: example: 248023188.0
+    sizeBytes: Optional[int] = None
+    #: Whether or not the recording has been shared to the current user.
+    shareToMe: Optional[bool] = None
+    #: The download links for MP4/ARF, audio, and transcript of the recording without HTML page rendering in browser or HTTP redirect. This attribute is not available if the user is not a [Compliance Officer](/docs/compliance#compliance) and **Prevent Downloading** has been turned on for the recording being requested. The Prevent Downloading option can be viewed and set on page when editing a recording. Note that there are various products in [Webex Suite](https://www.cisco.com/c/en/us/products/conferencing/product_comparison.html) such as "Webex Meetings", "Webex Training" and "Webex Events".
+    temporaryDirectDownloadLinks: Optional[RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks] = None
+    #: External keys of the parent meeting created by an integration application. The key can be Zendesk ticket IDs, Jira IDs, Salesforce Opportunity IDs, etc. The integration application queries recordings by a key in its own domain.
+    integrationTags: Optional[list[str]] = None
+    status: Optional[RecordingObjectWithDirectDownloadLinksStatus] = None
+
+
+class DeleteRecordingObject(ApiModel):
+    #: Reason for deleting a recording. Only required when a Compliance Officer is operating on another user's recording.
+    #: example: audit
+    reason: Optional[str] = None
+    #: Compliance Officer's explanation for deleting a recording. The comment can be a maximum of 255 characters long.
+    #: example: Maintain data privacy
+    comment: Optional[str] = None
+
+
+class BulkSoftDeleteRecordingObject(ApiModel):
+    #: Recording IDs for removing recordings into the recycle bin in batch. Please note that all the recording IDs should belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.
+    recordingIds: Optional[list[str]] = None
+    #: URL of the Webex site from which the API deletes recordings. If not specified, the API deletes recordings from the user's preferred site. All available Webex sites and preferred sites of a user can be retrieved by the [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.
+    #: example: example.webex.com
+    siteUrl: Optional[str] = None
+
+
+class BulkRestoreRecordingObject(ApiModel):
+    #: If not specified or `false`, restores the recordings specified by `recordingIds`. If `true`, restores all recordings from the recycle bin.
+    restoreAll: Optional[bool] = None
+    #: Recording IDs for recovering recordings from the recycle bin in batch. Note that all the recording IDs should belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.
+    recordingIds: Optional[list[str]] = None
+    #: URL of the Webex site from which the API restores recordings. If not specified, the API restores recordings from a user's preferred site. All available Webex sites and preferred sites of a user can be retrieved by [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.
+    #: example: example.webex.com
+    siteUrl: Optional[str] = None
+
+
+class BulkPurgeRecordingObject(ApiModel):
+    #: If not specified or `false`, purges the recordings specified by `recordingIds`. If `true`, purges all recordings from the recycle bin.
+    purgeAll: Optional[bool] = None
+    #: Recording IDs for purging recordings from the recycle bin in batch. Note that all the recording IDs should belong to the site of `siteUrl` or the user's preferred site if `siteUrl` is not specified.
+    recordingIds: Optional[list[str]] = None
+    #: URL of the Webex site from which the API purges recordings. If not specified, the API purges recordings from user's preferred site. All available Webex sites and preferred sites of the user can be retrieved by [Get Site List](/docs/api/v1/meeting-preferences/get-site-list) API.
+    #: example: example.webex.com
+    siteUrl: Optional[str] = None
