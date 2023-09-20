@@ -12,7 +12,7 @@ class TestDeviceConfigurations(TestCaseWithLog):
     @async_test
     async def test_001_list_all(self):
         devices = [device for device in self.api.devices.list()
-                   if device.product_type == ProductType.rooomdesk]
+                   if device.product_type == ProductType.roomdesk]
         if not devices:
             self.skipTest('No devices')
         devices.sort(key=attrgetter('display_name'))
