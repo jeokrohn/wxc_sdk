@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Application', 'ApplicationOrgSubmissionStatus', 'ApplicationSubmissionStatus', 'ApplicationType', 'ApplicationsCollectionResponse']
+__auto__ = ['Application', 'ApplicationOrgSubmissionStatus', 'ApplicationSubmissionStatus', 'ApplicationType', 'ApplicationsCollectionResponse', 'ListApplicationsOrderBy', 'ListApplicationsType']
 
 
 class ApplicationType(str, Enum):
@@ -40,7 +40,7 @@ class Application(ApiModel):
     name: Optional[str] = None
     #: A unique URL-friendly identifier for the application.
     #: example: my-great-app-my-company
-    friendlyId: Optional[str] = None
+    friendly_id: Optional[str] = None
     #: The type of application.
     #: example: integration
     type: Optional[ApplicationType] = None
@@ -64,41 +64,41 @@ class Application(ApiModel):
     screenshot3: Optional[str] = None
     #: An array of languages supported by the application.
     #: example: ['en-US', 'es-MX']
-    supportedLanguages: Optional[list[str]] = None
+    supported_languages: Optional[list[str]] = None
     #: An array of categories the application belongs to.
     #: example: ['productivity', 'other']
     categories: Optional[list[str]] = None
     tags: Optional[list[str]] = None
     #: URL for the application's informational video.
     #: example: https://youtu.be/abc123
-    videoUrl: Optional[str] = None
+    video_url: Optional[str] = None
     #: The ID of the organization to which this application belongs.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: Contact email for the application.
     #: example: info@example.com
-    contactEmail: Optional[str] = None
+    contact_email: Optional[str] = None
     #: Contact name for the application.
     #: example: John Andersen
-    contactName: Optional[str] = None
+    contact_name: Optional[str] = None
     #: Company name for the application.
     #: example: Example, Inc.
-    companyName: Optional[str] = None
+    company_name: Optional[str] = None
     #: URL for the application's maintainer.
     #: example: https://www.example.com
-    companyUrl: Optional[str] = None
+    company_url: Optional[str] = None
     #: URL for the application's product information page.
     #: example: https://www.example.com/products/my-great-app
-    productUrl: Optional[str] = None
+    product_url: Optional[str] = None
     #: URL for the application's support information.
     #: example: https://help.example.com/
-    supportUrl: Optional[str] = None
+    support_url: Optional[str] = None
     #: URL for the application's privacy policy.
     #: example: https://www.example.com/privacy-policy
-    privacyUrl: Optional[str] = None
+    privacy_url: Optional[str] = None
     #: Oauth redirect URLs for the application (only present if the application is an integration).
     #: example: ['https://my-app.example.com/authenticate', 'https://my-app-staging.example.com/authenticate']
-    redirectUrls: Optional[list[str]] = None
+    redirect_urls: Optional[list[str]] = None
     #: Scopes requested by the application (only present if the application is an integration).
     #: example: ['spark:people_read', 'spark:messages_write']
     scopes: Optional[list[str]] = None
@@ -107,27 +107,27 @@ class Application(ApiModel):
     keywords: Optional[list[str]] = None
     #: The application's Oauth client ID.
     #: example: C1234567890ABCDEF
-    clientId: Optional[str] = None
+    client_id: Optional[str] = None
     #: If the application is a bot, this is the bot's email address. (only present if the application is a bot).
     #: example: my-great-app@webex.bot
-    botEmail: Optional[str] = None
+    bot_email: Optional[str] = None
     #: If the application is a bot, this is the bot's personId (only present if the application is a bot).
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8xMjM0NTY3OC05MGFiLWNkZWYtMTIzNC01Njc4OTBhYmNkZWY
-    botPersonId: Optional[str] = None
+    bot_person_id: Optional[str] = None
     #: Whether or not the application is featured on the Webex App Hub.
-    isFeatured: Optional[bool] = None
+    is_featured: Optional[bool] = None
     #: Internal use only.
-    isNative: Optional[bool] = None
+    is_native: Optional[bool] = None
     #: The date and time the application was submitted to Webex App Hub.
     #: example: 2017-12-01T07:00:00.000Z
-    submissionDate: Optional[datetime] = None
+    submission_date: Optional[datetime] = None
     #: The Webex App Hub submission status of the application.
     #: example: in_review
-    submissionStatus: Optional[ApplicationSubmissionStatus] = None
-    orgSubmissionStatus: Optional[ApplicationOrgSubmissionStatus] = None
+    submission_status: Optional[ApplicationSubmissionStatus] = None
+    org_submission_status: Optional[ApplicationOrgSubmissionStatus] = None
     #: The ID of the person who created the application.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    created_by: Optional[str] = None
+    created_by: Optional[str] = Field(alias='created_by', default=None)
     #: The date and time the application was created.
     #: example: 2017-10-01T07:00:00.000Z
     created: Optional[datetime] = None
@@ -135,3 +135,16 @@ class Application(ApiModel):
 
 class ApplicationsCollectionResponse(ApiModel):
     items: Optional[list[Application]] = None
+
+
+class ListApplicationsType(str, Enum):
+    integration = 'integration'
+    bot = 'bot'
+
+
+class ListApplicationsOrderBy(str, Enum):
+    is_featured = 'isFeatured'
+    last_submission_date = 'lastSubmissionDate'
+    policy = 'policy'
+    app_name = 'appName'
+    name = 'name'

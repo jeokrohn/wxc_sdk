@@ -20,15 +20,15 @@ class ConferenceStateEnum(str, Enum):
 
 
 class ConferenceTypeEnum(str, Enum):
-    bargein = 'bargeIn'
-    silentmonitoring = 'silentMonitoring'
+    barge_in = 'bargeIn'
+    silent_monitoring = 'silentMonitoring'
     coaching = 'coaching'
 
 
 class ConferenceParticipant(ApiModel):
     #: The callId of the call.
     #: example: Y2lzY29z...
-    callId: Optional[str] = None
+    call_id: Optional[str] = None
     #: Indicates if the participant has been muted.
     #: example: True
     muted: Optional[bool] = None

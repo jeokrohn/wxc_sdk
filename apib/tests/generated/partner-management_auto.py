@@ -13,7 +13,7 @@ __auto__ = ['IdentityManagedOrg', 'ManagedOrgsResponse', 'PartnerAdminUser', 'Pa
 class IdentityManagedOrg(ApiModel):
     #: The org ID of the managed org.
     #: example: Y2LZY29ZCGFYAZOVL3VZL1BFT1BMRS9MNWIZNJE4NY1JOGRKLTQ3MJCTOGIYZI1MOWM0NDDMMJKWNDY
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: role ID of the user to this org.
     #: example: YXRSYXMTCG9YDGFSLNBHCNRUZXIUC2FSZXNMDWXSYWRTAW4=
     role: Optional[str] = None
@@ -25,19 +25,19 @@ class PartnerAdminUser(ApiModel):
     id: Optional[str] = None
     #: The display name of the partner admin.
     #: example: display name
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: The first name of the partner admin.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: The last name of the partner admin.
     #: example: Doe
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: List of emails for the partner admin.
     #: example: ['johndoe@example.com']
     emails: Optional[list[str]] = None
     #: The role of this partner admin in the given customer org.
     #: example: id_full_admin
-    roleInCustomerOrg: Optional[str] = None
+    role_in_customer_org: Optional[str] = None
 
 
 class ManagedOrgsResponse(ApiModel):

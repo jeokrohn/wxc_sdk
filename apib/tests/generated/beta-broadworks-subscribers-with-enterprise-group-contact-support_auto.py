@@ -13,7 +13,7 @@ __auto__ = ['Error', 'Subscriber', 'SubscriberListResponse', 'SubscriberPackage'
 class Error(ApiModel):
     #: An error code that identifies the reason for the error.
     #: example: 10022.0
-    errorCode: Optional[int] = None
+    error_code: Optional[int] = None
     #: A description of the error.
     #: example: The BroadWorks UserID is already associated with an existing user.
     description: Optional[str] = None
@@ -53,31 +53,31 @@ class Subscriber(ApiModel):
     id: Optional[str] = None
     #: The Person Id of the subscriber on Webex. To be used when referencing this subscriber on other Webex APIs. Only presented when status is `provisioned`.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: The user ID of the subscriber on BroadWorks.
     #: example: 95547321@sp.com
-    userId: Optional[str] = None
+    user_id: Optional[str] = None
     #: The Service Provider supplied unique identifier for the subscriber's enterprise.
     #: example: Enterprise1
-    spEnterpriseId: Optional[str] = None
+    sp_enterprise_id: Optional[str] = None
     #: The group name under the enterprise in Broadworks. Only applicable to Enterprise mode.
     #: example: BroadworksEnterpriseGroup
-    spEnterpriseGroupId: Optional[str] = None
+    sp_enterprise_group_id: Optional[str] = None
     #: The first name of the subscriber.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: The last name of the subscriber.
     #: example: Andersen
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: The email address of the subscriber.
     #: example: john.anderson@acme.com
     email: Optional[str] = None
     #: The primary phone number configured against the subscriber on BroadWorks.
     #: example: +1-240-555-1212
-    primaryPhoneNumber: Optional[str] = None
+    primary_phone_number: Optional[str] = None
     #: The mobile phone number configured against the subscriber on BroadWorks.
     #: example: +1-818-279-1234
-    mobilePhoneNumber: Optional[str] = None
+    mobile_phone_number: Optional[str] = None
     #: The ISO 639-1 language code associated with the subscriber. Reserved for future use. Any value returned should be ignored. Currently set to "en" in all responses.
     #: example: en
     language: Optional[str] = None
@@ -97,12 +97,12 @@ class Subscriber(ApiModel):
     created: Optional[datetime] = None
     #: The date and time the provisioning status of the subscriber last changed.
     #: example: 2020-03-18T16:05:34.000Z
-    lastStatusChange: Optional[datetime] = None
+    last_status_change: Optional[datetime] = None
     #: This Provisioning ID associated with this subscriber.
     #: example: ZjViMzYxODctYzhkZC00NzI3LThiMmYtZjljNDQ3ZjI5MDQ2OjQyODVmNTk0LTViNTEtNDdiZS05Mzk2LTZjMzZlMmFkODNhNQ
-    provisioningId: Optional[str] = None
+    provisioning_id: Optional[str] = None
     #: Indicates if the subscriber was self activated, rather than provisioned via these APIs.
-    selfActivated: Optional[bool] = None
+    self_activated: Optional[bool] = None
 
 
 class SubscriberListResponse(ApiModel):

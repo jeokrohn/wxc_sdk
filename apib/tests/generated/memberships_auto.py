@@ -23,29 +23,29 @@ class Membership(ApiModel):
     id: Optional[str] = None
     #: The room ID.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vYmJjZWIxYWQtNDNmMS0zYjU4LTkxNDctZjE0YmIwYzRkMTU0
-    roomId: Optional[str] = None
+    room_id: Optional[str] = None
     #: The person ID.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: The email address of the person.
     #: example: john.andersen@example.com
-    personEmail: Optional[str] = None
+    person_email: Optional[str] = None
     #: The display name of the person.
     #: example: John Andersen
-    personDisplayName: Optional[str] = None
+    person_display_name: Optional[str] = None
     #: The organization ID of the person.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
-    personOrgId: Optional[str] = None
+    person_org_id: Optional[str] = None
     #: Whether or not the participant is a room moderator.
     #: example: True
-    isModerator: Optional[bool] = None
+    is_moderator: Optional[bool] = None
     #: Whether or not the direct type room is hidden in the Webex clients.
-    isRoomHidden: Optional[bool] = None
+    is_room_hidden: Optional[bool] = None
     #: The type of room the membership is associated with.
     #: example: direct
-    roomType: Optional[MembershipRoomType] = None
+    room_type: Optional[MembershipRoomType] = None
     #: Whether or not the participant is a monitoring bot (deprecated).
-    isMonitor: Optional[bool] = None
+    is_monitor: Optional[bool] = None
     #: The date and time when the membership was created.
     #: example: 2015-10-18T14:26:16.203Z
     created: Optional[datetime] = None

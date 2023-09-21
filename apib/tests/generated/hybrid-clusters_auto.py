@@ -16,13 +16,13 @@ class Cluster(ApiModel):
     id: Optional[str] = None
     #: The ID of the organization to which this hybrid cluster belongs.
     #: example: Y2lzY29zcGFyazovL3
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: The name of the cluster.
     #: example: EMEA Oslo 1
     name: Optional[str] = None
     #: The ID of the resource group this cluster belongs to.
     #: example: Y2lzY29zcGFyazovL3
-    resourceGroupId: Optional[str] = None
+    resource_group_id: Optional[str] = None
 
 
 class ClusterCollection(ApiModel):

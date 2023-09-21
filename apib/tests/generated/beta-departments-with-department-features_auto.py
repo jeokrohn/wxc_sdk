@@ -25,7 +25,7 @@ class DepartmentResponseDepartment(ApiModel):
     name: Optional[str] = None
     #: Number of members in this department.
     #: example: 2.0
-    memberCount: Optional[int] = None
+    member_count: Optional[int] = None
 
 
 class DepartmentResponse(ApiModel):

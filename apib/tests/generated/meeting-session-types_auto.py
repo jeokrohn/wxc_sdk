@@ -16,13 +16,13 @@ class SiteSessionTypeType(str, Enum):
     #: Webinar meeting.
     webinar = 'webinar'
     #: Private meeting.
-    privatemeeting = 'privateMeeting'
+    private_meeting = 'privateMeeting'
     #: Event Center.
-    eventcenter = 'EventCenter'
+    event_center = 'EventCenter'
     #: Support Center.
-    supportcenter = 'SupportCenter'
+    support_center = 'SupportCenter'
     #: Training Center.
-    traincenter = 'TrainCenter'
+    train_center = 'TrainCenter'
 
 
 class SiteSessionType(ApiModel):
@@ -31,10 +31,10 @@ class SiteSessionType(ApiModel):
     id: Optional[datetime] = None
     #: The short name of the session type.
     #: example: PRO
-    shortName: Optional[str] = None
+    short_name: Optional[str] = None
     #: Site URL for the session type.
     #: example: example.webex.com
-    siteUrl: Optional[str] = None
+    site_url: Optional[str] = None
     #: The name of the session type.
     #: example: Pro Meeting
     name: Optional[str] = None
@@ -49,7 +49,7 @@ class SessionType(ApiModel):
     id: Optional[datetime] = None
     #: The short name of the session type.
     #: example: PRO
-    shortName: Optional[str] = None
+    short_name: Optional[str] = None
     #: The name of the session type.
     #: example: Pro Meeting
     name: Optional[str] = None
@@ -61,27 +61,27 @@ class SessionType(ApiModel):
 class UserSessionTypes(ApiModel):
     #: A unique identifier for the user.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8yNWJiZjgzMS01YmU5LTRjMjUtYjRiMC05YjU5MmM4YTA4NmI
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: The email of the user.
     #: example: john.andersen@example.com
     email: Optional[str] = None
     #: Site URL for the user.
     #: example: example.webex.com
-    siteUrl: Optional[str] = None
+    site_url: Optional[str] = None
     #: All session types are supported by the user on the site.
-    sessionTypes: Optional[list[SessionType]] = None
+    session_types: Optional[list[SessionType]] = None
 
 
 class UpdateUserSessionType(ApiModel):
     #: Site URL for the session type.
     #: example: example.webex.com
-    siteUrl: Optional[str] = None
+    site_url: Optional[str] = None
     #: A unique identifier for the user.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8yNWJiZjgzMS01YmU5LTRjMjUtYjRiMC05YjU5MmM4YTA4NmI
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: The email of the user.
     #: example: john.andersen@example.com
     email: Optional[str] = None
     #: An array of the session type ID.
     #: example: ['3', '9']
-    sessionTypeIds: Optional[list[str]] = None
+    session_type_ids: Optional[list[str]] = None

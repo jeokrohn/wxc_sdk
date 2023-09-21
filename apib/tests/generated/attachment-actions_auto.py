@@ -16,13 +16,13 @@ class AttachmentAction(ApiModel):
 
 class SubmitCardActionInputs(ApiModel):
     #: example: John Andersen
-    Name: Optional[str] = None
+    name: Optional[str] = Field(alias='Name', default=None)
     #: example: https://example.com
-    Url: Optional[str] = None
+    url: Optional[str] = Field(alias='Url', default=None)
     #: example: john.andersen@example.com
-    Email: Optional[str] = None
+    email: Optional[str] = Field(alias='Email', default=None)
     #: example: +1 408 555 7209
-    Tel: Optional[str] = None
+    tel: Optional[str] = Field(alias='Tel', default=None)
 
 
 class AttachmentActivityType(str, Enum):
@@ -35,7 +35,7 @@ class SubmitCardAction(AttachmentAction):
     type: Optional[AttachmentActivityType] = None
     #: The parent message on which the attachment action was performed.
     #: example: GFyazovL3VzL1BFT1BMRS80MDNlZmUwNy02Yzc3LTQyY2UtOWI4NC
-    messageId: Optional[str] = None
+    message_id: Optional[str] = None
     inputs: Optional[SubmitCardActionInputs] = None
 
 
@@ -45,10 +45,10 @@ class SubmitCardActionResponse(SubmitCardAction):
     id: Optional[str] = None
     #: The person who performed the action.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS83MTZlOWQxYy1jYTQ0LTRmZ
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: The room in which the action was performed.
     #: example: L3VzL1BFT1BMRS80MDNlZmUwNy02Yzc3LTQyY2UtOWI
-    roomId: Optional[str] = None
+    room_id: Optional[str] = None
     #: The timestamp of the action.
     #: example: 2016-05-10T19:41:00.100Z
     created: Optional[datetime] = None
@@ -60,16 +60,16 @@ class AttachmentActivity(ApiModel):
     id: Optional[str] = None
     #: The ID of the person who performed the action.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS83MTZlOWQxYy1jYTQ0LTRmZ
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: The ID of the room in which the action was performed.
     #: example: L3VzL1BFT1BMRS80MDNlZmUwNy02Yzc3LTQyY2UtOWI
-    roomId: Optional[str] = None
+    room_id: Optional[str] = None
     #: The type of action performed.
     #: example: submit
     type: Optional[AttachmentActivityType] = None
     #: The parent message on which the attachment action was performed.
     #: example: GFyazovL3VzL1BFT1BMRS80MDNlZmUwNy02Yzc3LTQyY2UtOWI4NC
-    messageId: Optional[str] = None
+    message_id: Optional[str] = None
     #: The action's inputs.
     inputs: Optional[SubmitCardActionInputs] = None
     #: The date and time the action was created.

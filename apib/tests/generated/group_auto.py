@@ -18,7 +18,7 @@ class Member(ApiModel):
     #: example: user
     type: Optional[str] = None
     #: example: Jane Smith
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
 
 
 class PostMember(ApiModel):
@@ -46,10 +46,10 @@ class PatchMemberWithOperation(ApiModel):
 class PostGroup(ApiModel):
     #: The name of the group.
     #: example: Sales Group
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: The ID of the organization to which this group belongs. If not specified, the organization ID from the OAuth token is used.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8zNDhhZGI4MS0yOGY5LTRhYjUtYjJkNi1lOWI0OTRlNzJhMDY
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: Description of the group.
     #: example: Salas Group in San Jose
     description: Optional[str] = None
@@ -60,7 +60,7 @@ class PostGroup(ApiModel):
 class PatchGroup(ApiModel):
     #: The name of the group.
     #: example: New Sales Group
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: Description of the group.
     #: example: Sales Group in LA
     description: Optional[str] = None
@@ -74,18 +74,18 @@ class GroupResponse(ApiModel):
     id: Optional[str] = None
     #: The name of the group.
     #: example: Sales Group
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: The ID of the organization to which this group belongs.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8zNDhhZGI4MS0yOGY5LTRhYjUtYjJkNi1lOWI0OTRlNzJhMDY
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: The timestamp indicating creation date/time of group
     #: example: 2022-02-17T02:13:29.706Z
     created: Optional[datetime] = None
     #: The timestamp indicating lastModification time of group
     #: example: 2022-02-17T02:13:29.706Z
-    lastModified: Optional[datetime] = None
+    last_modified: Optional[datetime] = None
     #: example: 1.0
-    memberSize: Optional[int] = None
+    member_size: Optional[int] = None
     #: An array of members
     members: Optional[list[Member]] = None
 
@@ -93,10 +93,10 @@ class GroupResponse(ApiModel):
 class GroupsCollectionResponse(ApiModel):
     #: Total number of groups returned in the response.
     #: example: 3.0
-    totalResults: Optional[int] = None
+    total_results: Optional[int] = None
     #: example: 1.0
-    startIndex: Optional[int] = None
+    start_index: Optional[int] = None
     #: example: 10.0
-    itemsPerPage: Optional[int] = None
+    items_per_page: Optional[int] = None
     #: An array of group objects.
     groups: Optional[list[GroupResponse]] = None

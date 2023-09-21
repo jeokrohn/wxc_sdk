@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Policy', 'PolicyAction', 'PolicyCollectionResponse', 'PolicyType']
+__auto__ = ['ListPoliciesType', 'Policy', 'PolicyAction', 'PolicyCollectionResponse', 'PolicyType']
 
 
 class PolicyType(str, Enum):
@@ -31,19 +31,19 @@ class Policy(ApiModel):
     id: Optional[str] = None
     #: The `appId` of the app to which the policy applies.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vYmJjZWIxYWQtNDNmMS0zYjU4LTkxNDctZjE0YmIwYzRkMTU0
-    appId: Optional[str] = None
+    app_id: Optional[str] = None
     #: A user-friendly name for the policy.
     #: example: Allow App 123
     name: Optional[str] = None
     #: The `orgId` of the organization to which the policy applies.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8xZWI2NWZkZi05NjQzLTQxN2YtOTk3NC1hZDcyY2FlMGUxMGY
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: A policy type for the policy.
     #: example: Default
     type: Optional[PolicyType] = None
     #: The `personIds` for the people this policy applies to.
     #: example: ['Y2lzY29zcGFyazovL3VzL1JPT00vYmJjZWIxYWQtNDNmMS0zYjU4LTkxNDctZjE0YmIwYzRkMTU0', 'Y2lzY29zcGFyazovL3VzL1JPT00vYmJjZWIxYWQtNDNmMS0zYjU4LTkxNDctZjE0YmIwYzRkMTU0', 'Y2lzY29zcGFyazovL3VzL0NBTExTLzU0MUFFMzBFLUUyQzUtNERENi04NTM4LTgzOTRDODYzM0I3MQo']
-    personIds: Optional[list[str]] = None
+    person_ids: Optional[list[str]] = None
     #: The policy action.
     #: example: allow
     action: Optional[PolicyAction] = None
@@ -54,3 +54,8 @@ class Policy(ApiModel):
 
 class PolicyCollectionResponse(ApiModel):
     items: Optional[list[Policy]] = None
+
+
+class ListPoliciesType(str, Enum):
+    default = 'default'
+    custom = 'custom'

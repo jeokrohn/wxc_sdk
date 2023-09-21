@@ -12,38 +12,38 @@ __auto__ = ['NoneArguments', 'NoneResult', 'NoneResultAudio', 'NoneResultBooking
 
 class NoneResultAudio(ApiModel):
     #: example: 75.0
-    Volume: Optional[int] = None
+    volume: Optional[int] = Field(alias='Volume', default=None)
 
 
 class NoneResultBookingTime(ApiModel):
     #: example: 2020-07-01T13:00:00Z
-    StartTime: Optional[datetime] = None
+    start_time: Optional[datetime] = Field(alias='StartTime', default=None)
     #: example: 60.0
-    Duration: Optional[int] = None
+    duration: Optional[int] = Field(alias='Duration', default=None)
 
 
 class NoneResultBookingOrganizer(ApiModel):
     #: example: John Doe
-    Name: Optional[str] = None
+    name: Optional[str] = Field(alias='Name', default=None)
 
 
 class NoneResultBooking(ApiModel):
     #: example: foo
-    Id: Optional[str] = None
+    id: Optional[str] = Field(alias='Id', default=None)
     #: example: Booking Title
-    Title: Optional[str] = None
+    title: Optional[str] = Field(alias='Title', default=None)
     #: example: SIP
-    Protocol: Optional[str] = None
-    Time: Optional[NoneResultBookingTime] = None
-    Organizer: Optional[NoneResultBookingOrganizer] = None
+    protocol: Optional[str] = Field(alias='Protocol', default=None)
+    time: Optional[NoneResultBookingTime] = Field(alias='Time', default=None)
+    organizer: Optional[NoneResultBookingOrganizer] = Field(alias='Organizer', default=None)
     #: example: number@example.com
-    Number: Optional[str] = None
+    number: Optional[str] = Field(alias='Number', default=None)
 
 
 class NoneResult(ApiModel):
-    Booking: Optional[NoneResultBooking] = None
+    booking: Optional[NoneResultBooking] = Field(alias='Booking', default=None)
 
 
 class NoneArguments(ApiModel):
     #: example: 50.0
-    Level: Optional[int] = None
+    level: Optional[int] = Field(alias='Level', default=None)

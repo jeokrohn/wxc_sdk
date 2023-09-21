@@ -13,7 +13,7 @@ __auto__ = ['EnterpriseListResponse', 'EnterpriseListResponseBroadworksDirectory
 class EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors(ApiModel):
     #: An error code that identifies the reason for the error
     #: example: 6003.0
-    errorCode: Optional[int] = None
+    error_code: Optional[int] = None
     #: A textual representation of the error code.
     #: example: Broadworks External Directory User Sync failed while trying to connect to Broadworks cluster.
     description: Optional[str] = None
@@ -22,77 +22,77 @@ class EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors(Api
 class EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatus(ApiModel):
     #: The start date and time of the last sync.
     #: example: 2021-04-01T14:49:50.309640Z
-    lastSyncStartTime: Optional[datetime] = None
+    last_sync_start_time: Optional[datetime] = None
     #: The end date and time of the last sync.
     #: example: 2021-04-01T14:49:52.667189Z
-    lastSyncEndTime: Optional[datetime] = None
+    last_sync_end_time: Optional[datetime] = None
     #: The sync status of the enterprise.
     #: example: COMPLETE
-    syncStatus: Optional[str] = None
+    sync_status: Optional[str] = None
     #: Number of users added to CI in this sync.
     #: example: 44.0
-    usersAdded: Optional[int] = None
+    users_added: Optional[int] = None
     #: Number of users updated in CI in this sync.
     #: example: 21.0
-    usersUpdated: Optional[int] = None
+    users_updated: Optional[int] = None
     #: Number of users deleted from CI in this sync.
     #: example: 34.0
-    usersDeleted: Optional[int] = None
+    users_deleted: Optional[int] = None
     #: Number of machines added to CI in this sync.
     #: example: 24.0
-    machinesAdded: Optional[int] = None
+    machines_added: Optional[int] = None
     #: Number of machines updated in CI in this sync.
     #: example: 4.0
-    machinesUpdated: Optional[int] = None
+    machines_updated: Optional[int] = None
     #: Number of machines deleted from CI in this sync.
     #: example: 9.0
-    machinesDeleted: Optional[int] = None
+    machines_deleted: Optional[int] = None
     #: Number of total external users that have been added to CI across all syncs.
     #: example: 1077.0
-    totalExternalUsersInCI: Optional[int] = None
+    total_external_users_in_ci: Optional[int] = Field(alias='totalExternalUsersInCI', default=None)
     #: Number of total external machines that have been added to CI across all syncs.
     #: example: 326.0
-    totalExternalMachinesInCI: Optional[int] = None
+    total_external_machines_in_ci: Optional[int] = Field(alias='totalExternalMachinesInCI', default=None)
     #: The date and time of the last successful sync.
     #: example: 2021-04-01T14:48:30.502539Z
-    lastSuccessfulSyncTime: Optional[datetime] = None
+    last_successful_sync_time: Optional[datetime] = None
     #: Unique tracking identifier.
     #: example: NA_dde3a13a-bad7-4990-b155-9b4574e545b9
-    lastSyncTrackingId: Optional[str] = None
+    last_sync_tracking_id: Optional[str] = None
     #: List of errors that occurred during that last attempt to sync this BroadWorks enterprise. This list captures errors that occur during a directory sync of the BroadWorks enterprise, after the API has been accepted and a 200 OK response is returned. Any errors that occur during the initial API request validation will be captured directly in the error response with an appropriate HTTP status code.
     errors: Optional[list[EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors]] = None
     #: Number of user contacts added to Contact service in this sync.
     #: example: 5.0
-    userContactsAdded: Optional[int] = None
+    user_contacts_added: Optional[int] = None
     #: Number of user contacts updated in Contact service in this sync.
     #: example: 2.0
-    userContactsUpdated: Optional[int] = None
+    user_contacts_updated: Optional[int] = None
     #: Number of user contacts deleted from Contact service in this sync.
     #: example: 1.0
-    userContactsDeleted: Optional[int] = None
+    user_contacts_deleted: Optional[int] = None
     #: Number of org contacts added to Contact service in this sync.
     #: example: 5.0
-    orgContactsAdded: Optional[int] = None
+    org_contacts_added: Optional[int] = None
     #: Number of org contacts updated in Contact service in this sync.
     #: example: 2.0
-    orgContactsUpdated: Optional[int] = None
+    org_contacts_updated: Optional[int] = None
     #: Number of org contacts deleted from Contact service in this sync.
     #: example: 1.0
-    orgContactsDeleted: Optional[int] = None
+    org_contacts_deleted: Optional[int] = None
     #: Total number of user contacts in Contact service.
     #: example: 10.0
-    totalUserContactsInContactService: Optional[int] = None
+    total_user_contacts_in_contact_service: Optional[int] = None
     #: Total number of org contacts in Contact service.
     #: example: 2.0
-    totalOrgContactsInContactService: Optional[int] = None
+    total_org_contacts_in_contact_service: Optional[int] = None
 
 
 class EnterpriseListResponseBroadworksDirectorySync(ApiModel):
     #: The toggle to enable/disable directory sync.
     #: example: True
-    enableDirSync: Optional[bool] = None
+    enable_dir_sync: Optional[bool] = None
     #: Directory sync status.
-    directorySyncStatus: Optional[EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatus] = None
+    directory_sync_status: Optional[EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatus] = None
 
 
 class EnterpriseListResponse(ApiModel):
@@ -101,44 +101,44 @@ class EnterpriseListResponse(ApiModel):
     id: Optional[str] = None
     #: The Organization ID for the Webex enterprise.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: The Provisioning ID associated with the enterprise.
     #: example: ZjViMzYxODctYzhkZC00NzI3LThiMmYtZjljNDQ3ZjI5MDQ2OjQyODVmNTk0LTViNTEtNDdiZS05Mzk2LTZjMzZlMmFkODNhNQ
-    provisioningId: Optional[str] = None
+    provisioning_id: Optional[str] = None
     #: The date and time of org creation.
     #: example: 2022-03-25T11:33:48.455Z
-    orgCreationTimeStamp: Optional[datetime] = None
+    org_creation_time_stamp: Optional[datetime] = None
     #: The Service Provider supplied unique identifier for the subscriber's enterprise.
     #: example: Reseller1+example
-    spEnterpriseId: Optional[str] = None
+    sp_enterprise_id: Optional[str] = None
     #: BroadWorks Directory sync.
-    broadworksDirectorySync: Optional[EnterpriseListResponseBroadworksDirectorySync] = None
+    broadworks_directory_sync: Optional[EnterpriseListResponseBroadworksDirectorySync] = None
 
 
 class TriggerDirectorySyncResponseDirectorySyncStatus(ApiModel):
     #: The sync status of the enterprise.
     #: example: IN_PROGRESS
-    syncStatus: Optional[str] = None
+    sync_status: Optional[str] = None
 
 
 class TriggerDirectorySyncResponse(ApiModel):
     #: The toggle that enabled the directory sync.
     #: example: True
-    enableDirSync: Optional[bool] = None
+    enable_dir_sync: Optional[bool] = None
     #: Directory sync status.
-    directorySyncStatus: Optional[TriggerDirectorySyncResponseDirectorySyncStatus] = None
+    directory_sync_status: Optional[TriggerDirectorySyncResponseDirectorySyncStatus] = None
 
 
 class TriggerUserDirectorySyncResponseUserResponse(ApiModel):
     #: The user ID of the user on Broadworks (A non-webex user).
     #: example: john.anderson@example.com
-    userId: Optional[str] = None
+    user_id: Optional[str] = None
     #: First Name of the user on Broadworks.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last Name of the user on Broadworks.
     #: example: Anderson
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Extension of the user on Broadworks.
     #: example: 4653
     extension: Optional[datetime] = None
@@ -163,7 +163,7 @@ class TriggerUserDirectorySyncResponseStatus(str, Enum):
 
 class TriggerUserDirectorySyncResponse(ApiModel):
     #: User Directory sync response.
-    userResponse: Optional[TriggerUserDirectorySyncResponseUserResponse] = None
+    user_response: Optional[TriggerUserDirectorySyncResponseUserResponse] = None
     #: The Status of the operation being performed.
     #: example: ADD
     status: Optional[TriggerUserDirectorySyncResponseStatus] = None

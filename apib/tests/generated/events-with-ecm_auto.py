@@ -14,15 +14,15 @@ class EventData(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL01FU1NBR0UvOTJkYjNiZTAtNDNiZC0xMWU2LThhZTktZGQ1YjNkZmM1NjVk
     id: Optional[str] = None
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vYmJjZWIxYWQtNDNmMS0zYjU4LTkxNDctZjE0YmIwYzRkMTU0
-    roomId: Optional[str] = None
+    room_id: Optional[str] = None
     #: example: group
-    roomType: Optional[str] = None
+    room_type: Optional[str] = None
     #: example: PROJECT UPDATE - A new project plan has been published: http://example.com/s/lf5vj. The PM for this project is Mike C. and the Engineering Manager is Jane W.
     text: Optional[str] = None
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: example: matt@example.com
-    personEmail: Optional[str] = None
+    person_email: Optional[str] = None
     #: example: 2016-05-16T21:34:59.324Z
     created: Optional[datetime] = None
 
@@ -55,13 +55,13 @@ class Event(ApiModel):
     type: Optional[EventTypeEnum] = None
     #: The ID of the application for the event.
     #: example: null
-    appId: Optional[str] = None
+    app_id: Optional[str] = None
     #: The ID of the person who performed the action.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    actorId: Optional[str] = None
+    actor_id: Optional[str] = None
     #: The ID of the organization for the event.
     #: example: OTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: The date and time of the event.
     #: example: 2016-05-16T21:34:59.324Z
     created: Optional[datetime] = None

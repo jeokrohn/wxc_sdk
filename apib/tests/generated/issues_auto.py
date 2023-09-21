@@ -42,7 +42,7 @@ class Issue(ApiModel):
     id: Optional[str] = None
     #: A shorter identifier for the issue, unique only to the organization it belongs to.
     #: example: 123.0
-    shortKey: Optional[int] = None
+    short_key: Optional[int] = None
     #: The subject summary for the issue.
     #: example: No audio during meeting from Webex client.
     subject: Optional[str] = None
@@ -51,10 +51,10 @@ class Issue(ApiModel):
     description: Optional[str] = None
     #: The person ID of user the issue was created for.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    createdFor: Optional[str] = None
+    created_for: Optional[str] = None
     #: The organization the issue belongs to.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: The type for the issue, such as `PROBLEM` or `DEFECT`.
     #: example: PROBLEM
     type: Optional[IssueType] = None
@@ -72,22 +72,22 @@ class Issue(ApiModel):
     created: Optional[datetime] = None
     #: Date and time issue was last modified.
     #: example: 2019-06-01T00:00:00.000Z
-    lastModified: Optional[datetime] = None
+    last_modified: Optional[datetime] = None
     #: The person ID of user that last modified the issue.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    lastModifiedBy: Optional[str] = None
+    last_modified_by: Optional[str] = None
     #: The log ID submitted by webex clients when a user triggers feedback.
     #: example: 99e71be2-25a6-4628-9b77-37002fe40f47
-    logId: Optional[str] = None
+    log_id: Optional[str] = None
     #: The meeting ID related to the issue.
     #: example: dfb45ece33264639a7bc3dd9535d53f7_20200516T230000Z
-    meetingId: Optional[str] = None
+    meeting_id: Optional[str] = None
     #: The space ID created to collaborate on the issue.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vYmJjZWIxYWQtNDNmMS0zYjU4LTkxNDctZjE0YmIwYzRkMTU0
-    spaceId: Optional[str] = None
+    space_id: Optional[str] = None
     #: Any custom identifier associated with the issue, such as from an external ticketing system.
     #: example: TICKET-12345
-    externalKey: Optional[str] = None
+    external_key: Optional[str] = None
 
 
 class IssuesCollectionResponse(ApiModel):

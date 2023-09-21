@@ -29,7 +29,7 @@ class Call(ApiModel):
     id: Optional[str] = None
     #: The room ID for the call.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vYmJjZWIxYWQtNDNmMS0zYjU4LTkxNDctZjE0YmIwYzRkMTU0
-    roomId: Optional[str] = None
+    room_id: Optional[str] = None
     #: The current state of the call.
     #: example: connected
     status: Optional[CallStatus] = None

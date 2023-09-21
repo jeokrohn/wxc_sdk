@@ -28,7 +28,7 @@ class BulkUserOperations(ApiModel):
     data: Optional[str] = None
     #: The transient identifier of a newly created resource, unique within a bulk request and created by the client.
     #: example: ytrewq
-    bulkId: Optional[str] = None
+    bulk_id: Optional[str] = None
 
 
 class BulkUser(ApiModel):
@@ -37,6 +37,6 @@ class BulkUser(ApiModel):
     schemas: Optional[list[str]] = None
     #: An integer specifying the maximum number of errors that the service provider will accept before the operation is terminated and an error response is returned.
     #: example: 99.0
-    failOnErrors: Optional[int] = None
+    fail_on_errors: Optional[int] = None
     #: Contains a list of bulk operations for POST/PATCH/DELETE operations.
     operations: Optional[list[BulkUserOperations]] = None

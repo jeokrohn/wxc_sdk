@@ -13,6 +13,8 @@ __all__ = ['PythonClass', 'PythonClassRegistry', 'Attribute', 'Endpoint', 'Param
 import dateutil.parser
 
 from apib.apib import ApibDatastructure, ApibObject, ApibEnum, ApibParseResult, ApibMember, words_to_camel
+from apib.apib.classes import snake_case
+from wxc_sdk.base import to_camel
 
 log = logging.getLogger(__name__)
 
@@ -85,7 +87,7 @@ class Attribute:
         else:
             lines = []
         if for_enum:
-            name = self.name.lower()
+            name = snake_case(self.name)
             if name == 'none':
                 name = 'none_'
             name, _ = subn(r'[^a-z0-9]', '_', name)
@@ -95,13 +97,13 @@ class Attribute:
             lines.append(f"{name} = '{value}'")
             foo = 1
         else:
-            attr_name = self.name
+            attr_name = snake_case(self.name)
             if attr_name in {'from'}:
                 attr_name = f'{attr_name}_'
             if self.sample:
                 lines.append(f'#: example: {self.sample}')
             line = f'{attr_name}: Optional[{self.python_type}]'
-            if attr_name == self.name:
+            if to_camel(attr_name) == self.name:
                 line = f'{line} = None'
             else:
                 line = f"{line} = Field(alias='{self.name}', default=None)"
@@ -282,6 +284,11 @@ class PythonClassRegistry:
                 return False
             if attribute_key(pc1) != attribute_key(pc2):
                 return False
+            if pc1.name == pc2.name:
+                if pc1 == pc2:
+                    # if both classes are the same then they are equivalent and no further optimization is needed
+                    return True
+                raise ValueError('equal class names should imply class equality!')
             if not pc1.is_enum:
                 # if these are not enums then we actually have to compare the attributes
                 for attr1, attr2 in zip(sorted(pc1.attributes, key=attrgetter('name')),
@@ -319,6 +326,9 @@ class PythonClassRegistry:
         # start by grouping all Python classes by their attribute_key
         class_groups: dict[str, list[PythonClass]] = defaultdict(list)
         for pc in self._classes.values():
+            # only consider classes that haven't been eliminated yet
+            if pc.baseclass and not pc.attributes:
+                continue
             class_groups[attribute_key(pc)].append(pc)
 
         # now work though the groups sorted by number of classes in each group

@@ -19,7 +19,7 @@ class ContactPrimaryContactMethod(str, Enum):
 
 class ContactSource(str, Enum):
     ch = 'CH'
-    webex4broadworks = 'Webex4Broadworks'
+    webex4_broadworks = 'Webex4Broadworks'
 
 
 class ContactEmailsType(str, Enum):
@@ -117,16 +117,16 @@ class Contact(ApiModel):
     schemas: Optional[str] = None
     #: The full name of the contact.
     #: example: John Andersen
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: The first name of the contact.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: The last name of the contact.
     #: example: Andersen
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: The company the contact is working for.
     #: example: Cisco Systems
-    companyName: Optional[str] = None
+    company_name: Optional[str] = None
     #: The contact's title.
     #: example: GM
     title: Optional[str] = None
@@ -135,19 +135,19 @@ class Contact(ApiModel):
     address: Optional[str] = None
     #: The URL to the person's avatar in PNG format.
     #: example: https://avatar-prod-us-east-2.webexcontent.com/default_avatar~1600
-    avatarURL: Optional[str] = None
+    avatar_url: Optional[str] = Field(alias='avatarURL', default=None)
     #: The contact's primary contact method.
     #: example: SIPADDRESS
-    primaryContactMethod: Optional[ContactPrimaryContactMethod] = None
+    primary_contact_method: Optional[ContactPrimaryContactMethod] = None
     #: Where the data come from.
     #: example: Webex4Broadworks
     source: Optional[ContactSource] = None
     #: A list of the user's email addresses with an indicator of the user's primary email address.
     emails: Optional[list[ContactEmails]] = None
     #: A list of user's phone numbers with an indicator of primary to specify the user's main number.
-    phoneNumbers: Optional[list[ContactPhoneNumbers]] = None
+    phone_numbers: Optional[list[ContactPhoneNumbers]] = None
     #: The sipAddress values for the user.
-    sipAddresses: Optional[list[ContactSipAddresses]] = None
+    sip_addresses: Optional[list[ContactSipAddresses]] = None
     #: Instant messaging addresses for the user.
     ims: Optional[list[ContactIms]] = None
 
@@ -155,16 +155,16 @@ class Contact(ApiModel):
 class BulkCreateContacts(ApiModel):
     #: The full name of the contact.
     #: example: John Andersen
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: The first name of the contact.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: The last name of the contact.
     #: example: Andersen
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: The company the contact is working for.
     #: example: Cisco Systems
-    companyName: Optional[str] = None
+    company_name: Optional[str] = None
     #: The contact's title.
     #: example: GM
     title: Optional[str] = None
@@ -173,19 +173,19 @@ class BulkCreateContacts(ApiModel):
     address: Optional[str] = None
     #: The URL to the person's avatar in PNG format.
     #: example: https://avatar-prod-us-east-2.webexcontent.com/default_avatar~1600
-    avatarURL: Optional[str] = None
+    avatar_url: Optional[str] = Field(alias='avatarURL', default=None)
     #: The contact's primary contact method.
     #: example: SIPADDRESS
-    primaryContactMethod: Optional[ContactPrimaryContactMethod] = None
+    primary_contact_method: Optional[ContactPrimaryContactMethod] = None
     #: Where the data come from.
     #: example: Webex4Broadworks
     source: Optional[ContactSource] = None
     #: A list of the user's email addresses with an indicator of the user's primary email address.
     emails: Optional[list[ContactEmails]] = None
     #: A list of user's phone numbers with an indicator of primary to specify the user's main number.
-    phoneNumbers: Optional[list[ContactPhoneNumbers]] = None
+    phone_numbers: Optional[list[ContactPhoneNumbers]] = None
     #: The sipAddress values for the user.
-    sipAddresses: Optional[list[ContactSipAddresses]] = None
+    sip_addresses: Optional[list[ContactSipAddresses]] = None
     #: Instant messaging addresses for the user.
     ims: Optional[list[ContactIms]] = None
 
@@ -204,7 +204,7 @@ class BulkDelete(ApiModel):
     schemas: Optional[str] = None
     #: List of UUIDs for the contacts.
     #: example: ['8a5fac49-2c5f-4773-aec7-02db0e3a9d72']
-    objectIds: Optional[list[str]] = None
+    object_ids: Optional[list[str]] = None
 
 
 class Meta(ApiModel):
@@ -213,7 +213,7 @@ class Meta(ApiModel):
     created: Optional[datetime] = None
     #: The date and time the contact was last changed.
     #: example: 2022-05-29T13:06:26.831Z
-    lastModified: Optional[datetime] = None
+    last_modified: Optional[datetime] = None
 
 
 class ContactResponse(ApiModel):
@@ -224,16 +224,16 @@ class ContactResponse(ApiModel):
     meta: Optional[Meta] = None
     #: The full name of the contact.
     #: example: John Andersen
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: The first name of the contact.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: The last name of the contact.
     #: example: Andersen
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: The company the contact is working for.
     #: example: Cisco Systems
-    companyName: Optional[str] = None
+    company_name: Optional[str] = None
     #: The contact's title.
     #: example: GM
     title: Optional[str] = None
@@ -242,19 +242,19 @@ class ContactResponse(ApiModel):
     address: Optional[str] = None
     #: The URL to the person's avatar in PNG format.
     #: example: https://avatar-prod-us-east-2.webexcontent.com/default_avatar~1600
-    avatarURL: Optional[str] = None
+    avatar_url: Optional[str] = Field(alias='avatarURL', default=None)
     #: The contact's primary contact method.
     #: example: SIPADDRESS
-    primaryContactMethod: Optional[ContactPrimaryContactMethod] = None
+    primary_contact_method: Optional[ContactPrimaryContactMethod] = None
     #: Where the data come from.
     #: example: Webex4Broadworks
     source: Optional[ContactSource] = None
     #: A list of the user's email addresses with an indicator of the user's primary email address.
     emails: Optional[list[ContactEmails]] = None
     #: A list of user's phone numbers with an indicator of primary to specify the user's main number.
-    phoneNumbers: Optional[list[ContactPhoneNumbers]] = None
+    phone_numbers: Optional[list[ContactPhoneNumbers]] = None
     #: The sipAddress values for the user.
-    sipAddresses: Optional[list[ContactSipAddresses]] = None
+    sip_addresses: Optional[list[ContactSipAddresses]] = None
     #: Instant messaging addresses for the user.
     ims: Optional[list[ContactIms]] = None
 

@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CallMembership', 'CallMembershipAudio', 'CallMembershipCollectionResponse', 'CallMembershipStatus']
+__auto__ = ['CallMembership', 'CallMembershipAudio', 'CallMembershipCollectionResponse', 'CallMembershipStatus', 'ListCallMembershipsCallStatus', 'ListCallMembershipsIsHost']
 
 
 class CallMembershipStatus(str, Enum):
@@ -32,30 +32,30 @@ class CallMembership(ApiModel):
     status: Optional[CallMembershipStatus] = None
     #: The call ID.
     #: example: Y2lzY29zcGFyazovL3VzL0NBTExTLzU0MUFFMzBFLUUyQzUtNERENi04NTM4LTgzOTRDODYzM0I3MQo
-    callId: Optional[str] = None
+    call_id: Optional[str] = None
     #: Whether or not the person referenced by this membership hosted the call.
     #: example: True
-    isHost: Optional[bool] = None
+    is_host: Optional[bool] = None
     #: The fully qualified SIP address of the participant, if not a known Webex user.
     #: example: sip:john.andersen@example.com
-    sipUrl: Optional[str] = None
+    sip_url: Optional[str] = None
     #: The E.164 PSTN address of the participant, if not a known Webex user.
     #: example: +14155551212
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: The room ID of the call.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vYmJjZWIxYWQtNDNmMS0zYjU4LTkxNDctZjE0YmIwYzRkMTU0
-    roomId: Optional[str] = None
+    room_id: Optional[str] = None
     #: List of device IDs associated to the participant.
     #: example: ['22ecb593-8408-4fe5-81bb-0d92d568f93f', '2345aea8-7a8b-4861-982a-26c792e21c17']
-    deviceIds: Optional[list[str]] = None
+    device_ids: Optional[list[str]] = None
     #: Whether or not the participant is in the same organization.
-    isGuest: Optional[bool] = None
+    is_guest: Optional[bool] = None
     #: The organization ID of the participant if they are a guest.
     #: example: ``
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: The total amount of time, in seconds, that the membership was in a "joined" state.
     #: example: 180.0
-    joinedDuration: Optional[int] = None
+    joined_duration: Optional[int] = None
     #: The current status of the audio stream.
     #: example: on
     audio: Optional[CallMembershipAudio] = None
@@ -72,3 +72,15 @@ class CallMembership(ApiModel):
 
 class CallMembershipCollectionResponse(ApiModel):
     items: Optional[list[CallMembership]] = None
+
+
+class ListCallMembershipsCallStatus(str, Enum):
+    initializing = 'initializing'
+    lobby = 'lobby'
+    connected = 'connected'
+    terminating = 'terminating'
+    disconnected = 'disconnected'
+
+
+class ListCallMembershipsIsHost(str, Enum):
+    true = 'true'

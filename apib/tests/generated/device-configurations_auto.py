@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['DeviceConfiguration', 'DeviceConfigurationCollectionResponse', 'DeviceConfigurationConfiguration_key', 'DeviceConfigurationConfiguration_keySource', 'DeviceConfigurationConfiguration_keySources', 'DeviceConfigurationConfiguration_keySourcesConfigured', 'DeviceConfigurationConfiguration_keySourcesConfiguredEditability', 'DeviceConfigurationConfiguration_keySourcesConfiguredEditabilityReason', 'DeviceConfigurationConfiguration_keySourcesDefault', 'DeviceConfigurationConfiguration_keySourcesDefaultEditability', 'DeviceConfigurationConfiguration_keyValueSpace']
+__auto__ = ['DeviceConfiguration', 'DeviceConfigurationCollectionResponse', 'DeviceConfigurationConfiguration_key', 'DeviceConfigurationConfiguration_keySource', 'DeviceConfigurationConfiguration_keySources', 'DeviceConfigurationConfiguration_keySourcesConfigured', 'DeviceConfigurationConfiguration_keySourcesConfiguredEditability', 'DeviceConfigurationConfiguration_keySourcesConfiguredEditabilityReason', 'DeviceConfigurationConfiguration_keySourcesDefault', 'DeviceConfigurationConfiguration_keySourcesDefaultEditability', 'DeviceConfigurationConfiguration_keyValueSpace', 'UpdateDeviceConfigurationsOp']
 
 
 class DeviceConfigurationConfiguration_keySource(str, Enum):
@@ -19,7 +19,7 @@ class DeviceConfigurationConfiguration_keySource(str, Enum):
 
 class DeviceConfigurationConfiguration_keySourcesDefaultEditability(ApiModel):
     #: Whether or not the value is editable on this source (always `false` for `default`).
-    isEditable: Optional[bool] = None
+    is_editable: Optional[bool] = None
     #: The reason value is not editable on this source (always `FACTORY_DEFAULT` for `default`).
     #: example: FACTORY_DEFAULT
     reason: Optional[str] = None
@@ -39,7 +39,7 @@ class DeviceConfigurationConfiguration_keySourcesConfiguredEditabilityReason(str
 class DeviceConfigurationConfiguration_keySourcesConfiguredEditability(ApiModel):
     #: Whether or not the value is editable on this source.
     #: example: True
-    isEditable: Optional[bool] = None
+    is_editable: Optional[bool] = None
     #: The reason the value is not editable on this source.
     #: example: NOT_AUTHORIZED
     reason: Optional[DeviceConfigurationConfiguration_keySourcesConfiguredEditabilityReason] = None
@@ -63,16 +63,23 @@ class DeviceConfigurationConfiguration_key(ApiModel):
     source: Optional[DeviceConfigurationConfiguration_keySource] = None
     sources: Optional[DeviceConfigurationConfiguration_keySources] = None
     #: [JSON Schema](http://json-schema.org/) describing the data format of the configuration as specified by the device.
-    valueSpace: Optional[DeviceConfigurationConfiguration_keyValueSpace] = None
+    value_space: Optional[DeviceConfigurationConfiguration_keyValueSpace] = None
 
 
 class DeviceConfiguration(ApiModel):
     #: Key of the configuration.
-    configuration_key: Optional[DeviceConfigurationConfiguration_key] = None
+    configuration_key: Optional[DeviceConfigurationConfiguration_key] = Field(alias='configuration_key', default=None)
 
 
 class DeviceConfigurationCollectionResponse(ApiModel):
     #: ID of the device that the configurations are for.
     #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMl9hL0RFVklDRS9hNmYwYjhkMi01ZjdkLTQzZDItODAyNi0zM2JkNDg3NjYzMTg=
-    deviceId: Optional[str] = None
+    device_id: Optional[str] = None
     items: Optional[DeviceConfiguration] = None
+
+
+class UpdateDeviceConfigurationsOp(str, Enum):
+    #: Remove the configured value and revert back to the default from schema, if present.
+    remove = 'remove'
+    #: Set the configured value.
+    replace = 'replace'

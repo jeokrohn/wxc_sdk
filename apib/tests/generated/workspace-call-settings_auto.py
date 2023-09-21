@@ -35,7 +35,7 @@ class CallForwardingBusyGet(ApiModel):
     #: example: +19075552859
     destination: Optional[str] = None
     #: Indicates the enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
-    destinationVoicemailEnabled: Optional[bool] = None
+    destination_voicemail_enabled: Optional[bool] = None
 
 
 class CallForwardingNoAnswerGet(ApiModel):
@@ -47,20 +47,20 @@ class CallForwardingNoAnswerGet(ApiModel):
     destination: Optional[str] = None
     #: Number of rings before the call will be forwarded if unanswered.
     #: example: 2.0
-    numberOfRings: Optional[int] = None
+    number_of_rings: Optional[int] = None
     #: System-wide maximum number of rings allowed for `numberOfRings` setting.
     #: example: 20.0
-    systemMaxNumberOfRings: Optional[int] = None
+    system_max_number_of_rings: Optional[int] = None
     #: Enables and disables sending incoming to destination number's voicemail if the destination is an internal phone number and that number has the voicemail service enabled.
     #: example: True
-    destinationVoicemailEnabled: Optional[bool] = None
+    destination_voicemail_enabled: Optional[bool] = None
 
 
 class CallForwardingPlaceSettingGet(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the workspace is busy.
     busy: Optional[CallForwardingBusyGet] = None
     #: Settings for forwarding which only occurs when you are away or not answering your phone.
-    noAnswer: Optional[CallForwardingNoAnswerGet] = None
+    no_answer: Optional[CallForwardingNoAnswerGet] = None
 
 
 class CallWaiting(ApiModel):
@@ -110,13 +110,13 @@ class CallingPermissionAction(str, Enum):
 class CallingPermission(ApiModel):
     #: Type of the outgoing call.
     #: example: INTERNAL_CALL
-    callType: Optional[CallingPermissionCallType] = None
+    call_type: Optional[CallingPermissionCallType] = None
     #: Indicates permission for call types.
     #: example: ALLOW
     action: Optional[CallingPermissionAction] = None
     #: Indicate calling permission for call type enable status.
     #: example: True
-    transferEnabled: Optional[bool] = None
+    transfer_enabled: Optional[bool] = None
 
 
 class ExternalCallerIdNamePolicy(str, Enum):
@@ -152,9 +152,9 @@ class InterceptAnnouncementsGet(ApiModel):
     #: example: incoming.wav
     filename: Optional[str] = None
     #: Information about the new number announcement.
-    newNumber: Optional[InterceptNumberGet] = None
+    new_number: Optional[InterceptNumberGet] = None
     #: Information about how the call will be handled if zero (0) is pressed.
-    zeroTransfer: Optional[InterceptNumberGet] = None
+    zero_transfer: Optional[InterceptNumberGet] = None
 
 
 class InterceptAnnouncementsPatch(ApiModel):
@@ -162,9 +162,9 @@ class InterceptAnnouncementsPatch(ApiModel):
     #: example: DEFAULT
     greeting: Optional[InterceptAnnouncementsGetGreeting] = None
     #: Information about the new number announcement.
-    newNumber: Optional[InterceptNumberGet] = None
+    new_number: Optional[InterceptNumberGet] = None
     #: Information about how the call will be handled if zero (0) is pressed.
-    zeroTransfer: Optional[InterceptNumberGet] = None
+    zero_transfer: Optional[InterceptNumberGet] = None
 
 
 class InterceptIncomingGetType(str, Enum):
@@ -179,7 +179,7 @@ class InterceptIncomingGet(ApiModel):
     #: example: INTERCEPT_ALL
     type: Optional[InterceptIncomingGetType] = None
     #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
-    voicemailEnabled: Optional[bool] = None
+    voicemail_enabled: Optional[bool] = None
     #: Settings related to how incoming calls are handled when the intercept feature is enabled.
     announcements: Optional[InterceptAnnouncementsGet] = None
 
@@ -196,7 +196,7 @@ class InterceptOutGoingGet(ApiModel):
     #: example: INTERCEPT_ALL
     type: Optional[InterceptOutGoingGetType] = None
     #: If `true`, when the person attempts to make an outbound call, a system default message is played and the call is made to the destination phone number.
-    transferEnabled: Optional[bool] = None
+    transfer_enabled: Optional[bool] = None
     #: Number to which the outbound call be transferred.
     #: example: `+12225551212
     destination: Optional[str] = None
@@ -218,7 +218,7 @@ class InterceptIncomingPatch(ApiModel):
     type: Optional[InterceptIncomingGetType] = None
     #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
     #: example: True
-    voicemailEnabled: Optional[bool] = None
+    voicemail_enabled: Optional[bool] = None
     #: Settings related to how incoming calls are handled when the intercept feature is enabled.
     announcements: Optional[InterceptAnnouncementsPatch] = None
 
@@ -235,7 +235,7 @@ class InterceptPatch(ApiModel):
 
 class ModifyPlaceCallForwardSettings(ApiModel):
     #: Call forwarding settings for a Workspace.
-    callForwarding: Optional[CallForwardingPlaceSettingGet] = None
+    call_forwarding: Optional[CallForwardingPlaceSettingGet] = None
 
 
 class ModifyPlaceCallerIdGet(ApiModel):
@@ -244,25 +244,25 @@ class ModifyPlaceCallerIdGet(ApiModel):
     selected: Optional[CLIDPolicySelection] = None
     #: This value must be an assigned number from the workspace's location.
     #: example: +12815550003
-    customNumber: Optional[str] = None
+    custom_number: Optional[str] = None
     #: Workspace's caller ID display name.
     #: example: Clockmaker's shop 7.1
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: Workspace's caller ID display details.
     #: example: .
-    displayDetail: Optional[str] = None
+    display_detail: Optional[str] = None
     #: Flag to block call forwarding.
     #: example: True
-    blockInForwardCallsEnabled: Optional[bool] = None
+    block_in_forward_calls_enabled: Optional[bool] = None
     #: Designates which type of External Caller ID Name policy is used. Default is `DIRECT_LINE`.
     #: example: DIRECT_LINE
-    externalCallerIdNamePolicy: Optional[ExternalCallerIdNamePolicy] = None
+    external_caller_id_name_policy: Optional[ExternalCallerIdNamePolicy] = None
     #: Custom External Caller Name, which will be shown if External Caller ID Name is `OTHER`.
     #: example: Custom external caller name
-    customExternalCallerIdName: Optional[str] = None
+    custom_external_caller_id_name: Optional[str] = None
     #: External Caller Name, which will be shown if External Caller ID Name is `OTHER`.
     #: example: Anna
-    locationExternalCallerIdName: Optional[str] = None
+    location_external_caller_id_name: Optional[str] = None
 
 
 class MonitoredElementCallParkExtension(ApiModel):
@@ -280,7 +280,7 @@ class MonitoredElementCallParkExtension(ApiModel):
     location: Optional[str] = None
     #: ID of location for call park extension.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzEyMzQ1
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
 
 
 class MonitoredElementUserType(str, Enum):
@@ -302,7 +302,7 @@ class UserNumberItem(ApiModel):
     primary: Optional[bool] = None
     #: Flag to indicate toll free number.
     #: example: True
-    tollFreeNumber: Optional[bool] = None
+    toll_free_number: Optional[bool] = None
 
 
 class MonitoredElementUser(ApiModel):
@@ -311,13 +311,13 @@ class MonitoredElementUser(ApiModel):
     id: Optional[str] = None
     #: First name of person or workspace.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name of person or workspace.
     #: example: Brown
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Display name of person or workspace.
     #: example: John Brown
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: Type of the person or workspace.
     #: example: PEOPLE
     type: Optional[MonitoredElementUserType] = None
@@ -331,7 +331,7 @@ class MonitoredElementUser(ApiModel):
     location: Optional[str] = None
     #: ID of the location for call park.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzEyMzQ1
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
 
 
 class MonitoredElementItem(ApiModel):
@@ -361,45 +361,45 @@ class PlaceCallerIdGet(ApiModel):
     selected: Optional[CLIDPolicySelection] = None
     #: Direct number which will be shown if `DIRECT_LINE` is selected.
     #: example: +12815550003
-    directNumber: Optional[str] = None
+    direct_number: Optional[str] = None
     #: Location number which will be shown if `LOCATION_NUMBER` is selected
     #: example: +12815550002
-    locationNumber: Optional[str] = None
+    location_number: Optional[str] = None
     #: Flag for specifying a toll-free number.
-    tollFreeLocationNumber: Optional[bool] = None
+    toll_free_location_number: Optional[bool] = None
     #: This value must be an assigned number from the person's location.
     #: example: +12815550003
-    customNumber: Optional[str] = None
+    custom_number: Optional[str] = None
     #: Workspace's caller ID display name.
     #: example: Clockmaker's shop 7.1
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: Workspace's caller ID display details. Default is `.`.
     #: example: .
-    displayDetail: Optional[str] = None
+    display_detail: Optional[str] = None
     #: Flag to block call forwarding.
     #: example: True
-    blockInForwardCallsEnabled: Optional[bool] = None
+    block_in_forward_calls_enabled: Optional[bool] = None
     #: Designates which type of External Caller ID Name policy is used. Default is `DIRECT_LINE`.
     #: example: DIRECT_LINE
-    externalCallerIdNamePolicy: Optional[ExternalCallerIdNamePolicy] = None
+    external_caller_id_name_policy: Optional[ExternalCallerIdNamePolicy] = None
     #: Custom External Caller Name, which will be shown if External Caller ID Name is `OTHER`.
     #: example: Custom external caller name
-    customExternalCallerIdName: Optional[str] = None
+    custom_external_caller_id_name: Optional[str] = None
     #: External Caller Name, which will be shown if External Caller ID Name is `OTHER`.
     #: example: Anna
-    locationExternalCallerIdName: Optional[str] = None
+    location_external_caller_id_name: Optional[str] = None
 
 
 class TransferNumberGet(ApiModel):
     #: When calling a specific call type, this workspace will be automatically transferred to another number.
     #: example: "+1205553650"
-    autoTransferNumber1: Optional[str] = None
+    auto_transfer_number1: Optional[str] = None
     #: When calling a specific call type, this workspace will be automatically transferred to another number.
     #: example: "+1205553651"
-    autoTransferNumber2: Optional[str] = None
+    auto_transfer_number2: Optional[str] = None
     #: When calling a specific call type, this workspace will be automatically transferred to another number.
     #: example: "+1205553652"
-    autoTransferNumber3: Optional[str] = None
+    auto_transfer_number3: Optional[str] = None
 
 
 class UserInboundPermissionGetExternalTransfer(str, Enum):
@@ -414,50 +414,50 @@ class UserInboundPermissionGetExternalTransfer(str, Enum):
 class UserInboundPermissionGet(ApiModel):
     #: Incoming Permission state. If disabled, the default settings are used.
     #: example: True
-    useCustomEnabled: Optional[bool] = None
+    use_custom_enabled: Optional[bool] = None
     #: Indicate call transfer setting.
     #: example: ALLOW_ALL_EXTERNAL
-    externalTransfer: Optional[UserInboundPermissionGetExternalTransfer] = None
+    external_transfer: Optional[UserInboundPermissionGetExternalTransfer] = None
     #: Flag to indicate if workspace can receive internal calls.
     #: example: True
-    internalCallsEnabled: Optional[bool] = None
+    internal_calls_enabled: Optional[bool] = None
     #: Flag to indicate if workspace can receive collect calls.
     #: example: True
-    collectCallsEnabled: Optional[bool] = None
+    collect_calls_enabled: Optional[bool] = None
 
 
 class UserMonitoringGet(ApiModel):
     #: Call park notification enabled or disabled.
     #: example: True
-    callParkNotificationEnabled: Optional[bool] = None
+    call_park_notification_enabled: Optional[bool] = None
     #: Monitored element items.
-    monitoredElements: Optional[MonitoredElementItem] = None
+    monitored_elements: Optional[MonitoredElementItem] = None
 
 
 class UserMonitoringPatch(ApiModel):
     #: Call park notification is enabled or disabled.
     #: example: True
-    enableCallParkNotification: Optional[bool] = None
+    enable_call_park_notification: Optional[bool] = None
     #: Array of ID strings of monitored elements.
-    monitoredElements: Optional[list[str]] = None
+    monitored_elements: Optional[list[str]] = None
 
 
 class UserOutgoingPermissionGet(ApiModel):
     #: Outgoing Permission state. If disabled, the default settings are used.
     #: example: True
-    useCustomEnabled: Optional[bool] = None
+    use_custom_enabled: Optional[bool] = None
     #: Workspace's list of outgoing permissions.
-    callingPermissions: Optional[list[CallingPermission]] = None
+    calling_permissions: Optional[list[CallingPermission]] = None
 
 
 class UserPlaceAuthorizationCodeListGet(ApiModel):
     #: Indicates the set of activation codes and description.
-    accessCodes: Optional[list[AuthorizationCode]] = None
+    access_codes: Optional[list[AuthorizationCode]] = None
 
 
 class UserPlaceAuthorizationCodeListPatch(ApiModel):
     #: Indicates access codes to delete.
-    deleteCodes: Optional[list[str]] = None
+    delete_codes: Optional[list[str]] = None
 
 
 class Location(ApiModel):

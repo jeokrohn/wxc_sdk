@@ -23,19 +23,19 @@ class RoomTab(ApiModel):
     id: Optional[str] = None
     #: A unique identifier for the room containing the room tab.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vYmJjZWIxYWQtNDNmMS0zYjU4LTkxNDctZjE0YmIwYzRkMTU0
-    roomId: Optional[str] = None
+    room_id: Optional[str] = None
     #: The room type.
     #: example: group
-    roomType: Optional[RoomTabRoomType] = None
+    room_type: Optional[RoomTabRoomType] = None
     #: User-friendly name for the room tab.
     #: example: Cisco HomePage
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: Room Tab's content URL.
     #: example: https://www.cisco.com
-    contentUrl: Optional[str] = None
+    content_url: Optional[str] = None
     #: The person ID of the person who created this Room Tab.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    creatorId: Optional[str] = None
+    creator_id: Optional[str] = None
     #: The date and time when the Room Tab was created.
     #: example: 2015-10-18T14:26:16.203Z
     created: Optional[datetime] = None

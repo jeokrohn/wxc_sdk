@@ -28,7 +28,7 @@ class GetUserNumberItemObject(ApiModel):
     extension: Optional[datetime] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12348080
     esn: Optional[str] = None
@@ -43,13 +43,13 @@ class GetPersonPlaceVirtualLineCallPickupObject(ApiModel):
     id: Optional[str] = None
     #: First name of a person, workspace or virtual line.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name of a person, workspace or virtual line.
     #: example: Brown
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Display name of a person, workspace or virtual line.
     #: example: johnBrown
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: Type of the person, workspace or virtual line.
     #: example: PEOPLE
     type: Optional[GetPersonPlaceVirtualLineCallPickupObjectType] = None
@@ -57,7 +57,7 @@ class GetPersonPlaceVirtualLineCallPickupObject(ApiModel):
     #: example: john.brown@example.com
     email: Optional[str] = None
     #: List of phone numbers of a person, workspace or virtual line.
-    phoneNumber: Optional[list[GetUserNumberItemObject]] = None
+    phone_number: Optional[list[GetUserNumberItemObject]] = None
 
 
 class GetCallPickupObject(ApiModel):

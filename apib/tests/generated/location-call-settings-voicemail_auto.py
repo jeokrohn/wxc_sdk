@@ -27,10 +27,10 @@ class GetLocationVoicemailGroupObjectMessageStorageStorageType(str, Enum):
 class GetLocationVoicemailGroupObjectMessageStorage(ApiModel):
     #: Message storage type
     #: example: EXTERNAL
-    storageType: Optional[GetLocationVoicemailGroupObjectMessageStorageStorageType] = None
+    storage_type: Optional[GetLocationVoicemailGroupObjectMessageStorageStorageType] = None
     #: External email to forward the message.
     #: example: user@flex2.cisco.com
-    externalEmail: Optional[str] = None
+    external_email: Optional[str] = None
 
 
 class GetLocationVoicemailGroupObjectNotifications(ApiModel):
@@ -48,7 +48,7 @@ class GetLocationVoicemailGroupObjectFaxMessage(ApiModel):
     enabled: Optional[bool] = None
     #: Phone number to receive fax messages.
     #: example: +1234234324
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Extension to receive fax messages.
     #: example: 23455.0
     extension: Optional[int] = None
@@ -60,7 +60,7 @@ class GetLocationVoicemailGroupObjectEmailCopyOfMessage(ApiModel):
     enabled: Optional[bool] = None
     #: Email message copy to email address provided.
     #: example: user@flex2.cisco.com
-    emailId: Optional[str] = None
+    email_id: Optional[str] = None
 
 
 class GetLocationVoicemailGroupObject(ApiModel):
@@ -72,52 +72,52 @@ class GetLocationVoicemailGroupObject(ApiModel):
     name: Optional[str] = None
     #: Voicemail group phone number.
     #: example: +1234234324
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Voicemail group extension number.
     #: example: 23455.0
     extension: Optional[int] = None
     #: Voicemail group toll free number.
-    tollFreeNumber: Optional[bool] = None
+    toll_free_number: Optional[bool] = None
     #: Voicemail group caller ID first name.
     #: example: Customer
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Voicemail group called ID last name.
     #: example: Support
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Enable/disable voicemail group.
     #: example: True
     enabled: Optional[bool] = None
     #: Language for voicemail group audio announcement.
     #: example: en_us
-    languageCode: Optional[str] = None
+    language_code: Optional[str] = None
     #: Set voicemail group greeting type.
     #: example: DEFAULT
     greeting: Optional[GetLocationVoicemailGroupObjectGreeting] = None
     #: Enabled if CUSTOM greeting is previously uploaded.
     #: example: True
-    greetingUploaded: Optional[bool] = None
+    greeting_uploaded: Optional[bool] = None
     #: CUSTOM greeting for previously uploaded.
     #: example: short greeting.wav
-    greetingDescription: Optional[str] = None
+    greeting_description: Optional[str] = None
     #: Message storage information
-    messageStorage: Optional[GetLocationVoicemailGroupObjectMessageStorage] = None
+    message_storage: Optional[GetLocationVoicemailGroupObjectMessageStorage] = None
     #: Message notifications
     notifications: Optional[GetLocationVoicemailGroupObjectNotifications] = None
     #: Fax message receive settings
-    faxMessage: Optional[GetLocationVoicemailGroupObjectFaxMessage] = None
+    fax_message: Optional[GetLocationVoicemailGroupObjectFaxMessage] = None
     #: Transfer message information
-    transferToNumber: Optional[GetLocationVoicemailGroupObjectNotifications] = None
+    transfer_to_number: Optional[GetLocationVoicemailGroupObjectNotifications] = None
     #: Message copy information
-    emailCopyOfMessage: Optional[GetLocationVoicemailGroupObjectEmailCopyOfMessage] = None
+    email_copy_of_message: Optional[GetLocationVoicemailGroupObjectEmailCopyOfMessage] = None
     #: Enable/disable to forward voice message.
     #: example: True
-    voiceMessageForwardingEnabled: Optional[bool] = None
+    voice_message_forwarding_enabled: Optional[bool] = None
 
 
 class GetLocationVoicemailObject(ApiModel):
     #: Set to `true` to enable voicemail transcription.
     #: example: True
-    voicemailTranscriptionEnabled: Optional[bool] = None
+    voicemail_transcription_enabled: Optional[bool] = None
 
 
 class GetVoicePortalObject(ApiModel):
@@ -132,19 +132,19 @@ class GetVoicePortalObject(ApiModel):
     language: Optional[str] = None
     #: Language code for voicemail group audio announcement.
     #: example: en_us
-    languageCode: Optional[str] = None
+    language_code: Optional[str] = None
     #: Extension of incoming call.
     #: example: 0007
     extension: Optional[datetime] = None
     #: Phone Number of incoming call.
     #: example: +1345325235
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Caller ID First Name.
     #: example: firstName
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Caller ID Last Name.
     #: example: lastName
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
 
 
 class GetVoicePortalPasscodeRuleObjectExpirePasscode(ApiModel):
@@ -153,7 +153,7 @@ class GetVoicePortalPasscodeRuleObjectExpirePasscode(ApiModel):
     enabled: Optional[bool] = None
     #: Number of days for passcode expiry. The minimum value is 15. The maximum value is 100.
     #: example: 180.0
-    numberOfDays: Optional[int] = None
+    number_of_days: Optional[int] = None
 
 
 class GetVoicePortalPasscodeRuleObjectFailedAttempts(ApiModel):
@@ -171,7 +171,7 @@ class GetVoicePortalPasscodeRuleObjectBlockPreviousPasscodes(ApiModel):
     enabled: Optional[bool] = None
     #: Number of required passcodes changes. The minimum value is 1. The maximum value is 10.
     #: example: 3.0
-    numberOfPasscodes: Optional[int] = None
+    number_of_passcodes: Optional[int] = None
 
 
 class GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits(ApiModel):
@@ -189,34 +189,34 @@ class GetVoicePortalPasscodeRuleObjectLength(ApiModel):
 
 class GetVoicePortalPasscodeRuleObject(ApiModel):
     #: Settings for passcode expiry.
-    expirePasscode: Optional[GetVoicePortalPasscodeRuleObjectExpirePasscode] = None
+    expire_passcode: Optional[GetVoicePortalPasscodeRuleObjectExpirePasscode] = None
     #: Number of failed attempts allowed.
-    failedAttempts: Optional[GetVoicePortalPasscodeRuleObjectFailedAttempts] = None
+    failed_attempts: Optional[GetVoicePortalPasscodeRuleObjectFailedAttempts] = None
     #: Settings for previous passcode usage.
-    blockPreviousPasscodes: Optional[GetVoicePortalPasscodeRuleObjectBlockPreviousPasscodes] = None
+    block_previous_passcodes: Optional[GetVoicePortalPasscodeRuleObjectBlockPreviousPasscodes] = None
     #: Settings for not allowing single or groups of repeated digits in passcode (for example, 22888, 121212, or 408408).
     #: + enabled: true (boolean) - If enabled, passcode should not contain repeated digits.
     #: + max: `3` (number) - Maximum number of digits to be considered as a repeated sequence. The minimum value is 1. The maximum value is 6.
-    blockRepeatedDigits: Optional[GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits] = None
+    block_repeated_digits: Optional[GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits] = None
     #: Settings for not allowing numerical sequence in passcode (for example, 012345 or 987654).
     #: + enabled: true (boolean) - If enabled, do not allow the specified number of ascending or descending digits in a row.
     #: + numberOfAscendingDigits: `3` (number) -  Number of ascending digits in sequence. The minimum value is 2. The maximum value is 5.
     #: + numberOfDescendingDigits: `3` (number) -  Number of descending digits in sequence. The minimum value is 2. The maximum value is 5.
-    blockContiguousSequences: Optional[GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits] = None
+    block_contiguous_sequences: Optional[GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits] = None
     #: Allowed length of the passcode.
     length: Optional[GetVoicePortalPasscodeRuleObjectLength] = None
     #: If enabled, the passcode do not contain repeated pattern.
     #: example: True
-    blockRepeatedPatternsEnabled: Optional[bool] = None
+    block_repeated_patterns_enabled: Optional[bool] = None
     #: If enabled, the passcode do not allow user phone number or extension.
     #: example: True
-    blockUserNumberEnabled: Optional[bool] = None
+    block_user_number_enabled: Optional[bool] = None
     #: If enabled, the passcode do not allow revered phone number or extension.
     #: example: True
-    blockReversedUserNumberEnabled: Optional[bool] = None
+    block_reversed_user_number_enabled: Optional[bool] = None
     #: If enabled, the passcode do not allow setting reversed old passcode.
     #: example: True
-    blockReversedOldPasscodeEnabled: Optional[bool] = None
+    block_reversed_old_passcode_enabled: Optional[bool] = None
 
 
 class GetVoicemailGroupObject(ApiModel):
@@ -228,22 +228,22 @@ class GetVoicemailGroupObject(ApiModel):
     name: Optional[str] = None
     #: Location Name.
     #: example: San Jose
-    locationName: Optional[str] = None
+    location_name: Optional[str] = None
     #: Location ID.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzMxMTYx
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: Extension of the voicemail group.
     #: example: 0007
     extension: Optional[datetime] = None
     #: Phone number of the voicemail group.
     #: example: +1345325235
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: If enabled, incoming calls are sent to voicemail.
     #: example: True
     enabled: Optional[bool] = None
     #: Flag to indicate if the number is toll free.
     #: example: True
-    tollFreeNumber: Optional[bool] = None
+    toll_free_number: Optional[bool] = None
 
 
 class PostLocationVoicemailGroupObject(ApiModel):
@@ -252,32 +252,32 @@ class PostLocationVoicemailGroupObject(ApiModel):
     name: Optional[str] = None
     #: Set voicemail group phone number for this particular location.
     #: example: +1234234324
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Set unique voicemail group extension number for this particular location.
     #: example: 23455.0
     extension: Optional[int] = None
     #: Set voicemail group caller ID first name.
     #: example: Customer
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Set voicemail group called ID last name.
     #: example: Support
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Set passcode to access voicemail group when calling.
     #: example: 1234.0
     passcode: Optional[int] = None
     #: Language code for voicemail group audio announcement.
     #: example: en_us
-    languageCode: Optional[str] = None
+    language_code: Optional[str] = None
     #: Message storage information
-    messageStorage: Optional[GetLocationVoicemailGroupObjectMessageStorage] = None
+    message_storage: Optional[GetLocationVoicemailGroupObjectMessageStorage] = None
     #: Message notifications
     notifications: Optional[GetLocationVoicemailGroupObjectNotifications] = None
     #: Fax message information
-    faxMessage: Optional[GetLocationVoicemailGroupObjectFaxMessage] = None
+    fax_message: Optional[GetLocationVoicemailGroupObjectFaxMessage] = None
     #: Transfer message information
-    transferToNumber: Optional[GetLocationVoicemailGroupObjectNotifications] = None
+    transfer_to_number: Optional[GetLocationVoicemailGroupObjectNotifications] = None
     #: Message copy information
-    emailCopyOfMessage: Optional[GetLocationVoicemailGroupObjectEmailCopyOfMessage] = None
+    email_copy_of_message: Optional[GetLocationVoicemailGroupObjectEmailCopyOfMessage] = None
 
 
 class PutLocationVoicemailGroupObject(ApiModel):
@@ -286,16 +286,16 @@ class PutLocationVoicemailGroupObject(ApiModel):
     name: Optional[str] = None
     #: Set voicemail group phone number.
     #: example: +1234234324
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Set unique voicemail group extension number.
     #: example: 23455.0
     extension: Optional[int] = None
     #: Set the voicemail group caller ID first name.
     #: example: Customer
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Set the voicemail group called ID last name.
     #: example: Support
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Set to `true` to enable the voicemail group.
     #: example: True
     enabled: Optional[bool] = None
@@ -304,32 +304,32 @@ class PutLocationVoicemailGroupObject(ApiModel):
     passcode: Optional[int] = None
     #: Language code for the voicemail group audio announcement.
     #: example: en_us
-    languageCode: Optional[str] = None
+    language_code: Optional[str] = None
     #: Voicemail group greeting type.
     #: example: DEFAULT
     greeting: Optional[GetLocationVoicemailGroupObjectGreeting] = None
     #: CUSTOM greeting for previously uploaded.
     #: example: short greeting.wav
-    greetingDescription: Optional[str] = None
+    greeting_description: Optional[str] = None
     #: Message storage information
-    messageStorage: Optional[GetLocationVoicemailGroupObjectMessageStorage] = None
+    message_storage: Optional[GetLocationVoicemailGroupObjectMessageStorage] = None
     #: Message notifications
     notifications: Optional[GetLocationVoicemailGroupObjectNotifications] = None
     #: Fax message receive settings
-    faxMessage: Optional[GetLocationVoicemailGroupObjectFaxMessage] = None
+    fax_message: Optional[GetLocationVoicemailGroupObjectFaxMessage] = None
     #: Transfer message information
-    transferToNumber: Optional[GetLocationVoicemailGroupObjectNotifications] = None
+    transfer_to_number: Optional[GetLocationVoicemailGroupObjectNotifications] = None
     #: Message copy information
-    emailCopyOfMessage: Optional[GetLocationVoicemailGroupObjectEmailCopyOfMessage] = None
+    email_copy_of_message: Optional[GetLocationVoicemailGroupObjectEmailCopyOfMessage] = None
 
 
 class PutVoicePortalObjectPasscode(ApiModel):
     #: New passcode.
     #: example: testPass123
-    newPasscode: Optional[str] = None
+    new_passcode: Optional[str] = None
     #: Confirm new passcode.
     #: example: testPass123
-    confirmPasscode: Optional[str] = None
+    confirm_passcode: Optional[str] = None
 
 
 class PutVoicePortalObject(ApiModel):
@@ -338,18 +338,18 @@ class PutVoicePortalObject(ApiModel):
     name: Optional[str] = None
     #: Language code for voicemail group audio announcement.
     #: example: en_us
-    languageCode: Optional[str] = None
+    language_code: Optional[str] = None
     #: Extension of incoming call.
     #: example: 0007
     extension: Optional[datetime] = None
     #: Phone Number of incoming call.
     #: example: +1345325235
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Caller ID First Name.
     #: example: firstName
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Caller ID Last Name.
     #: example: lastName
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Voice Portal Admin Passcode.
     passcode: Optional[PutVoicePortalObjectPasscode] = None

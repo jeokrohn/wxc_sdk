@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ListReport', 'ListReportStatus', 'ListReportType', 'Report', 'ReportError', 'ReportId', 'WholesaleBillingReportsListResponse']
+__auto__ = ['ListReport', 'ListReportStatus', 'ListReportType', 'ListWholesaleBillingReportsSortBy', 'Report', 'ReportError', 'ReportId', 'WholesaleBillingReportsListResponse']
 
 
 class ListReportStatus(str, Enum):
@@ -31,10 +31,10 @@ class ListReport(ApiModel):
     id: Optional[str] = None
     #: Billing report startDate.
     #: example: 2021-05-21
-    billingStartDate: Optional[datetime] = None
+    billing_start_date: Optional[datetime] = None
     #: Billing report endDate.
     #: example: 2021-05-30
-    billingEndDate: Optional[datetime] = None
+    billing_end_date: Optional[datetime] = None
     #: The status of the billing report
     #: example: COMPLETED
     status: Optional[ListReportStatus] = None
@@ -58,10 +58,10 @@ class Report(ApiModel):
     id: Optional[str] = None
     #: Billing report `startDate`.
     #: example: 2021-05-21
-    billingStartDate: Optional[datetime] = None
+    billing_start_date: Optional[datetime] = None
     #: Billing report `endDate`.
     #: example: 2021-05-30
-    billingEndDate: Optional[datetime] = None
+    billing_end_date: Optional[datetime] = None
     #: Billing Report Type
     #: example: PARTNER
     type: Optional[ListReportType] = None
@@ -70,13 +70,13 @@ class Report(ApiModel):
     created: Optional[datetime] = None
     #: The person ID of the partner administrator who created the report.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8wYWNkMzg3NS00ZTEyLTRkNzctYjk4MS1lMzg5ZmQ4ODQ2YzA
-    createdBy: Optional[str] = None
+    created_by: Optional[str] = None
     #: The status of the billing report.
     #: example: COMPLETED
     status: Optional[ListReportStatus] = None
     #: The URL for partners to download the billing report.
     #: example: https://billing-reports-int-us-east-1.webexcontent.com/a366de9b-3204-4140-8181-25808d360e36/WHOLESALE/340177d1-7f25-41e1-a39f-ad63ec1103a5.csv?Expires=1624978489&Signature=Syp3vrVeMx4P6MeMtm8e1bQaeAdHFe-c7NeHERWh5-qJGLZ1T8Dvl2ee-M8OsFf~z6Yepz94e2Hh1HDVailD0Uryl8SgiM~jl0cBh7L0PmSe~i9oFA0eJ0MulkqGSMVf7ZHhxY55xYMgIBZIERkWm3CqQNDg5BS4EaXapKfOnmFegf36OokCM63m5uOK8-csk08IkZhwo2Z0l1JMtuWYEaLh4dgMHoe~xgH3YmDSSCWInFYaEifUAfgi2YAYS6nP9Zq4BTliBq62XBaehOE1gBrhy4RdwD-3WSs2oD-BdpoRpuGzo3FZzDLVEvd0S2D6gTcHljOHodQKxe-u0BXPWQ__&Key-Pair-Id=APKAJADAKLCI2FW2U32Q
-    tempDownloadURL: Optional[str] = None
+    temp_download_url: Optional[str] = Field(alias='tempDownloadURL', default=None)
     #: List of errors that occurred during report generation.
     #: **Note:**
     #: * This list captures errors that occurred during asynchronous or background report generation, after the request has been accepted and a `202 OK` response is returned.
@@ -89,10 +89,10 @@ class ReportId(ApiModel):
     id: Optional[str] = None
     #: Billing report startDate.
     #: example: 2021-05-21
-    billingStartDate: Optional[datetime] = None
+    billing_start_date: Optional[datetime] = None
     #: Billing report endDate.
     #: example: 2021-05-30
-    billingEndDate: Optional[datetime] = None
+    billing_end_date: Optional[datetime] = None
     #: Billing Report Type
     #: example: PARTNER
     type: Optional[ListReportType] = None
@@ -101,3 +101,10 @@ class ReportId(ApiModel):
 class WholesaleBillingReportsListResponse(ApiModel):
     #: An array of report objects.
     items: Optional[list[ListReport]] = None
+
+
+class ListWholesaleBillingReportsSortBy(str, Enum):
+    id = 'id'
+    billing_start_date = 'billingStartDate'
+    billing_end_date = 'billingEndDate'
+    status = 'status'

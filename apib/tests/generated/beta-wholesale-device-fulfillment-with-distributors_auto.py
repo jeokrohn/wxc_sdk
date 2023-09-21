@@ -26,16 +26,16 @@ class CatalogResponse(ApiModel):
     sku: Optional[str] = None
     #: The distributor ID.
     #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMl9hL0RJU1RSSUJVVE9SL2MwNTYzN2U3LWE3MmYtNDcxZS05N2ZhLTVjNDM1MTRkODdkNA
-    distributorId: Optional[str] = None
+    distributor_id: Optional[str] = None
     #: The catalog item product name.
     #: example: Cisco IP Phone 8845. Charcoal
-    productName: Optional[str] = None
+    product_name: Optional[str] = None
     #: The availability of catalog item.
     #: example: available
     availability: Optional[CatalogResponseAvailability] = None
     #: The catalog item manufacturer name.
     #: example: Cisco
-    manufacturerName: Optional[str] = None
+    manufacturer_name: Optional[str] = None
 
 
 class CatalogListResponse(ApiModel):
@@ -86,16 +86,16 @@ class OrderShippingDetails(ApiModel):
     name: Optional[str] = None
     #: The order recipient's phone number.
     #: example: +1 468 23456789
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: The order recipient's email address.
     #: example: dforbes@test.com
     email: Optional[str] = None
     #: The order recipient's address line 1.
     #: example: Almond Telecom
-    addressLine1: Optional[str] = None
+    address_line1: Optional[str] = None
     #: The order recipient's address line 2.
     #: example: 45 North Glen Eagles Street
-    addressLine2: Optional[str] = None
+    address_line2: Optional[str] = None
     #: The order recipient's city.
     #: example: Springfield
     city: Optional[str] = None
@@ -104,7 +104,7 @@ class OrderShippingDetails(ApiModel):
     state: Optional[str] = None
     #: The order recipient's zip code.
     #: example: 19064
-    zipCode: Optional[str] = None
+    zip_code: Optional[str] = None
     #: The order recipient's country.
     #: example: USA
     country: Optional[str] = None
@@ -116,19 +116,19 @@ class Person(ApiModel):
     id: Optional[str] = None
     #: The person display name for the line item.
     #: example: Dwight Schrute
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
 
 
 class OrderResponseLineItem(ApiModel):
     #: The order line item number.
     #: example: 1
-    lineItemNumber: Optional[datetime] = None
+    line_item_number: Optional[datetime] = None
     #: The line item catalog identifier.
     #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMl9hL0NBVEFMT0dJVEVNLzZmN2QzMTFjLTc1YjEtNGM4Ny04YTMyLTIwODMwNjcyYjE4Yg
-    catalogId: Optional[str] = None
+    catalog_id: Optional[str] = None
     #: The line item device display name.
     #: example: Cisco 8865
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: The line item device SKU.
     #: example: CP-8865-K9=
     sku: Optional[str] = None
@@ -142,23 +142,23 @@ class OrderResponseLineItem(ApiModel):
 class OrderResponse(ApiModel):
     #: A unique identifier for the order.
     #: example: '4560123456'
-    orderNumber: Optional[str] = None
+    order_number: Optional[str] = None
     #: The person ID used to place the order.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mZTc3NGJlLTFhNTUtNDM2NS05ODZhLWFiMzAyMThjYzVhYg
-    orderedBy: Optional[str] = None
+    ordered_by: Optional[str] = None
     #: The distributor ID
     #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMl9hL0RJU1RSSUJVVE9SL2MwNTYzN2U3LWE3MmYtNDcxZS05N2ZhLTVjNDM1MTRkODdkNA
-    distributorId: Optional[str] = None
+    distributor_id: Optional[str] = None
     #: Descriptive name for the order.
     #: example: Almond Telecom Initial Cisco Device Order
     description: Optional[str] = None
     #: Tracking number for delivery, if available.
-    trackingNumber: Optional[str] = None
+    tracking_number: Optional[str] = None
     #: A unique identifier for the customer.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: The order delivery shipping details.
-    shippingDetails: Optional[OrderShippingDetails] = None
+    shipping_details: Optional[OrderShippingDetails] = None
     #: The aggregated order status.
     #: example: Order Confirmed
     status: Optional[str] = None
@@ -166,7 +166,7 @@ class OrderResponse(ApiModel):
     #: example: 2022-11-15T10:14:44.712Z
     created: Optional[datetime] = None
     #: A list of order line items.
-    lineItems: Optional[list[OrderResponseLineItem]] = None
+    line_items: Optional[list[OrderResponseLineItem]] = None
 
 
 class OrderListResponse(ApiModel):
@@ -177,13 +177,13 @@ class OrderListResponse(ApiModel):
 class OrderRequestLineItem(ApiModel):
     #: The line item catalog identifier.
     #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMl9hL0NBVEFMT0dJVEVNLzZmN2QzMTFjLTc1YjEtNGM4Ny04YTMyLTIwODMwNjcyYjE4Yg
-    catalogId: Optional[str] = None
+    catalog_id: Optional[str] = None
     #: The person ID which the line item is associated with.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8wOTA5ODFhOS04Yjc1LTRkY2QtYWU4Zi1lZjQ3NjI3NDI4ZTQ
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: The workspace ID which the line item is associated with.
     #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMl9hL1BMQUNFLzg2NDc2MmI4LTVlZGYtNDc0NC04ZWNmLTEyMjQ2OGIzMzFhMA
-    workspaceId: Optional[str] = None
+    workspace_id: Optional[str] = None
 
 
 class OrderRequest(ApiModel):
@@ -192,8 +192,8 @@ class OrderRequest(ApiModel):
     description: Optional[str] = None
     #: A unique identifier for the customer.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: The order delivery shipping details.
-    shippingDetails: Optional[OrderShippingDetails] = None
+    shipping_details: Optional[OrderShippingDetails] = None
     #: A list of order line items.
-    lineItems: Optional[list[OrderRequestLineItem]] = None
+    line_items: Optional[list[OrderRequestLineItem]] = None

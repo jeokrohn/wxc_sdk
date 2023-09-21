@@ -30,10 +30,10 @@ class AudioAnnouncementFileGetObject(ApiModel):
     id: Optional[str] = None
     #: Audio announcement file name.
     #: example: AUDIO_FILE.wav
-    fileName: Optional[str] = None
+    file_name: Optional[str] = None
     #: Audio announcement file type.
     #: example: WAV
-    mediaFileType: Optional[AudioAnnouncementFileGetObjectMediaFileType] = None
+    media_file_type: Optional[AudioAnnouncementFileGetObjectMediaFileType] = None
     #: Audio announcement file location.
     #: example: ORGANIZATION
     level: Optional[AudioAnnouncementFileGetObjectLevel] = None
@@ -49,23 +49,23 @@ class GetMusicOnHoldObjectGreeting(str, Enum):
 class GetMusicOnHoldObject(ApiModel):
     #: Music on hold enabled or disabled for the person.
     #: example: True
-    audioEnabled: Optional[bool] = None
+    audio_enabled: Optional[bool] = None
     #: Music on hold enabled or disabled for the location.
     #: example: True
-    mohLocationEnabled: Optional[bool] = None
+    moh_location_enabled: Optional[bool] = None
     #: Greeting type for the person.
     #: example: DEFAULT
     greeting: Optional[GetMusicOnHoldObjectGreeting] = None
     #: Announcement Audio File details when greeting is selected to be `CUSTOM`.
-    audioAnnouncementFile: Optional[AudioAnnouncementFileGetObject] = None
+    audio_announcement_file: Optional[AudioAnnouncementFileGetObject] = None
 
 
 class PutMusicOnHoldObject(ApiModel):
     #: Music on hold is enabled or disabled for the person.
     #: example: True
-    audioEnabled: Optional[bool] = None
+    audio_enabled: Optional[bool] = None
     #: Greeting type for the person.
     #: example: DEFAULT
     greeting: Optional[GetMusicOnHoldObjectGreeting] = None
     #: Announcement Audio File details when greeting is selected to be `CUSTOM`.
-    audioAnnouncementFile: Optional[AudioAnnouncementFileGetObject] = None
+    audio_announcement_file: Optional[AudioAnnouncementFileGetObject] = None

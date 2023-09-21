@@ -21,12 +21,12 @@ class AlternateNumbersObjectRingPattern(str, Enum):
 class AlternateNumbersObject(ApiModel):
     #: Phone number defined as alternate number.
     #: example: +19705550028
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Flag to indicate if auto attendant number is toll-free number.
-    tollFreeNumber: Optional[bool] = None
+    toll_free_number: Optional[bool] = None
     #: Ring pattern that will be used for the alternate number.
     #: example: 0
-    ringPattern: Optional[AlternateNumbersObjectRingPattern] = None
+    ring_pattern: Optional[AlternateNumbersObjectRingPattern] = None
 
 
 class GetAutoAttendantObjectExtensionDialing(str, Enum):
@@ -93,9 +93,9 @@ class HoursMenuObject(ApiModel):
     greeting: Optional[HoursMenuObjectGreeting] = None
     #: Flag to indicate if auto attendant extension is enabled or not.
     #: example: True
-    extensionEnabled: Optional[bool] = None
+    extension_enabled: Optional[bool] = None
     #: Key configurations defined for the auto attendant.
-    keyConfigurations: Optional[KeyConfigurationsObject] = None
+    key_configurations: Optional[KeyConfigurationsObject] = None
 
 
 class GetAutoAttendantObject(ApiModel):
@@ -110,45 +110,45 @@ class GetAutoAttendantObject(ApiModel):
     enabled: Optional[bool] = None
     #: Auto attendant phone number. Either phone number or extension should be present as mandatory.
     #: example: +19705550028
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Auto attendant extension. Either phone number or extension should be present as mandatory.
     #: example: 1001
     extension: Optional[datetime] = None
     #: Flag to indicate if auto attendant number is toll-free number.
-    tollFreeNumber: Optional[bool] = None
+    toll_free_number: Optional[bool] = None
     #: First name defined for an auto attendant.
     #: example: Main Line AA
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name defined for an auto attendant.
     #: example: Test
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Alternate numbers defined for the auto attendant.
-    alternateNumbers: Optional[list[AlternateNumbersObject]] = None
+    alternate_numbers: Optional[list[AlternateNumbersObject]] = None
     #: Language for the auto attendant.
     #: example: English
     language: Optional[str] = None
     #: Language code for the auto attendant.
     #: example: en_us
-    languageCode: Optional[str] = None
+    language_code: Optional[str] = None
     #: Business hours for the auto attendant.
     #: example: Peak Season Hours
-    businessSchedule: Optional[str] = None
+    business_schedule: Optional[str] = None
     #: Holiday schedule for the auto attendant.
     #: example: Corporate Holidays
-    holidaySchedule: Optional[str] = None
+    holiday_schedule: Optional[str] = None
     #: Extension dialing setting. If the values are not set default will be set as ENTERPRISE.
     #: example: ENTERPRISE
-    extensionDialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
+    extension_dialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
     #: Name dialing setting. If the values are not set default will be set as ENTERPRISE.
     #: example: ENTERPRISE
-    nameDialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
+    name_dialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
     #: Time zone defined for the auto attendant.
     #: example: America/Los_Angeles
-    timeZone: Optional[str] = None
+    time_zone: Optional[str] = None
     #: Business hours menu defined for the auto attendant.
-    businessHoursMenu: Optional[HoursMenuObject] = None
+    business_hours_menu: Optional[HoursMenuObject] = None
     #: After hours menu defined for the auto attendant.
-    afterHoursMenu: Optional[HoursMenuObject] = None
+    after_hours_menu: Optional[HoursMenuObject] = None
     #: Specifies the department information.
     department: Optional[GetAutoAttendantObjectDepartment] = None
 
@@ -171,18 +171,18 @@ class ListAutoAttendantObject(ApiModel):
     name: Optional[str] = None
     #: Name of location for auto attendant.
     #: example: Houston
-    locationName: Optional[str] = None
+    location_name: Optional[str] = None
     #: ID of location for auto attendant.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzI2NDE1MA
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: Auto attendant phone number. Either phone number or extension should be present as mandatory.
     #: example: +19705550028
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Auto attendant extension. Either phone number or extension should be present as mandatory.
     #: example: 1001
     extension: Optional[datetime] = None
     #: Flag to indicate if auto attendant number is toll-free number.
-    tollFreeNumber: Optional[bool] = None
+    toll_free_number: Optional[bool] = None
     #: Specifies the department information.
     department: Optional[ListAutoAttendantObjectDepartment] = None
 
@@ -193,39 +193,39 @@ class ModifyAutoAttendantObject(ApiModel):
     name: Optional[str] = None
     #: Auto attendant phone number. Either phone number or extension should be present as mandatory.
     #: example: +19705550028
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Auto attendant extension. Either phone number or extension should be present as mandatory.
     #: example: 1001
     extension: Optional[datetime] = None
     #: First name defined for an auto attendant.
     #: example: Main Line AA
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name defined for an auto attendant.
     #: example: Test
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Alternate numbers defined for the auto attendant.
-    alternateNumbers: Optional[list[AlternateNumbersObject]] = None
+    alternate_numbers: Optional[list[AlternateNumbersObject]] = None
     #: Language code for the auto attendant.
     #: example: en_us
-    languageCode: Optional[str] = None
+    language_code: Optional[str] = None
     #: Business hours for the auto attendant.
     #: example: Peak Season Hours
-    businessSchedule: Optional[str] = None
+    business_schedule: Optional[str] = None
     #: Holiday schedule for the auto attendant.
     #: example: Corporate Holidays
-    holidaySchedule: Optional[str] = None
+    holiday_schedule: Optional[str] = None
     #: Extension dialing setting. If the values are not set default will be set as ENTERPRISE.
     #: example: ENTERPRISE
-    extensionDialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
+    extension_dialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
     #: Name dialing setting. If the values are not set default will be set as ENTERPRISE.
     #: example: ENTERPRISE
-    nameDialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
+    name_dialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
     #: Time zone defined for the auto attendant.
     #: example: America/Los_Angeles
-    timeZone: Optional[str] = None
+    time_zone: Optional[str] = None
     #: Business hours menu defined for the auto attendant.
-    businessHoursMenu: Optional[HoursMenuObject] = None
+    business_hours_menu: Optional[HoursMenuObject] = None
     #: After hours menu defined for the auto attendant.
-    afterHoursMenu: Optional[HoursMenuObject] = None
+    after_hours_menu: Optional[HoursMenuObject] = None
     #: Specifies the department information.
     department: Optional[GetAutoAttendantObjectDepartment] = None

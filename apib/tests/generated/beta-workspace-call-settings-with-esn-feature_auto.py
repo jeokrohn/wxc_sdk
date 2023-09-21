@@ -22,7 +22,7 @@ class MonitoredElementCallParkExtension(ApiModel):
     extension: Optional[datetime] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12348080
     esn: Optional[str] = None
@@ -31,7 +31,7 @@ class MonitoredElementCallParkExtension(ApiModel):
     location: Optional[str] = None
     #: ID of location for call park extension.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzEyMzQ1
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
 
 
 class MonitoredElementUserType(str, Enum):
@@ -50,7 +50,7 @@ class UserNumberItem(ApiModel):
     extension: Optional[datetime] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12348080
     esn: Optional[str] = None
@@ -59,7 +59,7 @@ class UserNumberItem(ApiModel):
     primary: Optional[bool] = None
     #: Flag to indicate toll free number.
     #: example: True
-    tollFreeNumber: Optional[bool] = None
+    toll_free_number: Optional[bool] = None
 
 
 class MonitoredElementUser(ApiModel):
@@ -68,13 +68,13 @@ class MonitoredElementUser(ApiModel):
     id: Optional[str] = None
     #: First name of person or workspace.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name of person or workspace.
     #: example: Brown
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Display name of person or workspace.
     #: example: John Brown
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: Type of the person or workspace.
     #: example: PEOPLE
     type: Optional[MonitoredElementUserType] = None
@@ -88,7 +88,7 @@ class MonitoredElementUser(ApiModel):
     location: Optional[str] = None
     #: ID of the location for call park.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzEyMzQ1
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
 
 
 class MonitoredElementItem(ApiModel):
@@ -107,7 +107,7 @@ class PhoneNumbers(ApiModel):
     extension: Optional[datetime] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 1234123
     esn: Optional[str] = None
@@ -119,9 +119,9 @@ class PhoneNumbers(ApiModel):
 class UserMonitoringGet(ApiModel):
     #: Call park notification enabled or disabled.
     #: example: True
-    callParkNotificationEnabled: Optional[bool] = None
+    call_park_notification_enabled: Optional[bool] = None
     #: Monitored element items.
-    monitoredElements: Optional[MonitoredElementItem] = None
+    monitored_elements: Optional[MonitoredElementItem] = None
 
 
 class Location(ApiModel):

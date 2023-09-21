@@ -18,20 +18,20 @@ class ConnectorStatus(str, Enum):
     #: Indicates that the connector is completely non-functional.
     outage = 'outage'
     #: Reports the current maintenance mode state of the connector.
-    maintenancemode = 'maintenanceMode'
+    maintenance_mode = 'maintenanceMode'
 
 
 class ConnectorType(str, Enum):
-    expresswaymanagement = 'expresswayManagement'
+    expressway_management = 'expresswayManagement'
     calendar = 'calendar'
     call = 'call'
     message = 'message'
-    expresswayserviceability = 'expresswayServiceability'
-    ecpserviceability = 'ecpServiceability'
-    videomesh = 'videoMesh'
-    datasecurity = 'dataSecurity'
+    expressway_serviceability = 'expresswayServiceability'
+    ecp_serviceability = 'ecpServiceability'
+    video_mesh = 'videoMesh'
+    data_security = 'dataSecurity'
     care = 'care'
-    caremanagement = 'careManagement'
+    care_management = 'careManagement'
 
 
 class AlarmSeverity(str, Enum):
@@ -63,7 +63,7 @@ class Alarm(ApiModel):
     description: Optional[str] = None
     #: The ID of the connector the alarm is raised on.
     #: example: Y2lZY76123af234bb
-    hybridConnectorId: Optional[str] = None
+    hybrid_connector_id: Optional[str] = None
 
 
 class Connector(ApiModel):
@@ -72,10 +72,10 @@ class Connector(ApiModel):
     id: Optional[str] = None
     #: The ID of the organization to which this hybrid connector belongs.
     #: example: Y2lzY29zcGFyazovL3
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: The ID of the cluster this connector belongs to.
     #: example: Y2lZY76123abbb
-    hybridClusterId: Optional[str] = None
+    hybrid_cluster_id: Optional[str] = None
     #: The hostname of the system the connector is running on.
     #: example: foo.example.org
     hostname: Optional[str] = None

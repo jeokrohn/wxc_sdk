@@ -31,7 +31,7 @@ class AggregatedMetric(ApiModel):
 class RawMetric(ApiModel):
     #: ID of the device reporting the metric.
     #: example: Y2lzY29zcGFyazovM4dz09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
-    deviceId: Optional[str] = None
+    device_id: Optional[str] = None
     #: Timestamp of the measurement (ISO 8601).
     #: example: 2021-10-21T13:00:00
     timestamp: Optional[datetime] = None
@@ -41,12 +41,12 @@ class RawMetric(ApiModel):
 
 
 class WorkspaceMetricsResponseMetricName(str, Enum):
-    soundlevel = 'soundLevel'
-    ambientnoise = 'ambientNoise'
+    sound_level = 'soundLevel'
+    ambient_noise = 'ambientNoise'
     temperature = 'temperature'
     humidity = 'humidity'
     tvoc = 'tvoc'
-    peoplecount = 'peopleCount'
+    people_count = 'peopleCount'
 
 
 class WorkspaceMetricsResponseAggregation(str, Enum):
@@ -61,26 +61,26 @@ class WorkspaceMetricsResponseUnit(str, Enum):
 
 
 class WorkspaceMetricsResponseSortBy(str, Enum):
-    newestfirst = 'newestFirst'
-    oldestfirst = 'oldestFirst'
+    newest_first = 'newestFirst'
+    oldest_first = 'oldestFirst'
 
 
 class WorkspaceMetricsResponse(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
-    workspaceId: Optional[str] = None
+    workspace_id: Optional[str] = None
     #: example: temperature
-    metricName: Optional[WorkspaceMetricsResponseMetricName] = None
+    metric_name: Optional[WorkspaceMetricsResponseMetricName] = None
     #: example: hourly
     aggregation: Optional[WorkspaceMetricsResponseAggregation] = None
     #: example: 2020-10-21T13:33:37.789Z
-    from_: Optional[datetime] = Field(alias='from', default=None)
+    from_: Optional[datetime] = None
     #: example: 2020-10-31T16:00:00.532Z
     to: Optional[datetime] = None
     #: Output data unit (only present if `metricName` is `temperature`).
     #: example: celsius
     unit: Optional[WorkspaceMetricsResponseUnit] = None
     #: example: newestFirst
-    sortBy: Optional[WorkspaceMetricsResponseSortBy] = None
+    sort_by: Optional[WorkspaceMetricsResponseSortBy] = None
     items: Optional[list[RawMetric]] = None
 
 
@@ -102,19 +102,19 @@ class WorkspaceDurationMetricsResponseAggregation(str, Enum):
 
 
 class WorkspaceDurationMetricsResponseMeasurement(str, Enum):
-    timeused = 'timeUsed'
-    timebooked = 'timeBooked'
+    time_used = 'timeUsed'
+    time_booked = 'timeBooked'
 
 
 class WorkspaceDurationMetricsResponse(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
-    workspaceId: Optional[str] = None
+    workspace_id: Optional[str] = None
     #: example: hourly
     aggregation: Optional[WorkspaceDurationMetricsResponseAggregation] = None
     #: example: timeBooked
     measurement: Optional[WorkspaceDurationMetricsResponseMeasurement] = None
     #: example: 2020-10-21T13:33:37.789Z
-    from_: Optional[datetime] = Field(alias='from', default=None)
+    from_: Optional[datetime] = None
     #: example: 2020-10-31T16:00:00.532Z
     to: Optional[datetime] = None
     #: The time unit.

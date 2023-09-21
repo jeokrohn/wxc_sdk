@@ -24,13 +24,13 @@ class CallParkSettingsObjectRingPattern(str, Enum):
 class CallParkSettingsObject(ApiModel):
     #: Ring pattern for when this callpark is called.
     #: example: NORMAL
-    ringPattern: Optional[CallParkSettingsObjectRingPattern] = None
+    ring_pattern: Optional[CallParkSettingsObjectRingPattern] = None
     #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up within the set time, then the call will be recalled based on the Call Park Recall setting.
     #: example: 60.0
-    recallTime: Optional[int] = None
+    recall_time: Optional[int] = None
     #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up, the call will revert back to the hunt group (after the person who parked the call is alerted).
     #: example: 60.0
-    huntWaitTime: Optional[int] = None
+    hunt_wait_time: Optional[int] = None
 
 
 class GetAvailableRecallHuntGroupsObject(ApiModel):
@@ -63,10 +63,10 @@ class GetRecallHuntGroupObjectOption(str, Enum):
 class GetRecallHuntGroupObject(ApiModel):
     #: Alternate user which is a hunt group ID for call park recall alternate destination.
     #: example: Y2lzY29zcGFyazovL3VzL0hVTlRfR1JPVVAvZEdWamFHNXBZMkZzTFhOMWNIQnZjblF0TlRVMU9EWTNOVE13T1VCbmJXRnBiQzVqYjIwPQ
-    huntGroupId: Optional[str] = None
+    hunt_group_id: Optional[str] = None
     #: Unique name for the hunt group.
     #: example: Technical Support Group - 5558675309
-    huntGroupName: Optional[str] = None
+    hunt_group_name: Optional[str] = None
     #: Call park recall options.
     #: example: ALERT_PARKING_USER_ONLY
     option: Optional[GetRecallHuntGroupObjectOption] = None
@@ -99,13 +99,13 @@ class GetPersonPlaceVirtualLineCallParksObject(ApiModel):
     id: Optional[str] = None
     #: First name of a person, workspace or virtual line.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name of a person, workspace or virtual line.
     #: example: Brown
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Display name of a person, workspace or virtual line.
     #: example: johnBrown
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: Type of the person, workspace or virtual line.
     #: example: PEOPLE
     type: Optional[GetPersonPlaceVirtualLineCallParksObjectType] = None
@@ -140,16 +140,16 @@ class GetCallParkObject(ApiModel):
     #: People, workspaces and virtual lines that are eligible to receive calls.
     agents: Optional[list[GetPersonPlaceVirtualLineCallParksObject]] = None
     #: Whether or not the calls will be parked on agents as a destination.
-    parkOnAgentsEnabled: Optional[bool] = None
+    park_on_agents_enabled: Optional[bool] = None
     #: Array of call park extensions assigned to a call park.
-    callParkExtensions: Optional[list[ListCPCallParkExtensionObject]] = None
+    call_park_extensions: Optional[list[ListCPCallParkExtensionObject]] = None
 
 
 class GetCallParkSettingsObject(ApiModel):
     #: Recall options that are added to call park.
-    callParkRecall: Optional[GetRecallHuntGroupObject] = None
+    call_park_recall: Optional[GetRecallHuntGroupObject] = None
     #: Setting controlling call park behavior.
-    callParkSettings: Optional[CallParkSettingsObject] = None
+    call_park_settings: Optional[CallParkSettingsObject] = None
 
 
 class ListCallParkExtensionObject(ApiModel):
@@ -164,10 +164,10 @@ class ListCallParkExtensionObject(ApiModel):
     name: Optional[str] = None
     #: ID of location for call park extension.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzMxMTYx
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: Name of location for call park extension.
     #: example: WXCSIVDKCPAPIC4S1
-    locationName: Optional[str] = None
+    location_name: Optional[str] = None
 
 
 class ListCallParkObject(ApiModel):
@@ -179,10 +179,10 @@ class ListCallParkObject(ApiModel):
     id: Optional[str] = None
     #: Name of the location for the call park.
     #: example: Alaska
-    locationName: Optional[str] = None
+    location_name: Optional[str] = None
     #: ID of the location for the call park.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzEyMzQ1
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
 
 
 class ModifyCallExtensionParkObject(ApiModel):
@@ -197,7 +197,7 @@ class ModifyCallExtensionParkObject(ApiModel):
 class PutRecallHuntGroupObject(ApiModel):
     #: Alternate user which is a hunt group ID for call park recall alternate destination.
     #: example: Y2lzY29zcGFyazovL3VzL0hVTlRfR1JPVVAvZEdWamFHNXBZMkZzTFhOMWNIQnZjblF0TlRVMU9EWTNOVE13T1VCbmJXRnBiQzVqYjIwPQ
-    huntGroupId: Optional[str] = None
+    hunt_group_id: Optional[str] = None
     #: Call park recall options.
     #: example: ALERT_PARKING_USER_FIRST_THEN_HUNT_GROUP
     option: Optional[GetRecallHuntGroupObjectOption] = None
@@ -215,6 +215,6 @@ class ModifyCallParkObject(ApiModel):
 
 class ModifyCallParkSettingsObject(ApiModel):
     #: Recall options that are added to call park.
-    callParkRecall: Optional[PutRecallHuntGroupObject] = None
+    call_park_recall: Optional[PutRecallHuntGroupObject] = None
     #: Setting controlling call park behavior.
-    callParkSettings: Optional[CallParkSettingsObject] = None
+    call_park_settings: Optional[CallParkSettingsObject] = None

@@ -12,4 +12,4 @@ __auto__ = ['CallBridgeInfo']
 
 class CallBridgeInfo(ApiModel):
     #: Indicates that a stutter dial tone will be played to all the participants when a person is bridged on the active shared line call.
-    warningToneEnabled: Optional[bool] = None
+    warning_tone_enabled: Optional[bool] = None

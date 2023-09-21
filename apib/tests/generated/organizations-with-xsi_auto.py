@@ -16,22 +16,22 @@ class Organization(ApiModel):
     id: Optional[str] = None
     #: Full name of the organization.
     #: example: Acme, Inc.
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: The date and time the organization was created.
     #: example: 2019-10-18T14:26:16+00:00
     created: Optional[datetime] = None
     #: The base path to xsi-actions.
     #: example: https://api-us.bcld.webex.com/com.broadsoft.xsi-actions
-    xsiActionsEndpoint: Optional[str] = None
+    xsi_actions_endpoint: Optional[str] = None
     #: The base path to xsi-events.
     #: example: https://api-us.bcld.webex.com/com.broadsoft.xsi-events
-    xsiEventsEndpoint: Optional[str] = None
+    xsi_events_endpoint: Optional[str] = None
     #: The base path to xsi-events-channel.
     #: example: https://api-us.bcld.webex.com/com.broadsoft.async/com.broadsoft.xsi-events
-    xsiEventsChannelEndpoint: Optional[str] = None
+    xsi_events_channel_endpoint: Optional[str] = None
     #: `api-` prepended to the `bcBaseDomain` value for the organization.
     #: example: api-us.bcld.webex.com
-    xsiDomain: Optional[str] = None
+    xsi_domain: Optional[str] = None
 
 
 class OrganizationCollectionResponse(ApiModel):

@@ -22,30 +22,30 @@ class Report(ApiModel):
     service: Optional[str] = None
     #: The data in this report belongs to dates greater than or equal to this.
     #: example: 2020-02-23
-    startDate: Optional[datetime] = None
+    start_date: Optional[datetime] = None
     #: The data in this report belongs to dates smaller than or equal to this.
     #: example: 2020-03-24
-    endDate: Optional[datetime] = None
+    end_date: Optional[datetime] = None
     #: The site to which this report belongs to. This only exists if the report belongs to service `Webex`.
     #: example: cisco.webex.com
-    siteList: Optional[str] = None
+    site_list: Optional[str] = None
     #: Time of creation for this report.
     #: example: 2020-03-24 17:13:39
     created: Optional[datetime] = None
     #: The person who created the report.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mYzhjMWFhMS00OTM5LTQ2NjEtODAwMy1hYWE0MzFmZWM0ZmE
-    createdBy: Optional[str] = None
+    created_by: Optional[str] = None
     #: Whether this report was scheduled from API or Control Hub.
     #: example: API
-    scheduledFrom: Optional[str] = None
+    scheduled_from: Optional[str] = None
     #: Completion status of this report.
     #: example: done
     status: Optional[str] = None
     #: The link from which the report can be downloaded.
     #: example: https://downloadservicebts.webex.com/api?reportId=Y2lzY29zcGFyazovL3VzL1JFUE9SVC9hZDBkMjA1NzVkYTA0NWE0OGZhZDQ3ZDk3NGFiNDFmMg
-    downloadURL: Optional[str] = None
+    download_url: Optional[str] = Field(alias='downloadURL', default=None)
 
 
 class ReportCollectionResponse(ApiModel):
     #: An array of report objects.
-    Report Attributes: Optional[list[Report]] = None
+    report attributes: Optional[list[Report]] = Field(alias='Report Attributes', default=None)

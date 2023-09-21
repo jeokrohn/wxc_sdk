@@ -28,7 +28,7 @@ class Option(ApiModel):
     value: Optional[str] = None
     #: Whether or not the option is correct.
     #: example: True
-    isCorrect: Optional[bool] = None
+    is_correct: Optional[bool] = None
 
 
 class Question(ApiModel):
@@ -54,25 +54,25 @@ class Poll(ApiModel):
     id: Optional[str] = None
     #: A unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the poll belongs.
     #: example: a2f95f5073e347489f7611492dbd6ad5_I_199075330905867928
-    meetingId: Optional[str] = None
+    meeting_id: Optional[str] = None
     #: The date and time the poll started in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
     #: example: 2021-07-06T09:22:34Z
-    startTime: Optional[datetime] = None
+    start_time: Optional[datetime] = None
     #: The date and time the poll ended in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
     #: example: 2021-07-06T09:25:51Z
-    endTime: Optional[datetime] = None
+    end_time: Optional[datetime] = None
     #: The length of time in the alarm box, in seconds.
     #: example: 300.0
-    timerDuration: Optional[int] = None
+    timer_duration: Optional[int] = None
     #: The name of the poll coordinator.
     #: example: John Andersen
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: The email of the poll coordinator.
     #: example: john.andersen@example.co
     email: Optional[str] = None
     #: The ID of the polling coordinator.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8xYTY5MmE2Mi00MTNmLTRjYWEtYjdkOS0wYzg0ZDZmMDdlNzY
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: Poll's questions.
     questions: Optional[list[Question]] = None
 
@@ -90,10 +90,10 @@ class AnswerSummaryItem(ApiModel):
     value: Optional[str] = None
     #: The total number of people who selected this answer.
     #: example: 10.0
-    totalRespondents: Optional[int] = None
+    total_respondents: Optional[int] = None
     #: Whether the answer is correct.
     #: example: True
-    isCorrect: Optional[bool] = None
+    is_correct: Optional[bool] = None
 
 
 class Link(ApiModel):
@@ -111,7 +111,7 @@ class Link(ApiModel):
 class Respondent(ApiModel):
     #: The name of the person who answers the question.
     #: example: John Andersen
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: The email of the person who answers the question.
     #: example: john.andersen@example.com
     email: Optional[str] = None
@@ -141,7 +141,7 @@ class QuestionResult(ApiModel):
     #: example: single
     type: Optional[QuestionType] = None
     #: Summary of all answers.
-    answerSummary: Optional[list[AnswerSummaryItem]] = None
+    answer_summary: Optional[list[AnswerSummaryItem]] = None
     #: Question's respondents.
     respondents: Optional[RespondentsReferenceLinks] = None
 
@@ -152,31 +152,31 @@ class PollResult(ApiModel):
     id: Optional[str] = None
     #: A unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the poll belongs.
     #: example: a2f95f5073e347489f7611492dbd6ad5_I_199075330905867928
-    meetingId: Optional[str] = None
+    meeting_id: Optional[str] = None
     #: The total number of attendees in the meeting.
     #: example: 10.0
-    totalAttendees: Optional[int] = None
+    total_attendees: Optional[int] = None
     #: The total number of respondents in the poll.
     #: example: 10.0
-    totalRespondents: Optional[int] = None
+    total_respondents: Optional[int] = None
     #: The date and time the poll started in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
     #: example: 2021-07-06T09:25:34Z
-    startTime: Optional[datetime] = None
+    start_time: Optional[datetime] = None
     #: The date and time the poll ended in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
     #: example: 2021-07-06T09:28:34Z
-    endTime: Optional[datetime] = None
+    end_time: Optional[datetime] = None
     #: The duration of the poll, in seconds.
     #: example: 300.0
-    timerDuration: Optional[int] = None
+    timer_duration: Optional[int] = None
     #: The name of the poll coordinator.
     #: example: John Andersen
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: The email of the poll coordinator.
     #: example: john.andersen@example.com
     email: Optional[str] = None
     #: The ID of the the poll coordinator.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8xYTY5MmE2Mi00MTNmLTRjYWEtYjdkOS0wYzg0ZDZmMDdlNzY
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: An array of questions in this poll.
     questions: Optional[list[QuestionResult]] = None
 

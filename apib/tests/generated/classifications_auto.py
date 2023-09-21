@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['HydraClassification', 'Organization'sSpaceClassificationCollectionResponse']
+__auto__ = ['HydraClassification', 'OrganizationsSpaceClassificationCollectionResponse']
 
 
 class HydraClassification(ApiModel):
@@ -27,11 +27,11 @@ class HydraClassification(ApiModel):
     description: Optional[str] = None
     #: The date and time the Space Classification was last changed.
     #: example: 2020-02-22T00:06:42.438Z
-    lastModified: Optional[datetime] = None
+    last_modified: Optional[datetime] = None
     #: A unique identifier for the Webex organization.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
 
 
-class Organization'sSpaceClassificationCollectionResponse(ApiModel):
+class OrganizationsSpaceClassificationCollectionResponse(ApiModel):
     items: Optional[list[HydraClassification]] = None

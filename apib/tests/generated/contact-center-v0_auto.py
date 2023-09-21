@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ActivityList', 'ActivityListDatasetMetadata', 'Agent', 'AgentActivity', 'AgentAgentDn', 'AgentChannelType', 'AgentCurrentState', 'AgentSession', 'Customer', 'CustomerActivity', 'CustomerCallDirection', 'CustomerCurrentState', 'CustomerSession', 'CustomerSessionTerminatingEnd', 'CustomerSessionTerminationType', 'Entity', 'EntityRecognition', 'Error', 'ErrorDetails', 'Link']
+__auto__ = ['ActivityList', 'ActivityListDatasetMetadata', 'Agent', 'AgentActivity', 'AgentAgentDn', 'AgentChannelType', 'AgentCurrentState', 'AgentSession', 'AnalyzeEntitiesDocument', 'Customer', 'CustomerActivity', 'CustomerCallDirection', 'CustomerCurrentState', 'CustomerSession', 'CustomerSessionTerminatingEnd', 'CustomerSessionTerminationType', 'Entity', 'EntityRecognition', 'Error', 'ErrorDetails', 'Link']
 
 
 class ErrorDetails(ApiModel):
@@ -32,12 +32,12 @@ class AgentAgentDn(str, Enum):
 
 
 class AgentCurrentState(str, Enum):
-    loggedin = 'LoggedIn'
+    logged_in = 'LoggedIn'
     idle = 'Idle'
     available = 'Available'
     connected = 'Connected'
     wrapup = 'Wrapup'
-    notresponding = 'NotResponding'
+    not_responding = 'NotResponding'
     ringing = 'Ringing'
 
 
@@ -50,22 +50,22 @@ class AgentChannelType(str, Enum):
 class Agent(ApiModel):
     #: The endpoint on which the agent receives calls/chats/emails.
     #: example: 653
-    agentDn: Optional[AgentAgentDn] = None
+    agent_dn: Optional[AgentAgentDn] = None
     #: The ID identifies an agent.
     #: example: 295.0
-    agentId: Optional[int] = None
+    agent_id: Optional[int] = None
     #: Name of an agent, that is, a person who answers customer calls, chats or emails.
     #: example: loadAgent00001 BSFT
-    agentName: Optional[str] = None
+    agent_name: Optional[str] = None
     #: Login name with which agent logs into agent desktop.
     #: example: loadAgent00001
     agentlogin: Optional[str] = None
     #: The ID assigned to an agent's login session.
     #: example: e3db29fa-6a84-4dc3-b814-95c617b67a95
-    agentSessionId: Optional[str] = None
+    agent_session_id: Optional[str] = None
     #: The current state of the agent.
     #: example: LoggedIn
-    currentState: Optional[AgentCurrentState] = None
+    current_state: Optional[AgentCurrentState] = None
     #: Timestamp when the interaction started.
     #: example: 1530629440059.0
     cstts: Optional[int] = None
@@ -74,64 +74,64 @@ class Agent(ApiModel):
     cetts: Optional[int] = None
     #: The ID assigned to an entry point.
     #: example: 0ba49aae-74ed-41e5-bd28-6f8524b62e04
-    channelId: Optional[str] = None
+    channel_id: Optional[str] = None
     #: The media type of the contact.
     #: example: telephony
-    channelType: Optional[AgentChannelType] = None
+    channel_type: Optional[AgentChannelType] = None
     #: example: 1530629440059.0
-    realtimeUpdateTimestamp: Optional[int] = None
+    realtime_update_timestamp: Optional[int] = None
     #: The ID assigned to a team.
     #: example: 125.0
-    teamId: Optional[int] = None
+    team_id: Optional[int] = None
     #: The name of a team, which is a group of agents at a specific site who handle a particular type of contact.
     #: example: Load_Team1
-    teamName: Optional[str] = None
+    team_name: Optional[str] = None
     #: example: AV-SuTCNizTcJ2G98gNn
-    teamSystemId: Optional[str] = None
+    team_system_id: Optional[str] = None
     #: The ID assigned to a site, which is a call center location.
     #: example: 66.0
-    siteId: Optional[int] = None
+    site_id: Optional[int] = None
     #: The call center location to which a call was distributed.
     #: example: Load_Site_BLV
-    siteName: Optional[str] = None
+    site_name: Optional[str] = None
     #: example: AV-SuI65izTcJ2G98gNm
-    siteSystemId: Optional[str] = None
+    site_system_id: Optional[str] = None
 
 
 class AgentActivity(Agent):
     #: example: c4567c9858a74fd39497cddde50b1ac
-    callSessionId: Optional[str] = None
+    call_session_id: Optional[str] = None
     #: The amount of time between when the activity started and when the activity ended.
     #: example: 21.0
     duration: Optional[int] = None
     #: The ID assigned to an idle state/code.
     #: example: 95.0
-    idleCodeId: Optional[int] = None
+    idle_code_id: Optional[int] = None
     #: The name of the idle code. Admin can configure possible values like Meeting, RONA, Dinner, Lunch, Busy
     #: example: Meeting
-    idleCodeName: Optional[str] = None
+    idle_code_name: Optional[str] = None
     #: example: AV4s2V-PXI3EMNlP7oIm
-    idleCodeSystemId: Optional[str] = None
+    idle_code_system_id: Optional[str] = None
     #: Indicates whether this activity occurred while making an outdial call.
-    outdialFlag: Optional[int] = None
+    outdial_flag: Optional[int] = None
 
 
 class AgentSession(Agent):
     #: A string that identifies an agent.
     #: example: AV9-9J4KizTcJ2G98fzL
-    agentSystemId: Optional[str] = None
+    agent_system_id: Optional[str] = None
     #: The number of times an agent went into Available state.
     #: example: 1.0
-    availableCount: Optional[int] = None
+    available_count: Optional[int] = None
     #: The number of times an agent transferred without consulting first.
     #: example: 2.0
-    blindXferCount: Optional[int] = None
+    blind_xfer_count: Optional[int] = None
     #: The number of times an agent went into an Idle state.
     #: example: 1.0
-    idleCount: Optional[int] = None
+    idle_count: Optional[int] = None
     #: The amount of time an agent spent in an Available state.
     #: example: 2065.0
-    totalAvailableTime: Optional[int] = None
+    total_available_time: Optional[int] = None
 
 
 class CustomerCallDirection(str, Enum):
@@ -155,59 +155,59 @@ class Customer(ApiModel):
     active: Optional[int] = None
     #: Name of an agent, that is, a person who answers customer calls/chats/emails
     #: example: loadAgent00001 BSFT
-    agentName: Optional[str] = None
+    agent_name: Optional[str] = None
     #: The ID assigned to an agent's login session.
     #: example: e3db29fa-6a84-4dc3-b814-95c617b67a95
-    agentSessionId: Optional[str] = None
+    agent_session_id: Optional[str] = None
     #: Number of times a customer contacted.
     #: example: 1.0
-    callCount: Optional[int] = None
+    call_count: Optional[int] = None
     #: The current direction of the call.
     #: example: inbound
-    callDirection: Optional[CustomerCallDirection] = None
+    call_direction: Optional[CustomerCallDirection] = None
     #: Timestamp when the interaction started.
     #: example: 1530629440059.0
     cstts: Optional[int] = None
     #: The media type of the contact.
     #: example: telephony
-    channelType: Optional[AgentChannelType] = None
+    channel_type: Optional[AgentChannelType] = None
     #: The current state of the contact.
     #: example: ended
-    currentState: Optional[CustomerCurrentState] = None
+    current_state: Optional[CustomerCurrentState] = None
     #: The DNIS digits delivered with the call. DNIS, or Dialed Number Identification Service, is a service provided by the phone company that delivers a digit string indicating the number the caller dialed along with the call.
     #: example: 11888999
     dnis: Optional[str] = None
     #: The ID assigned to an entry point.
     #: example: 11
-    entrypointId: Optional[datetime] = None
+    entrypoint_id: Optional[datetime] = None
     #: The name of the entry point, which is the landing place for customer calls on the Webex Contact Center system. Calls are moved from the entry point into a queue and are then distributed to agents.
     #: example: Apple-SalesEP
-    entrypointName: Optional[str] = None
+    entrypoint_name: Optional[str] = None
     #: The ID assigned to an entry point.
     #: example: AV3KrA1AXI3EMNlP7m_2
-    entrypointSystemId: Optional[str] = None
+    entrypoint_system_id: Optional[str] = None
     #: Flag that indicates whether this activity occurred while making an outdial call.
-    isOutdial: Optional[int] = None
+    is_outdial: Optional[int] = None
     #: example: 1584547145749
-    realtimeUpdateTimestamp: Optional[str] = None
+    realtime_update_timestamp: Optional[str] = None
     #: example: e3cf6187-cc3f-4c6f-8ba5-6014821529e3-1584547145537-new
     sid: Optional[str] = None
     #: The ID assigned to a site, which is a call center location.
     #: example: 66.0
-    siteId: Optional[int] = None
+    site_id: Optional[int] = None
     #: The call center location to which a call was distributed.
     #: example: Load_Site_BLV
-    siteName: Optional[str] = None
+    site_name: Optional[str] = None
     #: example: AV-SuI65izTcJ2G98gNm
-    siteSystemId: Optional[str] = None
+    site_system_id: Optional[str] = None
     #: The ID assigned to a team.
     #: example: 125.0
-    teamId: Optional[int] = None
+    team_id: Optional[int] = None
     #: The name of a team, which is a group of agents at a specific site who handle a particular type of contact.
     #: example: Load_Team1
-    teamName: Optional[str] = None
+    team_name: Optional[str] = None
     #: example: AV-SuTCNizTcJ2G98gNn
-    teamSystemId: Optional[str] = None
+    team_system_id: Optional[str] = None
     #: example: 1.0
     tid: Optional[int] = None
 
@@ -218,7 +218,7 @@ class CustomerActivity(Customer):
     duration: Optional[int] = None
     #: If this isn't a current activity, this field shows the state of the following activity.
     #: example: ivr-connected
-    nextState: Optional[str] = None
+    next_state: Optional[str] = None
 
 
 class CustomerSessionTerminatingEnd(str, Enum):
@@ -235,42 +235,42 @@ class CustomerSessionTerminationType(str, Enum):
 class CustomerSession(Customer):
     #: Number of times the contact was in IVR state.
     #: example: 1.0
-    ivrCount: Optional[int] = None
+    ivr_count: Optional[int] = None
     #: The amount of time, in milliseconds, during which a call was in IVR state.
     #: example: 1.0
-    ivrDuration: Optional[int] = None
+    ivr_duration: Optional[int] = None
     #: A string that identifies a queue.
     #: example: 20
-    queueId: Optional[datetime] = None
+    queue_id: Optional[datetime] = None
     #: The number of queues contact entered.
     #: example: 1.0
-    queueCount: Optional[int] = None
+    queue_count: Optional[int] = None
     #: The name of the current or final queue, which is holding place for contacts while they await handling by an agent. Calls are moved from an entry point into a queue and are then distributed to agents.
     #: example: Apple-SalesQueue
-    queueName: Optional[str] = None
+    queue_name: Optional[str] = None
     #: The amount of time, in milliseconds, a contact spent in queue waiting.
     #: example: 245198.0
-    queueDuration: Optional[int] = None
+    queue_duration: Optional[int] = None
     #: Indicates which party terminated the interaction.
     #: example: caller
-    terminatingEnd: Optional[CustomerSessionTerminatingEnd] = None
+    terminating_end: Optional[CustomerSessionTerminatingEnd] = None
     #: Indicates how a call was terminated.
     #: example: abandoned
-    terminationType: Optional[CustomerSessionTerminationType] = None
+    termination_type: Optional[CustomerSessionTerminationType] = None
 
 
 class ActivityListDatasetMetadata(ApiModel):
-    lastAccessTimestamp: Optional[int] = None
+    last_access_timestamp: Optional[int] = None
     #: example: 3.0
-    numberOfRecordsFound: Optional[int] = None
+    number_of_records_found: Optional[int] = None
     #: example: 3.0
-    numberOfRecordsInDataset: Optional[int] = None
+    number_of_records_in_dataset: Optional[int] = None
     #: example: true
-    isComplete: Optional[str] = None
+    is_complete: Optional[str] = None
 
 
 class ActivityList(ApiModel):
-    datasetMetadata: Optional[ActivityListDatasetMetadata] = None
+    dataset_metadata: Optional[ActivityListDatasetMetadata] = None
     #: An array of column IDs in the query.
     columns: Optional[list[str]] = None
     #: An array of records
@@ -281,9 +281,9 @@ class Entity(ApiModel):
     #: String value of the found entity
     value: Optional[str] = None
     #: Start index of the found entity
-    startPosition: Optional[int] = None
+    start_position: Optional[int] = None
     #: End index of the found entity
-    endPosition: Optional[int] = None
+    end_position: Optional[int] = None
     #: Name of the entity found
     label: Optional[str] = None
     #: Confidence score of the found entity
@@ -292,14 +292,23 @@ class Entity(ApiModel):
 
 class EntityRecognition(ApiModel):
     #: Identifier of the Organization
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: Identifier of the contact.
-    contactId: Optional[str] = None
+    contact_id: Optional[str] = None
     #: Identifier of the call leg / party (caller, agent).
-    partyId: Optional[str] = None
+    party_id: Optional[str] = None
     #: Identifier of the model.
-    modelId: Optional[str] = None
+    model_id: Optional[str] = None
     #: Version of the model.
-    modelVersion: Optional[str] = None
+    model_version: Optional[str] = None
     #: List of found entities
     entities: Optional[list[Entity]] = None
+
+
+class AnalyzeEntitiesDocument(ApiModel):
+    #: The document's type.
+    #: example: PLAIN_TEXT
+    type: Optional[str] = None
+    #: The document's content.
+    #: example: My name is John Doe . I am from USA .
+    content: Optional[str] = None

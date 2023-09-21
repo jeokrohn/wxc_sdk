@@ -28,19 +28,19 @@ class License(ApiModel):
     name: Optional[str] = None
     #: Total number of license units allocated.
     #: example: 50.0
-    totalUnits: Optional[int] = None
+    total_units: Optional[int] = None
     #: Total number of license units consumed.
     #: example: 5.0
-    consumedUnits: Optional[int] = None
+    consumed_units: Optional[int] = None
     #: The subscription ID associated with this license. This ID is used in other systems, such as Webex Control Hub.
     #: example: Sub-hydraOct26a
-    subscriptionId: Optional[str] = None
+    subscription_id: Optional[str] = None
     #: The Webex Meetings site associated with this license.
     #: example: site1-example.webex.com
-    siteUrl: Optional[str] = None
+    site_url: Optional[str] = None
     #: The type of site associated with this license.
     #: example: Control Hub managed site
-    siteType: Optional[LicenseSiteType] = None
+    site_type: Optional[LicenseSiteType] = None
 
 
 class LicenseCollectionResponse(ApiModel):

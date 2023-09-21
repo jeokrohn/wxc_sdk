@@ -25,10 +25,10 @@ class Organization(ApiModel):
     id: Optional[str] = None
     #: Full name of the organization.
     #: example: Acme, Inc.
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: The current Enterprise Content Management setting for the organization.
     #: example: hybrid
-    supportedContentType: Optional[OrganizationSupportedContentType] = None
+    supported_content_type: Optional[OrganizationSupportedContentType] = None
     #: The date and time the organization was created.
     #: example: 2015-10-18T14:26:16+00:00
     created: Optional[datetime] = None

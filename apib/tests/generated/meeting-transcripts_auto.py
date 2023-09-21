@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['DeleteTranscriptObject', 'SnippetObject', 'TranscriptObject', 'TranscriptObjectStatus', 'UpdateSnippetObject']
+__auto__ = ['DeleteTranscriptObject', 'DownloadAMeetingTranscriptFormat', 'SnippetObject', 'TranscriptObject', 'TranscriptObjectStatus', 'UpdateSnippetObject']
 
 
 class TranscriptObjectStatus(str, Enum):
@@ -24,31 +24,31 @@ class TranscriptObject(ApiModel):
     id: Optional[str] = None
     #: URL of the Webex site from which the API lists meeting transcripts.
     #: example: example.webex.com
-    siteUrl: Optional[str] = None
+    site_url: Optional[str] = None
     #: Start time for the meeting transcript in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
     #: example: 2020-06-01T20:30:15.042Z
-    startTime: Optional[datetime] = None
+    start_time: Optional[datetime] = None
     #: The meeting's topic.
     #: example: John's Meeting
-    meetingTopic: Optional[str] = None
+    meeting_topic: Optional[str] = None
     #: Unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the transcripts belong.
     #: example: 0ed74a1c0551494fb7a04e2881bf50ae_I_166022169160077044
-    meetingId: Optional[str] = None
+    meeting_id: Optional[str] = None
     #: Unique identifier for scheduled meeting with which the current meeting is associated. Only apples to a meeting instance which is happening or has happened. This is the `id` of the scheduled meeting with which the instance is associated.
     #: example: 0ed74a1c0551494fb7a04e2881bf50ae_20210401T232500Z
-    scheduledMeetingId: Optional[str] = None
+    scheduled_meeting_id: Optional[str] = None
     #: Unique identifier for the parent meeting series to which the recording belongs.
     #: example: 0ed74a1c0551494fb7a04e2881bf50ae
-    meetingSeriesId: Optional[str] = None
+    meeting_series_id: Optional[str] = None
     #: Unique identifier for the meeting host.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS83QkFCQkU5OS1CNDNFLTREM0YtOTE0Ny1BMUU5RDQ2QzlDQTA
-    hostUserId: Optional[str] = None
+    host_user_id: Optional[str] = None
     #: The download link for the transcript vtt file.
     #: example: http://site-example.webex.com/v1/meetingTranscripts/195d64646ad14be2924ea50f541fd91d/download?format=vtt
-    vttDownloadLink: Optional[str] = None
+    vtt_download_link: Optional[str] = None
     #: The download link for the transcript txt file.
     #: example: http://site-example.webex.com/v1/meetingTranscripts/195d64646ad14be2924ea50f541fd91d/download?format=txt
-    txtDownloadLink: Optional[str] = None
+    txt_download_link: Optional[str] = None
     status: Optional[TranscriptObjectStatus] = None
 
 
@@ -61,16 +61,16 @@ class SnippetObject(ApiModel):
     text: Optional[str] = None
     #: Name of the person generating the speech for the snippet.
     #: example: John Andersen
-    personName: Optional[str] = None
+    person_name: Optional[str] = None
     #: Email address of the person generating the speech for the snippet.
     #: example: john.andersen@example.com
-    personEmail: Optional[str] = None
+    person_email: Optional[str] = None
     #: Offset from the beginning of the parent transcript in milliseconds indicating the start time of the snippet.
     #: example: 1000.0
-    offsetMillisecond: Optional[int] = None
+    offset_millisecond: Optional[int] = None
     #: Duration of the snippet in milliseconds.
     #: example: 2000.0
-    durationMillisecond: Optional[int] = None
+    duration_millisecond: Optional[int] = None
 
 
 class UpdateSnippetObject(ApiModel):
@@ -89,3 +89,8 @@ class DeleteTranscriptObject(ApiModel):
     #: Explanation for deleting a transcript. The comment can be a maximum of 255 characters long.
     #: example: Maintain data privacy
     comment: Optional[str] = None
+
+
+class DownloadAMeetingTranscriptFormat(str, Enum):
+    vtt = 'vtt'
+    txt = 'txt'

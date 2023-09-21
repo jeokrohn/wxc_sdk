@@ -51,31 +51,31 @@ class CallingPermissionObjectAction(str, Enum):
 class CallingPermissionObject(ApiModel):
     #: Below are the call type values.
     #: example: INTERNAL_CALL
-    callType: Optional[CallingPermissionObjectCallType] = None
+    call_type: Optional[CallingPermissionObjectCallType] = None
     #: Allows to configure settings for each call type.
     #: example: ALLOW
     action: Optional[CallingPermissionObjectAction] = None
     #: If enabled, allow the person to transfer or forward internal calls.
     #: example: True
-    transferEnabled: Optional[bool] = None
+    transfer_enabled: Optional[bool] = None
 
 
 class GeneratePasswordPostResponse(ApiModel):
     #: Example password.
     #: example: xyz123!
-    exampleSipPassword: Optional[str] = None
+    example_sip_password: Optional[str] = None
 
 
 class GetAutoTransferNumberObject(ApiModel):
     #: Calls placed meeting the criteria in an outbound rule whose `action` is `TRANSFER_NUMBER_1` will be transferred to this number.
     #: example: 1234456789
-    autoTransferNumber1: Optional[str] = None
+    auto_transfer_number1: Optional[str] = None
     #: Calls placed meeting the criteria in an outbound rule whose `action` is `TRANSFER_NUMBER_2` will be transferred to this number.
     #: example: 2234567891
-    autoTransferNumber2: Optional[str] = None
+    auto_transfer_number2: Optional[str] = None
     #: Calls placed meeting the criteria in an outbound rule whose `action` is `TRANSFER_NUMBER_3` will be transferred to this number.
     #: example: 3234567891
-    autoTransferNumber3: Optional[str] = None
+    auto_transfer_number3: Optional[str] = None
 
 
 class GetLocationAccessCodeObjectAccessCodes(ApiModel):
@@ -89,7 +89,7 @@ class GetLocationAccessCodeObjectAccessCodes(ApiModel):
 
 class GetLocationAccessCodeObject(ApiModel):
     #: Access code details
-    accessCodes: Optional[GetLocationAccessCodeObjectAccessCodes] = None
+    access_codes: Optional[GetLocationAccessCodeObjectAccessCodes] = None
 
 
 class GetLocationInterceptObjectIncomingType(str, Enum):
@@ -121,11 +121,11 @@ class GetLocationInterceptObjectIncomingAnnouncements(ApiModel):
     greeting: Optional[GetLocationInterceptObjectIncomingAnnouncementsGreeting] = None
     #: If set to `CUSTOM` for greeting, filename of previously uploaded file.
     #: example: .wav
-    fileName: Optional[str] = None
+    file_name: Optional[str] = None
     #: Settings for new number announcement.
-    newNumber: Optional[GetLocationInterceptObjectIncomingAnnouncementsNewNumber] = None
+    new_number: Optional[GetLocationInterceptObjectIncomingAnnouncementsNewNumber] = None
     #: Transfer number details.
-    zeroTransfer: Optional[GetLocationInterceptObjectIncomingAnnouncementsNewNumber] = None
+    zero_transfer: Optional[GetLocationInterceptObjectIncomingAnnouncementsNewNumber] = None
 
 
 class GetLocationInterceptObjectIncoming(ApiModel):
@@ -134,7 +134,7 @@ class GetLocationInterceptObjectIncoming(ApiModel):
     type: Optional[GetLocationInterceptObjectIncomingType] = None
     #: Enable/disable to route voice mail.
     #: example: True
-    voicemailEnabled: Optional[bool] = None
+    voicemail_enabled: Optional[bool] = None
     #: Announcements details.
     announcements: Optional[GetLocationInterceptObjectIncomingAnnouncements] = None
 
@@ -152,7 +152,7 @@ class GetLocationInterceptObjectOutgoing(ApiModel):
     type: Optional[GetLocationInterceptObjectOutgoingType] = None
     #: Enable/disable to route all outbound calls to phone number.
     #: example: True
-    transferEnabled: Optional[bool] = None
+    transfer_enabled: Optional[bool] = None
     #: If enabled, set outgoing destination phone number.
     #: example: 2147691007
     destination: Optional[str] = None
@@ -189,9 +189,9 @@ class RouteIdentity(ApiModel):
 class InternalDialingGet(ApiModel):
     #: When enabled, calls made by users at the location to an unknown extension (between 2-6 digits) are routed to the selected route group/trunk as premises calls.
     #: example: True
-    enableUnknownExtensionRoutePolicy: Optional[bool] = None
+    enable_unknown_extension_route_policy: Optional[bool] = None
     #: The selected route group/trunk as premises calls.
-    unknownExtensionRouteIdentity: Optional[RouteIdentity] = None
+    unknown_extension_route_identity: Optional[RouteIdentity] = None
 
 
 class UnknownExtensionRouteIdentity(ApiModel):
@@ -205,9 +205,9 @@ class UnknownExtensionRouteIdentity(ApiModel):
 class InternalDialingPut(ApiModel):
     #: When enabled, calls made by users at the location to an unknown extension (between 2-6 digits) are routed to the selected route group/trunk as premises calls.
     #: example: True
-    enableUnknownExtensionRoutePolicy: Optional[bool] = None
+    enable_unknown_extension_route_policy: Optional[bool] = None
     #: Type associated with the identity.
-    unknownExtensionRouteIdentity: Optional[UnknownExtensionRouteIdentity] = None
+    unknown_extension_route_identity: Optional[UnknownExtensionRouteIdentity] = None
 
 
 class PasswordGenerate(str, Enum):
@@ -217,4 +217,4 @@ class PasswordGenerate(str, Enum):
 
 class PutAccessCodeLocationObject(ApiModel):
     #: Array of string to delete access codes. For example, ["1234","2345"]
-    deleteCodes: Optional[list[str]] = None
+    delete_codes: Optional[list[str]] = None

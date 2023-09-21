@@ -18,9 +18,9 @@ class CallForwardingPutCallForwardingAlways(ApiModel):
     #: example: 2225551212
     destination: Optional[str] = None
     #: If `true`, a brief tone will be played on the person's phone when a call has been forwarded.
-    ringReminderEnabled: Optional[bool] = None
+    ring_reminder_enabled: Optional[bool] = None
     #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
-    destinationVoicemailEnabled: Optional[bool] = None
+    destination_voicemail_enabled: Optional[bool] = None
 
 
 class CallForwardingPutCallForwardingBusy(ApiModel):
@@ -31,7 +31,7 @@ class CallForwardingPutCallForwardingBusy(ApiModel):
     #: example: 2225551212
     destination: Optional[str] = None
     #: Indicates the enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
-    destinationVoicemailEnabled: Optional[bool] = None
+    destination_voicemail_enabled: Optional[bool] = None
 
 
 class CallForwardingPutCallForwardingNoAnswer(ApiModel):
@@ -43,12 +43,12 @@ class CallForwardingPutCallForwardingNoAnswer(ApiModel):
     destination: Optional[str] = None
     #: Number of rings before the call will be forwarded if unanswered.
     #: example: 3.0
-    numberOfRings: Optional[int] = None
+    number_of_rings: Optional[int] = None
     #: System-wide maximum number of rings allowed for `numberOfRings` setting.
     #: example: 15.0
-    systemMaxNumberOfRings: Optional[int] = None
+    system_max_number_of_rings: Optional[int] = None
     #: Indicates the enabled or disabled state of sending incoming calls to destination number's voicemail if the destination is an internal phone number and that number has the voicemail service enabled.
-    destinationVoicemailEnabled: Optional[bool] = None
+    destination_voicemail_enabled: Optional[bool] = None
 
 
 class CallForwardingPutCallForwarding(ApiModel):
@@ -57,11 +57,11 @@ class CallForwardingPutCallForwarding(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the person is busy.
     busy: Optional[CallForwardingPutCallForwardingBusy] = None
     #: Settings for forwarding which only occurs when you are away or not answering your phone.
-    noAnswer: Optional[CallForwardingPutCallForwardingNoAnswer] = None
+    no_answer: Optional[CallForwardingPutCallForwardingNoAnswer] = None
 
 
 class CallForwardingPut(ApiModel):
     #: Settings related to "Always", "Busy", and "No Answer" call forwarding.
-    callForwarding: Optional[CallForwardingPutCallForwarding] = None
+    call_forwarding: Optional[CallForwardingPutCallForwarding] = None
     #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any reason, such as power outage, failed Internet connection, or wiring problem.
-    businessContinuity: Optional[CallForwardingPutCallForwardingBusy] = None
+    business_continuity: Optional[CallForwardingPutCallForwardingBusy] = None

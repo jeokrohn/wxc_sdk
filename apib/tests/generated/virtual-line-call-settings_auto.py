@@ -46,32 +46,32 @@ class ListVirtualLineObject(ApiModel):
     id: Optional[str] = None
     #: Last name for virtual line.
     #: example: Shen
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: First name for virtual line.
     #: example: Tom
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: `callerIdLastName` for virtual line.
     #: example: Shen
-    callerIdLastName: Optional[str] = None
+    caller_id_last_name: Optional[str] = None
     #: `callerIdFirstName` for virtual line.
     #: example: Tom
-    callerIdFirstName: Optional[str] = None
+    caller_id_first_name: Optional[str] = None
     #: `callerIdNumber` for virtual line.
     #: example: +15558675313
-    callerIdNumber: Optional[str] = None
+    caller_id_number: Optional[str] = None
     #: `externalCallerIdNamePolicy` for the virtual line.
     #: example: DIRECT_LINE
-    externalCallerIdNamePolicy: Optional[ListVirtualLineObjectExternalCallerIdNamePolicy] = None
+    external_caller_id_name_policy: Optional[ListVirtualLineObjectExternalCallerIdNamePolicy] = None
     #: `customExternalCallerIdName` for virtual line.
     #: example: Tom
-    customExternalCallerIdName: Optional[str] = None
+    custom_external_caller_id_name: Optional[str] = None
     #: Calling details of virtual line.
     number: Optional[ListVirtualLineObjectNumber] = None
     #: Location details of virtual line.
     location: Optional[ListVirtualLineObjectLocation] = None
     #: Number of devices assigned to a virtual line.
     #: example: 1.0
-    numberOfDevicesAssigned: Optional[int] = None
+    number_of_devices_assigned: Optional[int] = None
     #: Type of billing plan.
     #: example: BCOCP1
-    billingPlan: Optional[str] = None
+    billing_plan: Optional[str] = None

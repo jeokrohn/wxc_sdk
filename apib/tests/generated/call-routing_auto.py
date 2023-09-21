@@ -30,22 +30,22 @@ class CallSourceType(str, Enum):
 
 class CallSourceInfo(ApiModel):
     #: The type of call source.
-    callSourceType: Optional[CallSourceType] = None
+    call_source_type: Optional[CallSourceType] = None
     #: When `originatorType` is `trunk`, `originatorId` is a valid trunk, this trunk belongs to a route group which is assigned to a route list with the name routeListA and `originatorNumber` is a number assigned to routeListA. routeListA is returned here. This element is returned when `callSourceType` is `ROUTE_LIST`.
     #: example: routeList1
-    routeListName: Optional[str] = None
+    route_list_name: Optional[str] = None
     #: Foute list ID.
     #: example: NTJiZmUxNDAtYjIwMS00NTUzLWI1OGQtMmVkNDU1NTFmYTUy
-    routeListId: Optional[str] = None
+    route_list_id: Optional[str] = None
     #: When `originatorType` is `trunk`, `originatorId` is a valid trunk with name trunkA, trunkA belongs to a route group which is assigned to a route list with name routeListA,  trunkA is also assigned to dialPlanA as routing choice, dialPlanA has dialPattern xxxx assigned. If the `originatorNumber` matches the `dialPattern` `xxxx`, dialPlanA is returned. This element is returned when `callSourceType` is `DIAL_PATTERN`.
     #: example: dialPlan1
-    dialPlanName: Optional[str] = None
+    dial_plan_name: Optional[str] = None
     #: When `originatorType` is `trunk`, `originatorId` is a valid trunk with the name trunkA, trunkA belongs to a route group which is assigned to a route list with the name routeListA,  trunkA is also assigned to dialPlanA as routing choice, dialPlanA has `dialPattern` `xxxx` assigned. If the `originatorNumber` matches the `dialPattern` `xxxx`, `dialPattern` `xxxx` is returned. This element is returned when `callSourceType` is `DIAL_PATTERN`.
     #: example: *888
-    dialPattern: Optional[str] = None
+    dial_pattern: Optional[str] = None
     #: Dial plan ID.
     #: example: Y2lzY29zcGFyazovL3VzL0RJQUxfUExBTi8wNTlhMjczZS1iYmIwLTExZWMtODQyMi0wMjQyYWMxMjAwMDI
-    dialPlanId: Optional[str] = None
+    dial_plan_id: Optional[str] = None
 
 
 class Customer(ApiModel):
@@ -96,29 +96,29 @@ class DeviceStatus(str, Enum):
 class DeviceType(ApiModel):
     #: Device type assosiated with trunk configuration.
     #: example: Cisco Unified Border Element
-    deviceType: Optional[str] = None
+    device_type: Optional[str] = None
     #: Minimum number of concurrent calls. Required for static certificate based trunk.
     #: example: 250.0
-    minConcurrentCalls: Optional[int] = None
+    min_concurrent_calls: Optional[int] = None
     #: Maximum number of concurrent calls. Required for static certificate based trunk.
     #: example: 1000.0
-    maxConcurrentCalls: Optional[int] = None
+    max_concurrent_calls: Optional[int] = None
 
 
 class DialPattern(ApiModel):
     #: A unique dial pattern.
     #: example: +5555
-    dialPattern: Optional[str] = None
+    dial_pattern: Optional[str] = None
     #: Action to add or delete a pattern.
     action: Optional[ActionOnRouteList] = None
 
 
 class DialPatternPut(ApiModel):
     #: Array of dial patterns to add or delete. Dial Pattern that is not present in the request is not modified.
-    dialPatterns: Optional[list[DialPattern]] = None
+    dial_patterns: Optional[list[DialPattern]] = None
     #: Delete all the dial patterns for a dial plan.
     #: example: True
-    deleteAllDialPatterns: Optional[bool] = None
+    delete_all_dial_patterns: Optional[bool] = None
 
 
 class DialPatternStatus(str, Enum):
@@ -133,9 +133,9 @@ class DialPatternStatus(str, Enum):
 class DialPatternValidate(ApiModel):
     #: Input dial pattern that is being validated.
     #: example: +4555
-    dialPattern: Optional[str] = None
+    dial_pattern: Optional[str] = None
     #: Validation status.
-    patternStatus: Optional[DialPatternStatus] = None
+    pattern_status: Optional[DialPatternStatus] = None
     #: Failure details.
     #: example: invalid format for premises dial pattern +4555
     message: Optional[str] = None
@@ -152,7 +152,7 @@ class DialPatternValidateResult(ApiModel):
     #: Overall validation result status.
     status: Optional[DialPatternValidationStatus] = None
     #: Patterns validation result.
-    dialPatternStatus: Optional[list[DialPatternValidate]] = None
+    dial_pattern_status: Optional[list[DialPatternValidate]] = None
 
 
 class RouteType(str, Enum):
@@ -171,12 +171,12 @@ class DialPlan(ApiModel):
     name: Optional[str] = None
     #: ID of route type associated with the dial plan.
     #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQLzA1OWEyNzNlLWJiYjAtMTFlYy04NDIyLTAyNDJhYzEyMDAwMg
-    routeId: Optional[str] = None
+    route_id: Optional[str] = None
     #: Name of route type associated with the dial plan.
     #: example: routeName
-    routeName: Optional[str] = None
+    route_name: Optional[str] = None
     #: Route Type associated with the dial plan.
-    routeType: Optional[RouteType] = None
+    route_type: Optional[RouteType] = None
 
 
 class DialPlanGet(ApiModel):
@@ -188,12 +188,12 @@ class DialPlanGet(ApiModel):
     name: Optional[str] = None
     #: ID of route type associated with the dial plan.
     #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQLzA1OWEyNzNlLWJiYjAtMTFlYy04NDIyLTAyNDJhYzEyMDAwMg
-    routeId: Optional[str] = None
+    route_id: Optional[str] = None
     #: Name of route type associated with the dial plan.
     #: example: routeName
-    routeName: Optional[str] = None
+    route_name: Optional[str] = None
     #: Route Type associated with the dial plan.
-    routeType: Optional[RouteType] = None
+    route_type: Optional[RouteType] = None
     #: Customer information.
     customer: Optional[Customer] = None
 
@@ -204,12 +204,12 @@ class DialPlanPost(ApiModel):
     name: Optional[str] = None
     #: ID of route type associated with the dial plan.
     #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQLzA1OWEyNzNlLWJiYjAtMTFlYy04NDIyLTAyNDJhYzEyMDAwMg
-    routeId: Optional[str] = None
+    route_id: Optional[str] = None
     #: Route Type associated with the dial plan.
-    routeType: Optional[RouteType] = None
+    route_type: Optional[RouteType] = None
     #: An Array of dial patterns.
     #: example: ['+5555,+5556']
-    dialPatterns: Optional[list[str]] = None
+    dial_patterns: Optional[list[str]] = None
 
 
 class DialPlanPut(ApiModel):
@@ -218,32 +218,32 @@ class DialPlanPut(ApiModel):
     name: Optional[str] = None
     #: ID of route type associated with the dial plan.
     #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQLzA1OWEyNzNlLWJiYjAtMTFlYy04NDIyLTAyNDJhYzEyMDAwMg
-    routeId: Optional[str] = None
+    route_id: Optional[str] = None
     #: Route Type associated with the dial plan.
-    routeType: Optional[RouteType] = None
+    route_type: Optional[RouteType] = None
 
 
 class Emergency(ApiModel):
     #: Indicates if RedSky is in use.
-    isRedSky: Optional[bool] = None
+    is_red_sky: Optional[bool] = None
     #: Trunk name.
     #: example: trunkName1
-    trunkName: Optional[str] = None
+    trunk_name: Optional[str] = None
     #: Trunk id.
     #: example: MDhmYzI3YTAtZWEwYy00MWQxLWJlMjMtNzg0YWQ3MjZmMmM1
-    trunkId: Optional[str] = None
+    trunk_id: Optional[str] = None
     #: Route group name.
     #: example: routeGroupName1
-    routeGroupName: Optional[str] = None
+    route_group_name: Optional[str] = None
     #: Route group ID.
     #: example: YTcwYTUwOGMtZTdhYy00YzU2LWIyM2ItZTAzMjE5ZGJjMzgy
-    routeGroupId: Optional[str] = None
+    route_group_id: Optional[str] = None
     #: Location of the trunk; required if `trunkName` is returned.
     #: example: trunkLocationName1
-    trunkLocationName: Optional[str] = None
+    trunk_location_name: Optional[str] = None
     #: Location ID of the trunk; required if `trunkName` is returned.
     #: example: MjJhZDhiYWUtZTE3NS00YzIxLWFjYTctNWJmYjA2Y2YxZGEw
-    trunkLocationId: Optional[str] = None
+    trunk_location_id: Optional[str] = None
 
 
 class FeatureAccessCode(ApiModel):
@@ -270,19 +270,19 @@ class HostedAgent(ApiModel):
     type: Optional[HostedAgentType] = None
     #: Person or workspace's first name.
     #: example: firstName
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Person or workspace's last name.
     #: example: lastName
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Name of location for a person or workspace.
     #: example: locationName
-    locationName: Optional[str] = None
+    location_name: Optional[str] = None
     #: Location ID for a person or workspace.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL1dLQVBRMjQ4NDczTDI0ODQ3NA
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: Person or workspace's phone number.
     #: example: 9874531287
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Person or workspace's extension.
     #: example: 111
     extension: Optional[datetime] = None
@@ -318,13 +318,13 @@ class HostedFeature(ApiModel):
     id: Optional[str] = None
     #: Location of the service instance.
     #: example: locationName1
-    locationName: Optional[str] = None
+    location_name: Optional[str] = None
     #: Location ID of the service instance.
     #: example: Y2lzY29zcGFyazovL3VzL0RJQUxfUExBTi8wNTlhMjczZS1iYmIwLTExZWMtODQyMi0wMjQyYWMxMjAwMDI
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: User or place's phone number.
     #: example: 9874531287
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: User or place's extension.
     #: example: 111
     extension: Optional[datetime] = None
@@ -333,16 +333,16 @@ class HostedFeature(ApiModel):
 class LocalGatewayUsageCount(ApiModel):
     #: The count where the local gateway is used as a PSTN Connection setting.
     #: example: 1.0
-    pstnConnectionCount: Optional[int] = None
+    pstn_connection_count: Optional[int] = None
     #: The count where the given local gateway is used as call to extension setting.
     #: example: 1.0
-    callToExtensionCount: Optional[int] = None
+    call_to_extension_count: Optional[int] = None
     #: The count where the given local gateway is used by the dial plan.
     #: example: 1.0
-    dialPlanCount: Optional[int] = None
+    dial_plan_count: Optional[int] = None
     #: The count where the given local gateway is used by the route group.
     #: example: 1.0
-    routeGroupCount: Optional[int] = None
+    route_group_count: Optional[int] = None
 
 
 class LocalGateways(ApiModel):
@@ -354,7 +354,7 @@ class LocalGateways(ApiModel):
     name: Optional[str] = None
     #: Location ID to which local gateway belongs.
     #: example: 'Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL1dTV1laMjEyODA2TDIxMjgwNw'
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: Prioritizes local gateways based on these numbers; the lowest number gets the highest priority.
     #: example: 1.0
     priority: Optional[int] = None
@@ -382,31 +382,31 @@ class OriginatorType(str, Enum):
 class PbxUser(ApiModel):
     #: Dial plan name that the called string matches.
     #: example: dialPlan1
-    dialPlanName: Optional[str] = None
+    dial_plan_name: Optional[str] = None
     #: Dial plan ID.
     #: example: NTZhMmQzZDktZDVhMC00NWQzLWE3NWYtNjY4NDA4Yzc0OWRk
-    dialPlanId: Optional[str] = None
+    dial_plan_id: Optional[str] = None
     #: Dial pattern that the called string matches.
     #: example: 442xxx
-    dialPattern: Optional[str] = None
+    dial_pattern: Optional[str] = None
     #: Trunk name.
     #: example: trunkName1
-    trunkName: Optional[str] = None
+    trunk_name: Optional[str] = None
     #: Trunk ID.
     #: example: MDhmYzI3YTAtZWEwYy00MWQxLWJlMjMtNzg0YWQ3MjZmMmM1
-    trunkId: Optional[str] = None
+    trunk_id: Optional[str] = None
     #: Route group name.
     #: example: routeGroupName1
-    routeGroupName: Optional[str] = None
+    route_group_name: Optional[str] = None
     #: Route group ID.
     #: example: YTcwYTUwOGMtZTdhYy00YzU2LWIyM2ItZTAzMjE5ZGJjMzgy
-    routeGroupId: Optional[str] = None
+    route_group_id: Optional[str] = None
     #: Location of the trunk; required if `trunkName` is returned.
     #: example: trunkLocationName1
-    trunkLocationName: Optional[str] = None
+    trunk_location_name: Optional[str] = None
     #: Location ID of the trunk; required if `trunkName` is returned.
     #: example: MjJhZDhiYWUtZTE3NS00YzIxLWFjYTctNWJmYjA2Y2YxZGEw
-    trunkLocationId: Optional[str] = None
+    trunk_location_id: Optional[str] = None
 
 
 class PostResponse(ApiModel):
@@ -418,22 +418,22 @@ class PostResponse(ApiModel):
 class PstnNumber(ApiModel):
     #: Trunk name.
     #: example: trunkName1
-    trunkName: Optional[str] = None
+    trunk_name: Optional[str] = None
     #: Trunk ID.
     #: example: MDhmYzI3YTAtZWEwYy00MWQxLWJlMjMtNzg0YWQ3MjZmMmM1
-    trunkId: Optional[str] = None
+    trunk_id: Optional[str] = None
     #: Route group name.
     #: example: routeGroupName1
-    routeGroupName: Optional[str] = None
+    route_group_name: Optional[str] = None
     #: Route group ID.
     #: example: YTcwYTUwOGMtZTdhYy00YzU2LWIyM2ItZTAzMjE5ZGJjMzgy
-    routeGroupId: Optional[str] = None
+    route_group_id: Optional[str] = None
     #: Location of the trunk; required if `trunkName` is returned.
     #: example: trunkLocationName1
-    trunkLocationName: Optional[str] = None
+    trunk_location_name: Optional[str] = None
     #: Location ID of the trunk; required if `trunkName` is returned.
     #: example: MjJhZDhiYWUtZTE3NS00YzIxLWFjYTctNWJmYjA2Y2YxZGEw
-    trunkLocationId: Optional[str] = None
+    trunk_location_id: Optional[str] = None
 
 
 class ResponseStatusType(str, Enum):
@@ -451,13 +451,13 @@ class ResponseStatus(ApiModel):
     type: Optional[ResponseStatusType] = None
     #: Error summary in English.
     #: example: CPAPI: Error retrieving outboundproxy.
-    summaryEnglish: Optional[str] = None
+    summary_english: Optional[str] = None
     #: Error Details.
     #: example: ['OCI-P GroupOutboundProxyGetRequest: [Error 26088] Cloud PBX Console is not configured properly., OCI-P Error code: [Error 26088] Cloud PBX Console is not configured properly.']
     detail: Optional[list[str]] = None
     #: Error Tracking ID.
     #: example: CPAPI_2da34568-1e72-4196-b613-905ce45ec592_0
-    trackingId: Optional[str] = None
+    tracking_id: Optional[str] = None
 
 
 class RouteGroup(ApiModel):
@@ -469,7 +469,7 @@ class RouteGroup(ApiModel):
     name: Optional[str] = None
     #: Flag to indicate if the route group is used.
     #: example: True
-    inUse: Optional[bool] = None
+    in_use: Optional[bool] = None
 
 
 class RouteGroupGet(ApiModel):
@@ -479,7 +479,7 @@ class RouteGroupGet(ApiModel):
     #: Organization details.
     organization: Optional[Customer] = None
     #: Local Gateways that are part of this Route Group.
-    localGateways: Optional[list[LocalGateways]] = None
+    local_gateways: Optional[list[LocalGateways]] = None
 
 
 class RouteGroupPatch(ApiModel):
@@ -487,7 +487,7 @@ class RouteGroupPatch(ApiModel):
     #: example: routeGroupName
     name: Optional[str] = None
     #: Local Gateways that are part of this Route Group.
-    localGateways: Optional[list[LocalGateways]] = None
+    local_gateways: Optional[list[LocalGateways]] = None
 
 
 class RouteGroupUsageRouteListItem(ApiModel):
@@ -499,15 +499,15 @@ class RouteGroupUsageRouteListItem(ApiModel):
     name: Optional[str] = None
     #: Location ID for route list.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2JjNWUwNWFjLTI5ZmEtNGY0NS05MmM1LWUxZTExMDc0OTIwZg
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: Location name for route list.
     #: example: locationName
-    locationName: Optional[str] = None
+    location_name: Optional[str] = None
 
 
 class RouteGroupUsageRouteListGet(ApiModel):
     #: List of route lists for this route group.
-    routeLists: Optional[list[RouteGroupUsageRouteListItem]] = None
+    route_lists: Optional[list[RouteGroupUsageRouteListItem]] = None
 
 
 class RouteList(ApiModel):
@@ -519,16 +519,16 @@ class RouteList(ApiModel):
     name: Optional[str] = None
     #: Name of the route group the route list is associated with.
     #: example: routeGroupName1
-    routeGroupName: Optional[str] = None
+    route_group_name: Optional[str] = None
     #: ID of the route group the route list is associated with.
     #: example: MjRlNDQwYTUtNzQ5NC00ODg2LWIyNTktMmFiM2I2M2ZiMGY0
-    routeGroupId: Optional[str] = None
+    route_group_id: Optional[str] = None
     #: Location name of the route list.
     #: example: locationName1
-    locationName: Optional[str] = None
+    location_name: Optional[str] = None
     #: Location ID of the route list.
     #: example: NjY5YmY3ODQtNjMyZS00MTA2LWFmMWItMzYxYWNkY2M1OTFh
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
 
 
 class RouteListGet(ApiModel):
@@ -538,13 +538,13 @@ class RouteListGet(ApiModel):
     #: Location associated with the Route List.
     location: Optional[Customer] = None
     #: Route group associated with the Route list.
-    routeGroup: Optional[RouteGroup] = None
+    route_group: Optional[RouteGroup] = None
 
 
 class RouteListNumberListGet(ApiModel):
     #: Number assigned to the Route list.
     #: example: +2147891122
-    phoneNumbers: Optional[str] = None
+    phone_numbers: Optional[str] = None
 
 
 class RouteListNumberPatch(ApiModel):
@@ -559,10 +559,10 @@ class RouteListNumberPatch(ApiModel):
 class RouteListNumberPatchResponse(ApiModel):
     #: Phone Number whose status is being reported.
     #: example: +2147891122
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Status of the number. Possible values are `INVALID`, `DUPLICATE`, `DUPLICATE_IN_LIST`, or `UNAVAILABLE`.
     #: example: DUPLICATE
-    numberStatus: Optional[NumberStatus] = None
+    number_status: Optional[NumberStatus] = None
     #: Message of the number add status.
     #: example: Invalid Number
     message: Optional[str] = None
@@ -574,7 +574,7 @@ class RouteListPatch(ApiModel):
     name: Optional[str] = None
     #: New route group ID.
     #: example: NTJiZmUxNDAtYjIwMS00NTUzLWI1OGQtMmVkNDU1NTFmYTUy
-    routeGroupId: Optional[str] = None
+    route_group_id: Optional[str] = None
 
 
 class RouteListPost(ApiModel):
@@ -583,10 +583,10 @@ class RouteListPost(ApiModel):
     name: Optional[str] = None
     #: Location associated with the Route List.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2JjNWUwNWFjLTI5ZmEtNGY0NS05MmM1LWUxZTExMDc0OTIwZg
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: ID of the route group associated with Route List.
     #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQL2ZjN2EzZDU2LTg1OGMtNDVkZC1iZDA1LTE2OWM2NGU1OTRmMQ
-    routeGroupId: Optional[str] = None
+    route_group_id: Optional[str] = None
 
 
 class VirtualExtension(ApiModel):
@@ -595,43 +595,43 @@ class VirtualExtension(ApiModel):
     id: Optional[str] = None
     #: Virtual extension display first name.
     #: example: firstName1
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Virtual extension display last name.
     #: example: lastName1
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Virtual extension display name.
     #: example: displayName1
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: Extension that the virtual extension is associated with.
     #: example: 0007
     extension: Optional[datetime] = None
     #: Phone number that the virtual extension is associated with.
     #: example: 8701278963
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Location name if the virtual extension is at the location level, empty if it is at customer level.
     #: example: locationName1
-    locationName: Optional[str] = None
+    location_name: Optional[str] = None
     #: Location ID if the virtual extension is at the location level, empty if it is at customer level.
     #: example: MWU5ZmEzZmEtYTQ0ZS00MDJhLWExNDItMjJmODQxMjhkOTY4
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: Trunk name.
     #: example: trunkName1
-    trunkName: Optional[str] = None
+    trunk_name: Optional[str] = None
     #: Trunk ID.
     #: example: MDhmYzI3YTAtZWEwYy00MWQxLWJlMjMtNzg0YWQ3MjZmMmM1
-    trunkId: Optional[str] = None
+    trunk_id: Optional[str] = None
     #: Route group name.
     #: example: routeGroupName1
-    routeGroupName: Optional[str] = None
+    route_group_name: Optional[str] = None
     #: Route group ID.
     #: example: YTcwYTUwOGMtZTdhYy00YzU2LWIyM2ItZTAzMjE5ZGJjMzgy
-    routeGroupId: Optional[str] = None
+    route_group_id: Optional[str] = None
     #: Location of the trunk; required if `trunkName` is returned.
     #: example: trunkLocationName1
-    trunkLocationName: Optional[str] = None
+    trunk_location_name: Optional[str] = None
     #: Location ID of the trunk; required if `trunkName` is returned.
     #: example: MjJhZDhiYWUtZTE3NS00YzIxLWFjYTctNWJmYjA2Y2YxZGEw
-    trunkLocationId: Optional[str] = None
+    trunk_location_id: Optional[str] = None
 
 
 class VirtualExtensionRange(ApiModel):
@@ -649,67 +649,67 @@ class VirtualExtensionRange(ApiModel):
     pattern: Optional[str] = None
     #: Location name if the virtual extension range is at the location level, empty if it is at customer level.
     #: example: locationName1
-    locationName: Optional[str] = None
+    location_name: Optional[str] = None
     #: Location ID if the virtual extension range is at the location level, empty if it is at customer level.
     #: example: MWU5ZmEzZmEtYTQ0ZS00MDJhLWExNDItMjJmODQxMjhkOTY4
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: Trunk name.
     #: example: trunkName1
-    trunkName: Optional[str] = None
+    trunk_name: Optional[str] = None
     #: Trunk ID.
     #: example: MDhmYzI3YTAtZWEwYy00MWQxLWJlMjMtNzg0YWQ3MjZmMmM1
-    trunkId: Optional[str] = None
+    trunk_id: Optional[str] = None
     #: Route group name.
     #: example: routeGroupName1
-    routeGroupName: Optional[str] = None
+    route_group_name: Optional[str] = None
     #: Route group ID.
     #: example: YTcwYTUwOGMtZTdhYy00YzU2LWIyM2ItZTAzMjE5ZGJjMzgy
-    routeGroupId: Optional[str] = None
+    route_group_id: Optional[str] = None
     #: Location of the trunk; required if `trunkName` is returned.
     #: example: trunkLocationName1
-    trunkLocationName: Optional[str] = None
+    trunk_location_name: Optional[str] = None
     #: Location ID of the trunk; required if `trunkName` is returned.
     #: example: MjJhZDhiYWUtZTE3NS00YzIxLWFjYTctNWJmYjA2Y2YxZGEw
-    trunkLocationId: Optional[str] = None
+    trunk_location_id: Optional[str] = None
 
 
 class TestCallRoutingPostResponse(ApiModel):
     #: Only returned when `originatorNumber` is specified in the request.
-    callSourceInfo: Optional[CallSourceInfo] = None
+    call_source_info: Optional[CallSourceInfo] = None
     #: Matching destination type for the call.
-    destinationType: Optional[DestinationType] = None
+    destination_type: Optional[DestinationType] = None
     #: FAC code if `destinationType` is FAC. The routing address will be returned for all other destination types.
     #: example: 007
-    routingAddress: Optional[datetime] = None
+    routing_address: Optional[datetime] = None
     #: Outside access code.
     #: example: 1234
-    outsideAccessCode: Optional[datetime] = None
+    outside_access_code: Optional[datetime] = None
     #: `true` if the call would be rejected.
-    isRejected: Optional[bool] = None
+    is_rejected: Optional[bool] = None
     #: Returned when `destinationType` is `HOSTED_AGENT`.
-    hostedAgent: Optional[HostedAgent] = None
+    hosted_agent: Optional[HostedAgent] = None
     #: Returned when `destinationType` is `HOSTED_FEATURE`.
-    hostedFeature: Optional[HostedFeature] = None
+    hosted_feature: Optional[HostedFeature] = None
     #: Returned when `destinationType` is `PBX_USER`.
-    pbxUser: Optional[PbxUser] = None
+    pbx_user: Optional[PbxUser] = None
     #: Returned when `destinationType` is `PSTN_NUMBER`.
-    pstnNumber: Optional[PstnNumber] = None
+    pstn_number: Optional[PstnNumber] = None
     #: Returned when `destinationType` is `VIRTUAL_EXTENSION`.
-    virtualExtension: Optional[VirtualExtension] = None
+    virtual_extension: Optional[VirtualExtension] = None
     #: Returned when `destinationType` is `VIRTUAL_EXTENSION_RANGE`.
-    virtualExtensionRange: Optional[VirtualExtensionRange] = None
+    virtual_extension_range: Optional[VirtualExtensionRange] = None
     #: Returned when `destinationType` is `ROUTE_LIST`.
-    routeList: Optional[RouteList] = None
+    route_list: Optional[RouteList] = None
     #: Returned when `destinationType` is `FAC`.
-    featureAccessCode: Optional[FeatureAccessCode] = None
+    feature_access_code: Optional[FeatureAccessCode] = None
     #: Returned when `destinationType` is `EMERGENCY`.
     emergency: Optional[Emergency] = None
     #: Returned when `destinationType` is `REPAIR`.
     repair: Optional[PstnNumber] = None
     #: Returned when `destinationType` is `UNKNOWN_EXTENSION`.
-    unknownExtension: Optional[PstnNumber] = None
+    unknown_extension: Optional[PstnNumber] = None
     #: Returned when `destinationType` is `UNKNOWN_NUMBER`.
-    unknownNumber: Optional[PstnNumber] = None
+    unknown_number: Optional[PstnNumber] = None
 
 
 class TrunkType(str, Enum):
@@ -730,9 +730,9 @@ class Trunk(ApiModel):
     location: Optional[Customer] = None
     #: Trunk in use flag.
     #: example: True
-    inUse: Optional[bool] = None
+    in_use: Optional[bool] = None
     #: Trunk Type associated with the trunk.
-    trunkType: Optional[TrunkType] = None
+    trunk_type: Optional[TrunkType] = None
 
 
 class TrunkFQDNValidatePost(ApiModel):
@@ -761,35 +761,35 @@ class TrunkGet(ApiModel):
     location: Optional[Customer] = None
     #: Unique Outgoing and Destination trunk group associated with the dial plan.
     #: example: lg1_sias10_cpapi12446_lgu
-    otgDtgId: Optional[str] = None
+    otg_dtg_id: Optional[str] = None
     #: The Line/Port identifies a device endpoint in standalone mode or a SIP URI public identity in IMS mode.
     #: example: lg1_sias10_cpapi16004_LGU@64941297.int10.bcld.webex.com
-    linePort: Optional[str] = None
+    line_port: Optional[str] = None
     #: Locations using trunk.
-    locationsUsingTrunk: Optional[list[Customer]] = None
+    locations_using_trunk: Optional[list[Customer]] = None
     #: User ID.
     #: example: lg1_sias10_cpapi12446_LGU@64941297.int10.bcld.webex.com
-    pilotUserId: Optional[str] = None
+    pilot_user_id: Optional[str] = None
     #: Contains the body of the HTTP response received following the request to Console API and will not be set if the response has no body.
-    outboundProxy: Optional[TrunkGetOutboundProxy] = None
+    outbound_proxy: Optional[TrunkGetOutboundProxy] = None
     #: User's authentication service information.
     #: example: lg1_sias10_cpapi12446_LGU
-    sipAuthenticationUserName: Optional[str] = None
+    sip_authentication_user_name: Optional[str] = None
     #: Device status.
     status: Optional[DeviceStatus] = None
     #: Error codes.
     #: example: ['errorCodes']
-    errorCodes: Optional[list[str]] = None
+    error_codes: Optional[list[str]] = None
     #: Present partial error/warning status information included when the http response is 206.
-    responseStatus: Optional[ResponseStatus] = None
+    response_status: Optional[ResponseStatus] = None
     #: Determines the behavior of the From and PAI headers on outbound calls.
     #: example: True
-    dualIdentitySupportEnabled: Optional[bool] = None
+    dual_identity_support_enabled: Optional[bool] = None
     #: Trunk Type associated with the trunk.
-    trunkType: Optional[TrunkType] = None
+    trunk_type: Optional[TrunkType] = None
     #: Device type assosiated with trunk.
     #: example: Cisco Unified Border Element
-    deviceType: Optional[str] = None
+    device_type: Optional[str] = None
     #: FQDN or SRV address. Required to create a static certificate-based trunk.
     #: example: lgw1.london
     address: Optional[str] = None
@@ -801,7 +801,7 @@ class TrunkGet(ApiModel):
     port: Optional[int] = None
     #: Max Concurrent call. Required to create a static certificate based trunk.
     #: example: 1000.0
-    maxConcurrentCalls: Optional[int] = None
+    max_concurrent_calls: Optional[int] = None
 
 
 class TrunkPost(ApiModel):
@@ -810,18 +810,18 @@ class TrunkPost(ApiModel):
     name: Optional[str] = None
     #: ID of location associated with the trunk.
     #: example: Y2lzY29zcGFyazovL3VzL1JPVVRFX0dST1VQLzA1OWEyNzNlLWJiYjAtMTFlYy04NDIyLTAyNDJhYzEyMDAwMg
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: A password to use on the trunk.
     #: example: password
     password: Optional[str] = None
     #: Dual Identity Support setting impacts the handling of the From header and P-Asserted-Identity header when sending an initial SIP `INVITE` to the trunk for an outbound call.
     #: example: True
-    dualIdentitySupportEnabled: Optional[bool] = None
+    dual_identity_support_enabled: Optional[bool] = None
     #: Trunk Type associated with the trunk.
-    trunkType: Optional[TrunkType] = None
+    trunk_type: Optional[TrunkType] = None
     #: Device type assosiated with trunk.
     #: example: Cisco Unified Border Element
-    deviceType: Optional[str] = None
+    device_type: Optional[str] = None
     #: FQDN or SRV address. Required to create a static certificate-based trunk.
     #: example: lgw1.london
     address: Optional[str] = None
@@ -833,7 +833,7 @@ class TrunkPost(ApiModel):
     port: Optional[int] = None
     #: Max Concurrent call. Required to create a static certificate based trunk.
     #: example: 1000.0
-    maxConcurrentCalls: Optional[int] = None
+    max_concurrent_calls: Optional[int] = None
 
 
 class TrunkPut(ApiModel):
@@ -845,19 +845,19 @@ class TrunkPut(ApiModel):
     password: Optional[str] = None
     #: Determines the behavior of the From and PAI headers on outbound calls.
     #: example: True
-    dualIdentitySupportEnabled: Optional[bool] = None
+    dual_identity_support_enabled: Optional[bool] = None
     #: Max Concurrent call. Required to create a static certificate-based trunk.
     #: example: 1000.0
-    maxConcurrentCalls: Optional[int] = None
+    max_concurrent_calls: Optional[int] = None
 
 
 class TrunkTypeWithDeviceType(ApiModel):
     #: Trunk Type associated with the trunk.
-    trunkType: Optional[TrunkType] = None
+    trunk_type: Optional[TrunkType] = None
     #: Device types for trunk configuration.
-    deviceTypes: Optional[list[DeviceType]] = None
+    device_types: Optional[list[DeviceType]] = None
 
 
 class TrunkTypeGetList(ApiModel):
     #: Trunk type with device types.
-    trunkTypes: Optional[list[TrunkTypeWithDeviceType]] = None
+    trunk_types: Optional[list[TrunkTypeWithDeviceType]] = None

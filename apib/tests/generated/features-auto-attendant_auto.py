@@ -21,12 +21,12 @@ class AlternateNumbersObjectRingPattern(str, Enum):
 class AlternateNumbersObject(ApiModel):
     #: Phone number defined as alternate number.
     #: example: +19705550028
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Flag to indicate if auto attendant number is toll-free number.
-    tollFreeNumber: Optional[bool] = None
+    toll_free_number: Optional[bool] = None
     #: Ring pattern that will be used for the alternate number.
     #: example: 0
-    ringPattern: Optional[AlternateNumbersObjectRingPattern] = None
+    ring_pattern: Optional[AlternateNumbersObjectRingPattern] = None
 
 
 class AudioAnnouncementFileObjectMediaFileType(str, Enum):
@@ -35,7 +35,7 @@ class AudioAnnouncementFileObjectMediaFileType(str, Enum):
     #: WMA File Extension.
     wma = 'WMA'
     #: 3GP File Extension.
-    _3gp = '3GP'
+    _3_gp = '3GP'
 
 
 class AudioAnnouncementFileGetObjectLevel(str, Enum):
@@ -51,10 +51,10 @@ class AudioAnnouncementFileGetObject(ApiModel):
     id: Optional[str] = None
     #: Audio announcement file name.
     #: example: AUDIO_FILE.wav
-    fileName: Optional[str] = None
+    file_name: Optional[str] = None
     #: Audio announcement file type.
     #: example: WAV
-    mediaFileType: Optional[AudioAnnouncementFileObjectMediaFileType] = None
+    media_file_type: Optional[AudioAnnouncementFileObjectMediaFileType] = None
     #: Audio announcement file type location.
     #: example: ORGANIZATION
     level: Optional[AudioAnnouncementFileGetObjectLevel] = None
@@ -66,7 +66,7 @@ class AudioFileObject(ApiModel):
     name: Optional[str] = None
     #: Announcement audio file media type.
     #: example: WAV
-    mediaType: Optional[AudioAnnouncementFileObjectMediaFileType] = None
+    media_type: Optional[AudioAnnouncementFileObjectMediaFileType] = None
 
 
 class GetCallForwardAlwaysSettingObject(ApiModel):
@@ -77,9 +77,9 @@ class GetCallForwardAlwaysSettingObject(ApiModel):
     #: example: +19705550006
     destination: Optional[str] = None
     #: If `true`, a brief tone will be played on the person's phone when a call has been forwarded.
-    ringReminderEnabled: Optional[bool] = None
+    ring_reminder_enabled: Optional[bool] = None
     #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
-    sendToVoicemailEnabled: Optional[bool] = None
+    send_to_voicemail_enabled: Optional[bool] = None
 
 
 class CallForwardRulesObject(ApiModel):
@@ -91,13 +91,13 @@ class CallForwardRulesObject(ApiModel):
     name: Optional[str] = None
     #: Comma-separated list of incoming call numbers that, when matched, will not be forwarded. A Limit of 12 numbers is allowed. Use `Any private Number` in the comma-separated value to indicate rules that match incoming calls from a private number. Use `Any unavailable number` in the comma-separated value to match incoming calls from an unavailable number.
     #: example: Any private number
-    callsFrom: Optional[str] = None
+    calls_from: Optional[str] = None
     #: Comma-separated list of the types of numbers being matched for incoming call destination.
     #: example: +19705550006
-    callsTo: Optional[str] = None
+    calls_to: Optional[str] = None
     #: Number to which calls will be forwarded if the rule is of type "Forward To" and the incoming call is matched.
     #: example: +19705550026
-    forwardTo: Optional[str] = None
+    forward_to: Optional[str] = None
     #: Reflects if rule is enabled.
     #: example: True
     enabled: Optional[bool] = None
@@ -133,9 +133,9 @@ class AutoAttendantCallForwardSettingsModifyDetailsObject(ApiModel):
 class CallForwardSelectiveCallsFromCustomNumbersObject(ApiModel):
     #: Match if caller ID indicates the call is from a private number.
     #: example: True
-    privateNumberEnabled: Optional[bool] = None
+    private_number_enabled: Optional[bool] = None
     #: Match if callerID is unavailable.
-    unavailableNumberEnabled: Optional[bool] = None
+    unavailable_number_enabled: Optional[bool] = None
     #: Array of number strings to be matched against incoming caller ID.
     #: example: ['["+12147691003", "+12147691004"]']
     numbers: Optional[list[str]] = None
@@ -153,7 +153,7 @@ class CallForwardSelectiveCallsFromObject(ApiModel):
     #: example: CUSTOM
     selection: Optional[CallForwardSelectiveCallsFromObjectSelection] = None
     #: Custom rules for matching incoming caller ID information. Mandatory if the selection option is set to `CUSTOM`.
-    customNumbers: Optional[CallForwardSelectiveCallsFromCustomNumbersObject] = None
+    custom_numbers: Optional[CallForwardSelectiveCallsFromCustomNumbersObject] = None
 
 
 class CallForwardSelectiveCallsToNumbersObjectType(str, Enum):
@@ -166,7 +166,7 @@ class CallForwardSelectiveCallsToNumbersObjectType(str, Enum):
 class CallForwardSelectiveCallsToNumbersObject(ApiModel):
     #: AutoCalls To phone number. Either phone number or extension should be present as mandatory.
     #: example: +19705550028
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Calls To extension.  Either `phoneNumber` or `extension` is mandatory.
     #: example: 1001
     extension: Optional[datetime] = None
@@ -192,7 +192,7 @@ class CallForwardSelectiveForwardToObjectSelection(str, Enum):
 class CallForwardSelectiveForwardToObject(ApiModel):
     #: Phone number used if selection is `FORWARD_TO_SPECIFIED_NUMBER`.
     #: example: +19705550028
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Controls what happens when the rule matches.
     #: example: FORWARD_TO_DEFAULT_NUMBER
     selection: Optional[CallForwardSelectiveForwardToObjectSelection] = None
@@ -210,21 +210,21 @@ class GetAutoAttendantCallForwardSelectiveRuleObject(ApiModel):
     enabled: Optional[bool] = None
     #: Name of the location's business schedule which determines when this selective call forwarding rule is in effect.
     #: example: AUTOATTENDANT-BUSINESS-HOURS
-    businessSchedule: Optional[str] = None
+    business_schedule: Optional[str] = None
     #: Name of the location's holiday schedule which determines when this selective call forwarding rule is in effect.
     #: example: AUTOATTENDANT-HOLIDAY
-    holidaySchedule: Optional[str] = None
+    holiday_schedule: Optional[str] = None
     #: Controls what happens when the rule matches including the destination number for the call forwarding.
-    forwardTo: Optional[CallForwardSelectiveForwardToObject] = None
+    forward_to: Optional[CallForwardSelectiveForwardToObject] = None
     #: Settings related to the rule matching based on incoming caller ID.
-    callsFrom: Optional[CallForwardSelectiveCallsFromObject] = None
+    calls_from: Optional[CallForwardSelectiveCallsFromObject] = None
     #: Settings related to the rule matching based on the destination number.
-    callsTo: Optional[CallForwardSelectiveCallsToObject] = None
+    calls_to: Optional[CallForwardSelectiveCallsToObject] = None
 
 
 class GetAutoAttendantCallForwardSettingsObject(ApiModel):
     #: Settings related to `Always`, `Busy`, and `No Answer` call forwarding.
-    callForwarding: Optional[AutoAttendantCallForwardSettingsDetailsObject] = None
+    call_forwarding: Optional[AutoAttendantCallForwardSettingsDetailsObject] = None
 
 
 class GetAutoAttendantObjectExtensionDialing(str, Enum):
@@ -289,7 +289,7 @@ class KeyConfigurationsGetObject(ApiModel):
     #: example: +19705550006
     value: Optional[str] = None
     #: Pre-configured announcement audio files when PLAY_ANNOUNCEMENT is set.
-    audioAnnouncementFile: Optional[AudioAnnouncementFileGetObject] = None
+    audio_announcement_file: Optional[AudioAnnouncementFileGetObject] = None
 
 
 class HoursMenuGetObject(ApiModel):
@@ -298,11 +298,11 @@ class HoursMenuGetObject(ApiModel):
     greeting: Optional[HoursMenuGetObjectGreeting] = None
     #: Flag to indicate if auto attendant extension is enabled or not.
     #: example: True
-    extensionEnabled: Optional[bool] = None
+    extension_enabled: Optional[bool] = None
     #: Announcement Audio File details.
-    audioAnnouncementFile: Optional[AudioAnnouncementFileGetObject] = None
+    audio_announcement_file: Optional[AudioAnnouncementFileGetObject] = None
     #: Key configurations defined for the auto attendant.
-    keyConfigurations: Optional[KeyConfigurationsGetObject] = None
+    key_configurations: Optional[KeyConfigurationsGetObject] = None
 
 
 class GetAutoAttendantObject(ApiModel):
@@ -317,45 +317,45 @@ class GetAutoAttendantObject(ApiModel):
     enabled: Optional[bool] = None
     #: Auto attendant phone number.  Either `phoneNumber` or `extension` is mandatory.
     #: example: +19705550028
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
     #: example: 1001
     extension: Optional[datetime] = None
     #: Flag to indicate if auto attendant number is toll-free number.
-    tollFreeNumber: Optional[bool] = None
+    toll_free_number: Optional[bool] = None
     #: First name defined for an auto attendant.
     #: example: Main Line AA
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name defined for an auto attendant.
     #: example: Test
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Alternate numbers defined for the auto attendant.
-    alternateNumbers: Optional[list[AlternateNumbersObject]] = None
+    alternate_numbers: Optional[list[AlternateNumbersObject]] = None
     #: Language for the auto attendant.
     #: example: English
     language: Optional[str] = None
     #: Language code for the auto attendant.
     #: example: en_us
-    languageCode: Optional[str] = None
+    language_code: Optional[str] = None
     #: Business hours defined for the auto attendant.
     #: example: AUTOATTENDANT-BUSINESS-HOURS
-    businessSchedule: Optional[str] = None
+    business_schedule: Optional[str] = None
     #: Holiday defined for the auto attendant.
     #: example: AUTOATTENDANT-HOLIDAY
-    holidaySchedule: Optional[str] = None
+    holiday_schedule: Optional[str] = None
     #: Extension dialing setting. If the values are not set default will be set as `ENTERPRISE`.
     #: example: ENTERPRISE
-    extensionDialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
+    extension_dialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
     #: Name dialing setting. If the values are not set default will be set as `ENTERPRISE`.
     #: example: ENTERPRISE
-    nameDialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
+    name_dialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
     #: Time zone defined for the auto attendant.
     #: example: America/Los_Angeles
-    timeZone: Optional[str] = None
+    time_zone: Optional[str] = None
     #: Business hours menu defined for the auto attendant.
-    businessHoursMenu: Optional[HoursMenuGetObject] = None
+    business_hours_menu: Optional[HoursMenuGetObject] = None
     #: After hours menu defined for the auto attendant.
-    afterHoursMenu: Optional[HoursMenuGetObject] = None
+    after_hours_menu: Optional[HoursMenuGetObject] = None
 
 
 class ListAutoAttendantObject(ApiModel):
@@ -367,18 +367,18 @@ class ListAutoAttendantObject(ApiModel):
     name: Optional[str] = None
     #: Name of location for auto attendant.
     #: example: Houston
-    locationName: Optional[str] = None
+    location_name: Optional[str] = None
     #: ID of location for auto attendant.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzI2NDE1MA
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: Auto attendant phone number.  Either `phoneNumber` or `extension` is mandatory.
     #: example: +19705550028
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
     #: example: 1001
     extension: Optional[datetime] = None
     #: Flag to indicate if auto attendant number is toll-free number.
-    tollFreeNumber: Optional[bool] = None
+    toll_free_number: Optional[bool] = None
 
 
 class ModifyAutoAttendantCallForwardSelectiveRuleObject(ApiModel):
@@ -390,21 +390,21 @@ class ModifyAutoAttendantCallForwardSelectiveRuleObject(ApiModel):
     enabled: Optional[bool] = None
     #: Name of the location's business schedule which determines when this selective call forwarding rule is in effect.
     #: example: AUTOATTENDANT-BUSINESS-HOURS
-    businessSchedule: Optional[str] = None
+    business_schedule: Optional[str] = None
     #: Name of the location's holiday schedule which determines when this selective call forwarding rule is in effect.
     #: example: AUTOATTENDANT-HOLIDAY
-    holidaySchedule: Optional[str] = None
+    holiday_schedule: Optional[str] = None
     #: Controls what happens when the rule matches including the destination number for the call forwarding.
-    forwardTo: Optional[CallForwardSelectiveForwardToObject] = None
+    forward_to: Optional[CallForwardSelectiveForwardToObject] = None
     #: Settings related the rule matching based on incoming caller ID.
-    callsFrom: Optional[CallForwardSelectiveCallsFromObject] = None
+    calls_from: Optional[CallForwardSelectiveCallsFromObject] = None
     #: Settings related to the rule matching based on the destination number.
-    callsTo: Optional[CallForwardSelectiveCallsToObject] = None
+    calls_to: Optional[CallForwardSelectiveCallsToObject] = None
 
 
 class ModifyAutoAttendantCallForwardSettingsObject(ApiModel):
     #: Settings related to `Always`, `Busy`, and `No Answer` call forwarding.
-    callForwarding: Optional[AutoAttendantCallForwardSettingsModifyDetailsObject] = None
+    call_forwarding: Optional[AutoAttendantCallForwardSettingsModifyDetailsObject] = None
 
 
 class ModifyAutoAttendantObject(ApiModel):
@@ -413,37 +413,37 @@ class ModifyAutoAttendantObject(ApiModel):
     name: Optional[str] = None
     #: Auto attendant phone number.  Either `phoneNumber` or `extension` is mandatory.
     #: example: +19705550028
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
     #: example: 1001
     extension: Optional[datetime] = None
     #: First name defined for an auto attendant.
     #: example: Main Line AA
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name defined for an auto attendant.
     #: example: Test
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Alternate numbers defined for the auto attendant.
-    alternateNumbers: Optional[list[AlternateNumbersObject]] = None
+    alternate_numbers: Optional[list[AlternateNumbersObject]] = None
     #: Language code for the auto attendant.
     #: example: en_us
-    languageCode: Optional[str] = None
+    language_code: Optional[str] = None
     #: Business hours defined for the auto attendant.
     #: example: AUTOATTENDANT-BUSINESS-HOURS
-    businessSchedule: Optional[str] = None
+    business_schedule: Optional[str] = None
     #: Holiday defined for the auto attendant.
     #: example: AUTOATTENDANT-HOLIDAY
-    holidaySchedule: Optional[str] = None
+    holiday_schedule: Optional[str] = None
     #: Extension dialing setting. If the values are not set default will be set as `ENTERPRISE`.
     #: example: ENTERPRISE
-    extensionDialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
+    extension_dialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
     #: Name dialing setting. If the values are not set default will be set as `ENTERPRISE`.
     #: example: ENTERPRISE
-    nameDialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
+    name_dialing: Optional[GetAutoAttendantObjectExtensionDialing] = None
     #: Time zone defined for the auto attendant.
     #: example: America/Los_Angeles
-    timeZone: Optional[str] = None
+    time_zone: Optional[str] = None
     #: Business hours menu defined for the auto attendant.
-    businessHoursMenu: Optional[HoursMenuGetObject] = None
+    business_hours_menu: Optional[HoursMenuGetObject] = None
     #: After hours menu defined for the auto attendant.
-    afterHoursMenu: Optional[HoursMenuGetObject] = None
+    after_hours_menu: Optional[HoursMenuGetObject] = None

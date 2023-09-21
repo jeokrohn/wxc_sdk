@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AcdObject', 'ActivationStates', 'AdminBatchStartJobObjectLocationCustomizations', 'AtaDtmfMethodObject', 'AtaDtmfModeObject', 'AtaObject', 'AudioCodecPriorityObject', 'AuthenticationMethodObject', 'BackgroundImage', 'BackgroundImageColor', 'BacklightTimer68XX', 'BacklightTimerObject', 'BluetoothObject', 'BluetoothObjectDevice', 'BluetoothObjectDeviceMode', 'BluetoothObjectMode', 'CallForwardExpandedSoftKey', 'CallHistoryMethod', 'CommSecurityType', 'CountObject', 'CustomizationDeviceLevelObject', 'CustomizationDeviceLevelObjectDevice', 'CustomizationObject', 'DectDeviceList', 'DectObject', 'DectVlanObject', 'DefaultLoggingLevelObject', 'DeviceList', 'DeviceObject', 'DeviceOwner', 'DeviceSettingsObject', 'DeviceSettingsObjectForDeviceLevel', 'Devices', 'DirectoryMethod', 'DisplayCallqueueAgentSoftkeysObject', 'DisplayNameSelection', 'ErrorMessageObject', 'ErrorObject', 'ErrorResponseObject', 'GetMemberResponse', 'Hoteling', 'HttpProxyObject', 'HttpProxyObjectMode', 'ItemObject', 'JobExecutionStatusObject', 'JobExecutionStatusObject1', 'JobIdResponseObject', 'JobListResponse', 'KemModuleTypeObject', 'LdapObject', 'LineKeyLEDPattern', 'LineKeyLabelSelection', 'LineType', 'ListDectDeviceType', 'ListDeviceSettingsObject', 'Location', 'MACAddressResponse', 'MACAddressResponseStatus', 'MacStatusObject', 'MacStatusObjectState', 'ManagedByObject', 'ManufacturerObject', 'MemberObject', 'MemberType', 'MppAudioCodecPriorityObject', 'MppObject', 'MppObjectDevice', 'MppVlanObject', 'NoiseCancellationObject', 'OnboardingMethodObject', 'PhoneLanguage', 'PlaceDeviceList', 'PlaceDevices', 'PoeMode', 'PskObject', 'PutDeviceSettingsRequest', 'PutMemberObject', 'PutMembersRequest', 'SearchMemberObject', 'SearchMemberResponse', 'SelectionType', 'SnmpObject', 'SoftKeyLayoutObject', 'SoftKeyMenuObject', 'StartJobResponse', 'StepExecutionStatusesObject', 'SupportedDevicesObject', 'TypeObject', 'UsbPortsObject', 'ValidateMACRequest', 'VolumeSettingsObject', 'WebAccessObject', 'WifiNetworkObject', 'WifiObject', 'WifiObjectDevice']
+__auto__ = ['AcdObject', 'ActivationStates', 'AdminBatchStartJobObjectLocationCustomizations', 'AtaDtmfMethodObject', 'AtaDtmfModeObject', 'AtaObject', 'AudioCodecPriorityObject', 'AuthenticationMethodObject', 'BackgroundImage', 'BackgroundImageColor', 'BacklightTimer68XX', 'BacklightTimerObject', 'BluetoothObject', 'BluetoothObjectMode', 'CallForwardExpandedSoftKey', 'CallHistoryMethod', 'CommSecurityType', 'CountObject', 'CustomizationDeviceLevelObject', 'CustomizationDeviceLevelObjectDevice', 'CustomizationObject', 'DectDeviceList', 'DectObject', 'DectVlanObject', 'DefaultLoggingLevelObject', 'DeviceList', 'DeviceObject', 'DeviceOwner', 'DeviceSettingsObject', 'DeviceSettingsObjectForDeviceLevel', 'Devices', 'DirectoryMethod', 'DisplayCallqueueAgentSoftkeysObject', 'DisplayNameSelection', 'ErrorMessageObject', 'ErrorObject', 'ErrorResponseObject', 'GetMemberResponse', 'Hoteling', 'HttpProxyObject', 'HttpProxyObjectMode', 'ItemObject', 'JobExecutionStatusObject', 'JobExecutionStatusObject1', 'JobIdResponseObject', 'JobListResponse', 'KemModuleTypeObject', 'LdapObject', 'LineKeyLEDPattern', 'LineKeyLabelSelection', 'LineType', 'ListDectDeviceType', 'ListDeviceSettingsObject', 'Location', 'MACAddressResponse', 'MACAddressResponseStatus', 'MacStatusObject', 'MacStatusObjectState', 'ManagedByObject', 'ManufacturerObject', 'MemberObject', 'MemberType', 'MppAudioCodecPriorityObject', 'MppObject', 'MppObjectDevice', 'MppVlanObject', 'NoiseCancellationObject', 'OnboardingMethodObject', 'PhoneLanguage', 'PlaceDeviceList', 'PlaceDevices', 'PoeMode', 'PskObject', 'PutDeviceSettingsRequest', 'PutMemberObject', 'PutMembersRequest', 'SearchMemberObject', 'SearchMemberResponse', 'SelectionType', 'SnmpObject', 'SoftKeyLayoutObject', 'SoftKeyMenuObject', 'StartJobResponse', 'StepExecutionStatusesObject', 'SupportedDevicesObject', 'TypeObject', 'UsbPortsObject', 'ValidateMACRequest', 'VolumeSettingsObject', 'WebAccessObject', 'WifiNetworkObject', 'WifiObject', 'WifiObjectDevice']
 
 
 class DisplayCallqueueAgentSoftkeysObject(str, Enum):
@@ -21,7 +21,7 @@ class AcdObject(ApiModel):
     enabled: Optional[bool] = None
     #: Indicates the call queue agent soft key value of an ACD object.
     #: example: LAST_PAGE
-    displayCallqueueAgentSoftkeys: Optional[DisplayCallqueueAgentSoftkeysObject] = None
+    display_callqueue_agent_softkeys: Optional[DisplayCallqueueAgentSoftkeysObject] = None
 
 
 class ActivationStates(str, Enum):
@@ -83,70 +83,70 @@ class SnmpObject(ApiModel):
     enabled: Optional[bool] = None
     #: Trusted IPv4 address and subnet mask in this order: 0.0.0.0/0.0.0.0.
     #: example: 10.0.0.45
-    trustedIP: Optional[str] = None
+    trusted_ip: Optional[str] = Field(alias='trustedIP', default=None)
     #: Read-only community string that allows/denies access to other device's statistics. Default value is `public`.
     #: example: public
-    getCommunity: Optional[str] = None
+    get_community: Optional[str] = None
     #: Read-write community string that protects the device against unauthorized changes. Must never be set to `public`.
     #: example: private
-    setCommunity: Optional[str] = None
+    set_community: Optional[str] = None
     #: Denotes whether the SNMPv3 security is enabled.
-    snmpV3Enabled: Optional[bool] = None
+    snmp_v3_enabled: Optional[bool] = None
 
 
 class AtaObject(ApiModel):
     #: Choose up to three predefined codec priority options available for your region.
-    audioCodecPriority: Optional[AudioCodecPriorityObject] = None
+    audio_codec_priority: Optional[AudioCodecPriorityObject] = None
     #: DTMF Detection Tx Mode selection for Cisco ATA devices.
-    ataDtmfMode: Optional[AtaDtmfModeObject] = None
+    ata_dtmf_mode: Optional[AtaDtmfModeObject] = None
     #: Method for transmitting DTMF signals to the far end.
     #: example: AVT
-    ataDtmfMethod: Optional[AtaDtmfMethodObject] = None
+    ata_dtmf_method: Optional[AtaDtmfMethodObject] = None
     #: Enable/disable Cisco Discovery Protocol for local devices.
     #: example: True
-    cdpEnabled: Optional[bool] = None
+    cdp_enabled: Optional[bool] = None
     #: Enable/disable Link Layer Discovery Protocol for local devices.
     #: example: True
-    lldpEnabled: Optional[bool] = None
+    lldp_enabled: Optional[bool] = None
     #: Enable/disable quality of service tagging of packets from the local device to the Webex Calling platform.
     #: example: True
-    qosEnabled: Optional[bool] = None
+    qos_enabled: Optional[bool] = None
     #: Specify a numeric Virtual LAN ID for devices.
     vlan: Optional[DectVlanObject] = None
     #: Enable/disable user level web access to the local device.
     #: example: True
-    webAccessEnabled: Optional[bool] = None
+    web_access_enabled: Optional[bool] = None
     #: Enable/disable the automatic nightly configuration resync of the MPP device.
     #: example: True
-    nightlyResyncEnabled: Optional[bool] = None
+    nightly_resync_enabled: Optional[bool] = None
     #: Specify values needed to enable use of the SNMP service from the phone.
     snmp: Optional[SnmpObject] = None
 
 
 class DectObject(ApiModel):
     #: Choose up to three predefined codec priority options available for your region.
-    audioCodecPriority: Optional[AudioCodecPriorityObject] = None
+    audio_codec_priority: Optional[AudioCodecPriorityObject] = None
     #: Enable/disable Cisco Discovery Protocol for local devices.
     #: example: True
-    cdpEnabled: Optional[bool] = None
+    cdp_enabled: Optional[bool] = None
     #: Specify the destination number to be dialled from the DECT Handset top button when pressed.
-    dect6825HandsetEmergencyNumber: Optional[str] = None
+    dect6825_handset_emergency_number: Optional[str] = None
     #: Enable/disable Link Layer Discovery Protocol for local devices.
     #: example: True
-    lldpEnabled: Optional[bool] = None
+    lldp_enabled: Optional[bool] = None
     #: Specify up to 3 multicast group URLs each with a unique listening port.
     multicast: Optional[str] = None
     #: Enable/disable quality of service tagging of packets from the local device to the Webex Calling platform.
     #: example: True
-    qosEnabled: Optional[bool] = None
+    qos_enabled: Optional[bool] = None
     #: Specify a numeric Virtual LAN ID for devices.
     vlan: Optional[DectVlanObject] = None
     #: Enable/disable user level web access to the local device.
     #: example: True
-    webAccessEnabled: Optional[bool] = None
+    web_access_enabled: Optional[bool] = None
     #: Enable/disable phone's default behavior regarding the nightly maintenance synchronization with the Webex Calling platform.
     #: example: True
-    nightlyResyncEnabled: Optional[bool] = None
+    nightly_resync_enabled: Optional[bool] = None
 
 
 class MppAudioCodecPriorityObject(ApiModel):
@@ -187,7 +187,7 @@ class BackgroundImage(str, Enum):
     #: Indicates that a custom background image will be set for the devices.
     custom_background = 'CUSTOM_BACKGROUND'
     #: When this option is selected, a field 'Custom Background URL' needs to be added with the image url. URLs provided must link directly to an image file and be in HTTP, HTTPS, or filepath format.
-    customurl = 'customUrl'
+    custom_url = 'customUrl'
 
 
 class DisplayNameSelection(str, Enum):
@@ -272,7 +272,7 @@ class MppVlanObject(ApiModel):
     value: Optional[int] = None
     #: Indicates the PC port value of a VLAN object for an MPP object.
     #: example: 1.0
-    pcPort: Optional[int] = None
+    pc_port: Optional[int] = None
 
 
 class AuthenticationMethodObject(str, Enum):
@@ -294,13 +294,13 @@ class WifiNetworkObject(ApiModel):
     #: Indicates whether the wifi network is enabled.
     enabled: Optional[bool] = None
     #: Authentication method of wifi network.
-    authenticationMethod: Optional[AuthenticationMethodObject] = None
+    authentication_method: Optional[AuthenticationMethodObject] = None
     #: SSID name of the wifi network.
     #: example: my_wifi_network
-    ssidName: Optional[str] = None
+    ssid_name: Optional[str] = None
     #: User Id of the wifi network.
     #: example: test-user
-    userId: Optional[str] = None
+    user_id: Optional[str] = None
 
 
 class CallHistoryMethod(str, Enum):
@@ -320,22 +320,22 @@ class DirectoryMethod(str, Enum):
 class VolumeSettingsObject(ApiModel):
     #: Specify a ringer volume level through a numeric value between 0 and 15.
     #: example: 9.0
-    ringerVolume: Optional[int] = None
+    ringer_volume: Optional[int] = None
     #: Specify a speaker volume level through a numeric value between 0 and 15.
     #: example: 11.0
-    speakerVolume: Optional[int] = None
+    speaker_volume: Optional[int] = None
     #: Specify a handset volume level through a numeric value between 0 and 15.
     #: example: 10.0
-    handsetVolume: Optional[int] = None
+    handset_volume: Optional[int] = None
     #: Specify a headset volume level through a numeric value between 0 and 15.
     #: example: 10.0
-    headsetVolume: Optional[int] = None
+    headset_volume: Optional[int] = None
     #: Enable/disable the wireless headset hookswitch control.
     #: example: True
-    eHookEnabled: Optional[bool] = None
+    e_hook_enabled: Optional[bool] = None
     #: Enable/disable to preserve the existing values on the phone and not the values defined for the device settings.
     #: example: True
-    allowEndUserOverrideEnabled: Optional[bool] = None
+    allow_end_user_override_enabled: Optional[bool] = None
 
 
 class CallForwardExpandedSoftKey(str, Enum):
@@ -357,7 +357,7 @@ class HttpProxyObject(ApiModel):
     mode: Optional[HttpProxyObjectMode] = None
     #: Enable/disable auto discovery of the URL.
     #: example: True
-    autoDiscoveryEnabled: Optional[bool] = None
+    auto_discovery_enabled: Optional[bool] = None
     #: Specify the host URL if the HTTP mode is set to `MANUAL`.
     #: example: www.example.wxc
     host: Optional[str] = None
@@ -366,10 +366,10 @@ class HttpProxyObject(ApiModel):
     port: Optional[datetime] = None
     #: Specify PAC URL if auto discovery is disabled.
     #: example: www.example.wxc
-    packUrl: Optional[str] = None
+    pack_url: Optional[str] = None
     #: Enable/disable authentication settings.
     #: example: True
-    authSettingsEnabled: Optional[bool] = None
+    auth_settings_enabled: Optional[bool] = None
     #: Specify a username if authentication settings are enabled.
     #: example: john
     username: Optional[str] = None
@@ -380,6 +380,8 @@ class HttpProxyObject(ApiModel):
 
 class BluetoothObjectMode(str, Enum):
     phone = 'PHONE'
+    hands_free = 'HANDS_FREE'
+    both = 'BOTH'
 
 
 class BluetoothObject(ApiModel):
@@ -389,9 +391,6 @@ class BluetoothObject(ApiModel):
     #: Select a Bluetooth mode.
     #: example: PHONE
     mode: Optional[BluetoothObjectMode] = None
-    PHONE: Optional[str] = None
-    HANDS_FREE: Optional[str] = None
-    BOTH: Optional[str] = None
 
 
 class NoiseCancellationObject(ApiModel):
@@ -400,52 +399,52 @@ class NoiseCancellationObject(ApiModel):
     enabled: Optional[bool] = None
     #: Enable/disable to preserve the existing values on the phone and not the value defined for the device setting.
     #: example: True
-    allowEndUserOverrideEnabled: Optional[bool] = None
+    allow_end_user_override_enabled: Optional[bool] = None
 
 
 class SoftKeyMenuObject(ApiModel):
     #: Specify the idle key list.
     #: example: guestin|;guestout|;acd_login|;acd_logout|;astate|;redial|;newcall|;cfwd|;recents|;dnd|;unpark|;psk1|;gpickup|;pickup|;dir|4;miss|5;selfview|;messages
-    idleKeyList: Optional[str] = None
+    idle_key_list: Optional[str] = None
     #: Specify the off hook key list.
     #: example: endcall|1;redial|2;dir|3;lcr|4;unpark|5;pickup|6;gpickup|7
-    offHookKeyList: Optional[str] = None
+    off_hook_key_list: Optional[str] = None
     #: Specify the dialing input key list.
     #: example: dial|1;cancel|2;delchar|3;left|5;right|6
-    dialingInputKeyList: Optional[str] = None
+    dialing_input_key_list: Optional[str] = None
     #: Specify the progressing key list.
     #: example: endcall|2
-    progressingKeyList: Optional[str] = None
+    progressing_key_list: Optional[str] = None
     #: Specify the connected key list.
     #: example: hold;endcall;xfer;conf;xferLx;confLx;bxfer;phold;redial;dir;park;crdstart;crdstop;crdpause;crdresume
-    connectedKeyList: Optional[str] = None
+    connected_key_list: Optional[str] = None
     #: Specify the connected video key list.
     #: example: hold;endcall;xfer;conf;xferLx;confLx;bxfer;phold;redial;dir;park;crdstart;crdstop;crdpause;crdresume
-    connectedVideoKeyList: Optional[str] = None
+    connected_video_key_list: Optional[str] = None
     #: Start the transfer key list.
     #: example: endcall|2;xfer|3
-    startTransferKeyList: Optional[str] = None
+    start_transfer_key_list: Optional[str] = None
     #: Start the conference key list.
     #: example: endcall|2;conf|3
-    startConferenceKeyList: Optional[str] = None
+    start_conference_key_list: Optional[str] = None
     #: Specify the conferencing key list.
     #: example: endcall;join;crdstart;crdstop;crdpause;crdresume
-    conferencingKeyList: Optional[str] = None
+    conferencing_key_list: Optional[str] = None
     #: Specify the releasing key list.
     #: example: endcall|2
-    releasingKeyList: Optional[str] = None
+    releasing_key_list: Optional[str] = None
     #: Specify the hold key list.
     #: example: resume|1;endcall|2;newcall|3;redial|4;dir|5
-    holdKeyList: Optional[str] = None
+    hold_key_list: Optional[str] = None
     #: Specify the ringing key list.
     #: example: answer|1;ignore|2
-    ringingKeyList: Optional[str] = None
+    ringing_key_list: Optional[str] = None
     #: Specify the shared active key list.
     #: example: newcall|1;psk1|2;dir|3;back|4
-    sharedActiveKeyList: Optional[str] = None
+    shared_active_key_list: Optional[str] = None
     #: Specify the shared held key list.
     #: example: resume|1;dir|4
-    sharedHeldKeyList: Optional[str] = None
+    shared_held_key_list: Optional[str] = None
 
 
 class PskObject(ApiModel):
@@ -501,13 +500,13 @@ class PskObject(ApiModel):
 
 class SoftKeyLayoutObject(ApiModel):
     #: Customize SoftKey menu settings.
-    softKeyMenu: Optional[SoftKeyMenuObject] = None
+    soft_key_menu: Optional[SoftKeyMenuObject] = None
     #: Customize PSK.
     psk: Optional[PskObject] = None
     #: Default SoftKey menu settings.
-    softKeyMenuDefaults: Optional[SoftKeyMenuObject] = None
+    soft_key_menu_defaults: Optional[SoftKeyMenuObject] = None
     #: Default PSK.
-    pskDefaults: Optional[PskObject] = None
+    psk_defaults: Optional[PskObject] = None
 
 
 class BackgroundImageColor(str, Enum):
@@ -541,117 +540,117 @@ class BacklightTimer68XX(str, Enum):
 class MppObject(ApiModel):
     #: Indicates whether the PNAC of MPP object is enabled or not.
     #: example: True
-    pnacEnabled: Optional[bool] = None
+    pnac_enabled: Optional[bool] = None
     #: Choose up to three predefined codec priority options available for your region.
-    audioCodecPriority: Optional[MppAudioCodecPriorityObject] = None
+    audio_codec_priority: Optional[MppAudioCodecPriorityObject] = None
     #: Choose the length of time (in minutes) for the phone's backlight to remain on.
     #: example: ONE_MIN
-    backlightTimer: Optional[BacklightTimerObject] = None
+    backlight_timer: Optional[BacklightTimerObject] = None
     #: Holds the background object of MPP Object.
     background: Optional[BackgroundImage] = None
     #: The display name that appears on the phone screen.
     #: example: PERSON_NUMBER
-    displayNameFormat: Optional[DisplayNameSelection] = None
+    display_name_format: Optional[DisplayNameSelection] = None
     #: Allows you to enable/disable CDP for local devices.
-    cdpEnabled: Optional[bool] = None
+    cdp_enabled: Optional[bool] = None
     #: Choose the desired logging level for an MPP devices.
     #: example: STANDARD
-    defaultLoggingLevel: Optional[DefaultLoggingLevelObject] = None
+    default_logging_level: Optional[DefaultLoggingLevelObject] = None
     #: Enable/disable Do-Not-Disturb capabilities for Multi-Platform Phones.
     #: example: True
-    dndServicesEnabled: Optional[bool] = None
+    dnd_services_enabled: Optional[bool] = None
     #: Holds the Acd object value.
     acd: Optional[AcdObject] = None
     #: Indicates the short inter digit timer value.
     #: example: 14.0
-    shortInterdigitTimer: Optional[int] = None
+    short_interdigit_timer: Optional[int] = None
     #: Indicates the long inter digit timer value..
     #: example: 16.0
-    longInterdigitTimer: Optional[int] = None
+    long_interdigit_timer: Optional[int] = None
     #: Line key labels define the format of what's shown next to line keys.
     #: example: PERSON_EXTENSION
-    lineKeyLabelFormat: Optional[LineKeyLabelSelection] = None
+    line_key_label_format: Optional[LineKeyLabelSelection] = None
     #: LED patterns define lighting schemes for the line keys on the MPP devices. Note that this parameter is not supported on the MPP 8875
     #: example: DEFAULT
-    lineKeyLEDPattern: Optional[LineKeyLEDPattern] = None
+    line_key_ledpattern: Optional[LineKeyLEDPattern] = Field(alias='lineKeyLEDPattern', default=None)
     #: Enable/disable Link Layer Discovery Protocol for local devices.
-    lldpEnabled: Optional[bool] = None
+    lldp_enabled: Optional[bool] = None
     #: Enable/disable user-level access to the web interface of Multi-Platform Phones.
     #: example: True
-    mppUserWebAccessEnabled: Optional[bool] = None
+    mpp_user_web_access_enabled: Optional[bool] = None
     #: Select up to 10 Multicast Group URLs (each with a unique Listening Port).
     #: example: ['["192.86.108.226:22"]']
     multicast: Optional[list[str]] = None
     #: Specify the amount of time (in seconds) that a phone can remain off-hook.
     #: example: 30.0
-    offHookTimer: Optional[int] = None
+    off_hook_timer: Optional[int] = None
     #: Select the language for your MPP phone. Setting this overrides the default language setting in place for your provisioned location.
     #: example: RUSSIAN
-    phoneLanguage: Optional[PhoneLanguage] = None
+    phone_language: Optional[PhoneLanguage] = None
     #: Enable/disable the Power-Over-Ethernet mode for Multi-Platform Phones.
-    poeMode: Optional[PoeMode] = None
+    poe_mode: Optional[PoeMode] = None
     #: Allows you to enable/disable tagging of packets from the local device to the Webex Calling platform.
     #: example: True
-    qosEnabled: Optional[bool] = None
+    qos_enabled: Optional[bool] = None
     #: Specify the amount of inactive time needed (in seconds) before the phone's screen saver activates.
-    screenTimeout: Optional[DectVlanObject] = None
+    screen_timeout: Optional[DectVlanObject] = None
     #: Enable/disable the use of the USB ports on Multi-Platform phones.
     #: example: True
-    usbPortsEnabled: Optional[bool] = None
+    usb_ports_enabled: Optional[bool] = None
     #: Specify a numeric Virtual LAN ID for devices.
     vlan: Optional[MppVlanObject] = None
     #: Specify the Wi-Fi SSID and password for wireless-enabled MPP phones.
-    wifiNetwork: Optional[WifiNetworkObject] = None
+    wifi_network: Optional[WifiNetworkObject] = None
     #: Specify the call history information to use. Only applies to user devices.
-    callHistory: Optional[CallHistoryMethod] = None
+    call_history: Optional[CallHistoryMethod] = None
     #: Specify the directory services to use.
     contacts: Optional[DirectoryMethod] = None
     #: Enable/disable the availability of the webex meetings functionality from the phone.
     #: example: True
-    webexMeetingsEnabled: Optional[bool] = None
+    webex_meetings_enabled: Optional[bool] = None
     #: Specify all volume level values on the phone.
-    volumeSettings: Optional[VolumeSettingsObject] = None
+    volume_settings: Optional[VolumeSettingsObject] = None
     #: Specify the call forward expanded soft key behavior.
-    cfExpandedSoftKey: Optional[CallForwardExpandedSoftKey] = None
+    cf_expanded_soft_key: Optional[CallForwardExpandedSoftKey] = None
     #: Specify HTTP Proxy values.
-    httpProxy: Optional[HttpProxyObject] = None
+    http_proxy: Optional[HttpProxyObject] = None
     #: Enable/disable the visibility of the bluetooth menu on the MPP device.
     bluetooth: Optional[BluetoothObject] = None
     #: Enable/disable the use of the PC passthrough ethernet port on supported phone models.
     #: example: True
-    passThroughPortEnabled: Optional[bool] = None
+    pass_through_port_enabled: Optional[bool] = None
     #: Enable/disable the ability for an end user to set a local password on the phone to restrict local access to the device.
     #: example: True
-    userPasswordOverrideEnabled: Optional[bool] = None
+    user_password_override_enabled: Optional[bool] = None
     #: Enable/disable the default screen behavior when inbound calls are received.
     #: example: True
-    activeCallFocusEnabled: Optional[bool] = None
+    active_call_focus_enabled: Optional[bool] = None
     #: Enable/disable peer firmware sharing.
     #: example: True
-    peerFirmwareEnabled: Optional[bool] = None
+    peer_firmware_enabled: Optional[bool] = None
     #: Enable/disable local noise cancellation on active calls from the device.
-    noiseCancellation: Optional[NoiseCancellationObject] = None
+    noise_cancellation: Optional[NoiseCancellationObject] = None
     #: Enable/disable visibility of the Accessibility Voice Feedback menu on the MPP device.
     #: example: True
-    voiceFeedbackAccessibilityEnabled: Optional[bool] = None
+    voice_feedback_accessibility_enabled: Optional[bool] = None
     #: Enable/disable availability of dial assist feature on the phone.
     #: example: True
-    dialAssistEnabled: Optional[bool] = None
+    dial_assist_enabled: Optional[bool] = None
     #: Specify the number of calls per unique line appearance on the phone.
     #: example: 9.0
-    callsPerLine: Optional[int] = None
+    calls_per_line: Optional[int] = None
     #: Enable/disable automatic nightly configuration resync of the MPP device.
     #: example: True
-    nightlyResyncEnabled: Optional[bool] = None
+    nightly_resync_enabled: Optional[bool] = None
     #: Enable/disable the visual indication of missed calls.
     #: example: True
-    missedCallNotificationEnabled: Optional[bool] = None
+    missed_call_notification_enabled: Optional[bool] = None
     #: Specify the softkey layout per phone menu state.
-    softKeyLayout: Optional[SoftKeyLayoutObject] = None
+    soft_key_layout: Optional[SoftKeyLayoutObject] = None
     #: Specify the image option for the MPP 8875 phone background.
-    backgroundImage8875: Optional[BackgroundImageColor] = None
+    background_image8875: Optional[BackgroundImageColor] = None
     #: Specify the use of the backlight feature on 6800 nad 7800 series devices.
-    backlightTimer68XX78XX: Optional[BacklightTimer68XX] = None
+    backlight_timer68_xx78_xx: Optional[BacklightTimer68XX] = Field(alias='backlightTimer68XX78XX', default=None)
 
 
 class CommSecurityType(str, Enum):
@@ -668,28 +667,28 @@ class LdapObject(ApiModel):
     enabled: Optional[bool] = None
     #: Sets the values needed to enable use of the LDAP service on the phone.
     #: example: localhost
-    serverAddress: Optional[str] = None
+    server_address: Optional[str] = None
     #: Sets the values needed to enable use of the LDAP service on the phone.
     #: example: 8080.0
-    serverPort: Optional[int] = None
+    server_port: Optional[int] = None
     #: Indicates the selection of the protocol for LDAP service on the phone.
     #: example: SSL
-    commSecurityType: Optional[CommSecurityType] = None
+    comm_security_type: Optional[CommSecurityType] = None
     #: Sets the values needed to enable use of the LDAP service on the phone.
     #: example: bindDn
-    bindDn: Optional[str] = None
+    bind_dn: Optional[str] = None
     #: Sets the values needed to enable use of the LDAP service on the phone.
     #: example: bindPw
-    bindPw: Optional[str] = None
+    bind_pw: Optional[str] = None
     #: Sets the values needed to enable use of the LDAP service on the phone.
     #: example: baseDn
-    baseDn: Optional[str] = None
+    base_dn: Optional[str] = None
     #: Sets the values needed to enable use of the LDAP service on the phone.
     #: example: primaryEmailAttribute
-    primaryEmailAttribute: Optional[str] = None
+    primary_email_attribute: Optional[str] = None
     #: Sets the values needed to enable use of the LDAP service on the phone.
     #: example: alternateEmailAttribute
-    alternateEmailAttribute: Optional[str] = None
+    alternate_email_attribute: Optional[str] = None
 
 
 class WebAccessObject(ApiModel):
@@ -702,14 +701,14 @@ class WebAccessObject(ApiModel):
 
 class WifiObject(ApiModel):
     #: Choose up to three predefined codec priority options available for your region.
-    audioCodecPriority: Optional[AudioCodecPriorityObject] = None
+    audio_codec_priority: Optional[AudioCodecPriorityObject] = None
     #: Set the values needed to enable use of the LDAP service on the phone.
     ldap: Optional[LdapObject] = None
     #: Set the availability of the local end user web access for an 840/860 WiFi phone.
-    webAccess: Optional[WebAccessObject] = None
+    web_access: Optional[WebAccessObject] = None
     #: Set the local security password on an 840/860 WiFi phone.
     #: example: phoneSecurityPwd
-    phoneSecurityPwd: Optional[str] = None
+    phone_security_pwd: Optional[str] = None
 
 
 class CustomizationObject(ApiModel):
@@ -726,37 +725,22 @@ class CustomizationObject(ApiModel):
 class AdminBatchStartJobObjectLocationCustomizations(ApiModel):
     #: Location within an organization where changes of device setings will be applied to all the devices within it.
     #: example: 'Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4Mjg5NzIyLTFiODAtNDFiNy05Njc4LTBlNzdhZThjMTA5OA'
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: Indicates if all the devices within this location will be customized with new requested customizations(if set to `true`) or will be overridden with the one at organization level (if set to `false` or any other value). This field has no effect when the job is being triggered at organization level.
-    locationCustomizationsEnabled: Optional[bool] = None
+    location_customizations_enabled: Optional[bool] = None
     #: Indicates the settings for ATA devices, DECT devices and MPP devices.
     customizations: Optional[CustomizationObject] = None
 
 
-class BluetoothObjectDeviceMode(str, Enum):
-    phone = 'PHONE'
-    hands_free = 'HANDS_FREE'
-    both = 'BOTH'
-
-
-class BluetoothObjectDevice(ApiModel):
-    #: Enable/disable Bluetooth.
-    #: example: True
-    enabled: Optional[bool] = None
-    #: Select a Bluetooth mode.
-    #: example: PHONE
-    mode: Optional[BluetoothObjectDeviceMode] = None
-
-
 class CountObject(ApiModel):
     #: Indicates the total number of phone numbers requested to be moved.
-    totalNumbers: Optional[int] = None
+    total_numbers: Optional[int] = None
     #: Indicates the total number of phone numbers successfully deleted.
-    numbersDeleted: Optional[int] = None
+    numbers_deleted: Optional[int] = None
     #: Indicates the total number of phone numbers successfully moved.
-    numbersMoved: Optional[int] = None
+    numbers_moved: Optional[int] = None
     #: Indicates the total number of phone numbers failed.
-    numbersFailed: Optional[int] = None
+    numbers_failed: Optional[int] = None
 
 
 class CustomizationDeviceLevelObject(ApiModel):
@@ -773,140 +757,140 @@ class UsbPortsObject(ApiModel):
     enabled: Optional[bool] = None
     #: Enable/disable use of the side USB port on the MPP device. Enabled by default.
     #: example: True
-    sideUsbEnabled: Optional[bool] = None
+    side_usb_enabled: Optional[bool] = None
     #: Enable/disable use of the rear USB port on the MPP device.
     #: example: True
-    rearUsbEnabled: Optional[bool] = None
+    rear_usb_enabled: Optional[bool] = None
 
 
 class MppObjectDevice(ApiModel):
     #: Indicates whether the PNAC of MPP object is enabled or not.
     #: example: True
-    pnacEnabled: Optional[bool] = None
+    pnac_enabled: Optional[bool] = None
     #: Choose up to three predefined codec priority options available for your region.
-    audioCodecPriority: Optional[AudioCodecPriorityObject] = None
+    audio_codec_priority: Optional[AudioCodecPriorityObject] = None
     #: Choose the length of time (in minutes) for the phone's backlight to remain on.
     #: example: ONE_MIN
-    backlightTimer: Optional[BacklightTimerObject] = None
+    backlight_timer: Optional[BacklightTimerObject] = None
     #: Holds the background object of MPP Object.
     background: Optional[BackgroundImage] = None
     #: The display name that appears on the phone screen.
     #: example: PERSON_NUMBER
-    displayNameFormat: Optional[DisplayNameSelection] = None
+    display_name_format: Optional[DisplayNameSelection] = None
     #: Allows you to enable/disable CDP for local devices.
-    cdpEnabled: Optional[bool] = None
+    cdp_enabled: Optional[bool] = None
     #: Choose the desired logging level for an MPP devices.
     #: example: STANDARD
-    defaultLoggingLevel: Optional[DefaultLoggingLevelObject] = None
+    default_logging_level: Optional[DefaultLoggingLevelObject] = None
     #: Enable/disable Do-Not-Disturb capabilities for Multi-Platform Phones.
     #: example: True
-    dndServicesEnabled: Optional[bool] = None
+    dnd_services_enabled: Optional[bool] = None
     #: Holds the Acd object value.
     acd: Optional[AcdObject] = None
     #: Indicates the short inter digit timer value.
     #: example: 14.0
-    shortInterdigitTimer: Optional[int] = None
+    short_interdigit_timer: Optional[int] = None
     #: Indicates the long inter digit timer value..
     #: example: 16.0
-    longInterdigitTimer: Optional[int] = None
+    long_interdigit_timer: Optional[int] = None
     #: Line key labels define the format of what's shown next to line keys.
     #: example: PERSON_EXTENSION
-    lineKeyLabelFormat: Optional[LineKeyLabelSelection] = None
+    line_key_label_format: Optional[LineKeyLabelSelection] = None
     #: LED patterns define lighting schemes for the line keys on the MPP devices. Note that this parameter is not supported on the MPP 8875
     #: example: DEFAULT
-    lineKeyLEDPattern: Optional[LineKeyLEDPattern] = None
+    line_key_ledpattern: Optional[LineKeyLEDPattern] = Field(alias='lineKeyLEDPattern', default=None)
     #: Enable/disable Link Layer Discovery Protocol for local devices.
-    lldpEnabled: Optional[bool] = None
+    lldp_enabled: Optional[bool] = None
     #: Enable/disable user-level access to the web interface of Multi-Platform Phones.
     #: example: True
-    mppUserWebAccessEnabled: Optional[bool] = None
+    mpp_user_web_access_enabled: Optional[bool] = None
     #: Select up to 10 Multicast Group URLs (each with a unique Listening Port).
     #: example: ['["192.86.108.226:22"]']
     multicast: Optional[list[str]] = None
     #: Specify the amount of time (in seconds) that a phone can remain off-hook.
     #: example: 30.0
-    offHookTimer: Optional[int] = None
+    off_hook_timer: Optional[int] = None
     #: Select the language for your MPP phone. Setting this overrides the default language setting in place for your provisioned location.
     #: example: RUSSIAN
-    phoneLanguage: Optional[PhoneLanguage] = None
+    phone_language: Optional[PhoneLanguage] = None
     #: Enable/disable the Power-Over-Ethernet mode for Multi-Platform Phones.
-    poeMode: Optional[PoeMode] = None
+    poe_mode: Optional[PoeMode] = None
     #: Allows you to enable/disable tagging of packets from the local device to the Webex Calling platform.
     #: example: True
-    qosEnabled: Optional[bool] = None
+    qos_enabled: Optional[bool] = None
     #: Specify the amount of inactive time needed (in seconds) before the phone's screen saver activates.
-    screenTimeout: Optional[DectVlanObject] = None
+    screen_timeout: Optional[DectVlanObject] = None
     #: Enable/disable the use of the USB ports on Multi-Platform phones.
     #: example: True
-    usbPortsEnabled: Optional[bool] = None
+    usb_ports_enabled: Optional[bool] = None
     #: By default the Side USB port is enabled to support KEMs and other peripheral devices. Use the option to disable use of this port.
-    usbPorts: Optional[UsbPortsObject] = None
+    usb_ports: Optional[UsbPortsObject] = None
     #: Specify a numeric Virtual LAN ID for devices.
     vlan: Optional[MppVlanObject] = None
     #: Specify the Wi-Fi SSID and password for wireless-enabled MPP phones.
-    wifiNetwork: Optional[WifiNetworkObject] = None
+    wifi_network: Optional[WifiNetworkObject] = None
     #: Specify the call history information to use. Only applies to user devices.
-    callHistory: Optional[CallHistoryMethod] = None
+    call_history: Optional[CallHistoryMethod] = None
     #: Specify the directory services to use.
     contacts: Optional[DirectoryMethod] = None
     #: Enable/disable the availability of the webex meetings functionality from the phone.
     #: example: True
-    webexMeetingsEnabled: Optional[bool] = None
+    webex_meetings_enabled: Optional[bool] = None
     #: Specify all volume level values on the phone.
-    volumeSettings: Optional[VolumeSettingsObject] = None
+    volume_settings: Optional[VolumeSettingsObject] = None
     #: Specify the call forward expanded soft key behavior.
-    cfExpandedSoftKey: Optional[CallForwardExpandedSoftKey] = None
+    cf_expanded_soft_key: Optional[CallForwardExpandedSoftKey] = None
     #: Specify HTTP Proxy values.
-    httpProxy: Optional[HttpProxyObject] = None
+    http_proxy: Optional[HttpProxyObject] = None
     #: Enable/disable the visibility of the bluetooth menu on the MPP device.
-    bluetooth: Optional[BluetoothObjectDevice] = None
+    bluetooth: Optional[BluetoothObject] = None
     #: Enable/disable the use of the PC passthrough ethernet port on supported phone models.
     #: example: True
-    passThroughPortEnabled: Optional[bool] = None
+    pass_through_port_enabled: Optional[bool] = None
     #: Enable/disable the ability for an end user to set a local password on the phone to restrict local access to the device.
     #: example: True
-    userPasswordOverrideEnabled: Optional[bool] = None
+    user_password_override_enabled: Optional[bool] = None
     #: Enable/disable the default screen behavior when inbound calls are received.
     #: example: True
-    activeCallFocusEnabled: Optional[bool] = None
+    active_call_focus_enabled: Optional[bool] = None
     #: Enable/disable peer firmware sharing.
     #: example: True
-    peerFirmwareEnabled: Optional[bool] = None
+    peer_firmware_enabled: Optional[bool] = None
     #: Enable/disable local noise cancellation on active calls from the device.
-    noiseCancellation: Optional[NoiseCancellationObject] = None
+    noise_cancellation: Optional[NoiseCancellationObject] = None
     #: Enable/disable visibility of the Accessibility Voice Feedback menu on the MPP device.
     #: example: True
-    voiceFeedbackAccessibilityEnabled: Optional[bool] = None
+    voice_feedback_accessibility_enabled: Optional[bool] = None
     #: Enable/disable availability of dial assist feature on the phone.
     #: example: True
-    dialAssistEnabled: Optional[bool] = None
+    dial_assist_enabled: Optional[bool] = None
     #: Specify the number of calls per unique line appearance on the phone.
     #: example: 9.0
-    callsPerLine: Optional[int] = None
+    calls_per_line: Optional[int] = None
     #: Enable/disable automatic nightly configuration resync of the MPP device.
     #: example: True
-    nightlyResyncEnabled: Optional[bool] = None
+    nightly_resync_enabled: Optional[bool] = None
     #: Enable/disable the visual indication of missed calls.
     #: example: True
-    missedCallNotificationEnabled: Optional[bool] = None
+    missed_call_notification_enabled: Optional[bool] = None
     #: Specify the softkey layout per phone menu state.
-    softKeyLayout: Optional[SoftKeyLayoutObject] = None
+    soft_key_layout: Optional[SoftKeyLayoutObject] = None
     #: Specify the image option for the MPP 8875 phone background.
-    backgroundImage8875: Optional[BackgroundImageColor] = None
+    background_image8875: Optional[BackgroundImageColor] = None
     #: Specify the use of the backlight feature on 6800 nad 7800 series devices.
-    backlightTimer68XX78XX: Optional[BacklightTimer68XX] = None
+    backlight_timer68_xx78_xx: Optional[BacklightTimer68XX] = Field(alias='backlightTimer68XX78XX', default=None)
 
 
 class WifiObjectDevice(ApiModel):
     #: Choose up to three predefined codec priority options available for your region.
-    audioCodecPriority: Optional[MppAudioCodecPriorityObject] = None
+    audio_codec_priority: Optional[MppAudioCodecPriorityObject] = None
     #: Set the values needed to enable use of the LDAP service on the phone.
     ldap: Optional[LdapObject] = None
     #: Set the availability of the local end user web access for an 840/860 WiFi phone.
-    webAccess: Optional[WebAccessObject] = None
+    web_access: Optional[WebAccessObject] = None
     #: Set the local security password on an 840/860 WiFi phone.
     #: example: phoneSecurityPwd
-    phoneSecurityPwd: Optional[str] = None
+    phone_security_pwd: Optional[str] = None
 
 
 class CustomizationDeviceLevelObjectDevice(ApiModel):
@@ -924,16 +908,16 @@ class DectDeviceList(ApiModel):
     model: Optional[str] = None
     #: Display name of the device.
     #: example: Cisco DECT 210 Base
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: Indicates number of base stations.
     #: example: 250.0
-    numberOfBaseStations: Optional[int] = None
+    number_of_base_stations: Optional[int] = None
     #: Indicates number of port lines,
     #: example: 1000.0
-    numberOfLinePorts: Optional[int] = None
+    number_of_line_ports: Optional[int] = None
     #: Indicates number of supported registrations.
     #: example: 30.0
-    numberOfRegistrationsSupported: Optional[int] = None
+    number_of_registrations_supported: Optional[int] = None
 
 
 class TypeObject(str, Enum):
@@ -985,7 +969,7 @@ class DeviceObject(ApiModel):
     model: Optional[str] = None
     #: Display name of the device.
     #: example: 2N Customer Managed
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: Type of the device.
     #: example: GENERIC_SIP
     type: Optional[TypeObject] = None
@@ -994,36 +978,36 @@ class DeviceObject(ApiModel):
     manufacturer: Optional[ManufacturerObject] = None
     #: Users who manage the device.
     #: example: CUSTOMER
-    managedBy: Optional[ManagedByObject] = None
+    managed_by: Optional[ManagedByObject] = None
     #: List of places the device is supported for.
-    supportedFor: Optional[list[MemberType]] = None
+    supported_for: Optional[list[MemberType]] = None
     #: Onboarding method.
-    onboardingMethod: Optional[list[OnboardingMethodObject]] = None
+    onboarding_method: Optional[list[OnboardingMethodObject]] = None
     #: Enables / Disables layout configuration for devices.
-    allowConfigureLayoutEnabled: Optional[bool] = None
+    allow_configure_layout_enabled: Optional[bool] = None
     #: Number of port lines.
-    numberOfLinePorts: Optional[int] = None
+    number_of_line_ports: Optional[int] = None
     #: Indicates whether Kem support is enabled or not.
     #: example: True
-    kemSupportEnabled: Optional[bool] = None
+    kem_support_enabled: Optional[bool] = None
     #: Module count.
-    kemModuleCount: Optional[int] = None
+    kem_module_count: Optional[int] = None
     #: Key expansion module type of the device.
-    kemModuleType: Optional[list[KemModuleTypeObject]] = None
+    kem_module_type: Optional[list[KemModuleTypeObject]] = None
     #: Enables / Disables the upgrade channel.
-    upgradeChannelEnabled: Optional[bool] = None
+    upgrade_channel_enabled: Optional[bool] = None
     #: The default upgrade channel.
-    defaultUpgradeChannel: Optional[str] = None
+    default_upgrade_channel: Optional[str] = None
     #: Enables / disables the additional primary line appearances.
-    additionalPrimaryLineAppearancesEnabled: Optional[bool] = None
+    additional_primary_line_appearances_enabled: Optional[bool] = None
     #: Enables / disables Basic emergency nomadic.
-    basicEmergencyNomadicEnabled: Optional[bool] = None
+    basic_emergency_nomadic_enabled: Optional[bool] = None
     #: Enables / disables customized behavior support on devices.
-    customizedBehaviorsEnabled: Optional[bool] = None
+    customized_behaviors_enabled: Optional[bool] = None
     #: Enables / disables configuring port support on device.
-    allowConfigurePortsEnabled: Optional[bool] = None
+    allow_configure_ports_enabled: Optional[bool] = None
     #: Enables / disables customizable line label.
-    customizableLineLabelEnabled: Optional[bool] = None
+    customizable_line_label_enabled: Optional[bool] = None
 
 
 class DeviceSettingsObject(ApiModel):
@@ -1031,16 +1015,16 @@ class DeviceSettingsObject(ApiModel):
     customizations: Optional[CustomizationDeviceLevelObject] = None
     #: Indicates if customization is allowed at a location level. If `true`, customized at a location level. If `false`, not customized; uses customer-level configuration.
     #: example: True
-    customEnabled: Optional[bool] = None
+    custom_enabled: Optional[bool] = None
     #: Customer devices setting update status. If `true`, an update is in progress (no further changes are allowed). `If false`, no update in progress (changes are allowed).
     #: example: True
-    updateInProgress: Optional[bool] = None
+    update_in_progress: Optional[bool] = None
     #: Number of devices that will be updated.
     #: example: 9.0
-    deviceCount: Optional[int] = None
+    device_count: Optional[int] = None
     #: Indicates the last updated time.
     #: example: 1659624763665.0
-    lastUpdateTime: Optional[int] = None
+    last_update_time: Optional[int] = None
 
 
 class DeviceSettingsObjectForDeviceLevel(ApiModel):
@@ -1048,16 +1032,16 @@ class DeviceSettingsObjectForDeviceLevel(ApiModel):
     customizations: Optional[CustomizationDeviceLevelObjectDevice] = None
     #: Indicates if customization is allowed at a device level. If `true`, customized at a device level. If `false`, not customized; uses customer-level configuration.
     #: example: True
-    customEnabled: Optional[bool] = None
+    custom_enabled: Optional[bool] = None
     #: Customer devices setting update status. If `true`, an update is in progress (no further changes are allowed). `If false`, no update in progress (changes are allowed).
     #: example: True
-    updateInProgress: Optional[bool] = None
+    update_in_progress: Optional[bool] = None
     #: Number of devices that will be updated.
     #: example: 9.0
-    deviceCount: Optional[int] = None
+    device_count: Optional[int] = None
     #: Indicates the last updated time.
     #: example: 1659624763665.0
-    lastUpdateTime: Optional[int] = None
+    last_update_time: Optional[int] = None
 
 
 class ErrorMessageObject(ApiModel):
@@ -1066,7 +1050,7 @@ class ErrorMessageObject(ApiModel):
     #: Internal error code.
     code: Optional[str] = None
     #: Error messages describing the location id in which the error occurs. For a move operation this is the target location ID.
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
 
 
 class ErrorObject(ApiModel):
@@ -1080,9 +1064,9 @@ class ItemObject(ApiModel):
     #: Phone number
     item: Optional[str] = None
     #: Index of error number.
-    itemNumber: Optional[int] = None
+    item_number: Optional[int] = None
     #: Unique identifier to track the HTTP requests.
-    trackingId: Optional[str] = None
+    tracking_id: Optional[str] = None
     error: Optional[ErrorObject] = None
 
 
@@ -1112,52 +1096,52 @@ class MemberObject(ApiModel):
     id: Optional[str] = None
     #: First name of a person or workspace.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name of a person or workspace.
     #: example: Smith
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Phone Number of a person or workspace. In some regions phone numbers are not returned in E.164 format. This will be supported in a future update.
     #: example: 2055552221
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Extension of a person or workspace.
     #: example: 000
     extension: Optional[str] = None
     #: This field indicates whether the person or the workspace is the owner of the device, and points to a primary Line/Port of the device.
     #: example: True
-    primaryOwner: Optional[bool] = None
+    primary_owner: Optional[bool] = None
     #: Port number assigned to person or workspace.
     #: example: 1.0
     port: Optional[int] = None
     #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device requires this option. This will override user level compression options.
-    t38FaxCompressionEnabled: Optional[bool] = None
+    t38_fax_compression_enabled: Optional[bool] = None
     #: Line type is used to differentiate Primary and SCA, at which endpoint it is assigned.
-    lineType: Optional[LineType] = None
+    line_type: Optional[LineType] = None
     #: Number of lines that have been configured for the person on the device.
     #: example: 1.0
-    lineWeight: Optional[int] = None
+    line_weight: Optional[int] = None
     #: Registration Host IP address for the line port.
     #: example: 10.0.0.45
-    hostIP: Optional[str] = None
+    host_ip: Optional[str] = Field(alias='hostIP', default=None)
     #: Registration Remote IP address for the line port.
     #: example: 192.102.12.84
-    remoteIP: Optional[str] = None
+    remote_ip: Optional[str] = Field(alias='remoteIP', default=None)
     #: Enable Hotline. Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line can only make calls to the predefined number set in hotlineDestination.
     #: example: True
-    hotlineEnabled: Optional[bool] = None
+    hotline_enabled: Optional[bool] = None
     #: The preconfigured number for Hotline. Required only if `hotlineEnabled` is set to true.
     #: example: +12055552222
-    hotlineDestination: Optional[str] = None
+    hotline_destination: Optional[str] = None
     #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended to all the endpoints on the device. When set to false, a call decline request only declines the current endpoint.
     #: example: True
-    allowCallDeclineEnabled: Optional[bool] = None
+    allow_call_decline_enabled: Optional[bool] = None
     #: Device line label.
     #: example: share line label
-    lineLabel: Optional[str] = None
+    line_label: Optional[str] = None
     #: SIP username used in SIP signaling, for example, in registration.
     #: example: evypzco5ds@55552222.int10.bcld.webex.com
-    linePort: Optional[str] = None
+    line_port: Optional[str] = None
     #: Indicates if the member is of type `PEOPLE` or `PLACE`.
-    memberType: Optional[MemberType] = None
+    member_type: Optional[MemberType] = None
     #: Location object having a unique identifier for the location and its name.
     location: Optional[Location] = None
 
@@ -1170,7 +1154,7 @@ class GetMemberResponse(ApiModel):
     members: Optional[list[MemberObject]] = None
     #: Maximum number of lines available for the device.
     #: example: 10.0
-    maxLineCount: Optional[int] = None
+    max_line_count: Optional[int] = None
 
 
 class Hoteling(ApiModel):
@@ -1178,60 +1162,60 @@ class Hoteling(ApiModel):
     #: as if it were their own. This is useful when traveling to a remote office but still needing to place/receive calls with their telephone number and access features normally available to them on their office phone.
     enabled: Optional[bool] = None
     #: Enable limiting the time a guest can use the device. The time limit is configured via `guestHoursLimit`.
-    limitGuestUse: Optional[bool] = None
+    limit_guest_use: Optional[bool] = None
     #: Time Limit in hours until hoteling is enabled. Mandatory if `limitGuestUse` is enabled.
-    guestHoursLimit: Optional[int] = None
+    guest_hours_limit: Optional[int] = None
 
 
 class StepExecutionStatusesObject(ApiModel):
     #: Unique identifier that identifies each step in a job.
     id: Optional[int] = None
     #: Step execution start time in UTC format.
-    startTime: Optional[str] = None
+    start_time: Optional[str] = None
     #: Step execution end time in UTC format.
-    endTime: Optional[str] = None
+    end_time: Optional[str] = None
     #: Last updated time for a step in UTC format.
-    lastUpdated: Optional[str] = None
+    last_updated: Optional[str] = None
     #: Displays status for a step.
-    statusMessage: Optional[str] = None
+    status_message: Optional[str] = None
     #: Exit Code for a step.
-    exitCode: Optional[str] = None
+    exit_code: Optional[str] = None
     #: Step name.
     name: Optional[str] = None
     #: Time lapsed since the step execution started.
-    timeElapsed: Optional[str] = None
+    time_elapsed: Optional[str] = None
 
 
 class JobExecutionStatusObject(ApiModel):
     #: Unique identifier that identifies each instance of the job.
     id: Optional[int] = None
     #: Last updated time (in UTC format) post one of the step execution completion.
-    lastUpdated: Optional[str] = None
+    last_updated: Optional[str] = None
     #: Displays status for overall steps that are part of the job.
-    statusMessage: Optional[str] = None
+    status_message: Optional[str] = None
     #: Exit Code for a job.
-    exitCode: Optional[str] = None
+    exit_code: Optional[str] = None
     #: Job creation time in UTC format.
-    createdTime: Optional[str] = None
+    created_time: Optional[str] = None
     #: Time lapsed since the job execution started.
-    timeElapsed: Optional[str] = None
+    time_elapsed: Optional[str] = None
     #: Status of each step within a job.
-    stepExecutionStatuses: Optional[list[StepExecutionStatusesObject]] = None
+    step_execution_statuses: Optional[list[StepExecutionStatusesObject]] = None
 
 
 class JobExecutionStatusObject1(ApiModel):
     #: Unique identifier that identifies each instance of the job.
     id: Optional[int] = None
     #: Last updated time (in UTC format) post one of the step execution completion.
-    lastUpdated: Optional[str] = None
+    last_updated: Optional[str] = None
     #: Displays status for overall steps that are part of the job.
-    statusMessage: Optional[str] = None
+    status_message: Optional[str] = None
     #: Exit Code for a job.
-    exitCode: Optional[str] = None
+    exit_code: Optional[str] = None
     #: Job creation time in UTC format.
-    createdTime: Optional[str] = None
+    created_time: Optional[str] = None
     #: Time lapsed since the job execution started.
-    timeElapsed: Optional[str] = None
+    time_elapsed: Optional[str] = None
 
 
 class StartJobResponse(ApiModel):
@@ -1240,27 +1224,27 @@ class StartJobResponse(ApiModel):
     #: Unique identifier of the job.
     id: Optional[str] = None
     #: Job type.
-    jobType: Optional[str] = None
+    job_type: Optional[str] = None
     #: Unique identifier to track the flow of HTTP requests.
-    trackingId: Optional[str] = None
+    tracking_id: Optional[str] = None
     #: Unique identifier to identify which user has run the job.
-    sourceUserId: Optional[str] = None
+    source_user_id: Optional[str] = None
     #: Unique identifier to identify the customer who has run the job.
-    sourceCustomerId: Optional[str] = None
+    source_customer_id: Optional[str] = None
     #: Unique identifier to identify the customer for which the job was run.
-    targetCustomerId: Optional[str] = None
+    target_customer_id: Optional[str] = None
     #: Unique identifier to identify the instance of the job.
-    instanceId: Optional[int] = None
+    instance_id: Optional[int] = None
     #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the execution of the job.
-    jobExecutionStatus: Optional[list[JobExecutionStatusObject1]] = None
+    job_execution_status: Optional[list[JobExecutionStatusObject1]] = None
     #: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
-    latestExecutionStatus: Optional[str] = None
+    latest_execution_status: Optional[str] = None
     #: Indicates operation type that was carried out.
-    operationType: Optional[str] = None
+    operation_type: Optional[str] = None
     #: Unique location identifier for which the job was run.
-    sourceLocationId: Optional[str] = None
+    source_location_id: Optional[str] = None
     #: Unique location identifier for which the numbers have been moved.
-    targetLocationId: Optional[str] = None
+    target_location_id: Optional[str] = None
     #: Job statistics.
     counts: Optional[CountObject] = None
 
@@ -1279,13 +1263,13 @@ class ListDeviceSettingsObject(ApiModel):
     #: Customization object of the device settings.
     customizations: Optional[CustomizationObject] = None
     #: Progress of the device update.
-    updateInProgress: Optional[bool] = None
+    update_in_progress: Optional[bool] = None
     #: Device count.
     #: example: 22.0
-    deviceCount: Optional[int] = None
+    device_count: Optional[int] = None
     #: Last updated time.
     #: example: 1659624763665.0
-    lastUpdateTime: Optional[int] = None
+    last_update_time: Optional[int] = None
 
 
 class MACAddressResponseStatus(str, Enum):
@@ -1313,7 +1297,7 @@ class MacStatusObject(ApiModel):
     state: Optional[MacStatusObjectState] = None
     #: MAC address validation error code.
     #: example: 5675.0
-    errorCode: Optional[int] = None
+    error_code: Optional[int] = None
     #: Provides a status message about the MAC address.
     #: example: [Error 5675] MAC Address is in use.
     message: Optional[str] = None
@@ -1324,7 +1308,7 @@ class MACAddressResponse(ApiModel):
     #: example: ERRORS
     status: Optional[MACAddressResponseStatus] = None
     #: Contains an array of all the MAC address provided and their statuses.
-    macStatus: Optional[list[MacStatusObject]] = None
+    mac_status: Optional[list[MacStatusObject]] = None
 
 
 class PutDeviceSettingsRequest(ApiModel):
@@ -1332,7 +1316,7 @@ class PutDeviceSettingsRequest(ApiModel):
     customizations: Optional[CustomizationDeviceLevelObjectDevice] = None
     #: Indicates if customization is allowed at a device level. If true, customized at a device level. If false, not customized; uses customer-level configuration.
     #: example: True
-    customEnabled: Optional[bool] = None
+    custom_enabled: Optional[bool] = None
 
 
 class PutMemberObject(ApiModel):
@@ -1343,27 +1327,27 @@ class PutMemberObject(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9jODhiZGIwNC1jZjU5LTRjMjMtODQ4OC00NTNhOTE3ZDFlMjk
     id: Optional[str] = None
     #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device requires this option. This will override user level compression options.
-    t38FaxCompressionEnabled: Optional[bool] = None
+    t38_fax_compression_enabled: Optional[bool] = None
     #: Whether the user is the owner of the device or not, and points to a primary Line/Port of device.
     #: example: True
-    primaryOwner: Optional[bool] = None
+    primary_owner: Optional[bool] = None
     #: Line type is used to differentiate Primary and SCA, at which endpoint it is assigned.
-    lineType: Optional[LineType] = None
+    line_type: Optional[LineType] = None
     #: Number of lines that have been configured for the person on the device.
     #: example: 1.0
-    lineWeight: Optional[int] = None
+    line_weight: Optional[int] = None
     #: Enable Hotline. Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line can only make calls to the predefined number set in hotlineDestination.
     #: example: True
-    hotlineEnabled: Optional[bool] = None
+    hotline_enabled: Optional[bool] = None
     #: The preconfigured number for Hotline. Required only if `hotlineEnabled` is set to true.
     #: example: +12055552222
-    hotlineDestination: Optional[str] = None
+    hotline_destination: Optional[str] = None
     #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended to all the endpoints on the device. When set to false, a call decline request only declines the current endpoint.
     #: example: True
-    allowCallDeclineEnabled: Optional[bool] = None
+    allow_call_decline_enabled: Optional[bool] = None
     #: Device line label.
     #: example: share line label
-    lineLabel: Optional[str] = None
+    line_label: Optional[str] = None
 
 
 class PutMembersRequest(ApiModel):
@@ -1377,22 +1361,22 @@ class SearchMemberObject(ApiModel):
     id: Optional[str] = None
     #: First name of a person or workspace.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name of a person or workspace.
     #: example: Smith
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Phone Number of a person or workspace.
     #: example: +12055552221
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: T.38 Fax Compression setting and available only for ATA Devices. Choose T.38 fax compression if the device requires this option. this will override user level compression options.
-    t38FaxCompressionEnabled: Optional[bool] = None
+    t38_fax_compression_enabled: Optional[bool] = None
     #: Line type is used to differentiate Primary and SCA, at which endpoint it is assigned.
-    lineType: Optional[LineType] = None
+    line_type: Optional[LineType] = None
     #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended to all the endpoints on the device. When set to false, a call decline request only declines the current endpoint.
     #: example: True
-    allowCallDeclineEnabled: Optional[bool] = None
+    allow_call_decline_enabled: Optional[bool] = None
     #: Indicates if member is of type `PEOPLE` or `PLACE`.
-    memberType: Optional[MemberType] = None
+    member_type: Optional[MemberType] = None
     #: Location object having a unique identifier for the location and its name.
     location: Optional[Location] = None
 
@@ -1414,9 +1398,9 @@ class DeviceOwner(ApiModel):
     #: Enumeration that indicates if the member is of type `PEOPLE` or `PLACE`.
     type: Optional[MemberType] = None
     #: First name of device owner.
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name of device owner.
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
 
 
 class Devices(ApiModel):
@@ -1429,22 +1413,22 @@ class Devices(ApiModel):
     #: MAC address of device.
     mac: Optional[str] = None
     #: IP address of device.
-    ipAddress: Optional[str] = None
+    ip_address: Optional[str] = None
     #: Indicates whether the person or the workspace is the owner of the device, and points to a primary Line/Port of the device.
-    primaryOwner: Optional[bool] = None
+    primary_owner: Optional[bool] = None
     #: Indicates if the line is acting as a primary line or a shared line for this device.
     type: Optional[LineType] = None
     #: Owner of device.
     owner: Optional[DeviceOwner] = None
     #: Activation state of device.
-    activationState: Optional[ActivationStates] = None
+    activation_state: Optional[ActivationStates] = None
 
 
 class DeviceList(ApiModel):
     #: Array of devices available to person.
     devices: Optional[list[Devices]] = None
     #: Maximum number of devices a person can be assigned to.
-    maxDeviceCount: Optional[int] = None
+    max_device_count: Optional[int] = None
 
 
 class JobIdResponseObject(ApiModel):
@@ -1453,31 +1437,31 @@ class JobIdResponseObject(ApiModel):
     #: Unique identifier of the job.
     id: Optional[str] = None
     #: Job type.
-    jobType: Optional[str] = None
+    job_type: Optional[str] = None
     #: Unique identifier to track the flow of HTTP requests.
-    trackingId: Optional[str] = None
+    tracking_id: Optional[str] = None
     #: Unique identifier to identify which user has run the job.
-    sourceUserId: Optional[str] = None
+    source_user_id: Optional[str] = None
     #: Unique identifier to identify the customer who has run the job.
-    sourceCustomerId: Optional[str] = None
+    source_customer_id: Optional[str] = None
     #: Unique identifier to identify the customer for which the job was run.
-    targetCustomerId: Optional[str] = None
+    target_customer_id: Optional[str] = None
     #: Unique identifier to identify the instance of the job.
-    instanceId: Optional[int] = None
+    instance_id: Optional[int] = None
     #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the execution of the job.
-    jobExecutionStatus: Optional[list[JobExecutionStatusObject]] = None
+    job_execution_status: Optional[list[JobExecutionStatusObject]] = None
     #: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
-    latestExecutionStatus: Optional[str] = None
+    latest_execution_status: Optional[str] = None
     #: Indicates the operation type that was carried out.
-    operationType: Optional[str] = None
+    operation_type: Optional[str] = None
     #: Unique location identifier for which the job was run.
-    sourceLocationId: Optional[str] = None
+    source_location_id: Optional[str] = None
     #: Unique location identifier for which the numbers have been moved.
-    targetLocationId: Optional[str] = None
+    target_location_id: Optional[str] = None
     #: The location name for which the job was run.
-    sourceLocationName: Optional[str] = None
+    source_location_name: Optional[str] = None
     #: The location name for which the numbers have been moved.
-    targetLocationName: Optional[str] = None
+    target_location_name: Optional[str] = None
     #: Job statistics.
     counts: Optional[CountObject] = None
 
@@ -1492,9 +1476,9 @@ class PlaceDevices(ApiModel):
     #: MAC address of device.
     mac: Optional[str] = None
     #: IP address of device.
-    ipAddress: Optional[str] = None
+    ip_address: Optional[str] = None
     #: Indicates whether the person or the workspace is the owner of the device and points to a primary Line/Port of the device.
-    primaryOwner: Optional[bool] = None
+    primary_owner: Optional[bool] = None
     #: Indicates if the line is acting as a primary line or a shared line for this device.
     type: Optional[LineType] = None
     #: Indicates Hoteling details of a device.
@@ -1502,14 +1486,14 @@ class PlaceDevices(ApiModel):
     #: Owner of the device.
     owner: Optional[DeviceOwner] = None
     #: Activation state of a device.
-    activationState: Optional[ActivationStates] = None
+    activation_state: Optional[ActivationStates] = None
 
 
 class PlaceDeviceList(ApiModel):
     #: Array of devices associated to a workspace.
     devices: Optional[list[PlaceDevices]] = None
     #: Maximum number of devices a workspace can be assigned to.
-    maxDeviceCount: Optional[int] = None
+    max_device_count: Optional[int] = None
 
 
 class SupportedDevicesObject(ApiModel):

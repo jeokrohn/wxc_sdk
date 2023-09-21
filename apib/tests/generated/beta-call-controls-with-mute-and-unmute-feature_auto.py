@@ -16,7 +16,7 @@ class CallPersonalityEnum(str, Enum):
     #: An incoming call received by the user.
     terminator = 'terminator'
     #: A call that is alerting the user's devices for a Click to Dial action. When the user answers on one of these alerting devices, the call's personality is updated to originator.
-    clicktodial = 'clickToDial'
+    click_to_dial = 'clickToDial'
 
 
 class CallStateEnum(str, Enum):
@@ -29,7 +29,7 @@ class CallStateEnum(str, Enum):
     #: The user has placed the call on hold.
     held = 'held'
     #: The remote party within the same organization has placed the call on hold.
-    remoteheld = 'remoteHeld'
+    remote_held = 'remoteHeld'
     #: The call has been disconnected.
     disconnected = 'disconnected'
 
@@ -58,35 +58,35 @@ class PartyInformation(ApiModel):
     number: Optional[str] = None
     #: The party's person ID. Only present when the person ID is available and privacy is not enabled.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9hMTlkODJhMi00ZTY5LTU5YWEtOWYyZi1iY2E2MzEwMTNhNjg=
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: The party's place ID. Only present when the place ID is available and privacy is not enabled.
     #: example: Y2lzY29zcGFyazovL3VzL1BMQUNFL2ExOWQ4MmEyLTRlNjktNTlhYS05ZjJmLWJjYTYzMTAxM2E2OA==
-    placeId: Optional[str] = None
+    place_id: Optional[str] = None
     #: Indicates whether privacy is enabled for the name, number and personId/placeId.
-    privacyEnabled: Optional[bool] = None
+    privacy_enabled: Optional[bool] = None
     #: The call type for the party.
-    callType: Optional[CallTypeEnum] = None
+    call_type: Optional[CallTypeEnum] = None
 
 
 class RedirectionReasonEnum(str, Enum):
     #: The call was redirected on a busy condition. For example, the call was forwarded by Call Forwarding Busy.
     busy = 'busy'
     #: The call was redirected on a no answer condition. For example, the call was forwarded by Call Forwarding No Answer.
-    noanswer = 'noAnswer'
+    no_answer = 'noAnswer'
     #: The call was redirected on an unavailable condition. For example, the call was forwarded by Business Continuity.
     unavailable = 'unavailable'
     #: The call was redirected unconditionally. For example, the call was forwarded by Call Forwarding Always.
     unconditional = 'unconditional'
     #: The call was redirected by a service schedule. For example, the call was forwarded by Selective Call Forwarding.
-    timeofday = 'timeOfDay'
+    time_of_day = 'timeOfDay'
     #: The call was redirected by divert action.
     divert = 'divert'
     #: The call was redirected by a follow me service. For example, the call was redirected by Simultaneous Ring.
-    followme = 'followMe'
+    follow_me = 'followMe'
     #: The call was redirected by Hunt Group routing.
-    huntgroup = 'huntGroup'
+    hunt_group = 'huntGroup'
     #: The call was redirected by Call Queue routing.
-    callqueue = 'callQueue'
+    call_queue = 'callQueue'
     #: The call was redirected on an unknown condition.
     unknown = 'unknown'
 
@@ -95,7 +95,7 @@ class RedirectionInformation(ApiModel):
     #: The reason the incoming call was redirected.
     reason: Optional[RedirectionReasonEnum] = None
     #: The details of a party who redirected the incoming call.
-    redirectingParty: Optional[PartyInformation] = None
+    redirecting_party: Optional[PartyInformation] = None
 
 
 class RecallTypeEnum(str, Enum):
@@ -129,13 +129,13 @@ class Call(ApiModel):
     id: Optional[str] = None
     #: The call session identifier of the call session the call belongs to. This can be used to correlate multiple calls that are part of the same call session.
     #: example: MmFmNThiZjktYWE3Ny00NWE5LThiMDEtYzI4NDMxZWYwNzRm
-    callSessionId: Optional[str] = None
+    call_session_id: Optional[str] = None
     #: The personality of the call.
     personality: Optional[CallPersonalityEnum] = None
     #: The current state of the call.
     state: Optional[CallStateEnum] = None
     #: The remote party's details. For example, if user A calls user B then B is the remote party in A's outgoing call details and A is the remote party in B's incoming call details.
-    remoteParty: Optional[PartyInformation] = None
+    remote_party: Optional[PartyInformation] = None
     #: The appearance value for the call. The appearance value can be used to display the user's calls in an order consistent with the user's devices. Only present when the call has an appearance value assigned.
     #: example: 1.0
     appearance: Optional[int] = None
@@ -150,7 +150,7 @@ class Call(ApiModel):
     #: The recall details for the incoming call. Only present when the incoming call is for a recall.
     recall: Optional[RecallInformation] = None
     #: The call's current recording state. Only present when the user's call recording has been invoked during the life of the call.
-    recordingState: Optional[RecordingStateEnum] = None
+    recording_state: Optional[RecordingStateEnum] = None
 
 
 class CallHistoryRecordTypeEnum(str, Enum):
@@ -172,7 +172,7 @@ class CallHistoryRecord(ApiModel):
     #: example: +12225554444
     number: Optional[str] = None
     #: Indicates whether privacy is enabled for the name and number.
-    privacyEnabled: Optional[bool] = None
+    privacy_enabled: Optional[bool] = None
     #: The date and time the call history record was created. For a placed call history record, this is when the call was placed. For a missed call history record, this is when the call was disconnected. For a received call history record, this is when the call was answered.
     #: example: 2016-04-21T17:00:00.000Z
     time: Optional[datetime] = None
@@ -182,6 +182,6 @@ class RejectActionEnum(str, Enum):
     #: Send the call to busy.
     busy = 'busy'
     #: Send the call to temporarily unavailable.
-    temporarilyunavailable = 'temporarilyUnavailable'
+    temporarily_unavailable = 'temporarilyUnavailable'
     #: Ignore the call by continuing ringback to the caller while no longer alerting the called user's devices.
     ignore = 'ignore'

@@ -27,10 +27,10 @@ class GetLocationVoicemailGroupObjectMessageStorageStorageType(str, Enum):
 class GetLocationVoicemailGroupObjectMessageStorage(ApiModel):
     #: Message storage type
     #: example: EXTERNAL
-    storageType: Optional[GetLocationVoicemailGroupObjectMessageStorageStorageType] = None
+    storage_type: Optional[GetLocationVoicemailGroupObjectMessageStorageStorageType] = None
     #: External email to forward the message.
     #: example: user@flex2.cisco.com
-    externalEmail: Optional[str] = None
+    external_email: Optional[str] = None
 
 
 class GetLocationVoicemailGroupObjectNotifications(ApiModel):
@@ -48,7 +48,7 @@ class GetLocationVoicemailGroupObjectFaxMessage(ApiModel):
     enabled: Optional[bool] = None
     #: Phone number to receive fax messages.
     #: example: +1234234324
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Extension to receive fax messages.
     #: example: 23455.0
     extension: Optional[int] = None
@@ -60,7 +60,7 @@ class GetLocationVoicemailGroupObjectEmailCopyOfMessage(ApiModel):
     enabled: Optional[bool] = None
     #: Email message copy to email address provided.
     #: example: user@flex2.cisco.com
-    emailId: Optional[str] = None
+    email_id: Optional[str] = None
 
 
 class GetLocationVoicemailGroupObject(ApiModel):
@@ -72,52 +72,52 @@ class GetLocationVoicemailGroupObject(ApiModel):
     name: Optional[str] = None
     #: Voicemail group phone number.
     #: example: +1234234324
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Voicemail group extension number.
     #: example: 23455.0
     extension: Optional[int] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 123423455
     esn: Optional[str] = None
     #: Voicemail group toll free number.
-    tollFreeNumber: Optional[bool] = None
+    toll_free_number: Optional[bool] = None
     #: Voicemail group caller ID first name.
     #: example: Customer
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Voicemail group called ID last name.
     #: example: Support
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Enable/disable voicemail group.
     #: example: True
     enabled: Optional[bool] = None
     #: Language for voicemail group audio announcement.
     #: example: en_us
-    languageCode: Optional[str] = None
+    language_code: Optional[str] = None
     #: Set voicemail group greeting type.
     #: example: DEFAULT
     greeting: Optional[GetLocationVoicemailGroupObjectGreeting] = None
     #: Enabled if CUSTOM greeting is previously uploaded.
     #: example: True
-    greetingUploaded: Optional[bool] = None
+    greeting_uploaded: Optional[bool] = None
     #: CUSTOM greeting for previously uploaded.
     #: example: short greeting.wav
-    greetingDescription: Optional[str] = None
+    greeting_description: Optional[str] = None
     #: Message storage information
-    messageStorage: Optional[GetLocationVoicemailGroupObjectMessageStorage] = None
+    message_storage: Optional[GetLocationVoicemailGroupObjectMessageStorage] = None
     #: Message notifications
     notifications: Optional[GetLocationVoicemailGroupObjectNotifications] = None
     #: Fax message receive settings
-    faxMessage: Optional[GetLocationVoicemailGroupObjectFaxMessage] = None
+    fax_message: Optional[GetLocationVoicemailGroupObjectFaxMessage] = None
     #: Transfer message information
-    transferToNumber: Optional[GetLocationVoicemailGroupObjectNotifications] = None
+    transfer_to_number: Optional[GetLocationVoicemailGroupObjectNotifications] = None
     #: Message copy information
-    emailCopyOfMessage: Optional[GetLocationVoicemailGroupObjectEmailCopyOfMessage] = None
+    email_copy_of_message: Optional[GetLocationVoicemailGroupObjectEmailCopyOfMessage] = None
     #: Enable/disable to forward voice message.
     #: example: True
-    voiceMessageForwardingEnabled: Optional[bool] = None
+    voice_message_forwarding_enabled: Optional[bool] = None
 
 
 class GetVoicemailGroupObject(ApiModel):
@@ -129,25 +129,25 @@ class GetVoicemailGroupObject(ApiModel):
     name: Optional[str] = None
     #: Location Name.
     #: example: San Jose
-    locationName: Optional[str] = None
+    location_name: Optional[str] = None
     #: Location ID.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzMxMTYx
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: Extension of the voicemail group.
     #: example: 0007
     extension: Optional[datetime] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12340007
     esn: Optional[str] = None
     #: Phone number of the voicemail group.
     #: example: +1345325235
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: If enabled, incoming calls are sent to voicemail.
     #: example: True
     enabled: Optional[bool] = None
     #: Flag to indicate if the number is toll free.
     #: example: True
-    tollFreeNumber: Optional[bool] = None
+    toll_free_number: Optional[bool] = None

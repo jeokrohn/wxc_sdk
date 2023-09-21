@@ -48,9 +48,9 @@ class CallRecordingInfoRepeat(ApiModel):
 
 class CallRecordingInfoStartStopAnnouncement(ApiModel):
     #: When `true`, an announcement is played when call recording starts and an announcement is played when call recording ends for internal calls.
-    internalCallsEnabled: Optional[bool] = None
+    internal_calls_enabled: Optional[bool] = None
     #: When `true`, an announcement is played when call recording starts and an announcement is played when call recording ends for PSTN calls.
-    pstnCallsEnabled: Optional[bool] = None
+    pstn_calls_enabled: Optional[bool] = None
 
 
 class CallRecordingInfo(ApiModel):
@@ -61,24 +61,24 @@ class CallRecordingInfo(ApiModel):
     #: example: Never
     record: Optional[CallRecordingInfoRecord] = None
     #: When `true`, voicemail messages are also recorded.
-    recordVoicemailEnabled: Optional[bool] = None
+    record_voicemail_enabled: Optional[bool] = None
     #: When enabled, an announcement is played when call recording starts and an announcement is played when call recording ends.
-    startStopAnnouncementEnabled: Optional[bool] = None
+    start_stop_announcement_enabled: Optional[bool] = None
     #: Pause/resume notification settings.
     notification: Optional[CallRecordingInfoNotification] = None
     #: Beep sound plays periodically.
     repeat: Optional[CallRecordingInfoRepeat] = None
     #: Name of the service provider providing call recording service.
     #: example: WSWYZ25455
-    serviceProvider: Optional[str] = None
+    service_provider: Optional[str] = None
     #: Group utilized by the service provider providing call recording service.
     #: example: WSWYZ25455L31161
-    externalGroup: Optional[str] = None
+    external_group: Optional[str] = None
     #: Unique person identifier utilized by the service provider providing call recording service.
     #: example: a34iidrh5o@64941297.int10.bcld.webex.com
-    externalIdentifier: Optional[str] = None
+    external_identifier: Optional[str] = None
     #: Call Recording starts and stops announcement settings.
-    startStopAnnouncement: Optional[CallRecordingInfoStartStopAnnouncement] = None
+    start_stop_announcement: Optional[CallRecordingInfoStartStopAnnouncement] = None
 
 
 class CallRecordingPut(ApiModel):
@@ -89,12 +89,12 @@ class CallRecordingPut(ApiModel):
     #: example: Never
     record: Optional[CallRecordingInfoRecord] = None
     #: When `true`, voicemail messages are also recorded.
-    recordVoicemailEnabled: Optional[bool] = None
+    record_voicemail_enabled: Optional[bool] = None
     #: When enabled, an announcement is played when call recording starts and an announcement is played when call recording ends.
-    startStopAnnouncementEnabled: Optional[bool] = None
+    start_stop_announcement_enabled: Optional[bool] = None
     #: Pause/resume notification settings.
     notification: Optional[CallRecordingInfoNotification] = None
     #: Beep sound plays periodically.
     repeat: Optional[CallRecordingInfoRepeat] = None
     #: Call Recording starts and stops announcement settings.
-    startStopAnnouncement: Optional[CallRecordingInfoStartStopAnnouncement] = None
+    start_stop_announcement: Optional[CallRecordingInfoStartStopAnnouncement] = None

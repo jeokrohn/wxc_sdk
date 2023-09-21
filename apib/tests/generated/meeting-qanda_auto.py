@@ -25,13 +25,13 @@ class QAObjectAnswersLinks(ApiModel):
 class AnswerObject(ApiModel):
     #: The name of the person who answered the question.
     #: example: John Andersen
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: The email of the person who answered the question.
     #: example: john.andersen@example.com
     email: Optional[str] = None
     #: The ID of the person who answered the question. Only present for authenticated users.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8xYTY5MmE2Mi00MTNmLTRjYWEtYjdkOS0wYzg0ZDZmMDdlNzY
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: The content of the answer.
     #: example: ['Fine, thank you.']
     answer: Optional[list[str]] = None
@@ -53,16 +53,16 @@ class QAObject(ApiModel):
     id: Optional[str] = None
     #: A unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the Q&A belongs.
     #: example: a2f95f5073e347489f7611492dbd6ad5_I_199075330905867928
-    meetingId: Optional[str] = None
+    meeting_id: Optional[str] = None
     #: The total number of attendees in the meeting.
     #: example: 10.0
-    totalAttendees: Optional[int] = None
+    total_attendees: Optional[int] = None
     #: The total number of respondents in the meeting.
     #: example: 10.0
-    totalRespondents: Optional[int] = None
+    total_respondents: Optional[int] = None
     #: The name of the user who asked the question.
     #: example: John Andersen
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: The email of the user who asked the question.
     #: example: john.andersen@example.com
     email: Optional[str] = None

@@ -39,55 +39,55 @@ class MemberObject(ApiModel):
     id: Optional[str] = None
     #: First name of a person or workspace.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name of a person or workspace.
     #: example: Smith
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Phone Number of a person or workspace. In some regions phone numbers are not returned in E.164 format. This will be supported in a future update.
     #: example: 2055552221
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Extension of a person or workspace.
     #: example: 000
     extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 1234000
     esn: Optional[str] = None
     #: This field indicates whether the person or the workspace is the owner of the device, and points to a primary Line/Port of the device.
     #: example: True
-    primaryOwner: Optional[bool] = None
+    primary_owner: Optional[bool] = None
     #: Port number assigned to person or workspace.
     #: example: 1.0
     port: Optional[int] = None
     #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device requires this option. This will override user level compression options.
-    t38FaxCompressionEnabled: Optional[bool] = None
+    t38_fax_compression_enabled: Optional[bool] = None
     #: Line type is used to differentiate Primary and SCA, at which endpoint it is assigned.
-    lineType: Optional[LineType] = None
+    line_type: Optional[LineType] = None
     #: Number of lines that have been configured for the person on the device.
     #: example: 1.0
-    lineWeight: Optional[int] = None
+    line_weight: Optional[int] = None
     #: Registration Host IP address for the line port.
     #: example: 10.0.0.45
-    hostIP: Optional[str] = None
+    host_ip: Optional[str] = Field(alias='hostIP', default=None)
     #: Registration Remote IP address for the line port.
     #: example: 192.102.12.84
-    remoteIP: Optional[str] = None
+    remote_ip: Optional[str] = Field(alias='remoteIP', default=None)
     #: Enable Hotline. Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line can only make calls to the predefined number set in hotlineDestination.
     #: example: True
-    hotlineEnabled: Optional[bool] = None
+    hotline_enabled: Optional[bool] = None
     #: The preconfigured number for Hotline. Required only if `hotlineEnabled` is set to true.
     #: example: +12055552222
-    hotlineDestination: Optional[str] = None
+    hotline_destination: Optional[str] = None
     #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended to all the endpoints on the device. When set to false, a call decline request only declines the current endpoint.
     #: example: True
-    allowCallDeclineEnabled: Optional[bool] = None
+    allow_call_decline_enabled: Optional[bool] = None
     #: Device line label.
     #: example: share line label
-    lineLabel: Optional[str] = None
+    line_label: Optional[str] = None
     #: Indicates if the member is of type `PEOPLE` or `PLACE`.
-    memberType: Optional[MemberType] = None
+    member_type: Optional[MemberType] = None
     #: Location object having a unique identifier for the location and its name.
     location: Optional[Location] = None
 
@@ -100,7 +100,7 @@ class GetMemberResponse(ApiModel):
     members: Optional[list[MemberObject]] = None
     #: Maximum number of lines available for the device.
     #: example: 10.0
-    maxLineCount: Optional[int] = None
+    max_line_count: Optional[int] = None
 
 
 class SearchMemberObject(ApiModel):
@@ -109,22 +109,22 @@ class SearchMemberObject(ApiModel):
     id: Optional[str] = None
     #: First name of a person or workspace.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name of a person or workspace.
     #: example: Smith
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Phone Number of a person or workspace.
     #: example: +12055552221
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: T.38 Fax Compression setting and available only for ATA Devices. Choose T.38 fax compression if the device requires this option. this will override user level compression options.
-    t38FaxCompressionEnabled: Optional[bool] = None
+    t38_fax_compression_enabled: Optional[bool] = None
     #: Line type is used to differentiate Primary and SCA, at which endpoint it is assigned.
-    lineType: Optional[LineType] = None
+    line_type: Optional[LineType] = None
     #: Set how a person's device behaves when a call is declined. When set to true, a call decline request is extended to all the endpoints on the device. When set to false, a call decline request only declines the current endpoint.
     #: example: True
-    allowCallDeclineEnabled: Optional[bool] = None
+    allow_call_decline_enabled: Optional[bool] = None
     #: Indicates if member is of type `PEOPLE` or `PLACE`.
-    memberType: Optional[MemberType] = None
+    member_type: Optional[MemberType] = None
     #: Location object having a unique identifier for the location and its name.
     location: Optional[Location] = None
 

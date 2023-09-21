@@ -12,7 +12,7 @@ __auto__ = ['Webhook', 'WebhookCollectionResponse', 'WebhookEvent', 'WebhookReso
 
 class WebhookResource(str, Enum):
     #: The [Attachment Actions](/docs/api/v1/attachment-actions) resource.
-    attachmentactions = 'attachmentActions'
+    attachment_actions = 'attachmentActions'
     #: The [Memberships](/docs/api/v1/memberships) resource.
     memberships = 'memberships'
     #: The [Messages](/docs/api/v1/messages) resource.
@@ -24,9 +24,9 @@ class WebhookResource(str, Enum):
     #: The [Recordings](/docs/api/v1/recordings) resource.
     recordings = 'recordings'
     #: The [Meeting Participants](/docs/api/v1/meeting-participants) resource.
-    meetingparticipants = 'meetingParticipants'
+    meeting_participants = 'meetingParticipants'
     #: The [Meeting Transcripts](/docs/api/v1/meeting-transcripts) resource.
-    meetingtranscripts = 'meetingTranscripts'
+    meeting_transcripts = 'meetingTranscripts'
 
 
 class WebhookEvent(str, Enum):
@@ -64,7 +64,7 @@ class Webhook(ApiModel):
     name: Optional[str] = None
     #: The URL that receives POST requests for each event.
     #: example: https://example.com/mywebhook
-    targetUrl: Optional[str] = None
+    target_url: Optional[str] = None
     #: The resource type for the webhook. Creating a webhook requires 'read' scope on the resource the webhook is for.
     #: example: messages
     resource: Optional[WebhookResource] = None
@@ -85,7 +85,7 @@ class Webhook(ApiModel):
     created: Optional[datetime] = None
     #: Specified when creating an org/admin level webhook.
     #: example: org
-    ownedBy: Optional[str] = None
+    owned_by: Optional[str] = None
 
 
 class WebhookCollectionResponse(ApiModel):

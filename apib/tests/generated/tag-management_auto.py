@@ -27,10 +27,10 @@ class TagsRequest(ApiModel):
 class CustomerTagsResponse(ApiModel):
     #: Name of the customer organization.
     #: example: Customer Name
-    orgName: Optional[str] = None
+    org_name: Optional[str] = None
     #: The unique identifier for the customer organization.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: An array of tags.
     #: example: ['Tags1', 'Tags2']
     tags: Optional[list[str]] = None
@@ -39,16 +39,16 @@ class CustomerTagsResponse(ApiModel):
 class SubscriptionTagsResponse(ApiModel):
     #: Name of the customer organization.
     #: example: Customer Name
-    orgName: Optional[str] = None
+    org_name: Optional[str] = None
     #: The unique identifier for the customer organization.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: An array of tags.
     #: example: ['Tags1,Tags2']
     tags: Optional[list[str]] = None
     #: The unique identifier for the subscription.
     #: example: Sub119911
-    subscriptionId: Optional[str] = None
+    subscription_id: Optional[str] = None
     #: boolean flag for trial or not.
     #: example: false
     trial: Optional[str] = None

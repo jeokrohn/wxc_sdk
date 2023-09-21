@@ -26,7 +26,7 @@ class CallQueueObject(ApiModel):
     name: Optional[str] = None
     #: When not null, indicates the Call Queue's phone number.
     #: example: 4255558100
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: When not null, indicates the Call Queue's extension number.
     #: example: 8100
     extension: Optional[datetime] = None
@@ -34,72 +34,72 @@ class CallQueueObject(ApiModel):
 
 class AgentAvaliableCallQueueIdList(ApiModel):
     #: Indicates a list of Call Queues that the agent belongs and are available to be selected as the Caller ID for outgoing calls. It is empty when the agent's Call Queues have disabled the Call Queue outgoing phone number setting to be used as Caller ID. In the case where this setting is enabled the array will be populated.
-    availableQueues: Optional[list[CallQueueObject]] = None
+    available_queues: Optional[list[CallQueueObject]] = None
 
 
 class AgentCallQueueId(ApiModel):
     #: When true, indicates that this agent is using the `selectedQueue` for its Caller ID. When false, indicates that it is using the agent's configured Caller ID.
     #: example: True
-    queueCallerIdEnabled: Optional[bool] = None
+    queue_caller_id_enabled: Optional[bool] = None
     #: Indicates agent's choice of using this queue's Caller ID for outgoing calls. It is empty object when `queueCallerIdEnabled` is false. When `queueCallerIdEnabled` is true this data must be populated.
-    selectedQueue: Optional[CallQueueObject] = None
+    selected_queue: Optional[CallQueueObject] = None
 
 
 class ApplicationsSetting(ApiModel):
     #: When `true`, indicates to ring devices for outbound Click to Dial calls.
     #: example: True
-    ringDevicesForClickToDialCallsEnabled: Optional[bool] = None
+    ring_devices_for_click_to_dial_calls_enabled: Optional[bool] = None
     #: When `true`, indicates to ring devices for inbound Group Pages.
     #: example: True
-    ringDevicesForGroupPageEnabled: Optional[bool] = None
+    ring_devices_for_group_page_enabled: Optional[bool] = None
     #: When `true`, indicates to ring devices for Call Park recalled.
     #: example: True
-    ringDevicesForCallParkEnabled: Optional[bool] = None
+    ring_devices_for_call_park_enabled: Optional[bool] = None
     #: Indicates that the browser Webex Calling application is enabled for use.
     #: example: True
-    browserClientEnabled: Optional[bool] = None
+    browser_client_enabled: Optional[bool] = None
     #: Device ID of WebRTC client. Returns only if `browserClientEnabled` is true.
     #: example: Y2lzY29zcGFyazovL3VzL0FQUExJQ0FUSU9OLzQyNDM3YzY5LTBlNmYtNGMxZS1iMTJhLTFjNGYxZTk5NDRjMA
-    browserClientId: Optional[str] = None
+    browser_client_id: Optional[str] = None
     #: Indicates that the desktop Webex Calling application is enabled for use.
     #: example: True
-    desktopClientEnabled: Optional[bool] = None
+    desktop_client_enabled: Optional[bool] = None
     #: Device ID of Desktop client. Returns only if `desktopClientEnabled` is true.
     #: example: Y2lzY29zcGFyazovL3VzL0FQUExJQ0FUSU9OL2IwOWYzMDlhLTY0NDItNDRiYi05OGI2LWEzNTEwYjFhNTJmZg
-    desktopClientId: Optional[str] = None
+    desktop_client_id: Optional[str] = None
     #: Indicates that the tablet Webex Calling application is enabled for use.
     #: example: True
-    tabletClientEnabled: Optional[bool] = None
+    tablet_client_enabled: Optional[bool] = None
     #: Indicates that the mobile Webex Calling application is enabled for use.
     #: example: True
-    mobileClientEnabled: Optional[bool] = None
+    mobile_client_enabled: Optional[bool] = None
     #: Number of available device licenses for assigning devices/apps.
     #: example: 35.0
-    availableLineCount: Optional[int] = None
+    available_line_count: Optional[int] = None
 
 
 class ApplicationsSettingPut(ApiModel):
     #: When `true`, indicates to ring devices for outbound Click to Dial calls.
     #: example: True
-    ringDevicesForClickToDialCallsEnabled: Optional[bool] = None
+    ring_devices_for_click_to_dial_calls_enabled: Optional[bool] = None
     #: When `true`, indicates to ring devices for inbound Group Pages.
     #: example: True
-    ringDevicesForGroupPageEnabled: Optional[bool] = None
+    ring_devices_for_group_page_enabled: Optional[bool] = None
     #: When `true`, indicates to ring devices for Call Park recalled.
     #: example: True
-    ringDevicesForCallParkEnabled: Optional[bool] = None
+    ring_devices_for_call_park_enabled: Optional[bool] = None
     #: Indicates that the browser Webex Calling application is enabled for use.
     #: example: True
-    browserClientEnabled: Optional[bool] = None
+    browser_client_enabled: Optional[bool] = None
     #: Indicates that the desktop Webex Calling application is enabled for use.
     #: example: True
-    desktopClientEnabled: Optional[bool] = None
+    desktop_client_enabled: Optional[bool] = None
     #: Indicates that the tablet Webex Calling application is enabled for use.
     #: example: True
-    tabletClientEnabled: Optional[bool] = None
+    tablet_client_enabled: Optional[bool] = None
     #: Indicates that the mobile Webex Calling application is enabled for use.
     #: example: True
-    mobileClientEnabled: Optional[bool] = None
+    mobile_client_enabled: Optional[bool] = None
 
 
 class LineType(str, Enum):
@@ -124,19 +124,19 @@ class AvailableSharedLineMemberItem(ApiModel):
     id: Optional[str] = None
     #: First name of member.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name of member.
     #: example: Doe
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Phone number of member. Currently, E.164 format is not supported.
     #: example: 1234567890
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Phone extension of member.
     #: example: 0000
     extension: Optional[str] = None
     #: Indicates if the line is acting as a primary line or a shared line for this device.
     #: example: SHARED_CALL_APPEARANCE
-    lineType: Optional[LineType] = None
+    line_type: Optional[LineType] = None
     #: Location object having a unique identifier for the location and its name.
     location: Optional[PutAgentCallQueueIdSelectedQueue] = None
 
@@ -150,7 +150,7 @@ class BargeInInfo(ApiModel):
     #: example: True
     enabled: Optional[bool] = None
     #: Indicates that a stutter dial tone will be played when a person is barging in on the active call.
-    toneEnabled: Optional[bool] = None
+    tone_enabled: Optional[bool] = None
 
 
 class CallForwardingInfoCallForwardingAlways(ApiModel):
@@ -161,9 +161,9 @@ class CallForwardingInfoCallForwardingAlways(ApiModel):
     #: example: 2225551212
     destination: Optional[str] = None
     #: If `true`, a brief tone will be played on the person's phone when a call has been forwarded.
-    ringReminderEnabled: Optional[bool] = None
+    ring_reminder_enabled: Optional[bool] = None
     #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
-    destinationVoicemailEnabled: Optional[bool] = None
+    destination_voicemail_enabled: Optional[bool] = None
 
 
 class CallForwardingInfoCallForwardingBusy(ApiModel):
@@ -174,7 +174,7 @@ class CallForwardingInfoCallForwardingBusy(ApiModel):
     #: example: 2225551212
     destination: Optional[str] = None
     #: Indicates the enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
-    destinationVoicemailEnabled: Optional[bool] = None
+    destination_voicemail_enabled: Optional[bool] = None
 
 
 class CallForwardingInfoCallForwardingNoAnswer(ApiModel):
@@ -186,12 +186,12 @@ class CallForwardingInfoCallForwardingNoAnswer(ApiModel):
     destination: Optional[str] = None
     #: Number of rings before the call will be forwarded if unanswered.
     #: example: 3.0
-    numberOfRings: Optional[int] = None
+    number_of_rings: Optional[int] = None
     #: System-wide maximum number of rings allowed for `numberOfRings` setting.
     #: example: 15.0
-    systemMaxNumberOfRings: Optional[int] = None
+    system_max_number_of_rings: Optional[int] = None
     #: Indicates the enabled or disabled state of sending incoming calls to destination number's voicemail if the destination is an internal phone number and that number has the voicemail service enabled.
-    destinationVoicemailEnabled: Optional[bool] = None
+    destination_voicemail_enabled: Optional[bool] = None
 
 
 class CallForwardingInfoCallForwarding(ApiModel):
@@ -200,14 +200,14 @@ class CallForwardingInfoCallForwarding(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the person is busy.
     busy: Optional[CallForwardingInfoCallForwardingBusy] = None
     #: Settings for forwarding which only occurs when you are away or not answering your phone.
-    noAnswer: Optional[CallForwardingInfoCallForwardingNoAnswer] = None
+    no_answer: Optional[CallForwardingInfoCallForwardingNoAnswer] = None
 
 
 class CallForwardingInfo(ApiModel):
     #: Settings related to "Always", "Busy", and "No Answer" call forwarding.
-    callForwarding: Optional[CallForwardingInfoCallForwarding] = None
+    call_forwarding: Optional[CallForwardingInfoCallForwarding] = None
     #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any reason, such as power outage, failed Internet connection, or wiring problem.
-    businessContinuity: Optional[CallForwardingInfoCallForwardingBusy] = None
+    business_continuity: Optional[CallForwardingInfoCallForwardingBusy] = None
 
 
 class CallForwardingPutCallForwardingNoAnswer(ApiModel):
@@ -219,9 +219,9 @@ class CallForwardingPutCallForwardingNoAnswer(ApiModel):
     destination: Optional[str] = None
     #: Number of rings before the call will be forwarded if unanswered.
     #: example: 3.0
-    numberOfRings: Optional[int] = None
+    number_of_rings: Optional[int] = None
     #: Enables and disables sending incoming to destination number's voicemail if the destination is an internal phone number and that number has the voicemail service enabled.
-    destinationVoicemailEnabled: Optional[bool] = None
+    destination_voicemail_enabled: Optional[bool] = None
 
 
 class CallForwardingPutCallForwarding(ApiModel):
@@ -230,14 +230,14 @@ class CallForwardingPutCallForwarding(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the person is busy.
     busy: Optional[CallForwardingInfoCallForwardingBusy] = None
     #: Settings for forwarding which only occurs when you are away or not answering your phone.
-    noAnswer: Optional[CallForwardingPutCallForwardingNoAnswer] = None
+    no_answer: Optional[CallForwardingPutCallForwardingNoAnswer] = None
 
 
 class CallForwardingPut(ApiModel):
     #: Settings related to "Always", "Busy", and "No Answer" call forwarding.
-    callForwarding: Optional[CallForwardingPutCallForwarding] = None
+    call_forwarding: Optional[CallForwardingPutCallForwarding] = None
     #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any reason, such as a power outage, failed Internet connection, or wiring problem.
-    businessContinuity: Optional[CallForwardingInfoCallForwardingBusy] = None
+    business_continuity: Optional[CallForwardingInfoCallForwardingBusy] = None
 
 
 class CallInterceptInfoIncomingType(str, Enum):
@@ -271,9 +271,9 @@ class CallInterceptInfoIncomingAnnouncements(ApiModel):
     #: example: incoming.wav
     filename: Optional[str] = None
     #: Information about the new number announcement.
-    newNumber: Optional[CallInterceptInfoIncomingAnnouncementsNewNumber] = None
+    new_number: Optional[CallInterceptInfoIncomingAnnouncementsNewNumber] = None
     #: Information about how the call will be handled if zero (0) is pressed.
-    zeroTransfer: Optional[CallInterceptInfoIncomingAnnouncementsNewNumber] = None
+    zero_transfer: Optional[CallInterceptInfoIncomingAnnouncementsNewNumber] = None
 
 
 class CallInterceptInfoIncoming(ApiModel):
@@ -281,7 +281,7 @@ class CallInterceptInfoIncoming(ApiModel):
     #: example: INTERCEPT_ALL
     type: Optional[CallInterceptInfoIncomingType] = None
     #: If `true`, the destination will be the person's voicemail.
-    voicemailEnabled: Optional[bool] = None
+    voicemail_enabled: Optional[bool] = None
     #: Settings related to how incoming calls are handled when the intercept feature is enabled.
     announcements: Optional[CallInterceptInfoIncomingAnnouncements] = None
 
@@ -298,7 +298,7 @@ class CallInterceptInfoOutgoing(ApiModel):
     #: example: INTERCEPT_ALL
     type: Optional[CallInterceptInfoOutgoingType] = None
     #: If `true`, when the person attempts to make an outbound call, a system default message is played and the call is made to the destination phone number
-    transferEnabled: Optional[bool] = None
+    transfer_enabled: Optional[bool] = None
     #: Number to which the outbound call be transferred.
     #: example: 2225551212
     destination: Optional[str] = None
@@ -319,9 +319,9 @@ class CallInterceptPutIncomingAnnouncements(ApiModel):
     #: example: DEFAULT
     greeting: Optional[CallInterceptInfoIncomingAnnouncementsGreeting] = None
     #: Information about the new number announcement.
-    newNumber: Optional[CallInterceptInfoIncomingAnnouncementsNewNumber] = None
+    new_number: Optional[CallInterceptInfoIncomingAnnouncementsNewNumber] = None
     #: Information about how call will be handled if zero (0) is pressed.
-    zeroTransfer: Optional[CallInterceptInfoIncomingAnnouncementsNewNumber] = None
+    zero_transfer: Optional[CallInterceptInfoIncomingAnnouncementsNewNumber] = None
 
 
 class CallInterceptPutIncoming(ApiModel):
@@ -329,7 +329,7 @@ class CallInterceptPutIncoming(ApiModel):
     #: example: INTERCEPT_ALL
     type: Optional[CallInterceptInfoIncomingType] = None
     #: If `true`, the destination will be the person's voicemail.
-    voicemailEnabled: Optional[bool] = None
+    voicemail_enabled: Optional[bool] = None
     #: Settings related to how incoming calls are handled when the intercept feature is enabled.
     announcements: Optional[CallInterceptPutIncomingAnnouncements] = None
 
@@ -382,9 +382,9 @@ class CallRecordingInfoRepeat(ApiModel):
 
 class CallRecordingInfoStartStopAnnouncement(ApiModel):
     #: When `true`, an announcement is played when call recording starts and an announcement is played when call recording ends for internal calls.
-    internalCallsEnabled: Optional[bool] = None
+    internal_calls_enabled: Optional[bool] = None
     #: When `true`, an announcement is played when call recording starts and an announcement is played when call recording ends for PSTN calls.
-    pstnCallsEnabled: Optional[bool] = None
+    pstn_calls_enabled: Optional[bool] = None
 
 
 class CallRecordingInfo(ApiModel):
@@ -395,24 +395,24 @@ class CallRecordingInfo(ApiModel):
     #: example: Never
     record: Optional[CallRecordingInfoRecord] = None
     #: When `true`, voicemail messages are also recorded.
-    recordVoicemailEnabled: Optional[bool] = None
+    record_voicemail_enabled: Optional[bool] = None
     #: When enabled, an announcement is played when call recording starts and an announcement is played when call recording ends.
-    startStopAnnouncementEnabled: Optional[bool] = None
+    start_stop_announcement_enabled: Optional[bool] = None
     #: Pause/resume notification settings.
     notification: Optional[CallRecordingInfoNotification] = None
     #: Beep sound plays periodically.
     repeat: Optional[CallRecordingInfoRepeat] = None
     #: Name of the service provider providing call recording service.
     #: example: WSWYZ25455
-    serviceProvider: Optional[str] = None
+    service_provider: Optional[str] = None
     #: Group utilized by the service provider providing call recording service.
     #: example: WSWYZ25455L31161
-    externalGroup: Optional[str] = None
+    external_group: Optional[str] = None
     #: Unique person identifier utilized by the service provider providing call recording service.
     #: example: a34iidrh5o@64941297.int10.bcld.webex.com
-    externalIdentifier: Optional[str] = None
+    external_identifier: Optional[str] = None
     #: Call Recording starts and stops announcement settings.
-    startStopAnnouncement: Optional[CallRecordingInfoStartStopAnnouncement] = None
+    start_stop_announcement: Optional[CallRecordingInfoStartStopAnnouncement] = None
 
 
 class CallRecordingPut(ApiModel):
@@ -423,15 +423,15 @@ class CallRecordingPut(ApiModel):
     #: example: Never
     record: Optional[CallRecordingInfoRecord] = None
     #: When `true`, voicemail messages are also recorded.
-    recordVoicemailEnabled: Optional[bool] = None
+    record_voicemail_enabled: Optional[bool] = None
     #: When enabled, an announcement is played when call recording starts and an announcement is played when call recording ends.
-    startStopAnnouncementEnabled: Optional[bool] = None
+    start_stop_announcement_enabled: Optional[bool] = None
     #: Pause/resume notification settings.
     notification: Optional[CallRecordingInfoNotification] = None
     #: Beep sound plays periodically.
     repeat: Optional[CallRecordingInfoRepeat] = None
     #: Call Recording starts and stops announcement settings.
-    startStopAnnouncement: Optional[CallRecordingInfoStartStopAnnouncement] = None
+    start_stop_announcement: Optional[CallRecordingInfoStartStopAnnouncement] = None
 
 
 class CallWaitingInfo(ApiModel):
@@ -469,39 +469,39 @@ class CallerIdInfo(ApiModel):
     selected: Optional[CallerIdSelectedType] = None
     #: Direct number which will be shown if `DIRECT_LINE` is selected.
     #: example: 2025551212
-    directNumber: Optional[str] = None
+    direct_number: Optional[str] = None
     #: Extension number which will be shown if `DIRECT_LINE` is selected.
     #: example: 3456
-    extensionNumber: Optional[datetime] = None
+    extension_number: Optional[datetime] = None
     #: Location number which will be shown if `LOCATION_NUMBER` is selected.
     #: example: 2025551212
-    locationNumber: Optional[str] = None
+    location_number: Optional[str] = None
     #: Mobile number which will be shown if `MOBILE_NUMBER` is selected.
     #: example: 2025552121
-    mobileNumber: Optional[str] = None
+    mobile_number: Optional[str] = None
     #: Flag to indicate if the location number is toll-free number.
-    tollFreeLocationNumber: Optional[bool] = None
+    toll_free_location_number: Optional[bool] = None
     #: This value must be an assigned number from the person's location.
     #: example: 2025551212
-    customNumber: Optional[str] = None
+    custom_number: Optional[str] = None
     #: Person's Caller ID first name.  Characters of `%`,  `+`, ``, `"` and Unicode characters are not allowed.
     #: example: Hakim
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Person's Caller ID last name.  Characters of `%`,  `+`, ``, `"` and Unicode characters are not allowed.
     #: example: Gonzales
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: `true` if the person's identity is blocked when receiving a transferred or forwarded call.
     #: example: True
-    blockInForwardCallsEnabled: Optional[bool] = None
+    block_in_forward_calls_enabled: Optional[bool] = None
     #: Designates which type of External Caller Id Name policy is used. Default is `DIRECT_LINE`.
     #: example: DIRECT_LINE
-    externalCallerIdNamePolicy: Optional[CallerIdInfoExternalCallerIdNamePolicy] = None
+    external_caller_id_name_policy: Optional[CallerIdInfoExternalCallerIdNamePolicy] = None
     #: Custom External Caller Name, which will be shown if External Caller Id Name is `OTHER`.
     #: example: Hakim custom
-    customExternalCallerIdName: Optional[str] = None
+    custom_external_caller_id_name: Optional[str] = None
     #: Location's caller ID.
     #: example: Hakim location
-    locationExternalCallerIdName: Optional[str] = None
+    location_external_caller_id_name: Optional[str] = None
 
 
 class CallerIdPut(ApiModel):
@@ -510,22 +510,22 @@ class CallerIdPut(ApiModel):
     selected: Optional[CallerIdSelectedType] = None
     #: This value must be an assigned number from the person's location.
     #: example: 2025551212
-    customNumber: Optional[str] = None
+    custom_number: Optional[str] = None
     #: Person's Caller ID first name.  Characters of `%`,  `+`, ``, `"` and Unicode characters are not allowed.
     #: example: Hakim
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Person's Caller ID last name.  Characters of `%`,  `+`, ``, `"` and Unicode characters are not allowed.
     #: example: Gonzales
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: `true` if person's identity has to be blocked when receiving a transferred or forwarded call.
     #: example: True
-    blockInForwardCallsEnabled: Optional[bool] = None
+    block_in_forward_calls_enabled: Optional[bool] = None
     #: Designates which type of External Caller Id Name policy is used. Default is `DIRECT_LINE`.
     #: example: DIRECT_LINE
-    externalCallerIdNamePolicy: Optional[CallerIdInfoExternalCallerIdNamePolicy] = None
+    external_caller_id_name_policy: Optional[CallerIdInfoExternalCallerIdNamePolicy] = None
     #: Person's custom External Caller ID last name.  Characters of `%`,  `+`, ``, `"` and Unicode characters are not allowed.
     #: example: Hakim Custom
-    customExternalCallerIdName: Optional[str] = None
+    custom_external_caller_id_name: Optional[str] = None
 
 
 class DeviceType(str, Enum):
@@ -540,25 +540,25 @@ class DoNotDisturbInfo(ApiModel):
     #: example: True
     enabled: Optional[bool] = None
     #: Enables a Ring Reminder to play a brief tone on your desktop phone when you receive incoming calls.
-    ringSplashEnabled: Optional[bool] = None
+    ring_splash_enabled: Optional[bool] = None
 
 
 class EndpointIdType(ApiModel):
     #: Person’s preferred answer endpoint.
     #: example: Y2lzY29z...
-    preferredAnswerEndpointId: Optional[str] = None
+    preferred_answer_endpoint_id: Optional[str] = None
 
 
 class EventLongDetailsRecurrenceRecurDaily(ApiModel):
     #: Recurring interval in days. The number of days after the start when an event will repeat.  Repetitions cannot overlap.
     #: example: 1.0
-    recurInterval: Optional[int] = None
+    recur_interval: Optional[int] = None
 
 
 class EventLongDetailsRecurrenceRecurWeekly(ApiModel):
     #: Specifies the number of weeks between the start of each recurrence.
     #: example: 1.0
-    recurInterval: Optional[int] = None
+    recur_interval: Optional[int] = None
     #: Indicates event occurs weekly on Sunday.
     sunday: Optional[bool] = None
     #: Indicates event occurs weekly on Monday.
@@ -579,17 +579,17 @@ class EventLongDetailsRecurrenceRecurWeekly(ApiModel):
 class EventLongDetailsRecurrence(ApiModel):
     #: True if the event repeats forever. Requires either `recurDaily` or `recurWeekly` to be specified.
     #: example: True
-    recurForEver: Optional[bool] = None
+    recur_for_ever: Optional[bool] = None
     #: End date for the recurring event in the format of `YYYY-MM-DD`. Requires either `recurDaily` or `recurWeekly` to be specified.
     #: example: 2020-03-18
-    recurEndDate: Optional[datetime] = None
+    recur_end_date: Optional[datetime] = None
     #: End recurrence after the event has repeated the specified number of times. Requires either `recurDaily` or `recurWeekly` to be specified.
     #: example: 1.0
-    recurEndOccurrence: Optional[int] = None
+    recur_end_occurrence: Optional[int] = None
     #: Specifies the number of days between the start of each recurrence. Not allowed with `recurWeekly`.
-    recurDaily: Optional[EventLongDetailsRecurrenceRecurDaily] = None
+    recur_daily: Optional[EventLongDetailsRecurrenceRecurDaily] = None
     #: Specifies the event recur weekly on the designated days of the week. Not allowed with `recurDaily`.
-    recurWeekly: Optional[EventLongDetailsRecurrenceRecurWeekly] = None
+    recur_weekly: Optional[EventLongDetailsRecurrenceRecurWeekly] = None
 
 
 class EventLongDetails(ApiModel):
@@ -598,18 +598,18 @@ class EventLongDetails(ApiModel):
     name: Optional[str] = None
     #: Start date of the event, or first occurrence if repeating, in the format of `YYYY-MM-DD`.  This field is required if the `allDayEnabled` field is present.
     #: example: 2020-03-18
-    startDate: Optional[datetime] = None
+    start_date: Optional[datetime] = None
     #: End date of the event, or first occurrence if repeating, in the format of `YYYY-MM-DD`.  This field is required if the `allDayEnabled` field is present.
     #: example: 2020-03-18
-    endDate: Optional[datetime] = None
+    end_date: Optional[datetime] = None
     #: Start time of the event in the format of `HH:MM` (24 hours format).  This field is required if the `allDayEnabled` field is false or omitted.
     #: example: 08:00
-    startTime: Optional[datetime] = None
+    start_time: Optional[datetime] = None
     #: End time of the event in the format of `HH:MM` (24 hours format).  This field is required if the `allDayEnabled` field is false or omitted.
     #: example: 17:00
-    endTime: Optional[datetime] = None
+    end_time: Optional[datetime] = None
     #: True if it is all-day event.
-    allDayEnabled: Optional[bool] = None
+    all_day_enabled: Optional[bool] = None
     #: Recurrance scheme for an event.
     recurrence: Optional[EventLongDetailsRecurrence] = None
 
@@ -633,13 +633,13 @@ class GetSharedLineMemberItem(ApiModel):
     id: Optional[str] = None
     #: First name of person or workspace.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name of person or workspace.
     #: example: Doe
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Phone number of a person or workspace. Currently, E.164 format is not supported. This will be supported in the future update.
     #: example: 2056852221
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Phone extension of a person or workspace.
     #: example: 1111
     extension: Optional[datetime] = None
@@ -648,36 +648,36 @@ class GetSharedLineMemberItem(ApiModel):
     port: Optional[int] = None
     #: T.38 Fax Compression setting. Valid only for ATA Devices. Overrides user level compression options.
     #: example: True
-    t38FaxCompressionEnabled: Optional[bool] = None
+    t38_fax_compression_enabled: Optional[bool] = None
     #: If `true` the person or the workspace is the owner of the device. Points to primary line/port of the device.
     #: example: true
-    primaryOwner: Optional[str] = None
+    primary_owner: Optional[str] = None
     #: Indicates if the line is acting as a primary line or a shared line for this device.
     #: example: SHARED_CALL_APPEARANCE
-    lineType: Optional[LineType] = None
+    line_type: Optional[LineType] = None
     #: Number of lines that have been configured for the person on the device.
     #: example: 1.0
-    lineWeight: Optional[int] = None
+    line_weight: Optional[int] = None
     #: Registration home IP for the line port.
     #: example: 198.168.0.1
-    hostIP: Optional[str] = None
+    host_ip: Optional[str] = Field(alias='hostIP', default=None)
     #: Registration remote IP for the line port.
     #: example: 198.168.0.2
-    remoteIP: Optional[str] = None
+    remote_ip: Optional[str] = Field(alias='remoteIP', default=None)
     #: Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line can only make calls to the predefined number set in hotlineDestination.
     #: example: True
-    hotlineEnabled: Optional[bool] = None
+    hotline_enabled: Optional[bool] = None
     #: Preconfigured number for the hotline. Required only if `hotlineEnabled` is set to `true`.
     #: example: 1234
-    hotlineDestination: Optional[datetime] = None
+    hotline_destination: Optional[datetime] = None
     #: Set how a device behaves when a call is declined. When set to `true`, a call decline request is extended to all the endpoints on the device. When set to `false`, a call decline request is only declined at the current endpoint.
     #: example: True
-    allowCallDeclineEnabled: Optional[bool] = None
+    allow_call_decline_enabled: Optional[bool] = None
     #: Device line label.
     #: example: share line label
-    lineLabel: Optional[str] = None
+    line_label: Optional[str] = None
     #: Indicates if the member is of type `PEOPLE` or `PLACE`.
-    memberType: Optional[UserType] = None
+    member_type: Optional[UserType] = None
     #: Location object having a unique identifier for the location and its name.
     location: Optional[PutAgentCallQueueIdSelectedQueue] = None
 
@@ -690,7 +690,7 @@ class GetSharedLineMemberList(ApiModel):
     members: Optional[list[GetSharedLineMemberItem]] = None
     #: Maximum number of device ports.
     #: example: 10.0
-    maxLineCount: Optional[int] = None
+    max_line_count: Optional[int] = None
 
 
 class GetCallingBehaviorObjectBehaviorType(str, Enum):
@@ -724,13 +724,13 @@ class GetCallingBehaviorObjectEffectiveBehaviorType(str, Enum):
 class GetCallingBehaviorObject(ApiModel):
     #: The current Calling Behavior setting for the person. If `null`, the effective Calling Behavior will be the Organization's current default.
     #: example: CALL_WITH_APP_REGISTERED_FOR_CISCOTEL
-    behaviorType: Optional[GetCallingBehaviorObjectBehaviorType] = None
+    behavior_type: Optional[GetCallingBehaviorObjectBehaviorType] = None
     #: The effective Calling Behavior setting for the person, will be the organization's default Calling Behavior if the user's `behaviorType` is set to `null`.
     #: example: NATIVE_WEBEX_TEAMS_CALLING
-    effectiveBehaviorType: Optional[GetCallingBehaviorObjectEffectiveBehaviorType] = None
+    effective_behavior_type: Optional[GetCallingBehaviorObjectEffectiveBehaviorType] = None
     #: The UC Manager Profile ID.
     #: example: Y2lzY29zcGFyazovL3VzL0NBTExJTkdfUFJPRklMRS9iMzdmMmZiYS0yZTdjLTExZWItYTM2OC1kYmU0Yjc2NzFmZTk
-    profileId: Optional[str] = None
+    profile_id: Optional[str] = None
 
 
 class GetEvent(ApiModel):
@@ -742,18 +742,18 @@ class GetEvent(ApiModel):
     name: Optional[str] = None
     #: Start date of the event, or first occurrence if repeating, in the format of `YYYY-MM-DD`.  This field is required if the `allDayEnabled` field is present.
     #: example: 2020-03-18
-    startDate: Optional[datetime] = None
+    start_date: Optional[datetime] = None
     #: End date of the event, or first occurrence if repeating, in the format of `YYYY-MM-DD`.  This field is required if the `allDayEnabled` field is present.
     #: example: 2020-03-18
-    endDate: Optional[datetime] = None
+    end_date: Optional[datetime] = None
     #: Start time of the event in the format of `HH:MM` (24 hours format).  This field is required if the `allDayEnabled` field is false or omitted.
     #: example: 08:00
-    startTime: Optional[datetime] = None
+    start_time: Optional[datetime] = None
     #: End time of the event in the format of `HH:MM `(24 hours format).  This field is required if the `allDayEnabled` field is false or omitted.
     #: example: 17:00
-    endTime: Optional[datetime] = None
+    end_time: Optional[datetime] = None
     #: True if it is all-day event.
-    allDayEnabled: Optional[bool] = None
+    all_day_enabled: Optional[bool] = None
     #: Recurrance scheme for an event.
     recurrence: Optional[EventLongDetailsRecurrence] = None
 
@@ -785,13 +785,13 @@ class GetMonitoredElementsObjectMember(ApiModel):
     id: Optional[str] = None
     #: The last name of the monitored person, place or virtual line.
     #: example: Nelson
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: The first name of the monitored person, place or virtual line.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: The display name of the monitored person, place or virtual line.
     #: example: John Nelson
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: Indicates whether the type is `PEOPLE`, `PLACE` or `VIRTUAL_LINE`.
     type: Optional[PeopleOrPlaceOrVirtualLineType] = None
     #: The email address of the monitored person, place or virtual line.
@@ -804,7 +804,7 @@ class GetMonitoredElementsObjectMember(ApiModel):
     location: Optional[str] = None
     #: The ID for the location.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzZhZjk4ZGViLWVlZGItNGFmYi1hMDAzLTEzNzgyYjdjODAxYw
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
 
 
 class GetMonitoredElementsObjectCallparkextension(ApiModel):
@@ -822,7 +822,7 @@ class GetMonitoredElementsObjectCallparkextension(ApiModel):
     location: Optional[str] = None
     #: The ID for the location.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzZhZjk4ZGViLWVlZGItNGFmYi1hMDAzLTEzNzgyYjdjODAxYw
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
 
 
 class GetMonitoredElementsObject(ApiModel):
@@ -847,21 +847,21 @@ class GetNumbersPhoneNumbers(ApiModel):
     primary: Optional[bool] = None
     #: Phone number.
     #: example: 2143456789
-    directNumber: Optional[str] = None
+    direct_number: Optional[str] = None
     #: Extension.
     #: example: 1234
     extension: Optional[datetime] = None
     #: Optional ring pattern. Applicable only for alternate numbers.
     #: example: NORMAL
-    ringPattern: Optional[GetNumbersPhoneNumbersRingPattern] = None
+    ring_pattern: Optional[GetNumbersPhoneNumbersRingPattern] = None
 
 
 class GetNumbers(ApiModel):
     #: Enable/disable a distinctive ring pattern that identifies calls coming from a specific phone number.
     #: example: True
-    distinctiveRingEnabled: Optional[bool] = None
+    distinctive_ring_enabled: Optional[bool] = None
     #: Information about the number.
-    phoneNumbers: Optional[list[GetNumbersPhoneNumbers]] = None
+    phone_numbers: Optional[list[GetNumbersPhoneNumbers]] = None
 
 
 class IncomingPermissionSettingExternalTransfer(str, Enum):
@@ -875,16 +875,16 @@ class IncomingPermissionSettingExternalTransfer(str, Enum):
 
 class IncomingPermissionSetting(ApiModel):
     #: When true, indicates that this person uses the specified calling permissions for receiving inbound calls rather than the organizational defaults.
-    useCustomEnabled: Optional[bool] = None
+    use_custom_enabled: Optional[bool] = None
     #: Specifies the transfer behavior for incoming, external calls.
     #: example: ALLOW_ALL_EXTERNAL
-    externalTransfer: Optional[IncomingPermissionSettingExternalTransfer] = None
+    external_transfer: Optional[IncomingPermissionSettingExternalTransfer] = None
     #: Internal calls are allowed to be received.
     #: example: True
-    internalCallsEnabled: Optional[bool] = None
+    internal_calls_enabled: Optional[bool] = None
     #: Collect calls are allowed to be received.
     #: example: True
-    collectCallsEnabled: Optional[bool] = None
+    collect_calls_enabled: Optional[bool] = None
 
 
 class MonitoredMemberObject(ApiModel):
@@ -893,13 +893,13 @@ class MonitoredMemberObject(ApiModel):
     id: Optional[str] = None
     #: Last name of the monitored person, workspace or virtual line.
     #: example: Little
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: First name of the monitored person, workspace or virtual line.
     #: example: Alice
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Display name of the monitored person, workspace or virtual line.
     #: example: Alice Little
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: Indicates whether type is person, workspace or virtual line.
     type: Optional[PeopleOrPlaceOrVirtualLineType] = None
     #: Email address of the monitored person, workspace or virtual line.
@@ -912,18 +912,18 @@ class MonitoredMemberObject(ApiModel):
 class MonitoringSettings(ApiModel):
     #: Call park notification is enabled or disabled.
     #: example: True
-    callParkNotificationEnabled: Optional[bool] = None
+    call_park_notification_enabled: Optional[bool] = None
     #: Settings of monitored elements which can be person, place, virtual line or call park extension.
-    monitoredElements: Optional[list[GetMonitoredElementsObject]] = None
+    monitored_elements: Optional[list[GetMonitoredElementsObject]] = None
 
 
 class MonitoringSettingsPut(ApiModel):
     #: Enable or disable call park notification.
     #: example: True
-    enableCallParkNotification: Optional[bool] = None
+    enable_call_park_notification: Optional[bool] = None
     #: Identifiers of monitored elements whose monitoring settings will be modified.
     #: example: ['Y2lzY29zcGFyazovL3VzL1BFT1BMRS85OWNlZjRmYS03YTM5LTQ1ZDItOTNmNi1jNjA5YTRiMjgzODY']
-    monitoredElements: Optional[list[str]] = None
+    monitored_elements: Optional[list[str]] = None
 
 
 class OutgoingCallingPermissionsSettingCallingPermissionsCallType(str, Enum):
@@ -967,29 +967,29 @@ class OutgoingCallingPermissionsSettingCallingPermissionsAction(str, Enum):
 class OutgoingCallingPermissionsSettingCallingPermissions(ApiModel):
     #: Designates the action to be taken for each call type and if transferring the call type is allowed.
     #: example: INTERNAL_CALL
-    callType: Optional[OutgoingCallingPermissionsSettingCallingPermissionsCallType] = None
+    call_type: Optional[OutgoingCallingPermissionsSettingCallingPermissionsCallType] = None
     #: Action on the given `callType`.
     #: example: ALLOW
     action: Optional[OutgoingCallingPermissionsSettingCallingPermissionsAction] = None
     #: Allow the person to transfer or forward a call of the specified call type.
-    transferEnabled: Optional[bool] = None
+    transfer_enabled: Optional[bool] = None
 
 
 class OutgoingCallingPermissionsSetting(ApiModel):
     #: When true, indicates that this user uses the specified calling permissions when placing outbound calls.
     #: example: True
-    useCustomEnabled: Optional[bool] = None
+    use_custom_enabled: Optional[bool] = None
     #: Specifies the outbound calling permissions settings.
-    callingPermissions: Optional[list[OutgoingCallingPermissionsSettingCallingPermissions]] = None
+    calling_permissions: Optional[list[OutgoingCallingPermissionsSettingCallingPermissions]] = None
 
 
 class PatchCallingBehaviorObject(ApiModel):
     #: The new Calling Behavior setting for the person (case-insensitive). If `null`, the effective Calling Behavior will be the Organization's current default.
     #: example: NATIVE_WEBEX_TEAMS_CALLING
-    behaviorType: Optional[GetCallingBehaviorObjectBehaviorType] = None
+    behavior_type: Optional[GetCallingBehaviorObjectBehaviorType] = None
     #: The UC Manager Profile ID. Specifying null results in the organizational default being applied.
     #: example: Y2lzY29zcGFyazovL3VzL0NBTExJTkdfUFJPRklMRS9iMzdmMmZiYS0yZTdjLTExZWItYTM2OC1kYmU0Yjc2NzFmZTk
-    profileId: Optional[str] = None
+    profile_id: Optional[str] = None
 
 
 class PhoneNumber(ApiModel):
@@ -1000,26 +1000,26 @@ class PhoneNumber(ApiModel):
     action: Optional[Action] = None
     #: Phone numbers that are assigned.
     #: example: +12145553567
-    directNumber: Optional[str] = None
+    direct_number: Optional[str] = None
     #: Extension that is assigned.
     #: example: 1234
     extension: Optional[datetime] = None
     #: Ring Pattern of this number.
-    ringPattern: Optional[GetNumbersPhoneNumbersRingPattern] = None
+    ring_pattern: Optional[GetNumbersPhoneNumbersRingPattern] = None
 
 
 class PrivacyGet(ApiModel):
     #: When `true` auto attendant extension dialing will be enabled.
     #: example: True
-    aaExtensionDialingEnabled: Optional[bool] = None
+    aa_extension_dialing_enabled: Optional[bool] = None
     #: When `true` auto attendant dailing by first or last name will be enabled.
     #: example: True
-    aaNamingDialingEnabled: Optional[bool] = None
+    aa_naming_dialing_enabled: Optional[bool] = None
     #: When `true` phone status directory privacy will be enabled.
     #: example: True
-    enablePhoneStatusDirectoryPrivacy: Optional[bool] = None
+    enable_phone_status_directory_privacy: Optional[bool] = None
     #: List of people that are being monitored.
-    monitoringAgents: Optional[list[MonitoredMemberObject]] = None
+    monitoring_agents: Optional[list[MonitoredMemberObject]] = None
 
 
 class PushToTalkAccessType(str, Enum):
@@ -1039,11 +1039,11 @@ class PushToTalkConnectionType(str, Enum):
 class PushToTalkInfo(ApiModel):
     #: Set to `true` to enable the Push-to-Talk feature.  When enabled, a person receives a Push-to-Talk call and answers the call automatically.
     #: example: True
-    allowAutoAnswer: Optional[bool] = None
+    allow_auto_answer: Optional[bool] = None
     #: Specifies the connection type to be used.
-    connectionType: Optional[PushToTalkConnectionType] = None
+    connection_type: Optional[PushToTalkConnectionType] = None
     #: Specifies the access type to be applied when evaluating the member list.
-    accessType: Optional[PushToTalkAccessType] = None
+    access_type: Optional[PushToTalkAccessType] = None
     #: List of people that are allowed or disallowed to interact using the Push-to-Talk feature.
     members: Optional[list[MonitoredMemberObject]] = None
 
@@ -1051,11 +1051,11 @@ class PushToTalkInfo(ApiModel):
 class PushToTalkPut(ApiModel):
     #: `true` if Push-to-Talk feature is enabled.
     #: example: True
-    allowAutoAnswer: Optional[bool] = None
+    allow_auto_answer: Optional[bool] = None
     #: Specifies the connection type to be used.
-    connectionType: Optional[PushToTalkConnectionType] = None
+    connection_type: Optional[PushToTalkConnectionType] = None
     #: Specifies the access type to be applied when evaluating the member list.
-    accessType: Optional[PushToTalkAccessType] = None
+    access_type: Optional[PushToTalkAccessType] = None
     #: List of people that are allowed or disallowed to interact using the Push-to-Talk feature.
     #: example: ['Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC04NmE5MDgxYWFkNmE']
     members: Optional[list[str]] = None
@@ -1070,28 +1070,28 @@ class PutSharedLineMemberItem(ApiModel):
     port: Optional[int] = None
     #: T.38 Fax Compression setting. Valid only for ATA Devices. Overrides user level compression options.
     #: example: True
-    t38FaxCompressionEnabled: Optional[bool] = None
+    t38_fax_compression_enabled: Optional[bool] = None
     #: If `true` the person or the workspace is the owner of the device. Points to primary line/port of the device.
     #: example: true
-    primaryOwner: Optional[str] = None
+    primary_owner: Optional[str] = None
     #: Indicates if the line is acting as a primary line or a shared line for this device.
     #: example: SHARED_CALL_APPEARANCE
-    lineType: Optional[LineType] = None
+    line_type: Optional[LineType] = None
     #: Number of lines that have been configured for the person on the device.
     #: example: 1.0
-    lineWeight: Optional[int] = None
+    line_weight: Optional[int] = None
     #: Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line can only make calls to the predefined number set in `hotlineDestination`.
     #: example: True
-    hotlineEnabled: Optional[bool] = None
+    hotline_enabled: Optional[bool] = None
     #: Preconfigured number for the hotline. Required only if `hotlineEnabled` is set to `true`.
     #: example: 1234
-    hotlineDestination: Optional[datetime] = None
+    hotline_destination: Optional[datetime] = None
     #: Set how a device behaves when a call is declined. When set to `true`, a call decline request is extended to all the endpoints on the device. When set to `false`, a call decline request is only declined at the current endpoint.
     #: example: True
-    allowCallDeclineEnabled: Optional[bool] = None
+    allow_call_decline_enabled: Optional[bool] = None
     #: Device line label.
     #: example: share line label
-    lineLabel: Optional[str] = None
+    line_label: Optional[str] = None
 
 
 class PutSharedLineMemberList(ApiModel):
@@ -1101,32 +1101,32 @@ class PutSharedLineMemberList(ApiModel):
 class PutAgentCallQueueId(ApiModel):
     #: When true, indicates that this agent is using the `selectedQueue` for its Caller ID. When false, indicates that it is using the agent's configured Caller ID.
     #: example: True
-    queueCallerIdEnabled: Optional[bool] = None
+    queue_caller_id_enabled: Optional[bool] = None
     #: Use the queue's caller ID for outgoing calls. Optional when queueCallerIdEnabled is false, required when it's true.
-    selectedQueue: Optional[PutAgentCallQueueIdSelectedQueue] = None
+    selected_queue: Optional[PutAgentCallQueueIdSelectedQueue] = None
 
 
 class PutEvent(ApiModel):
     #: New name for the event.
     #: example: Central_Zone_Day_Shift
-    newName: Optional[str] = None
+    new_name: Optional[str] = None
     #: Name for the event.
     #: example: Day_Shift
     name: Optional[str] = None
     #: Start date of the event, or first occurrence if repeating, in the format of YYYY-MM-DD.  This field is required if the `allDayEnabled` field is present.
     #: example: 2020-03-18
-    startDate: Optional[datetime] = None
+    start_date: Optional[datetime] = None
     #: End date of the event, or first occurrence if repeating, in the format of YYYY-MM-DD.  This field is required if the `allDayEnabled` field is present.
     #: example: 2020-03-18
-    endDate: Optional[datetime] = None
+    end_date: Optional[datetime] = None
     #: Start time of the event in the format of HH:MM (24 hours format).  This field is required if the `allDayEnabled` field is false or omitted.
     #: example: 08:00
-    startTime: Optional[datetime] = None
+    start_time: Optional[datetime] = None
     #: End time of the event in the format of HH:MM (24 hours format).  This field is required if the `allDayEnabled` field is false or omitted.
     #: example: 17:00
-    endTime: Optional[datetime] = None
+    end_time: Optional[datetime] = None
     #: True if it is all-day event.
-    allDayEnabled: Optional[bool] = None
+    all_day_enabled: Optional[bool] = None
     #: Recurrance scheme for an event.
     recurrence: Optional[EventLongDetailsRecurrence] = None
 
@@ -1134,23 +1134,23 @@ class PutEvent(ApiModel):
 class ReceptionInfo(ApiModel):
     #: Set to `true` to enable the Receptionist Client feature.
     #: example: True
-    receptionEnabled: Optional[bool] = None
+    reception_enabled: Optional[bool] = None
     #: List of people, workspaces or virtual lines to monitor.
-    monitoredMembers: Optional[list[MonitoredMemberObject]] = None
+    monitored_members: Optional[list[MonitoredMemberObject]] = None
 
 
 class ReceptionPut(ApiModel):
     #: `true` if the Receptionist Client feature is enabled.
     #: example: True
-    receptionEnabled: Optional[bool] = None
+    reception_enabled: Optional[bool] = None
     #: List of members' unique identifiers to monitor.
     #: example: ['Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MWU3MDlkNy1hM2IxLTQ2MDctOTBiOC04NmE5MDgxYWFkNmE']
-    monitoredMembers: Optional[list[str]] = None
+    monitored_members: Optional[list[str]] = None
 
 
 class ScheduleType(str, Enum):
     #: Indicates the schedule type that specifies the business or working hours during the day.
-    businesshours = 'businessHours'
+    business_hours = 'businessHours'
     #: Indicates the schedule type that specifies the day when your organization is not open.
     holidays = 'holidays'
 
@@ -1197,7 +1197,7 @@ class ScheduleLongDetails(ApiModel):
 class ScheduleUpdateRequest(ApiModel):
     #: New name for the schedule.
     #: example: Richardson_Office_Hours
-    newName: Optional[str] = None
+    new_name: Optional[str] = None
     #: Name for the schedule.
     #: example: Dallas_Office_Hours
     name: Optional[str] = None
@@ -1210,9 +1210,9 @@ class ScheduleUpdateRequest(ApiModel):
 class UserNumbersPatch(ApiModel):
     #: Enables a distinctive ring pattern for the person.
     #: example: True
-    enableDistinctiveRingPattern: Optional[bool] = None
+    enable_distinctive_ring_pattern: Optional[bool] = None
     #: List of phone numbers that are assigned to a person.
-    phoneNumbers: Optional[list[PhoneNumber]] = None
+    phone_numbers: Optional[list[PhoneNumber]] = None
 
 
 class VoiceMailPartyInformation(ApiModel):
@@ -1224,12 +1224,12 @@ class VoiceMailPartyInformation(ApiModel):
     number: Optional[str] = None
     #: The party's person ID. Only present when the person ID is available and privacy is not enabled.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9hMTlkODJhMi00ZTY5LTU5YWEtOWYyZi1iY2E2MzEwMTNhNjg=
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: The party's place ID. Only present when the place ID is available and privacy is not enabled.
     #: example: Y2lzY29zcGFyazovL3VzL1BMQUNFL2ExOWQ3MWEyLTRlOTItOTFhYi05ZjJmLWJjYTEzNTAxM2ExNA==
-    placeId: Optional[str] = None
+    place_id: Optional[str] = None
     #: Indicates whether privacy is enabled for the name, number and `personId`/`placeId`.
-    privacyEnabled: Optional[bool] = None
+    privacy_enabled: Optional[bool] = None
 
 
 class VoiceMessageDetails(ApiModel):
@@ -1240,7 +1240,7 @@ class VoiceMessageDetails(ApiModel):
     #: example: 38.0
     duration: Optional[int] = None
     #: The calling party's details. For example, if user A calls user B and leaves a voicemail message, then A is the calling party.
-    callingParty: Optional[VoiceMailPartyInformation] = None
+    calling_party: Optional[VoiceMailPartyInformation] = None
     #: `true` if the voicemail message is urgent.
     urgent: Optional[bool] = None
     #: `true` if the voicemail message is confidential.
@@ -1250,7 +1250,7 @@ class VoiceMessageDetails(ApiModel):
     read: Optional[bool] = None
     #: Number of pages for the FAX.  Only set for a FAX.
     #: example: 2.0
-    faxPageCount: Optional[int] = None
+    fax_page_count: Optional[int] = None
     #: The date and time the voicemail message was created.
     #: example: 2021-11-14T17:00:00.000Z
     created: Optional[datetime] = None
@@ -1265,7 +1265,7 @@ class VoicemailInfoSendBusyCalls(ApiModel):
     greeting: Optional[CallInterceptInfoIncomingAnnouncementsGreeting] = None
     #: Indicates a custom greeting has been uploaded.
     #: example: True
-    greetingUploaded: Optional[bool] = None
+    greeting_uploaded: Optional[bool] = None
 
 
 class VoicemailInfoSendUnansweredCalls(ApiModel):
@@ -1277,13 +1277,13 @@ class VoicemailInfoSendUnansweredCalls(ApiModel):
     greeting: Optional[CallInterceptInfoIncomingAnnouncementsGreeting] = None
     #: Indicates a custom greeting has been uploaded
     #: example: True
-    greetingUploaded: Optional[bool] = None
+    greeting_uploaded: Optional[bool] = None
     #: Number of rings before unanswered call will be sent to voicemail.
     #: example: 3.0
-    numberOfRings: Optional[int] = None
+    number_of_rings: Optional[int] = None
     #: System-wide maximum number of rings allowed for `numberOfRings` setting.
     #: example: 15.0
-    systemMaxNumberOfRings: Optional[int] = None
+    system_max_number_of_rings: Optional[int] = None
 
 
 class VoicemailInfoTransferToNumber(ApiModel):
@@ -1301,7 +1301,7 @@ class VoicemailInfoEmailCopyOfMessage(ApiModel):
     enabled: Optional[bool] = None
     #: Email address to which the new voicemail audio will be sent.
     #: example: dummy@example.com
-    emailId: Optional[str] = None
+    email_id: Optional[str] = None
 
 
 class VoicemailInfoMessageStorageStorageType(str, Enum):
@@ -1314,13 +1314,13 @@ class VoicemailInfoMessageStorageStorageType(str, Enum):
 class VoicemailInfoMessageStorage(ApiModel):
     #: When `true` desktop phone will indicate there are new voicemails.
     #: example: True
-    mwiEnabled: Optional[bool] = None
+    mwi_enabled: Optional[bool] = None
     #: Designates which type of voicemail message storage is used.
     #: example: INTERNAL
-    storageType: Optional[VoicemailInfoMessageStorageStorageType] = None
+    storage_type: Optional[VoicemailInfoMessageStorageStorageType] = None
     #: External email address to which the new voicemail audio will be sent.  A value for this field must be provided in the request if a `storageType` of `EXTERNAL` is given in the request.
     #: example: dummy@example.com
-    externalEmail: Optional[str] = None
+    external_email: Optional[str] = None
 
 
 class VoicemailInfoFaxMessage(ApiModel):
@@ -1329,7 +1329,7 @@ class VoicemailInfoFaxMessage(ApiModel):
     enabled: Optional[bool] = None
     #: Designates phone number for the FAX. A value for this field must be provided in the request if faxMessage `enabled` field is given as `true` in the request.
     #: example: 2025551212
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Designates optional extension for the FAX.
     #: example: 1234
     extension: Optional[datetime] = None
@@ -1340,18 +1340,18 @@ class VoicemailInfo(ApiModel):
     #: example: True
     enabled: Optional[bool] = None
     #: Settings for sending all calls to voicemail.
-    sendAllCalls: Optional[CallWaitingInfo] = None
+    send_all_calls: Optional[CallWaitingInfo] = None
     #: Settings for sending calls to voicemail when the line is busy.
-    sendBusyCalls: Optional[VoicemailInfoSendBusyCalls] = None
-    sendUnansweredCalls: Optional[VoicemailInfoSendUnansweredCalls] = None
+    send_busy_calls: Optional[VoicemailInfoSendBusyCalls] = None
+    send_unanswered_calls: Optional[VoicemailInfoSendUnansweredCalls] = None
     #: Settings for notifications when there are any new voicemails.
     notifications: Optional[CallInterceptInfoIncomingAnnouncementsNewNumber] = None
     #: Settings for voicemail caller to transfer to a different number by pressing zero (0).
-    transferToNumber: Optional[VoicemailInfoTransferToNumber] = None
+    transfer_to_number: Optional[VoicemailInfoTransferToNumber] = None
     #: Settings for sending a copy of new voicemail message audio via email.
-    emailCopyOfMessage: Optional[VoicemailInfoEmailCopyOfMessage] = None
-    messageStorage: Optional[VoicemailInfoMessageStorage] = None
-    faxMessage: Optional[VoicemailInfoFaxMessage] = None
+    email_copy_of_message: Optional[VoicemailInfoEmailCopyOfMessage] = None
+    message_storage: Optional[VoicemailInfoMessageStorage] = None
+    fax_message: Optional[VoicemailInfoFaxMessage] = None
 
 
 class VoicemailPutSendBusyCalls(ApiModel):
@@ -1372,7 +1372,7 @@ class VoicemailPutSendUnansweredCalls(ApiModel):
     greeting: Optional[CallInterceptInfoIncomingAnnouncementsGreeting] = None
     #: Number of rings before an unanswered call will be sent to voicemail.
     #: example: 3.0
-    numberOfRings: Optional[int] = None
+    number_of_rings: Optional[int] = None
 
 
 class VoicemailPut(ApiModel):
@@ -1380,18 +1380,18 @@ class VoicemailPut(ApiModel):
     #: example: True
     enabled: Optional[bool] = None
     #: Settings for sending all calls to voicemail.
-    sendAllCalls: Optional[CallWaitingInfo] = None
+    send_all_calls: Optional[CallWaitingInfo] = None
     #: Settings for sending calls to voicemail when the line is busy.
-    sendBusyCalls: Optional[VoicemailPutSendBusyCalls] = None
-    sendUnansweredCalls: Optional[VoicemailPutSendUnansweredCalls] = None
+    send_busy_calls: Optional[VoicemailPutSendBusyCalls] = None
+    send_unanswered_calls: Optional[VoicemailPutSendUnansweredCalls] = None
     #: Settings for notifications when there are any new voicemails.
     notifications: Optional[CallInterceptInfoIncomingAnnouncementsNewNumber] = None
     #: Settings for voicemail caller to transfer to a different number by pressing zero (0).
-    transferToNumber: Optional[VoicemailInfoTransferToNumber] = None
+    transfer_to_number: Optional[VoicemailInfoTransferToNumber] = None
     #: Settings for sending a copy of new voicemail message audio via email.
-    emailCopyOfMessage: Optional[VoicemailInfoEmailCopyOfMessage] = None
-    messageStorage: Optional[VoicemailInfoMessageStorage] = None
-    faxMessage: Optional[VoicemailInfoFaxMessage] = None
+    email_copy_of_message: Optional[VoicemailInfoEmailCopyOfMessage] = None
+    message_storage: Optional[VoicemailInfoMessageStorage] = None
+    fax_message: Optional[VoicemailInfoFaxMessage] = None
 
 
 class Endpoints(ApiModel):
@@ -1408,7 +1408,7 @@ class Endpoints(ApiModel):
 class EndpointInformation(ApiModel):
     #: Person’s preferred answer endpoint.
     #: example: Y2lzY29z...
-    preferredAnswerEndpointId: Optional[str] = None
+    preferred_answer_endpoint_id: Optional[str] = None
     #: Array of endpoints available to the person.
     endpoints: Optional[list[Endpoints]] = None
 

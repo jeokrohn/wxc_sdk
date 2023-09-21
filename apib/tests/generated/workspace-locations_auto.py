@@ -16,16 +16,16 @@ class Location(ApiModel):
     id: Optional[str] = None
     #: A friendly name for the location.
     #: example: Cisco Barcelona
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: The location address.
     #: example: Carrer de Pere IV, Barcelona, Spain
     address: Optional[str] = None
     #: The location country code (ISO 3166-1).
     #: example: ES
-    countryCode: Optional[str] = None
+    country_code: Optional[str] = None
     #: The location city name.
     #: example: Barcelona
-    cityName: Optional[str] = None
+    city_name: Optional[str] = None
     #: The location latitude.
     #: example: 41.4066147
     latitude: Optional[int] = None
@@ -40,16 +40,16 @@ class Location(ApiModel):
 class WorkspaceLocationsCreationRequest(ApiModel):
     #: A friendly name for the location.
     #: example: Cisco Barcelona
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: The location address.
     #: example: Carrer de Pere IV, Barcelona, Spain
     address: Optional[str] = None
     #: The location country code (ISO 3166-1).
     #: example: ES
-    countryCode: Optional[str] = None
+    country_code: Optional[str] = None
     #: The location city name.
     #: example: Barcelona
-    cityName: Optional[str] = None
+    city_name: Optional[str] = None
     #: The location latitude.
     #: example: 41.4066147
     latitude: Optional[int] = None
@@ -72,22 +72,22 @@ class Floor(ApiModel):
     id: Optional[str] = None
     #: Unique identifier for the location.
     #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMV9pbnQxMy9XT1JLU1BBQ0VfTE9DQVRJT04vM2E2ZmYzNzMtNjhhNy00NGU0LTkxZDYtYTI3NDYwZTBhYzVjIzUxOWY2N2E1LTlkOTktNGM2My04YTA5LWI5MTcxY2M2NmJkMQ==
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: The floor number.
     #: example: -1.0
-    floorNumber: Optional[int] = None
+    floor_number: Optional[int] = None
     #: The floor display name.
     #: example: The basement
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
 
 
 class WorkspaceLocationFloorsCreationRequest(ApiModel):
     #: The floor number.
     #: example: -1.0
-    floorNumber: Optional[int] = None
+    floor_number: Optional[int] = None
     #: The floor display name.
     #: example: The basement
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
 
 
 class WorkspaceLocationFloorsCollectionResponse(ApiModel):

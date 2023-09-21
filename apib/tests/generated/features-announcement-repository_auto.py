@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AnnouncementResponse', 'AnnouncementResponseWithId', 'AnnouncementUsageResponse', 'AnnouncementsListResponse', 'AnnouncementsListResponseLevel', 'FeatureReferenceObject', 'LocationObject']
+__auto__ = ['AnnouncementResponse', 'AnnouncementResponseWithId', 'AnnouncementUsageResponse', 'AnnouncementsListResponse', 'AnnouncementsListResponseLevel', 'FeatureReferenceObject', 'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId', 'LocationObject']
 
 
 class FeatureReferenceObject(ApiModel):
@@ -22,10 +22,10 @@ class FeatureReferenceObject(ApiModel):
     type: Optional[str] = None
     #: Unique identifier of the location.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi81ZTk3MzFlNy1iOWQ0LTRmMWQtYjYyMi05NDgwMDhhMjkzMzM
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: Location name of the announcement file.
     #: example: RCDN
-    locationName: Optional[str] = None
+    location_name: Optional[str] = None
 
 
 class AnnouncementResponse(ApiModel):
@@ -37,21 +37,21 @@ class AnnouncementResponse(ApiModel):
     name: Optional[str] = None
     #: File name of the uploaded binary announcement greeting.
     #: example: Sample_Greetings_file.wav
-    fileName: Optional[str] = None
+    file_name: Optional[str] = None
     #: Size of the file in kilobytes.
     #: example: 356
-    fileSize: Optional[datetime] = None
+    file_size: Optional[datetime] = None
     #: Media file type of the announcement file.
     #: example: WAV
-    mediaFileType: Optional[str] = None
+    media_file_type: Optional[str] = None
     #: Last updated timestamp (in UTC format) of the announcement.
     #: example: 2023-06-13T18:39:53.651Z
-    lastUpdated: Optional[datetime] = None
+    last_updated: Optional[datetime] = None
     #: Reference count of the call features this announcement is assigned to.
     #: example: 1.0
-    featureReferenceCount: Optional[int] = None
+    feature_reference_count: Optional[int] = None
     #: Call features referenced by this announcement.
-    featureReferences: Optional[list[FeatureReferenceObject]] = None
+    feature_references: Optional[list[FeatureReferenceObject]] = None
 
 
 class AnnouncementResponseWithId(ApiModel):
@@ -63,16 +63,16 @@ class AnnouncementResponseWithId(ApiModel):
 class AnnouncementUsageResponse(ApiModel):
     #: Total file size used by announcements in this repository in kilobytes.
     #: example: 1068.0
-    totalFileSizeUsedKB: Optional[int] = None
+    total_file_size_used_kb: Optional[int] = Field(alias='totalFileSizeUsedKB', default=None)
     #: Maximum audio file size allowed to upload in kilobytes.
     #: example: 9600.0
-    maxAudioFileSizeAllowedKB: Optional[int] = None
+    max_audio_file_size_allowed_kb: Optional[int] = Field(alias='maxAudioFileSizeAllowedKB', default=None)
     #: Maximum video file size allowed to upload in kilobytes.
     #: example: 120000.0
-    maxVideoFileSizeAllowedKB: Optional[int] = None
+    max_video_file_size_allowed_kb: Optional[int] = Field(alias='maxVideoFileSizeAllowedKB', default=None)
     #: Total file size limit for the repository in megabytes.
     #: example: 1000.0
-    totalFileSizeLimitMB: Optional[int] = None
+    total_file_size_limit_mb: Optional[int] = Field(alias='totalFileSizeLimitMB', default=None)
 
 
 class AnnouncementsListResponseLevel(str, Enum):
@@ -97,18 +97,24 @@ class AnnouncementsListResponse(ApiModel):
     name: Optional[str] = None
     #: File name of the uploaded binary announcement greeting.
     #: example: Sample_Greetings_file.wav
-    fileName: Optional[str] = None
+    file_name: Optional[str] = None
     #: Size of the file in kilobytes.
     #: example: 356
-    fileSize: Optional[datetime] = None
+    file_size: Optional[datetime] = None
     #: Media file type of the announcement file.
     #: example: WAV
-    mediaFileType: Optional[str] = None
+    media_file_type: Optional[str] = None
     #: LastUpdated timestamp (in UTC format) of the announcement.
     #: example: 2023-06-13T18:39:53.651Z
-    lastUpdated: Optional[datetime] = None
+    last_updated: Optional[datetime] = None
     #: The level at which this announcement exists.
     #: example: LOCATION
     level: Optional[AnnouncementsListResponseLevel] = None
     #: The details of location at which this announcement exists.
     location: Optional[LocationObject] = None
+
+
+class FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId(str, Enum):
+    all = 'all'
+    locations = 'locations'
+    y2lz_y29zc_gfyazov_l3_vz_l0x_pq0_fusu9_olz_mx_mtyx = 'Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzMxMTYx'

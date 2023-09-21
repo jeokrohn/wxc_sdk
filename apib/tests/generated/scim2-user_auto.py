@@ -33,7 +33,7 @@ class PatchUser(ApiModel):
     #: example: ['urn:ietf:params:scim:api:messages:2.0:PatchOp']
     schemas: Optional[list[str]] = None
     #: A list of patch operations.
-    Operations: Optional[list[PatchUserOperations]] = None
+    operations: Optional[list[PatchUserOperations]] = Field(alias='Operations', default=None)
 
 
 class PostUserUrn:ietf:params:scim:schemas:extension:enterprise:2.0:UserManager(ApiModel):
@@ -45,7 +45,7 @@ class PostUserUrn:ietf:params:scim:schemas:extension:enterprise:2.0:UserManager(
 class PostUserUrn:ietf:params:scim:schemas:extension:enterprise:2.0:User(ApiModel):
     #: Identifies the name of a cost center.
     #: example: costCenter 123
-    costCenter: Optional[str] = None
+    cost_center: Optional[str] = None
     #: Identifies the name of an organization.
     #: example: Cisco webexidentity
     organization: Optional[str] = None
@@ -57,7 +57,7 @@ class PostUserUrn:ietf:params:scim:schemas:extension:enterprise:2.0:User(ApiMode
     department: Optional[str] = None
     #: Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an organization.
     #: example: 518-8888-888
-    employeeNumber: Optional[str] = None
+    employee_number: Optional[str] = None
     #: The user's manager.
     manager: Optional[PostUserUrn:ietf:params:scim:schemas:extension:enterprise:2.0:UserManager] = None
 
@@ -84,7 +84,7 @@ class SipAddressObject(ApiModel):
 class ManagedOrgsObject(ApiModel):
     #: Webex Identity assigned organization identifier.
     #: example: 75fe2995-24f5-4831-8d2c-1c2f8255912e
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: Role in the target organization for the user.
     #: example: id_full_admin
     role: Optional[str] = None
@@ -93,10 +93,10 @@ class ManagedOrgsObject(ApiModel):
 class ManagedGroupObject(ApiModel):
     #: Webex Identity assigned organization identifier.
     #: example: 153ced48-d2d1-4369-86fd-9b9fade218ff
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: A unique identifier for the group.
     #: example: 1929effd-b750-43d6-be0d-7dcdaac38e92
-    groupId: Optional[str] = None
+    group_id: Optional[str] = None
     #: Role in the target organization for the user.
     #: example: location_full_admin
     role: Optional[str] = None
@@ -105,7 +105,7 @@ class ManagedGroupObject(ApiModel):
 class ManagedSitesObject(ApiModel):
     #: Managed site name.
     #: example: admintrainSiteName1.webex.com
-    siteName: Optional[str] = None
+    site_name: Optional[str] = None
     #: Role in the managed site for the user.
     #: example: full_admin
     role: Optional[str] = None
@@ -114,15 +114,15 @@ class ManagedSitesObject(ApiModel):
 class PostUserUrn:scim:schemas:extension:cisco:webexidentity:2.0:User(ApiModel):
     #: Account status of the user.
     #: example: ['element='string' content='active' attributes={'typeAttributes': ApibArray(element='array', content=[ApibString(element='string', content='fixed', attributes=None, meta=None)], attributes=None, meta=None)} meta=None']
-    accountStatus: Optional[list[str]] = None
+    account_status: Optional[list[str]] = None
     #: sipAddress values for the user.
-    sipAddresses: Optional[list[SipAddressObject]] = None
+    sip_addresses: Optional[list[SipAddressObject]] = None
     #: Organizations that the user can manage.
-    managedOrgs: Optional[list[ManagedOrgsObject]] = None
+    managed_orgs: Optional[list[ManagedOrgsObject]] = None
     #: Groups that the user can manage.
-    managedGroups: Optional[list[ManagedGroupObject]] = None
+    managed_groups: Optional[list[ManagedGroupObject]] = None
     #: Sites that the user can manage.
-    managedSites: Optional[list[ManagedSitesObject]] = None
+    managed_sites: Optional[list[ManagedSitesObject]] = None
 
 
 class UserTypeObject(str, Enum):
@@ -135,19 +135,19 @@ class UserTypeObject(str, Enum):
 class NameObject(ApiModel):
     #: The given name of the user, or first name in most Western languages (e.g., "Sarah" given the full name "Ms. Sarah J Henderson, III").
     #: example: Sarah
-    givenName: Optional[str] = None
+    given_name: Optional[str] = None
     #: The family name of the user, or last name in most Western languages (e.g., "Henderson" given the full name "Ms. Sarah J Henderson, III").
     #: example: Henderson
-    familyName: Optional[str] = None
+    family_name: Optional[str] = None
     #: The middle name(s) of the user (e.g., "Jane" given the full name "Ms. Sarah J Henderson, III").
     #: example: Jane
-    middleName: Optional[str] = None
+    middle_name: Optional[str] = None
     #: The honorific prefix(es) of the user, or title in most Western languages (e.g., "Ms." given the full name "Ms. Sarah J Henderson, III").
     #: example: Mr.
-    honorificPrefix: Optional[str] = None
+    honorific_prefix: Optional[str] = None
     #: The honorific suffix(es) of the user, or suffix in most Western languages (e.g., "III" given the full name "Ms. Sarah J Henderson, III").
     #: example: III
-    honorificSuffix: Optional[str] = None
+    honorific_suffix: Optional[str] = None
 
 
 class PutUserPhoneNumbersType(str, Enum):
@@ -202,7 +202,7 @@ class PutUserAddresses(ApiModel):
     type: Optional[str] = None
     #: The full street address component, which may include house number, street name, P.O. box, and multi-line extended street address information. This attribute MAY contain newlines.
     #: example: 100 Universal City Plaza
-    streetAddress: Optional[str] = None
+    street_address: Optional[str] = None
     #: The city or locality component.
     #: example: Hollywood
     locality: Optional[str] = None
@@ -211,7 +211,7 @@ class PutUserAddresses(ApiModel):
     region: Optional[str] = None
     #: The zip code or postal code component.
     #: example: 91608
-    postalCode: Optional[str] = None
+    postal_code: Optional[str] = None
     #: The country name component.
     #: example: US
     country: Optional[str] = None
@@ -263,10 +263,10 @@ class PostUser(ApiModel):
     schemas: Optional[list[str]] = None
     #: A unique identifier for the user and is used to authenticate the user in Webex.  This attribute must be set to the user's primary email address.  No other user in Webex may have the same userName value and thus this value is required to be unique within Webex.
     #: example: user1@example.com
-    userName: Optional[str] = None
+    user_name: Optional[str] = None
     #: The type of the user.
     #: example: user
-    userType: Optional[UserTypeObject] = None
+    user_type: Optional[UserTypeObject] = None
     #: The user's business title.  Examples of a title is "Business Manager". "Senior Accountant", "Engineer" etc.
     #: example: Sales manager
     title: Optional[str] = None
@@ -276,7 +276,7 @@ class PostUser(ApiModel):
     #: Indicates the user's preferred language.  Acceptable values for this field are based on the [ISO-696](http://www.loc.gov/standards/iso639-2/php/code_list.php) and [ISO-3166](https://www.iso.org/obp/ui/#search) with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for english spoken in the United Statesfr_FR: for french spoken in France.
     #: example: en_US
-    preferredLanguage: Optional[str] = None
+    preferred_language: Optional[str] = None
     #: The user's locale which is used to represent the user's currency, time format, and numerical representations.  Acceptable values for this field are based on the [ISO-696](http://www.loc.gov/standards/iso639-2/php/code_list.php) and [ISO-3166](https://www.iso.org/obp/ui/#search) with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for English spoken in the United States or fr_FR: for French spoken in France.
     #: example: en_US
@@ -286,20 +286,20 @@ class PostUser(ApiModel):
     timezone: Optional[str] = None
     #: A fully qualified URL pointing to a page representing the user's online profile.
     #: example: https://jojowiki.com/Jonathan_Joestar
-    profileUrl: Optional[str] = None
+    profile_url: Optional[str] = None
     #: External identity.
     #: example: externalIdValue
-    externalId: Optional[str] = None
+    external_id: Optional[str] = None
     #: The value to display or show the user's name in Webex.
     #: example: Mr. Jonathan Jane Joestar, III
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: A casual name of the user.  The value Bob when the user's formal name is Robert.
     #: example: JoJo
-    nickName: Optional[str] = None
+    nick_name: Optional[str] = None
     #: The components of the user's real name.
     name: Optional[NameObject] = None
     #: A list of user's phone numbers with an indicator of primary to specify the user's main number.
-    phoneNumbers: Optional[list[PutUserPhoneNumbers]] = None
+    phone_numbers: Optional[list[PutUserPhoneNumbers]] = None
     #: A list of photos for the user that represent a thing the user has.
     photos: Optional[list[PhotoObject]] = None
     #: User's physical mailing address.
@@ -309,9 +309,9 @@ class PostUser(ApiModel):
     #: A list of roles for the user that collectively represent who the user is.
     roles: Optional[list[RoleObject]] = None
     #: SCIM2 enterprise extension
-    urn:ietf:params:scim:schemas:extension:enterprise:2.0:User: Optional[PostUserUrn:ietf:params:scim:schemas:extension:enterprise:2.0:User] = None
+    urn:ietf:params:scim:schemas:extension:enterprise:2.0:user: Optional[PostUserUrn:ietf:params:scim:schemas:extension:enterprise:2.0:User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
     #: The Cisco extension of SCIM 2.
-    urn:scim:schemas:extension:cisco:webexidentity:2.0:User: Optional[PostUserUrn:scim:schemas:extension:cisco:webexidentity:2.0:User] = None
+    urn:scim:schemas:extension:cisco:webexidentity:2.0:user: Optional[PostUserUrn:scim:schemas:extension:cisco:webexidentity:2.0:User] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
 
 
 class PutUser(ApiModel):
@@ -320,10 +320,10 @@ class PutUser(ApiModel):
     schemas: Optional[list[str]] = None
     #: A unique identifier for the user and is used to authenticate the user in Webex.  This attribute must be set to the user's primary email address.  No other user in Webex may have the same userName value and thus this value is required to b unique within Webex.
     #: example: user1Changed@example.com
-    userName: Optional[str] = None
+    user_name: Optional[str] = None
     #: The type of the user.
     #: example: user
-    userType: Optional[UserTypeObject] = None
+    user_type: Optional[UserTypeObject] = None
     #: The user's business title.  Examples of a title is "Business Manager". "Senior Accountant", "Engineer" etc.
     #: example: Sales manager
     title: Optional[str] = None
@@ -333,7 +333,7 @@ class PutUser(ApiModel):
     #: Indicates the user's preferred language.  Acceptable values for this field are based on the [ISO-696](http://www.loc.gov/standards/iso639-2/php/code_list.php) and [ISO-3166](https://www.iso.org/obp/ui/#search) with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for english spoken in the United States, fr_FR: for french spoken in France.
     #: example: en_US
-    preferredLanguage: Optional[str] = None
+    preferred_language: Optional[str] = None
     #: The user's locale which is used to represent the user's currency, time format, and numerical representations.  Acceptable values for this field are based on the  [ISO-696](http://www.loc.gov/standards/iso639-2/php/code_list.php) and [ISO-3166](https://www.iso.org/obp/ui/#search) with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for English spoken in the United States, or fr_FR: for French spoken in France.
     #: example: en_US
@@ -343,18 +343,18 @@ class PutUser(ApiModel):
     timezone: Optional[str] = None
     #: A fully qualified URL pointing to a page representing the user's online profile.
     #: example: https://jojowiki.com/Jonathan_Joestar
-    profileUrl: Optional[str] = None
+    profile_url: Optional[str] = None
     #: External identity.
     #: example: externalIdNewValue
-    externalId: Optional[str] = None
+    external_id: Optional[str] = None
     #: The value to display or show the user's name in Webex.
     #: example: Mr. Jonathan Jane Joestar, III
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: A casual name of the user.  The value Bob when the user's formal name is Robert.
     #: example: JoJo
-    nickName: Optional[str] = None
+    nick_name: Optional[str] = None
     #: A list of user's phone numbers with an indicator of primary to specify the users main number.
-    phoneNumbers: Optional[list[PutUserPhoneNumbers]] = None
+    phone_numbers: Optional[list[PutUserPhoneNumbers]] = None
     #: A list of photos for the user that represent a thing the user has.
     photos: Optional[list[PhotoObject]] = None
     #: A physical mailing address of user.
@@ -364,9 +364,9 @@ class PutUser(ApiModel):
     #: A list of roles for the user that collectively represent who the user is.
     roles: Optional[list[RoleObject]] = None
     #: SCIM2 enterprise extention
-    urn:ietf:params:scim:schemas:extension:enterprise:2.0:User: Optional[PostUserUrn:ietf:params:scim:schemas:extension:enterprise:2.0:User] = None
+    urn:ietf:params:scim:schemas:extension:enterprise:2.0:user: Optional[PostUserUrn:ietf:params:scim:schemas:extension:enterprise:2.0:User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
     #: cisco extention of SCIM 2
-    urn:scim:schemas:extension:cisco:webexidentity:2.0:User: Optional[PostUserUrn:scim:schemas:extension:cisco:webexidentity:2.0:User] = None
+    urn:scim:schemas:extension:cisco:webexidentity:2.0:user: Optional[PostUserUrn:scim:schemas:extension:cisco:webexidentity:2.0:User] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
 
 
 class ManagerResponseObject(ApiModel):
@@ -375,7 +375,7 @@ class ManagerResponseObject(ApiModel):
     value: Optional[str] = None
     #: The value to display or show the manager's name in Webex.
     #: example: Identity Administrator
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: The URI corresponding to a SCIM user that is the manager.
     #: example: http://integration.webexapis.com/identity/scim/0ae87ade-8c8a-4952-af08-318798958d0c/v2/Users/b5717a4a-0169-43b2-ac3c-db20ba4e72cd
     $ref: Optional[str] = None
@@ -384,7 +384,7 @@ class ManagerResponseObject(ApiModel):
 class GetUserResponseUrn:ietf:params:scim:schemas:extension:enterprise:2.0:User(ApiModel):
     #: Identifies the name of a cost center.
     #: example: costCenter 123
-    costCenter: Optional[str] = None
+    cost_center: Optional[str] = None
     #: Identifies the name of an organization.
     #: example: Cisco webexidentity
     organization: Optional[str] = None
@@ -396,7 +396,7 @@ class GetUserResponseUrn:ietf:params:scim:schemas:extension:enterprise:2.0:User(
     department: Optional[str] = None
     #: Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an organization.
     #: example: 518-8888-888
-    employeeNumber: Optional[str] = None
+    employee_number: Optional[str] = None
     #: The user's manager.
     manager: Optional[ManagerResponseObject] = None
 
@@ -410,7 +410,7 @@ class GetUserResponse(ApiModel):
     id: Optional[str] = None
     #: A unique identifier for the user and is used to authenticate the user in Webex.  This attribute must be set to the user's primary email address.  No other user in Webex may have the same userName value and thus this value is required to be unique within Webex.
     #: example: user1@example.com
-    userName: Optional[str] = None
+    user_name: Optional[str] = None
     #: A boolean value of "true" or "false" indicating whether the user is active in Webex.
     #: example: True
     active: Optional[bool] = None
@@ -420,45 +420,45 @@ class GetUserResponse(ApiModel):
     name: Optional[NameObject] = None
     #: The value to display or show the user's name in Webex.
     #: example: Mr. Jonathan Jane Joestar, III
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: A casual name of the user.  The value Bob when the user's formal name is Robert.
     #: example: JoJo
-    nickName: Optional[str] = None
+    nick_name: Optional[str] = None
     #: A list of the user's email addresses with an indicator of the user's primary email address.  The primary email address must be the same value as the user's userName.
     emails: Optional[list[EmailObject]] = None
     #: The type of the user.
     #: example: user
-    userType: Optional[UserTypeObject] = None
+    user_type: Optional[UserTypeObject] = None
     #: A fully qualified URL pointing to a page representing the user's online profile.
     #: example: https://jojowiki.com/Jonathan_Joestar
-    profileUrl: Optional[str] = None
+    profile_url: Optional[str] = None
     #: The user's business title.  Examples of a title is "Business Manager". "Senior Accountant", "Engineer" etc.
     #: example: Sales manager
     title: Optional[str] = None
     #: Indicates the user's preferred language.  Acceptable values for this field are based on the [ISO-696](http://www.loc.gov/standards/iso639-2/php/code_list.php) and [ISO-3166](https://www.iso.org/obp/ui/#search) with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for english spoken in the United Statesfr_FR: for french spoken in France.
     #: example: en_US
-    preferredLanguage: Optional[str] = None
+    preferred_language: Optional[str] = None
     #: The user's locale which is used to represent the user's currency, time format, and numerical representations.  Acceptable values for this field are based on the [ISO-696](http://www.loc.gov/standards/iso639-2/php/code_list.php) and [ISO-3166](https://www.iso.org/obp/ui/#search) with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for English spoken in the United States or fr_FR: for French spoken in France.
     #: example: en_US
     locale: Optional[str] = None
     #: External identity.
     #: example: externalIdValue
-    externalId: Optional[str] = None
+    external_id: Optional[str] = None
     #: The user's time zone specified in the [IANA timezone](https://nodatime.org/timezones) timezone format, for example, "America/Los_Angeles".
     #: example: America/Los_Angeles
     timezone: Optional[str] = None
     #: A list of user's phone numbers with an indicator of primary to specify the user's main number.
-    phoneNumbers: Optional[list[PutUserPhoneNumbers]] = None
+    phone_numbers: Optional[list[PutUserPhoneNumbers]] = None
     #: A list of photos for the user that represent a thing the user has.
     photos: Optional[list[PhotoObject]] = None
     #: User's physical mailing address.
     addresses: Optional[list[PutUserAddresses]] = None
     #: SCIM2 enterprise extension
-    urn:ietf:params:scim:schemas:extension:enterprise:2.0:User: Optional[GetUserResponseUrn:ietf:params:scim:schemas:extension:enterprise:2.0:User] = None
+    urn:ietf:params:scim:schemas:extension:enterprise:2.0:user: Optional[GetUserResponseUrn:ietf:params:scim:schemas:extension:enterprise:2.0:User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
     #: The Cisco extension of SCIM 2.
-    urn:scim:schemas:extension:cisco:webexidentity:2.0:User: Optional[PostUserUrn:scim:schemas:extension:cisco:webexidentity:2.0:User] = None
+    urn:scim:schemas:extension:cisco:webexidentity:2.0:user: Optional[PostUserUrn:scim:schemas:extension:cisco:webexidentity:2.0:User] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
 
 
 class SearchUserResponse(ApiModel):
@@ -467,12 +467,12 @@ class SearchUserResponse(ApiModel):
     schemas: Optional[list[str]] = None
     #: Total number of users in search results.
     #: example: 2.0
-    totalResults: Optional[int] = None
+    total_results: Optional[int] = None
     #: The total number of items in a paged result.
     #: example: 2.0
-    itemsPerPage: Optional[int] = None
+    items_per_page: Optional[int] = None
     #: Start at the one-based offset in the list of matching users.
     #: example: 1.0
-    startIndex: Optional[int] = None
+    start_index: Optional[int] = None
     #: A list of users with details.
-    Resources: Optional[list[GetUserResponse]] = None
+    resources: Optional[list[GetUserResponse]] = Field(alias='Resources', default=None)

@@ -24,10 +24,10 @@ class RingPatternObject(str, Enum):
 class AlternateNumbersWithPattern(ApiModel):
     #: Alternate phone number for the hunt group.
     #: example: +12225555309
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Ring pattern for when this alternate number is called. Only available when `distinctiveRing` is enabled for the hunt group.
     #: example: NORMAL
-    ringPattern: Optional[RingPatternObject] = None
+    ring_pattern: Optional[RingPatternObject] = None
 
 
 class CallQueueQueueSettingsObjectOverflowAction(str, Enum):
@@ -51,25 +51,25 @@ class CallQueueQueueSettingsObjectOverflow(ApiModel):
     #: example: PERFORM_BUSY_TREATMENT
     action: Optional[CallQueueQueueSettingsObjectOverflowAction] = None
     #: When `true`, forwards all calls to a voicemail service of an internal number. This option is ignored when an external `transferNumber` is entered.
-    sendToVoicemail: Optional[bool] = None
+    send_to_voicemail: Optional[bool] = None
     #: Destination number for overflow calls when `action` is set to `TRANSFER_TO_PHONE_NUMBER`.
     #: example: +15555551212
-    transferNumber: Optional[str] = None
+    transfer_number: Optional[str] = None
     #: After calls wait for the configured number of seconds and no agent is available, the overflow treatment is triggered.
     #: example: True
-    overflowAfterWaitEnabled: Optional[bool] = None
+    overflow_after_wait_enabled: Optional[bool] = None
     #: Number of seconds to wait before the overflow treatment is triggered when no agent is available. The minimum value 0, The maximum value is 7200 seconds.
     #: example: 20.0
-    overflowAfterWaitTime: Optional[int] = None
+    overflow_after_wait_time: Optional[int] = None
     #: Indicate overflow audio to be played, otherwise, callers will hear the hold music until the call is answered by a user.
     #: example: True
-    playOverflowGreetingEnabled: Optional[bool] = None
+    play_overflow_greeting_enabled: Optional[bool] = None
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
     greeting: Optional[CallQueueQueueSettingsObjectOverflowGreeting] = None
     #: Array of announcement `fileName` strings to be played as overflow greetings. These files are from the list of announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 `fileName` is mandatory, and the maximum is 4.
     #: example: ['[\"Greeting-1.wav\"]']
-    audioFiles: Optional[list[str]] = None
+    audio_files: Optional[list[str]] = None
 
 
 class CallQueueQueueSettingsObjectWelcomeMessage(ApiModel):
@@ -77,13 +77,13 @@ class CallQueueQueueSettingsObjectWelcomeMessage(ApiModel):
     #: example: True
     enabled: Optional[bool] = None
     #: Mandatory entrance message. The default value is `false`.
-    alwaysEnabled: Optional[bool] = None
+    always_enabled: Optional[bool] = None
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
     greeting: Optional[CallQueueQueueSettingsObjectOverflowGreeting] = None
     #: Array of announcement `fileName` strings to be played as `welcomeMessage` greetings. These files are from the list of announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 `fileName` is mandatory, and the maximum is 4.
     #: example: ['[\"Greeting-1.wav\"]']
-    audioFiles: Optional[list[str]] = None
+    audio_files: Optional[list[str]] = None
 
 
 class CallQueueQueueSettingsObjectWaitMessageWaitMode(str, Enum):
@@ -99,31 +99,31 @@ class CallQueueQueueSettingsObjectWaitMessage(ApiModel):
     enabled: Optional[bool] = None
     #: Estimated wait message operating mode. Supported values `TIME` and `POSITION`.
     #: example: POSITION
-    waitMode: Optional[CallQueueQueueSettingsObjectWaitMessageWaitMode] = None
+    wait_mode: Optional[CallQueueQueueSettingsObjectWaitMessageWaitMode] = None
     #: The number of minutes for which the estimated wait is played. The minimum time is 10 minutes. The maximum time is 100 minutes.
     #: example: 100.0
-    handlingTime: Optional[int] = None
+    handling_time: Optional[int] = None
     #: The default number of call handling minutes. The minimum time is 1 minutes, The maximum time is 100 minutes.
     #: example: 100.0
-    defaultHandlingTime: Optional[int] = None
+    default_handling_time: Optional[int] = None
     #: The number of the position for which the estimated wait is played. The minimum positions are 10, The maximum positions are 100.
     #: example: 100.0
-    queuePosition: Optional[int] = None
+    queue_position: Optional[int] = None
     #: Play time / Play position High Volume.
-    highVolumeMessageEnabled: Optional[bool] = None
+    high_volume_message_enabled: Optional[bool] = None
     #: The number of estimated waiting times in seconds. The minimum time is 10 seconds. The maximum time is 600 seconds.
     #: example: 600.0
-    estimatedWaitingTime: Optional[int] = None
+    estimated_waiting_time: Optional[int] = None
     #: Callback options enabled/disabled. Default value is false.
-    callbackOptionEnabled: Optional[bool] = None
+    callback_option_enabled: Optional[bool] = None
     #: The minimum estimated callback times in minutes. The default value is 30.
     #: example: 10.0
-    minimumEstimatedCallbackTime: Optional[int] = None
+    minimum_estimated_callback_time: Optional[int] = None
     #: The international numbers for callback is enabled/disabled. The default value is `false`.
-    internationalCallbackEnabled: Optional[bool] = None
+    international_callback_enabled: Optional[bool] = None
     #: Play updated estimated wait message.
     #: example: true
-    playUpdatedEstimatedWaitMessage: Optional[str] = None
+    play_updated_estimated_wait_message: Optional[str] = None
 
 
 class CallQueueQueueSettingsObjectComfortMessage(ApiModel):
@@ -132,13 +132,13 @@ class CallQueueQueueSettingsObjectComfortMessage(ApiModel):
     enabled: Optional[bool] = None
     #: The interval in seconds between each repetition of the comfort message played to queued users. The minimum time is 10 seconds.The maximum time is 600 seconds.
     #: example: 10.0
-    timeBetweenMessages: Optional[int] = None
+    time_between_messages: Optional[int] = None
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
     greeting: Optional[CallQueueQueueSettingsObjectOverflowGreeting] = None
     #: Array of announcement `fileName` strings to be played as `comfortMessage` greetings. These files are from the list of announcement files associated with this call queue. These files are from the list of announcements files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 `fileName` is mandatory, and the maximum is 4.
     #: example: ['[\"Greeting-1.wav\"]']
-    audioFiles: Optional[list[str]] = None
+    audio_files: Optional[list[str]] = None
 
 
 class CallQueueQueueSettingsObjectComfortMessageBypass(ApiModel):
@@ -147,13 +147,13 @@ class CallQueueQueueSettingsObjectComfortMessageBypass(ApiModel):
     enabled: Optional[bool] = None
     #: The interval in seconds between each repetition of the comfort bypass message played to queued users. The minimum time is 1 seconds. The maximum time is 120 seconds.
     #: example: 10.0
-    callWaitingAgeThreshold: Optional[int] = None
+    call_waiting_age_threshold: Optional[int] = None
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
     greeting: Optional[CallQueueQueueSettingsObjectOverflowGreeting] = None
     #: Array of announcement `fileName` strings to be played as `comfortMessageBypass` greetings. These files are from the list of announcements files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 `fileName` is mandatory, and the maximum is 4.
     #: example: ['[\"Greeting-1.wav\"]']
-    audioFiles: Optional[list[str]] = None
+    audio_files: Optional[list[str]] = None
 
 
 class CallQueueQueueSettingsObjectMohMessageNormalSource(ApiModel):
@@ -165,60 +165,61 @@ class CallQueueQueueSettingsObjectMohMessageNormalSource(ApiModel):
     greeting: Optional[CallQueueQueueSettingsObjectOverflowGreeting] = None
     #: Array of announcement `fileName` strings to be played as `mohMessage` greetings. These files are from the list of announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 `fileName` is mandatory, and the maximum is 4.
     #: example: ['[\"Greeting-1.wav\"]']
-    audioFiles: Optional[list[str]] = None
+    audio_files: Optional[list[str]] = None
 
 
 class CallQueueQueueSettingsObjectMohMessage(ApiModel):
-    normalSource: Optional[CallQueueQueueSettingsObjectMohMessageNormalSource] = None
-    alternateSource: Optional[CallQueueQueueSettingsObjectMohMessageNormalSource] = None
+    normal_source: Optional[CallQueueQueueSettingsObjectMohMessageNormalSource] = None
+    alternate_source: Optional[CallQueueQueueSettingsObjectMohMessageNormalSource] = None
 
 
 class CallQueueQueueSettingsObject(ApiModel):
     #: The maximum number of calls for this call queue. Once this number is reached, the `overflow` settings are triggered.
     #: example: 50.0
-    queueSize: Optional[int] = None
+    queue_size: Optional[int] = None
     #: Play ringing tone to callers when their call is set to an available agent.
-    callOfferToneEnabled `true`: Optional[bool] = None
+    #: example: True
+    call_offer_tone_enabled: Optional[bool] = None
     #: Reset caller statistics upon queue entry.
-    resetCallStatisticsEnabled: Optional[bool] = None
+    reset_call_statistics_enabled: Optional[bool] = None
     #: Settings for incoming calls exceed queueSize.
     overflow: Optional[CallQueueQueueSettingsObjectOverflow] = None
     #: Play a message when callers first reach the queue. For example, “Thank you for calling. An agent will be with you shortly.” It can be set as mandatory. If the mandatory option is not selected and a caller reaches the call queue while there is an available agent, the caller will not hear this announcement and is transferred to an agent. The welcome message feature is enabled by default.
-    welcomeMessage: Optional[CallQueueQueueSettingsObjectWelcomeMessage] = None
+    welcome_message: Optional[CallQueueQueueSettingsObjectWelcomeMessage] = None
     #: Notify the caller with either their estimated wait time or position in the queue. If this option is enabled, it plays after the welcome message and before the comfort message. By default, it is not enabled.
-    waitMessage: Optional[CallQueueQueueSettingsObjectWaitMessage] = None
+    wait_message: Optional[CallQueueQueueSettingsObjectWaitMessage] = None
     #: Play a message after the welcome message and before hold music. This is typically a `CUSTOM` announcement that plays information, such as current promotions or information about products and services.
-    comfortMessage: Optional[CallQueueQueueSettingsObjectComfortMessage] = None
+    comfort_message: Optional[CallQueueQueueSettingsObjectComfortMessage] = None
     #: Play a shorter comfort message instead of the usual Comfort or Music On Hold announcement to all the calls that should be answered quickly. This feature prevents a caller from hearing a short portion of the standard comfort message that abruptly ends when they are connected to an agent.
-    comfortMessageBypass: Optional[CallQueueQueueSettingsObjectComfortMessageBypass] = None
+    comfort_message_bypass: Optional[CallQueueQueueSettingsObjectComfortMessageBypass] = None
     #: Play music after the comforting message in a repetitive loop.
-    mohMessage: Optional[CallQueueQueueSettingsObjectMohMessage] = None
+    moh_message: Optional[CallQueueQueueSettingsObjectMohMessage] = None
     #: Play a message to the agent immediately before the incoming call is connected. The message typically announces the identity of the call queue from which the call is coming.
-    whisperMessage: Optional[CallQueueQueueSettingsObjectMohMessageNormalSource] = None
+    whisper_message: Optional[CallQueueQueueSettingsObjectMohMessageNormalSource] = None
 
 
 class GetCallQueueCallPolicyObjectCallBounce(ApiModel):
     #: If enabled, bounce calls after the set number of rings.
     #: example: True
-    callBounceEnabled: Optional[bool] = None
+    call_bounce_enabled: Optional[bool] = None
     #: Number of rings after which to bounce call, if call bounce is enabled.
     #: example: 5.0
-    callBounceMaxRings: Optional[int] = None
+    call_bounce_max_rings: Optional[int] = None
     #: Bounce if agent becomes unavailable.
     #: example: True
-    agentUnavailableEnabled: Optional[bool] = None
+    agent_unavailable_enabled: Optional[bool] = None
     #: Alert agent if call on hold more than `alertAgentMaxSeconds`.
     #: example: True
-    alertAgentEnabled: Optional[bool] = None
+    alert_agent_enabled: Optional[bool] = None
     #: Number of second after which to alert agent if `alertAgentEnabled`.
     #: example: 20.0
-    alertAgentMaxSeconds: Optional[int] = None
+    alert_agent_max_seconds: Optional[int] = None
     #: Bounce if call on hold more than `callBounceMaxSeconds`.
     #: example: True
-    callBounceOnHoldEnabled: Optional[bool] = None
+    call_bounce_on_hold_enabled: Optional[bool] = None
     #: Number of second after which to bounce if `callBounceEnabled`.
     #: example: 20.0
-    callBounceOnHoldMaxSeconds: Optional[int] = None
+    call_bounce_on_hold_max_seconds: Optional[int] = None
 
 
 class GetCallQueueCallPolicyObjectDistinctiveRing(ApiModel):
@@ -227,7 +228,7 @@ class GetCallQueueCallPolicyObjectDistinctiveRing(ApiModel):
     enabled: Optional[bool] = None
     #: Ring pattern for when this call queue is called. Only available when `distinctiveRing` is enabled for the call queue.
     #: example: NORMAL
-    ringPattern: Optional[RingPatternObject] = None
+    ring_pattern: Optional[RingPatternObject] = None
 
 
 class HuntRoutingTypeSelection(str, Enum):
@@ -253,22 +254,22 @@ class HuntPolicySelection(str, Enum):
 class GetCallQueueCallPolicyObject(ApiModel):
     #: Call routing type to use to dispatch calls to agents.
     #: example: PRIORITY_BASED
-    routingType: Optional[HuntRoutingTypeSelection] = None
+    routing_type: Optional[HuntRoutingTypeSelection] = None
     #: Call routing policy to use to dispatch calls to agents.
     #: example: UNIFORM
     policy: Optional[HuntPolicySelection] = None
     #: Settings for when the call into the call queue is not answered.
-    callBounce: Optional[GetCallQueueCallPolicyObjectCallBounce] = None
+    call_bounce: Optional[GetCallQueueCallPolicyObjectCallBounce] = None
     #: Whether or not the call queue has the distinctive ring option enabled.
-    distinctiveRing: Optional[GetCallQueueCallPolicyObjectDistinctiveRing] = None
+    distinctive_ring: Optional[GetCallQueueCallPolicyObjectDistinctiveRing] = None
 
 
 class GetCallQueueObjectAlternateNumberSettings(ApiModel):
     #: Distinctive Ringing selected for the alternate numbers in the call queue overrides the normal ringing patterns set for the Alternate Numbers.
     #: example: True
-    distinctiveRingEnabled: Optional[bool] = None
+    distinctive_ring_enabled: Optional[bool] = None
     #: Specifies up to 10 numbers which can each have an overriden distinctive ring setting.
-    alternateNumbers: Optional[list[AlternateNumbersWithPattern]] = None
+    alternate_numbers: Optional[list[AlternateNumbersWithPattern]] = None
 
 
 class GetPersonPlaceVirtualLineCallQueueObjectType(str, Enum):
@@ -289,19 +290,19 @@ class GetPersonPlaceVirtualLineCallQueueObject(ApiModel):
     type: Optional[GetPersonPlaceVirtualLineCallQueueObjectType] = None
     #: First name of person, workspace or virtual line.
     #: example: Hakim
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: First name of person, workspace or virtual line.
     #: example: Smith
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Phone number of person, workspace or virtual line.
     #: example: +12225555309
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Extension of person, workspace or virtual line.
     #: example: 5309
     extension: Optional[datetime] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12345309
     esn: Optional[str] = None
@@ -310,10 +311,10 @@ class GetPersonPlaceVirtualLineCallQueueObject(ApiModel):
     weight: Optional[datetime] = None
     #: Skill level of person, workspace or virtual line. Only applied when the call `routingType` is `SKILL_BASED`.
     #: example: 1.0
-    skillLevel: Optional[int] = None
+    skill_level: Optional[int] = None
     #: Indicates the join status of the agent for this queue. The default value while creating call queue is `true`.
     #: example: True
-    joinEnabled: Optional[bool] = None
+    join_enabled: Optional[bool] = None
 
 
 class GetCallQueueObject(ApiModel):
@@ -331,43 +332,43 @@ class GetCallQueueObject(ApiModel):
     language: Optional[str] = None
     #: Language code.
     #: example: en-US
-    languageCode: Optional[str] = None
+    language_code: Optional[str] = None
     #: First name to be shown when calls are forwarded out of this call queue. Defaults to `.`.
     #: example: Hakim
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the `phoneNumber` if set, otherwise defaults to call group name.
     #: example: Smith
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Time zone for the call queue.
     #: example: America/Chicago
-    timeZone: Optional[str] = None
+    time_zone: Optional[str] = None
     #: Primary phone number of the call queue.
     #: example: +12225555309
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Extension of the call queue.
     #: example: 5309
     extension: Optional[datetime] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12345309
     esn: Optional[str] = None
     #: When true, indicates that the agent's configuration allows them to use the queue's Caller ID for outgoing calls.
     #: example: True
-    phoneNumberForOutgoingCallsEnabled: Optional[bool] = None
+    phone_number_for_outgoing_calls_enabled: Optional[bool] = None
     #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
-    alternateNumberSettings: Optional[GetCallQueueObjectAlternateNumberSettings] = None
+    alternate_number_settings: Optional[GetCallQueueObjectAlternateNumberSettings] = None
     #: Policy controlling how calls are routed to `agents`.
-    callPolicies: Optional[GetCallQueueCallPolicyObject] = None
+    call_policies: Optional[GetCallQueueCallPolicyObject] = None
     #: Overall call queue settings.
-    queueSettings: Optional[CallQueueQueueSettingsObject] = None
+    queue_settings: Optional[CallQueueQueueSettingsObject] = None
     #: Flag to indicate whether call waiting is enabled for `agents`.
-    allowCallWaitingForAgentsEnabled: Optional[bool] = None
+    allow_call_waiting_for_agents_enabled: Optional[bool] = None
     #: People, workspaces and virtual lines that are eligible to receive calls.
     agents: Optional[list[GetPersonPlaceVirtualLineCallQueueObject]] = None
     #: Whether or not to allow agents to join or unjoin a queue.
-    allowAgentJoinEnabled: Optional[bool] = None
+    allow_agent_join_enabled: Optional[bool] = None
 
 
 class ListCallQueueObject(ApiModel):
@@ -379,19 +380,19 @@ class ListCallQueueObject(ApiModel):
     name: Optional[str] = None
     #: Name of location for call queue.
     #: example: WXCSIVDKCPAPIC4S1
-    locationName: Optional[str] = None
+    location_name: Optional[str] = None
     #: ID of location for call queue.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzMxMTYx
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: Primary phone number of the call queue.
     #: example: +12225555309
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Primary phone extension of the call queue.
     #: example: 5309
     extension: Optional[datetime] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12345309
     esn: Optional[str] = None

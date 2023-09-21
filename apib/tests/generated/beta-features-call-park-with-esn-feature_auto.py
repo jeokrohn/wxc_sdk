@@ -16,7 +16,7 @@ class GetCallParkExtensionObject(ApiModel):
     extension: Optional[datetime] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12341415
     esn: Optional[str] = None
@@ -37,10 +37,10 @@ class GetRecallHuntGroupObjectOption(str, Enum):
 class GetRecallHuntGroupObject(ApiModel):
     #: Alternate user which is a hunt group ID for call park recall alternate destination.
     #: example: Y2lzY29zcGFyazovL3VzL0hVTlRfR1JPVVAvZEdWamFHNXBZMkZzTFhOMWNIQnZjblF0TlRVMU9EWTNOVE13T1VCbmJXRnBiQzVqYjIwPQ
-    huntGroupId: Optional[str] = None
+    hunt_group_id: Optional[str] = None
     #: Unique name for the hunt group.
     #: example: Technical Support Group - 5558675309
-    huntGroupName: Optional[str] = None
+    hunt_group_name: Optional[str] = None
     #: Call park recall options.
     #: example: ALERT_PARKING_USER_ONLY
     option: Optional[GetRecallHuntGroupObjectOption] = None
@@ -64,7 +64,7 @@ class GetUserNumberItemObject(ApiModel):
     extension: Optional[datetime] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12348080
     esn: Optional[str] = None
@@ -79,13 +79,13 @@ class GetPersonPlaceVirtualLineCallParksObject(ApiModel):
     id: Optional[str] = None
     #: First name of a person, workspace or virtual line.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name of a person, workspace or virtual line.
     #: example: Brown
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Display name of a person, workspace or virtual line.
     #: example: johnBrown
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: Type of the person, workspace or virtual line.
     #: example: PEOPLE
     type: Optional[GetPersonPlaceVirtualLineCallParksObjectType] = None
@@ -105,7 +105,7 @@ class ListCPCallParkExtensionObject(ApiModel):
     extension: Optional[datetime] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12341415
     esn: Optional[str] = None
@@ -126,9 +126,9 @@ class GetCallParkObject(ApiModel):
     #: People, workspaces and virtual lines that are eligible to receive calls.
     agents: Optional[list[GetPersonPlaceVirtualLineCallParksObject]] = None
     #: Whether or not the calls will be parked on agents as a destination.
-    parkOnAgentsEnabled: Optional[bool] = None
+    park_on_agents_enabled: Optional[bool] = None
     #: Array of call park extensions assigned to a call park.
-    callParkExtensions: Optional[list[ListCPCallParkExtensionObject]] = None
+    call_park_extensions: Optional[list[ListCPCallParkExtensionObject]] = None
 
 
 class ListCallParkExtensionObject(ApiModel):
@@ -140,7 +140,7 @@ class ListCallParkExtensionObject(ApiModel):
     extension: Optional[datetime] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12341415
     esn: Optional[str] = None
@@ -149,7 +149,7 @@ class ListCallParkExtensionObject(ApiModel):
     name: Optional[str] = None
     #: ID of location for call park extension.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzMxMTYx
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: Name of location for call park extension.
     #: example: WXCSIVDKCPAPIC4S1
-    locationName: Optional[str] = None
+    location_name: Optional[str] = None

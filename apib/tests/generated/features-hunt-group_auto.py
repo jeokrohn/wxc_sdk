@@ -24,10 +24,10 @@ class RingPatternObject(str, Enum):
 class AlternateNumbersWithPattern(ApiModel):
     #: Alternate phone number for the hunt group.
     #: example: +12225555309
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Ring pattern for when this alternate number is called. Only available when `distinctiveRing` is enabled for the hunt group.
     #: example: NORMAL
-    ringPattern: Optional[RingPatternObject] = None
+    ring_pattern: Optional[RingPatternObject] = None
 
 
 class CallForwardRulesGet(ApiModel):
@@ -39,13 +39,13 @@ class CallForwardRulesGet(ApiModel):
     name: Optional[str] = None
     #: Comma-separated list of incoming call numbers that, when matched, will not be forwarded. A Limit of 12 numbers is allowed. Use `Any private Number` in the comma-separated value to indicate rules that match incoming calls from a private number. Use `Any unavailable number` in the comma-separated value to match incoming calls from an unavailable number.
     #: example: Any private Number,2025551212
-    callFrom: Optional[str] = None
+    call_from: Optional[str] = None
     #: Comma-separated list of the types of numbers being matched for incoming call destination.
     #: example: Primary
-    callsTo: Optional[str] = None
+    calls_to: Optional[str] = None
     #: Number to which calls will be forwarded if the rule is of type "Forward To" and the incoming call is matched.
     #: example: 2025557736
-    forwardTo: Optional[str] = None
+    forward_to: Optional[str] = None
     #: Reflects if rule is enabled.
     #: example: True
     enabled: Optional[bool] = None
@@ -68,9 +68,9 @@ class CallForwardSettingsGetCallForwardingAlways(ApiModel):
     #: example: 2225551212
     destination: Optional[str] = None
     #: If `true`, a brief tone will be played on the person's phone when a call has been forwarded.
-    ringReminderEnabled: Optional[bool] = None
+    ring_reminder_enabled: Optional[bool] = None
     #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
-    destinationVoicemailEnabled: Optional[bool] = None
+    destination_voicemail_enabled: Optional[bool] = None
 
 
 class CallForwardSettingsGetCallForwarding(ApiModel):
@@ -84,7 +84,7 @@ class CallForwardSettingsGetCallForwarding(ApiModel):
 
 class CallForwardSettingsGet(ApiModel):
     #: Settings related to `Always`, `Busy`, and `No Answer` call forwarding.
-    callForwarding: Optional[CallForwardSettingsGetCallForwarding] = None
+    call_forwarding: Optional[CallForwardSettingsGetCallForwarding] = None
 
 
 class CallForwardingNumbersType(str, Enum):
@@ -97,7 +97,7 @@ class CallForwardingNumbersType(str, Enum):
 class CallForwardingNumbers(ApiModel):
     #: Only return call queues with matching primary phone number or extension.
     #: example: 5558675309
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Primary phone extension of the call queue.
     #: example: 7781
     extension: Optional[datetime] = None
@@ -121,7 +121,7 @@ class CreateForwardingRuleObjectForwardTo(ApiModel):
     selection: Optional[CreateForwardingRuleObjectForwardToSelection] = None
     #: Phone number used if selection is `FORWARD_TO_SPECIFIED_NUMBER`.
     #: example: 5558675309
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
 
 
 class CreateForwardingRuleObjectCallsFromSelection(str, Enum):
@@ -133,9 +133,9 @@ class CreateForwardingRuleObjectCallsFromSelection(str, Enum):
 
 class CreateForwardingRuleObjectCallsFromCustomNumbers(ApiModel):
     #: Match if caller ID indicates the call is from a private number.
-    privateNumberEnabled: Optional[bool] = None
+    private_number_enabled: Optional[bool] = None
     #: Match if caller ID is unavailable.
-    unavailableNumberEnabled: Optional[bool] = None
+    unavailable_number_enabled: Optional[bool] = None
     #: Array of number strings to be matched against incoming caller ID.
     numbers: Optional[list[str]] = None
 
@@ -145,7 +145,7 @@ class CreateForwardingRuleObjectCallsFrom(ApiModel):
     #: example: CUSTOM
     selection: Optional[CreateForwardingRuleObjectCallsFromSelection] = None
     #: Custom rules for matching incoming caller ID information.
-    customNumbers: Optional[CreateForwardingRuleObjectCallsFromCustomNumbers] = None
+    custom_numbers: Optional[CreateForwardingRuleObjectCallsFromCustomNumbers] = None
 
 
 class CreateForwardingRuleObjectCallsTo(ApiModel):
@@ -162,16 +162,16 @@ class CreateForwardingRuleObject(ApiModel):
     enabled: Optional[bool] = None
     #: Name of the location's holiday schedule which determines when this selective call forwarding rule is in effect.
     #: example: HolidayScheduleOne
-    holidaySchedule: Optional[str] = None
+    holiday_schedule: Optional[str] = None
     #: Name of the location's business schedule which determines when this selective call forwarding rule is in effect.
     #: example: BusinessScheduleTwo
-    businessSchedule: Optional[str] = None
+    business_schedule: Optional[str] = None
     #: Controls what happens when the rule matches including the destination number for the call forwarding.
-    forwardTo: Optional[CreateForwardingRuleObjectForwardTo] = None
+    forward_to: Optional[CreateForwardingRuleObjectForwardTo] = None
     #: Settings related to the rule matching based on incoming caller ID.
-    callsFrom: Optional[CreateForwardingRuleObjectCallsFrom] = None
+    calls_from: Optional[CreateForwardingRuleObjectCallsFrom] = None
     #: Settings related to the rule matching based on the destination number.
-    callsTo: Optional[CreateForwardingRuleObjectCallsTo] = None
+    calls_to: Optional[CreateForwardingRuleObjectCallsTo] = None
 
 
 class HuntPolicySelection(str, Enum):
@@ -190,20 +190,20 @@ class HuntPolicySelection(str, Enum):
 class PostHuntGroupCallPolicyObjectNoAnswer(ApiModel):
     #: If enabled, advance to next agent after the `nextAgentRings` has occurred.
     #: example: True
-    nextAgentEnabled: Optional[bool] = None
+    next_agent_enabled: Optional[bool] = None
     #: Number of rings before call will be forwarded if unanswered and `nextAgentEnabled` is true.
     #: example: 3.0
-    nextAgentRings: Optional[int] = None
+    next_agent_rings: Optional[int] = None
     #: If true, forwards unanswered calls to the destination after the number of rings occurs.
-    forwardEnabled: Optional[bool] = None
+    forward_enabled: Optional[bool] = None
     #: Number of rings before forwarding calls if `forwardEnabled` is true.
     #: example: 15.0
-    numberOfRings: Optional[int] = None
+    number_of_rings: Optional[int] = None
     #: Destination if `forwardEnabled` is True.
     #: example: 2225551212
     destination: Optional[str] = None
     #: If `forwardEnabled` is true, enables and disables sending incoming to destination number's voicemail if the destination is an internal phone number and that number has the voicemail service enabled.
-    destinationVoicemailEnabled: Optional[bool] = None
+    destination_voicemail_enabled: Optional[bool] = None
 
 
 class GetHuntGroupCallPolicyObjectBusinessContinuity(ApiModel):
@@ -214,7 +214,7 @@ class GetHuntGroupCallPolicyObjectBusinessContinuity(ApiModel):
     #: example: 2225551212
     destination: Optional[str] = None
     #: Indicates enabled or disabled state of sending diverted incoming calls to the destination number's voicemail if the destination is an internal phone number and that number has the voicemail service enabled.
-    destinationVoicemailEnabled: Optional[bool] = None
+    destination_voicemail_enabled: Optional[bool] = None
 
 
 class PostHuntGroupCallPolicyObject(ApiModel):
@@ -223,11 +223,11 @@ class PostHuntGroupCallPolicyObject(ApiModel):
     policy: Optional[HuntPolicySelection] = None
     #: If false, then the option is treated as "Advance when busy": the hunt group won't ring agents when they're on a call and will advance to the next agent. If a hunt group agent has call waiting enabled and the call is advanced to them, then the call will wait until that hunt group agent isn't busy.
     #: example: True
-    waitingEnabled: Optional[bool] = None
+    waiting_enabled: Optional[bool] = None
     #: Settings for when the call into the hunt group is not answered.
-    noAnswer: Optional[PostHuntGroupCallPolicyObjectNoAnswer] = None
+    no_answer: Optional[PostHuntGroupCallPolicyObjectNoAnswer] = None
     #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any reason, such as power outage, failed Internet connection, or wiring problem.
-    businessContinuity: Optional[GetHuntGroupCallPolicyObjectBusinessContinuity] = None
+    business_continuity: Optional[GetHuntGroupCallPolicyObjectBusinessContinuity] = None
 
 
 class PostPersonPlaceVirtualLineHuntGroupObject(ApiModel):
@@ -245,24 +245,24 @@ class CreateHuntGroupObject(ApiModel):
     name: Optional[str] = None
     #: Primary phone number of the hunt group. Either phone number or extension are required.
     #: example: 5558675309
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Primary phone extension of the hunt group. Either phone number or extension are required.
     #: example: 7781
     extension: Optional[datetime] = None
     #: Language code.
     #: example: en-US
-    languageCode: Optional[str] = None
+    language_code: Optional[str] = None
     #: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
     #: example: Hakim
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set, otherwise defaults to call group name.
     #: example: Smith
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Time zone for the hunt group.
     #: example: America/Chicago
-    timeZone: Optional[str] = None
+    time_zone: Optional[str] = None
     #: Policy controlling how calls are routed to agents.
-    callPolicies: Optional[PostHuntGroupCallPolicyObject] = None
+    call_policies: Optional[PostHuntGroupCallPolicyObject] = None
     #: People, workspaces and virtual lines that are eligible to  receive calls.
     agents: Optional[list[PostPersonPlaceVirtualLineHuntGroupObject]] = None
     #: Whether or not the hunt group is enabled.
@@ -282,38 +282,38 @@ class GetForwardingRuleObject(ApiModel):
     enabled: Optional[bool] = None
     #: Name of the location's holiday schedule which determines when this selective call forwarding rule is in effect.
     #: example: HolidayScheduleOne
-    holidaySchedule: Optional[str] = None
+    holiday_schedule: Optional[str] = None
     #: Name of the location's business schedule which determines when this selective call forwarding rule is in effect.
     #: example: BusinessScheduleTwo
-    businessSchedule: Optional[str] = None
+    business_schedule: Optional[str] = None
     #: Controls what happens when the rule matches including the destination number for the call forwarding.
-    forwardTo: Optional[CreateForwardingRuleObjectForwardTo] = None
+    forward_to: Optional[CreateForwardingRuleObjectForwardTo] = None
     #: Settings related to the rule matching based on incoming caller ID.
-    callsFrom: Optional[CreateForwardingRuleObjectCallsFrom] = None
+    calls_from: Optional[CreateForwardingRuleObjectCallsFrom] = None
     #: Settings related to the rule matching based on the destination number.
-    callsTo: Optional[CreateForwardingRuleObjectCallsTo] = None
+    calls_to: Optional[CreateForwardingRuleObjectCallsTo] = None
 
 
 class GetHuntGroupCallPolicyObjectNoAnswer(ApiModel):
     #: If enabled, advance to next agent after the `nextAgentRings` has occurred.
     #: example: True
-    nextAgentEnabled: Optional[bool] = None
+    next_agent_enabled: Optional[bool] = None
     #: Number of rings before call will be forwarded if unanswered and `nextAgentEnabled` is true.
     #: example: 3.0
-    nextAgentRings: Optional[int] = None
+    next_agent_rings: Optional[int] = None
     #: If true, forwards unanswered calls to the destination after the number of rings occurs.
-    forwardEnabled: Optional[bool] = None
+    forward_enabled: Optional[bool] = None
     #: Destination if `forwardEnabled` is True.
     #: example: 2225551212
     destination: Optional[str] = None
     #: Number of rings before forwarding calls if `forwardEnabled` is true.
     #: example: 15.0
-    numberOfRings: Optional[int] = None
+    number_of_rings: Optional[int] = None
     #: System-wide maximum number of rings allowed for `numberOfRings` setting.
     #: example: 15.0
-    systemMaxNumberOfRings: Optional[int] = None
+    system_max_number_of_rings: Optional[int] = None
     #: If destinationVoicemailEnabled is true, enables and disables sending incoming to destination number's voicemail if the destination is an internal phone number and that number has the voicemail service enabled.
-    destinationVoicemailEnabled: Optional[bool] = None
+    destination_voicemail_enabled: Optional[bool] = None
 
 
 class GetHuntGroupCallPolicyObject(ApiModel):
@@ -322,11 +322,11 @@ class GetHuntGroupCallPolicyObject(ApiModel):
     policy: Optional[HuntPolicySelection] = None
     #: If false, then the option is treated as "Advance when busy": the hunt group won't ring `agents` when they're on a call and will advance to the next agent. If a hunt group agent has call waiting enabled and the call is advanced to them, then the call will wait until that hunt group agent isn't busy.
     #: example: True
-    waitingEnabled: Optional[bool] = None
+    waiting_enabled: Optional[bool] = None
     #: Settings for when the call into the hunt group is not answered.
-    noAnswer: Optional[GetHuntGroupCallPolicyObjectNoAnswer] = None
+    no_answer: Optional[GetHuntGroupCallPolicyObjectNoAnswer] = None
     #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for any reason, such as power outage, failed Internet connection, or wiring problem.
-    businessContinuity: Optional[GetHuntGroupCallPolicyObjectBusinessContinuity] = None
+    business_continuity: Optional[GetHuntGroupCallPolicyObjectBusinessContinuity] = None
 
 
 class GetPersonPlaceVirtualLineHuntGroupObject(ApiModel):
@@ -335,13 +335,13 @@ class GetPersonPlaceVirtualLineHuntGroupObject(ApiModel):
     id: Optional[str] = None
     #: First name of person, workspace or virtual line.
     #: example: Hakim
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name of person, workspace or virtual line.
     #: example: Smith
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Phone number of person, workspace or virtual line.
     #: example: +15555551234
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Extension of person, workspace or virtual line.
     #: example: 1234
     extension: Optional[datetime] = None
@@ -359,32 +359,32 @@ class GetHuntGroupObject(ApiModel):
     name: Optional[str] = None
     #: Primary phone number of the hunt group.
     #: example: 5558675309
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Extension of the hunt group.
     #: example: 7781
     extension: Optional[datetime] = None
     #: Whether or not the hunt group has the distinctive ring option enabled.
     #: example: True
-    distinctiveRing: Optional[bool] = None
+    distinctive_ring: Optional[bool] = None
     #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
-    alternateNumbers: Optional[list[AlternateNumbersWithPattern]] = None
+    alternate_numbers: Optional[list[AlternateNumbersWithPattern]] = None
     #: Language for hunt group.
     #: example: English
     language: Optional[str] = None
     #: Language code for hunt group.
     #: example: en-US
-    languageCode: Optional[str] = None
+    language_code: Optional[str] = None
     #: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
     #: example: Hakim
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to phone number if set, otherwise defaults to call group name.
     #: example: Smith
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Time zone for the hunt group.
     #: example: America/Chicago
-    timeZone: Optional[str] = None
+    time_zone: Optional[str] = None
     #: Policy controlling how calls are routed to agents.
-    callPolicies: Optional[GetHuntGroupCallPolicyObject] = None
+    call_policies: Optional[GetHuntGroupCallPolicyObject] = None
     #: People, workspaces and virtual lines that are eligible to  receive calls.
     agents: Optional[list[GetPersonPlaceVirtualLineHuntGroupObject]] = None
     #: Whether or not the hunt group is enabled.
@@ -401,13 +401,13 @@ class ListHuntGroupObject(ApiModel):
     name: Optional[str] = None
     #: Name of the location for the hunt group.
     #: example: WXCSIVDKCPAPIC4S1
-    locationName: Optional[str] = None
+    location_name: Optional[str] = None
     #: ID of location for hunt group.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzMxMTYx
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: Primary phone number of the hunt group.
     #: example: 5558675309
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Primary phone extension of the hunt group.
     #: example: 7781
     extension: Optional[datetime] = None
@@ -427,7 +427,7 @@ class ModifyCallForwardingObjectCallForwarding(ApiModel):
 
 class ModifyCallForwardingObject(ApiModel):
     #: Settings related to `Always`, `Busy`, and `No Answer` call forwarding.
-    callForwarding: Optional[ModifyCallForwardingObjectCallForwarding] = None
+    call_forwarding: Optional[ModifyCallForwardingObjectCallForwarding] = None
 
 
 class ModifyHuntGroupObject(ApiModel):
@@ -436,29 +436,29 @@ class ModifyHuntGroupObject(ApiModel):
     name: Optional[str] = None
     #: Primary phone number of the hunt group.
     #: example: 5558675309
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Primary phone extension of the hunt group.
     #: example: 7781
     extension: Optional[datetime] = None
     #: Whether or not the hunt group has the distinctive ring option enabled.
     #: example: True
-    distinctiveRing: Optional[bool] = None
+    distinctive_ring: Optional[bool] = None
     #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
-    alternateNumbers: Optional[list[AlternateNumbersWithPattern]] = None
+    alternate_numbers: Optional[list[AlternateNumbersWithPattern]] = None
     #: Language code.
     #: example: en-US
-    languageCode: Optional[str] = None
+    language_code: Optional[str] = None
     #: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
     #: example: Hakim
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone number if set, otherwise defaults to call group name.
     #: example: Smith
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Time zone for the hunt group.
     #: example: America/Chicago
-    timeZone: Optional[str] = None
+    time_zone: Optional[str] = None
     #: Policy controlling how calls are routed to agents.
-    callPolicies: Optional[PostHuntGroupCallPolicyObject] = None
+    call_policies: Optional[PostHuntGroupCallPolicyObject] = None
     #: People, workspaces and virtual lines that are eligible to  receive calls.
     agents: Optional[list[PostPersonPlaceVirtualLineHuntGroupObject]] = None
     #: Whether or not the hunt group is enabled.

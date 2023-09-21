@@ -19,7 +19,7 @@ class ResourceGroup(ApiModel):
     name: Optional[str] = None
     #: The ID of the organization to which this resource group belongs.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
 
 
 class ResourceGroupCollectionResponse(ApiModel):

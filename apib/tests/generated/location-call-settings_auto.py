@@ -61,7 +61,7 @@ class ExtensionStatusObject(ApiModel):
     state: Optional[ExtensionStatusObjectState] = None
     #: Error code of the state in case extension is not valid.
     #: example: 9495.0
-    errorCode: Optional[int] = None
+    error_code: Optional[int] = None
     #: Message assigned to the error code.
     #: example: [Error 9495] The extension is not available. It is already assigned as a Call Park Extension: 407721.
     message: Optional[str] = None
@@ -70,16 +70,16 @@ class ExtensionStatusObject(ApiModel):
 class GetLocationCallBackNumberObjectLocationInfo(ApiModel):
     #: The location DN.
     #: example: +12145551767
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: The name of the location.
     #: example: CPAPI_Dev_Test_Location_DND
     name: Optional[str] = None
     #: The source from which the emergency calling line ID (CLID) is selected for an actual emergency call, applying fallback rules as necessary.
     #: example: LOCATION_NUMBER
-    effectiveLevel: Optional[CallBackEffectiveLevel] = None
+    effective_level: Optional[CallBackEffectiveLevel] = None
     #: Location calling line ID (CLID) number. Avaliable only when number is present and quality would be invalid.
     #: example: +12145551767
-    effectiveValue: Optional[str] = None
+    effective_value: Optional[str] = None
     #: Used to represent whether a number is a recommended ECBN.
     #: example: RECOMMENDED
     quality: Optional[CallBackQuality] = None
@@ -88,25 +88,25 @@ class GetLocationCallBackNumberObjectLocationInfo(ApiModel):
 class GetLocationCallBackNumberObjectLocationMemberInfo(ApiModel):
     #: The member DN.
     #: example: +12145551767
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: The member first name.
     #: example: Jim
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: The member last name. Always contains `.` if the member is a place.
     #: example: Grey
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Member ID of user/place within the location.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS82MmQ3YTY3MS00YmVlLTQ2MDItOGVkOC1jOTFmNjU5NjcxZGI
-    memberId: Optional[str] = None
+    member_id: Optional[str] = None
     #: Member Type.
     #: example: PEOPLE
-    memberType: Optional[CallBackMemberType] = None
+    member_type: Optional[CallBackMemberType] = None
     #: The source from which the emergency calling line ID (CLID) is selected for an actual emergency call, applying fallback rules as necessary.
     #: example: LOCATION_MEMBER_NUMBER
-    effectiveLevel: Optional[CallBackEffectiveLevel] = None
+    effective_level: Optional[CallBackEffectiveLevel] = None
     #: Location CLID number. Avaliable only when number is present and quality would be invalid.
     #: example: +12145551767
-    effectiveValue: Optional[str] = None
+    effective_value: Optional[str] = None
     #: Used to represent whether a number is a recommended ECBN.
     #: example: RECOMMENDED
     quality: Optional[CallBackQuality] = None
@@ -114,9 +114,9 @@ class GetLocationCallBackNumberObjectLocationMemberInfo(ApiModel):
 
 class GetLocationCallBackNumberObject(ApiModel):
     #: Data relevant to this location.
-    locationInfo: Optional[GetLocationCallBackNumberObjectLocationInfo] = None
+    location_info: Optional[GetLocationCallBackNumberObjectLocationInfo] = None
     #: Data relevant to the user/place (member) selected for ECBN.
-    locationMemberInfo: Optional[GetLocationCallBackNumberObjectLocationMemberInfo] = None
+    location_member_info: Optional[GetLocationCallBackNumberObjectLocationMemberInfo] = None
     #: Selected number type to configure emergency call back.
     #: example: LOCATION_MEMBER_NUMBER
     selected: Optional[CallBackSelected] = None
@@ -135,7 +135,7 @@ class AudioAnnouncementFileGetObjectMediaFileType(str, Enum):
     #: WMA File Extension.
     wma = 'WMA'
     #: 3GP File Extension.
-    _3gp = '3GP'
+    _3_gp = '3GP'
 
 
 class AudioAnnouncementFileGetObjectLevel(str, Enum):
@@ -151,10 +151,10 @@ class AudioAnnouncementFileGetObject(ApiModel):
     id: Optional[str] = None
     #: Audio announcement file name.
     #: example: AUDIO_FILE.wav
-    fileName: Optional[str] = None
+    file_name: Optional[str] = None
     #: Audio announcement file type.
     #: example: WAV
-    mediaFileType: Optional[AudioAnnouncementFileGetObjectMediaFileType] = None
+    media_file_type: Optional[AudioAnnouncementFileGetObjectMediaFileType] = None
     #: Audio announcement file type location.
     #: example: ORGANIZATION
     level: Optional[AudioAnnouncementFileGetObjectLevel] = None
@@ -163,15 +163,15 @@ class AudioAnnouncementFileGetObject(ApiModel):
 class GetMusicOnHoldObject(ApiModel):
     #: If enabled, music will be played when call is placed on hold.
     #: example: True
-    callHoldEnabled: Optional[bool] = None
+    call_hold_enabled: Optional[bool] = None
     #: If enabled, music will be played when call is parked.
     #: example: True
-    callParkEnabled: Optional[bool] = None
+    call_park_enabled: Optional[bool] = None
     #: Greeting type for the location.
     #: example: SYSTEM
     greeting: Optional[GetMusicOnHoldObjectGreeting] = None
     #: Announcement Audio File details when greeting is selected to be `CUSTOM`.
-    audioFile: Optional[AudioAnnouncementFileGetObject] = None
+    audio_file: Optional[AudioAnnouncementFileGetObject] = None
 
 
 class GetPrivateNetworkConnectObjectNetworkConnectionType(str, Enum):
@@ -184,7 +184,7 @@ class GetPrivateNetworkConnectObjectNetworkConnectionType(str, Enum):
 class GetPrivateNetworkConnectObject(ApiModel):
     #: Network Connection Type for the location.
     #: example: PUBLIC_INTERNET
-    networkConnectionType: Optional[GetPrivateNetworkConnectObjectNetworkConnectionType] = None
+    network_connection_type: Optional[GetPrivateNetworkConnectObjectNetworkConnectionType] = None
 
 
 class GetTelephonyLocationObjectCallingLineId(ApiModel):
@@ -193,7 +193,7 @@ class GetTelephonyLocationObjectCallingLineId(ApiModel):
     name: Optional[str] = None
     #: Directory Number / Main number in E.164 Format.
     #: example: '+12145555698'
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
 
 
 class RouteType(str, Enum):
@@ -220,32 +220,32 @@ class GetTelephonyLocationObject(ApiModel):
     name: Optional[str] = None
     #: Location's phone announcement language.
     #: example: 'fr_fr'
-    announcementLanguage: Optional[str] = None
+    announcement_language: Optional[str] = None
     #: Location calling line information.
-    callingLineId: Optional[GetTelephonyLocationObjectCallingLineId] = None
+    calling_line_id: Optional[GetTelephonyLocationObjectCallingLineId] = None
     #: Connection details are only returned for local PSTN types of `TRUNK` or `ROUTE_GROUP`.
     connection: Optional[GetTelephonyLocationObjectConnection] = None
     #: External Caller ID Name value. Unicode characters.
     #: example: 'Big Corp Denver'
-    externalCallerIdName: Optional[str] = None
+    external_caller_id_name: Optional[str] = None
     #: Limit on the number of people at the location, Read-Only.
     #: example: 500000.0
-    userLimit: Optional[int] = None
+    user_limit: Optional[int] = None
     #: Emergency Location Identifier for a location. Set this field to provide the SIP access network information to the provider which will be used to populate the SIP P-Access-Network-Info header. This is helpful to establish the location of a device when you make an emergency call.
     #: example: 'Rcdn'
-    pAccessNetworkInfo: Optional[str] = None
+    p_access_network_info: Optional[str] = None
     #: Must dial to reach an outside line, default is None.
     #: example: 'Rcdn'
-    outsideDialDigit: Optional[str] = None
+    outside_dial_digit: Optional[str] = None
     #: Must dial a prefix when calling between locations having same extension within same location.
     #: example: '2'
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: IP Address, hostname, or domain. Read-Only.
     #: example: '98079822.int10.bcld.webex.com'
-    defaultDomain: Optional[str] = None
+    default_domain: Optional[str] = None
     #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will include a P-Charge-Info header with the selected number in the SIP INVITE.
     #: example: '+14158952369'
-    chargeNumber: Optional[str] = None
+    charge_number: Optional[str] = None
 
 
 class ListLocationObject(ApiModel):
@@ -257,15 +257,15 @@ class ListLocationObject(ApiModel):
     name: Optional[str] = None
     #: Must dial to reach an outside line, default is None.
     #: example: '12'
-    outsideDialDigit: Optional[datetime] = None
+    outside_dial_digit: Optional[datetime] = None
     #: Must dial a prefix when calling between locations having the same extension within the same location.
     #: example: '2'
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Location calling line information.
-    callingLineId: Optional[GetTelephonyLocationObjectCallingLineId] = None
+    calling_line_id: Optional[GetTelephonyLocationObjectCallingLineId] = None
     #: True if E911 setup is required.
     #: example: True
-    e911SetupRequired: Optional[bool] = None
+    e911_setup_required: Optional[bool] = None
 
 
 class LocationCallingResponseWithId(ApiModel):
@@ -276,12 +276,12 @@ class LocationCallingResponseWithId(ApiModel):
 
 class PostLocationAnnouncementLanguageObject(ApiModel):
     #: Set to `true` to change announcement language for existing people and workspaces.
-    agentEnabled: Optional[bool] = None
+    agent_enabled: Optional[bool] = None
     #: Set to `true` to change announcement language for existing feature configurations.
-    serviceEnabled: Optional[bool] = None
+    service_enabled: Optional[bool] = None
     #: Language code.
     #: example: en_us
-    announcementLanguageCode: Optional[str] = None
+    announcement_language_code: Optional[str] = None
 
 
 class PostLocationCallingRequestAddress(ApiModel):
@@ -299,7 +299,7 @@ class PostLocationCallingRequestAddress(ApiModel):
     state: Optional[str] = None
     #: Postal code of the location.
     #: example: 95035
-    postalCode: Optional[str] = None
+    postal_code: Optional[str] = None
     #: ISO-3166 2-Letter country code of the location.
     #: example: US
     country: Optional[str] = None
@@ -314,13 +314,13 @@ class PostLocationCallingRequest(ApiModel):
     name: Optional[str] = None
     #: Time zone associated with this location. Refer to this link (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone) for the format.
     #: example: 'America/Chicago'
-    timeZone: Optional[str] = None
+    time_zone: Optional[str] = None
     #: Default email language.
     #: example: 'en_us'
-    preferredLanguage: Optional[str] = None
+    preferred_language: Optional[str] = None
     #: Location's phone announcement language.
     #: example: 'fr_fr'
-    announcementLanguage: Optional[str] = None
+    announcement_language: Optional[str] = None
     #: The address of the location.
     address: Optional[PostLocationCallingRequestAddress] = None
 
@@ -341,7 +341,7 @@ class ExtentionStatusObject(ApiModel):
     state: Optional[ExtensionStatusObjectState] = None
     #: Error Code.
     #: example: 59475.0
-    errorCode: Optional[int] = None
+    error_code: Optional[int] = None
     #: example: The extension is not available. It is already assigned to a virtual extension
     message: Optional[str] = None
 
@@ -349,7 +349,7 @@ class ExtentionStatusObject(ApiModel):
 class PostValidateExtensionResponse(ApiModel):
     #: OK , ERRORS
     status: Optional[PostValidateExtensionResponseStatus] = None
-    extensionStatus: Optional[list[ExtentionStatusObject]] = None
+    extension_status: Optional[list[ExtentionStatusObject]] = None
 
 
 class PutLocationCallBackNumberObject(ApiModel):
@@ -358,32 +358,32 @@ class PutLocationCallBackNumberObject(ApiModel):
     selected: Optional[CallBackSelected] = None
     #: Member ID of user/place within the location. Required if `LOCATION_MEMBER_NUMBER` is selected.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9hOTc0MzVjZi0zYTZmLTRmNGYtOWU1OC00OTI2OTQ5MDkwMWY
-    locationMemberId: Optional[str] = None
+    location_member_id: Optional[str] = None
 
 
 class PutTelephonyLocationObject(ApiModel):
     #: Location's phone announcement language.
     #: example: 'fr_fr'
-    announcementLanguage: Optional[str] = None
+    announcement_language: Optional[str] = None
     #: Location calling line information.
-    callingLineId: Optional[GetTelephonyLocationObjectCallingLineId] = None
+    calling_line_id: Optional[GetTelephonyLocationObjectCallingLineId] = None
     #: Connection details can only be modified to and from local PSTN types of `TRUNK` and `ROUTE_GROUP`.
     connection: Optional[GetTelephonyLocationObjectConnection] = None
     #: Denve' (string) - External Caller ID Name value. Unicode characters.
     #: example: 'Big Corp
-    externalCallerIdName: Optional[str] = None
+    external_caller_id_name: Optional[str] = None
     #: Location Identifier.
     #: example: 'Rcdn'
-    pAccessNetworkInfo: Optional[str] = None
+    p_access_network_info: Optional[str] = None
     #: Must dial to reach an outside line. Default is None.
     #: example: '12'
-    outsideDialDigit: Optional[datetime] = None
+    outside_dial_digit: Optional[datetime] = None
     #: Must dial a prefix when calling between locations having same extension within same location; should be numeric.
     #: example: '2'
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will include a P-Charge-Info header with the selected number in the SIP INVITE.
     #: example: '+14158952369'
-    chargeNumber: Optional[str] = None
+    charge_number: Optional[str] = None
 
 
 class RouteIdentity(ApiModel):
@@ -402,4 +402,4 @@ class StatusOfExtensionsObject(ApiModel):
     #: example: OK
     status: Optional[PostValidateExtensionResponseStatus] = None
     #: Array of extensions statuses.
-    extensionStatus: Optional[list[ExtensionStatusObject]] = None
+    extension_status: Optional[list[ExtensionStatusObject]] = None

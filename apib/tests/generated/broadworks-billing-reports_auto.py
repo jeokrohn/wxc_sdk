@@ -40,7 +40,7 @@ class Report(ApiModel):
     id: Optional[str] = None
     #: The year and month (`YYYY-MM`) for which the billing report was generated.
     #: example: 2021-05
-    billingPeriod: Optional[datetime] = None
+    billing_period: Optional[datetime] = None
     #: The status of the billing report.
     #: example: IN_PROGRESS
     status: Optional[ReportStatus] = None
@@ -49,10 +49,10 @@ class Report(ApiModel):
     created: Optional[datetime] = None
     #: The person ID of the partner administrator who created the report.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS8wYWNkMzg3NS00ZTEyLTRkNzctYjk4MS1lMzg5ZmQ4ODQ2YzA
-    createdBy: Optional[str] = None
+    created_by: Optional[str] = None
     #: The URL for partners to download the billing report.
     #: example: https://billing-reports-int-example.webexcontent.com/a366de9b-3204-4140-8181-25808d360e36/2021/06/16/340177d1-7f25-41e1-a39f-ad63ec1103a5.csv?Expires=1624978489&Signature=Syp3vrVeMx4P6MeMtm8e1bQaeAdHFe-c7NeHERWh5-qJGLZ1T8Dvl2ee-M8OsFf~z6Yepz94e2Hh1HDVailD0Uryl8SgiM~jl0cBh7L0PmSe~i9oFA0eJ0MulkqGSMVf7ZHhxY55xYMgIBZIERkWm3CqQNDg5BS4EaXapKfOnmFegf36OokCM63m5uOK8-csk08IkZhwo2Z0l1JMtuWYEaLh4dgMHoe~xgH3YmDSSCWInFYaEifUAfgi2YAYS6nP9Zq4BTliBq62XBaehOE1gBrhy4RdwD-3WSs2oD-BdpoRpuGzo3FZzDLVEvd0S2D6gTcHljOHodQKxe-u0BXPWQ__&Key-Pair-Id=APKAJADAKLCI2FW2U32Q
-    tempDownloadURL: Optional[str] = None
+    temp_download_url: Optional[str] = Field(alias='tempDownloadURL', default=None)
     #: List of errors that occurred during report generation.
     #: **Note:**
     #: * Captures errors that occurred during asynchronous or background report generation, after the request has been accepted and a `202 OK` response is returned.
@@ -65,7 +65,7 @@ class ListReport(ApiModel):
     id: Optional[str] = None
     #: The year and month (`YYYY-MM`) for which the billing report was generated.
     #: example: 2021-05
-    billingPeriod: Optional[datetime] = None
+    billing_period: Optional[datetime] = None
     #: The status of the billing report.
     #: example: IN_PROGRESS
     status: Optional[ReportStatus] = None

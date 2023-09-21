@@ -7,13 +7,13 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Error', 'Subscriber', 'SubscriberListResponse', 'SubscriberPackage', 'SubscriberProvisioningPrecheckResponse', 'SubscriberProvisioningPrecheckResponseInfo', 'SubscriberStatus']
+__auto__ = ['Error', 'PrecheckABroadworksSubscriberProvisioningCustomerInfo', 'Subscriber', 'SubscriberListResponse', 'SubscriberPackage', 'SubscriberProvisioningPrecheckResponse', 'SubscriberProvisioningPrecheckResponseInfo', 'SubscriberStatus']
 
 
 class Error(ApiModel):
     #: An error code that identifies the reason for the error.
     #: example: 10022.0
-    errorCode: Optional[int] = None
+    error_code: Optional[int] = None
     #: A description of the error.
     #: example: The BroadWorks UserID is already associated with an existing user.
     description: Optional[str] = None
@@ -53,28 +53,28 @@ class Subscriber(ApiModel):
     id: Optional[str] = None
     #: The Person Id of the subscriber on Webex. To be used when referencing this subscriber on other Webex APIs. Only presented when status is `provisioned`.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: The user ID of the subscriber on BroadWorks.
     #: example: 95547321@sp.com
-    userId: Optional[str] = None
+    user_id: Optional[str] = None
     #: The Service Provider supplied unique identifier for the subscriber's enterprise.
     #: example: Reseller1+acme
-    spEnterpriseId: Optional[str] = None
+    sp_enterprise_id: Optional[str] = None
     #: The first name of the subscriber.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: The last name of the subscriber.
     #: example: Andersen
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: The email address of the subscriber.
     #: example: john.anderson@acme.com
     email: Optional[str] = None
     #: The primary phone number configured against the subscriber on BroadWorks.
     #: example: +1-240-555-1212
-    primaryPhoneNumber: Optional[str] = None
+    primary_phone_number: Optional[str] = None
     #: The mobile phone number configured against the subscriber on BroadWorks.
     #: example: +1-818-279-1234
-    mobilePhoneNumber: Optional[str] = None
+    mobile_phone_number: Optional[str] = None
     #: The extension number configured against the subscriber on BroadWorks.
     #: example: 1212
     extension: Optional[datetime] = None
@@ -94,12 +94,12 @@ class Subscriber(ApiModel):
     created: Optional[datetime] = None
     #: The date and time the provisioning status of the subscriber last changed.
     #: example: 2020-03-18T16:05:34.000Z
-    lastStatusChange: Optional[datetime] = None
+    last_status_change: Optional[datetime] = None
     #: This Provisioning ID associated with this subscriber.
     #: example: ZjViMzYxODctYzhkZC00NzI3LThiMmYtZjljNDQ3ZjI5MDQ2OjQyODVmNTk0LTViNTEtNDdiZS05Mzk2LTZjMzZlMmFkODNhNQ
-    provisioningId: Optional[str] = None
+    provisioning_id: Optional[str] = None
     #: Indicates if the subscriber was self activated, rather than provisioned via these APIs.
-    selfActivated: Optional[bool] = None
+    self_activated: Optional[bool] = None
 
 
 class SubscriberListResponse(ApiModel):
@@ -110,7 +110,7 @@ class SubscriberListResponse(ApiModel):
 class SubscriberProvisioningPrecheckResponseInfo(ApiModel):
     #: Provisioning Precheck `infoCode`.
     #: example: 100.0
-    infoCode: Optional[int] = None
+    info_code: Optional[int] = None
     #: A textual description of the `infoCode`.
     #: example: Provisioning Precheck validation successful.
     description: Optional[str] = None
@@ -122,3 +122,9 @@ class SubscriberProvisioningPrecheckResponse(ApiModel):
     message: Optional[str] = None
     #: A list of `ProvisioningPreCheckResponseInfo` objects.
     info: Optional[SubscriberProvisioningPrecheckResponseInfo] = None
+
+
+class PrecheckABroadworksSubscriberProvisioningCustomerInfo(ApiModel):
+    #: Email address of the customer org user to be provisioned.
+    #: example: "john.anderson@example.com"
+    primary_email: Optional[str] = None

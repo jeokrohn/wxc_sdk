@@ -51,7 +51,7 @@ class AdaptiveCard(ApiModel):
 class Attachment(ApiModel):
     #: The content type of the attachment.
     #: example: application/vnd.microsoft.card.adaptive
-    contentType: Optional[str] = None
+    content_type: Optional[str] = None
     #: Adaptive Card content.
     content: Optional[AdaptiveCard] = None
 
@@ -62,19 +62,19 @@ class Message(ApiModel):
     id: Optional[str] = None
     #: The unique identifier for the parent message.
     #: example: Y2lzY29zcGFyazovL3VzL01FU1NBR0UvOTJkYjNiZTAtNDNiZC0xMWU2LThhZTktZGQ1YjNkZmM1NjVk
-    parentId: Optional[str] = None
+    parent_id: Optional[str] = None
     #: The room ID of the message.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vYmJjZWIxYWQtNDNmMS0zYjU4LTkxNDctZjE0YmIwYzRkMTU0
-    roomId: Optional[str] = None
+    room_id: Optional[str] = None
     #: The type of room.
     #: example: group
-    roomType: Optional[MessageRoomType] = None
+    room_type: Optional[MessageRoomType] = None
     #: The person ID of the recipient when sending a private 1:1 message.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mMDZkNzFhNS0wODMzLTRmYTUtYTcyYS1jYzg5YjI1ZWVlMmX
-    toPersonId: Optional[str] = None
+    to_person_id: Optional[str] = None
     #: The email address of the recipient when sending a private 1:1 message.
     #: example: julie@example.com
-    toPersonEmail: Optional[str] = None
+    to_person_email: Optional[str] = None
     #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide alternate text for UI clients that do not support rich text.
     #: example: PROJECT UPDATE - A new project plan has been published om http://example.com/s/lf5vj. The PM for this project is Mike C. and the Engineering Manager is Jane W.
     text: Optional[str] = None
@@ -89,16 +89,16 @@ class Message(ApiModel):
     files: Optional[list[str]] = None
     #: The person ID of the message author.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: The email address of the message author.
     #: example: matt@example.com
-    personEmail: Optional[str] = None
+    person_email: Optional[str] = None
     #: People IDs for anyone mentioned in the message.
     #: example: ['Y2lzY29zcGFyazovL3VzL1BFT1BMRS8yNDlmNzRkOS1kYjhhLTQzY2EtODk2Yi04NzllZDI0MGFjNTM', 'Y2lzY29zcGFyazovL3VzL1BFT1BMRS83YWYyZjcyYy0xZDk1LTQxZjAtYTcxNi00MjlmZmNmYmM0ZDg']
-    mentionedPeople: Optional[list[str]] = None
+    mentioned_people: Optional[list[str]] = None
     #: Group names for the groups mentioned in the message.
     #: example: ['all']
-    mentionedGroups: Optional[list[str]] = None
+    mentioned_groups: Optional[list[str]] = None
     #: Message content attachments attached to the message. See the [Cards Guide](/docs/api/guides/cards) for more information.
     attachments: Optional[list[Attachment]] = None
     #: The date and time the message was created.
@@ -108,7 +108,7 @@ class Message(ApiModel):
     #: example: 2015-10-18T14:27:16+00:00
     updated: Optional[datetime] = None
     #: True if the audio file is a voice clip recorded by the client; false if the audio file is a standard audio file not posted using the voice clip feature.
-    isVoiceClip: Optional[bool] = None
+    is_voice_clip: Optional[bool] = None
 
 
 class ListMessage(ApiModel):
@@ -117,13 +117,13 @@ class ListMessage(ApiModel):
     id: Optional[str] = None
     #: The unique identifier for the parent message.
     #: example: Y2lzY29zcGFyazovL3VzL01FU1NBR0UvOTJkYjNiZTAtNDNiZC0xMWU2LThhZTktZGQ1YjNkZmM1NjVk
-    parentId: Optional[str] = None
+    parent_id: Optional[str] = None
     #: The room ID of the message.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vYmJjZWIxYWQtNDNmMS0zYjU4LTkxNDctZjE0YmIwYzRkMTU0
-    roomId: Optional[str] = None
+    room_id: Optional[str] = None
     #: The type of room.
     #: example: group
-    roomType: Optional[MessageRoomType] = None
+    room_type: Optional[MessageRoomType] = None
     #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide alternate text for UI clients that do not support rich text.
     #: example: PROJECT UPDATE - A new project plan has been published on http://example.com/s/lf5vj. The PM for this project is Mike C. and the Engineering Manager is Jane W.
     text: Optional[str] = None
@@ -138,16 +138,16 @@ class ListMessage(ApiModel):
     files: Optional[list[str]] = None
     #: The person ID of the message author.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: The email address of the message author.
     #: example: matt@example.com
-    personEmail: Optional[str] = None
+    person_email: Optional[str] = None
     #: People IDs for anyone mentioned in the message.
     #: example: ['Y2lzY29zcGFyazovL3VzL1BFT1BMRS8yNDlmNzRkOS1kYjhhLTQzY2EtODk2Yi04NzllZDI0MGFjNTM', 'Y2lzY29zcGFyazovL3VzL1BFT1BMRS83YWYyZjcyYy0xZDk1LTQxZjAtYTcxNi00MjlmZmNmYmM0ZDg']
-    mentionedPeople: Optional[list[str]] = None
+    mentioned_people: Optional[list[str]] = None
     #: Group names for the groups mentioned in the message.
     #: example: ['all']
-    mentionedGroups: Optional[list[str]] = None
+    mentioned_groups: Optional[list[str]] = None
     #: Message content attachments attached to the message. See the [Cards Guide](/docs/api/guides/cards) for more information.
     attachments: Optional[list[Attachment]] = None
     #: The date and time the message was created.
@@ -157,7 +157,7 @@ class ListMessage(ApiModel):
     #: example: 2015-10-18T14:27:16+00:00
     updated: Optional[datetime] = None
     #: `true` if the audio file is a voice clip recorded by the client; `false` if the audio file is a standard audio file not posted using the voice clip feature.
-    isVoiceClip: Optional[bool] = None
+    is_voice_clip: Optional[bool] = None
 
 
 class DirectMessage(ApiModel):
@@ -166,13 +166,13 @@ class DirectMessage(ApiModel):
     id: Optional[str] = None
     #: The unique identifier for the parent message.
     #: example: Y2lzY29zcGFyazovL3VzL01FU1NBR0UvOTJkYjNiZTAtNDNiZC0xMWU2LThhZTktZGQ1YjNkZmM1NjVk
-    parentId: Optional[str] = None
+    parent_id: Optional[str] = None
     #: The room ID of the message.
     #: example: Y2lzY29zcGFyazovL3VzL1JPT00vODQxZjY5MjAtNDdlZC00NmE0LWI2YmItZTVjM2M1YTc3Yzgy
-    roomId: Optional[str] = None
+    room_id: Optional[str] = None
     #: The type of room. Will always be `direct`.
     #: example: direct
-    roomType: Optional[str] = None
+    room_type: Optional[str] = None
     #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide alternate text for UI clients that do not support rich text.
     #: example: Hey there, what do you think of this project update presentation (http://sharepoint.example.com/presentation.pptx)?
     text: Optional[str] = None
@@ -187,10 +187,10 @@ class DirectMessage(ApiModel):
     files: Optional[list[str]] = None
     #: The person ID of the message author.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: The email address of the message author.
     #: example: matt@example.com
-    personEmail: Optional[str] = None
+    person_email: Optional[str] = None
     #: Message content attachments attached to the message. See the [Cards Guide](/docs/api/guides/cards) for more information.
     attachments: Optional[list[Attachment]] = None
     #: The date and time the message was created.
@@ -200,7 +200,7 @@ class DirectMessage(ApiModel):
     #: example: 2015-10-18T14:27:16+00:00
     updated: Optional[datetime] = None
     #: True if the audio file is a voice clip recorded by the client; false if the audio file is a standard audio file not posted using the voice clip feature.
-    isVoiceClip: Optional[bool] = None
+    is_voice_clip: Optional[bool] = None
 
 
 class MessageCollectionResponse(ApiModel):

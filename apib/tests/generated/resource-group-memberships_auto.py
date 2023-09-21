@@ -25,16 +25,16 @@ class ResourceGroupMembership(ApiModel):
     id: Optional[str] = None
     #: The resource group ID.
     #: example: Y2lzY29zcGFyazovL3VzL1JFU09VUkNFX0dST1VQL2RlZmF1bHQ
-    resourceGroupId: Optional[str] = None
+    resource_group_id: Optional[str] = None
     #: The license ID.
     #: example: Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvMWNjYmJjMTctZDYxNi00ZDc0LTg2NGItYjFmM2IwNzAxZmJhOk1TXzAzMDRjMDkzLTFjM2MtNDRlMC1iYjBhLWU1ZDE2NDM2NmQ1OQ
-    licenseId: Optional[str] = None
+    license_id: Optional[str] = None
     #: The person ID.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: The organization ID of the person.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
-    personOrgId: Optional[str] = None
+    person_org_id: Optional[str] = None
     #: The activation status of the resource group membership.
     #: example: activated
     status: Optional[ResourceGroupMembershipStatus] = None

@@ -14,45 +14,45 @@ class StepExecutionStatuses(ApiModel):
     #: Unique identifier that identifies each step in a job.
     id: Optional[int] = None
     #: Step execution start time in UTC format.
-    startTime: Optional[str] = None
+    start_time: Optional[str] = None
     #: Step execution end time in UTC format.
-    endTime: Optional[str] = None
+    end_time: Optional[str] = None
     #: Last updated time for a step in UTC format.
-    lastUpdated: Optional[str] = None
+    last_updated: Optional[str] = None
     #: Displays status for a step.
-    statusMessage: Optional[str] = None
+    status_message: Optional[str] = None
     #: Exit Code for a step.
-    exitCode: Optional[str] = None
+    exit_code: Optional[str] = None
     #: Step name.
     name: Optional[str] = None
     #: Time lapsed since the step execution started.
-    timeElapsed: Optional[str] = None
+    time_elapsed: Optional[str] = None
 
 
 class JobExecutionStatus(ApiModel):
     #: Unique identifier that identifies each instance of the job.
     id: Optional[int] = None
     #: Job execution start time in UTC format.
-    startTime: Optional[str] = None
+    start_time: Optional[str] = None
     #: Job execution end time in UTC format.
-    endTime: Optional[str] = None
+    end_time: Optional[str] = None
     #: Last updated time (in UTC format) post one of the step execution completion.
-    lastUpdated: Optional[str] = None
+    last_updated: Optional[str] = None
     #: Displays status for overall steps that are part of the job.
-    statusMessage: Optional[str] = None
+    status_message: Optional[str] = None
     #: Exit Code for a job.
-    exitCode: Optional[str] = None
+    exit_code: Optional[str] = None
     #: Job creation time in UTC format.
-    createdTime: Optional[str] = None
+    created_time: Optional[str] = None
     #: Status of each step within a job.
-    stepExecutionStatuses: Optional[list[StepExecutionStatuses]] = None
+    step_execution_statuses: Optional[list[StepExecutionStatuses]] = None
 
 
 class Counts(ApiModel):
     #: Indicates the total number of records whose routing prefix update is successful.
-    routingPrefixUpdated: Optional[int] = None
+    routing_prefix_updated: Optional[int] = None
     #: Indicates the total number of records whose routing prefix update failed.
-    routingPrefixFailed: Optional[int] = None
+    routing_prefix_failed: Optional[int] = None
 
 
 class BatchResponse(ApiModel):
@@ -61,19 +61,19 @@ class BatchResponse(ApiModel):
     #: Unique identifier of the job.
     id: Optional[str] = None
     #: Unique identifier to track the flow of HTTP requests.
-    trackingId: Optional[str] = None
+    tracking_id: Optional[str] = None
     #: Unique identifier to identify which user has run the job.
-    sourceUserId: Optional[str] = None
+    source_user_id: Optional[str] = None
     #: Unique identifier to identify the customer who has run the job.
-    sourceCustomerId: Optional[str] = None
+    source_customer_id: Optional[str] = None
     #: Unique identifier to identify the customer for which the job was run.
-    targetCustomerId: Optional[str] = None
+    target_customer_id: Optional[str] = None
     #: Unique identifier to identify the instance of the job.
-    instanceId: Optional[int] = None
+    instance_id: Optional[int] = None
     #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the execution of the job.
-    jobExecutionStatus: Optional[list[JobExecutionStatus]] = None
+    job_execution_status: Optional[list[JobExecutionStatus]] = None
     #: Indicates the most recent status (`STARTING`, `STARTED`, `COMPLETED`, `FAILED`) of the job at the time of invocation.
-    latestExecutionStatus: Optional[str] = None
+    latest_execution_status: Optional[str] = None
     #: Job statistics.
     counts: Optional[Counts] = None
 
@@ -84,7 +84,7 @@ class ErrorMessage(ApiModel):
     #: Internal error code.
     code: Optional[str] = None
     #: Error messages describing the location id in which the error occurs. For a move operation this is the target location ID.
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
 
 
 class Error(ApiModel):
@@ -96,7 +96,7 @@ class Error(ApiModel):
 
 class BatchJobError(ApiModel):
     #: Unique identifier to track the HTTP requests.
-    trackingId: Optional[str] = None
+    tracking_id: Optional[str] = None
     #: row number of failed record.
-    itemNumber: Optional[int] = None
+    item_number: Optional[int] = None
     error: Optional[Error] = None

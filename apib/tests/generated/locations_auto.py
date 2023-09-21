@@ -25,7 +25,7 @@ class LocationAddress(ApiModel):
     state: Optional[str] = None
     #: ZIP/Postal Code
     #: example: 12345
-    postalCode: Optional[str] = None
+    postal_code: Optional[str] = None
     #: ISO-3166 2-Letter Country Code.
     #: example: US
     country: Optional[str] = None
@@ -40,10 +40,10 @@ class Location(ApiModel):
     name: Optional[str] = None
     #: The ID of the organization to which this location belongs.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: Time zone associated with this location.
     #: example: 'America/Chicago'
-    timeZone: Optional[str] = None
+    time_zone: Optional[str] = None
     #: The address of the location.
     address: Optional[LocationAddress] = None
     #: Latitude
@@ -63,10 +63,10 @@ class PutCommonLocationObject(ApiModel):
     name: Optional[str] = None
     #: Time zone associated with this location, refer to this link (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone) for format.
     #: example: 'America/Chicago'
-    timeZone: Optional[str] = None
+    time_zone: Optional[str] = None
     #: Default email language.
     #: example: 'en_us'
-    preferredLanguage: Optional[str] = None
+    preferred_language: Optional[str] = None
     #: The address of the location.
     address: Optional[LocationAddress] = None
 
@@ -77,13 +77,13 @@ class PostCommonLocationObject(ApiModel):
     name: Optional[str] = None
     #: Time zone associated with this location, refer to this link (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone) for format.
     #: example: 'America/Chicago'
-    timeZone: Optional[str] = None
+    time_zone: Optional[str] = None
     #: Default email language.
     #: example: 'en_us'
-    preferredLanguage: Optional[str] = None
+    preferred_language: Optional[str] = None
     #: Location's phone announcement language.
     #: example: 'fr_fr'
-    announcementLanguage: Optional[str] = None
+    announcement_language: Optional[str] = None
     #: The address of the location.
     address: Optional[LocationAddress] = None
     #: Latitude
@@ -107,22 +107,22 @@ class Floor(ApiModel):
     id: Optional[str] = None
     #: Unique identifier for the location.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2E4NjczZDIwLWM0M2EtNDQ5Ni1iYWIxLTNiMjhhZGJjMjViYQ
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
     #: The floor number.
     #: example: -1.0
-    floorNumber: Optional[int] = None
+    floor_number: Optional[int] = None
     #: The floor display name.
     #: example: The basement
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
 
 
 class FloorCreationRequest(ApiModel):
     #: The floor number.
     #: example: -1.0
-    floorNumber: Optional[int] = None
+    floor_number: Optional[int] = None
     #: The floor display name.
     #: example: The basement
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
 
 
 class FloorCollectionResponse(ApiModel):

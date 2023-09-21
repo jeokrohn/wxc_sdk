@@ -1,4 +1,5 @@
 import logging
+import re
 from collections import defaultdict
 from itertools import chain
 from typing import Literal, Any, Optional, Union, ClassVar, Generator, NamedTuple
@@ -24,7 +25,16 @@ def words_to_camel(s: str) -> str:
         return f'{s[0].upper()}{s[1:]}'
 
     r = ''.join(cap_first(w) for w in s.split())
+    r, _ = re.subn(r'\W', '', r)
     return r
+
+
+def snake_case(s: str) -> str:
+    def replace(m: re.Match)->str:
+        t = m.group(0)
+        return f'{t[0]}_{t[1].lower()}'
+    r, _ = re.subn(r'[a-z\d][A-Z]', replace, s)
+    return r.lower()
 
 
 class ApibModel(BaseModel):

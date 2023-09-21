@@ -7,25 +7,25 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Address', 'Customer', 'CustomerListResponse', 'CustomerProvisioningPrecheckResponse', 'CustomerProvisioningPrecheckResponseInfo', 'CustomerStatus', 'Error', 'Package', 'PackageName', 'PackageStatus', 'ResourceDetails', 'ResourceURL', 'SubPartner', 'SubPartnerProvisioningState', 'SubPartnersListResponse', 'Subscriber', 'SubscriberListResponse', 'SubscriberPackage', 'SubscriberStatus']
+__auto__ = ['Address', 'Customer', 'CustomerListResponse', 'CustomerProvisioningPrecheckResponse', 'CustomerProvisioningPrecheckResponseInfo', 'CustomerStatus', 'Error', 'Package', 'PackageName', 'PackageStatus', 'PrecheckAWholesaleCustomerProvisioningCustomerInfo', 'PrecheckAWholesaleSubscriberProvisioningCustomerInfo', 'ProvisionAWholesaleCustomerCustomerInfo', 'ProvisionAWholesaleCustomerProvisioningParameters', 'ProvisionAWholesaleCustomerProvisioningParametersCalling', 'ProvisionAWholesaleCustomerProvisioningParametersCallingLocation', 'ProvisionAWholesaleCustomerProvisioningParametersMeetings', 'ProvisionAWholesaleSubscriberProvisioningParameters', 'ResourceDetails', 'ResourceURL', 'SubPartner', 'SubPartnerProvisioningState', 'SubPartnersListResponse', 'Subscriber', 'SubscriberListResponse', 'SubscriberPackage', 'SubscriberStatus', 'UpdateAWholesaleSubscriberProvisioningParameters']
 
 
 class Address(ApiModel):
     #: Address Line 1.
     #: example: 771 Alder Drive
-    addressLine1: Optional[str] = None
+    address_line1: Optional[str] = None
     #: Address Line 2.
     #: example: Cisco Site 5
-    addressLine2: Optional[str] = None
+    address_line2: Optional[str] = None
     #: City of the customer.
     #: example: Milpitas
     city: Optional[str] = None
     #: State or Province of the customer.
     #: example: CA
-    stateOrProvince: Optional[str] = None
+    state_or_province: Optional[str] = None
     #: Postal/Zip code of the customer.
     #: example: 95035
-    zipOrPostalCode: Optional[str] = None
+    zip_or_postal_code: Optional[str] = None
     #: ISO2 country code of the customer size = 2.
     #: example: `US`:
     country: Optional[str] = None
@@ -75,7 +75,7 @@ class PackageStatus(str, Enum):
 class Error(ApiModel):
     #: An error code that identifies the reason for the error.
     #: example: 10022.0
-    errorCode: Optional[int] = None
+    error_code: Optional[int] = None
     #: A textual representation of the error code.
     #: example: The email is already associated with an existing user.
     description: Optional[str] = None
@@ -110,10 +110,10 @@ class Customer(ApiModel):
     id: Optional[str] = None
     #: The Organization ID of the enterprise on Cisco Webex, to be used when referencing this customer on other Cisco Webex APIs. Only presented when status is `provisioned`.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: External ID of the Customer.
     #: example: c1677a16-557a-4fb4-b48f-24adde57ec99
-    externalId: Optional[str] = None
+    external_id: Optional[str] = None
     address: Optional[Address] = None
     #: The provisioning status of the customer.
     #: example: provisioned
@@ -121,7 +121,7 @@ class Customer(ApiModel):
     #: List of package names provisioned
     #: example: ['common_area_calling', 'webex_calling', 'webex_meetings', 'webex_suite', 'webex_voice']
     packages: Optional[list[str]] = None
-    resourceDetails: Optional[ResourceDetails] = None
+    resource_details: Optional[ResourceDetails] = None
     #: List of errors that occurred during that last attempt to provision/update this customer.
     #: *Note:*
     #: + This list captures errors that occurred during *asynchronous or background* provisioning of the customer, *after* the API has been accepted and 202 response returned.
@@ -137,7 +137,7 @@ class CustomerListResponse(ApiModel):
 class CustomerProvisioningPrecheckResponseInfo(ApiModel):
     #: Provisioning Precheck `infoCode`.
     #: example: 100.0
-    infoCode: Optional[int] = None
+    info_code: Optional[int] = None
     #: A textual description of the `infoCode`.
     #: example: Provisioning Precheck validation successful.
     description: Optional[str] = None
@@ -168,19 +168,19 @@ class SubPartnerProvisioningState(str, Enum):
 class SubPartner(ApiModel):
     #: The Organization ID for the sub-partner.
     #: example: 'Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE'
-    orgId: Optional[str] = None
+    org_id: Optional[str] = None
     #: The Wholesale Subscription ID of the partner.
     #: example: 'Sub23452345'
-    subscriptionId: Optional[str] = None
+    subscription_id: Optional[str] = None
     #: The provisioning status of the sub-partner.
     #: example: 'active'
-    provisioningState: Optional[SubPartnerProvisioningState] = None
+    provisioning_state: Optional[SubPartnerProvisioningState] = None
     #: 02-16T14:10:18.855Z' (string) - The date and time the sub-partner was created.
     #: example: '2023
     created: Optional[datetime] = None
     #: 02-22T13:43:41.117Z' (string) - The date and time from which new billing for the sub-partner started.
     #: example: '2023
-    billingStartDate: Optional[datetime] = None
+    billing_start_date: Optional[datetime] = None
 
 
 class SubPartnersListResponse(ApiModel):
@@ -212,16 +212,16 @@ class Subscriber(ApiModel):
     id: Optional[str] = None
     #: The person id of the subscriber used in the /people API. Only presented when status is `provisioned`.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: The email address of the subscriber.
     #: example: john.anderson@acme.com
     email: Optional[str] = None
     #: A unique identifier for the customer.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    customerId: Optional[str] = None
+    customer_id: Optional[str] = None
     #: External ID of the Wholesale customer.
     #: example: c1677a16-557a-4fb4-b48f-24adde57ec99
-    externalCustomerId: Optional[str] = None
+    external_customer_id: Optional[str] = None
     #: The Webex Wholesale Package assigned to the subscriber.
     #: example: webex_calling
     package: Optional[SubscriberPackage] = None
@@ -238,9 +238,104 @@ class Subscriber(ApiModel):
     created: Optional[datetime] = None
     #: The date and time the provisioning status of the subscriber last changed.
     #: example: 2020-03-18T16:05:34.000Z
-    lastStatusChange: Optional[datetime] = None
+    last_status_change: Optional[datetime] = None
 
 
 class SubscriberListResponse(ApiModel):
     #: An array of Subscriber objects.
     items: Optional[list[Subscriber]] = None
+
+
+class ProvisionAWholesaleCustomerCustomerInfo(ApiModel):
+    #: The name of the Wholesale customer.
+    #: example: John's Pizza
+    name: Optional[str] = None
+    #: The primary email address of the customer.
+    #: example: john.anderson@acme.com
+    primary_email: Optional[str] = None
+    #: The {ISO-639-1}_{ISO-3166} or {ISO-639-1} locale or language code used as preferred language for organization and Webex Meeting Sites. Refer to the [help page](https://www.cisco.com/c/en/us/td/docs/voice_ip_comm/cloudCollaboration/wholesale_rtm/wbxbw_b_wholesale-rtm-solution-guide/wbxbw_m_overview-of-webex-wholesale.html#Cisco_Reference.dita_deb994cb-9c48-4488-b352-54495c54ba1e) for more information.
+    #: example: 'en'
+    language: Optional[str] = None
+
+
+class ProvisionAWholesaleCustomerProvisioningParametersCallingLocation(ApiModel):
+    #: Name of the wholesale customer office.
+    #: example: Head Office
+    name: Optional[str] = None
+    #: Address of the wholesale customer.
+    address: Optional[Address] = None
+    #: Customer timezone for calling package.
+    #: example: America/Los_Angeles
+    timezone: Optional[str] = None
+    #: Determine language for all generated emails and voice announcements.
+    #: example: en_us
+    language: Optional[str] = None
+    #: SIP Header for any emergency calls from this location.
+    #: example: 95547321
+    emergency_location_identifier: Optional[str] = None
+    #: List of numbers to be assigned to the location.
+    #: example: ['+17205557878', '+17205557879', '+17205557880', '+17205557881']
+    numbers: Optional[list[str]] = None
+    #: Main number of the Wholesale customer.
+    #: example: +17205557878
+    main_number: Optional[str] = None
+
+
+class ProvisionAWholesaleCustomerProvisioningParametersCalling(ApiModel):
+    location: Optional[ProvisionAWholesaleCustomerProvisioningParametersCallingLocation] = None
+
+
+class ProvisionAWholesaleCustomerProvisioningParametersMeetings(ApiModel):
+    #: Customer timezone for meetings package.
+    #: example: America/Los_Angeles
+    timezone: Optional[str] = None
+
+
+class ProvisionAWholesaleCustomerProvisioningParameters(ApiModel):
+    calling: Optional[ProvisionAWholesaleCustomerProvisioningParametersCalling] = None
+    meetings: Optional[ProvisionAWholesaleCustomerProvisioningParametersMeetings] = None
+
+
+class PrecheckAWholesaleCustomerProvisioningCustomerInfo(ApiModel):
+    #: The name of the Wholesale customer.
+    #: example: John's Pizza
+    name: Optional[str] = None
+    #: The primary email address of the Wholesale customer.
+    #: example: "john.anderson@acme.com"
+    primary_email: Optional[str] = None
+
+
+class ProvisionAWholesaleSubscriberProvisioningParameters(ApiModel):
+    #: The first name of the subscriber.
+    #: example: John
+    first_name: Optional[str] = None
+    #: The last name of the subscriber.
+    #: example: Andersen
+    last_name: Optional[str] = None
+    #: The primary phone number configured for the subscriber. A primary phone number, extension, or both must be supplied when assigning a calling-enabled package, unless the subscriber is an existing Webex Calling entitled user.
+    #: example: +12405551212
+    primary_phone_number: Optional[str] = None
+    #: The extension configured for the subscriber. An extension, primary phone number or both must be supplied when assigning a calling-enabled package, unless the subscriber is an existing Webex Calling entitled user.
+    #: example: 51212
+    extension: Optional[str] = None
+    #: A unique identifier for the location. This ID should be retrieved via the [List Locations](/docs/api/v1/locations/list-locations) API.
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzAxMjM0NTY3LTg5YWItY2RlZi0wMTIzLTQ1Njc4OWFiY2RlZg==
+    location_id: Optional[str] = None
+
+
+class UpdateAWholesaleSubscriberProvisioningParameters(ApiModel):
+    #: The primary phone number configured for the subscriber. A primary phone number, extension, or both must be supplied when changing from the webex_meetings package to any calling-enabled package.
+    #: example: +1-240-555-1212
+    primary_phone_number: Optional[str] = None
+    #: The extension configured for the subscriber. An extension, primary phone number or both must be supplied when changing from the webex_meetings package to any calling-enabled package.
+    #: example: 5221
+    extension: Optional[datetime] = None
+    #: A unique identifier for the location. This id should be retrieved via the [List Locations](/docs/api/v1/locations/list-locations) API.
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzAxMjM0NTY3LTg5YWItY2RlZi0wMTIzLTQ1Njc4OWFiY2RlZg==
+    location_id: Optional[str] = None
+
+
+class PrecheckAWholesaleSubscriberProvisioningCustomerInfo(ApiModel):
+    #: The primary email address of the customer.
+    #: example: "john.anderson@acme.com"
+    primary_email: Optional[str] = None

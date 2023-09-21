@@ -21,4 +21,4 @@ class WorkspacePersonalizationTaskResponse(ApiModel):
     success: Optional[bool] = None
     #: A description of the error will be provided if the personalization was not successful.
     #: example: Device is offline
-    errorDescription: Optional[str] = None
+    error_description: Optional[str] = None

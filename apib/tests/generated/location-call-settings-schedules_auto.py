@@ -52,7 +52,7 @@ class RecurYearlyByDateObjectMonth(str, Enum):
 class RecurYearlyByDateObject(ApiModel):
     #: Schedule the event on a specific day of the month.
     #: example: 1.0
-    dayOfMonth: Optional[int] = None
+    day_of_month: Optional[int] = None
     #: Schedule the event on a specific month of the year.
     #: example: JANUARY
     month: Optional[RecurYearlyByDateObjectMonth] = None
@@ -90,16 +90,16 @@ class RecurYearlyByDayObject(ApiModel):
 
 class RecurrenceObject(ApiModel):
     #: Flag to indicate if event will recur forever.
-    recurForEver: Optional[bool] = None
+    recur_for_ever: Optional[bool] = None
     #: End date of recurrence.
     #: example: 2021-11-30
-    recurEndDate: Optional[datetime] = None
+    recur_end_date: Optional[datetime] = None
     #: Weekly recurrence definition.
-    recurWeekly: Optional[RecurWeeklyObject] = None
+    recur_weekly: Optional[RecurWeeklyObject] = None
     #: Recurrence definition yearly by date.
-    recurYearlyByDate: Optional[RecurYearlyByDateObject] = None
+    recur_yearly_by_date: Optional[RecurYearlyByDateObject] = None
     #: Recurrence definition yearly by day.
-    recurYearlyByDay: Optional[RecurYearlyByDayObject] = None
+    recur_yearly_by_day: Optional[RecurYearlyByDayObject] = None
 
 
 class GetScheduleEventObject(ApiModel):
@@ -111,25 +111,25 @@ class GetScheduleEventObject(ApiModel):
     name: Optional[str] = None
     #: Start Date of Event.
     #: example: 2021-11-01
-    startDate: Optional[datetime] = None
+    start_date: Optional[datetime] = None
     #: End Date of Event.
     #: example: 2021-11-30
-    endDate: Optional[datetime] = None
+    end_date: Optional[datetime] = None
     #: Start time of event.
     #: example: 12:20
-    startTime: Optional[datetime] = None
+    start_time: Optional[datetime] = None
     #: End time of event.
     #: example: 14:20
-    endTime: Optional[datetime] = None
+    end_time: Optional[datetime] = None
     #: An indication of whether given event is an all-day event or not.
-    allDayEnabled: Optional[bool] = None
+    all_day_enabled: Optional[bool] = None
     #: Recurrence definition.
     recurrence: Optional[RecurrenceObject] = None
 
 
 class GetScheduleObjectType(str, Enum):
     #: Business hours schedule type.
-    businesshours = 'businessHours'
+    business_hours = 'businessHours'
     #: Holidays schedule type.
     holidays = 'holidays'
 
@@ -160,10 +160,10 @@ class ListScheduleObject(ApiModel):
     type: Optional[GetScheduleObjectType] = None
     #: Name of location for schedule.
     #: example: Alaska
-    locationName: Optional[str] = None
+    location_name: Optional[str] = None
     #: ID of the location for the schedule.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzEyMzQ1
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
 
 
 class ModifyScheduleEventListObject(ApiModel):
@@ -172,21 +172,21 @@ class ModifyScheduleEventListObject(ApiModel):
     name: Optional[str] = None
     #: New name for the event.
     #: example: MondaySchedule
-    newName: Optional[str] = None
+    new_name: Optional[str] = None
     #: Start date of event.
     #: example: 2021-11-01
-    startDate: Optional[datetime] = None
+    start_date: Optional[datetime] = None
     #: End date of event.
     #: example: 2021-11-30
-    endDate: Optional[datetime] = None
+    end_date: Optional[datetime] = None
     #: Start time of event. Mandatory if the event is not all day.
     #: example: 12:20
-    startTime: Optional[datetime] = None
+    start_time: Optional[datetime] = None
     #: End time of event. Mandatory if the event is not all day.
     #: example: 14:20
-    endTime: Optional[datetime] = None
+    end_time: Optional[datetime] = None
     #: An indication of whether given event is an all-day event or not. Mandatory if the `startTime` and `endTime` are not defined.
-    allDayEnabled: Optional[bool] = None
+    all_day_enabled: Optional[bool] = None
     #: Recurrence definition.
     recurrence: Optional[RecurrenceObject] = None
 
@@ -197,18 +197,18 @@ class ModifyScheduleEventObject(ApiModel):
     name: Optional[str] = None
     #: Start date of event.
     #: example: 2021-11-01
-    startDate: Optional[datetime] = None
+    start_date: Optional[datetime] = None
     #: End date of event.
     #: example: 2021-11-30
-    endDate: Optional[datetime] = None
+    end_date: Optional[datetime] = None
     #: Start time of event. Mandatory if the event is not all day.
     #: example: 12:20
-    startTime: Optional[datetime] = None
+    start_time: Optional[datetime] = None
     #: End time of event. Mandatory if the event is not all day.
     #: example: 14:20
-    endTime: Optional[datetime] = None
+    end_time: Optional[datetime] = None
     #: An indication of whether given event is an all-day event or not. Mandatory if the `startTime` and `endTime` are not defined.
-    allDayEnabled: Optional[bool] = None
+    all_day_enabled: Optional[bool] = None
     #: Recurrence definition.
     recurrence: Optional[RecurrenceObject] = None
 

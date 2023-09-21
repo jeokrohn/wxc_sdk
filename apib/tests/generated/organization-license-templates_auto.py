@@ -21,12 +21,12 @@ class Template(ApiModel):
     id: Optional[str] = None
     #: Name of the org level template
     #: example: Default
-    templateName: Optional[str] = None
+    template_name: Optional[str] = None
     #: An array of license strings
     #: example: ['Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh', 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi']
     licenses: Optional[list[str]] = None
     #: Specify the template type to be created ORG or GROUP
-    templateType: Optional[TemplateTemplateType] = None
+    template_type: Optional[TemplateTemplateType] = None
     #: An array of group ids associated with template
     #: example: ['Y2lzY29zcGFyazovL45zL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh', 'Y2lzY29zcGFyazovL3VzL0xOU0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWExNTItZmUzNDgxOWNkYzlh']
     groups: Optional[list[str]] = None
@@ -40,7 +40,7 @@ class GroupMembers(ApiModel):
     #: example: Y2lzY29zcGFyazovL45zL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xJWU1LWExNTItZmUzNDgxOWNkYsgh
     id: Optional[str] = None
     #: example: Test Group
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
 
 
 class Groups(ApiModel):

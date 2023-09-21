@@ -19,13 +19,13 @@ class CallQueueObject(ApiModel):
     name: Optional[str] = None
     #: When not null, indicates the Call Queue's phone number.
     #: example: 4255558100
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: When not null, indicates the Call Queue's extension number.
     #: example: 8100
     extension: Optional[datetime] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12348100
     esn: Optional[str] = None
@@ -33,15 +33,15 @@ class CallQueueObject(ApiModel):
 
 class AgentAvaliableCallQueueIdList(ApiModel):
     #: Indicates a list of Call Queues that the agent belongs and are available to be selected as the Caller ID for outgoing calls. It is empty when the agent's Call Queues have disabled the Call Queue outgoing phone number setting to be used as Caller ID. In the case where this setting is enabled the array will be populated.
-    availableQueues: Optional[list[CallQueueObject]] = None
+    available_queues: Optional[list[CallQueueObject]] = None
 
 
 class AgentCallQueueId(ApiModel):
     #: When true, indicates that this agent is using the `selectedQueue` for its Caller ID. When false, indicates that it is using the agent's configured Caller ID.
     #: example: True
-    queueCallerIdEnabled: Optional[bool] = None
+    queue_caller_id_enabled: Optional[bool] = None
     #: Indicates agent's choice of using this queue's Caller ID for outgoing calls. It is empty object when `queueCallerIdEnabled` is false. When `queueCallerIdEnabled` is true this data must be populated.
-    selectedQueue: Optional[CallQueueObject] = None
+    selected_queue: Optional[CallQueueObject] = None
 
 
 class LineType(str, Enum):
@@ -66,25 +66,25 @@ class AvailableSharedLineMemberItem(ApiModel):
     id: Optional[str] = None
     #: First name of member.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name of member.
     #: example: Doe
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Phone number of member. Currently, E.164 format is not supported.
     #: example: 1234567890
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Phone extension of member.
     #: example: 0000
     extension: Optional[str] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12340000
     esn: Optional[str] = None
     #: Indicates if the line is acting as a primary line or a shared line for this device.
     #: example: SHARED_CALL_APPEARANCE
-    lineType: Optional[LineType] = None
+    line_type: Optional[LineType] = None
     #: Location object having a unique identifier for the location and its name.
     location: Optional[Location] = None
 
@@ -106,19 +106,19 @@ class GetSharedLineMemberItem(ApiModel):
     id: Optional[str] = None
     #: First name of person or workspace.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name of person or workspace.
     #: example: Doe
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: Phone number of a person or workspace. Currently, E.164 format is not supported. This will be supported in the future update.
     #: example: 2056852221
-    phoneNumber: Optional[str] = None
+    phone_number: Optional[str] = None
     #: Phone extension of a person or workspace.
     #: example: 1111
     extension: Optional[datetime] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12341111
     esn: Optional[datetime] = None
@@ -127,36 +127,36 @@ class GetSharedLineMemberItem(ApiModel):
     port: Optional[int] = None
     #: T.38 Fax Compression setting. Valid only for ATA Devices. Overrides user level compression options.
     #: example: True
-    t38FaxCompressionEnabled: Optional[bool] = None
+    t38_fax_compression_enabled: Optional[bool] = None
     #: If `true` the person or the workspace is the owner of the device. Points to primary line/port of the device.
     #: example: true
-    primaryOwner: Optional[str] = None
+    primary_owner: Optional[str] = None
     #: Indicates if the line is acting as a primary line or a shared line for this device.
     #: example: SHARED_CALL_APPEARANCE
-    lineType: Optional[LineType] = None
+    line_type: Optional[LineType] = None
     #: Number of lines that have been configured for the person on the device.
     #: example: 1.0
-    lineWeight: Optional[int] = None
+    line_weight: Optional[int] = None
     #: Registration home IP for the line port.
     #: example: 198.168.0.1
-    hostIP: Optional[str] = None
+    host_ip: Optional[str] = Field(alias='hostIP', default=None)
     #: Registration remote IP for the line port.
     #: example: 198.168.0.2
-    remoteIP: Optional[str] = None
+    remote_ip: Optional[str] = Field(alias='remoteIP', default=None)
     #: Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line can only make calls to the predefined number set in hotlineDestination.
     #: example: True
-    hotlineEnabled: Optional[bool] = None
+    hotline_enabled: Optional[bool] = None
     #: Preconfigured number for the hotline. Required only if `hotlineEnabled` is set to `true`.
     #: example: 1234
-    hotlineDestination: Optional[datetime] = None
+    hotline_destination: Optional[datetime] = None
     #: Set how a device behaves when a call is declined. When set to `true`, a call decline request is extended to all the endpoints on the device. When set to `false`, a call decline request is only declined at the current endpoint.
     #: example: True
-    allowCallDeclineEnabled: Optional[bool] = None
+    allow_call_decline_enabled: Optional[bool] = None
     #: Device line label.
     #: example: share line label
-    lineLabel: Optional[str] = None
+    line_label: Optional[str] = None
     #: Indicates if the member is of type `PEOPLE` or `PLACE`.
-    memberType: Optional[UserType] = None
+    member_type: Optional[UserType] = None
     #: Location object having a unique identifier for the location and its name.
     location: Optional[Location] = None
 
@@ -169,7 +169,7 @@ class GetSharedLineMemberList(ApiModel):
     members: Optional[list[GetSharedLineMemberItem]] = None
     #: Maximum number of device ports.
     #: example: 10.0
-    maxLineCount: Optional[int] = None
+    max_line_count: Optional[int] = None
 
 
 class PeopleOrPlaceOrVirtualLineType(str, Enum):
@@ -190,7 +190,7 @@ class MonitoredNumberObject(ApiModel):
     extension: Optional[datetime] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12341088
     esn: Optional[str] = None
@@ -205,13 +205,13 @@ class GetMonitoredElementsObjectMember(ApiModel):
     id: Optional[str] = None
     #: The last name of the monitored person, place or virtual line.
     #: example: Nelson
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: The first name of the monitored person, place or virtual line.
     #: example: John
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: The display name of the monitored person, place or virtual line.
     #: example: John Nelson
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: Indicates whether the type is `PEOPLE`, `PLACE` or `VIRTUAL_LINE`.
     type: Optional[PeopleOrPlaceOrVirtualLineType] = None
     #: The email address of the monitored person, place or virtual line.
@@ -224,7 +224,7 @@ class GetMonitoredElementsObjectMember(ApiModel):
     location: Optional[str] = None
     #: The ID for the location.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzZhZjk4ZGViLWVlZGItNGFmYi1hMDAzLTEzNzgyYjdjODAxYw
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
 
 
 class GetMonitoredElementsObjectCallparkextension(ApiModel):
@@ -239,7 +239,7 @@ class GetMonitoredElementsObjectCallparkextension(ApiModel):
     extension: Optional[datetime] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12344001
     esn: Optional[str] = None
@@ -248,7 +248,7 @@ class GetMonitoredElementsObjectCallparkextension(ApiModel):
     location: Optional[str] = None
     #: The ID for the location.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzZhZjk4ZGViLWVlZGItNGFmYi1hMDAzLTEzNzgyYjdjODAxYw
-    locationId: Optional[str] = None
+    location_id: Optional[str] = None
 
 
 class GetMonitoredElementsObject(ApiModel):
@@ -273,27 +273,27 @@ class GetNumbersPhoneNumbers(ApiModel):
     primary: Optional[bool] = None
     #: Phone number.
     #: example: 2143456789
-    directNumber: Optional[str] = None
+    direct_number: Optional[str] = None
     #: Extension.
     #: example: 1234
     extension: Optional[datetime] = None
     #: Routing prefix of location.
     #: example: 1234
-    routingPrefix: Optional[datetime] = None
+    routing_prefix: Optional[datetime] = None
     #: Routing prefix + extension of a person or workspace.
     #: example: 12341234
     esn: Optional[str] = None
     #: Optional ring pattern. Applicable only for alternate numbers.
     #: example: NORMAL
-    ringPattern: Optional[GetNumbersPhoneNumbersRingPattern] = None
+    ring_pattern: Optional[GetNumbersPhoneNumbersRingPattern] = None
 
 
 class GetNumbers(ApiModel):
     #: Enable/disable a distinctive ring pattern that identifies calls coming from a specific phone number.
     #: example: True
-    distinctiveRingEnabled: Optional[bool] = None
+    distinctive_ring_enabled: Optional[bool] = None
     #: Information about the number.
-    phoneNumbers: Optional[list[GetNumbersPhoneNumbers]] = None
+    phone_numbers: Optional[list[GetNumbersPhoneNumbers]] = None
 
 
 class MonitoredMemberObject(ApiModel):
@@ -302,13 +302,13 @@ class MonitoredMemberObject(ApiModel):
     id: Optional[str] = None
     #: Last name of the monitored person, workspace or virtual line.
     #: example: Little
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
     #: First name of the monitored person, workspace or virtual line.
     #: example: Alice
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Display name of the monitored person, workspace or virtual line.
     #: example: Alice Little
-    displayName: Optional[str] = None
+    display_name: Optional[str] = None
     #: Indicates whether type is person, workspace or virtual line.
     type: Optional[PeopleOrPlaceOrVirtualLineType] = None
     #: Email address of the monitored person, workspace or virtual line.
@@ -321,23 +321,23 @@ class MonitoredMemberObject(ApiModel):
 class MonitoringSettings(ApiModel):
     #: Call park notification is enabled or disabled.
     #: example: True
-    callParkNotificationEnabled: Optional[bool] = None
+    call_park_notification_enabled: Optional[bool] = None
     #: Settings of monitored elements which can be person, place, virtual line or call park extension.
-    monitoredElements: Optional[list[GetMonitoredElementsObject]] = None
+    monitored_elements: Optional[list[GetMonitoredElementsObject]] = None
 
 
 class PrivacyGet(ApiModel):
     #: When `true` auto attendant extension dialing will be enabled.
     #: example: True
-    aaExtensionDialingEnabled: Optional[bool] = None
+    aa_extension_dialing_enabled: Optional[bool] = None
     #: When `true` auto attendant dailing by first or last name will be enabled.
     #: example: True
-    aaNamingDialingEnabled: Optional[bool] = None
+    aa_naming_dialing_enabled: Optional[bool] = None
     #: When `true` phone status directory privacy will be enabled.
     #: example: True
-    enablePhoneStatusDirectoryPrivacy: Optional[bool] = None
+    enable_phone_status_directory_privacy: Optional[bool] = None
     #: List of people that are being monitored.
-    monitoringAgents: Optional[list[MonitoredMemberObject]] = None
+    monitoring_agents: Optional[list[MonitoredMemberObject]] = None
 
 
 class PushToTalkAccessType(str, Enum):
@@ -357,11 +357,11 @@ class PushToTalkConnectionType(str, Enum):
 class PushToTalkInfo(ApiModel):
     #: Set to `true` to enable the Push-to-Talk feature.  When enabled, a person receives a Push-to-Talk call and answers the call automatically.
     #: example: True
-    allowAutoAnswer: Optional[bool] = None
+    allow_auto_answer: Optional[bool] = None
     #: Specifies the connection type to be used.
-    connectionType: Optional[PushToTalkConnectionType] = None
+    connection_type: Optional[PushToTalkConnectionType] = None
     #: Specifies the access type to be applied when evaluating the member list.
-    accessType: Optional[PushToTalkAccessType] = None
+    access_type: Optional[PushToTalkAccessType] = None
     #: List of people that are allowed or disallowed to interact using the Push-to-Talk feature.
     members: Optional[list[MonitoredMemberObject]] = None
 
@@ -369,6 +369,6 @@ class PushToTalkInfo(ApiModel):
 class ReceptionInfo(ApiModel):
     #: Set to `true` to enable the Receptionist Client feature.
     #: example: True
-    receptionEnabled: Optional[bool] = None
+    reception_enabled: Optional[bool] = None
     #: List of people, workspaces or virtual lines to monitor.
-    monitoredMembers: Optional[list[MonitoredMemberObject]] = None
+    monitored_members: Optional[list[MonitoredMemberObject]] = None

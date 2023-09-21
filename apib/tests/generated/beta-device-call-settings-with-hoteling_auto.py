@@ -24,9 +24,9 @@ class HotelingRequest(ApiModel):
     #: as if it were their own. This is useful for employees who travel to remote offices and need to make and receive calls using their office phone number and access features that are normally available on their office phone.
     enabled: Optional[bool] = None
     #: Enable limiting the time a guest can use the device. The time limit is configured via `guestHoursLimit`.
-    limitGuestUse: Optional[bool] = None
+    limit_guest_use: Optional[bool] = None
     #: Time limit, in hours, until the hoteling reservation expires.
-    guestHoursLimit: Optional[int] = None
+    guest_hours_limit: Optional[int] = None
 
 
 class LineType(str, Enum):
@@ -49,9 +49,9 @@ class DeviceOwner(ApiModel):
     #: Enumeration that indicates if the member is of type `PEOPLE` or `PLACE`.
     type: Optional[MemberType] = None
     #: First name of device owner.
-    firstName: Optional[str] = None
+    first_name: Optional[str] = None
     #: Last name of device owner.
-    lastName: Optional[str] = None
+    last_name: Optional[str] = None
 
 
 class Devices(ApiModel):
@@ -64,9 +64,9 @@ class Devices(ApiModel):
     #: MAC address of device.
     mac: Optional[str] = None
     #: IP address of device.
-    ipAddress: Optional[str] = None
+    ip_address: Optional[str] = None
     #: Indicates whether the person or the workspace is the owner of the device, and points to a primary Line/Port of the device.
-    primaryOwner: Optional[bool] = None
+    primary_owner: Optional[bool] = None
     #: Indicates if the line is acting as a primary line or a shared line for this device.
     type: Optional[LineType] = None
     #: Hoteling settings, which are available when the device is the user's primary device and device type is PRIMARY
@@ -74,11 +74,11 @@ class Devices(ApiModel):
     #: Owner of device.
     owner: Optional[DeviceOwner] = None
     #: Activation state of device.
-    activationState: Optional[ActivationStates] = None
+    activation_state: Optional[ActivationStates] = None
 
 
 class DeviceList(ApiModel):
     #: Array of devices available to person.
     devices: Optional[list[Devices]] = None
     #: Maximum number of devices a person can be assigned to.
-    maxDeviceCount: Optional[int] = None
+    max_device_count: Optional[int] = None

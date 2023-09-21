@@ -15,9 +15,9 @@ class HotelingRequest(ApiModel):
     #: as if it were their own. This is useful for employees who travel to remote offices and need to make and receive calls using their office phone number and access features that are normally available on their office phone.
     enabled: Optional[bool] = None
     #: Enable limiting the time a guest can use the device. The time limit is configured via `guestHoursLimit`.
-    limitGuestUse: Optional[bool] = None
+    limit_guest_use: Optional[bool] = None
     #: Time limit, in hours, until the hoteling reservation expires.
-    guestHoursLimit: Optional[int] = None
+    guest_hours_limit: Optional[int] = None
 
 
 class UserHotelingRequestPatch(ApiModel):

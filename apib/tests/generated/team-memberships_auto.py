@@ -16,22 +16,22 @@ class TeamMembership(ApiModel):
     id: Optional[str] = None
     #: The team ID.
     #: example: Y2lzY29zcGFyazovL3VzL1RFQU0vMTNlMThmNDAtNDJmYy0xMWU2LWE5ZDgtMjExYTBkYzc5NzY5
-    teamId: Optional[str] = None
+    team_id: Optional[str] = None
     #: The person ID.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
-    personId: Optional[str] = None
+    person_id: Optional[str] = None
     #: The email address of the person.
     #: example: john.andersen@example.com
-    personEmail: Optional[str] = None
+    person_email: Optional[str] = None
     #: The display name of the person.
     #: example: John Andersen
-    personDisplayName: Optional[str] = None
+    person_display_name: Optional[str] = None
     #: The organization ID of the person.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
-    personOrgId: Optional[str] = None
+    person_org_id: Optional[str] = None
     #: Whether or not the participant is a team moderator.
     #: example: True
-    isModerator: Optional[bool] = None
+    is_moderator: Optional[bool] = None
     #: The date and time when the team membership was created.
     #: example: 2015-10-18T14:26:16.203Z
     created: Optional[datetime] = None
