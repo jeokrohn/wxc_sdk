@@ -30,11 +30,14 @@ def words_to_camel(s: str) -> str:
 
 
 def snake_case(s: str) -> str:
-    def replace(m: re.Match)->str:
-        t = m.group(0)
-        return f'{t[0]}_{t[1].lower()}'
-    r, _ = re.subn(r'[a-z\d][A-Z]', replace, s)
-    return r.lower()
+    # get rid of all spaces
+    r = s.replace(' ', '_')
+    # add underscore whenever a capital letter is preceded by lower case or digit
+    r, _ = re.subn(r'([a-z0-9])([A-Z])', '\\1_\\2', r)
+    # add underscore whenever a letter or digit is preceded by non-word character other than underscore
+    r, _ = re.subn(r'[^_\w]([A-Za-z0-9])', '_\\1', r)
+    r = r.lower()
+    return r
 
 
 class ApibModel(BaseModel):

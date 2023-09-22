@@ -13,28 +13,28 @@ __auto__ = ['CDR', 'CDRResponse']
 class CDR(ApiModel):
     #: The time the call was answered. Time is in UTC.
     #: example: 2020-05-14T11:01:17.551Z
-    answer time: Optional[datetime] = Field(alias='Answer time', default=None)
+    answer_time: Optional[datetime] = Field(alias='Answer time', default=None)
     #: Whether the call leg was answered. For example, in a hunt group case, some legs will be unanswered, and one will be answered.
     #: example: true
     answered: Optional[str] = Field(alias='Answered', default=None)
     #: The authorization code admin created for a location or site for users to use. Collected by the Account/Authorization Codes or Enhanced Outgoing Calling Plan services.
     #: example: 107
-    authorization code: Optional[datetime] = Field(alias='Authorization code', default=None)
+    authorization_code: Optional[datetime] = Field(alias='Authorization code', default=None)
     #: SIP Call ID used to identify the call. You can share the Call ID with Cisco TAC to help them pinpoint a call if necessary.
     #: example: SSE1101163211405201218829100@10.177.4.29
-    call id: Optional[str] = Field(alias='Call ID', default=None)
+    call_id: Optional[str] = Field(alias='Call ID', default=None)
     #: Identifies whether the call was set up or disconnected normally. Possible values:
     #: - Success
     #: - Failure
     #: - Refusal
     #: example: Success
-    call outcome: Optional[str] = Field(alias='Call outcome', default=None)
+    call_outcome: Optional[str] = Field(alias='Call outcome', default=None)
     #: Additional information about the Call outcome returned.
     #: example: Normal
-    call outcome reason: Optional[str] = Field(alias='Call outcome reason', default=None)
+    call_outcome_reason: Optional[str] = Field(alias='Call outcome reason', default=None)
     #: Indicates the time at which the call transfer service was invoked during the call. The invocation time is shown using the UTC/GMT time zone format.
     #: example: 2023-06-05T18:21:29.707Z
-    call transfer time: Optional[datetime] = Field(alias='Call transfer Time', default=None)
+    call_transfer_time: Optional[datetime] = Field(alias='Call transfer Time', default=None)
     #: Type of call. For example:
     #: - SIP_MEETING
     #: - SIP_INTERNATIONAL
@@ -48,19 +48,19 @@ class CDR(ApiModel):
     #: - SIP_NATIONAL
     #: - SIP_MOBILE
     #: example: SIP_ENTERPRISE
-    call type: Optional[str] = Field(alias='Call type', default=None)
+    call_type: Optional[str] = Field(alias='Call type', default=None)
     #: For incoming calls, the calling line ID of the user. For outgoing calls, it's the calling line ID of the called party.
     #: example: CALLEDCLIDGOESHERE
-    called line id: Optional[str] = Field(alias='Called line ID', default=None)
+    called_line_id: Optional[str] = Field(alias='Called line ID', default=None)
     #: For incoming calls, the telephone number of the user. For outgoing calls, it's the telephone number of the called party.
     #: example: 2002
-    called number: Optional[datetime] = Field(alias='Called number', default=None)
+    called_number: Optional[datetime] = Field(alias='Called number', default=None)
     #: For incoming calls, the calling line ID of the calling party. For outgoing calls, it's the calling line ID of the user.
     #: example: YOURCLIDGOESHERE
-    calling line id: Optional[str] = Field(alias='Calling line ID', default=None)
+    calling_line_id: Optional[str] = Field(alias='Calling line ID', default=None)
     #: For incoming calls, the telephone number of the calling party. For outgoing calls, it's the telephone number of the user.
     #: example: 2001
-    calling number: Optional[datetime] = Field(alias='Calling number', default=None)
+    calling_number: Optional[datetime] = Field(alias='Calling number', default=None)
     #: The type of client that the user (creating this record) is using to make or receive the call. For example:
     #: - SIP
     #: - WXC_CLIENT
@@ -69,19 +69,19 @@ class CDR(ApiModel):
     #: - WXC_DEVICE
     #: - WXC_SIP_GW
     #: example: SIP_TOLLFREE
-    client type: Optional[str] = Field(alias='Client type', default=None)
+    client_type: Optional[str] = Field(alias='Client type', default=None)
     #: The version of the client that the user (creating this record) is using to make or receive the call.
     #: example: 1.0.2.3
-    client version: Optional[str] = Field(alias='Client version', default=None)
+    client_version: Optional[str] = Field(alias='Client version', default=None)
     #: Correlation ID to tie together multiple call legs of the same call session.
     #: example: 8e8e1dc7-4f25-4595-b9c7-26237f824535
-    correlation id: Optional[str] = Field(alias='Correlation ID', default=None)
+    correlation_id: Optional[str] = Field(alias='Correlation ID', default=None)
     #: A unique identifier for the user's department name.
     #: example: 4370c763-81ec-403b-aba3-626a7b1cf264
-    department id: Optional[str] = Field(alias='Department ID', default=None)
+    department_id: Optional[str] = Field(alias='Department ID', default=None)
     #: The MAC address of the device, if known.
     #: example: 6C710D8ABC10
-    device mac: Optional[str] = Field(alias='Device MAC', default=None)
+    device_mac: Optional[str] = Field(alias='Device MAC', default=None)
     #: The keypad digits as dialed by the user, before pre-translations.
     #: This field reports multiple call dial possibilities:
     #: - Feature access codes (FAC) used for invoking features such as Last Number Redial or a Call Return.
@@ -90,7 +90,7 @@ class CDR(ApiModel):
     #: Note that when pre-translations have no effect, the dialed digits field contains the same data as the called number field.
     #: This field is only used for originating (outgoing) Calls and is not available for terminating (incoming) Calls.
     #: example: 1246
-    dialed digits: Optional[datetime] = Field(alias='Dialed digits', default=None)
+    dialed_digits: Optional[datetime] = Field(alias='Dialed digits', default=None)
     #: Whether the call was inbound or outbound. The possible values are:
     #: - ORIGINATING
     #: - TERMINATING
@@ -101,22 +101,22 @@ class CDR(ApiModel):
     duration: Optional[int] = Field(alias='Duration', default=None)
     #: Inbound trunk may be presented in Originating and Terminating records.
     #: example: InTrunk
-    inbound trunk: Optional[str] = Field(alias='Inbound trunk', default=None)
+    inbound_trunk: Optional[str] = Field(alias='Inbound trunk', default=None)
     #: The country code of the dialed number. This is only populated for international calls.
     #: example: US
-    international country: Optional[str] = Field(alias='International country', default=None)
+    international_country: Optional[str] = Field(alias='International country', default=None)
     #: A unique identifier that is used to correlate CDRs and call legs with each other. This ID is used in conjunction with:
     #: - Remote call ID: To identify the remote CDR of a call leg.
     #: - Transfer related call ID: To identify the call transferred leg.
     #: example: 113104021:0
-    local call id: Optional[str] = Field(alias='Local call ID', default=None)
+    local_call_id: Optional[str] = Field(alias='Local call ID', default=None)
     #: Each call consists of two UUIDs known as Local Session ID and Remote Session ID.
     #: - The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call.
     #: - It can be used for end-to-end tracking of a SIP session in IP-based multimedia communication systems in compliance with RFC 7206 and draft-ietf-insipid-session-id-15.
     #: - The Local SessionID is generated from the Originating user agent.
     #: - The Remote SessionID is generated from the Terminating user agent.
     #: example: 82bb753300105000a0000242be131609
-    local session_id: Optional[str] = Field(alias='Local SessionID', default=None)
+    local_session_id: Optional[str] = Field(alias='Local SessionID', default=None)
     #: Location of the report.
     #: example: Richardson
     location: Optional[str] = Field(alias='Location', default=None)
@@ -125,10 +125,10 @@ class CDR(ApiModel):
     model: Optional[str] = Field(alias='Model', default=None)
     #: A unique identifier that shows if other CDRs are in the same call leg. Two CDRs belong in the same call leg if they have the same Network call ID.
     #: example: BW2356451711108231501755806@10.21.0.192
-    network call id: Optional[str] = Field(alias='Network call ID', default=None)
+    network_call_id: Optional[str] = Field(alias='Network call ID', default=None)
     #: A unique identifier for the organization that made the call. This is a unique identifier across Cisco.
     #: example: 408806bc-a013-4a4b-9a24-85e374912102
-    org uuid: Optional[str] = Field(alias='Org UUID', default=None)
+    org_uuid: Optional[str] = Field(alias='Org UUID', default=None)
     #: Call redirection reason for the original called number. For example:
     #: - Unconditional: Call Forward Always (CFA) service, Group night forwarding.
     #: - NoAnswer: The party was not available to take the call. CF/busy or Voicemail/busy.
@@ -144,13 +144,13 @@ class CDR(ApiModel):
     #: - ExplicitIdxxx: Enterprise voice portal redirection to the user’s home voice portal. The “xxx” portion is the digits collected from the caller, identifying the target mailbox (Extension or DN).
     #: - ImplicitId: Indicates an enterprise voice portal redirection to the user’s home voice portal.
     #: example: UserBusy
-    original reason: Optional[str] = Field(alias='Original reason', default=None)
+    original_reason: Optional[str] = Field(alias='Original reason', default=None)
     #: The operating system that the app was running on, if available.
     #: example: na
-    os type: Optional[str] = Field(alias='OS type', default=None)
+    os_type: Optional[str] = Field(alias='OS type', default=None)
     #: Outbound trunk may be presented in Originating and Terminating records.
     #: example: OutTrunk
-    outbound trunk: Optional[str] = Field(alias='Outbound trunk', default=None)
+    outbound_trunk: Optional[str] = Field(alias='Outbound trunk', default=None)
     #: Call Redirection Reason for the redirecting number. For example:
     #: - Unconditional: Call Forward Always (CFA) service.
     #: - NoAnswer: The party was not available to take the call. CF/busy or Voicemail/busy.
@@ -166,13 +166,13 @@ class CDR(ApiModel):
     #: - ExplicitIdxxx: Enterprise voice portal redirection to the user’s home voice portal. The “xxx” portion is the digits collected from the caller, identifying the target mailbox (Extension or DN).
     #: - ImplicitId: Indicates an enterprise voice portal redirection to the user’s home voice portal.
     #: example: Unavailable
-    redirect reason: Optional[str] = Field(alias='Redirect reason', default=None)
+    redirect_reason: Optional[str] = Field(alias='Redirect reason', default=None)
     #: When the call has been redirected one or more times, this field reports the last redirecting number. Identifies who last redirected the call. Only applies to call scenarios such as transfer, call forwarded calls, simultaneous rings, etc.
     #: example: +13343822691
-    redirecting number: Optional[str] = Field(alias='Redirecting number', default=None)
+    redirecting_number: Optional[str] = Field(alias='Redirecting number', default=None)
     #: Call identifier of a different call that was created by this call because of a service activation. The value is the same as the Local call ID field of the related call. You can use this field to correlate multiple call legs connected through other services.
     #: example: 760583469:0
-    related call id: Optional[str] = Field(alias='Related call ID', default=None)
+    related_call_id: Optional[str] = Field(alias='Related call ID', default=None)
     #: Indicates a trigger that led to a change in the call presence. The trigger could be for this particular call or redirected via a different call. For example:
     #: - ConsultativeTransfer: While on a call, the call was transferred to another user by announcing it first. meaning the person was given a heads up or asked if they're interested in taking the call and then transferred.
     #: - CallForwardSelective: Call Forward as per the defined schedule. Might be based on factors like a specific time, specific callers or to a VM. It always takes precedence over Call Forwarding.
@@ -207,56 +207,56 @@ class CDR(ApiModel):
     #: - SimultaneousRingPersonal: Indicates this user was in the list of multiple destinations that are to ring simultaneously when any calls are received on their phone number (the first destination answered is connected).
     #: - CCMonitoringBI: The indication that a Call Queue supervisor invoked silent monitoring.
     #: example: CallQueue
-    related reason: Optional[str] = Field(alias='Related reason', default=None)
+    related_reason: Optional[str] = Field(alias='Related reason', default=None)
     #: Indicates which party released the call first. The possible values are:
     #: - Local: Used when the local user has released the call first.
     #: - Remote: Used when the far-end party releases the call first.
     #: - Unknown: Used when the call has partial information or is unable to gather enough information about the party who released the call. It could be because of situations like force lock or because of a session audit failure.
     #: example: Remote
-    releasing party: Optional[str] = Field(alias='Releasing party', default=None)
+    releasing_party: Optional[str] = Field(alias='Releasing party', default=None)
     #: A unique identifier that is used to correlate CDRs and call legs with each other. This ID is used in conjunction with Local call ID to identity the local CDR of a call leg.
     #: example: 113103977:0
-    remote call id: Optional[str] = Field(alias='Remote call ID', default=None)
+    remote_call_id: Optional[str] = Field(alias='Remote call ID', default=None)
     #: Each call consists of two UUIDs known as Local Session ID and Remote Session ID.
     #: - The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call.
     #: - It can be used for end-to-end tracking of a SIP session in IP-based multimedia communication systems in compliance with RFC 7206 and draft-ietf-insipid-session-id-15.
     #: - The Local SessionID is generated from the Originating user agent.
     #: - The Remote SessionID is generated from the Terminating user agent.
     #: example: 6bf2f47800105000a0000242be13160a
-    remote session_id: Optional[str] = Field(alias='Remote SessionID', default=None)
+    remote_session_id: Optional[str] = Field(alias='Remote SessionID', default=None)
     #: A unique ID for this particular record. This can be used when processing records to aid in deduplication.
     #: example: 0a0c2eb7-f1f6-3326-86f9-565d2e11553d
-    report id: Optional[str] = Field(alias='Report ID', default=None)
+    report_id: Optional[str] = Field(alias='Report ID', default=None)
     #: The time this report was created. Time is in UTC.
     #: example: 2020-05-14T11:01:52.723Z
-    report time: Optional[datetime] = Field(alias='Report time', default=None)
+    report_time: Optional[datetime] = Field(alias='Report time', default=None)
     #: If present, this field's only reported in Originating records. Route group identifies the route group used for outbound calls routed via a route group to Premises-based PSTN or an on-prem deployment integrated with Webex Calling (dial plan or unknown extension).
     #: example: RouteGrpAA
-    route group: Optional[str] = Field(alias='Route group', default=None)
+    route_group: Optional[str] = Field(alias='Route group', default=None)
     #: The main number for the user's site where the call was made or received.
     #: example: +14692281000
-    site main number: Optional[str] = Field(alias='Site main number', default=None)
+    site_main_number: Optional[str] = Field(alias='Site main number', default=None)
     #: Site timezone is the offset in minutes from UTC time of the user's timezone.
     #: example: -300
-    site timezone: Optional[datetime] = Field(alias='Site timezone', default=None)
+    site_timezone: Optional[datetime] = Field(alias='Site timezone', default=None)
     #: A unique identifier for the site associated with the call. Unique across Cisco products.
     #: example: 474d4f70-4ef5-4d52-9e1d-b207086629e0
-    site uuid: Optional[str] = Field(alias='Site UUID', default=None)
+    site_uuid: Optional[str] = Field(alias='Site UUID', default=None)
     #: This is the start time of the call, the answer time may be slightly after this. Time is in UTC.
     #: example: 2020-05-14T11:01:16.545Z
-    start time: Optional[datetime] = Field(alias='Start time', default=None)
+    start_time: Optional[datetime] = Field(alias='Start time', default=None)
     #: If the call is TO or FROM a mobile phone using Webex Go, the Client type will show SIP, and Sub client type will show MOBILE_NETWORK.
     #: example: MOBILE_NETWORK
-    sub client type: Optional[str] = Field(alias='Sub client type', default=None)
+    sub_client_type: Optional[str] = Field(alias='Sub client type', default=None)
     #: Call identifier of a different call that was involved in the transfer. You can share this ID with Cisco TAC to help them pinpoint parties who were involved in the call transfer.
     #: example: 2340586843:0A
-    transfer related call id: Optional[str] = Field(alias='Transfer related call ID', default=None)
+    transfer_related_call_id: Optional[str] = Field(alias='Transfer related call ID', default=None)
     #: The user who made or received the call.
     #: example: John Andersen
     user: Optional[str] = Field(alias='User', default=None)
     #: Represents the E.164 number of the user generating a CDR. If the user has no number assigned to them, then their extension will be displayed instead.
     #: example: +81546668399
-    user number: Optional[str] = Field(alias='User number', default=None)
+    user_number: Optional[str] = Field(alias='User number', default=None)
     #: The type of user (user or workspace) that made or received the call. For example:
     #: - AutomatedAttendantVideo: Automated Attendant Video IVR group service.
     #: - Anchor: A Webex Calling user number made or received that is integrated with Webex Contact Center. An "anchor" is created to facilitate the call routing flow between WxC and WxCC.
@@ -273,10 +273,10 @@ class CDR(ApiModel):
     #: - Place: A workspace-based user who made or received the call.
     #: - VirtuaLline: Call made or received by a virtual line user using the Multi-line option in Webex Calling.
     #: example: User
-    user type: Optional[str] = Field(alias='User type', default=None)
+    user_type: Optional[str] = Field(alias='User type', default=None)
     #: A unique identifier for the user associated with the call. This is a unique identifier across Cisco products.
     #: example: 47f0d0c2-f05a-44cc-870d-7a3daf859c6c
-    user uuid: Optional[str] = Field(alias='User UUID', default=None)
+    user_uuid: Optional[str] = Field(alias='User UUID', default=None)
 
 
 class CDRResponse(ApiModel):

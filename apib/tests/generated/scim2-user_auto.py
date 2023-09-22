@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['EmailObject', 'EmailObjectType', 'GetUserResponse', 'GetUserResponseUrn:ietf:params:scim:schemas:extension:enterprise:2.0:User', 'ManagedGroupObject', 'ManagedOrgsObject', 'ManagedSitesObject', 'ManagerResponseObject', 'NameObject', 'PatchUser', 'PatchUserOperations', 'PatchUserOperationsOp', 'PhotoObject', 'PhotoObjectType', 'PostUser', 'PostUserUrn:ietf:params:scim:schemas:extension:enterprise:2.0:User', 'PostUserUrn:ietf:params:scim:schemas:extension:enterprise:2.0:UserManager', 'PostUserUrn:scim:schemas:extension:cisco:webexidentity:2.0:User', 'PutUser', 'PutUserAddresses', 'PutUserPhoneNumbers', 'PutUserPhoneNumbersType', 'RoleObject', 'RoleObjectType', 'SearchUserResponse', 'SipAddressObject', 'SipAddressObjectType', 'UserTypeObject']
+__auto__ = ['EmailObject', 'EmailObjectType', 'GetUserResponse', 'GetUserResponseUrnietfparamsscimschemasextensionenterprise20User', 'ManagedGroupObject', 'ManagedOrgsObject', 'ManagedSitesObject', 'ManagerResponseObject', 'NameObject', 'PatchUser', 'PatchUserOperations', 'PatchUserOperationsOp', 'PhotoObject', 'PhotoObjectType', 'PostUser', 'PostUserUrnietfparamsscimschemasextensionenterprise20User', 'PostUserUrnietfparamsscimschemasextensionenterprise20UserManager', 'PostUserUrnscimschemasextensionciscowebexidentity20User', 'PutUser', 'PutUserAddresses', 'PutUserPhoneNumbers', 'PutUserPhoneNumbersType', 'RoleObject', 'RoleObjectType', 'SearchUserResponse', 'SipAddressObject', 'SipAddressObjectType', 'UserTypeObject']
 
 
 class PatchUserOperationsOp(str, Enum):
@@ -36,13 +36,13 @@ class PatchUser(ApiModel):
     operations: Optional[list[PatchUserOperations]] = Field(alias='Operations', default=None)
 
 
-class PostUserUrn:ietf:params:scim:schemas:extension:enterprise:2.0:UserManager(ApiModel):
+class PostUserUrnietfparamsscimschemasextensionenterprise20UserManager(ApiModel):
     #: Webex Identity assigned user identifier of the user's manager. The manager must be in the same org as the user.
     #: example: b5717a4a-0169-43b2-ac3c-db20ba4e72cd
     value: Optional[str] = None
 
 
-class PostUserUrn:ietf:params:scim:schemas:extension:enterprise:2.0:User(ApiModel):
+class PostUserUrnietfparamsscimschemasextensionenterprise20User(ApiModel):
     #: Identifies the name of a cost center.
     #: example: costCenter 123
     cost_center: Optional[str] = None
@@ -59,7 +59,7 @@ class PostUserUrn:ietf:params:scim:schemas:extension:enterprise:2.0:User(ApiMode
     #: example: 518-8888-888
     employee_number: Optional[str] = None
     #: The user's manager.
-    manager: Optional[PostUserUrn:ietf:params:scim:schemas:extension:enterprise:2.0:UserManager] = None
+    manager: Optional[PostUserUrnietfparamsscimschemasextensionenterprise20UserManager] = None
 
 
 class SipAddressObjectType(str, Enum):
@@ -111,7 +111,7 @@ class ManagedSitesObject(ApiModel):
     role: Optional[str] = None
 
 
-class PostUserUrn:scim:schemas:extension:cisco:webexidentity:2.0:User(ApiModel):
+class PostUserUrnscimschemasextensionciscowebexidentity20User(ApiModel):
     #: Account status of the user.
     #: example: ['element='string' content='active' attributes={'typeAttributes': ApibArray(element='array', content=[ApibString(element='string', content='fixed', attributes=None, meta=None)], attributes=None, meta=None)} meta=None']
     account_status: Optional[list[str]] = None
@@ -309,9 +309,9 @@ class PostUser(ApiModel):
     #: A list of roles for the user that collectively represent who the user is.
     roles: Optional[list[RoleObject]] = None
     #: SCIM2 enterprise extension
-    urn:ietf:params:scim:schemas:extension:enterprise:2.0:user: Optional[PostUserUrn:ietf:params:scim:schemas:extension:enterprise:2.0:User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
+    urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: Optional[PostUserUrnietfparamsscimschemasextensionenterprise20User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
     #: The Cisco extension of SCIM 2.
-    urn:scim:schemas:extension:cisco:webexidentity:2.0:user: Optional[PostUserUrn:scim:schemas:extension:cisco:webexidentity:2.0:User] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
+    urn_scim_schemas_extension_cisco_webexidentity_2_0_user: Optional[PostUserUrnscimschemasextensionciscowebexidentity20User] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
 
 
 class PutUser(ApiModel):
@@ -364,9 +364,9 @@ class PutUser(ApiModel):
     #: A list of roles for the user that collectively represent who the user is.
     roles: Optional[list[RoleObject]] = None
     #: SCIM2 enterprise extention
-    urn:ietf:params:scim:schemas:extension:enterprise:2.0:user: Optional[PostUserUrn:ietf:params:scim:schemas:extension:enterprise:2.0:User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
+    urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: Optional[PostUserUrnietfparamsscimschemasextensionenterprise20User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
     #: cisco extention of SCIM 2
-    urn:scim:schemas:extension:cisco:webexidentity:2.0:user: Optional[PostUserUrn:scim:schemas:extension:cisco:webexidentity:2.0:User] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
+    urn_scim_schemas_extension_cisco_webexidentity_2_0_user: Optional[PostUserUrnscimschemasextensionciscowebexidentity20User] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
 
 
 class ManagerResponseObject(ApiModel):
@@ -378,10 +378,10 @@ class ManagerResponseObject(ApiModel):
     display_name: Optional[str] = None
     #: The URI corresponding to a SCIM user that is the manager.
     #: example: http://integration.webexapis.com/identity/scim/0ae87ade-8c8a-4952-af08-318798958d0c/v2/Users/b5717a4a-0169-43b2-ac3c-db20ba4e72cd
-    $ref: Optional[str] = None
+    _ref: Optional[str] = Field(alias='$ref', default=None)
 
 
-class GetUserResponseUrn:ietf:params:scim:schemas:extension:enterprise:2.0:User(ApiModel):
+class GetUserResponseUrnietfparamsscimschemasextensionenterprise20User(ApiModel):
     #: Identifies the name of a cost center.
     #: example: costCenter 123
     cost_center: Optional[str] = None
@@ -456,9 +456,9 @@ class GetUserResponse(ApiModel):
     #: User's physical mailing address.
     addresses: Optional[list[PutUserAddresses]] = None
     #: SCIM2 enterprise extension
-    urn:ietf:params:scim:schemas:extension:enterprise:2.0:user: Optional[GetUserResponseUrn:ietf:params:scim:schemas:extension:enterprise:2.0:User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
+    urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: Optional[GetUserResponseUrnietfparamsscimschemasextensionenterprise20User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
     #: The Cisco extension of SCIM 2.
-    urn:scim:schemas:extension:cisco:webexidentity:2.0:user: Optional[PostUserUrn:scim:schemas:extension:cisco:webexidentity:2.0:User] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
+    urn_scim_schemas_extension_cisco_webexidentity_2_0_user: Optional[PostUserUrnscimschemasextensionciscowebexidentity20User] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
 
 
 class SearchUserResponse(ApiModel):

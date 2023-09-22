@@ -1,4 +1,5 @@
 import logging
+import re
 from collections import defaultdict
 from collections.abc import Generator
 from dataclasses import dataclass, field
@@ -95,7 +96,6 @@ class Attribute:
             value = self.name
             value = value.replace("'", '')
             lines.append(f"{name} = '{value}'")
-            foo = 1
         else:
             attr_name = snake_case(self.name)
             if attr_name in {'from'}:
@@ -189,8 +189,13 @@ class PythonClass:
         for transition in parse_result.api.transitions():
             response = transition.http_transaction.response
             ds = response and response.datastructure
-            if ds:
-                yield from PythonClass.from_data_structure(ds)
+            if not ds:
+                continue
+
+            # skip datastructures w/o attributes
+            if not ds.attributes:
+                continue
+            yield from PythonClass.from_data_structure(ds)
 
 
 @dataclass
@@ -478,6 +483,7 @@ def classes_and_attribute_from_member(class_name: str, member: ApibMember) \
     elif value.element == 'object':
         # we need a class with these attributes
         python_type = f'{class_name}{name[0].upper()}{name[1:]}'
+        python_type, _ = re.subn(r'[^\w_]', '', python_type)
         sample = None
         referenced_class = python_type
         new_classes, class_attributes = python_class_attributes(basename=referenced_class, members=value.content)
@@ -499,6 +505,7 @@ def classes_and_attribute_from_member(class_name: str, member: ApibMember) \
         value: ApibEnum
         # we need an implicit enum class
         python_type = f'{class_name}{name[0].upper()}{name[1:]}'
+        python_type, _ = re.subn(r'[^\w_]', '', python_type)
         sample = value.content and value.content.content
         referenced_class = python_type
         class_attributes = list(Attribute.from_enum(value))

@@ -48,4 +48,4 @@ class Report(ApiModel):
 
 class ReportCollectionResponse(ApiModel):
     #: An array of report objects.
-    report attributes: Optional[list[Report]] = Field(alias='Report Attributes', default=None)
+    report_attributes: Optional[list[Report]] = Field(alias='Report Attributes', default=None)

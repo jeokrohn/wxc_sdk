@@ -42,13 +42,13 @@ class GeneratorTest(ApibTest):
         for apib_path in self.apib_paths:
             code_gen = CodeGenerator()
             code_gen.read_blueprint(apib_path)
-            classes_after_reading_blueprint = len(code_gen.class_registry.classes())
+            classes_after_reading_blueprint = len(list(code_gen.class_registry.classes()))
 
             list(code_gen.endpoints())
-            classes_after_generating_endpoints = len(code_gen.class_registry.classes())
+            classes_after_generating_endpoints = len(list(code_gen.class_registry.classes()))
 
             code_gen.class_registry.eliminate_redundancies()
-            classes_after_generating_endpoints_no_redundancies = len(code_gen.class_registry.classes())
+            classes_after_generating_endpoints_no_redundancies = len(list(code_gen.class_registry.classes()))
 
             apib_path = os.path.basename(apib_path)
 

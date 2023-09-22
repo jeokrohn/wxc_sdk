@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetGroupResponse', 'GetGroupResponseMembers', 'GetGroupResponseUrn:scim:schemas:extension:cisco:webexidentity:2.0:Group', 'GetGroupResponseUrn:scim:schemas:extension:cisco:webexidentity:2.0:GroupMeta', 'GroupMemberObject', 'GroupMemberResponse', 'GroupMemberResponseMembers', 'ManagedByObject', 'MetaObject', 'MetaObjectResourceType', 'PatchGroup', 'PatchGroupOperations', 'PatchGroupOperationsOp', 'PostGroup', 'PostGroupUrn:scim:schemas:extension:cisco:webexidentity:2.0:Group', 'PostGroupUrn:scim:schemas:extension:cisco:webexidentity:2.0:GroupOwners', 'SearchGroupResponse']
+__auto__ = ['GetGroupResponse', 'GetGroupResponseMembers', 'GetGroupResponseUrnscimschemasextensionciscowebexidentity20Group', 'GetGroupResponseUrnscimschemasextensionciscowebexidentity20GroupMeta', 'GroupMemberObject', 'GroupMemberResponse', 'GroupMemberResponseMembers', 'ManagedByObject', 'MetaObject', 'MetaObjectResourceType', 'PatchGroup', 'PatchGroupOperations', 'PatchGroupOperationsOp', 'PostGroup', 'PostGroupUrnscimschemasextensionciscowebexidentity20Group', 'PostGroupUrnscimschemasextensionciscowebexidentity20GroupOwners', 'SearchGroupResponse']
 
 
 class PatchGroupOperationsOp(str, Enum):
@@ -36,7 +36,7 @@ class PatchGroup(ApiModel):
     operations: Optional[list[PatchGroupOperations]] = Field(alias='Operations', default=None)
 
 
-class PostGroupUrn:scim:schemas:extension:cisco:webexidentity:2.0:GroupOwners(ApiModel):
+class PostGroupUrnscimschemasextensionciscowebexidentity20GroupOwners(ApiModel):
     #: The identifier of the owner of this group.
     #: example: c5349664-9f3d-410b-8bd3-6c31f181f13d
     value: Optional[str] = None
@@ -57,12 +57,12 @@ class ManagedByObject(ApiModel):
     role: Optional[str] = None
 
 
-class PostGroupUrn:scim:schemas:extension:cisco:webexidentity:2.0:Group(ApiModel):
+class PostGroupUrnscimschemasextensionciscowebexidentity20Group(ApiModel):
     #: The identifier of this Group.
     #: example: policy
     usage: Optional[str] = None
     #: The owners of this group.
-    owners: Optional[list[PostGroupUrn:scim:schemas:extension:cisco:webexidentity:2.0:GroupOwners]] = None
+    owners: Optional[list[PostGroupUrnscimschemasextensionciscowebexidentity20GroupOwners]] = None
     #: A list of delegates of this group.
     managed_by: Optional[list[ManagedByObject]] = None
 
@@ -89,7 +89,7 @@ class PostGroup(ApiModel):
     #: A list of members of this group.
     members: Optional[list[GroupMemberObject]] = None
     #: The Cisco extension of SCIM 2.
-    urn:scim:schemas:extension:cisco:webexidentity:2.0:group: Optional[PostGroupUrn:scim:schemas:extension:cisco:webexidentity:2.0:Group] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:Group', default=None)
+    urn_scim_schemas_extension_cisco_webexidentity_2_0_group: Optional[PostGroupUrnscimschemasextensionciscowebexidentity20Group] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:Group', default=None)
 
 
 class GetGroupResponseMembers(ApiModel):
@@ -104,28 +104,28 @@ class GetGroupResponseMembers(ApiModel):
     display: Optional[str] = None
     #: The URI corresponding to a SCIM resource that is a member of this Group.
     #: example: https://example.com/v2/Users/c5349664-9f3d-410b-8bd3-6c31f181f13d
-    $ref: Optional[str] = None
+    _ref: Optional[str] = Field(alias='$ref', default=None)
 
 
-class GetGroupResponseUrn:scim:schemas:extension:cisco:webexidentity:2.0:GroupMeta(ApiModel):
+class GetGroupResponseUrnscimschemasextensionciscowebexidentity20GroupMeta(ApiModel):
     #: The ID of the organization to which this group belongs.
     #: example: e9f9ab27-0459-4cd0-bd72-089bde5a7da6
     organization_id: Optional[str] = Field(alias='organizationID', default=None)
 
 
-class GetGroupResponseUrn:scim:schemas:extension:cisco:webexidentity:2.0:Group(ApiModel):
+class GetGroupResponseUrnscimschemasextensionciscowebexidentity20Group(ApiModel):
     #: The identifier of this group.
     #: example: location
     usage: Optional[str] = None
     #: The owners of this group.
-    owners: Optional[list[PostGroupUrn:scim:schemas:extension:cisco:webexidentity:2.0:GroupOwners]] = None
+    owners: Optional[list[PostGroupUrnscimschemasextensionciscowebexidentity20GroupOwners]] = None
     #: A list of delegates of this group.
     managed_by: Optional[list[ManagedByObject]] = None
     #: The identifier of the source.
     #: example: AD
     provision_source: Optional[str] = None
     #: Response metadata.
-    meta: Optional[GetGroupResponseUrn:scim:schemas:extension:cisco:webexidentity:2.0:GroupMeta] = None
+    meta: Optional[GetGroupResponseUrnscimschemasextensionciscowebexidentity20GroupMeta] = None
 
 
 class MetaObjectResourceType(str, Enum):
@@ -168,7 +168,7 @@ class GetGroupResponse(ApiModel):
     #: Response metadata.
     meta: Optional[MetaObject] = None
     #: The Cisco extention of SCIM 2
-    urn:scim:schemas:extension:cisco:webexidentity:2.0:group: Optional[GetGroupResponseUrn:scim:schemas:extension:cisco:webexidentity:2.0:Group] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:Group', default=None)
+    urn_scim_schemas_extension_cisco_webexidentity_2_0_group: Optional[GetGroupResponseUrnscimschemasextensionciscowebexidentity20Group] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:Group', default=None)
 
 
 class SearchGroupResponse(ApiModel):
