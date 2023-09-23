@@ -6,6 +6,9 @@ import subprocess
 
 __all__ = ['read_api_blueprint']
 
+import sys
+
+
 def read_api_blueprint(path: str) -> dict:
     """
     read apib file from path and return a dict representation.

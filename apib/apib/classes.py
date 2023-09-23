@@ -15,7 +15,7 @@ __all__ = ['ApibParseResult', 'ApibElement', 'ApibCopy', 'ApibResource', 'ApibMo
            'ApibWithHeaders', 'ApibHttpResponse', 'ApibHttpTransaction', 'ApibHttpRequest',
            'ApibBool', 'ApibApi', 'ApibHrefVariables', 'ApibNumber', 'ApibSourceMap', 'ApibSourceMapNumber',
            'AbibSourceMapNumberArray', 'ApibObject', 'words_to_camel', 'ApibSourceMapEntry', 'ApibOption',
-           'ApibSelect']
+           'ApibSelect', 'snake_case']
 
 log = logging.getLogger(__name__)
 

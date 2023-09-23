@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersWithPattern', 'AnnouncementAudioFileGet', 'AnnouncementAudioFileGetLevel', 'AudioAnnouncementFileFeatureGetObject', 'AudioAnnouncementFileFeatureGetObjectMediaFileType', 'CallForwardRulesGet', 'CallForwardRulesSet', 'CallForwardSettingsGet', 'CallForwardSettingsGetCallForwarding', 'CallForwardSettingsGetCallForwardingAlways', 'CallForwardingNumbers', 'CallForwardingNumbersType', 'CallQueueAudioFilesObject', 'CallQueueHolidaySchedulesObject', 'CallQueueHolidaySchedulesObjectScheduleLevel', 'CallQueueQueueSettingsGetObject', 'CallQueueQueueSettingsGetObjectComfortMessage', 'CallQueueQueueSettingsGetObjectComfortMessageBypass', 'CallQueueQueueSettingsGetObjectMohMessage', 'CallQueueQueueSettingsGetObjectMohMessageNormalSource', 'CallQueueQueueSettingsGetObjectOverflow', 'CallQueueQueueSettingsGetObjectOverflowAction', 'CallQueueQueueSettingsGetObjectOverflowGreeting', 'CallQueueQueueSettingsGetObjectWaitMessage', 'CallQueueQueueSettingsGetObjectWaitMessageWaitMode', 'CallQueueQueueSettingsGetObjectWelcomeMessage', 'CallQueueQueueSettingsObject', 'CreateCallQueueObject', 'CreateForwardingRuleObject', 'CreateForwardingRuleObjectCallsFrom', 'CreateForwardingRuleObjectCallsFromCustomNumbers', 'CreateForwardingRuleObjectCallsFromSelection', 'CreateForwardingRuleObjectCallsTo', 'CreateForwardingRuleObjectForwardTo', 'CreateForwardingRuleObjectForwardToSelection', 'GetAnnouncementFileInfo', 'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObjectCallBounce', 'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueForcedForwardObject', 'GetCallQueueHolidayObject', 'GetCallQueueHolidayObjectAction', 'GetCallQueueNightServiceObject', 'GetCallQueueNightServiceObjectAnnouncementMode', 'GetCallQueueObject', 'GetCallQueueObjectAlternateNumberSettings', 'GetCallQueueStrandedCallsObject', 'GetCallQueueStrandedCallsObjectAction', 'GetForwardingRuleObject', 'GetPersonPlaceVirtualLineCallQueueObject', 'GetPersonPlaceVirtualLineCallQueueObjectType', 'HuntPolicySelection', 'HuntRoutingTypeSelection', 'ListCallQueueObject', 'MediaType', 'ModifyCallForwardingObject', 'ModifyCallForwardingObjectCallForwarding', 'ModifyCallQueueHolidayObject', 'ModifyCallQueueObject', 'ModifyPersonPlaceVirtualLineCallQueueObject', 'PatchCallQueueNightServiceObject', 'PostPersonPlaceVirtualLineCallQueueObject', 'RingPatternObject']
+__auto__ = ['AlternateNumbersWithPattern', 'AnnouncementAudioFileGet', 'AnnouncementAudioFileGetLevel', 'AudioAnnouncementFileFeatureGetObject', 'AudioAnnouncementFileFeatureGetObjectMediaFileType', 'CallForwardRulesGet', 'CallForwardRulesSet', 'CallForwardSettingsGet', 'CallForwardSettingsGetCallForwarding', 'CallForwardSettingsGetCallForwardingAlways', 'CallForwardingNumbers', 'CallForwardingNumbersType', 'CallQueueAudioFilesObject', 'CallQueueHolidaySchedulesObject', 'CallQueueHolidaySchedulesObjectScheduleLevel', 'CallQueueQueueSettingsGetObject', 'CallQueueQueueSettingsGetObjectComfortMessage', 'CallQueueQueueSettingsGetObjectComfortMessageBypass', 'CallQueueQueueSettingsGetObjectMohMessage', 'CallQueueQueueSettingsGetObjectMohMessageNormalSource', 'CallQueueQueueSettingsGetObjectOverflow', 'CallQueueQueueSettingsGetObjectOverflowAction', 'CallQueueQueueSettingsGetObjectOverflowGreeting', 'CallQueueQueueSettingsGetObjectWaitMessage', 'CallQueueQueueSettingsGetObjectWaitMessageWaitMode', 'CallQueueQueueSettingsGetObjectWelcomeMessage', 'CreateCallQueueObject', 'CreateForwardingRuleObject', 'CreateForwardingRuleObjectCallsFrom', 'CreateForwardingRuleObjectCallsFromCustomNumbers', 'CreateForwardingRuleObjectCallsFromSelection', 'CreateForwardingRuleObjectCallsTo', 'CreateForwardingRuleObjectForwardTo', 'CreateForwardingRuleObjectForwardToSelection', 'GetAnnouncementFileInfo', 'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObjectCallBounce', 'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueForcedForwardObject', 'GetCallQueueHolidayObject', 'GetCallQueueHolidayObjectAction', 'GetCallQueueNightServiceObject', 'GetCallQueueNightServiceObjectAnnouncementMode', 'GetCallQueueObject', 'GetCallQueueObjectAlternateNumberSettings', 'GetCallQueueStrandedCallsObject', 'GetCallQueueStrandedCallsObjectAction', 'GetForwardingRuleObject', 'GetPersonPlaceVirtualLineCallQueueObject', 'GetPersonPlaceVirtualLineCallQueueObjectType', 'HuntPolicySelection', 'HuntRoutingTypeSelection', 'ListCallQueueObject', 'MediaType', 'ModifyCallForwardingObject', 'ModifyCallForwardingObjectCallForwarding', 'ModifyCallQueueHolidayObject', 'ModifyCallQueueObject', 'ModifyPersonPlaceVirtualLineCallQueueObject', 'PatchCallQueueNightServiceObject', 'PostPersonPlaceVirtualLineCallQueueObject', 'RingPatternObject']
 
 
 class RingPatternObject(str, Enum):
@@ -339,28 +339,6 @@ class CallQueueQueueSettingsGetObject(ApiModel):
     whisper_message: Optional[CallQueueQueueSettingsGetObjectMohMessageNormalSource] = None
 
 
-class CallQueueQueueSettingsObject(ApiModel):
-    #: The maximum number of calls for this call queue. Once this number is reached, the `overflow` settings are triggered.
-    #: example: 50.0
-    queue_size: Optional[int] = None
-    #: Reset caller statistics upon queue entry.
-    reset_call_statistics_enabled: Optional[bool] = None
-    #: Settings for incoming calls exceed queueSize.
-    overflow: Optional[CallQueueQueueSettingsGetObjectOverflow] = None
-    #: Play a message when callers first reach the queue. For example, “Thank you for calling. An agent will be with you shortly.” It can be set as mandatory. If the mandatory option is not selected and a caller reaches the call queue while there is an available agent, the caller will not hear this announcement and is transferred to an agent. The welcome message feature is enabled by default.
-    welcome_message: Optional[CallQueueQueueSettingsGetObjectWelcomeMessage] = None
-    #: Notify the caller with either their estimated wait time or position in the queue. If this option is enabled, it plays after the welcome message and before the comfort message. By default, it is not enabled.
-    wait_message: Optional[CallQueueQueueSettingsGetObjectWaitMessage] = None
-    #: Play a message after the welcome message and before hold music. This is typically a `CUSTOM` announcement that plays information, such as current promotions or information about products and services.
-    comfort_message: Optional[CallQueueQueueSettingsGetObjectComfortMessage] = None
-    #: Play a shorter comfort message instead of the usual Comfort or Music On Hold announcement to all the calls that should be answered quickly. This feature prevents a caller from hearing a short portion of the standard comfort message that abruptly ends when they are connected to an agent.
-    comfort_message_bypass: Optional[CallQueueQueueSettingsGetObjectComfortMessageBypass] = None
-    #: Play music after the comforting message in a repetitive loop.
-    moh_message: Optional[CallQueueQueueSettingsGetObjectMohMessage] = None
-    #: Play a message to the agent immediately before the incoming call is connected. The message typically announces the identity of the call queue from which the call is coming.
-    whisper_message: Optional[CallQueueQueueSettingsGetObjectMohMessageNormalSource] = None
-
-
 class HuntRoutingTypeSelection(str, Enum):
     #: Default routing type which directly uses the routing policy to dispatch calls to the agents.
     priority_based = 'PRIORITY_BASED'
@@ -464,7 +442,7 @@ class CreateCallQueueObject(ApiModel):
     #: Policy controlling how calls are routed to `agents`.
     call_policies: Optional[GetCallQueueCallPolicyObject] = None
     #: Overall call queue settings.
-    queue_settings: Optional[CallQueueQueueSettingsObject] = None
+    queue_settings: Optional[CallQueueQueueSettingsGetObject] = None
     #: People, workspaces and virtual lines that are eligible to receive calls.
     agents: Optional[list[PostPersonPlaceVirtualLineCallQueueObject]] = None
     #: Whether or not to allow agents to join or unjoin a queue.
@@ -926,7 +904,7 @@ class ModifyCallQueueObject(ApiModel):
     #: Policy controlling how calls are routed to agents.
     call_policies: Optional[GetCallQueueCallPolicyObject] = None
     #: Overall call queue settings.
-    queue_settings: Optional[CallQueueQueueSettingsObject] = None
+    queue_settings: Optional[CallQueueQueueSettingsGetObject] = None
     #: Flag to indicate whether call waiting is enabled for agents.
     allow_call_waiting_for_agents_enabled: Optional[bool] = None
     #: People, workspaces and virtual lines that are eligible to receive calls.

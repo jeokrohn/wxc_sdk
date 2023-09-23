@@ -11,7 +11,7 @@ from apib.apib import read_api_blueprint, ApibParseResult
 from apib.apib.classes import ApibElement, ApibEnum, ApibDatastructure, ApibObject, ApibString, \
     ApibBool, ApibNumber, ApibArray, ApibSelect, ApibMember
 from apib.python_class import PythonClassRegistry, Endpoint, Parameter, PythonClass, Attribute, \
-    classes_and_attribute_from_member, simple_python_type
+    simple_python_type
 
 PREAMBLE = """
 from datetime import datetime
@@ -50,10 +50,13 @@ class CodeGenerator:
         # TODO: allow to register multiple APIB files with identical class names
         #   in that case a new classname is created for the 2nd class and the references in the data from the APIB
         #   file are updated
-        list(map(self.class_registry.add, PythonClass.from_parse_result(self.parsed_blueprint)))
+        self.class_registry.add_classes_from_parse_result(self.parsed_blueprint)
         self.class_registry.eliminate_redundancies()
 
     def source(self) -> str:
+        """
+        Generate Python source for the APIB read
+        """
         class_names = []
         class_sources = [class_names.append(c.name) or s for c in self.class_registry.classes() if (s := c.source())]
         auto_src = f"""__auto__ = [{", ".join(f"'{c}'" for c in sorted(class_names))}]"""
@@ -61,7 +64,83 @@ class CodeGenerator:
         source = source.strip() + '\n'
         return source
 
-    def param_from_member_or_select(self, endpoint_name: str, member: Union[ApibMember, ApibSelect]) -> Parameter:
+    def endpoints(self) -> Generator[Endpoint, None, None]:
+        """
+        Generator of endpoints defined in the APIB
+        """
+        # host is defined at tha API level
+        # something like 'https://webexapis.com/v1/'
+        host = self.parsed_blueprint.api.host
+        for transition in self.parsed_blueprint.api.transitions():
+            # come up with a name for the method
+            # 'List Admin Audit Events' --> 'list_admin_audit_events'
+            name = '_'.join(transition.title.split()).lower()
+
+            # href is something like '/adminAudit/events{?orgId,from,to,actorId,max,offset,eventCategories}'
+            href = transition.href
+            # extract the href parameter names from the part between the brackets
+            if m := re.search(r'\{\?(.+)}', href):
+                href_param_names = m.group(1).split(',')
+            else:
+                href_param_names = []
+            # the actual URL is the part before the bracket ... if there is one
+            url = href.split('{')[0].strip('/')
+            # full url based based on host and endpoint url
+            full_url = urljoin(host, url)
+
+            # gather info from the HTTP transaction
+            http_transaction = transition.http_transaction
+            request = http_transaction.request
+            response = http_transaction.response
+
+            method = request.method
+            response_datastructure = response.datastructure
+            href_parameter = []
+            for href_variable in transition.href_variables:
+                param = self._param_from_member_or_select(endpoint_name=name, member=href_variable)
+                href_parameter.append(param)
+
+            body_parameter = []
+            if (body := request.find_content_by_element('dataStructure')):
+                body: ApibDatastructure
+                body_content = body.content
+                if isinstance(body_content, ApibObject):
+                    # The object should have all attributes
+                    body_content: ApibObject
+                    # ApibObject has a list of members
+                    body_parameter = [self._param_from_member_or_select(endpoint_name=name, member=member)
+                                      for member in body_content.content]
+                elif isinstance(body_content, ApibElement) and not any((body_content.content,
+                                                                        body_content.meta)):
+                    # this might be a class name
+                    class_name = body_content.element.replace(' ', '')
+
+                    # type attributes is the only acceptable attribute
+                    optional = False
+                    if body_content.attributes:
+                        if set(body_content.attributes) != {'typeAttributes'}:
+                            raise KeyError(f'Only typeAttributes are acceptable, got: '
+                                           f'{", ".join(sorted(body_content.attributes))}')
+                        type_attributes = set(ta.content for ta in body_content.attributes['typeAttributes'].content)
+                        optional = 'required' not in type_attributes
+                    # .. and that class should exist
+                    if python_class := self.class_registry.get(class_name):
+                        # attributes of the class -> parameters
+                        if python_class.attributes:
+                            body_parameter = [Parameter(name=attr.name, python_type=attr.python_type,
+                                                        docstring=attr.docstring, sample=attr.sample,
+                                                        optional=optional)
+                                              for attr in python_class.attributes]
+                        else:
+                            raise NotImplementedError('No attributes')
+                else:
+                    raise NotImplementedError(f'http request body datastructure '
+                                              f'with unexpected content: {body_content.element}')
+
+            yield Endpoint(name=name, method=method, url=full_url, href_parameter=href_parameter,
+                           body_parameter=body_parameter, result=response_datastructure)
+
+    def _param_from_member_or_select(self, endpoint_name: str, member: Union[ApibMember, ApibSelect]) -> Parameter:
 
         if not (isinstance(member, ApibMember) or isinstance(member, ApibSelect)):
             raise TypeError(f'unexpected parameter type: {member.__class__.__name__}')
@@ -120,6 +199,7 @@ class CodeGenerator:
                                          attributes=enum_attributes)
                 # and register that
                 self.class_registry.add(enum_class)
+                enum_name = enum_class.name
                 if sample.default:
                     sample = sample.default.content
                 else:
@@ -132,17 +212,15 @@ class CodeGenerator:
                 class_name = f'{class_name}{name[0].upper()}{name[1:]}'
                 class_attributes = []
                 for sample_member in sample.content:
-                    classes, attribute = classes_and_attribute_from_member(class_name=class_name,
+                    attribute = self.class_registry.attribute_from_member(class_name=class_name,
                                                                            member=sample_member)
-                    # register classes
-                    list(map(self.class_registry.add, classes))
                     class_attributes.append(attribute)
                 new_class = PythonClass(name=class_name, description=docstring, is_enum=False,
                                         attributes=class_attributes)
                 # and register that
                 self.class_registry.add(new_class)
                 sample = ''
-                python_type = class_name
+                python_type = new_class.name
             elif isinstance(sample, ApibArray):
                 try:
                     python_type = simple_python_type(sample.content[0].element)
@@ -167,17 +245,16 @@ class CodeGenerator:
                         class_name = f'{class_name}{name[0].upper()}{name[1:]}'
                         class_attributes = []
                         for sample_member in arr_element.content:
-                            classes, attribute = classes_and_attribute_from_member(class_name=class_name,
+                            attribute = self.class_registry.attribute_from_member(class_name=class_name,
                                                                                    member=sample_member)
-                            # register classes
-                            list(map(self.class_registry.add, classes))
                             class_attributes.append(attribute)
                         new_class = PythonClass(name=class_name, description=docstring, is_enum=False,
                                                 attributes=class_attributes)
                         # and register that
                         self.class_registry.add(new_class)
+                        class_name = new_class.name
                         sample = ''
-                        python_type = f'list[{class_name}]'
+                        python_type = f'list[{new_class.name}]'
                     else:
                         # this is an array of a class instance and the arr_element has the class name
                         class_name = arr_element.element.replace(' ', '')
@@ -266,76 +343,3 @@ class CodeGenerator:
 
         return Parameter(name=name, python_type=python_type, docstring=docstring, sample=sample, optional=optional)
 
-    def endpoints(self) -> Generator[Endpoint, None, None]:
-        # host is defined at tha API level
-        # something like 'https://webexapis.com/v1/'
-        host = self.parsed_blueprint.api.host
-        for transition in self.parsed_blueprint.api.transitions():
-            # come up with a name for the method
-            # 'List Admin Audit Events' --> 'list_admin_audit_events'
-            name = '_'.join(transition.title.split()).lower()
-
-            # href is something like '/adminAudit/events{?orgId,from,to,actorId,max,offset,eventCategories}'
-            href = transition.href
-            # extract the href parameter names from the part between the brackets
-            if m := re.search(r'\{\?(.+)}', href):
-                href_param_names = m.group(1).split(',')
-            else:
-                href_param_names = []
-            # the actual URL is the part before the bracket ... if there is one
-            url = href.split('{')[0].strip('/')
-            # full url based based on host and endpoint url
-            full_url = urljoin(host, url)
-
-            # gather info from the HTTP transaction
-            http_transaction = transition.http_transaction
-            request = http_transaction.request
-            response = http_transaction.response
-
-            method = request.method
-            response_datastructure = response.datastructure
-            href_parameter = []
-            for href_variable in transition.href_variables:
-                param = self.param_from_member_or_select(endpoint_name=name, member=href_variable)
-                href_parameter.append(param)
-
-            # TODO: body parameter, from request
-            body_parameter = []
-            if (body := request.find_content_by_element('dataStructure')):
-                body: ApibDatastructure
-                body_content = body.content
-                if isinstance(body_content, ApibObject):
-                    # The object should have all attributes
-                    body_content: ApibObject
-                    # ApibObject has a list of members
-                    body_parameter = [self.param_from_member_or_select(endpoint_name=name, member=member)
-                                      for member in body_content.content]
-                elif isinstance(body_content, ApibElement) and not any((body_content.content,
-                                                                        body_content.meta)):
-                    # this might be a class name
-                    class_name = body_content.element.replace(' ', '')
-
-                    # type attributes is the only acceptable attribute
-                    optional = False
-                    if body_content.attributes:
-                        if set(body_content.attributes) != {'typeAttributes'}:
-                            raise KeyError(f'Only typeAttributes are acceptable, got: '
-                                           f'{", ".join(sorted(body_content.attributes))}')
-                        type_attributes = set(ta.content for ta in body_content.attributes['typeAttributes'].content)
-                        optional = 'required' not in type_attributes
-                    # .. and that class should exist
-                    if python_class := self.class_registry.get(class_name):
-                        # attributes of the class -> parameters
-                        if python_class.attributes:
-                            body_parameter = [Parameter(name=attr.name, python_type=attr.python_type,
-                                                        docstring=attr.docstring, sample=attr.sample,
-                                                        optional=optional)
-                                              for attr in python_class.attributes]
-                        else:
-                            raise NotImplementedError('No attributes')
-                else:
-                    raise NotImplementedError(f'http request body datastructure '
-                                              f'with unexpected content: {body_content.element}')
-
-            yield Endpoint(name=name, method=method, url=full_url, href_parameter=href_parameter,
-                           body_parameter=body_parameter, result=response_datastructure)
