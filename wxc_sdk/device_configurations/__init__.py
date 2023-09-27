@@ -16,8 +16,9 @@ class DeviceConfigurationSourceEditability(ApiModel):
     is_editable: bool
     #: The reason value is not editable on this source (always FACTORY_DEFAULT for default).
     #: The reason the value is not editable on this source.
-    #:  NOT_AUTHORIZED - User is not authorized to edit any values.
-    #:  CONFIG_MANAGED_BY_DIFFERENT_AUTHORITY - The configuration is managed by a different authority. For example CUCM.
+    #:
+    #: * NOT_AUTHORIZED - User is not authorized to edit any values.
+    #: * CONFIG_MANAGED_BY_DIFFERENT_AUTHORITY - The configuration is managed by a different authority. For example CUCM.
     reason: Optional[str] = None
 
 

@@ -24,7 +24,6 @@ author = 'Johannes Krohn'
 # The full version, including alpha/beta/rc tags
 release = '1.16.1'
 
-
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
@@ -57,8 +56,10 @@ intersphinx_mapping = {
 
 
 # This value selects what content will be inserted into the main body of an autoclass directive.
-# Both the class’ and the __init__ method’s docstring are concatenated and inserted.
-autoclass_content = 'both'
+# both: Both the class’ and the __init__ method’s docstring are concatenated and inserted.
+# init: Only the __init__ method’s docstring is inserted.
+# class: Only the class’ docstring is inserted. This is the default.
+autoclass_content = 'class'
 
 # This value selects if automatically documented members are sorted alphabetical (value 'alphabetical'), by member
 # type (value 'groupwise') or by source order (value 'bysource'). The default is alphabetical.
@@ -79,7 +80,6 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -91,3 +91,25 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+
+def skip_member(app, what, name, obj, skip, options):
+    # skip doc creation for model_config and model_fields members; part of pydantic.BaseModel
+    if name in {'model_config', 'model_fields'}:
+        return True
+    return None
+
+
+# def process_bases(app, name, obj, options, bases):
+#     # we don't want to document ApiModel as a Base
+#     remove_base_index = next((i for i, base in enumerate(bases)
+#                               if base.__name__.split('.')[-1] in {'ApiModel'}),
+#                              None)
+#     if remove_base_index is not None:
+#         bases.pop(remove_base_index)
+#     print(f'{name=}, {obj.__class__.__name__ =} bases: {", ".join(f"{b}" for b in bases)}')
+
+
+def setup(app):
+    app.connect('autodoc-skip-member', skip_member)
+    # app.connect('autodoc-process-bases', process_bases)
