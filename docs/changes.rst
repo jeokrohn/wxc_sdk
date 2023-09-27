@@ -3,6 +3,7 @@ Release history
 
 - feat: device configurations API :attr:`wxc_sdk.WebexSimpleApi.device_configurations`
 - fix: :meth:`wxc_sdk.telephony.prem_pstn.route_group.RouteGroupApi.update`: used POST instead of PUT
+- fix: :meth:`wxc_sdk.telephony.calls.CallsApi.answer` has new `endpoint_id` endpoint parameter
 
 1.16.1
 ------

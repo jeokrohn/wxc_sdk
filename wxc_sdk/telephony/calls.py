@@ -267,15 +267,23 @@ class CallsApi(ApiChild, base='telephony/calls'):
         data = self.post(ep, json={'destination': destination})
         return DialResponse.model_validate(data)
 
-    def answer(self, call_id: str):
+    def answer(self, call_id: str, endpoint_id: str = None):
         """
-        Answer an incoming call on the user's primary device.
+        Answer an incoming call. When no endpointId is specified, the call is answered on the user's primary device.
+        When an endpointId is specified, the call is answered on the device or application identified by the
+        endpointId. The answer  API is rejected if the device is not alerting for the call or the device does not
+        support answer via API.
 
         :param call_id: The call identifier of the call to be answered.
         :type call_id: str
+        :param endpoint_id: The ID of the device or application to answer the call on. The endpointId must be one of
+            the endpointIds returned by :meth:`wxc_sdk.person_settings.preferred_answer.PreferredAnswerApi.read`
+        :type endpoint_id: str
         """
+        body = {to_camel(k): v for k, v in locals().items()
+                if v is not None and k != 'self'}
         ep = self.ep('answer')
-        self.post(ep, json={'callId': call_id})
+        self.post(ep, json=body)
 
     def reject(self, call_id: str, action: RejectAction = None):
         """
