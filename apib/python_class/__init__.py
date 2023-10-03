@@ -19,6 +19,9 @@ from wxc_sdk.base import to_camel
 
 log = logging.getLogger(__name__)
 
+# some Python names are not allowed as parameter names
+RESERVED_PARAM_NAMES = {'from', 'to', 'max'}
+
 CLASS_TEMPLATE = """
 class {class_name}{baseclass}:
 {attributes}
@@ -32,9 +35,20 @@ class Parameter:
     """
     name: str
     python_type: str
+    referenced_class: Optional[str]
     docstring: str
     sample: Any
     optional: bool
+
+    @property
+    def python_name(self) -> str:
+        """
+        A Python compatible name. Reserved Python names are suffixed with an underscore
+            from -> from_
+        """
+        if self.name in RESERVED_PARAM_NAMES:
+            return f'{self.name}_'
+        return self.name
 
 
 @dataclass
@@ -45,6 +59,7 @@ class Endpoint:
     href_parameter: list[Parameter] = field(default_factory=list)
     body_parameter: list[Parameter] = field(default_factory=list)
     result: str = field(default=None)
+    result_referenced_class: str = field(default=None)
 
 
 @dataclass
@@ -58,20 +73,6 @@ class Attribute:
     sample: Any
     referenced_class: str
 
-    # TODO: is this still needed?
-    # @classmethod
-    # def data_structure_class_attributes(cls, ds: ApibDatastucture) -> Generator['Attribute', None, None]:
-    #     if not ds.is_class:
-    #         return
-    #     if ds.superclass:
-    #         members = ds.content.content
-    #     else:
-    #         members = ds.content.content
-    #     if not members:
-    #         return
-    #     for member in members:
-    #         yield Attribute.from_member(ds.python_name, member)
-
     @classmethod
     def from_enum(cls, enum_element: ApibEnum) -> Generator['Attribute', None, None]:
         """
@@ -82,6 +83,9 @@ class Attribute:
                             docstring=e.description, sample=None, referenced_class=None)
 
     def source(self, for_enum: bool) -> str:
+        """
+        Python source for one class attribute
+        """
         if self.docstring:
             lines = [f'#: {ls}' for line in self.docstring.strip().splitlines()
                      if (ls := line.strip())]
@@ -117,7 +121,7 @@ class PythonClass:
     Information about a Python class
     """
     name: str
-    attributes: list[Attribute] = field(default_factory=list)
+    attributes: Optional[list[Attribute]] = field(default=None)
     description: str = field(default=None)
     is_enum: bool = field(default=None)
     baseclass: str = field(default=None)
@@ -146,19 +150,66 @@ class PythonClass:
         return result
 
 
-@dataclass
+@dataclass(init=False)
 class PythonClassRegistry:
+    # TODO: to disambiguate names:
+    #   + a global context can be set (name of the APIB currently processed)
+    #       * set_context(context: str)
+    #   + the context is used to create qualified identifiers for class names
+    #       * qualified_class_name(class_name: str)->str
+    #   + qualident: <prefix>%<class name>
+    #   + class names are not converted to camel case during creation of PythonClass instances from APIB
+    #   + python_types and referenced_classes in Attribute instances use qualified class names
+    #       * use get_qualident() to validate reference and get qualified name
+    #   + "proper" Python class names are created after all PythonClasses have been created --> normalization before
+    #       code creation
+    #   + the normalization makes sure that unique Python class names are used
+    #       + mapper from qualified class name to "normalized" Python class name
+    #       + remove qualifier
+    #       + convert class names to camel case
+    #       + make class names unique
+    #       + after creating unique unqualified class names the resulting mapping is used to update references to
+    #           class names
+    #       + normalization updates
+    #           + python_type in Attribute
+    #           + referenced_class in Attribute
+    #           + python_type in PythonClass
+    #           * ... in Endpoint
+    #   + after normalization updated PythonClass and Attribute instances can be used for code creation
+    #
+
+    # context used to disambiguate class names in the registry
+    _context: str = field(default='', repr=False)
+
+    # registered classes
     _classes: dict[str, PythonClass] = field(default_factory=dict, repr=False)
 
-    def add(self, pc: PythonClass):
-        # make sure that the class name is unique. To make the name unique append a numeric suffix if needed
-        name = next((sn for suffix in chain([''], (str(i) for i in range(1, 100)))
-                     if (sn := f'{pc.name}{suffix}') not in self._classes))
-        if name != pc.name:
-            existing = self._classes[pc.name]
-            log.error(f'class name "{pc.name}" already exists')
-            raise KeyError()
+    def __init__(self):
+        self._context = None
+        self._classes = dict()
 
+    def set_context(self, context: str):
+        self._context = context
+
+    def qualified_class_name(self, class_name: str)->str:
+        """
+        Get qualified identified for given class name
+        """
+        if '%' in class_name:
+            return class_name
+        return f'{self._context}%{class_name}'
+
+    def add(self, pc: PythonClass):
+        """
+        Add a python class to the registry. When adding the class name to the registry pc.name gets updated to a
+        qualident.
+        pc.name has to be unique
+        """
+        qualident = self.qualified_class_name(pc.name)
+        if qualident in self._classes:
+            raise KeyError(f'python class name "{pc.name}" already registered')
+
+        pc.name = qualident
         self._classes[pc.name] = pc
 
     def get(self, class_name: str) -> Optional[PythonClass]:
@@ -182,8 +233,8 @@ class PythonClassRegistry:
         """
         if member.element != 'member':
             log.warning(f'Not implemented, member element: {member.element}')
-            return None
             # TODO: implement this case
+            raise NotImplementedError
         name = member.key
         value = member.value
         docstring = member.meta and member.meta.description
@@ -244,7 +295,7 @@ class PythonClassRegistry:
             else:
                 # array of some type
                 # references class is that type
-                referenced_class = words_to_camel(array_element_type)
+                referenced_class = array_element_type
                 # .. and the Python type is a list of that type
                 python_type = f'list[{referenced_class}]'
         elif value.element == 'object':
@@ -286,43 +337,50 @@ class PythonClassRegistry:
             sample = value.content
         else:
             # this might be a reference to a class
-            python_type = words_to_camel(value.element)
+            python_type = value.element
             referenced_class = python_type
             try:
                 sample = value.content and value.content.content
             except AttributeError:
                 sample = None
+        if referenced_class:
+            referenced_class = self.qualified_class_name(referenced_class)
         return Attribute(name=name, python_type=python_type, docstring=docstring, sample=sample,
                          referenced_class=referenced_class)
 
-    def add_classes_from_data_structure(self, ds: ApibDatastructure):
+    def add_classes_from_data_structure(self, ds: ApibDatastructure, class_name: str = None) -> PythonClass:
         """
         Add classes defined in a given APIB datastructure
         """
         # content can be 'object' or 'enum'
         content = ds.content
         content_element = content and content.element
-        python_name = ds.python_name
+        class_name = class_name or ds.class_name
+        if not class_name:
+            raise ValueError('Undefined class name')
         baseclass = ds.baseclass
         if not content_element:
             raise ValueError('content element should not be None')
         elif content_element == 'object':
             content: ApibObject
             # get attributes from object content
-            attributes = self._python_class_attributes(basename=ds.python_name,
+            attributes = self._python_class_attributes(basename=class_name,
                                                        members=content.content)
-            self.add(PythonClass(name=python_name, attributes=attributes, description=None, is_enum=False,
-                                 baseclass=baseclass))
+            pc = PythonClass(name=class_name, attributes=attributes, description=None, is_enum=False,
+                                 baseclass=baseclass)
 
         elif content_element == 'enum':
             content: ApibEnum
             attributes = list(Attribute.from_enum(content))
-            self.add(PythonClass(name=python_name, attributes=attributes, is_enum=True))
+            pc = PythonClass(name=class_name, attributes=attributes, is_enum=True)
         else:
-            attributes = self._python_class_attributes(basename=ds.python_name,
+            attributes = self._python_class_attributes(basename=class_name,
                                                        members=content.content)
-            self.add(PythonClass(name=python_name, attributes=attributes, description=None, is_enum=False,
-                                 baseclass=baseclass))
+            baseclass = baseclass and self.qualified_class_name(baseclass)
+            pc = PythonClass(name=class_name, attributes=attributes, description=None, is_enum=False,
+                                 baseclass=baseclass)
+        self.add(pc)
+        return pc
 
     def add_classes_from_parse_result(self, parse_result: ApibParseResult) -> Generator['PythonClass', None, None]:
         """
@@ -529,6 +587,54 @@ class PythonClassRegistry:
                 # if
             # for
         # for
+
+    def normalize(self):
+        """
+        Eliminate redundancies and then transform all class names to Python class names
+            * the normalization makes sure that unique Python class names are used
+              * mapper from qualified class name to "normalized" Python class name
+              * remove qualifier
+              * convert class names to camel case
+              * make class names unique
+              * after creating unique unqualified class names the resulting mapping is used to update references to
+                  class names
+              * normalization updates
+                  * python_type in Attribute
+                  * referenced_class in Attribute
+                  * python_type in PythonClass
+                  * ... in Endpoint
+            * after normalization updated PythonClass and Attribute instances can be used for code creation
+        """
+        self.eliminate_redundancies()
+
+        # mapping qualidents to Python class names
+        qualident_to_python_name: dict[str, str] = dict()
+        python_names = set()
+
+        # create the mappings
+        for qualident, pc in self._classes.items():
+            python_class_name = words_to_camel(pc.name.split('%')[-1])
+            # disambiguate class names by appending an index
+            python_class_name = next((pn for suffix in chain([''], (str(i) for i in range(1, 100)))
+                                      if (pn:=f'{python_class_name}{suffix}') not in python_names))
+            # keep record of the Python class name
+            python_names.add(python_class_name)
+            qualident_to_python_name[qualident] = python_class_name
+
+        # now go through all classes and clean up references from qualidents to Python names
+        for qualident, python_class_name in qualident_to_python_name.items():
+            pc = self._classes.pop(qualident)
+            pc.name = python_class_name
+            pc.baseclass = pc.baseclass and qualident_to_python_name[pc.baseclass]
+            if pc.attributes:
+                for attr in pc.attributes:
+                    if attr.referenced_class:
+                        new_class_name = qualident_to_python_name[attr.referenced_class]
+                        attr.python_type = attr.python_type.replace(attr.referenced_class, new_class_name)
+                        attr.referenced_class = new_class_name
+            self._classes[python_class_name] = pc
+
+        # TODO: how do we update endpoints?
 
     def baseclasses_for_common_attribute_sets(self):
         """

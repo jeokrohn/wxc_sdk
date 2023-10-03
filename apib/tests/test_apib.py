@@ -1027,6 +1027,71 @@ class ReadAPIB(ApibTest):
                     err = True
         self.assertFalse(err)
 
+    def test_parsed_transition_response_datastructure(self):
+        """
+        Understand transition response datastructures
+        """
+        self.stream_handler.setLevel(logging.INFO)
+        err = None
+        response_datastructure_content_elements_wo_content = set()
+        response_datastructure_content_elements_w_content = set()
+        for path, data in self.apib_path_and_data():
+            path = os.path.basename(path)
+            parsed = ApibParseResult.model_validate(data)
+            for el_info in parsed.elements_with_path():
+                transition = el_info.element
+                if transition.element != 'transition':
+                    continue
+                transition: ApibTransition
+                try:
+                    response_datastructure = transition.http_transaction.response.datastructure
+                    if response_datastructure is None:
+                        # that is fine: this call does not have a response body
+                        continue
+                    # response datastructure always has content
+                    content = response_datastructure.content
+                    # the response datastructure content can have content or no content
+                    if content.content:
+                        # if there is content then the element is either 'array' or 'object'
+                        response_datastructure_content_elements_w_content.add(content.element)
+                        self.assertTrue(content.element in {'array', 'object'},
+                                        f'unexpected content element for datastructure content. Should be "array" or '
+                                        f'"object", is: {content.element}')
+                        if content.element == 'array':
+                            array_content = content.content
+                            self.assertTrue(isinstance(array_content, list),
+                                            f'array content should be list, is: {type(array_content)}')
+                            self.assertEqual(1, len(array_content),
+                                             'len of array content should be one')
+                            array_content_first_element = array_content[0]
+                            # the 1st element should be a reference to a class
+                            self.assertIsNone(array_content_first_element.content)
+                            array_element_class_name = array_content_first_element.element
+                            ds = next((ds for ds in parsed.elements()
+                                       if isinstance(ds, ApibDatastructure) and
+                                       ds.class_name == array_element_class_name),
+                                      None)
+                            self.assertIsNotNone(ds, f'datastructure "{array_element_class_name}" not found')
+                    else:
+                        # In this case the content.element is the name of a datastructure
+                        response_datastructure_content_elements_wo_content.add(content.element)
+                        ds_name = content.element
+                        # try to find the datastructure
+                        ds = next((ds for ds in parsed.elements()
+                                   if isinstance(ds, ApibDatastructure) and ds.class_name == ds_name), None)
+                        self.assertIsNotNone(ds,
+                                             f'Failed to find datastructure "{ds_name}"')
+                except Exception as e:
+                    raise
+                    err = err or e
+        print('Content element values w/o content:')
+        print('\n'.join(sorted(response_datastructure_content_elements_wo_content)))
+        print()
+        print('Content element values w/ content:')
+        print('\n'.join(sorted(response_datastructure_content_elements_w_content)))
+        if err:
+            raise err
+
     def test_parsed_http_transaction_has_request_and_response(self):
         self.stream_handler.setLevel(logging.INFO)
         err = False
@@ -1522,4 +1587,3 @@ class ReadAPIB(ApibTest):
             # try to generate source for all of them
             list(map(PythonClass.source, p_classes_after))
             foo = 1
-

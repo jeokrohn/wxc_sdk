@@ -21,6 +21,10 @@ log = logging.getLogger(__name__)
 
 
 def words_to_camel(s: str) -> str:
+    """
+    Generate a camel case Python name from multi-word input string
+    Example: 'User name' --> 'UserName'
+    """
     def cap_first(s: str) -> str:
         return f'{s[0].upper()}{s[1:]}'
 
@@ -30,6 +34,13 @@ def words_to_camel(s: str) -> str:
 
 
 def snake_case(s: str) -> str:
+    """
+    Generate a snake case Python name for given input string.
+    Input string can be a multiple words or a camel case string
+    Examples:
+        * 'user name' --> user_name
+        * 'User Name' --> user_name
+    """
     # get rid of all spaces
     r = s.replace(' ', '_')
     # add underscore whenever a capital letter is preceded by lower case or digit
@@ -645,9 +656,13 @@ class ApibDatastructure(ApibElement):
     """
 
     @property
-    def python_name(self) -> Optional[str]:
+    def class_name(self) -> Optional[str]:
+        """
+        DS name to be used for class registry. No transformation is applied. The name is used as is for PythonClass
+        instantiation. The normalization to proper Python names (and de-duplication) only happens later
+        """
         if self.content and self.content.meta and (name := self.content.meta.id):
-            return words_to_camel(name)
+            return name
         return None
 
     @property
@@ -663,7 +678,7 @@ class ApibDatastructure(ApibElement):
         el = self.content.element
         if el in {'object', 'enum'}:
             return None
-        return words_to_camel(el)
+        return el
 
     @property
     def referenced_classes(self) -> list[str]:
