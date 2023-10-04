@@ -39,6 +39,9 @@ class PhoneNumberType(str, Enum):
     mobile = 'mobile'
     fax = 'fax'
     work_extension = 'work_extension'
+    enterprise = 'enterprise'
+    alternate1 = 'alternate1'
+    alternate2 = 'alternate2'
 
 
 class PhoneNumber(ApiModel):
