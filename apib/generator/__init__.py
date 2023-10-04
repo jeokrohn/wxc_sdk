@@ -35,13 +35,10 @@ class CodeGenerator:
     class_registry: PythonClassRegistry
     #: Dictionary of parsed APIB files. Indexed by basename of APIB file w/o suffix
     parsed_blueprints: dict[str, ApibParseResult]
-    #: Dictionary of list of endpoints of an APIB file. Indexed by basename of APIB file w/o suffix
-    endpoints: dict[str, list[Endpoint]]
 
     def __init__(self):
         self.class_registry = PythonClassRegistry()
         self.parsed_blueprints = dict()
-        self.endpoints = defaultdict(list)
 
     def read_blueprint(self, apib_path: str):
         # read api bluepring file
@@ -65,9 +62,7 @@ class CodeGenerator:
         """
         Generator of endpoints defined in the APIB
         """
-        return chain.from_iterable(((apib_key, ep)
-                                    for ep in endpoints)
-                                   for apib_key, endpoints in self.endpoints.items())
+        return self.class_registry.endpoints()
 
     def source(self) -> str:
         """
