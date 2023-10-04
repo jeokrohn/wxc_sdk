@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetCallParkExtensionObject', 'GetCallParkObject', 'GetPersonPlaceVirtualLineCallParksObject', 'GetPersonPlaceVirtualLineCallParksObjectType', 'GetRecallHuntGroupObject', 'GetRecallHuntGroupObjectOption', 'GetUserNumberItemObject', 'ListCPCallParkExtensionObject', 'ListCallParkExtensionObject']
+__auto__ = ['GetAvailableAgentsFromCallParksResponse', 'GetCallParkExtensionObject', 'GetCallParkObject', 'GetPersonPlaceVirtualLineCallParksObject', 'GetPersonPlaceVirtualLineCallParksObjectType', 'GetRecallHuntGroupObject', 'GetRecallHuntGroupObjectOption', 'GetUserNumberItemObject', 'ListCPCallParkExtensionObject', 'ListCallParkExtensionObject', 'ReadTheListOfCallParkExtensionsResponse']
 
 
 class GetCallParkExtensionObject(ApiModel):
@@ -153,3 +153,13 @@ class ListCallParkExtensionObject(ApiModel):
     #: Name of location for call park extension.
     #: example: WXCSIVDKCPAPIC4S1
     location_name: Optional[str] = None
+
+
+class GetAvailableAgentsFromCallParksResponse(ApiModel):
+    #: Array of agents.
+    agents: Optional[list[GetPersonPlaceVirtualLineCallParksObject]] = None
+
+
+class ReadTheListOfCallParkExtensionsResponse(ApiModel):
+    #: Array of call park extensions.
+    call_park_extensions: Optional[list[ListCallParkExtensionObject]] = None

@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetPagingGroupAgentObject', 'GetPagingGroupAgentObjectType', 'GetPagingGroupObject', 'GetPagingGroupObjectDepartment', 'ListPagingGroupObject', 'UpdatePagingGroupObject', 'UpdatePagingGroupObjectDepartment']
+__auto__ = ['GetPagingGroupAgentObject', 'GetPagingGroupAgentObjectType', 'GetPagingGroupObject', 'GetPagingGroupObjectDepartment', 'ListPagingGroupObject', 'ReadTheListOfPagingGroupsResponse', 'UpdatePagingGroupObject', 'UpdatePagingGroupObjectDepartment']
 
 
 class GetPagingGroupAgentObjectType(str, Enum):
@@ -146,3 +146,8 @@ class UpdatePagingGroupObject(ApiModel):
     targets: Optional[list[str]] = None
     #: Specifies the department information.
     department: Optional[UpdatePagingGroupObjectDepartment] = None
+
+
+class ReadTheListOfPagingGroupsResponse(ApiModel):
+    #: Array of paging groups.
+    location_paging: Optional[list[ListPagingGroupObject]] = None

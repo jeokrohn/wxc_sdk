@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['DeleteTranscriptObject', 'DownloadAMeetingTranscriptFormat', 'SnippetObject', 'TranscriptObject', 'TranscriptObjectStatus', 'UpdateSnippetObject']
+__auto__ = ['DeleteTranscriptObject', 'DownloadAMeetingTranscriptFormat', 'ListMeetingTranscriptsResponse', 'ListSnippetsOfAMeetingTranscriptResponse', 'SnippetObject', 'TranscriptObject', 'TranscriptObjectStatus', 'UpdateSnippetObject']
 
 
 class TranscriptObjectStatus(str, Enum):
@@ -91,6 +91,16 @@ class DeleteTranscriptObject(ApiModel):
     comment: Optional[str] = None
 
 
+class ListMeetingTranscriptsResponse(ApiModel):
+    #: Transcript array.
+    items: Optional[list[TranscriptObject]] = None
+
+
 class DownloadAMeetingTranscriptFormat(str, Enum):
     vtt = 'vtt'
     txt = 'txt'
+
+
+class ListSnippetsOfAMeetingTranscriptResponse(ApiModel):
+    #: Transcript snippet array
+    items: Optional[list[SnippetObject]] = None

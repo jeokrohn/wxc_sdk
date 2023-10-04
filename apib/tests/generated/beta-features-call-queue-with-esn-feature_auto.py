@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersWithPattern', 'CallQueueQueueSettingsObject', 'CallQueueQueueSettingsObjectComfortMessage', 'CallQueueQueueSettingsObjectComfortMessageBypass', 'CallQueueQueueSettingsObjectMohMessage', 'CallQueueQueueSettingsObjectMohMessageNormalSource', 'CallQueueQueueSettingsObjectOverflow', 'CallQueueQueueSettingsObjectOverflowAction', 'CallQueueQueueSettingsObjectOverflowGreeting', 'CallQueueQueueSettingsObjectWaitMessage', 'CallQueueQueueSettingsObjectWaitMessageWaitMode', 'CallQueueQueueSettingsObjectWelcomeMessage', 'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObjectCallBounce', 'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueObject', 'GetCallQueueObjectAlternateNumberSettings', 'GetPersonPlaceVirtualLineCallQueueObject', 'GetPersonPlaceVirtualLineCallQueueObjectType', 'HuntPolicySelection', 'HuntRoutingTypeSelection', 'ListCallQueueObject', 'RingPatternObject']
+__auto__ = ['AlternateNumbersWithPattern', 'CallQueueQueueSettingsObject', 'CallQueueQueueSettingsObjectComfortMessage', 'CallQueueQueueSettingsObjectComfortMessageBypass', 'CallQueueQueueSettingsObjectMohMessage', 'CallQueueQueueSettingsObjectMohMessageNormalSource', 'CallQueueQueueSettingsObjectOverflow', 'CallQueueQueueSettingsObjectOverflowAction', 'CallQueueQueueSettingsObjectOverflowGreeting', 'CallQueueQueueSettingsObjectWaitMessage', 'CallQueueQueueSettingsObjectWaitMessageWaitMode', 'CallQueueQueueSettingsObjectWelcomeMessage', 'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObjectCallBounce', 'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueObject', 'GetCallQueueObjectAlternateNumberSettings', 'GetPersonPlaceVirtualLineCallQueueObject', 'GetPersonPlaceVirtualLineCallQueueObjectType', 'HuntPolicySelection', 'HuntRoutingTypeSelection', 'ListCallQueueObject', 'ReadTheListOfCallQueuesResponse', 'RingPatternObject']
 
 
 class RingPatternObject(str, Enum):
@@ -399,3 +399,8 @@ class ListCallQueueObject(ApiModel):
     #: Whether or not the call queue is enabled.
     #: example: True
     enabled: Optional[bool] = None
+
+
+class ReadTheListOfCallQueuesResponse(ApiModel):
+    #: Array of call queues.
+    queues: Optional[list[ListCallQueueObject]] = None

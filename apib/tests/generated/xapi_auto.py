@@ -7,7 +7,24 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ExecuteCommandArguments', 'ExecuteCommandBody', 'ExecuteCommandBodyBooking', 'ExecuteCommandBodyBookingOrganizer', 'ExecuteCommandBodyBookingTime']
+__auto__ = ['ExecuteCommandArguments', 'ExecuteCommandBody', 'ExecuteCommandBodyBooking', 'ExecuteCommandBodyBookingOrganizer', 'ExecuteCommandBodyBookingTime', 'ExecuteCommandResponse', 'QueryStatusResponse', 'QueryStatusResponseResult', 'QueryStatusResponseResultAudio']
+
+
+class QueryStatusResponseResultAudio(ApiModel):
+    #: example: 75.0
+    volume: Optional[int] = Field(alias='Volume', default=None)
+
+
+class QueryStatusResponseResult(ApiModel):
+    audio: Optional[QueryStatusResponseResultAudio] = Field(alias='Audio', default=None)
+
+
+class QueryStatusResponse(ApiModel):
+    #: The unique identifier for the Webex RoomOS Device.
+    #: example: Y2lzY29zcGFyazovL3VzL0RFVklDRS8wNTVkYThiNy02NWI2LTQ5NjgtOTg1ZC02ZmFjODcwOWMyMDM
+    device_id: Optional[str] = None
+    #: xAPI status result
+    result: Optional[QueryStatusResponseResult] = None
 
 
 class ExecuteCommandArguments(ApiModel):
@@ -42,3 +59,13 @@ class ExecuteCommandBodyBooking(ApiModel):
 
 class ExecuteCommandBody(ApiModel):
     booking: Optional[ExecuteCommandBodyBooking] = Field(alias='Booking', default=None)
+
+
+class ExecuteCommandResponse(ApiModel):
+    #: The unique identifier for the Webex RoomOS Device.
+    #: example: Y2lzY29zcGFyazovL3VzL0RFVklDRS8wNTVkYThiNy02NWI2LTQ5NjgtOTg1ZC02ZmFjODcwOWMyMDM
+    device_id: Optional[str] = None
+    #: xAPI command arguments
+    arguments: Optional[ExecuteCommandArguments] = None
+    #: xAPI command results
+    result: Optional[ExecuteCommandBody] = None

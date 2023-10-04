@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AddressAgentHuntGroupObject', 'AlternateNumbersWithPattern', 'CreateHuntGroupObject', 'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusinessContinuity', 'GetHuntGroupCallPolicyObjectNoAnswer', 'GetHuntGroupObject', 'GetPersonPlaceVirtualLineHuntGroupObject', 'HuntPolicySelection', 'ModifyHuntGroupObject', 'PostHuntGroupCallPolicyObject', 'PostHuntGroupCallPolicyObjectNoAnswer', 'PostPersonPlaceVirtualLineHuntGroupObject', 'RingPatternObject']
+__auto__ = ['AddressAgentHuntGroupObject', 'AlternateNumbersWithPattern', 'CreateAHuntGroupResponse', 'CreateHuntGroupObject', 'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusinessContinuity', 'GetHuntGroupCallPolicyObjectNoAnswer', 'GetHuntGroupObject', 'GetPersonPlaceVirtualLineHuntGroupObject', 'HuntPolicySelection', 'ModifyHuntGroupObject', 'PostHuntGroupCallPolicyObject', 'PostHuntGroupCallPolicyObjectNoAnswer', 'PostPersonPlaceVirtualLineHuntGroupObject', 'RingPatternObject']
 
 
 class AddressAgentHuntGroupObject(ApiModel):
@@ -279,3 +279,8 @@ class ModifyHuntGroupObject(ApiModel):
     #: Whether or not the hunt group is enabled.
     #: example: True
     enabled: Optional[bool] = None
+
+
+class CreateAHuntGroupResponse(ApiModel):
+    #: ID of the newly created hunt group.
+    id: Optional[str] = None

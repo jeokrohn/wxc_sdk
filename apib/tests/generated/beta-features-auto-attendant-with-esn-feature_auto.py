@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersObject', 'AlternateNumbersObjectRingPattern', 'AudioFileObject', 'AudioFileObjectMediaType', 'GetAutoAttendantObject', 'GetAutoAttendantObjectExtensionDialing', 'HoursMenuObject', 'HoursMenuObjectGreeting', 'KeyConfigurationsObject', 'KeyConfigurationsObjectAction', 'KeyConfigurationsObjectKey', 'ListAutoAttendantObject']
+__auto__ = ['AlternateNumbersObject', 'AlternateNumbersObjectRingPattern', 'AudioFileObject', 'AudioFileObjectMediaType', 'GetAutoAttendantObject', 'GetAutoAttendantObjectExtensionDialing', 'HoursMenuObject', 'HoursMenuObjectGreeting', 'KeyConfigurationsObject', 'KeyConfigurationsObjectAction', 'KeyConfigurationsObjectKey', 'ListAutoAttendantObject', 'ReadTheListOfAutoAttendantsResponse']
 
 
 class AlternateNumbersObjectRingPattern(str, Enum):
@@ -198,3 +198,8 @@ class ListAutoAttendantObject(ApiModel):
     esn: Optional[datetime] = None
     #: Flag to indicate if auto attendant number is toll-free number.
     toll_free_number: Optional[bool] = None
+
+
+class ReadTheListOfAutoAttendantsResponse(ApiModel):
+    #: Array of auto attendants.
+    auto_attendants: Optional[list[ListAutoAttendantObject]] = None

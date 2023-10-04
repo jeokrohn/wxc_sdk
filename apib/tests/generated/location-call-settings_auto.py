@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ArrayOfExtensionsObject', 'AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLevel', 'AudioAnnouncementFileGetObjectMediaFileType', 'CallBackEffectiveLevel', 'CallBackMemberType', 'CallBackQuality', 'CallBackSelected', 'ExtensionStatusObject', 'ExtensionStatusObjectState', 'ExtentionStatusObject', 'GetLocationCallBackNumberObject', 'GetLocationCallBackNumberObjectLocationInfo', 'GetLocationCallBackNumberObjectLocationMemberInfo', 'GetMusicOnHoldObject', 'GetMusicOnHoldObjectGreeting', 'GetPrivateNetworkConnectObject', 'GetPrivateNetworkConnectObjectNetworkConnectionType', 'GetTelephonyLocationObject', 'GetTelephonyLocationObjectCallingLineId', 'GetTelephonyLocationObjectConnection', 'ListLocationObject', 'LocationCallingResponseWithId', 'PostLocationAnnouncementLanguageObject', 'PostLocationCallingRequest', 'PostLocationCallingRequestAddress', 'PostValidateExtensionResponse', 'PostValidateExtensionResponseStatus', 'PutLocationCallBackNumberObject', 'PutTelephonyLocationObject', 'RouteIdentity', 'RouteType', 'StatusOfExtensionsObject']
+__auto__ = ['ArrayOfExtensionsObject', 'AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLevel', 'AudioAnnouncementFileGetObjectMediaFileType', 'CallBackEffectiveLevel', 'CallBackMemberType', 'CallBackQuality', 'CallBackSelected', 'ExtensionStatusObject', 'ExtensionStatusObjectState', 'ExtentionStatusObject', 'GetLocationCallBackNumberObject', 'GetLocationCallBackNumberObjectLocationInfo', 'GetLocationCallBackNumberObjectLocationMemberInfo', 'GetMusicOnHoldObject', 'GetMusicOnHoldObjectGreeting', 'GetPrivateNetworkConnectObject', 'GetPrivateNetworkConnectObjectNetworkConnectionType', 'GetTelephonyLocationObject', 'GetTelephonyLocationObjectCallingLineId', 'GetTelephonyLocationObjectConnection', 'ListLocationObject', 'ListLocationsWebexCallingDetailsResponse', 'LocationCallingResponseWithId', 'PostLocationAnnouncementLanguageObject', 'PostLocationCallingRequest', 'PostLocationCallingRequestAddress', 'PostValidateExtensionResponse', 'PostValidateExtensionResponseStatus', 'PutLocationCallBackNumberObject', 'PutTelephonyLocationObject', 'ReadTheListOfDialPatternsResponse', 'ReadTheListOfRoutingChoicesResponse', 'RouteIdentity', 'RouteType', 'StatusOfExtensionsObject']
 
 
 class ArrayOfExtensionsObject(ApiModel):
@@ -403,3 +403,18 @@ class StatusOfExtensionsObject(ApiModel):
     status: Optional[PostValidateExtensionResponseStatus] = None
     #: Array of extensions statuses.
     extension_status: Optional[list[ExtensionStatusObject]] = None
+
+
+class ListLocationsWebexCallingDetailsResponse(ApiModel):
+    #: Array of locations.
+    locations: Optional[list[ListLocationObject]] = None
+
+
+class ReadTheListOfDialPatternsResponse(ApiModel):
+    #: Array of dial patterns. An enterprise dial pattern is represented by a sequence of digits (1-9), followed by optional wildcard characters.
+    dial_patterns: Optional[list[str]] = None
+
+
+class ReadTheListOfRoutingChoicesResponse(ApiModel):
+    #: Array of route identities.
+    route_identities: Optional[list[RouteIdentity]] = None

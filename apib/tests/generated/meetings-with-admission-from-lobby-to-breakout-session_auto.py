@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AnswerForCustomizedQuestion', 'BatchUpdateMeetingRegistrantsStatusStatusOpType', 'BreakoutSessionObject', 'Control', 'CreateMeetingObject', 'CreateMeetingObjectRegistration', 'CreateMeetingObjectSimultaneousInterpretation', 'CustomizedQuestionForCreateMeeting', 'CustomizedQuestionForCreateMeetingOptions', 'CustomizedQuestionForCreateMeetingRules', 'CustomizedQuestionForCreateMeetingRulesCondition', 'CustomizedQuestionForCreateMeetingRulesResult', 'CustomizedQuestionForCreateMeetingType', 'CustomizedQuestionForGetMeeting', 'CustomizedQuestionForGetMeetingRules', 'CustomizedRegistrant', 'DetailedTemplateObject', 'GetBreakoutSessionObject', 'GetBreakoutSessionsObject', 'InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting', 'InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting', 'InvitationSourceCreateObject', 'InvitationSourceObject', 'InviteeObjectForCreateMeeting', 'JoinMeetingLinkObject', 'JoinMeetingObject', 'LinksObjectForTelephony', 'ListMeetingsOfAMeetingSeriesMeetingType', 'ListMeetingsOfAMeetingSeriesState', 'MeetingSeriesObject', 'MeetingSeriesObjectAttendeePrivileges', 'MeetingSeriesObjectAudioConnectionOptions', 'MeetingSeriesObjectAudioConnectionOptionsAudioConnectionType', 'MeetingSeriesObjectAudioConnectionOptionsEntryAndExitTone', 'MeetingSeriesObjectForListMeeting', 'MeetingSeriesObjectMeetingOptions', 'MeetingSeriesObjectMeetingOptionsNoteType', 'MeetingSeriesObjectMeetingType', 'MeetingSeriesObjectRegistration', 'MeetingSeriesObjectScheduledType', 'MeetingSeriesObjectSimultaneousInterpretation', 'MeetingSeriesObjectState', 'MeetingSeriesObjectTelephony', 'MeetingSeriesObjectTelephonyCallInNumbers', 'MeetingSeriesObjectTelephonyCallInNumbersTollType', 'MeetingSeriesObjectUnlockedMeetingJoinSecurity', 'MeetingSeriesObjectWithAdhoc', 'MeetingSeriesObjectWithAdhocRegistration', 'MeetingSeriesObjectWithAdhocTelephony', 'MeetingSessionTypeObject', 'MeetingSessionTypeObjectType', 'MeetingTrackingCodesObject', 'MeetingTrackingCodesObjectInputMode', 'MeetingTrackingCodesObjectService', 'MeetingTrackingCodesObjectType', 'OptionsForTrackingCodeObject', 'QueryRegistrants', 'QueryRegistrantsOrderBy', 'QueryRegistrantsOrderType', 'QuestionObject', 'QuestionObjectType', 'QuestionOptionObject', 'QuestionWithAnswersObject', 'ReassignMeetingErrorDescriptionObject', 'ReassignMeetingRequestObject', 'ReassignMeetingResponseObject', 'Registrant', 'RegistrantCreateResponse', 'RegistrantFormObject', 'RegistrantStatus', 'Registrants', 'Registration', 'RegistrationForUpdate', 'ScheduledMeetingObject', 'StandardRegistrationApproveRule', 'StandardRegistrationApproveRuleQuestion', 'SurveyObject', 'SurveyResultObject', 'TemplateObject', 'TemplateObjectTemplateType', 'TrackingCodeItemForCreateMeetingObject', 'UpdateInterpreterObject', 'UpdateMeetingBreakoutSessionsObject', 'UpdateMeetingObject']
+__auto__ = ['AnswerForCustomizedQuestion', 'BatchRegisterMeetingRegistrantsResponse', 'BatchUpdateMeetingRegistrantsStatusStatusOpType', 'BreakoutSessionObject', 'Control', 'CreateInvitationSourcesResponse', 'CreateMeetingObject', 'CreateMeetingObjectRegistration', 'CreateMeetingObjectSimultaneousInterpretation', 'CustomizedQuestionForCreateMeeting', 'CustomizedQuestionForCreateMeetingOptions', 'CustomizedQuestionForCreateMeetingRules', 'CustomizedQuestionForCreateMeetingRulesCondition', 'CustomizedQuestionForCreateMeetingRulesResult', 'CustomizedQuestionForCreateMeetingType', 'CustomizedQuestionForGetMeeting', 'CustomizedQuestionForGetMeetingRules', 'CustomizedRegistrant', 'DetailedTemplateObject', 'GetBreakoutSessionObject', 'GetBreakoutSessionsObject', 'InterpreterObjectForSimultaneousInterpretationOfCreateOrUpdateMeeting', 'InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting', 'InvitationSourceCreateObject', 'InvitationSourceObject', 'InviteeObjectForCreateMeeting', 'JoinMeetingLinkObject', 'JoinMeetingObject', 'LinksObjectForTelephony', 'ListMeetingInterpretersResponse', 'ListMeetingRegistrantsResponse', 'ListMeetingSessionTypesResponse', 'ListMeetingSurveyResultsResponse', 'ListMeetingTemplatesResponse', 'ListMeetingsOfAMeetingSeriesMeetingType', 'ListMeetingsOfAMeetingSeriesResponse', 'ListMeetingsOfAMeetingSeriesState', 'ListMeetingsResponse', 'MeetingSeriesObject', 'MeetingSeriesObjectAttendeePrivileges', 'MeetingSeriesObjectAudioConnectionOptions', 'MeetingSeriesObjectAudioConnectionOptionsAudioConnectionType', 'MeetingSeriesObjectAudioConnectionOptionsEntryAndExitTone', 'MeetingSeriesObjectForListMeeting', 'MeetingSeriesObjectMeetingOptions', 'MeetingSeriesObjectMeetingOptionsNoteType', 'MeetingSeriesObjectMeetingType', 'MeetingSeriesObjectRegistration', 'MeetingSeriesObjectScheduledType', 'MeetingSeriesObjectSimultaneousInterpretation', 'MeetingSeriesObjectState', 'MeetingSeriesObjectTelephony', 'MeetingSeriesObjectTelephonyCallInNumbers', 'MeetingSeriesObjectTelephonyCallInNumbersTollType', 'MeetingSeriesObjectUnlockedMeetingJoinSecurity', 'MeetingSeriesObjectWithAdhoc', 'MeetingSeriesObjectWithAdhocRegistration', 'MeetingSeriesObjectWithAdhocTelephony', 'MeetingSessionTypeObject', 'MeetingSessionTypeObjectType', 'MeetingTrackingCodesObject', 'MeetingTrackingCodesObjectInputMode', 'MeetingTrackingCodesObjectService', 'MeetingTrackingCodesObjectType', 'OptionsForTrackingCodeObject', 'QueryRegistrants', 'QueryRegistrantsOrderBy', 'QueryRegistrantsOrderType', 'QuestionObject', 'QuestionObjectType', 'QuestionOptionObject', 'QuestionWithAnswersObject', 'ReassignMeetingErrorDescriptionObject', 'ReassignMeetingRequestObject', 'ReassignMeetingResponseObject', 'ReassignMeetingsToANewHostResponse', 'Registrant', 'RegistrantCreateResponse', 'RegistrantFormObject', 'RegistrantStatus', 'Registrants', 'Registration', 'RegistrationForUpdate', 'ScheduledMeetingObject', 'StandardRegistrationApproveRule', 'StandardRegistrationApproveRuleQuestion', 'SurveyObject', 'SurveyResultObject', 'TemplateObject', 'TemplateObjectTemplateType', 'TrackingCodeItemForCreateMeetingObject', 'UpdateInterpreterObject', 'UpdateMeetingBreakoutSessionsObject', 'UpdateMeetingObject']
 
 
 class InviteeObjectForCreateMeeting(ApiModel):
@@ -2030,6 +2030,11 @@ class ReassignMeetingResponseObject(ApiModel):
     errors: Optional[list[ReassignMeetingErrorDescriptionObject]] = None
 
 
+class ListMeetingsResponse(ApiModel):
+    #: Meetings array.
+    items: Optional[list[MeetingSeriesObjectForListMeeting]] = None
+
+
 class ListMeetingsOfAMeetingSeriesMeetingType(str, Enum):
     scheduled_meeting = 'scheduledMeeting'
     meeting = 'meeting'
@@ -2044,8 +2049,52 @@ class ListMeetingsOfAMeetingSeriesState(str, Enum):
     missed = 'missed'
 
 
+class ListMeetingsOfAMeetingSeriesResponse(ApiModel):
+    #: Meetings array.
+    items: Optional[list[ScheduledMeetingObject]] = None
+
+
+class ListMeetingTemplatesResponse(ApiModel):
+    #: Meeting templates array.
+    items: Optional[list[TemplateObject]] = None
+
+
+class ListMeetingSessionTypesResponse(ApiModel):
+    #: Meeting session type array
+    items: Optional[list[MeetingSessionTypeObject]] = None
+
+
+class BatchRegisterMeetingRegistrantsResponse(ApiModel):
+    items: Optional[list[RegistrantCreateResponse]] = None
+
+
+class ListMeetingRegistrantsResponse(ApiModel):
+    #: Registrants array.
+    items: Optional[list[Registrant]] = None
+
+
 class BatchUpdateMeetingRegistrantsStatusStatusOpType(str, Enum):
     approve = 'approve'
     reject = 'reject'
     cancel = 'cancel'
     bulk_delete = 'bulkDelete'
+
+
+class ListMeetingInterpretersResponse(ApiModel):
+    #: Array of meeting interpreters.
+    items: Optional[list[InterpreterObjectForSimultaneousInterpretationOfGetOrListMeeting]] = None
+
+
+class ListMeetingSurveyResultsResponse(ApiModel):
+    #: SurveyResult array
+    items: Optional[list[SurveyResultObject]] = None
+
+
+class CreateInvitationSourcesResponse(ApiModel):
+    #: Invitation source array.
+    items: Optional[list[InvitationSourceObject]] = None
+
+
+class ReassignMeetingsToANewHostResponse(ApiModel):
+    #: Array of meeting reassignment results.
+    items: Optional[list[ReassignMeetingResponseObject]] = None

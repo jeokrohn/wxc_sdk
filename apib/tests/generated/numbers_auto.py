@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AdminBatchStartJobObject', 'CountObject', 'ErrorMessageObject', 'ErrorObject', 'ErrorResponseObject', 'GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType', 'ItemObject', 'JobExecutionStatusObject', 'JobExecutionStatusObject1', 'JobIdResponseObject', 'JobListResponse', 'MoveNumberValidationError', 'Number', 'NumberItem', 'NumberListGetObject', 'NumberListGetObjectLocation', 'NumberListGetObjectOwner', 'NumberState', 'NumbersDelete', 'NumbersPost', 'StartJobResponse', 'State', 'Status', 'StepExecutionStatusesObject', 'ValidateNumbersResponse']
+__auto__ = ['AdminBatchStartJobObject', 'CountObject', 'ErrorMessageObject', 'ErrorObject', 'ErrorResponseObject', 'GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType', 'GetPhoneNumbersForAnOrganizationWithGivenCriteriasResponse', 'ItemObject', 'JobExecutionStatusObject', 'JobExecutionStatusObject1', 'JobIdResponseObject', 'JobListResponse', 'MoveNumberValidationError', 'Number', 'NumberItem', 'NumberListGetObject', 'NumberListGetObjectLocation', 'NumberListGetObjectOwner', 'NumberState', 'NumbersDelete', 'NumbersPost', 'StartJobResponse', 'State', 'Status', 'StepExecutionStatusesObject', 'ValidateNumbersResponse']
 
 
 class NumberItem(ApiModel):
@@ -315,3 +315,8 @@ class GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType(str, Enum):
     contact_center_link = 'CONTACT_CENTER_LINK'
     route_list = 'ROUTE_LIST'
     voicemail_group = 'VOICEMAIL_GROUP'
+
+
+class GetPhoneNumbersForAnOrganizationWithGivenCriteriasResponse(ApiModel):
+    #: Array of phone numbers.
+    phone_numbers: Optional[NumberListGetObject] = None

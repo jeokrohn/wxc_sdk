@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CallingPermissionObject', 'CallingPermissionObjectAction', 'CallingPermissionObjectCallType', 'GeneratePasswordPostResponse', 'GetAutoTransferNumberObject', 'GetLocationAccessCodeObject', 'GetLocationAccessCodeObjectAccessCodes', 'GetLocationInterceptObject', 'GetLocationInterceptObjectIncoming', 'GetLocationInterceptObjectIncomingAnnouncements', 'GetLocationInterceptObjectIncomingAnnouncementsGreeting', 'GetLocationInterceptObjectIncomingAnnouncementsNewNumber', 'GetLocationInterceptObjectIncomingType', 'GetLocationInterceptObjectOutgoing', 'GetLocationInterceptObjectOutgoingType', 'InternalDialingGet', 'InternalDialingPut', 'PasswordGenerate', 'PutAccessCodeLocationObject', 'RouteIdentity', 'RouteType', 'UnknownExtensionRouteIdentity']
+__auto__ = ['CallingPermissionObject', 'CallingPermissionObjectAction', 'CallingPermissionObjectCallType', 'GeneratePasswordPostResponse', 'GetAutoTransferNumberObject', 'GetLocationAccessCodeObject', 'GetLocationAccessCodeObjectAccessCodes', 'GetLocationInterceptObject', 'GetLocationInterceptObjectIncoming', 'GetLocationInterceptObjectIncomingAnnouncements', 'GetLocationInterceptObjectIncomingAnnouncementsGreeting', 'GetLocationInterceptObjectIncomingAnnouncementsNewNumber', 'GetLocationInterceptObjectIncomingType', 'GetLocationInterceptObjectOutgoing', 'GetLocationInterceptObjectOutgoingType', 'GetLocationOutgoingPermissionResponse', 'InternalDialingGet', 'InternalDialingPut', 'PasswordGenerate', 'PutAccessCodeLocationObject', 'RouteIdentity', 'RouteType', 'UnknownExtensionRouteIdentity']
 
 
 class CallingPermissionObjectCallType(str, Enum):
@@ -218,3 +218,8 @@ class PasswordGenerate(str, Enum):
 class PutAccessCodeLocationObject(ApiModel):
     #: Array of string to delete access codes. For example, ["1234","2345"]
     delete_codes: Optional[list[str]] = None
+
+
+class GetLocationOutgoingPermissionResponse(ApiModel):
+    #: Array of calling permissions.
+    calling_permissions: Optional[list[CallingPermissionObject]] = None

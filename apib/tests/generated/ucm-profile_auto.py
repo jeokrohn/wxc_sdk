@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetManagerProfileObject']
+__auto__ = ['GetManagerProfileObject', 'ReadTheListOfUcManagerProfilesResponse']
 
 
 class GetManagerProfileObject(ApiModel):
@@ -17,3 +17,8 @@ class GetManagerProfileObject(ApiModel):
     #: Unique name for the calling UC Manager Profile.
     #: example: UC Profile2
     name: Optional[str] = None
+
+
+class ReadTheListOfUcManagerProfilesResponse(ApiModel):
+    #: Array of manager profiles.
+    calling_profiles: Optional[list[GetManagerProfileObject]] = None

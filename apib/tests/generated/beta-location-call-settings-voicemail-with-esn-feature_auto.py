@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetLocationVoicemailGroupObject', 'GetLocationVoicemailGroupObjectEmailCopyOfMessage', 'GetLocationVoicemailGroupObjectFaxMessage', 'GetLocationVoicemailGroupObjectGreeting', 'GetLocationVoicemailGroupObjectMessageStorage', 'GetLocationVoicemailGroupObjectMessageStorageStorageType', 'GetLocationVoicemailGroupObjectNotifications', 'GetVoicemailGroupObject']
+__auto__ = ['GetLocationVoicemailGroupObject', 'GetLocationVoicemailGroupObjectEmailCopyOfMessage', 'GetLocationVoicemailGroupObjectFaxMessage', 'GetLocationVoicemailGroupObjectGreeting', 'GetLocationVoicemailGroupObjectMessageStorage', 'GetLocationVoicemailGroupObjectMessageStorageStorageType', 'GetLocationVoicemailGroupObjectNotifications', 'GetVoicemailGroupObject', 'ListVoicemailgroupResponse']
 
 
 class GetLocationVoicemailGroupObjectGreeting(str, Enum):
@@ -151,3 +151,8 @@ class GetVoicemailGroupObject(ApiModel):
     #: Flag to indicate if the number is toll free.
     #: example: True
     toll_free_number: Optional[bool] = None
+
+
+class ListVoicemailgroupResponse(ApiModel):
+    #: Array of VoicemailGroups.
+    voicemail_groups: Optional[list[GetVoicemailGroupObject]] = None

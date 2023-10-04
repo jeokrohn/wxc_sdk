@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetLocationVoicemailGroupObject', 'GetLocationVoicemailGroupObjectEmailCopyOfMessage', 'GetLocationVoicemailGroupObjectFaxMessage', 'GetLocationVoicemailGroupObjectGreeting', 'GetLocationVoicemailGroupObjectMessageStorage', 'GetLocationVoicemailGroupObjectMessageStorageStorageType', 'GetLocationVoicemailGroupObjectNotifications', 'GetLocationVoicemailObject', 'GetVoicePortalObject', 'GetVoicePortalPasscodeRuleObject', 'GetVoicePortalPasscodeRuleObjectBlockPreviousPasscodes', 'GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits', 'GetVoicePortalPasscodeRuleObjectExpirePasscode', 'GetVoicePortalPasscodeRuleObjectFailedAttempts', 'GetVoicePortalPasscodeRuleObjectLength', 'GetVoicemailGroupObject', 'PostLocationVoicemailGroupObject', 'PutLocationVoicemailGroupObject', 'PutVoicePortalObject', 'PutVoicePortalObjectPasscode']
+__auto__ = ['CreateANewVoicemailGroupForALocationResponse', 'GetLocationVoicemailGroupObject', 'GetLocationVoicemailGroupObjectEmailCopyOfMessage', 'GetLocationVoicemailGroupObjectFaxMessage', 'GetLocationVoicemailGroupObjectGreeting', 'GetLocationVoicemailGroupObjectMessageStorage', 'GetLocationVoicemailGroupObjectMessageStorageStorageType', 'GetLocationVoicemailGroupObjectNotifications', 'GetLocationVoicemailObject', 'GetVoicePortalObject', 'GetVoicePortalPasscodeRuleObject', 'GetVoicePortalPasscodeRuleObjectBlockPreviousPasscodes', 'GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits', 'GetVoicePortalPasscodeRuleObjectExpirePasscode', 'GetVoicePortalPasscodeRuleObjectFailedAttempts', 'GetVoicePortalPasscodeRuleObjectLength', 'GetVoicemailGroupObject', 'ListVoicemailgroupResponse', 'PostLocationVoicemailGroupObject', 'PutLocationVoicemailGroupObject', 'PutVoicePortalObject', 'PutVoicePortalObjectPasscode']
 
 
 class GetLocationVoicemailGroupObjectGreeting(str, Enum):
@@ -184,7 +184,7 @@ class GetVoicePortalPasscodeRuleObjectLength(ApiModel):
     min: Optional[int] = None
     #: The minimum value is 3. The maximum value is 30.
     #: example: 3.0
-    max: Optional[int] = None
+    max_: Optional[int] = None
 
 
 class GetVoicePortalPasscodeRuleObject(ApiModel):
@@ -353,3 +353,13 @@ class PutVoicePortalObject(ApiModel):
     last_name: Optional[str] = None
     #: Voice Portal Admin Passcode.
     passcode: Optional[PutVoicePortalObjectPasscode] = None
+
+
+class ListVoicemailgroupResponse(ApiModel):
+    #: Array of VoicemailGroups.
+    voicemail_groups: Optional[list[GetVoicemailGroupObject]] = None
+
+
+class CreateANewVoicemailGroupForALocationResponse(ApiModel):
+    #: UUID of the newly created voice mail group.
+    id: Optional[str] = None

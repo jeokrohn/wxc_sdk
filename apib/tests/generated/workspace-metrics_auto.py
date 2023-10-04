@@ -25,7 +25,7 @@ class AggregatedMetric(ApiModel):
     min: Optional[int] = None
     #: The highest measurement value in the bucket.
     #: example: 8.8
-    max: Optional[int] = None
+    max_: Optional[int] = None
 
 
 class RawMetric(ApiModel):
@@ -75,7 +75,7 @@ class WorkspaceMetricsResponse(ApiModel):
     #: example: 2020-10-21T13:33:37.789Z
     from_: Optional[datetime] = None
     #: example: 2020-10-31T16:00:00.532Z
-    to: Optional[datetime] = None
+    to_: Optional[datetime] = None
     #: Output data unit (only present if `metricName` is `temperature`).
     #: example: celsius
     unit: Optional[WorkspaceMetricsResponseUnit] = None
@@ -116,7 +116,7 @@ class WorkspaceDurationMetricsResponse(ApiModel):
     #: example: 2020-10-21T13:33:37.789Z
     from_: Optional[datetime] = None
     #: example: 2020-10-31T16:00:00.532Z
-    to: Optional[datetime] = None
+    to_: Optional[datetime] = None
     #: The time unit.
     #: example: minutes
     unit: Optional[str] = None

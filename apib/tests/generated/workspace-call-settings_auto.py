@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AuthorizationCode', 'CLIDPolicySelection', 'CallForwardingBusyGet', 'CallForwardingNoAnswerGet', 'CallForwardingPlaceSettingGet', 'CallWaiting', 'CallingPermission', 'CallingPermissionAction', 'CallingPermissionCallType', 'ExternalCallerIdNamePolicy', 'InterceptAnnouncementsGet', 'InterceptAnnouncementsGetGreeting', 'InterceptAnnouncementsPatch', 'InterceptGet', 'InterceptIncomingGet', 'InterceptIncomingGetType', 'InterceptIncomingPatch', 'InterceptNumberGet', 'InterceptOutGoingGet', 'InterceptOutGoingGetType', 'InterceptPatch', 'Location', 'ModifyPlaceCallForwardSettings', 'ModifyPlaceCallerIdGet', 'MonitoredElementCallParkExtension', 'MonitoredElementItem', 'MonitoredElementUser', 'MonitoredElementUserType', 'PhoneNumbers', 'PlaceCallerIdGet', 'TransferNumberGet', 'UserInboundPermissionGet', 'UserInboundPermissionGetExternalTransfer', 'UserMonitoringGet', 'UserMonitoringPatch', 'UserNumberItem', 'UserOutgoingPermissionGet', 'UserPlaceAuthorizationCodeListGet', 'UserPlaceAuthorizationCodeListPatch', 'Workspace']
+__auto__ = ['AuthorizationCode', 'CLIDPolicySelection', 'CallForwardingBusyGet', 'CallForwardingNoAnswerGet', 'CallForwardingPlaceSettingGet', 'CallWaiting', 'CallingPermission', 'CallingPermissionAction', 'CallingPermissionCallType', 'ExternalCallerIdNamePolicy', 'InterceptAnnouncementsGet', 'InterceptAnnouncementsGetGreeting', 'InterceptAnnouncementsPatch', 'InterceptGet', 'InterceptIncomingGet', 'InterceptIncomingGetType', 'InterceptIncomingPatch', 'InterceptNumberGet', 'InterceptOutGoingGet', 'InterceptOutGoingGetType', 'InterceptPatch', 'ListNumbersAssociatedWithASpecificWorkspaceResponse', 'Location', 'ModifyPlaceCallForwardSettings', 'ModifyPlaceCallerIdGet', 'MonitoredElementCallParkExtension', 'MonitoredElementItem', 'MonitoredElementUser', 'MonitoredElementUserType', 'PhoneNumbers', 'PlaceCallerIdGet', 'TransferNumberGet', 'UserInboundPermissionGet', 'UserInboundPermissionGetExternalTransfer', 'UserMonitoringGet', 'UserMonitoringPatch', 'UserNumberItem', 'UserOutgoingPermissionGet', 'UserPlaceAuthorizationCodeListGet', 'UserPlaceAuthorizationCodeListPatch', 'Workspace']
 
 
 class AuthorizationCode(ApiModel):
@@ -473,3 +473,14 @@ class Workspace(ApiModel):
     #: Workspace ID associated with the list of numbers.
     #: example: Y2lzY29zcGFyazovL3VzL1BMQUNFLzg0MjkzOGQ1LTkyNzMtNGJjNi1hYTNhLTA1Njc3MmRiMzE2NQ
     id: Optional[str] = None
+
+
+class ListNumbersAssociatedWithASpecificWorkspaceResponse(ApiModel):
+    #: Array of numbers primary followed by alternate numbers.
+    phone_numbers: Optional[list[PhoneNumbers]] = None
+    #: Workspace object having a unique identifier for the Workspace.
+    workspace: Optional[Workspace] = None
+    #: Location object having a unique identifier for the location and its name.
+    location: Optional[Location] = None
+    #: Organization object having a unique identifier for the organization and its name.
+    organization: Optional[Location] = None

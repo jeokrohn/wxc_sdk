@@ -49,7 +49,7 @@ class ClientTypeDistributionCollectionForOrg(ApiModel):
     from_: Optional[datetime] = None
     #: End date and time (inclusive) of the Client Type Distribution details.
     #: example: 2022-03-24T10:22:03Z
-    to: Optional[datetime] = None
+    to_: Optional[datetime] = None
     #: The aggregation period of the trend data.
     #: example: 10m
     aggregation_interval: Optional[datetime] = None

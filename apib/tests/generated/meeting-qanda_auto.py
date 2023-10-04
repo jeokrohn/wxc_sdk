@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AnswerObject', 'QAObject', 'QAObjectAnswers', 'QAObjectAnswersLinks']
+__auto__ = ['AnswerObject', 'ListAnswersOfAQuestionResponse', 'ListMeetingQAndAResponse', 'QAObject', 'QAObjectAnswers', 'QAObjectAnswersLinks']
 
 
 class QAObjectAnswersLinks(ApiModel):
@@ -71,3 +71,13 @@ class QAObject(ApiModel):
     question: Optional[str] = None
     #: Question's answers.
     answers: Optional[QAObjectAnswers] = None
+
+
+class ListMeetingQAndAResponse(ApiModel):
+    #: An array of Q&A objects.
+    items: Optional[list[QAObject]] = None
+
+
+class ListAnswersOfAQuestionResponse(ApiModel):
+    #: An array of answers to a specific question.
+    items: Optional[list[AnswerObject]] = None

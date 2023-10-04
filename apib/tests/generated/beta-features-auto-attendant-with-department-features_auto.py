@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersObject', 'AlternateNumbersObjectRingPattern', 'GetAutoAttendantObject', 'GetAutoAttendantObjectDepartment', 'GetAutoAttendantObjectExtensionDialing', 'HoursMenuObject', 'HoursMenuObjectGreeting', 'KeyConfigurationsObject', 'KeyConfigurationsObjectAction', 'KeyConfigurationsObjectKey', 'ListAutoAttendantObject', 'ListAutoAttendantObjectDepartment', 'ModifyAutoAttendantObject']
+__auto__ = ['AlternateNumbersObject', 'AlternateNumbersObjectRingPattern', 'GetAutoAttendantObject', 'GetAutoAttendantObjectDepartment', 'GetAutoAttendantObjectExtensionDialing', 'HoursMenuObject', 'HoursMenuObjectGreeting', 'KeyConfigurationsObject', 'KeyConfigurationsObjectAction', 'KeyConfigurationsObjectKey', 'ListAutoAttendantObject', 'ListAutoAttendantObjectDepartment', 'ModifyAutoAttendantObject', 'ReadTheListOfAutoAttendantsResponse']
 
 
 class AlternateNumbersObjectRingPattern(str, Enum):
@@ -229,3 +229,8 @@ class ModifyAutoAttendantObject(ApiModel):
     after_hours_menu: Optional[HoursMenuObject] = None
     #: Specifies the department information.
     department: Optional[GetAutoAttendantObjectDepartment] = None
+
+
+class ReadTheListOfAutoAttendantsResponse(ApiModel):
+    #: Array of auto attendants.
+    auto_attendants: Optional[list[ListAutoAttendantObject]] = None

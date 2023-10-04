@@ -22,8 +22,6 @@ class GeneratorTest(ApibTest):
                 code_gen = CodeGenerator()
                 code_gen.read_blueprint(apib_path)
                 code_gen.cleanup()
-            except NotImplementedError:
-                pass
             except Exception as e:
                 err = err or e
                 print(f'{os.path.basename(apib_path)}: {e}')

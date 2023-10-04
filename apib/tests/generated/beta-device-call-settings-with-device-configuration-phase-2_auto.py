@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BatchJobError', 'BatchResponse', 'Counts', 'Error', 'ErrorMessage', 'GetLineKeyTemplateResponse', 'JobExecutionStatus', 'LineKeyTemplatesResponse', 'LineKeyType', 'PostApplyLineKeyTemplateRequest', 'PostApplyLineKeyTemplateRequestAction', 'PostLineKeyTemplateRequest', 'ProgrammableLineKeys', 'PutLineKeyTemplateRequest', 'StepExecutionStatuses']
+__auto__ = ['BatchJobError', 'BatchResponse', 'Counts', 'CreateALineKeyTemplateResponse', 'Error', 'ErrorMessage', 'GetLineKeyTemplateResponse', 'JobExecutionStatus', 'LineKeyTemplatesResponse', 'LineKeyType', 'PostApplyLineKeyTemplateRequest', 'PostApplyLineKeyTemplateRequestAction', 'PostLineKeyTemplateRequest', 'PreviewApplyLinekeyTemplateResponse', 'ProgrammableLineKeys', 'PutLineKeyTemplateRequest', 'ReadTheListOfLineKeyTemplatesResponse', 'StepExecutionStatuses']
 
 
 class ErrorMessage(ApiModel):
@@ -229,3 +229,19 @@ class LineKeyTemplatesResponse(ApiModel):
     #: The friendly display name used to represent the device model in Control Hub.
     #: example: Cisco 8845
     model_display_name: Optional[str] = None
+
+
+class PreviewApplyLinekeyTemplateResponse(ApiModel):
+    #: Number of devices affected.
+    device_count: Optional[int] = None
+
+
+class ReadTheListOfLineKeyTemplatesResponse(ApiModel):
+    #: Array of Line Key Templates.
+    line_key_templates: Optional[list[LineKeyTemplatesResponse]] = None
+
+
+class CreateALineKeyTemplateResponse(ApiModel):
+    #: ID of the newly created Line Key Template.
+    #: example: Y2lzY29zcGFyazovL3VzL0RFVklDRV9MSU5FX0tFWV9URU1QTEFURS9lYzVmMjg0Ni1iMDQ2LTQ5OGEtOWU2Mi04ZTg4ZWFlZmQyMGQ
+    id: Optional[str] = None

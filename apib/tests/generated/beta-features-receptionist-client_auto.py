@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ContactDetails', 'ContactPayload', 'Directory', 'PersonId']
+__auto__ = ['ContactDetails', 'ContactPayload', 'CreateAReceptionistContactDirectoryResponse', 'Directory', 'GetDetailsForAReceptionistContactDirectoryResponse', 'PersonId', 'ReadListOfReceptionistContactDirectoriesResponse']
 
 
 class ContactDetails(ApiModel):
@@ -64,3 +64,18 @@ class Directory(ApiModel):
     #: Name of Receptionist Contact Directory.
     #: example: test_directory
     name: Optional[str] = None
+
+
+class CreateAReceptionistContactDirectoryResponse(ApiModel):
+    #: Receptionist Contact Directory ID.
+    id: Optional[str] = None
+
+
+class ReadListOfReceptionistContactDirectoriesResponse(ApiModel):
+    #: Array of Receptionist Contact Directories.
+    directories: Optional[list[Directory]] = None
+
+
+class GetDetailsForAReceptionistContactDirectoryResponse(ApiModel):
+    #: Array of Receptionist Contact Directories.
+    contacts: Optional[list[ContactDetails]] = None
