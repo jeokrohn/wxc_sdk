@@ -20,6 +20,12 @@ The second column of the table has a link to the documentation of the method.
    * - api.cdr.get_cdr_history
         Provides Webex Calling Detailed Call History data for your organization
      - :meth:`~wxc_sdk.cdr.DetailedCDRApi.get_cdr_history`
+   * - api.device_configurations.list
+        Lists all device configurations associated with the given device ID
+     - :meth:`~wxc_sdk.device_configurations.DeviceConfigurationsApi.list`
+   * - api.device_configurations.update
+        Update Device Configurations
+     - :meth:`~wxc_sdk.device_configurations.DeviceConfigurationsApi.update`
    * - api.devices.activation_code
         Create a Device Activation Code
      - :meth:`~wxc_sdk.devices.DevicesApi.activation_code`
@@ -702,7 +708,7 @@ The second column of the table has a link to the documentation of the method.
         Update the designated Call Park Extension
      - :meth:`~wxc_sdk.telephony.callpark_extension.CallparkExtensionApi.update`
    * - api.telephony.calls.answer
-        Answer an incoming call on the user's primary device
+        Answer an incoming call
      - :meth:`~wxc_sdk.telephony.calls.CallsApi.answer`
    * - api.telephony.calls.barge_in
         Barge-in on another user’s answered call
