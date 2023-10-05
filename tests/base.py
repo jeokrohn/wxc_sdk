@@ -493,6 +493,10 @@ class TestWithLocations(TestCaseWithLog):
                 # figure out which locations are calling locations
                 details = await asyncio.gather(*[api.telephony.location.details(location_id=loc.location_id)
                                                  for loc in locations], return_exceptions=True)
+            validation_error = next((d for d in details if isinstance(d, ValidationError)), None)
+            if validation_error is not None:
+                raise validation_error
+
             # the calling locations are the ones for which we can actually get calling details
             result = [loc for loc, detail in zip(locations, details)
                       if not isinstance(detail, Exception)]

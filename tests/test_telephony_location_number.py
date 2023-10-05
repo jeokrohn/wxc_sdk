@@ -121,8 +121,13 @@ class TestAddAndActivate(NumberTest):
         with self.assertRaises(RestError) as rest_error:
             self.api.telephony.location.number.remove(location_id=self.target_location_info.location.location_id,
                                                       phone_numbers=[self.new_numbers[0]])
-        self.assertEqual(400, rest_error.exception.response.status_code)
-        self.assertEqual(25089, rest_error.exception.code)
+        # this used to be the response
+        # self.assertEqual(400, rest_error.exception.response.status_code)
+        # self.assertEqual(25089, rest_error.exception.code)
+
+        self.assertEqual(502, rest_error.exception.response.status_code)
+        spark_error = rest_error.exception.response.headers.get('cisco-spark-error-codes')
+        self.assertEqual('4251', spark_error)
 
 
 class TestAddExisting(NumberTest):

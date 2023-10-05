@@ -39,7 +39,7 @@ from wxc_sdk.workspace_locations import WorkspaceLocation
 from wxc_sdk.workspaces import Workspace
 
 
-class TestLocation(TestWithLocations):
+class TestLocationSimple(TestCaseWithLog):
 
     @async_test
     async def test_001_list_all(self):
@@ -62,17 +62,27 @@ class TestLocation(TestWithLocations):
         """
         get details for all locations
         """
-        locations = self.locations
+        with self.no_log():
+            locations = list(self.api.locations.list())
         # get location details and telephony details for each location
         details, telephony_details = await asyncio.gather(
             asyncio.gather(*[self.async_api.locations.details(location_id=location.location_id)
                              for location in locations], return_exceptions=True),
             asyncio.gather(*[self.async_api.telephony.location.details(location_id=loc.location_id)
                              for loc in locations], return_exceptions=True))
+        for location, detail, telephony_detail in zip(locations, details, telephony_details):
+            print(f'{location.name}')
+            if isinstance(detail, Exception):
+                print(f'  error getting location details: {detail}')
+            if isinstance(telephony_detail, Exception):
+                print(f'  error getting telephony location details: {telephony_detail}')
         exception = next((e for e in chain(details, telephony_details) if isinstance(e, Exception)), None)
         if exception:
             raise exception
         print(f'Got details for {len(locations)} locations')
+
+
+class TestLocation(TestWithLocations):
 
     @async_test
     async def test_003_create_location(self):

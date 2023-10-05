@@ -46,8 +46,10 @@ class TestCDR(TestCaseWithLog):
         GET CDRs w/ pagination
         """
         api = self.api.cdr
+        start_time = datetime.now(tz=tz.tzutc()) - timedelta(hours=47, minutes=55)
+        end_time = datetime.now(tz=tz.tzutc()) - timedelta(minutes=5, seconds=30)
         try:
-            cdrs = list(api.get_cdr_history(max=5))
+            cdrs = list(api.get_cdr_history(max=50, start_time=start_time, end_time=end_time))
         except RestError as e:
             print(f'Error: {e}')
             print(f'{e.detail}')

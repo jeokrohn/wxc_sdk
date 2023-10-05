@@ -33,7 +33,7 @@ class TestDeviceConfigurations(TestCaseWithLog):
 
     def test_002_system_unit_name(self):
         devices = [device for device in self.api.devices.list()
-                   if device.product_type == ProductType.rooomdesk]
+                   if device.product_type == ProductType.roomdesk]
         if not devices:
             self.skipTest('No devices')
         target_device = choice(devices)
