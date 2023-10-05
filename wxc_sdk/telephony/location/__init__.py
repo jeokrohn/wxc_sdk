@@ -68,6 +68,8 @@ class TelephonyLocation(ApiModel):
     default_domain: Optional[str] = None
     #: True if E911 setup is required.
     e911_setup_required: Optional[bool] = None
+    # TODO: undocumented
+    enforce_outbound_dial_digit: Optional[bool] = None
 
 
 @dataclass(init=False)

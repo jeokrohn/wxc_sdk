@@ -5,6 +5,7 @@ Release history
 - fix: :meth:`wxc_sdk.telephony.prem_pstn.route_group.RouteGroupApi.update`: used POST instead of PUT
 - fix: :meth:`wxc_sdk.telephony.calls.CallsApi.answer` has new `endpoint_id` endpoint parameter
 - fix: allow additional phone number types (enterprise, alternate1, alternate2), :class:`wxc_sdk.people.PhoneNumberType`
+- Fix: added some attributes based on unittest results :attr:`wxc_sdk.common.MppCustomization.allow_monitor_lines_enabled`, :attr:`wxc_sdk.events.EventData.title_encryption_key_url`, :attr:`wxc_sdk.telephony.location.TelephonyLocation.enforce_outbound_dial_digit`
 
 1.16.1
 ------

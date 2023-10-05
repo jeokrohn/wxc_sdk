@@ -84,6 +84,7 @@ class EventData(ApiModel):
     file_content_url: Optional[str] = None
     file_id: Optional[str] = None
     page_number: Optional[int] = None
+    title_encryption_key_url: Optional[str] = None
     is_locked: Optional[bool] = None
     is_public: Optional[bool] = None
     made_public: Optional[datetime] = None

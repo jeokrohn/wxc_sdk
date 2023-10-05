@@ -919,6 +919,8 @@ class MppCustomization(CommonDeviceCustomization):
     background_image8875: Optional[BackgroundImageColor] = None
     #: Specify the use of the backlight feature on 6800 nad 7800 series devices.
     backlight_timer_68xx78xx: Optional[BacklightTimer68XX78XX] = Field(alias='backlightTimer68XX78XX', default=None)
+    #: TODO undocumented
+    allow_monitor_lines_enabled: Optional[bool] = None
 
     # !!
     # #: Specify the Wi-Fi SSID and password for wireless-enabled MPP phones.
