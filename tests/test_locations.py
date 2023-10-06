@@ -22,6 +22,7 @@ from tests.testutil import as_available_tns, create_random_wsl
 from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.base import webex_id_to_uuid, ApiModel
 from wxc_sdk.common import RouteType, RouteIdentity
+from wxc_sdk.devices import ProductType
 from wxc_sdk.locations import Location, LocationAddress
 from wxc_sdk.people import Person
 from wxc_sdk.rest import RestError
@@ -31,6 +32,7 @@ from wxc_sdk.telephony.callqueue import CallQueue
 from wxc_sdk.telephony.huntgroup import HuntGroup
 from wxc_sdk.telephony.location import TelephonyLocation, PSTNConnection, CallingLineId
 from wxc_sdk.telephony.location.internal_dialing import InternalDialing
+from wxc_sdk.telephony.paging import Paging
 from wxc_sdk.telephony.prem_pstn.route_group import RouteGroup
 from wxc_sdk.telephony.prem_pstn.trunk import Trunk
 from wxc_sdk.telephony.virtual_line import VirtualLine
@@ -920,16 +922,25 @@ class TestLocationConsistency(TestCaseWithLog):
         def check_exists(number_key: NumberListPhoneNumber, cache: dict[str, Any],
                          list_call: Callable[[], Generator[Any, None, None]],
                          key_attr: Callable[[Any], str], entity: str):
-            key = webex_id_to_uuid(number_key.owner.owner_id)
+            owner_webex_id = number_key.owner.owner_id
+            decoded_owner_webex_id = base64.b64decode(owner_webex_id+'==').decode()
+            # we use the UUID for the lookup
+            owner_uuid = webex_id_to_uuid(owner_webex_id)
             if not cache:
+                # fill the cache
                 entities = list_call()
                 # assert that dict has at least one entry .. even if the list call doesn't return anything
                 cache[''] = ''
                 # add entities to dict
                 for en in entities:
                     cache[webex_id_to_uuid(key_attr(en))] = en
-            if cache.get(key) is None:
+            if (en:=cache.get(owner_uuid)) is None:
                 return f'{entity} not found'
+            en_webex_id = key_attr(en)
+            decoded_en_webex_id = base64.b64decode(en_webex_id+'==').decode()
+            if decoded_owner_webex_id != decoded_en_webex_id:
+                # looks like we found an entry using the UUID as index, but the actual IDs are different
+                return f'{entity}: id mismatch, from owner: {decoded_owner_webex_id}, entity id: {decoded_en_webex_id}'
             return ''
 
         def vm_exists(number_key: NumberListPhoneNumber) -> str:
@@ -954,6 +965,32 @@ class TestLocationConsistency(TestCaseWithLog):
                        f'phone number {number_key.phone_number or ""}/{vm_settings.phone_number or ""}'
             return ''
 
+        # noinspection PyShadowingNames
+        def check_devices_and_owners(numbers: list[NumberListPhoneNumber])->bool:
+            """
+            For each device that belongs to a user or workspace we want to find a number with the respective owner id
+            """
+            err = False
+            devices = list(self.api.devices.list())
+            for device in devices:
+                owner_id = device.person_id or device.workspace_id
+                if not owner_id:
+                    continue
+                decoded_owner_id = base64.b64decode(owner_id+'==').decode()
+
+                # try to find a number with this owner_id
+                number = next((number for number in numbers
+                               if number.owner and number.owner.owner_id == owner_id),
+                              None)
+                if number:
+                    continue
+                err = True
+                print(f'device "{device.display_name}" no owner found for '
+                      f'{"workspace" if device.workspace_id else "person"}_id: '
+                      f'{owner_id}, {decoded_owner_id}'
+                      f'{", might be a room device w/o calling" if device.product_type==ProductType.roomdesk else ""}')
+            return err
+
         class ValidatorCache(NamedTuple):
             users: dict[str, Person]
             auto_attendants: dict[str, AutoAttendant]
@@ -962,6 +999,7 @@ class TestLocationConsistency(TestCaseWithLog):
             places: dict[str, Workspace]
             hunt_groups: dict[str, HuntGroup]
             vm_groups: dict[str, VoicemailGroup]
+            group_paging: dict[str, Paging]
 
         validator_cache = ValidatorCache(users=dict(),
                                          auto_attendants=dict(),
@@ -969,7 +1007,9 @@ class TestLocationConsistency(TestCaseWithLog):
                                          call_queues=dict(),
                                          places=dict(),
                                          hunt_groups=dict(),
-                                         vm_groups=dict())
+                                         vm_groups=dict(),
+                                         group_paging=dict())
+
         # dict of validators for each owner type
         validators = {
             OwnerType.people: partial(check_exists, cache=validator_cache.users,
@@ -993,7 +1033,10 @@ class TestLocationConsistency(TestCaseWithLog):
             OwnerType.voice_messaging: vm_exists,
             OwnerType.voicemail_group: partial(check_exists, cache=validator_cache.vm_groups,
                                                list_call=self.api.telephony.voicemail_groups.list,
-                                               key_attr=attrgetter('group_id'), entity='voicemail group')
+                                               key_attr=attrgetter('group_id'), entity='voicemail group'),
+            OwnerType.group_paging: partial(check_exists, cache=validator_cache.group_paging,
+                                            list_call=self.api.telephony.paging.list,
+                                            key_attr=attrgetter('paging_id'), entity='paging group')
         }
 
         numbers = list(self.api.telephony.phone_numbers())
@@ -1018,25 +1061,33 @@ class TestLocationConsistency(TestCaseWithLog):
                   f'"{number.owner.first_name}"/"{number.owner.last_name}"'
                   f'({webex_id_to_uuid(number.owner.owner_id)}): {result}')
 
-        # also there seems to be an issue with owner IDs for places in the numbers response
-        numbers_in_places = [n for n in numbers if n.owner and n.owner.owner_type == OwnerType.place]
-        owner_name_and_id = dict()
-        for number in numbers_in_places:
-            owner_display_name = f'{number.owner.first_name} {number.owner.last_name.strip(".")}'.strip()
-            owner_name_and_id[owner_display_name] = base64.b64decode(number.owner.owner_id + '==').decode()
+        # also there seems to be an issue with owner IDs for workspaces in the numbers response
+        numbers_in_workspaces = [n for n in numbers if n.owner and n.owner.owner_type == OwnerType.place]
+        if numbers_in_workspaces:
+            # key: workstation display name
+            # value: owner UUID
+            owner_name_and_id:dict[str, str] = dict()
+            for number in numbers_in_workspaces:
+                owner_display_name = f'{number.owner.first_name} {number.owner.last_name.strip(".")}'.strip()
+                owner_name_and_id[owner_display_name] = base64.b64decode(number.owner.owner_id + '==').decode()
 
-        ws_name_and_id = dict()
-        for ws in validator_cache.places.values():
-            if not ws:
-                continue
-            ws_name_and_id[ws.display_name] = base64.b64decode(ws.workspace_id + '==').decode()
-        for name in sorted(owner_name_and_id):
-            owner_id = owner_name_and_id[name]
-            ws_id = ws_name_and_id.get(name, 'not found')
-            print(f'{name} owner id {owner_id} workspace id {ws_id}')
+            # create an equivalent dict based on list of workstations
+            ws_name_and_id = dict()
+            for ws in validator_cache.places.values():
+                if not ws:
+                    # skip sentinel
+                    continue
+                ws_name_and_id[ws.display_name] = base64.b64decode(ws.workspace_id + '==').decode()
 
-        for name, ws_id in ws_name_and_id.items():
-            if name not in owner_name_and_id:
-                print(f'{name} workspace id {ws_id}, not referenced as owner')
+            # now see if the IDs are equivalent for each given display name
+            for name in sorted(owner_name_and_id):
+                owner_id = owner_name_and_id[name]
+                ws_id = ws_name_and_id.get(name, 'not found')
+                if owner_id != ws_id:
+                    print(f'{name} owner id {owner_id} workspace id {ws_id}')
+                    err = True
+
+        if check_devices_and_owners(numbers):
+            err = True
 
         self.assertFalse(err, 'Some issues with numbers')
