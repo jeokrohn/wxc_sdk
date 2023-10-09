@@ -30,6 +30,8 @@ class VirtualLineCallerId(ApiModel):
     url: Optional[str] = None
     types: Optional[list[str]] = None
     selected: Optional[str] = None
+    direct_number: Optional[str] = None
+    custom_number: Optional[str] = None
     extension_number: Optional[str] = None
     location_number: Optional[str] = None
     toll_free_location_number: Optional[bool] = None
@@ -81,7 +83,8 @@ class VirtualLineTest(TestWithLocations):
               f'/features/callerid'
         data = update.model_dump_json(exclude_none=True, by_alias=True,
                                       include={'block_in_forward_calls_enabled', 'custom_external_caller_id_name',
-                                               'external_caller_id_name_policy', 'first_name', 'last_name', 'selected'})
+                                               'external_caller_id_name_policy', 'first_name', 'last_name', 'selected',
+                                               'custom_number'})
         await api.session.rest_patch(url=url, data=data)
 
     @asynccontextmanager
