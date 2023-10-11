@@ -250,6 +250,31 @@ Source: |catch_tns.py|_
 .. literalinclude:: ../examples/catch_tns.py
     :linenos:
 
+Downgrade room device workspaces from Webex Calling to free calling
+-------------------------------------------------------------------
+
+This script looks for workspaces in a given location (or all workspaces) and downgrades them from Webex Calling to free
+calling.
+
+    | usage: room_devices.py [-h] [--location LOCATION] [--test] {show,clear}
+    | 
+    | CLI tool to manage room device calling entitlements
+    | 
+    | positional arguments:
+    |   {show,clear}         show: show all room devices with their calling
+    |                        settings, clear: remove calling license from devices
+    | 
+    | optional arguments:
+    |   -h, --help           show this help message and exit
+    |   --location LOCATION  work on devices in given location
+    |   --test               test run only
+
+Source: |room_devices.py|_
+
+.. |room_devices.py| replace:: ``room_devices.py``
+
+.. literalinclude:: ../examples/room_devices.py
+    :linenos:
 
 .. _examples directory on GitHub: https://github.com/jeokrohn/wxc_sdk/tree/master/examples
 .. _"Integrations" page on developer.cisco.com: https://developer.webex.com/docs/integrations
@@ -267,6 +292,7 @@ Source: |catch_tns.py|_
 .. _queue_helper.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/queue_helper.py
 .. _service_app.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/service_app.py
 .. _catch_tns.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/catch_tns.py
+.. _room_devices.py: https://github.com/jeokrohn/wxc_sdk/blob/master/examples/room_devices.py
 
 .. _webbrowser module: https://docs.python.org/3/library/webbrowser.html
 .. _My Webex Apps on developer.webex.com: https://developer.webex.com/my-apps
