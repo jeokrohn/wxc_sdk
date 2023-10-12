@@ -256,17 +256,18 @@ Downgrade room device workspaces from Webex Calling to free calling
 This script looks for workspaces in a given location (or all workspaces) and downgrades them from Webex Calling to free
 calling.
 
-    | usage: room_devices.py [-h] [--location LOCATION] [--test] {show,clear}
-    | 
+    | usage: room_devices.py [-h] [--location LOCATION] [--wsnames WSNAMES] [--test] {show,clear}
+    |
     | CLI tool to manage room device calling entitlements
-    | 
+    |
     | positional arguments:
-    |   {show,clear}         show: show all room devices with their calling
-    |                        settings, clear: remove calling license from devices
-    | 
+    |   {show,clear}         show: show all room devices with their calling settings, clear: remove calling
+    |                        license from devices
+    |
     | optional arguments:
     |   -h, --help           show this help message and exit
     |   --location LOCATION  work on devices in given location
+    |   --wsnames WSNAMES    file name of a file with workspace names to operate on; one name per line
     |   --test               test run only
 
 Source: |room_devices.py|_

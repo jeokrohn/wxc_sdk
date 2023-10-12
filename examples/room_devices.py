@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 """
-    usage: room_devices.py [-h] [--location LOCATION] [--test] {show,clear}
+    usage: room_devices.py [-h] [--location LOCATION] [--wsnames WSNAMES] [--test] {show,clear}
 
     CLI tool to manage room device calling entitlements
 
     positional arguments:
-      {show,clear}         show: show all room devices with their calling settings, clear: remove calling license
-      from devices
+      {show,clear}         show: show all room devices with their calling settings, clear: remove calling
+                           license from devices
 
     optional arguments:
       -h, --help           show this help message and exit
       --location LOCATION  work on devices in given location
+      --wsnames WSNAMES    file name of a file with workspace names to operate on; one name per line
       --test               test run only
-
 
     The tool reads environment variables from room_devices.env:
         SERVICE_APP_CLIENT_ID=<clients id of a service app created on developer.webex.com>
@@ -46,26 +46,25 @@
 """
 import asyncio
 import logging
-import os.path
 import sys
 from argparse import ArgumentParser
 from collections import defaultdict
 from functools import reduce
 from itertools import chain
-from os import getenv, getcwd
-from os.path import splitext, basename, isfile, join
+from os import getenv
+from os.path import splitext, basename, isfile
 from typing import Optional
 
 from dotenv import load_dotenv
 from yaml import safe_load, safe_dump
 
-from wxc_sdk.tokens import Tokens
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.devices import Device
 from wxc_sdk.integration import Integration
 from wxc_sdk.locations import Location
 from wxc_sdk.telephony import OwnerType, NumberListPhoneNumber
+from wxc_sdk.tokens import Tokens
 from wxc_sdk.workspace_locations import WorkspaceLocation
 from wxc_sdk.workspaces import Workspace, WorkspaceSupportedDevices, CallingType, WorkspaceCalling
 
@@ -145,11 +144,14 @@ def main() -> int:
                                                                      'settings, clear: remove calling license from '
                                                                      'devices')
     parser.add_argument('--location', type=str, help='work on devices in given location')
+    parser.add_argument('--wsnames', type=str, help='file name of a file with workspace names to operate on; '
+                                                    'one name per line')
     parser.add_argument('--test', action='store_true', help='test run only')
     args = parser.parse_args()
     operation = args.operation
     test_run = args.test
     location = args.location
+    ws_names = args.wsnames
 
     # get tokens; as an alternative you can just get a developer token from developer.webex.com and use:
     #   tokens = '<developer token from developer.webex.com>'
@@ -177,11 +179,8 @@ def main() -> int:
             def log(s: str, file=sys.stdout):
                 print(f'downgrade workspace "{ws.display_name:{ws_name_len}}": {s}', file=file)
 
-            # log('getting details')
-            # details = await api.workspaces.details(workspace_id=ws.workspace_id)
-            details = ws
-            if details.calling.type != CallingType.webex:
-                raise ValueError(f'calling type is "{details.calling.type}", not "{CallingType.webex.value}"')
+            if ws.calling.type != CallingType.webex:
+                raise ValueError(f'calling type is "{ws.calling.type}", not "{CallingType.webex.value}"')
             if test_run:
                 log('skipping update, test run only')
             else:
@@ -225,6 +224,13 @@ def main() -> int:
             # only workspaces supporting desk devices
             workspaces = [ws for ws in workspaces
                           if ws.supported_devices == WorkspaceSupportedDevices.collaboration_devices]
+
+            # if a path to a file with workspace names was given, then filter based on the file contents
+            if ws_names:
+                with open(ws_names, mode='r') as f:
+                    workspace_names = set(s_line for line in f if (s_line := line.strip()))
+                workspaces = [ws for ws in workspaces
+                              if ws.display_name in workspace_names]
             if not workspaces:
                 print('No workspaces', file=sys.stderr)
                 return 1
