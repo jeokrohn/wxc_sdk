@@ -28,7 +28,7 @@ class ReceptionistContactsDirectoryApi(ApiChild, base='telephony/config/location
     """
 
     # TODO: create test cases
-    # TODO: really no details call and no way to update a directory?
+    # TODO: add details(), delete(), and update()
 
     def _url(self, location_id: str):
         return self.ep(f'{location_id}/receptionistContacts/directories')
