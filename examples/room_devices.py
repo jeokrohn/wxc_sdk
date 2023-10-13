@@ -47,12 +47,13 @@
 import asyncio
 import logging
 import sys
+import time
 from argparse import ArgumentParser
 from collections import defaultdict
 from functools import reduce
 from itertools import chain
-from os import getenv
-from os.path import splitext, basename, isfile
+from os import getenv, getcwd
+from os.path import splitext, basename, isfile, join
 from typing import Optional
 
 from dotenv import load_dotenv
@@ -304,5 +305,18 @@ def main() -> int:
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    logging.getLogger().setLevel(logging.INFO)
+
+    # log REST API interactions to file
+    file_fmt = logging.Formatter(fmt='%(asctime)s %(levelname)s %(message)s')
+    file_fmt.converter = time.gmtime
+
+    rest_log_name = join(getcwd(), f'{splitext(basename(__file__))[0]}.log')
+    rest_log_handler = logging.FileHandler(rest_log_name, mode='w')
+    rest_log_handler.setLevel(logging.DEBUG)
+    rest_log_handler.setFormatter(file_fmt)
+    rest_logger = logging.getLogger('wxc_sdk.as_rest')
+    rest_logger.setLevel(logging.DEBUG)
+    rest_logger.addHandler(rest_log_handler)
+
     exit(main())
