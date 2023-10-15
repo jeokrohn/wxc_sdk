@@ -159,7 +159,7 @@ def dump_response(response: Response, file: TextIOBase = None, dump_log: logging
                 print(f'  {line}', file=output)
         elif ct.startswith('application/x-www-form-urlencoded'):
             for k, v in parse_qsl(request_body):
-                print(f'  {k}: {"***" if k == "client_secret" else v}',
+                print(f'  {k}: {"***" if k in {"client_secret", "refresh_token"} else v}',
                       file=output)
         else:
             print(f'  {request_body}', file=output)
