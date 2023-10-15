@@ -168,7 +168,7 @@ def as_dump_response(*, response: ClientResponse, response_data=None, data=None,
             if 'access_token' in body:
                 # mask access token
                 body['access_token'] = '***'
-            elif 'refresh_token' in body:
+            if 'refresh_token' in body:
                 body['refresh_token'] = '***'
             body = json_mod.dumps(body, indent=2)
         except json_mod.JSONDecodeError:
