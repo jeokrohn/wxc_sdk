@@ -9,6 +9,7 @@ Release history
 - feat: new example: room_devices.py
 - feat: new parameter "mac" for ":meth:`wxc_sdk.devices.DevicesApi.list`
 - feat: field_validator for :attr:`wxc_sdk.devices.Device.mac` to remove colons; enforce consistent MAC address format for mpp and roomdesk devices.
+- feat: new API :attr:`wxc_sdk.WebexSimpleApi.authorizations`
 
 1.16.1
 ------
