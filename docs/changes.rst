@@ -7,6 +7,8 @@ Release history
 - fix: allow additional phone number types (enterprise, alternate1, alternate2), :class:`wxc_sdk.people.PhoneNumberType`
 - Fix: added some attributes based on unittest results :attr:`wxc_sdk.common.MppCustomization.allow_monitor_lines_enabled`, :attr:`wxc_sdk.events.EventData.title_encryption_key_url`, :attr:`wxc_sdk.telephony.location.TelephonyLocation.enforce_outbound_dial_digit`
 - feat: new example: room_devices.py
+- feat: new parameter "mac" for ":meth:`wxc_sdk.devices.DevicesApi.list`
+- feat: field_validator for :attr:`wxc_sdk.devices.Device.mac` to remove colons; enforce consistent MAC address format for mpp and roomdesk devices.
 
 1.16.1
 ------

@@ -515,7 +515,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
              display_name: str = None, product: str = None,
              product_type: str = None, tag: str = None, connection_status: str = None, serial: str = None,
              software: str = None, upgrade_channel: str = None, error_code: str = None, capability: str = None,
-             permission: str = None, org_id: str = None, **params) -> AsyncGenerator[Device, None, None]:
+             permission: str = None, mac: str = None, org_id: str = None, **params) -> AsyncGenerator[Device, None, None]:
         """
         List Devices
 
@@ -547,10 +547,12 @@ class AsDevicesApi(AsApiChild, base='devices'):
         :type upgrade_channel: str
         :param error_code: List devices with this error code.
         :type error_code: str
-        :param capability: List devices with this capability.
+        :param capability: List devices with this capability. For example: xapi
         :type capability: str
         :param permission: List devices with this permission.
         :type permission: str
+        :param mac: List devices with this MAC address.
+        :type mac: str
         :param org_id: List devices in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
         :type org_id: str
@@ -568,7 +570,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
              display_name: str = None, product: str = None,
              product_type: str = None, tag: str = None, connection_status: str = None, serial: str = None,
              software: str = None, upgrade_channel: str = None, error_code: str = None, capability: str = None,
-             permission: str = None, org_id: str = None, **params) -> List[Device]:
+             permission: str = None, mac: str = None, org_id: str = None, **params) -> List[Device]:
         """
         List Devices
 
@@ -600,10 +602,12 @@ class AsDevicesApi(AsApiChild, base='devices'):
         :type upgrade_channel: str
         :param error_code: List devices with this error code.
         :type error_code: str
-        :param capability: List devices with this capability.
+        :param capability: List devices with this capability. For example: xapi
         :type capability: str
         :param permission: List devices with this permission.
         :type permission: str
+        :param mac: List devices with this MAC address.
+        :type mac: str
         :param org_id: List devices in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
         :type org_id: str
@@ -12638,7 +12642,7 @@ class AsReceptionistContactsDirectoryApi(AsApiChild, base='telephony/config/loca
     """
 
     # TODO: create test cases
-    # TODO: really no details call and no way to update a directory?
+    # TODO: add details(), delete(), and update()
 
     def _url(self, location_id: str):
         return self.ep(f'{location_id}/receptionistContacts/directories')

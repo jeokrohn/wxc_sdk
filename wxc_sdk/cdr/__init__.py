@@ -143,6 +143,7 @@ class CDR(ApiModel):
     def force_none(cls, values: dict):
         """
         Pop all empty strings so that they get caught by Optional[] and convert keys to proper attribute names
+        :meta private:
         """
         # get rid of all empty values and convert to snake_case
         values = {normalize_name(k): v for k, v in values.items() if v != '' and v != 'NA'}

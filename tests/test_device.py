@@ -1,6 +1,7 @@
 import asyncio
 import json
 import uuid
+from itertools import chain
 from random import choice
 from unittest import skip
 
@@ -8,7 +9,7 @@ from pydantic import Field
 
 from tests.base import TestCaseWithLog, TestWithLocations, async_test
 from tests.testutil import available_mac_address, calling_users, create_workspace_with_webex_calling
-from wxc_sdk.devices import TagOp
+from wxc_sdk.devices import TagOp, Device, ProductType
 from wxc_sdk.workspaces import Workspace, CallingType, WorkspaceSupportedDevices
 
 
@@ -67,6 +68,74 @@ class TestDevice(TestCaseWithLog):
                 print(f'list for product type "{product_type}" has no devices of that type')
                 err = True
         self.assertFalse(err, 'Failed: see output')
+
+    @async_test
+    async def test_list_by_mac(self):
+        """
+        See if list with mac parameter returns the expected result
+        """
+        devices_with_mac = [d for d in await self.async_api.devices.list()
+                            if d.mac]
+        if not devices_with_mac:
+            self.skipTest('No devices with MAC address')
+        mac_searches = await asyncio.gather(*[self.async_api.devices.list(mac=d.mac) for d in devices_with_mac],
+                                            return_exceptions=True)
+        err = None
+        for device, result in zip(devices_with_mac, mac_searches):
+            try:
+                if isinstance(result, Exception):
+                    raise result
+                result: list[Device]
+                self.assertEqual(1, len(result), 'More than one device found')
+                self.assertEqual(device, result[0], 'Not the same device')
+            except Exception as e:
+                err = err or e
+                print(f'Device {device.mac}: {e}')
+        if err:
+            raise err
+
+    def test_mac_with_colon(self):
+        """
+        Check whether the MAC addresses returned for CE devices have colons
+        """
+        devices = list(self.api.devices.list())
+        err = None
+        print('\n'.join(f'{d.display_name}: {d.mac}' for d in devices if d.mac))
+        for device in devices:
+            try:
+                # we remove colons using a field_validator on class Device.
+                # this verifies the operation
+                self.assertTrue(not device.mac or (':' not in device.mac), 'mac with colon')
+            except Exception as e:
+                print(f'Device "{device.display_name}": {e}')
+                err = e or err
+
+        # now look at the raw response (before the field_validator)
+        requests = self.requests(method='GET')
+        items = list(chain.from_iterable(r.response_body.get('items', []) for r in requests))
+        room_desk_items = [d for d in items if d['type']=='roomdesk']
+        for device in items:
+            try:
+                if not device.get('mac'):
+                    continue
+                if device['type']=='roomdesk':
+                    self.assertTrue(':' in device['mac'], 'No colon in roomdesk device mac')
+                else:
+                    self.assertTrue(':' not in device['mac'], 'Colon in MPP device mac')
+
+            except Exception as e:
+                err = err or e
+                print(f'{device["displayName"]}, {device["mac"]}: e')
+
+        if not room_desk_items and (err is None):
+            self.skipTest('No "roomdesk" devices')
+
+        if err:
+            raise err
+        if room_desk_items:
+            # if no exception has been raised so far then this is an indication that MACs for MPPs and roomdesk devices
+            # are different: no colon in MPP macs, colon in roomdesk device MACs
+            self.assertTrue(False, 'MAC address format inconsistent between MPP and roomdesk devices')
 
     @async_test
     async def test_004_details(self):

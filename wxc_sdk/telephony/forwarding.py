@@ -109,8 +109,7 @@ class CallForwardingNumber(ApiModel):
     def validate_phone_number(cls, v):
         """
         Platform returns NANP numbers w/o +
-        :param v:
-        :return:
+        :meta private:
         """
         return assert_plus1(v)
 
@@ -146,18 +145,14 @@ class CustomNumbers(ApiModel):
     @field_validator('numbers', mode='before')
     def numbers_validator(cls, numbers: list[str]):
         """
-        Platform returns NANP numbers w/o +1
-        :param numbers:
-        :return:
+        :meta private:
         """
         return [assert_plus1(number) for number in numbers]
 
     def model_dump(self, *args, **kwargs):
         """
         When serializing remove the +1- again
-        :param args:
-        :param kwargs:
-        :return:
+        :meta private:
         """
         numbers = self.numbers
         if numbers:

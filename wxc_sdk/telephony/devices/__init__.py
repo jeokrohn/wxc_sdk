@@ -55,6 +55,9 @@ class MemberCommon(ApiModel):
 
     @field_validator('phone_number', mode='before')
     def e164(cls, v):
+        """
+        :meta private:
+        """
         return plus1(v)
 
 
@@ -96,6 +99,9 @@ class DeviceMembersResponse(ApiModel):
     # assert that members are always sorted by port number
     @field_validator('members', mode='after')
     def sort_members(cls, v):
+        """
+        :meta private:
+        """
         v.sort(key=lambda dm: dm.port)
         return v
 

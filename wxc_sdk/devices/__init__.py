@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional, Any, List
 
-from pydantic import Field, model_validator
+from pydantic import Field, model_validator, field_validator
 
 from ..api_child import ApiChild
 from ..base import SafeEnum as Enum
@@ -105,8 +105,19 @@ class Device(ApiModel):
 
     @model_validator(mode='before')
     def pop_place_id(cls, values):
+        """
+        :meta private:
+        """
         values.pop('placeId', None)
         return values
+
+    @field_validator('mac')
+    @classmethod
+    def mac_no_colon(cls, v:str)->str:
+        """
+        :meta private:
+        """
+        return v.replace(':', '')
 
 
 class TagOp(str, Enum):
@@ -154,7 +165,7 @@ class DevicesApi(ApiChild, base='devices'):
              display_name: str = None, product: str = None,
              product_type: str = None, tag: str = None, connection_status: str = None, serial: str = None,
              software: str = None, upgrade_channel: str = None, error_code: str = None, capability: str = None,
-             permission: str = None, org_id: str = None, **params) -> Generator[Device, None, None]:
+             permission: str = None, mac: str = None, org_id: str = None, **params) -> Generator[Device, None, None]:
         """
         List Devices
 
@@ -186,10 +197,12 @@ class DevicesApi(ApiChild, base='devices'):
         :type upgrade_channel: str
         :param error_code: List devices with this error code.
         :type error_code: str
-        :param capability: List devices with this capability.
+        :param capability: List devices with this capability. For example: xapi
         :type capability: str
         :param permission: List devices with this permission.
         :type permission: str
+        :param mac: List devices with this MAC address.
+        :type mac: str
         :param org_id: List devices in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
         :type org_id: str
