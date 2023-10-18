@@ -53,10 +53,10 @@ class Tokens(BaseModel):
         Set expiration based on current time and expires in values
         """
         now = datetime.datetime.utcnow().replace(tzinfo=pytz.UTC)
-        if not self.expires_at:
+        if not self.expires_at and self.expires_in:
             delta = datetime.timedelta(seconds=self.expires_in)
             self.expires_at = now + delta
-        if not self.refresh_token_expires_at:
+        if not self.refresh_token_expires_at and self.refresh_token_expires_in:
             delta = datetime.timedelta(seconds=self.refresh_token_expires_in)
             self.refresh_token_expires_at = now + delta
 

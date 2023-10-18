@@ -13,6 +13,7 @@ Subpackages
    :maxdepth: 4
 
    wxc_sdk.attachment_actions
+   wxc_sdk.authorizations
    wxc_sdk.cdr
    wxc_sdk.common
    wxc_sdk.device_configurations

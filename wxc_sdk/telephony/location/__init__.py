@@ -70,6 +70,8 @@ class TelephonyLocation(ApiModel):
     e911_setup_required: Optional[bool] = None
     # TODO: undocumented
     enforce_outbound_dial_digit: Optional[bool] = None
+    # TODO: undocumented
+    subscription_id: Optional[str] = None
 
 
 @dataclass(init=False)
