@@ -18,8 +18,8 @@ from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.as_rest import retry_request, AsRestSession
 from wxc_sdk.common import RoomType
 
-SPACE_NAME = "2023 STT Offsite Pictures"
-DOWNLOAD_PATH = '~/Downloads/stt pictures'
+SPACE_NAME = "Not so secret Sushi"
+DOWNLOAD_PATH = '~/Downloads/sushi'
 
 
 def write_to_file(path: str, content: str):
@@ -57,7 +57,7 @@ async def get_attachments():
     with WebexSimpleApi(tokens=token) as api:
         # get target spaces
         print('Getting target space...')
-        target_space = next((space for space in api.rooms.list(type_=RoomType.group)
+        target_space = next((space for space in api.rooms.list(type_=RoomType.group, sort_by='lastactivity')
                              if space.title == SPACE_NAME), None)
         if target_space is None:
             print(f'Space "{SPACE_NAME}" not found', file=sys.stderr)
@@ -79,5 +79,5 @@ async def get_attachments():
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
     asyncio.run(get_attachments())
