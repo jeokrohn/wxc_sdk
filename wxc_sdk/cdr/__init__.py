@@ -179,10 +179,21 @@ class CDR(ApiModel):
     correlation_id: Optional[str] = None
     #: The country code of the dialed number. This is only populated for international calls.
     international_country: Optional[str] = None
-    #: The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call. It
-    #: can be used for end-to-end tracking of a SIP session in IP-based multimedia communication. Each call consists of
-    #: two UUIDs known as Local Session ID and Remote Session ID. The Local SessionID is generated from the Originating
-    #: user agent.
+    #: Each call consists of four UUIDs known as Local Session ID, Final Local Session ID, Remote Session ID and Final
+    #: Remote Session ID.
+    #:
+    #: * The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call.
+    #:
+    #: * It can be used for end-to-end tracking of a SIP session in IP-based multimedia communication systems in
+    #:   compliance with RFC 7206 and draft-ietf-insipid-session-id-15.
+    #:
+    #: * The Local SessionID is generated from the Originating user agent.
+    #:
+    #: * The Remote SessionID is generated from the Terminating user agent.
+    #:
+    #: * The Final Local Session ID has the value of the Local Session ID at the end of the call.
+    #:
+    #: * The Final Remote Session ID has the value of the Remote Session ID at the end of the call.
     local_session_id: Optional[str] = Field(alias='local_sessionid', default=None)
     #: The MAC address of the device, if known.
     device_mac: Optional[str] = None
@@ -220,17 +231,29 @@ class CDR(ApiModel):
     #: The user who made or received the call.
     user: Optional[str] = None
     #: The type of user (user or workspace) that made or received the call. For example:
+    #:
     #:  * AutomatedAttendantVideo
+    #:
     #:  * Anchor
+    #:
     #:  * BroadworksAnywhere
+    #:
     #:  * VoiceMailRetrieval
+    #:
     #:  * LocalGateway
+    #:
     #:  * HuntGroup
+    #:
     #:  * GroupPaging
+    #:
     #:  * User
+    #:
     #:  * VoiceMailGroup
+    #:
     #:  * CallCenterStandard
+    #:
     #:  * VoiceXML
+    #:
     #:  * RoutePoint
     user_type: Optional[CDRUserType] = None
     #: For incoming calls, the telephone number of the user. For outgoing calls, it's the telephone number of the
@@ -257,14 +280,27 @@ class CDR(ApiModel):
     #: Indicates which party released the call first. The possible values are:
     #:
     #: Local: Used when the local user has released the call first.
+    #:
     #: Remote: Used when the far end party releases the call first.
+    #:
     #: Unknown: Used when the call has partial information or is unable to gather enough information about the party
     #: who released the call. It could be because of situations like force lock or because of a session audit failure.
     releasing_party: Optional[str] = None
-    #: The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call. It
-    #: can be used for end-to-end tracking of a SIP session in IP-based multimedia communication. Each call consists of
-    #: two UUIDs known as Local Session ID and Remote Session ID. The Remote SessionID is generated from the
-    #: Terminating user agent.
+    #: Each call consists of four UUIDs known as Local Session ID, Final Local Session ID, Remote Session ID and Final
+    #: Remote Session ID.
+    #:
+    #: * The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call.
+    #:
+    #: * It can be used for end-to-end tracking of a SIP session in IP-based multimedia communication systems in
+    #:   compliance with RFC 7206 and draft-ietf-insipid-session-id-15.
+    #:
+    #: * The Local SessionID is generated from the Originating user agent.
+    #:
+    #: * The Remote SessionID is generated from the Terminating user agent.
+    #:
+    #: * The Final Local Session ID has the value of the Local Session ID at the end of the call.
+    #:
+    #: * The Final Remote Session ID has the value of the Remote Session ID at the end of the call.
     remote_session_id: Optional[str] = Field(alias='remote_sessionid', default=None)
     #: When the call has been redirected one or more times, this field reports the last redirecting number.
     #: Identifies who last redirected the call. Only applies to call scenarios such as transfer, call forwarded calls,
@@ -288,8 +324,10 @@ class CDR(ApiModel):
     #: shown using the UTC/GMT time zone.
     call_transfer_time: Optional[datetime] = None
     #: A unique identifier that’s used to correlate CDRs and call legs with each other. This ID is used in
-    # conjunction with:
+    #: conjunction with:
+    #:
     #:  Remote call ID—To identify the remote CDR of a call leg.
+    #:
     #:  Transfer related call ID—To identify the call transferred leg.
     local_call_id: Optional[str] = None
     #: A unique identifier that’s used to correlate CDRs and call legs with each other. This ID is used in
@@ -306,39 +344,110 @@ class CDR(ApiModel):
     #: then their extension will be displayed instead.
     user_number: Optional[str] = None
     #: Identifies whether the call was set up or disconnected normally. Possible values are:
+    #:
     #:  Success—Call was routed and disconnected successfully. Includes Normal, UserBusy, and NoAnswer scenarios.
+    #:
     #:  Failure—Call failed with an internal or external error.
+    #:
     #:  Refusal—Call was rejected because of call block or timeout.
-    # You can find more information in the Call outcome reason field.
+    #:
+    #:  You can find more information in the Call outcome reason field.
     call_outcome: Optional[str] = None
     #: Additional information about the Call outcome returned. Possible reasons are:
+    #:
     #: Success
+    #:
     #: - Normal—Call was completed successfully.
+    #:
     #: - UserBusy—Call was a success, but the user was busy.
+    #:
     #: - NoAnswer—Call was a success, but the user didn't answer.
+    #:
     #: Refusal
+    #:
     #: - CallRejected—User rejected the call.
+    #:
     #: - UnassignedNumber—Dialed number isn't assigned to any user or service.
+    #:
     #: - SIP408—Request timed out.
+    #:
     #: - InternalRequestTimeout—Request timed out.
+    #:
     #: - Q850102ServerTimeout—Server timed out.
+    #:
     #: - NoUserResponse—No response from the user.
+    #:
     #: - NoAnswerFromUser—No answer from the user.
+    #:
     #: - SIP480—Caller was unavailable.
+    #:
     #: - SIP487—Request was terminated by the called number.
+    #:
     #: - TemporarilyUnavailable—User was temporarily unavailable.
+    #:
     #: - AdminCallBlock—Call was rejected.
+    #:
     #: - UserCallBlock—Call was rejected.
+    #:
     #: - Unreachable—Unable to route the call to the destination.
+    #:
     #: Failure
+    #:
     #: - DestinationOutOfOrder—Service request failed.
+    #:
     #: - SIP501—Invalid method.
+    #:
     #: - SIP503—Service was temporarily unavailable.
+    #:
     #: - ProtocolError—Unknown release code.
+    #:
     #: - SIP606—Some aspect of the session description wasn't acceptable.
+    #:
     #: - NoRouteToDestination—No route available to the destination.
+    #:
     #: - Internal—Failed because of internal Webex Calling reasons.
     call_outcome_reason: Optional[str] = None
+    #: The length of ringing before the call was answered or timed out, in seconds.
+    ring_duration: Optional[int] = None
+    #: Whether the call leg was answered after a redirection. Possible values:
+    #: * Yes
+    #: * No
+    #: * Yes-PostRedirection
+    answer_indicator: Optional[str] = None
+    #: The time the call was finished, in UTC.
+    release_time: Optional[datetime] = None
+    #: Each call consists of four UUIDs known as Local Session ID, Final Local Session ID, Remote Session ID and Final
+    #: Remote Session ID.
+    #:
+    #: * The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call.
+    #:
+    #: * It can be used for end-to-end tracking of a SIP session in IP-based multimedia communication systems in
+    #:   compliance with RFC 7206 and draft-ietf-insipid-session-id-15.
+    #:
+    #: * The Local SessionID is generated from the Originating user agent.
+    #:
+    #: * The Remote SessionID is generated from the Terminating user agent.
+    #:
+    #: * The Final Local Session ID has the value of the Local Session ID at the end of the call.
+    #:
+    #: * The Final Remote Session ID has the value of the Remote Session ID at the end of the call.
+    final_local_session_id: Optional[str] = Field(alias='final_local_sessionid', default=None)
+    #: Each call consists of four UUIDs known as Local Session ID, Final Local Session ID, Remote Session ID and Final
+    #: Remote Session ID.
+    #:
+    #: * The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call.
+    #:
+    #: * It can be used for end-to-end tracking of a SIP session in IP-based multimedia communication systems in
+    #:   compliance with RFC 7206 and draft-ietf-insipid-session-id-15.
+    #:
+    #: * The Local SessionID is generated from the Originating user agent.
+    #:
+    #: * The Remote SessionID is generated from the Terminating user agent.
+    #:
+    #: * The Final Local Session ID has the value of the Local Session ID at the end of the call.
+    #:
+    #: * The Final Remote Session ID has the value of the Remote Session ID at the end of the call.
+    final_remote_session_id: Optional[str] = Field(alias='final_remote_sessionid', default=None)
 
 
 @dataclass(init=False)

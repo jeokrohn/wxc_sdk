@@ -10,6 +10,7 @@ Release history
 - feat: new parameter "mac" for ":meth:`wxc_sdk.devices.DevicesApi.list`
 - feat: field_validator for :attr:`wxc_sdk.devices.Device.mac` to remove colons; enforce consistent MAC address format for mpp and roomdesk devices.
 - feat: new API :attr:`wxc_sdk.WebexSimpleApi.authorizations`
+- feat: new CDR fields: :attr:`wxc_sdk.cdr.CDR.ring_duration`, :attr:`wxc_sdk.cdr.CDR.release_time`, :attr:`wxc_sdk.cdr.CDR.answer_indicator`, :attr:`wxc_sdk.cdr.CDR.final_local_session_id`, :attr:`wxc_sdk.cdr.CDR.final_remote_session_id`
 
 1.16.1
 ------
