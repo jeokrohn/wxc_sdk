@@ -218,6 +218,10 @@ class PythonClassRegistry:
         self._classes[pc.name] = pc
 
     def get(self, class_name: str) -> Optional[PythonClass]:
+        """
+        Get a python class from the registry for a given (potentially unqualified) class name
+        """
+        class_name = self.qualified_class_name(class_name)
         if pc := self._classes.get(class_name):
             _, pc = self._dereferenced_class(pc.name)
         return pc
