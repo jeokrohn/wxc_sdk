@@ -241,7 +241,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         on category) and -1 (for filtering on capacity) can be used to filter for workspaces without a type and/or
         capacity.
 
-        :param workspace_location_id: Location associated with the workspace
+        :param workspace_location_id: Location associated with the workspace. Can be a lcoation id or a workspace
+            location id.
         :type workspace_location_id: str
         :param floor_id: Floor associated with the workspace.
         :type floor_id: str
