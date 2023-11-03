@@ -57,9 +57,12 @@ class Parameter:
 @dataclass
 class Endpoint:
     name: str
+    title: str
+    docstring: str
     method: str = field(default=None)
     url: str = field(default=None)
     href_parameter: list[Parameter] = field(default_factory=list)
+    body_class_name: str = field(default=None)
     body_parameter: list[Parameter] = field(default_factory=list)
     result: str = field(default=None)
     result_referenced_class: str = field(default=None)
@@ -730,6 +733,7 @@ class PythonClassRegistry:
                 href_parameters.append(param)
 
             body_parameters = []
+            body_class_name = None
             if body := request.find_content_by_element('dataStructure'):
                 body: ApibDatastructure
                 body_content = body.content
@@ -742,8 +746,9 @@ class PythonClassRegistry:
                 elif isinstance(body_content, ApibElement) and not any((body_content.content,
                                                                         body_content.meta)):
                     # this might be a class name
-                    class_name = body_content.element.replace(' ', '')
-                    class_name = self.qualified_class_name(class_name)
+                    class_name_base = body_content.element
+                    class_name = self.qualified_class_name(class_name_base)
+                    body_class_name = class_name
 
                     # type attributes is the only acceptable attribute
                     optional = False
@@ -763,9 +768,11 @@ class PythonClassRegistry:
                                                for attr in python_class.attributes]
                         else:
                             raise NotImplementedError('No attributes')
+                    else:
+                        raise ValueError(f'Unknown body class name "{class_name_base}" for "{name}()"')
                 else:
                     raise NotImplementedError(f'http request body datastructure '
-                                              f'with unexpected content: {body_content.element}')
+                                              f'with unexpected content: "{body_content.element}"')
 
             result = None
             referenced_class = None
@@ -792,7 +799,7 @@ class PythonClassRegistry:
                             referenced_class = array_content_class_name
                         else:
                             raise ValueError(f'Unexpected response datastructure content element: '
-                                             f'{response_ds_content.element}')
+                                             f'"{response_ds_content.element}"')
 
                     else:
                         # .. or the datastructure content doesn't have content
@@ -801,11 +808,14 @@ class PythonClassRegistry:
                         result = self.qualified_class_name(result)
                         # .. and the class has to exist
                         if not self.get(class_name=result):
-                            raise KeyError(f'class {result} not found')
+                            raise KeyError(f'class "{result}" not found')
             referenced_class = referenced_class or result
             self._endpoints[apib_key].append(Endpoint(name=name, method=method, url=full_url,
+                                                      title=transition.title,
+                                                      docstring=transition.docstring,
                                                       href_parameter=href_parameters,
                                                       body_parameter=body_parameters,
+                                                      body_class_name=body_class_name,
                                                       result=result,
                                                       result_referenced_class=referenced_class))
         return
