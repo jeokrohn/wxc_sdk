@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['SessionType', 'SiteSessionType', 'SiteSessionTypeType', 'UpdateUserSessionType', 'UserSessionTypes']
+__auto__ = ['ListSiteSessionTypesResponse', 'ListUserSessionTypeResponse', 'SessionType', 'SiteSessionType', 'SiteSessionTypeType', 'UpdateUserSessionType', 'UserSessionTypes']
 
 
 class SiteSessionTypeType(str, Enum):
@@ -85,3 +85,13 @@ class UpdateUserSessionType(ApiModel):
     #: An array of the session type ID.
     #: example: ['3', '9']
     session_type_ids: Optional[list[str]] = None
+
+
+class ListSiteSessionTypesResponse(ApiModel):
+    #: An array of the site's session types.
+    items: Optional[list[SiteSessionType]] = None
+
+
+class ListUserSessionTypeResponse(ApiModel):
+    #: An array of the user's session types.
+    items: Optional[list[UserSessionTypes]] = None

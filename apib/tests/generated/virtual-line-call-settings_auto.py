@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ListVirtualLineObject', 'ListVirtualLineObjectExternalCallerIdNamePolicy', 'ListVirtualLineObjectLocation', 'ListVirtualLineObjectNumber']
+__auto__ = ['ListVirtualLineObject', 'ListVirtualLineObjectExternalCallerIdNamePolicy', 'ListVirtualLineObjectLocation', 'ListVirtualLineObjectNumber', 'ReadTheListOfVirtualLinesResponse']
 
 
 class ListVirtualLineObjectExternalCallerIdNamePolicy(str, Enum):
@@ -75,3 +75,8 @@ class ListVirtualLineObject(ApiModel):
     #: Type of billing plan.
     #: example: BCOCP1
     billing_plan: Optional[str] = None
+
+
+class ReadTheListOfVirtualLinesResponse(ApiModel):
+    #: Array of virtual lines.
+    virtual_lines: Optional[list[ListVirtualLineObject]] = None

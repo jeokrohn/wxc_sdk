@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetScheduleEventObject', 'GetScheduleObject', 'GetScheduleObjectType', 'ListScheduleObject', 'ModifyScheduleEventListObject', 'ModifyScheduleEventObject', 'ModifyScheduleObject', 'PostScheduleObject', 'RecurWeeklyObject', 'RecurYearlyByDateObject', 'RecurYearlyByDateObjectMonth', 'RecurYearlyByDayObject', 'RecurYearlyByDayObjectDay', 'RecurYearlyByDayObjectWeek', 'RecurrenceObject']
+__auto__ = ['CreateAScheduleResponse', 'GetScheduleEventObject', 'GetScheduleObject', 'GetScheduleObjectType', 'ListScheduleObject', 'ModifyScheduleEventListObject', 'ModifyScheduleEventObject', 'ModifyScheduleObject', 'PostScheduleObject', 'ReadTheListOfSchedulesResponse', 'RecurWeeklyObject', 'RecurYearlyByDateObject', 'RecurYearlyByDateObjectMonth', 'RecurYearlyByDayObject', 'RecurYearlyByDayObjectDay', 'RecurYearlyByDayObjectWeek', 'RecurrenceObject']
 
 
 class RecurWeeklyObject(ApiModel):
@@ -230,3 +230,13 @@ class PostScheduleObject(ApiModel):
     name: Optional[str] = None
     #: List of schedule events.
     events: Optional[list[ModifyScheduleEventObject]] = None
+
+
+class ReadTheListOfSchedulesResponse(ApiModel):
+    #: Array of schedules.
+    schedules: Optional[list[ListScheduleObject]] = None
+
+
+class CreateAScheduleResponse(ApiModel):
+    #: ID of the newly created schedule.
+    id: Optional[str] = None

@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetPagingGroupAgentObject', 'GetPagingGroupAgentObjectType', 'GetPagingGroupObject', 'ListPagingGroupObject']
+__auto__ = ['GetPagingGroupAgentObject', 'GetPagingGroupAgentObjectType', 'GetPagingGroupObject', 'ListPagingGroupObject', 'ReadTheListOfPagingGroupsResponse']
 
 
 class GetPagingGroupAgentObjectType(str, Enum):
@@ -118,3 +118,8 @@ class ListPagingGroupObject(ApiModel):
     location_id: Optional[str] = None
     #: Flag to indicate toll free number.
     toll_free_number: Optional[bool] = None
+
+
+class ReadTheListOfPagingGroupsResponse(ApiModel):
+    #: Array of paging groups.
+    location_paging: Optional[list[ListPagingGroupObject]] = None

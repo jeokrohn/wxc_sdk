@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Call', 'CallHistoryRecord', 'CallHistoryRecordTypeEnum', 'CallPersonalityEnum', 'CallStateEnum', 'CallTypeEnum', 'PartyInformation', 'RecallInformation', 'RecallTypeEnum', 'RecordingStateEnum', 'RedirectionInformation', 'RedirectionReasonEnum', 'RejectActionEnum']
+__auto__ = ['Call', 'CallHistoryRecord', 'CallHistoryRecordTypeEnum', 'CallPersonalityEnum', 'CallStateEnum', 'CallTypeEnum', 'DialResponse', 'ListCallHistoryResponse', 'ListCallsResponse', 'ParkResponse', 'PartyInformation', 'RecallInformation', 'RecallTypeEnum', 'RecordingStateEnum', 'RedirectionInformation', 'RedirectionReasonEnum', 'RejectActionEnum']
 
 
 class RejectActionEnum(str, Enum):
@@ -185,3 +185,25 @@ class CallHistoryRecord(ApiModel):
     #: The date and time the call history record was created. For a placed call history record, this is when the call was placed. For a missed call history record, this is when the call was disconnected. For a received call history record, this is when the call was answered.
     #: example: 2016-04-21T17:00:00.000Z
     time: Optional[datetime] = None
+
+
+class DialResponse(ApiModel):
+    #: A unique identifier for the call which is used in all subsequent commands for the same call.
+    #: example: Y2lzY29zcGFyazovL3VzL0NBTEwvQkNMRC9jYWxsaGFsZi00ODg6MA
+    call_id: Optional[str] = None
+    #: A unique identifier for the call session the call belongs to. This can be used to correlate multiple calls that are part of the same call session.
+    #: example: MmFmNThiZjktYWE3Ny00NWE5LThiMDEtYzI4NDMxZWYwNzRm
+    call_session_id: Optional[str] = None
+
+
+class ParkResponse(ApiModel):
+    #: The details of where the call has been parked.
+    parked_against: Optional[PartyInformation] = None
+
+
+class ListCallsResponse(ApiModel):
+    items: Optional[list[Call]] = None
+
+
+class ListCallHistoryResponse(ApiModel):
+    items: Optional[list[CallHistoryRecord]] = None

@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AdmitParticipant', 'AdmitParticipantsObject', 'Device', 'DeviceAudioType', 'DeviceCallType', 'InProgressDevice', 'InProgressParticipant', 'InProgressParticipantState', 'Participant', 'ParticipantState', 'ParticipantVideo']
+__auto__ = ['AdmitParticipant', 'AdmitParticipantsObject', 'Device', 'DeviceAudioType', 'DeviceCallType', 'InProgressDevice', 'InProgressParticipant', 'InProgressParticipantState', 'ListMeetingParticipantsResponse', 'Participant', 'ParticipantState', 'ParticipantVideo']
 
 
 class ParticipantVideo(str, Enum):
@@ -203,3 +203,7 @@ class AdmitParticipant(ApiModel):
 
 class AdmitParticipantsObject(ApiModel):
     items: Optional[list[AdmitParticipant]] = None
+
+
+class ListMeetingParticipantsResponse(ApiModel):
+    items: Optional[list[Participant]] = None

@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetCallPickupObject', 'GetPersonPlaceVirtualLineCallPickupObject', 'GetPersonPlaceVirtualLineCallPickupObjectType', 'GetUserNumberItemObject', 'ListCallPickupObject', 'ModifyCallPickupObject']
+__auto__ = ['CreateACallPickupResponse', 'GetAvailableAgentsFromCallPickupsResponse', 'GetCallPickupObject', 'GetPersonPlaceVirtualLineCallPickupObject', 'GetPersonPlaceVirtualLineCallPickupObjectType', 'GetUserNumberItemObject', 'ListCallPickupObject', 'ModifyCallPickupObject', 'ReadTheListOfCallPickupsResponse']
 
 
 class GetPersonPlaceVirtualLineCallPickupObjectType(str, Enum):
@@ -86,3 +86,18 @@ class ModifyCallPickupObject(ApiModel):
     name: Optional[str] = None
     #: An array of people, workspace, and virtual lines IDs, that are added to call pickup.
     agents: Optional[list[str]] = None
+
+
+class ReadTheListOfCallPickupsResponse(ApiModel):
+    #: Array of call pickups.
+    call_pickups: Optional[list[ListCallPickupObject]] = None
+
+
+class CreateACallPickupResponse(ApiModel):
+    #: ID of the newly created call pickup.
+    id: Optional[str] = None
+
+
+class GetAvailableAgentsFromCallPickupsResponse(ApiModel):
+    #: Array of agents.
+    agents: Optional[list[GetPersonPlaceVirtualLineCallPickupObject]] = None

@@ -6,5 +6,6 @@ do
   bn=$(basename "$file")
   yml="${bn%.apib}.yml"
   # echo "$file" "$bn" "$yml"
+  echo "$bn"
   drafter -f json "$file" -o ~/Documents/workspace/wxc_sdk/apib/apib_yml/$yml
 done

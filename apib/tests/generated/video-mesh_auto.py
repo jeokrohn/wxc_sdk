@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BandwidthTest', 'BlrClusterDetails', 'BlrNode1', 'BlrNodeLocation', 'BulkUpdateEventThresholdResponse', 'ClientTypeDistributionCollectionForOrg', 'ClientTypeDistributionForOrg', 'ClientTypeDistributionTrend1', 'CloudOverflowTrend1', 'ClusterAvailability', 'ClusterAvailabilityCollection', 'ClusterAvailableTimeline', 'ClusterClientTypeDistributionBlr1', 'ClusterClientTypeDistributionDetailsBlr1a', 'ClusterDetails', 'ClusterDetailsCollection', 'ClusterRedirectBlr1', 'ClusterRedirectDetailsBlr1a', 'ClusterUpgradeScheduleBlr', 'ClusterUtilizationCollection', 'ClusterUtilizationT1SJ', 'ClusterUtilizationTrend1', 'ClustersAvailability', 'ClustersUtilization', 'ConnectivityTestResultsClustersObject1', 'ConnectivityTestResultsForNode', 'ConnectivityTestResultsObject', 'EventThresholdBody', 'EventThresholdBodyEventName', 'FailureDetails3', 'GetEntityThresholdConfig1', 'GetEventThresholdResponse', 'ListEventThresholdConfigurationEventName', 'ListEventThresholdConfigurationEventScope', 'ListMediaHealthMonitoringToolTestResultsV2TriggerType', 'MediaHealthMonitoringClusters', 'MediaHealthMonitoringForFirstCluster', 'MediaHealthMonitoringResultsCollectionForOrganization', 'MediaHealthMonitoringResultsForOrganization', 'MediaHealthMonitoringSecondNode', 'MediaHealthMonitoringTestResultsFailure', 'MediaHealthMonitoringTestResultsSuccess', 'MediaSignallingTestResultFailure', 'MediaSignallingTestResultSuccess', 'NodeAvailability', 'NodeAvailabilityCollection', 'NodeAvailableTimeline', 'NodeStatusList1', 'NodeStatusList1Status', 'NodesAvailability', 'OverflowDetails1', 'OverflowToCloud', 'OverflowToCloudCollection', 'PerClusterConnectivityResult1', 'PerNodeConnectivityResult1', 'ReachabilityTestResults', 'ReachabilityTestResultsCluster', 'ReachabilityTestResultsDestinationCluster', 'ReachabilityTestResultsFirstNode', 'ReachabilityTestResultsForCluster', 'ReachabilityTestResultsForFirstCluster', 'ReachabilityTestResultsForOrganization', 'ReachabilityTestResultsStunResults1', 'ReachabilityTestResultsSuccess', 'RedirectCollectionForOrg', 'RedirectForOrg', 'RedirectTrend1', 'ServiceTypeResult2', 'ServiceTypeResult4', 'SingleNodeAvailability', 'SingleNodeAvailabilityCollection', 'SingleNodeAvailableTimeline', 'TriggerOnDemandBody', 'TriggerOnDemandBodyCluster', 'TriggerOnDemandBodyType', 'TriggeredTestResult', 'TriggeredTestStatus1', 'UpdateEventThresholdConfig1', 'UpdateEventThresholdConfigurationEventThresholds', 'UpdateEventThresholdConfigurationEventThresholdsThresholdConfig', 'UtilizationMetricsT1SJ', 'WebSocketConnectivityTest']
+__auto__ = ['BandwidthTest', 'BlrClusterDetails', 'BlrNode1', 'BlrNodeLocation', 'BulkUpdateEventThresholdResponse', 'ClientTypeDistributionCollectionForOrg', 'ClientTypeDistributionForOrg', 'ClientTypeDistributionTrend1', 'CloudOverflowTrend1', 'ClusterAvailability', 'ClusterAvailabilityCollection', 'ClusterAvailableTimeline', 'ClusterClientTypeDistributionBlr1', 'ClusterClientTypeDistributionDetailsBlr1a', 'ClusterDetails', 'ClusterDetailsCollection', 'ClusterRedirectBlr1', 'ClusterRedirectDetailsBlr1a', 'ClusterUpgradeScheduleBlr', 'ClusterUtilizationCollection', 'ClusterUtilizationT1SJ', 'ClusterUtilizationTrend1', 'ClustersAvailability', 'ClustersUtilization', 'ConnectivityTestResultsClustersObject1', 'ConnectivityTestResultsForNode', 'ConnectivityTestResultsObject', 'EventThresholdBody', 'EventThresholdBodyEventName', 'FailureDetails3', 'GetEntityThresholdConfig1', 'GetEventThresholdResponse', 'ListEventThresholdConfigurationEventName', 'ListEventThresholdConfigurationEventScope', 'ListMediaHealthMonitoringToolTestResultsV2TriggerType', 'MediaHealthMonitoringClusters', 'MediaHealthMonitoringForFirstCluster', 'MediaHealthMonitoringResultsCollectionForOrganization', 'MediaHealthMonitoringResultsForOrganization', 'MediaHealthMonitoringSecondNode', 'MediaHealthMonitoringTestResultsFailure', 'MediaHealthMonitoringTestResultsSuccess', 'MediaSignallingTestResultFailure', 'MediaSignallingTestResultSuccess', 'NodeAvailability', 'NodeAvailabilityCollection', 'NodeAvailableTimeline', 'NodeStatusList1', 'NodeStatusList1Status', 'NodesAvailability', 'OverflowDetails1', 'OverflowToCloud', 'OverflowToCloudCollection', 'PerClusterConnectivityResult1', 'PerNodeConnectivityResult1', 'ReachabilityTestResults', 'ReachabilityTestResultsDestinationCluster', 'ReachabilityTestResultsFirstNode', 'ReachabilityTestResultsForCluster1', 'ReachabilityTestResultsForFirstCluster', 'ReachabilityTestResultsForOrganization', 'ReachabilityTestResultsStunResults1', 'ReachabilityTestResultsSuccess', 'RedirectCollectionForOrg', 'RedirectForOrg', 'RedirectTrend1', 'ServiceTypeResult2', 'ServiceTypeResult4', 'SingleNodeAvailability', 'SingleNodeAvailability1', 'SingleNodeAvailabilityCollection', 'SingleNodeAvailableTimeline', 'TriggerOnDemandBody', 'TriggerOnDemandBodyCluster', 'TriggerOnDemandBodyType', 'TriggeredTestResult', 'TriggeredTestStatus1', 'UpdateEventThresholdConfig1', 'UpdateEventThresholdConfigurationEventThresholds', 'UpdateEventThresholdConfigurationEventThresholdsThresholdConfig', 'UtilizationMetricsT1SJ', 'WebSocketConnectivityTest']
 
 
 class ClusterAvailableTimeline(ApiModel):
@@ -52,7 +52,7 @@ class ClusterAvailabilityCollection(ApiModel):
     from_: Optional[datetime] = None
     #: End date and time (inclusive) of the availability data.
     #: example: 2021-09-15T17:53:00Z
-    to: Optional[datetime] = None
+    to_: Optional[datetime] = None
 
 
 class ClustersAvailability(ApiModel):
@@ -109,7 +109,7 @@ class NodeAvailabilityCollection(ApiModel):
     from_: Optional[datetime] = None
     #: End date and time (inclusive) of the availability data.
     #: example: 2021-09-15T17:53:00Z
-    to: Optional[datetime] = None
+    to_: Optional[datetime] = None
 
 
 class NodesAvailability(ApiModel):
@@ -131,7 +131,7 @@ class SingleNodeAvailableTimeline(ApiModel):
     un_availability_reason: Optional[str] = None
 
 
-class SingleNodeAvailability(ApiModel):
+class SingleNodeAvailability1(ApiModel):
     #: ID of the Video Mesh cluster.
     #: example: Y2lzY29zcGFyazovL3VzL0hZQlJJRF9DTFVTVEVSLzFlYjY1ZmRmLTk2NDMtNDE3Zi05OTc0LWFkNzJjYWUwZTEwZjpiMzdmNTgzYy1kZGRjLTQyOGItODJlNS1jYmU2ODFkYjQ5NjI=
     cluster_id: Optional[str] = None
@@ -152,13 +152,17 @@ class SingleNodeAvailabilityCollection(ApiModel):
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8zNmQ4OTRmNy0yYjU3LTQzYzEtYWNlZS1kNDdlNjc3NjE0MTQ=
     org_id: Optional[str] = None
     #: Availability details of the Video Mesh cluster.
-    items: Optional[list[SingleNodeAvailability]] = None
+    items: Optional[list[SingleNodeAvailability1]] = None
     #: Start date and time (inclusive) of the availability data.
     #: example: 2021-09-15T15:53:00Z
     from_: Optional[datetime] = None
     #: End date and time (inclusive) of the availability data.
     #: example: 2021-09-15T17:53:00Z
-    to: Optional[datetime] = None
+    to_: Optional[datetime] = None
+
+
+class SingleNodeAvailability(ApiModel):
+    items: Optional[list[SingleNodeAvailabilityCollection]] = None
 
 
 class MediaSignallingTestResultFailure(ApiModel):
@@ -220,7 +224,7 @@ class MediaHealthMonitoringResultsCollectionForOrganization(ApiModel):
     from_: Optional[datetime] = None
     #: End date and time (inclusive) of the Media Health Monitoring Tool data.
     #: example: 2023-01-20T15:53:00Z
-    to: Optional[datetime] = None
+    to_: Optional[datetime] = None
     #: Media Health Monitoring Tool test results.
     items: Optional[list[MediaHealthMonitoringClusters]] = None
 
@@ -278,7 +282,7 @@ class OverflowToCloudCollection(ApiModel):
     from_: Optional[datetime] = None
     #: End date and time (inclusive) for the Overflow to Cloud data.
     #: example: 2022-03-24T04:22:03Z
-    to: Optional[datetime] = None
+    to_: Optional[datetime] = None
     #: The aggregation period of the trend data.
     #: example: 10m
     aggregation_interval: Optional[datetime] = None
@@ -329,7 +333,7 @@ class RedirectCollectionForOrg(ApiModel):
     from_: Optional[datetime] = None
     #: End date and time (inclusive) of the Call Redirect details.
     #: example: 2022-03-24T10:22:03Z
-    to: Optional[datetime] = None
+    to_: Optional[datetime] = None
     #: The aggregation period of the trend data.
     #: example: 10m
     aggregation_interval: Optional[datetime] = None
@@ -386,7 +390,7 @@ class ClusterUtilizationCollection(ApiModel):
     from_: Optional[datetime] = None
     #: End date and time (inclusive) of the utilization data.
     #: example: 2022-03-24T10:22:03Z
-    to: Optional[datetime] = None
+    to_: Optional[datetime] = None
     #: Utilization details of the Video Mesh cluster
     items: Optional[list[ClusterUtilizationTrend1]] = None
 
@@ -453,7 +457,7 @@ class ReachabilityTestResultsForFirstCluster(ApiModel):
     nodes: Optional[list[ReachabilityTestResultsFirstNode]] = None
 
 
-class ReachabilityTestResultsForCluster(ApiModel):
+class ReachabilityTestResultsForCluster1(ApiModel):
     #: List of Video Mesh clusters.
     clusters: Optional[list[ReachabilityTestResultsForFirstCluster]] = None
 
@@ -467,17 +471,13 @@ class ReachabilityTestResultsForOrganization(ApiModel):
     from_: Optional[datetime] = None
     #: End date and time (inclusive) of the Reachability test results data.
     #: example: 2023-01-20T15:53:00Z
-    to: Optional[datetime] = None
+    to_: Optional[datetime] = None
     #: Reachability test results data.
-    items: Optional[list[ReachabilityTestResultsForCluster]] = None
+    items: Optional[list[ReachabilityTestResultsForCluster1]] = None
 
 
 class ReachabilityTestResults(ApiModel):
     items: Optional[list[ReachabilityTestResultsForOrganization]] = None
-
-
-class ReachabilityTestResultsCluster(ApiModel):
-    items: Optional[list[ReachabilityTestResultsForCluster]] = None
 
 
 class BlrNodeLocation(ApiModel):
@@ -691,7 +691,7 @@ class ConnectivityTestResultsObject(ApiModel):
     from_: Optional[datetime] = None
     #: End date and time (inclusive) of the Network Test data.
     #: example: 2023-01-20T15:53:00Z
-    to: Optional[datetime] = None
+    to_: Optional[datetime] = None
     #: Network test results.
     items: Optional[list[ConnectivityTestResultsClustersObject1]] = None
 
@@ -752,7 +752,7 @@ class ClientTypeDistributionCollectionForOrg(ApiModel):
     from_: Optional[datetime] = None
     #: End date and time (inclusive) of the Client Type Distribution details.
     #: example: 2022-03-24T10:22:03Z
-    to: Optional[datetime] = None
+    to_: Optional[datetime] = None
     #: The aggregation period of the trend data.
     #: example: 10m
     aggregation_interval: Optional[datetime] = None

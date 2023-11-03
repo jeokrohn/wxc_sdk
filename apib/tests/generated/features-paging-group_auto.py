@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetPagingGroupAgentObject', 'GetPagingGroupAgentObjectType', 'GetPagingGroupObject', 'ListPagingGroupObject', 'PostPagingGroupObject', 'UpdatePagingGroupObject']
+__auto__ = ['CreateANewPagingGroupResponse', 'GetPagingGroupAgentObject', 'GetPagingGroupAgentObjectType', 'GetPagingGroupObject', 'ListPagingGroupObject', 'PostPagingGroupObject', 'ReadTheListOfPagingGroupsResponse', 'UpdatePagingGroupObject']
 
 
 class GetPagingGroupAgentObjectType(str, Enum):
@@ -159,3 +159,13 @@ class UpdatePagingGroupObject(ApiModel):
     originators: Optional[list[str]] = None
     #: People, including workspaces, that are added to paging group as paging call targets.
     targets: Optional[list[str]] = None
+
+
+class ReadTheListOfPagingGroupsResponse(ApiModel):
+    #: Array of paging groups.
+    location_paging: Optional[list[ListPagingGroupObject]] = None
+
+
+class CreateANewPagingGroupResponse(ApiModel):
+    #: ID of the newly created paging group.
+    id: Optional[str] = None

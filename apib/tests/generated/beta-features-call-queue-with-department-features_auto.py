@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersWithPattern', 'CallQueueQueueSettingsObject', 'CallQueueQueueSettingsObjectOverflow', 'CallQueueQueueSettingsObjectOverflowAction', 'CallQueueQueueSettingsObjectOverflowGreeting', 'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObjectCallBounce', 'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueObject', 'GetCallQueueObjectAlternateNumberSettings', 'GetCallQueueObjectDepartment', 'GetPersonPlaceObject', 'HuntPolicySelection', 'ListCallQueueObject', 'ModifyCallQueueObject', 'ModifyCallQueueObjectDepartment', 'PostPersonPlaceObject', 'RingPatternObject']
+__auto__ = ['AlternateNumbersWithPattern', 'CallQueueQueueSettingsObject', 'CallQueueQueueSettingsObjectOverflow', 'CallQueueQueueSettingsObjectOverflowAction', 'CallQueueQueueSettingsObjectOverflowGreeting', 'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObjectCallBounce', 'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueObject', 'GetCallQueueObjectAlternateNumberSettings', 'GetCallQueueObjectDepartment', 'GetPersonPlaceObject', 'HuntPolicySelection', 'ListCallQueueObject', 'ModifyCallQueueObject', 'ModifyCallQueueObjectDepartment', 'PostPersonPlaceObject', 'ReadTheListOfCallQueuesResponse', 'RingPatternObject']
 
 
 class RingPatternObject(str, Enum):
@@ -301,3 +301,8 @@ class ModifyCallQueueObject(ApiModel):
     agents: Optional[list[PostPersonPlaceObject]] = None
     #: Specifies the department information.
     department: Optional[ModifyCallQueueObjectDepartment] = None
+
+
+class ReadTheListOfCallQueuesResponse(ApiModel):
+    #: Array of call queues.
+    queues: Optional[list[ListCallQueueObject]] = None

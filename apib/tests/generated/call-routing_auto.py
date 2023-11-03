@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ActionOnRouteList', 'CallSourceInfo', 'CallSourceType', 'Customer', 'DestinationType', 'DeviceStatus', 'DeviceType', 'DialPattern', 'DialPatternPut', 'DialPatternStatus', 'DialPatternValidate', 'DialPatternValidateResult', 'DialPatternValidationStatus', 'DialPlan', 'DialPlanGet', 'DialPlanPost', 'DialPlanPut', 'Emergency', 'FeatureAccessCode', 'HostedAgent', 'HostedAgentType', 'HostedFeature', 'LocalGatewayUsageCount', 'LocalGateways', 'LocationUsageGetResponse', 'NumberStatus', 'OriginatorType', 'PbxUser', 'PostResponse', 'PstnNumber', 'ResponseStatus', 'ResponseStatusType', 'RouteGroup', 'RouteGroupGet', 'RouteGroupPatch', 'RouteGroupUsageRouteListGet', 'RouteGroupUsageRouteListItem', 'RouteList', 'RouteListGet', 'RouteListNumberListGet', 'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteListPatch', 'RouteListPost', 'RouteType', 'ServiceType', 'TestCallRoutingPostResponse', 'Trunk', 'TrunkFQDNValidatePost', 'TrunkGet', 'TrunkGetOutboundProxy', 'TrunkPost', 'TrunkPut', 'TrunkType', 'TrunkTypeGetList', 'TrunkTypeWithDeviceType', 'VirtualExtension', 'VirtualExtensionRange']
+__auto__ = ['ActionOnRouteList', 'CallSourceInfo', 'CallSourceType', 'Customer', 'DestinationType', 'DeviceStatus', 'DeviceType', 'DialPattern', 'DialPatternPut', 'DialPatternStatus', 'DialPatternValidate', 'DialPatternValidateResult', 'DialPatternValidationStatus', 'DialPlan', 'DialPlanGet', 'DialPlanPost', 'DialPlanPut', 'Emergency', 'FeatureAccessCode', 'GetLocalGatewayDialPlanUsageForATrunkResponse', 'GetRouteGroupsUsingTheLocalGatewayResponse', 'HostedAgent', 'HostedAgentType', 'HostedFeature', 'LocalGatewayUsageCount', 'LocalGateways', 'LocationUsageGetResponse', 'ModifyNumbersForRouteListResponse', 'NumberStatus', 'OriginatorType', 'PbxUser', 'PostResponse', 'PstnNumber', 'ReadTheCallToExtensionLocationsOfARoutingGroupResponse', 'ReadTheListOfDialPlansResponse', 'ReadTheListOfRouteListsResponse', 'ReadTheListOfRoutingGroupsResponse', 'ReadTheListOfTrunksResponse', 'ReadTheRouteListsOfARoutingGroupResponse', 'ReadTheUsageOfARoutingGroupResponse', 'ResponseStatus', 'ResponseStatusType', 'RouteGroup', 'RouteGroupGet', 'RouteGroupPatch', 'RouteGroupUsageRouteListGet', 'RouteGroupUsageRouteListItem', 'RouteList', 'RouteListGet', 'RouteListNumberListGet', 'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteListPatch', 'RouteListPost', 'RouteType', 'ServiceType', 'TestCallRoutingPostResponse', 'Trunk', 'TrunkFQDNValidatePost', 'TrunkGet', 'TrunkGetOutboundProxy', 'TrunkPost', 'TrunkPut', 'TrunkType', 'TrunkTypeGetList', 'TrunkTypeWithDeviceType', 'VirtualExtension', 'VirtualExtensionRange']
 
 
 class ActionOnRouteList(str, Enum):
@@ -861,3 +861,63 @@ class TrunkTypeWithDeviceType(ApiModel):
 class TrunkTypeGetList(ApiModel):
     #: Trunk type with device types.
     trunk_types: Optional[list[TrunkTypeWithDeviceType]] = None
+
+
+class GetLocalGatewayDialPlanUsageForATrunkResponse(ApiModel):
+    #: Array of dial Plans.
+    dial_plans: Optional[list[Customer]] = None
+
+
+class GetRouteGroupsUsingTheLocalGatewayResponse(ApiModel):
+    #: Array of route Groups.
+    route_group: Optional[list[RouteGroup]] = None
+
+
+class ReadTheListOfDialPlansResponse(ApiModel):
+    #: Array of dial plans.
+    dial_plans: Optional[list[DialPlan]] = None
+
+
+class ReadTheListOfTrunksResponse(ApiModel):
+    #: Array of trunks.
+    trunks: Optional[list[Trunk]] = None
+
+
+class ReadTheListOfRoutingGroupsResponse(ApiModel):
+    #: Array of route groups.
+    route_groups: Optional[list[RouteGroup]] = None
+
+
+class ReadTheUsageOfARoutingGroupResponse(ApiModel):
+    #: Number of PSTN connection locations associated to this route group.
+    #: example: 1
+    pstn_connection_count: Optional[datetime] = None
+    #: Number of call to extension locations associated to this route group.
+    #: example: 1
+    call_to_extension_count: Optional[datetime] = None
+    #: Number of dial plan locations associated to this route group.
+    #: example: 1
+    dial_plan_count: Optional[datetime] = None
+    #: Number of route list locations associated to this route group.
+    #: example: 1
+    route_list_count: Optional[datetime] = None
+
+
+class ReadTheCallToExtensionLocationsOfARoutingGroupResponse(ApiModel):
+    #: Array of locations.
+    locations: Optional[list[Customer]] = None
+
+
+class ReadTheRouteListsOfARoutingGroupResponse(ApiModel):
+    #: Array of route lists.
+    route_group_usage_route_list_get: Optional[list[RouteGroupUsageRouteListGet]] = None
+
+
+class ReadTheListOfRouteListsResponse(ApiModel):
+    #: Array of route lists.
+    route_lists: Optional[list[RouteList]] = None
+
+
+class ModifyNumbersForRouteListResponse(ApiModel):
+    #: Array of number statuses.
+    number_status: Optional[list[RouteListNumberPatchResponse]] = None

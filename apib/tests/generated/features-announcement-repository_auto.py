@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AnnouncementResponse', 'AnnouncementResponseWithId', 'AnnouncementUsageResponse', 'AnnouncementsListResponse', 'AnnouncementsListResponseLevel', 'FeatureReferenceObject', 'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId', 'LocationObject']
+__auto__ = ['AnnouncementResponse', 'AnnouncementResponseWithId', 'AnnouncementUsageResponse', 'AnnouncementsListResponse', 'AnnouncementsListResponseLevel', 'FeatureReferenceObject', 'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId', 'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelResponse', 'LocationObject']
 
 
 class FeatureReferenceObject(ApiModel):
@@ -118,3 +118,8 @@ class FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId(s
     all = 'all'
     locations = 'locations'
     y2lz_y29zc_gfyazov_l3_vz_l0x_pq0_fusu9_olz_mx_mtyx = 'Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzMxMTYx'
+
+
+class FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelResponse(ApiModel):
+    #: Array of announcements.
+    announcements: Optional[list[AnnouncementsListResponse]] = None

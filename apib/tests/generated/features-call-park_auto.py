@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CallParkSettingsObject', 'CallParkSettingsObjectRingPattern', 'GetAvailableRecallHuntGroupsObject', 'GetCallParkExtensionObject', 'GetCallParkObject', 'GetCallParkSettingsObject', 'GetPersonPlaceVirtualLineCallParksObject', 'GetPersonPlaceVirtualLineCallParksObjectType', 'GetRecallHuntGroupObject', 'GetRecallHuntGroupObjectOption', 'GetUserNumberItemObject', 'ListCPCallParkExtensionObject', 'ListCallParkExtensionObject', 'ListCallParkObject', 'ModifyCallExtensionParkObject', 'ModifyCallParkObject', 'ModifyCallParkSettingsObject', 'PutRecallHuntGroupObject']
+__auto__ = ['CallParkSettingsObject', 'CallParkSettingsObjectRingPattern', 'CreateACallParkResponse', 'GetAvailableAgentsFromCallParksResponse', 'GetAvailableRecallHuntGroupsFromCallParksResponse', 'GetAvailableRecallHuntGroupsObject', 'GetCallParkExtensionObject', 'GetCallParkObject', 'GetCallParkSettingsObject', 'GetPersonPlaceVirtualLineCallParksObject', 'GetPersonPlaceVirtualLineCallParksObjectType', 'GetRecallHuntGroupObject', 'GetRecallHuntGroupObjectOption', 'GetUserNumberItemObject', 'ListCPCallParkExtensionObject', 'ListCallParkExtensionObject', 'ListCallParkObject', 'ModifyCallExtensionParkObject', 'ModifyCallParkObject', 'ModifyCallParkSettingsObject', 'PutRecallHuntGroupObject', 'ReadTheListOfCallParkExtensionsResponse', 'ReadTheListOfCallParksResponse']
 
 
 class CallParkSettingsObjectRingPattern(str, Enum):
@@ -218,3 +218,29 @@ class ModifyCallParkSettingsObject(ApiModel):
     call_park_recall: Optional[PutRecallHuntGroupObject] = None
     #: Setting controlling call park behavior.
     call_park_settings: Optional[CallParkSettingsObject] = None
+
+
+class ReadTheListOfCallParksResponse(ApiModel):
+    #: Array of call parks.
+    call_parks: Optional[list[ListCallParkObject]] = None
+
+
+class CreateACallParkResponse(ApiModel):
+    #: ID of the newly created call park.
+    #: example: Y2lzY29zcGFyazovL3VzL0NBTExfUEFSSy9WR1Z6ZEMxRFVFY3RNZz09
+    id: Optional[str] = None
+
+
+class GetAvailableAgentsFromCallParksResponse(ApiModel):
+    #: Array of agents.
+    agents: Optional[list[GetPersonPlaceVirtualLineCallParksObject]] = None
+
+
+class GetAvailableRecallHuntGroupsFromCallParksResponse(ApiModel):
+    #: Array of available recall hunt groups.
+    hunt_groups: Optional[list[GetAvailableRecallHuntGroupsObject]] = None
+
+
+class ReadTheListOfCallParkExtensionsResponse(ApiModel):
+    #: Array of call park extensions.
+    call_park_extensions: Optional[list[ListCallParkExtensionObject]] = None

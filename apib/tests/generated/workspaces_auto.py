@@ -7,10 +7,25 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CapabilityMap', 'CapabilityResponse', 'SupportAndConfiguredInfo', 'Workspace', 'WorkspaceCalendar', 'WorkspaceCalendarType', 'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceCallingType', 'WorkspaceCollectionResponse', 'WorkspaceCreationRequest', 'WorkspaceCreationRequestCalendar', 'WorkspaceCreationRequestCalling', 'WorkspaceCreationRequestCallingWebexCalling', 'WorkspaceCreationRequestHotdeskingStatus', 'WorkspaceDeviceHostedMeetings', 'WorkspaceHotdeskingStatus', 'WorkspaceSupportedDevices', 'WorkspaceType', 'WorkspaceUpdateRequest', 'WorkspaceUpdateRequestType']
+__auto__ = ['CapabilityMap', 'CapabilityResponse', 'SupportAndConfiguredInfo', 'Workspace', 'WorkspaceCalendar', 'WorkspaceCalendarType', 'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceCallingType', 'WorkspaceCollectionResponse', 'WorkspaceCreationRequest', 'WorkspaceCreationRequestCalendar', 'WorkspaceCreationRequestCalling', 'WorkspaceCreationRequestCallingWebexCalling', 'WorkspaceCreationRequestHotdeskingStatus', 'WorkspaceDeviceHostedMeetings', 'WorkspaceHotdeskingStatus', 'WorkspaceSupportedDevices', 'WorkspaceType', 'WorkspaceType1', 'WorkspaceUpdateRequest', 'WorkspaceUpdateRequestType']
 
 
 class WorkspaceType(str, Enum):
+    #: High concentration.
+    focus = 'focus'
+    #: Brainstorm/collaboration.
+    huddle = 'huddle'
+    #: Dedicated meeting space.
+    meeting_room = 'meetingRoom'
+    #: Unstructured agile.
+    open = 'open'
+    #: Individual.
+    desk = 'desk'
+    #: Unspecified.
+    other = 'other'
+
+
+class WorkspaceType1(str, Enum):
     #: No workspace type set.
     not_set = 'notSet'
     #: High concentration.
@@ -118,7 +133,7 @@ class Workspace(ApiModel):
     #: example: 5.0
     capacity: Optional[int] = None
     #: The workspace type.
-    type: Optional[WorkspaceType] = None
+    type: Optional[WorkspaceType1] = None
     #: `SipUrl` to call all the devices associated with the workspace.
     #: example: test_workspace_1@trialorg.room.ciscospark.com
     sip_address: Optional[str] = None
@@ -193,7 +208,7 @@ class WorkspaceCreationRequest(ApiModel):
     #: example: 5.0
     capacity: Optional[int] = None
     #: The type that best describes the workspace.
-    type: Optional[WorkspaceType] = None
+    type: Optional[WorkspaceType1] = None
     #: The `sipAddress` field can only be provided when calling type is `thirdPartySipCalling`
     sip_address: Optional[str] = None
     #: Calling types supported on create are `freeCalling`, `webexEdgeForDevices`, `thirdPartySipCalling`, `webexCalling` and `none`. Default is `freeCalling`.

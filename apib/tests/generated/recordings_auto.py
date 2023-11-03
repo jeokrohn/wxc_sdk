@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BulkPurgeRecordingObject', 'BulkRestoreRecordingObject', 'BulkSoftDeleteRecordingObject', 'DeleteRecordingObject', 'ListRecordingsStatus', 'RecordingObject', 'RecordingObjectFormat', 'RecordingObjectServiceType', 'RecordingObjectStatus', 'RecordingObjectWithDirectDownloadLinks', 'RecordingObjectWithDirectDownloadLinksStatus', 'RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks']
+__auto__ = ['BulkPurgeRecordingObject', 'BulkRestoreRecordingObject', 'BulkSoftDeleteRecordingObject', 'DeleteRecordingObject', 'ListRecordingsResponse', 'ListRecordingsStatus', 'RecordingObject', 'RecordingObjectFormat', 'RecordingObjectServiceType', 'RecordingObjectStatus', 'RecordingObjectWithDirectDownloadLinks', 'RecordingObjectWithDirectDownloadLinksStatus', 'RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks']
 
 
 class RecordingObjectFormat(str, Enum):
@@ -202,3 +202,8 @@ class BulkPurgeRecordingObject(ApiModel):
 class ListRecordingsStatus(str, Enum):
     available = 'available'
     deleted = 'deleted'
+
+
+class ListRecordingsResponse(ApiModel):
+    #: An array of recording objects.
+    items: Optional[list[RecordingObject]] = None

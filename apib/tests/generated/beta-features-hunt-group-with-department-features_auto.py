@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersWithPattern', 'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusinessContinuity', 'GetHuntGroupCallPolicyObjectNoAnswer', 'GetHuntGroupObject', 'GetHuntGroupObjectDepartment', 'GetPersonPlaceObject', 'HuntPolicySelection', 'ListHuntGroupObject', 'ModifyHuntGroupObject', 'ModifyHuntGroupObjectDepartment', 'PostHuntGroupCallPolicyObject', 'PostHuntGroupCallPolicyObjectNoAnswer', 'PostPersonPlaceObject', 'RingPatternObject']
+__auto__ = ['AlternateNumbersWithPattern', 'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusinessContinuity', 'GetHuntGroupCallPolicyObjectNoAnswer', 'GetHuntGroupObject', 'GetHuntGroupObjectDepartment', 'GetPersonPlaceObject', 'HuntPolicySelection', 'ListHuntGroupObject', 'ModifyHuntGroupObject', 'ModifyHuntGroupObjectDepartment', 'PostHuntGroupCallPolicyObject', 'PostHuntGroupCallPolicyObjectNoAnswer', 'PostPersonPlaceObject', 'ReadTheListOfHuntGroupsResponse', 'RingPatternObject']
 
 
 class RingPatternObject(str, Enum):
@@ -272,3 +272,8 @@ class ModifyHuntGroupObject(ApiModel):
     enabled: Optional[bool] = None
     #: Department the huntgroup is assigned to.
     department: Optional[ModifyHuntGroupObjectDepartment] = None
+
+
+class ReadTheListOfHuntGroupsResponse(ApiModel):
+    #: Array of hunt groups.
+    hunt_groups: Optional[list[ListHuntGroupObject]] = None

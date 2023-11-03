@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetVoicemailRulesObject', 'GetVoicemailRulesObjectBlockPreviousPasscodes', 'GetVoicemailRulesObjectDefaultVoicemailPinRules', 'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockContiguousSequences', 'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits', 'GetVoicemailRulesObjectDefaultVoicemailPinRulesLength', 'GetVoicemailRulesObjectExpirePasscode', 'GetVoicemailSettingsObject', 'Language', 'PutVoicemailRulesObject']
+__auto__ = ['GetVoicemailRulesObject', 'GetVoicemailRulesObjectBlockPreviousPasscodes', 'GetVoicemailRulesObjectDefaultVoicemailPinRules', 'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockContiguousSequences', 'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits', 'GetVoicemailRulesObjectDefaultVoicemailPinRulesLength', 'GetVoicemailRulesObjectExpirePasscode', 'GetVoicemailSettingsObject', 'Language', 'PutVoicemailRulesObject', 'ReadTheListOfAnnouncementLanguagesResponse']
 
 
 class GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits(ApiModel):
@@ -16,7 +16,7 @@ class GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits(ApiMode
     enabled: Optional[bool] = None
     #: Maximum number of repeaed digits. The minimum value is 1. The maximum value is 6.
     #: example: 3.0
-    max: Optional[int] = None
+    max_: Optional[int] = None
 
 
 class GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockContiguousSequences(ApiModel):
@@ -37,7 +37,7 @@ class GetVoicemailRulesObjectDefaultVoicemailPinRulesLength(ApiModel):
     min: Optional[int] = None
     #: The minimum value is 3. The maximum value is 30.
     #: example: 3.0
-    max: Optional[int] = None
+    max_: Optional[int] = None
 
 
 class GetVoicemailRulesObjectDefaultVoicemailPinRules(ApiModel):
@@ -118,3 +118,8 @@ class PutVoicemailRulesObject(ApiModel):
     change_passcode: Optional[GetVoicemailRulesObjectExpirePasscode] = None
     #: Settings for previous passcode usage.
     block_previous_passcodes: Optional[GetVoicemailRulesObjectBlockPreviousPasscodes] = None
+
+
+class ReadTheListOfAnnouncementLanguagesResponse(ApiModel):
+    #: Array of Languages.
+    languages: Optional[list[Language]] = None

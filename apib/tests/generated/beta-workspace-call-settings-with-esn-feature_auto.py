@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Location', 'MonitoredElementCallParkExtension', 'MonitoredElementItem', 'MonitoredElementUser', 'MonitoredElementUserType', 'PhoneNumbers', 'UserMonitoringGet', 'UserNumberItem', 'Workspace']
+__auto__ = ['ListNumbersAssociatedWithASpecificWorkspaceResponse', 'Location', 'MonitoredElementCallParkExtension', 'MonitoredElementItem', 'MonitoredElementUser', 'MonitoredElementUserType', 'PhoneNumbers', 'UserMonitoringGet', 'UserNumberItem', 'Workspace']
 
 
 class MonitoredElementCallParkExtension(ApiModel):
@@ -137,3 +137,14 @@ class Workspace(ApiModel):
     #: Workspace ID associated with the list of numbers.
     #: example: Y2lzY29zcGFyazovL3VybjpURUFNOnVzLWVhc3QtMV9pbnQxMy9QTEFDRS8xNzdmNTNlZC1hNzY2LTRkYTAtOGQ3OC03MjE0MjhjMmFjZTQ=
     id: Optional[str] = None
+
+
+class ListNumbersAssociatedWithASpecificWorkspaceResponse(ApiModel):
+    #: Array of numbers (primary/alternate).
+    phone_numbers: Optional[list[PhoneNumbers]] = None
+    #: Workspace object having a unique identifier for the Workspace.
+    workspace: Optional[Workspace] = None
+    #: Location object having a unique identifier for the location and its name.
+    location: Optional[Location] = None
+    #: Organization object having a unique identifier for the organization and its name.
+    organization: Optional[Location] = None

@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ClosedCaptionObject', 'DownloadMeetingClosedCaptionSnippetsFormat', 'SnippetObject']
+__auto__ = ['ClosedCaptionObject', 'DownloadMeetingClosedCaptionSnippetsFormat', 'ListMeetingClosedCaptionSnippetsResponse', 'ListMeetingClosedCaptionsResponse', 'SnippetObject']
 
 
 class ClosedCaptionObject(ApiModel):
@@ -59,6 +59,16 @@ class SnippetObject(ApiModel):
     #: Original language of the snippet.
     #: example: en
     language: Optional[str] = None
+
+
+class ListMeetingClosedCaptionsResponse(ApiModel):
+    #: Closed caption array
+    items: Optional[list[ClosedCaptionObject]] = None
+
+
+class ListMeetingClosedCaptionSnippetsResponse(ApiModel):
+    #: Closed caption snippet array
+    items: Optional[list[SnippetObject]] = None
 
 
 class DownloadMeetingClosedCaptionSnippetsFormat(str, Enum):

@@ -16,26 +16,49 @@ class GeneratorTest(ApibTest):
         Generate Python sources for all classes in all APIB sources
         """
         logging.getLogger().setLevel(logging.INFO)
-
+        err = None
         for apib_path in self.apib_paths:
-            code_gen = CodeGenerator()
-            code_gen.read_blueprint(apib_path)
-            apib_path = os.path.basename(apib_path)
-            py_path = os.path.join(os.path.dirname(__file__),
-                                   'generated',
-                                   f'{os.path.splitext(apib_path)[0]}_auto.py')
-            with open(py_path, mode='w') as f:
-                f.write(code_gen.source())
+            try:
+                code_gen = CodeGenerator()
+                code_gen.read_blueprint(apib_path)
+                code_gen.cleanup()
+            except Exception as e:
+                err = err or e
+                print(f'{os.path.basename(apib_path)}: {e}')
+            else:
+                apib_path = os.path.basename(apib_path)
+                py_path = os.path.join(os.path.dirname(__file__),
+                                       'generated',
+                                       f'{os.path.splitext(apib_path)[0]}_auto.py')
+                with open(py_path, mode='w') as f:
+                    f.write(code_gen.source())
+        if err:
+            raise err
 
-    def test_002_endpoints(self):
+    def test_002_read_all_apib_list_endpoints(self):
         logging.getLogger().setLevel(logging.INFO)
+        code_gen = CodeGenerator()
 
+        ignore = {'device-configurations.apib'}
         for apib_path in self.apib_paths:
-            code_gen = CodeGenerator()
-            code_gen.read_blueprint(apib_path)
-            apib_path = os.path.basename(apib_path)
-            for ep in code_gen.endpoints():
-                print(ep)
+            apib_path_base = os.path.basename(apib_path)
+            if apib_path_base in ignore:
+                continue
+            try:
+                code_gen.read_blueprint(apib_path)
+            except Exception as e:
+                print(f'{apib_path_base}: {e}')
+        print(f'{len(list(code_gen.class_registry.classes()))} classes before optimization')
+        code_gen.cleanup()
+        print(f'{len(list(code_gen.class_registry.classes()))} classes after optimization')
+
+        for apib_key, ep in code_gen.all_endpoints():
+            print(f'{apib_key}: {ep}')
+        py_path = os.path.join(os.path.dirname(__file__),
+                               'generated',
+                               f'all_auto.py')
+        with open(py_path, mode='w') as f:
+            f.write(code_gen.source())
 
     def test_003_generate_class_sources_with_endpoints(self):
         logging.getLogger().setLevel(logging.INFO)

@@ -7,17 +7,22 @@ from functools import partial
 from itertools import chain
 from operator import attrgetter
 from re import subn, sub
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 __all__ = ['PythonClass', 'PythonClassRegistry', 'Attribute', 'Endpoint', 'Parameter', 'simple_python_type']
+
+from urllib.parse import urljoin
 
 import dateutil.parser
 
 from apib.apib import ApibDatastructure, ApibObject, ApibEnum, ApibParseResult, ApibMember, words_to_camel
-from apib.apib.classes import snake_case
+from apib.apib.classes import snake_case, ApibElement, ApibSelect, ApibString, ApibBool, ApibNumber, ApibArray
 from wxc_sdk.base import to_camel
 
 log = logging.getLogger(__name__)
+
+# some Python names are not allowed as parameter names
+RESERVED_PARAM_NAMES = {'from', 'to', 'max'}
 
 CLASS_TEMPLATE = """
 class {class_name}{baseclass}:
@@ -32,9 +37,20 @@ class Parameter:
     """
     name: str
     python_type: str
+    referenced_class: Optional[str]
     docstring: str
     sample: Any
     optional: bool
+
+    @property
+    def python_name(self) -> str:
+        """
+        A Python compatible name. Reserved Python names are suffixed with an underscore
+            from -> from_
+        """
+        if self.name in RESERVED_PARAM_NAMES:
+            return f'{self.name}_'
+        return self.name
 
 
 @dataclass
@@ -45,6 +61,7 @@ class Endpoint:
     href_parameter: list[Parameter] = field(default_factory=list)
     body_parameter: list[Parameter] = field(default_factory=list)
     result: str = field(default=None)
+    result_referenced_class: str = field(default=None)
 
 
 @dataclass
@@ -58,20 +75,6 @@ class Attribute:
     sample: Any
     referenced_class: str
 
-    # TODO: is this still needed?
-    # @classmethod
-    # def data_structure_class_attributes(cls, ds: ApibDatastucture) -> Generator['Attribute', None, None]:
-    #     if not ds.is_class:
-    #         return
-    #     if ds.superclass:
-    #         members = ds.content.content
-    #     else:
-    #         members = ds.content.content
-    #     if not members:
-    #         return
-    #     for member in members:
-    #         yield Attribute.from_member(ds.python_name, member)
-
     @classmethod
     def from_enum(cls, enum_element: ApibEnum) -> Generator['Attribute', None, None]:
         """
@@ -82,6 +85,9 @@ class Attribute:
                             docstring=e.description, sample=None, referenced_class=None)
 
     def source(self, for_enum: bool) -> str:
+        """
+        Python source for one class attribute
+        """
         if self.docstring:
             lines = [f'#: {ls}' for line in self.docstring.strip().splitlines()
                      if (ls := line.strip())]
@@ -98,7 +104,7 @@ class Attribute:
             lines.append(f"{name} = '{value}'")
         else:
             attr_name = snake_case(self.name)
-            if attr_name in {'from'}:
+            if attr_name in RESERVED_PARAM_NAMES:
                 attr_name = f'{attr_name}_'
             if self.sample:
                 lines.append(f'#: example: {self.sample}')
@@ -117,7 +123,7 @@ class PythonClass:
     Information about a Python class
     """
     name: str
-    attributes: list[Attribute] = field(default_factory=list)
+    attributes: Optional[list[Attribute]] = field(default=None)
     description: str = field(default=None)
     is_enum: bool = field(default=None)
     baseclass: str = field(default=None)
@@ -128,7 +134,6 @@ class PythonClass:
         """
         if self.baseclass and not self.attributes:
             return None
-        baseclass = ''
         if self.is_enum:
             baseclass = 'str, Enum'
         else:
@@ -146,19 +151,70 @@ class PythonClass:
         return result
 
 
-@dataclass
+@dataclass(init=False)
 class PythonClassRegistry:
-    _classes: dict[str, PythonClass] = field(default_factory=dict, repr=False)
+    # TODO: to disambiguate names:
+    #   + a global context can be set (name of the APIB currently processed)
+    #       * set_context(context: str)
+    #   + the context is used to create qualified identifiers for class names
+    #       * qualified_class_name(class_name: str)->str
+    #   + qualident: <prefix>%<class name>
+    #   + class names are not converted to camel case during creation of PythonClass instances from APIB
+    #   + python_types and referenced_classes in Attribute instances use qualified class names
+    #       * use get_qualident() to validate reference and get qualified name
+    #   + "proper" Python class names are created after all PythonClasses have been created --> normalization before
+    #       code creation
+    #   + the normalization makes sure that unique Python class names are used
+    #       + mapper from qualified class name to "normalized" Python class name
+    #       + remove qualifier
+    #       + convert class names to camel case
+    #       + make class names unique
+    #       + after creating unique unqualified class names the resulting mapping is used to update references to
+    #           class names
+    #       + normalization updates
+    #           + python_type in Attribute
+    #           + referenced_class in Attribute
+    #           + python_type in PythonClass
+    #           * ... in Endpoint
+    #   + after normalization updated PythonClass and Attribute instances can be used for code creation
+    #
+
+    # context used to disambiguate class names in the registry
+    _context: str = field(repr=False)
+
+    # registered classes
+    _classes: dict[str, PythonClass] = field(repr=False)
+
+    #: Dictionary of list of endpoints of an APIB file. Indexed by basename of APIB file w/o suffix
+    _endpoints: dict[str, list[Endpoint]] = field(repr=False)
+
+    def __init__(self):
+        self._context = None
+        self._classes = dict()
+        self._endpoints = defaultdict(list)
+
+    def set_context(self, context: str):
+        self._context = context
+
+    def qualified_class_name(self, class_name: str) -> str:
+        """
+        Get qualified identified for given class name
+        """
+        if '%' in class_name:
+            return class_name
+        return f'{self._context}%{class_name}'
 
     def add(self, pc: PythonClass):
-        # make sure that the class name is unique. To make the name unique append a numeric suffix if needed
-        name = next((sn for suffix in chain([''], (str(i) for i in range(1, 100)))
-                     if (sn := f'{pc.name}{suffix}') not in self._classes))
-        if name != pc.name:
-            existing = self._classes[pc.name]
-            log.error(f'class name "{pc.name}" already exists')
-            raise KeyError()
+        """
+        Add a python class to the registry. When adding the class name to the registry pc.name gets updated to a
+        qualident.
+        pc.name has to be unique
+        """
+        qualident = self.qualified_class_name(pc.name)
+        if qualident in self._classes:
+            raise KeyError(f'python class name "{pc.name}" already registered')
 
+        pc.name = qualident
         self._classes[pc.name] = pc
 
     def get(self, class_name: str) -> Optional[PythonClass]:
@@ -166,24 +222,64 @@ class PythonClassRegistry:
             _, pc = self._dereferenced_class(pc.name)
         return pc
 
+    def classes(self) -> Generator[PythonClass, None, None]:
+        """
+        Generator for all registered classes
+        :return:
+        """
+        visited = set()
+
+        def yield_from_classname(class_name: Optional[str]) -> Generator[PythonClass, None, None]:
+            if class_name is None:
+                return
+
+            # descend down into baseclasses if there are no attributes
+            _, c = self._dereferenced_class(class_name)
+            if c is None:
+                return
+
+            yield from yield_classes(c)
+            return
+
+        def yield_classes(p_class: PythonClass) -> Generator[PythonClass, None, None]:
+            yield from yield_from_classname(p_class.baseclass)
+            for attr in p_class.attributes:
+                yield from yield_from_classname(attr.referenced_class)
+
+            if p_class.name not in visited:
+                visited.add(p_class.name)
+                yield p_class
+
+        for pc_name in self._classes:
+            yield from yield_from_classname(pc_name)
+
+    def endpoints(self) -> Generator[tuple[str, Endpoint], None, None]:
+        """
+        Generator of endpoints defined in the APIB
+        yields tuples of APIB key and Endpoint instance
+        """
+        return chain.from_iterable(((apib_key, ep)
+                                    for ep in endpoints)
+                                   for apib_key, endpoints in self._endpoints.items())
+
     def _python_class_attributes(self, basename: str, members: list[ApibMember]) -> list[Attribute]:
         attributes = []
         if not members:
             return attributes
         for member in members:
-            attribute = self.attribute_from_member(basename, member)
+            attribute = self._attribute_from_member(basename, member)
             if attribute:
                 attributes.append(attribute)
         return attributes
 
-    def attribute_from_member(self, class_name: str, member: ApibMember) -> Attribute:
+    def _attribute_from_member(self, class_name: str, member: ApibMember) -> Attribute:
         """
         derive Attribute from APIB member. Create and register classes on the fly as needed
         """
         if member.element != 'member':
             log.warning(f'Not implemented, member element: {member.element}')
-            return None
             # TODO: implement this case
+            raise NotImplementedError
         name = member.key
         value = member.value
         docstring = member.meta and member.meta.description
@@ -244,7 +340,8 @@ class PythonClassRegistry:
             else:
                 # array of some type
                 # references class is that type
-                referenced_class = words_to_camel(array_element_type)
+                referenced_class = array_element_type
+                referenced_class = self.qualified_class_name(referenced_class)
                 # .. and the Python type is a list of that type
                 python_type = f'list[{referenced_class}]'
         elif value.element == 'object':
@@ -286,93 +383,72 @@ class PythonClassRegistry:
             sample = value.content
         else:
             # this might be a reference to a class
-            python_type = words_to_camel(value.element)
+            python_type = value.element
+            python_type = self.qualified_class_name(python_type)
             referenced_class = python_type
             try:
                 sample = value.content and value.content.content
             except AttributeError:
                 sample = None
+        if referenced_class:
+            referenced_class = self.qualified_class_name(referenced_class)
         return Attribute(name=name, python_type=python_type, docstring=docstring, sample=sample,
                          referenced_class=referenced_class)
 
-    def add_classes_from_data_structure(self, ds: ApibDatastructure):
+    def _add_classes_from_data_structure(self, ds: ApibDatastructure, class_name: str = None) -> PythonClass:
         """
         Add classes defined in a given APIB datastructure
         """
         # content can be 'object' or 'enum'
         content = ds.content
         content_element = content and content.element
-        python_name = ds.python_name
+        class_name = class_name or ds.class_name
+        if not class_name:
+            raise ValueError('Undefined class name')
         baseclass = ds.baseclass
         if not content_element:
             raise ValueError('content element should not be None')
         elif content_element == 'object':
             content: ApibObject
             # get attributes from object content
-            attributes = self._python_class_attributes(basename=ds.python_name,
+            attributes = self._python_class_attributes(basename=class_name,
                                                        members=content.content)
-            self.add(PythonClass(name=python_name, attributes=attributes, description=None, is_enum=False,
-                                 baseclass=baseclass))
+            pc = PythonClass(name=class_name, attributes=attributes, description=None, is_enum=False,
+                             baseclass=baseclass)
 
         elif content_element == 'enum':
             content: ApibEnum
             attributes = list(Attribute.from_enum(content))
-            self.add(PythonClass(name=python_name, attributes=attributes, is_enum=True))
+            pc = PythonClass(name=class_name, attributes=attributes, is_enum=True)
         else:
-            attributes = self._python_class_attributes(basename=ds.python_name,
+            attributes = self._python_class_attributes(basename=class_name,
                                                        members=content.content)
-            self.add(PythonClass(name=python_name, attributes=attributes, description=None, is_enum=False,
-                                 baseclass=baseclass))
+            baseclass = baseclass and self.qualified_class_name(baseclass)
+            pc = PythonClass(name=class_name, attributes=attributes, description=None, is_enum=False,
+                             baseclass=baseclass)
+        self.add(pc)
+        return pc
 
     def add_classes_from_parse_result(self, parse_result: ApibParseResult) -> Generator['PythonClass', None, None]:
         """
         All Python classes (implicit and explict and classes used in results of endpoint calls)
         """
         for ds in parse_result.api.data_structures():
-            self.add_classes_from_data_structure(ds)
+            self._add_classes_from_data_structure(ds)
 
         # also go through transitions and look at response datastructures
-        for transition in parse_result.api.transitions():
-            response = transition.http_transaction.response
-            ds = response and response.datastructure
-            if not ds:
-                continue
-
-            # skip datastructures w/o attributes
-            if not ds.attributes:
-                continue
-            self.add_classes_from_data_structure(ds)
-
-    def classes(self) -> Generator[PythonClass, None, None]:
-        """
-        Generator for all registered classes
-        :return:
-        """
-        visited = set()
-
-        def yield_from_classname(class_name: Optional[str]) -> Generator[PythonClass, None, None]:
-            if class_name is None:
-                return
-
-            # descend down into baseclasses if there are no attributes
-            _, c = self._dereferenced_class(class_name)
-            if c is None:
-                return
-
-            yield from yield_classes(c)
-            return
-
-        def yield_classes(p_class: PythonClass) -> Generator[PythonClass, None, None]:
-            yield from yield_from_classname(p_class.baseclass)
-            for attr in p_class.attributes:
-                yield from yield_from_classname(attr.referenced_class)
-
-            if p_class.name not in visited:
-                visited.add(p_class.name)
-                yield p_class
-
-        for pc_name in self._classes:
-            yield from yield_from_classname(pc_name)
+        # TODO: isn't this redundant w/ _register_endpoints?
+        # for transition in parse_result.api.transitions():
+        #     response = transition.http_transaction.response
+        #     ds = response and response.datastructure
+        #     if not ds:
+        #         continue
+        #
+        #     # skip datastructures w/o attributes
+        #     if not ds.attributes:
+        #         continue
+        #     self.add_classes_from_data_structure(ds)
+        self._register_endpoints(parsed_blueprint=parse_result)
 
     def _dereferenced_class(self, class_name) -> tuple[str, Optional[PythonClass]]:
         while True:
@@ -530,6 +606,67 @@ class PythonClassRegistry:
             # for
         # for
 
+    def normalize(self):
+        """
+        Eliminate redundancies and then transform all class names to Python class names
+            * the normalization makes sure that unique Python class names are used
+              * mapper from qualified class name to "normalized" Python class name
+              * remove qualifier
+              * convert class names to camel case
+              * make class names unique
+              * after creating unique unqualified class names the resulting mapping is used to update references to
+                  class names
+              * normalization updates
+                  * python_type in Attribute
+                  * referenced_class in Attribute
+                  * python_type in PythonClass
+                  * ... in Endpoint
+            * after normalization updated PythonClass and Attribute instances can be used for code creation
+        """
+        self.eliminate_redundancies()
+
+        # mapping qualidents to Python class names
+        qualident_to_python_name: dict[str, str] = dict()
+        python_names = set()
+
+        # create the mappings
+        for qualident, pc in self._classes.items():
+            python_name = words_to_camel(pc.name.split('%')[-1])
+            # disambiguate class names by appending an index
+            python_name = next((pn for suffix in chain([''], (str(i) for i in range(1, 100)))
+                                if (pn := f'{python_name}{suffix}') not in python_names))
+            # keep record of the Python class name
+            python_names.add(python_name)
+            qualident_to_python_name[qualident] = python_name
+
+        # now go through all classes and clean up references from qualidents to Python names
+        for qualident, python_name in qualident_to_python_name.items():
+            pc = self._classes.pop(qualident)
+            pc.name = python_name
+            pc.baseclass = pc.baseclass and qualident_to_python_name[pc.baseclass]
+            if pc.attributes:
+                for attr in pc.attributes:
+                    if attr.referenced_class:
+                        new_class_name = qualident_to_python_name[attr.referenced_class]
+                        attr.python_type = attr.python_type.replace(attr.referenced_class, new_class_name)
+                        attr.referenced_class = new_class_name
+            self._classes[python_name] = pc
+
+        # update class references in endpoints
+        for key, endpoint in self.endpoints():
+            # parameter
+            for param in chain(endpoint.body_parameter, endpoint.href_parameter):
+                if param.referenced_class:
+                    python_name = qualident_to_python_name[param.referenced_class]
+                    param.python_type = param.python_type.replace(param.referenced_class, python_name)
+
+            # result class
+            if endpoint.result_referenced_class:
+                python_name = qualident_to_python_name[endpoint.result_referenced_class]
+                endpoint.result = endpoint.result.replace(endpoint.result_referenced_class,
+                                                          python_name)
+                endpoint.result_referenced_class = python_name
+
     def baseclasses_for_common_attribute_sets(self):
         """
         Try to find classes that have sets of common attributes.
@@ -544,6 +681,344 @@ class PythonClassRegistry:
         # generate new base class if common attributes are not covering everything
         # TODO: implement
         ...
+
+    def _register_endpoints(self, parsed_blueprint: ApibParseResult):
+        """
+        Determine endpoints defined in parsed blueprint and register the endpoints. Python classes are registered on
+        the fly as needed
+        """
+        apib_key = self._context
+        # host is defined at tha API level
+        # something like 'https://webexapis.com/v1/'
+        host = parsed_blueprint.api.host
+        for transition in parsed_blueprint.api.transitions():
+            # come up with a name for the method
+            # 'List Admin Audit Events' --> 'list_admin_audit_events'
+            name = '_'.join(transition.title.split()).lower()
+
+            # href is something like '/adminAudit/events{?orgId,from,to,actorId,max,offset,eventCategories}'
+            href = transition.href
+            # extract the href parameter names from the part between the brackets
+            if m := re.search(r'\{\?(.+)}', href):
+                href_param_names = m.group(1).split(',')
+            else:
+                href_param_names = []
+
+            # the actual URL is the part before the bracket ... if there is one
+            url = href.split('{')[0].strip('/')
+            # full url based on host and endpoint url
+            full_url = urljoin(host, url)
+
+            # gather info from the HTTP transaction
+            http_transaction = transition.http_transaction
+            request = http_transaction.request
+            response = http_transaction.response
+
+            method = request.method
+            response_datastructure = response.datastructure
+            href_parameters = []
+            for href_variable in transition.href_variables:
+                param = self._param_from_member_or_select(endpoint_name=name, member=href_variable)
+                href_parameters.append(param)
+
+            body_parameters = []
+            if body := request.find_content_by_element('dataStructure'):
+                body: ApibDatastructure
+                body_content = body.content
+                if isinstance(body_content, ApibObject):
+                    # The object should have all attributes
+                    body_content: ApibObject
+                    # ApibObject has a list of members
+                    body_parameters = [self._param_from_member_or_select(endpoint_name=name, member=member)
+                                       for member in body_content.content]
+                elif isinstance(body_content, ApibElement) and not any((body_content.content,
+                                                                        body_content.meta)):
+                    # this might be a class name
+                    class_name = body_content.element.replace(' ', '')
+                    class_name = self.qualified_class_name(class_name)
+
+                    # type attributes is the only acceptable attribute
+                    optional = False
+                    if body_content.attributes:
+                        if set(body_content.attributes) != {'typeAttributes'}:
+                            raise KeyError(f'Only typeAttributes are acceptable, got: '
+                                           f'{", ".join(sorted(body_content.attributes))}')
+                        type_attributes = set(ta.content for ta in body_content.attributes['typeAttributes'].content)
+                        optional = 'required' not in type_attributes
+                    # .. and that class should exist
+                    if python_class := self.get(class_name):
+                        # attributes of the class -> parameters
+                        if python_class.attributes:
+                            body_parameters = [Parameter(name=attr.name, python_type=attr.python_type,
+                                                         docstring=attr.docstring, sample=attr.sample,
+                                                         optional=optional, referenced_class=attr.referenced_class)
+                                               for attr in python_class.attributes]
+                        else:
+                            raise NotImplementedError('No attributes')
+                else:
+                    raise NotImplementedError(f'http request body datastructure '
+                                              f'with unexpected content: {body_content.element}')
+
+            result = None
+            referenced_class = None
+            if response_datastructure:
+                # we have as response datastructure
+                # a response datastructure should always have content
+                response_ds_content = response_datastructure.content
+                if not response_ds_content:
+                    raise ValueError('response datastructure w/o content')
+                else:
+                    # the datastructure content can have content...
+                    if response_ds_content.content:
+                        # ... and then the element is either 'array' or 'object'
+                        if response_ds_content.element == 'object':
+                            # create a new response class
+                            response_class = self._add_classes_from_data_structure(
+                                ds=response_datastructure,
+                                class_name=f'{" ".join(map(str.capitalize, name.split("_")))} Response')
+                            result = response_class.name
+                        elif response_ds_content.element == 'array':
+                            array_content_class_name = response_ds_content.content[0].element
+                            array_content_class_name = self.qualified_class_name(array_content_class_name)
+                            result = f'list[{array_content_class_name}]'
+                            referenced_class = array_content_class_name
+                        else:
+                            raise ValueError(f'Unexpected response datastructure content element: '
+                                             f'{response_ds_content.element}')
+
+                    else:
+                        # .. or the datastructure content doesn't have content
+                        # and in this case the element is a reference to a class
+                        result = response_datastructure.content.element
+                        result = self.qualified_class_name(result)
+                        # .. and the class has to exist
+                        if not self.get(class_name=result):
+                            raise KeyError(f'class {result} not found')
+            referenced_class = referenced_class or result
+            self._endpoints[apib_key].append(Endpoint(name=name, method=method, url=full_url,
+                                                      href_parameter=href_parameters,
+                                                      body_parameter=body_parameters,
+                                                      result=result,
+                                                      result_referenced_class=referenced_class))
+        return
+
+    def _param_from_member_or_select(self, endpoint_name: str, member: Union[ApibMember, ApibSelect]) -> Parameter:
+
+        if not (isinstance(member, ApibMember) or isinstance(member, ApibSelect)):
+            raise TypeError(f'unexpected parameter type: {member.__class__.__name__}')
+
+        if isinstance(member, ApibSelect):
+            member: ApibSelect
+            name = member.option_key
+            docstring = member.description
+            # collect all types
+            types = [simple_python_type(option.content.value.element, option.content.value.content)
+                     for option in member.content]
+            python_type = f'Union[{", ".join(sorted(set(types)))}]'
+            text_of_options = '\n'.join(f'{option.content.value.content} ({t})'
+                                        for option, t in zip(member.content, types))
+            docstring = '\n'.join(l for l in chain((docstring, 'One of:'),
+                                                   (f'  * {tl}' for tl in text_of_options.splitlines()))
+                                  if l is not None)
+
+            parameter = Parameter(name=name, python_type=python_type, docstring=docstring, referenced_class=None,
+                                  optional=False, sample=None)
+            return parameter
+
+        # determine parameter name,
+        name = member.key
+
+        docstring = member.description
+        sample = member.value
+        if member.meta is None:
+            type_hint = None
+        else:
+            type_hint = member.meta.title
+        optional = 'required' not in member.type_attributes
+
+        # now try to determine the actual Python type and sample value
+        type_hint_lower = type_hint and type_hint.lower()
+        python_type = ''
+        referenced_class = None
+
+        if isinstance(sample, ApibString):
+            sample = sample.content
+        elif isinstance(sample, ApibBool):
+            sample = sample.content
+        elif isinstance(sample, ApibNumber):
+            sample = sample.content
+
+        if isinstance(sample, ApibElement):
+            if isinstance(sample, ApibEnum):
+                sample: ApibEnum
+                # create an enum on the fly
+                # name of the enum is based on the method name and the attribute
+                enum_name = ''.join(map(str.capitalize, endpoint_name.split('_')))
+                enum_name = f'{enum_name}{name[0].upper()}{name[1:]}'
+                enum_attributes = list(Attribute.from_enum(sample))
+                enum_class = PythonClass(name=enum_name, description=docstring, is_enum=True,
+                                         attributes=enum_attributes)
+                # and register that
+                self.add(enum_class)
+                enum_name = enum_class.name
+                if sample.default:
+                    sample = sample.default.content
+                else:
+                    # try the 1st enum value
+                    sample = sample.enum_values[0]
+                python_type = enum_name
+                referenced_class = enum_name
+            elif isinstance(sample, ApibObject):
+                # create a class on the fly
+                class_name = ''.join(map(str.capitalize, endpoint_name.split('_')))
+                class_name = f'{class_name}{name[0].upper()}{name[1:]}'
+                class_attributes = []
+                for sample_member in sample.content:
+                    attribute = self._attribute_from_member(class_name=class_name,
+                                                            member=sample_member)
+                    class_attributes.append(attribute)
+                new_class = PythonClass(name=class_name, description=docstring, is_enum=False,
+                                        attributes=class_attributes)
+                # and register that
+                self.add(new_class)
+                sample = ''
+                python_type = new_class.name
+                referenced_class = new_class.name
+            elif isinstance(sample, ApibArray):
+                try:
+                    python_type = simple_python_type(sample.content[0].element)
+                except ValueError:
+                    python_type = None
+                if python_type:
+                    # simple type
+                    python_type = f'list[{python_type}]'
+                    sample = ", ".join(f"'{e.content}'" for e in sample.content)
+                    sample = f'[{sample}]'
+                else:
+                    # hopefully we can figure out the type of the array elements. For this we expect the
+                    # sample content to have exactly one ApibElement entry
+                    if len(sample.content) != 1:
+                        raise NotImplementedError(f'Unexpected sample: {sample}')
+                    arr_element = sample.content[0]
+                    if not isinstance(arr_element, ApibElement):
+                        raise NotImplementedError(f'Unexpected sample: {sample}')
+                    if isinstance(arr_element, ApibObject):
+                        # create a class on the fly
+                        class_name = ''.join(map(str.capitalize, endpoint_name.split('_')))
+                        class_name = f'{class_name}{name[0].upper()}{name[1:]}'
+                        class_attributes = []
+                        for sample_member in arr_element.content:
+                            attribute = self._attribute_from_member(class_name=class_name,
+                                                                    member=sample_member)
+                            class_attributes.append(attribute)
+                        new_class = PythonClass(name=class_name, description=docstring, is_enum=False,
+                                                attributes=class_attributes)
+                        # and register that
+                        self.add(new_class)
+                        class_name = new_class.name
+                        referenced_class = new_class.name
+                        sample = ''
+                        python_type = f'list[{new_class.name}]'
+                    else:
+                        # this is an array of a class instance and the arr_element has the class name
+                        class_name = arr_element.element
+                        class_name = self.qualified_class_name(class_name)
+                        # this class has to exist
+                        if pc := self.get(class_name):
+                            python_type = f'list[{pc.name}]'
+                            referenced_class = pc.name
+                            sample = ''
+                        else:
+                            raise KeyError(f'Unknown class: {class_name}')
+            elif isinstance(sample, ApibElement):
+                # in this case the element is a class name
+                class_name = sample.element
+                class_name = self.qualified_class_name(class_name)
+
+                # this class should exist
+                if not self.get(class_name):
+                    raise KeyError(f'Unknown class: {class_name}')
+                else:
+                    python_type = class_name
+                    referenced_class = class_name
+                    if sample.meta:
+                        raise NotImplementedError()
+                    if (sample.attributes and
+                            (unexpected_attributes := set(sample.attributes) - {'typeAttributes', 'default',
+                                                                                'enumerations'})):
+                        raise NotImplementedError(f'Unexpected sample attributes: '
+                                                  f'{", ".join(sorted(unexpected_attributes))}')
+                    if sample.content:
+                        sample = sample.content.content
+                    else:
+                        sample = ''
+            else:
+                raise NotImplementedError(f'unhandled sample: {sample}')
+        elif type_hint_lower == 'string' or type_hint_lower is None:
+            # could be a datetime
+            if sample is None:
+                python_type = 'str'
+            else:
+                try:
+                    dateutil.parser.parse(sample)
+                    python_type = 'datetime'
+                except (OverflowError, dateutil.parser.ParserError, TypeError):
+                    # probably a string
+                    python_type = 'str'
+                except Exception as e:
+                    raise NotImplementedError(f'Unexpected error when trying to parse a string: {e}')
+        elif type_hint_lower == 'number':
+            # can be int or float
+            if sample is None:
+                python_type = 'int'
+            else:
+                try:
+                    sample = int(sample)
+                    python_type = 'int'
+                except ValueError:
+                    python_type = 'float'
+                    try:
+                        sample = float(sample)
+                    except ValueError:
+                        pass
+        elif type_hint_lower in {'integer', 'long', 'int'}:
+            python_type = 'int'
+            try:
+                sample = int(sample)
+            except ValueError:
+                pass
+        elif type_hint_lower == 'boolean':
+            python_type = 'bool'
+        elif type_hint_lower in {'list', 'array'}:
+            python_type = 'list[str]'
+        elif type_hint_lower.startswith('array['):
+            # let's see whether the type spec is a known class
+            m = re.match(r'array\[(.+)]', type_hint)
+            array_element_class = m.group(1)
+            pc = self.get(self.qualified_class_name(array_element_class))
+            if pc:
+                # reference to known class name
+                python_type = f'list[{pc.name}]'
+                referenced_class = pc.name
+            else:
+                python_type = f'list[{simple_python_type(array_element_class)}]'
+        elif type_hint_lower == 'string array':
+            python_type = 'list[str]'
+        else:
+            # check whether the type hint is a known PythonClass
+            if pc := self.get(type_hint):
+                if pc.is_enum:
+                    python_type = type_hint
+                else:
+                    NotImplementedError('No idea how to hande a non-enum class in href parameters')
+            else:
+                raise NotImplementedError(f'unexpected type hint: "{type_hint_lower}"')
+        if not python_type:
+            raise ValueError('Well, that\'s embarrassing!')
+
+        parameter = Parameter(name=name, python_type=python_type, docstring=docstring, sample=sample,
+                              optional=optional, referenced_class=referenced_class)
+        return parameter
 
 
 def simple_python_type(type_hint: str, value: Any = None) -> str:

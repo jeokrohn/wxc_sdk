@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Floor', 'FloorCollectionResponse', 'FloorCreationRequest', 'Location', 'LocationAddress', 'LocationsCollectionResponse', 'PostCommonLocationObject', 'PutCommonLocationObject']
+__auto__ = ['CreateALocationResponse', 'Floor', 'FloorCollectionResponse', 'FloorCreationRequest', 'Location', 'LocationAddress', 'LocationsCollectionResponse', 'PostCommonLocationObject', 'PutCommonLocationObject']
 
 
 class LocationAddress(ApiModel):
@@ -128,3 +128,9 @@ class FloorCreationRequest(ApiModel):
 class FloorCollectionResponse(ApiModel):
     #: An array of floor objects.
     items: Optional[list[Floor]] = None
+
+
+class CreateALocationResponse(ApiModel):
+    #: ID of the newly created location.
+    #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzljYTNhZmQ3LTE5MjYtNGQ0ZS05ZDA3LTk5ZDJjMGU4OGFhMA
+    id: Optional[str] = None

@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersObject', 'AlternateNumbersObjectRingPattern', 'AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLevel', 'AudioAnnouncementFileObjectMediaFileType', 'AudioFileObject', 'AutoAttendantCallForwardSettingsDetailsObject', 'AutoAttendantCallForwardSettingsModifyDetailsObject', 'CallForwardRulesModifyObject', 'CallForwardRulesObject', 'CallForwardSelectiveCallsFromCustomNumbersObject', 'CallForwardSelectiveCallsFromObject', 'CallForwardSelectiveCallsFromObjectSelection', 'CallForwardSelectiveCallsToNumbersObject', 'CallForwardSelectiveCallsToNumbersObjectType', 'CallForwardSelectiveCallsToObject', 'CallForwardSelectiveForwardToObject', 'CallForwardSelectiveForwardToObjectSelection', 'GetAutoAttendantCallForwardSelectiveRuleObject', 'GetAutoAttendantCallForwardSettingsObject', 'GetAutoAttendantObject', 'GetAutoAttendantObjectExtensionDialing', 'GetCallForwardAlwaysSettingObject', 'HoursMenuGetObject', 'HoursMenuGetObjectGreeting', 'KeyConfigurationsGetObject', 'KeyConfigurationsGetObjectAction', 'KeyConfigurationsGetObjectKey', 'ListAutoAttendantObject', 'ModifyAutoAttendantCallForwardSelectiveRuleObject', 'ModifyAutoAttendantCallForwardSettingsObject', 'ModifyAutoAttendantObject']
+__auto__ = ['AlternateNumbersObject', 'AlternateNumbersObjectRingPattern', 'AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLevel', 'AudioAnnouncementFileObjectMediaFileType', 'AudioFileObject', 'AutoAttendantCallForwardSettingsDetailsObject', 'AutoAttendantCallForwardSettingsModifyDetailsObject', 'CallForwardRulesModifyObject', 'CallForwardRulesObject', 'CallForwardSelectiveCallsFromCustomNumbersObject', 'CallForwardSelectiveCallsFromObject', 'CallForwardSelectiveCallsFromObjectSelection', 'CallForwardSelectiveCallsToNumbersObject', 'CallForwardSelectiveCallsToNumbersObjectType', 'CallForwardSelectiveCallsToObject', 'CallForwardSelectiveForwardToObject', 'CallForwardSelectiveForwardToObjectSelection', 'CreateAnAutoAttendantResponse', 'GetAutoAttendantCallForwardSelectiveRuleObject', 'GetAutoAttendantCallForwardSettingsObject', 'GetAutoAttendantObject', 'GetAutoAttendantObjectExtensionDialing', 'GetCallForwardAlwaysSettingObject', 'HoursMenuGetObject', 'HoursMenuGetObjectGreeting', 'KeyConfigurationsGetObject', 'KeyConfigurationsGetObjectAction', 'KeyConfigurationsGetObjectKey', 'ListAutoAttendantObject', 'ModifyAutoAttendantCallForwardSelectiveRuleObject', 'ModifyAutoAttendantCallForwardSettingsObject', 'ModifyAutoAttendantObject', 'ReadTheListOfAutoAttendantsResponse']
 
 
 class AlternateNumbersObjectRingPattern(str, Enum):
@@ -447,3 +447,13 @@ class ModifyAutoAttendantObject(ApiModel):
     business_hours_menu: Optional[HoursMenuGetObject] = None
     #: After hours menu defined for the auto attendant.
     after_hours_menu: Optional[HoursMenuGetObject] = None
+
+
+class ReadTheListOfAutoAttendantsResponse(ApiModel):
+    #: Array of auto attendants.
+    auto_attendants: Optional[list[ListAutoAttendantObject]] = None
+
+
+class CreateAnAutoAttendantResponse(ApiModel):
+    #: ID of the newly created auto attendant.
+    id: Optional[str] = None

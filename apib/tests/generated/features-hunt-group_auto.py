@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersWithPattern', 'CallForwardRulesGet', 'CallForwardRulesSet', 'CallForwardSettingsGet', 'CallForwardSettingsGetCallForwarding', 'CallForwardSettingsGetCallForwardingAlways', 'CallForwardingNumbers', 'CallForwardingNumbersType', 'CreateForwardingRuleObject', 'CreateForwardingRuleObjectCallsFrom', 'CreateForwardingRuleObjectCallsFromCustomNumbers', 'CreateForwardingRuleObjectCallsFromSelection', 'CreateForwardingRuleObjectCallsTo', 'CreateForwardingRuleObjectForwardTo', 'CreateForwardingRuleObjectForwardToSelection', 'CreateHuntGroupObject', 'GetForwardingRuleObject', 'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusinessContinuity', 'GetHuntGroupCallPolicyObjectNoAnswer', 'GetHuntGroupObject', 'GetPersonPlaceVirtualLineHuntGroupObject', 'HuntPolicySelection', 'ListHuntGroupObject', 'ModifyCallForwardingObject', 'ModifyCallForwardingObjectCallForwarding', 'ModifyHuntGroupObject', 'PostHuntGroupCallPolicyObject', 'PostHuntGroupCallPolicyObjectNoAnswer', 'PostPersonPlaceVirtualLineHuntGroupObject', 'RingPatternObject']
+__auto__ = ['AlternateNumbersWithPattern', 'CallForwardRulesGet', 'CallForwardRulesSet', 'CallForwardSettingsGet', 'CallForwardSettingsGetCallForwarding', 'CallForwardSettingsGetCallForwardingAlways', 'CallForwardingNumbers', 'CallForwardingNumbersType', 'CreateAHuntGroupResponse', 'CreateForwardingRuleObject', 'CreateForwardingRuleObjectCallsFrom', 'CreateForwardingRuleObjectCallsFromCustomNumbers', 'CreateForwardingRuleObjectCallsFromSelection', 'CreateForwardingRuleObjectCallsTo', 'CreateForwardingRuleObjectForwardTo', 'CreateForwardingRuleObjectForwardToSelection', 'CreateHuntGroupObject', 'GetForwardingRuleObject', 'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusinessContinuity', 'GetHuntGroupCallPolicyObjectNoAnswer', 'GetHuntGroupObject', 'GetPersonPlaceVirtualLineHuntGroupObject', 'HuntPolicySelection', 'ListHuntGroupObject', 'ModifyCallForwardingObject', 'ModifyCallForwardingObjectCallForwarding', 'ModifyHuntGroupObject', 'PostHuntGroupCallPolicyObject', 'PostHuntGroupCallPolicyObjectNoAnswer', 'PostPersonPlaceVirtualLineHuntGroupObject', 'ReadTheListOfHuntGroupsResponse', 'RingPatternObject']
 
 
 class RingPatternObject(str, Enum):
@@ -464,3 +464,13 @@ class ModifyHuntGroupObject(ApiModel):
     #: Whether or not the hunt group is enabled.
     #: example: True
     enabled: Optional[bool] = None
+
+
+class ReadTheListOfHuntGroupsResponse(ApiModel):
+    #: Array of hunt groups.
+    hunt_groups: Optional[list[ListHuntGroupObject]] = None
+
+
+class CreateAHuntGroupResponse(ApiModel):
+    #: ID of the newly created hunt group.
+    id: Optional[str] = None

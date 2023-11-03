@@ -7,7 +7,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersWithPattern', 'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusinessContinuity', 'GetHuntGroupCallPolicyObjectNoAnswer', 'GetHuntGroupObject', 'GetPersonPlaceVirtualLineHuntGroupObject', 'HuntPolicySelection', 'ListHuntGroupObject', 'RingPatternObject']
+__auto__ = ['AlternateNumbersWithPattern', 'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusinessContinuity', 'GetHuntGroupCallPolicyObjectNoAnswer', 'GetHuntGroupObject', 'GetPersonPlaceVirtualLineHuntGroupObject', 'HuntPolicySelection', 'ListHuntGroupObject', 'ReadTheListOfHuntGroupsResponse', 'RingPatternObject']
 
 
 class RingPatternObject(str, Enum):
@@ -192,3 +192,8 @@ class ListHuntGroupObject(ApiModel):
     #: Whether or not the hunt group is enabled.
     #: example: True
     enabled: Optional[bool] = None
+
+
+class ReadTheListOfHuntGroupsResponse(ApiModel):
+    #: Array of hunt groups.
+    hunt_groups: Optional[list[ListHuntGroupObject]] = None
