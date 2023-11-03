@@ -7,7 +7,13 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AdminBatchStartJobObject', 'CountObject', 'ErrorMessageObject', 'ErrorObject', 'ErrorResponseObject', 'GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType', 'GetPhoneNumbersForAnOrganizationWithGivenCriteriasResponse', 'ItemObject', 'JobExecutionStatusObject', 'JobExecutionStatusObject1', 'JobIdResponseObject', 'JobListResponse', 'MoveNumberValidationError', 'Number', 'NumberItem', 'NumberListGetObject', 'NumberListGetObjectLocation', 'NumberListGetObjectOwner', 'NumberState', 'NumbersDelete', 'NumbersPost', 'StartJobResponse', 'State', 'Status', 'StepExecutionStatusesObject', 'ValidateNumbersResponse']
+__auto__ = ['AdminBatchStartJobObject', 'CountObject', 'ErrorMessageObject', 'ErrorObject', 'ErrorResponseObject',
+            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType',
+            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasResponse', 'ItemObject', 'JobExecutionStatusObject',
+            'JobExecutionStatusObject1', 'JobIdResponseObject', 'JobListResponse', 'MoveNumberValidationError',
+            'Number', 'NumberItem', 'NumberListGetObject', 'NumberListGetObjectLocation', 'NumberListGetObjectOwner',
+            'NumberState', 'NumbersDelete', 'NumbersPost', 'StartJobResponse', 'State', 'Status',
+            'StepExecutionStatusesObject', 'ValidateNumbersResponse']
 
 
 class NumberItem(ApiModel):
@@ -45,7 +51,8 @@ class ErrorMessageObject(ApiModel):
     description: Optional[str] = None
     #: Internal error code.
     code: Optional[str] = None
-    #: Error messages describing the location id in which the error occurs. For a move operation this is the target location ID.
+    #: Error messages describing the location id in which the error occurs. For a move operation this is the target
+    #: location ID.
     location_id: Optional[str] = None
 
 
@@ -138,7 +145,8 @@ class StartJobResponse(ApiModel):
     target_customer_id: Optional[str] = None
     #: Unique identifier to identify the instance of the job.
     instance_id: Optional[int] = None
-    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the execution of the job.
+    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
+    #: execution of the job.
     job_execution_status: Optional[list[JobExecutionStatusObject1]] = None
     #: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
     latest_execution_status: Optional[str] = None
@@ -285,7 +293,8 @@ class JobIdResponseObject(ApiModel):
     target_customer_id: Optional[str] = None
     #: Unique identifier to identify the instance of the job.
     instance_id: Optional[int] = None
-    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the execution of the job.
+    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
+    #: execution of the job.
     job_execution_status: Optional[list[JobExecutionStatusObject]] = None
     #: Indicates the most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
     latest_execution_status: Optional[str] = None

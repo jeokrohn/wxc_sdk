@@ -7,7 +7,8 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ListReport', 'ListReportStatus', 'ListReportType', 'ListWholesaleBillingReportsSortBy', 'Report', 'ReportError', 'ReportId', 'WholesaleBillingReportsListResponse']
+__auto__ = ['ListReport', 'ListReportStatus', 'ListReportType', 'ListWholesaleBillingReportsSortBy', 'Report',
+            'ReportError', 'ReportId', 'WholesaleBillingReportsListResponse']
 
 
 class ListReportStatus(str, Enum):
@@ -79,7 +80,8 @@ class Report(ApiModel):
     temp_download_url: Optional[str] = Field(alias='tempDownloadURL', default=None)
     #: List of errors that occurred during report generation.
     #: **Note:**
-    #: * This list captures errors that occurred during asynchronous or background report generation, after the request has been accepted and a `202 OK` response is returned.
+    #: * This list captures errors that occurred during asynchronous or background report generation, after the request
+    #: has been accepted and a `202 OK` response is returned.
     errors: Optional[list[ReportError]] = None
 
 

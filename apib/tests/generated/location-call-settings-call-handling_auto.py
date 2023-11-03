@@ -7,15 +7,25 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CallingPermissionObject', 'CallingPermissionObjectAction', 'CallingPermissionObjectCallType', 'GeneratePasswordPostResponse', 'GetAutoTransferNumberObject', 'GetLocationAccessCodeObject', 'GetLocationAccessCodeObjectAccessCodes', 'GetLocationInterceptObject', 'GetLocationInterceptObjectIncoming', 'GetLocationInterceptObjectIncomingAnnouncements', 'GetLocationInterceptObjectIncomingAnnouncementsGreeting', 'GetLocationInterceptObjectIncomingAnnouncementsNewNumber', 'GetLocationInterceptObjectIncomingType', 'GetLocationInterceptObjectOutgoing', 'GetLocationInterceptObjectOutgoingType', 'GetLocationOutgoingPermissionResponse', 'InternalDialingGet', 'InternalDialingPut', 'PasswordGenerate', 'PutAccessCodeLocationObject', 'RouteIdentity', 'RouteType', 'UnknownExtensionRouteIdentity']
+__auto__ = ['CallingPermissionObject', 'CallingPermissionObjectAction', 'CallingPermissionObjectCallType',
+            'GeneratePasswordPostResponse', 'GetAutoTransferNumberObject', 'GetLocationAccessCodeObject',
+            'GetLocationAccessCodeObjectAccessCodes', 'GetLocationInterceptObject',
+            'GetLocationInterceptObjectIncoming', 'GetLocationInterceptObjectIncomingAnnouncements',
+            'GetLocationInterceptObjectIncomingAnnouncementsGreeting',
+            'GetLocationInterceptObjectIncomingAnnouncementsNewNumber', 'GetLocationInterceptObjectIncomingType',
+            'GetLocationInterceptObjectOutgoing', 'GetLocationInterceptObjectOutgoingType',
+            'GetLocationOutgoingPermissionResponse', 'InternalDialingGet', 'InternalDialingPut', 'PasswordGenerate',
+            'PutAccessCodeLocationObject', 'RouteIdentity', 'RouteType', 'UnknownExtensionRouteIdentity']
 
 
 class CallingPermissionObjectCallType(str, Enum):
     #: Controls calls within your own company.
     internal_call = 'INTERNAL_CALL'
-    #: Controls calls to a telephone number that is billed for all arriving calls instead of incurring charges to the originating caller, usually free of charge from a landline.
+    #: Controls calls to a telephone number that is billed for all arriving calls instead of incurring charges to the
+    #: originating caller, usually free of charge from a landline.
     toll_free = 'TOLL_FREE'
-    #: Controls calls to locations outside of the Long Distance areas that require an international calling code before the number is dialed.
+    #: Controls calls to locations outside of the Long Distance areas that require an international calling code before
+    #: the number is dialed.
     international = 'INTERNATIONAL'
     #: Controls calls requiring Operator Assistance.
     operator_assisted = 'OPERATOR_ASSISTED'
@@ -40,11 +50,14 @@ class CallingPermissionObjectAction(str, Enum):
     block = 'BLOCK'
     #: Callers must enter the authorization code that you set before placing an outgoing call.
     auth_code = 'AUTH_CODE'
-    #: If you select this, then these types of calls are transferred automatically to the configured auto transfer number `autoTransferNumber1`.
+    #: If you select this, then these types of calls are transferred automatically to the configured auto transfer
+    #: number `autoTransferNumber1`.
     transfer_number_1 = 'TRANSFER_NUMBER_1'
-    #: If you select this, then these types of calls are transferred automatically to the configured auto transfer number `autoTransferNumber2`.
+    #: If you select this, then these types of calls are transferred automatically to the configured auto transfer
+    #: number `autoTransferNumber2`.
     transfer_number_2 = 'TRANSFER_NUMBER_2'
-    #: If you select this, then these types of calls are transferred automatically to the configured auto transfer number `autoTransferNumber3`.
+    #: If you select this, then these types of calls are transferred automatically to the configured auto transfer
+    #: number `autoTransferNumber3`.
     transfer_number_3 = 'TRANSFER_NUMBER_3'
 
 
@@ -67,13 +80,16 @@ class GeneratePasswordPostResponse(ApiModel):
 
 
 class GetAutoTransferNumberObject(ApiModel):
-    #: Calls placed meeting the criteria in an outbound rule whose `action` is `TRANSFER_NUMBER_1` will be transferred to this number.
+    #: Calls placed meeting the criteria in an outbound rule whose `action` is `TRANSFER_NUMBER_1` will be transferred
+    #: to this number.
     #: example: 1234456789
     auto_transfer_number1: Optional[str] = None
-    #: Calls placed meeting the criteria in an outbound rule whose `action` is `TRANSFER_NUMBER_2` will be transferred to this number.
+    #: Calls placed meeting the criteria in an outbound rule whose `action` is `TRANSFER_NUMBER_2` will be transferred
+    #: to this number.
     #: example: 2234567891
     auto_transfer_number2: Optional[str] = None
-    #: Calls placed meeting the criteria in an outbound rule whose `action` is `TRANSFER_NUMBER_3` will be transferred to this number.
+    #: Calls placed meeting the criteria in an outbound rule whose `action` is `TRANSFER_NUMBER_3` will be transferred
+    #: to this number.
     #: example: 3234567891
     auto_transfer_number3: Optional[str] = None
 
@@ -159,7 +175,8 @@ class GetLocationInterceptObjectOutgoing(ApiModel):
 
 
 class GetLocationInterceptObject(ApiModel):
-    #: Enable/disable location intercept. Enable this feature to override any Location's Call Intercept settings that person configures.
+    #: Enable/disable location intercept. Enable this feature to override any Location's Call Intercept settings that
+    #: person configures.
     #: example: True
     enabled: Optional[bool] = None
     #: Inbound call details.
@@ -187,7 +204,8 @@ class RouteIdentity(ApiModel):
 
 
 class InternalDialingGet(ApiModel):
-    #: When enabled, calls made by users at the location to an unknown extension (between 2-6 digits) are routed to the selected route group/trunk as premises calls.
+    #: When enabled, calls made by users at the location to an unknown extension (between 2-6 digits) are routed to the
+    #: selected route group/trunk as premises calls.
     #: example: True
     enable_unknown_extension_route_policy: Optional[bool] = None
     #: The selected route group/trunk as premises calls.
@@ -203,7 +221,8 @@ class UnknownExtensionRouteIdentity(ApiModel):
 
 
 class InternalDialingPut(ApiModel):
-    #: When enabled, calls made by users at the location to an unknown extension (between 2-6 digits) are routed to the selected route group/trunk as premises calls.
+    #: When enabled, calls made by users at the location to an unknown extension (between 2-6 digits) are routed to the
+    #: selected route group/trunk as premises calls.
     #: example: True
     enable_unknown_extension_route_policy: Optional[bool] = None
     #: Type associated with the identity.

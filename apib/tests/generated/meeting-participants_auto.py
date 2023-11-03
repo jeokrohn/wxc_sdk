@@ -7,7 +7,9 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AdmitParticipantsObject', 'Device', 'DeviceAudioType', 'DeviceCallType', 'InProgressDevice', 'InProgressParticipant', 'InProgressParticipantState', 'ListMeetingParticipantsResponse', 'Participant', 'ParticipantID', 'ParticipantState', 'ParticipantVideo']
+__auto__ = ['AdmitParticipantsObject', 'Device', 'DeviceAudioType', 'DeviceCallType', 'InProgressDevice',
+            'InProgressParticipant', 'InProgressParticipantState', 'ListMeetingParticipantsResponse', 'Participant',
+            'ParticipantID', 'ParticipantState', 'ParticipantVideo']
 
 
 class ParticipantVideo(str, Enum):
@@ -54,10 +56,15 @@ class Device(ApiModel):
     #: The audio type that the participant is using.
     #: example: pstn
     audio_type: Optional[DeviceAudioType] = None
-    #: The time the device joined the meeting. If the field is non-existent or shows `1970-01-    01T00:00:00.000Z` the meeting may be still ongoing and the `joinedTime` will be filled in after the meeting ended. If you need real-time joined     events, please refer to the webhooks guide.
+    #: The time the device joined the meeting. If the field is non-existent or shows `1970-01-    01T00:00:00.000Z` the
+    #: meeting may be still ongoing and the `joinedTime` will be filled in after the meeting ended. If you need
+    #: real-time joined     events, please refer to the webhooks guide.
     #: example: 2019-04-23T17:31:00.000Z
     joined_time: Optional[datetime] = None
-    #: The time the device left the meeting, `leftTime` is the exact moment when a specific devi    ce left the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the meeting may be still ongoing and the `leftTime` will     be filled in after the meeting ended. If you need real-time left events, please refer to the webhooks guide.
+    #: The time the device left the meeting, `leftTime` is the exact moment when a specific devi    ce left the
+    #: meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the meeting may be still ongoing and
+    #: the `leftTime` will     be filled in after the meeting ended. If you need real-time left events, please refer to
+    #: the webhooks guide.
     #: example: 2019-04-23T17:32:00.000Z
     left_time: Optional[datetime] = None
     #: The duration in seconds the device stayed in the meeting.
@@ -66,7 +73,10 @@ class Device(ApiModel):
     #: The PSTN call type in which the device joined the meeting.
     #: example: callIn
     call_type: Optional[DeviceCallType] = None
-    #: The PSTN phone number from which the device joined the meeting. Only [compliance officer](/docs/compliance#compliance) can retrieve the `phoneNumber`. The meeting host and admin users cannot retrieve it. NOTE: The `phoneNumber` will be returned after the meeting ends; it is not returned while the meeting is in progress.
+    #: The PSTN phone number from which the device joined the meeting. Only [compliance
+    #: officer](/docs/compliance#compliance) can retrieve the `phoneNumber`. The meeting host and admin users cannot
+    #: retrieve it. NOTE: The `phoneNumber` will be returned after the meeting ends; it is not returned while the
+    #: meeting is in progress.
     #: example: 745273328
     phone_number: Optional[str] = None
 
@@ -83,7 +93,8 @@ class Participant(ApiModel):
     host: Optional[bool] = None
     #: Whether or not the participant has host privilege in the meeting.
     co_host: Optional[bool] = None
-    #: Whether or not the participant is the team space moderator. This field returns only if the meeting is associated with a Webex space.
+    #: Whether or not the participant is the team space moderator. This field returns only if the meeting is associated
+    #: with a Webex space.
     space_moderator: Optional[bool] = None
     #: The email address of the participant.
     #: example: joeDoe@cisco.com
@@ -101,16 +112,21 @@ class Participant(ApiModel):
     #: The status of the participant's video.
     #: example: on
     video: Optional[ParticipantVideo] = None
-    #: The status of the participant in the meeting. The value of `state` is `breakoutSession` which is only returned when the meeting is in progress and the breakout session is enabled.
+    #: The status of the participant in the meeting. The value of `state` is `breakoutSession` which is only returned
+    #: when the meeting is in progress and the breakout session is enabled.
     #: example: lobby
     state: Optional[ParticipantState] = None
     #: The ID of the breakout session including the participant.
     #: example: 2e373567-465b-8530-a18a-7025e1871d40
     breakout_session_id: Optional[str] = None
-    #: The time the participant joined the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the meeting may be still ongoing and the `joinedTime` will be filled in after the meeting ended. If you need real-time join events, please refer to the webhooks guide.
+    #: The time the participant joined the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z`
+    #: the meeting may be still ongoing and the `joinedTime` will be filled in after the meeting ended. If you need
+    #: real-time join events, please refer to the webhooks guide.
     #: example: 2022-10-25T09:00:00Z
     joined_time: Optional[datetime] = None
-    #: The time the participant left the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the meeting may be still ongoing and the `leftTime` will be filled in after the meeting ended. If you need real-time left events, please refer to the webhooks guide.
+    #: The time the participant left the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the
+    #: meeting may be still ongoing and the `leftTime` will be filled in after the meeting ended. If you need real-time
+    #: left events, please refer to the webhooks guide.
     #: example: 2022-10-25T09:30:00Z
     left_time: Optional[datetime] = None
     #: The site URL.
@@ -123,7 +139,8 @@ class Participant(ApiModel):
     #: example: janeDoe@cisco.com
     host_email: Optional[str] = None
     devices: Optional[list[Device]] = None
-    #: The source ID of the participant. The `sourceId` is from the [Create Invitation Sources](/docs/api/v1/meetings/create-invitation-sources) API.
+    #: The source ID of the participant. The `sourceId` is from the [Create Invitation
+    #: Sources](/docs/api/v1/meetings/create-invitation-sources) API.
     #: example: cisco
     source_id: Optional[str] = None
 
@@ -145,10 +162,15 @@ class InProgressDevice(ApiModel):
     #: The audio type that the participant is using.
     #: example: pstn
     audio_type: Optional[DeviceAudioType] = None
-    #: The time the device joined the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the meeting may be still ongoing and the `joinedTime` will be filled in after the meeting ended. If you need real-time joined events, please refer to the webhooks guide.
+    #: The time the device joined the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the
+    #: meeting may be still ongoing and the `joinedTime` will be filled in after the meeting ended. If you need
+    #: real-time joined events, please refer to the webhooks guide.
     #: example: 2019-04-23T17:31:00.000Z
     joined_time: Optional[datetime] = None
-    #: The time the device left the meeting, `leftTime` is the exact moment when a specific device left the meeting. If the field is non-existent or shows `1970-01-01T00:00:00.000Z` the meeting may be still ongoing and the `leftTime` will be filled in after the meeting ended. If you need real-time left events, please refer to the webhooks guide.
+    #: The time the device left the meeting, `leftTime` is the exact moment when a specific device left the meeting. If
+    #: the field is non-existent or shows `1970-01-01T00:00:00.000Z` the meeting may be still ongoing and the
+    #: `leftTime` will be filled in after the meeting ended. If you need real-time left events, please refer to the
+    #: webhooks guide.
     #: example: 2019-04-23T17:32:00.000Z
     left_time: Optional[datetime] = None
 
@@ -165,7 +187,8 @@ class InProgressParticipant(ApiModel):
     host: Optional[bool] = None
     #: Whether or not the participant has host privilege in the meeting.
     co_host: Optional[bool] = None
-    #: Whether or not the participant is the team space moderator. This field returns only if the meeting is associated with a Webex space.
+    #: Whether or not the participant is the team space moderator. This field returns only if the meeting is associated
+    #: with a Webex space.
     space_moderator: Optional[bool] = None
     #: The email address of the participant.
     #: example: joeDoe@cisco.com

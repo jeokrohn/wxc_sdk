@@ -7,7 +7,9 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType', 'GetPhoneNumbersForAnOrganizationWithGivenCriteriasResponse', 'NumberListGetObject', 'NumberListGetObjectLocation', 'NumberListGetObjectOwner']
+__auto__ = ['GetPhoneNumbersForAnOrganizationWithGivenCriteriasOwnerType',
+            'GetPhoneNumbersForAnOrganizationWithGivenCriteriasResponse', 'NumberListGetObject',
+            'NumberListGetObjectLocation', 'NumberListGetObjectOwner']
 
 
 class NumberListGetObjectLocation(ApiModel):

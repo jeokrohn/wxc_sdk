@@ -14,7 +14,8 @@ class HydraClassification(ApiModel):
     #: Unique identifier for the org's Space Classification
     #: example: Y2lzY29zcGFyazovL3VzL0NMQVNTSUZJQ0FUSU9OL2YyMDUyZTgyLTU0ZjgtMTFlYS1hMmUzLTJlNzI4Y2U4ODEyNQ
     id: Optional[str] = None
-    #: Represents the rank of the classification. A number from 0 to 4, in which 0 usually refers to "public", and is the default whenever a rank cannot be determined.
+    #: Represents the rank of the classification. A number from 0 to 4, in which 0 usually refers to "public", and is
+    #: the default whenever a rank cannot be determined.
     rank: Optional[int] = None
     #: Represents the classification title to be displayed in classified spaces for org users.
     #: example: Public

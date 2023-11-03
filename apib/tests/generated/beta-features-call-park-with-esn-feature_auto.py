@@ -7,7 +7,10 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetAvailableAgentsFromCallParksResponse', 'GetCallParkExtensionObject', 'GetCallParkObject', 'GetPersonPlaceVirtualLineCallParksObject', 'GetPersonPlaceVirtualLineCallParksObjectType', 'GetRecallHuntGroupObject', 'GetRecallHuntGroupObjectOption', 'GetUserNumberItemObject', 'ListCPCallParkExtensionObject', 'ListCallParkExtensionObject', 'ReadTheListOfCallParkExtensionsResponse']
+__auto__ = ['GetAvailableAgentsFromCallParksResponse', 'GetCallParkExtensionObject', 'GetCallParkObject',
+            'GetPersonPlaceVirtualLineCallParksObject', 'GetPersonPlaceVirtualLineCallParksObjectType',
+            'GetRecallHuntGroupObject', 'GetRecallHuntGroupObjectOption', 'GetUserNumberItemObject',
+            'ListCPCallParkExtensionObject', 'ListCallParkExtensionObject', 'ReadTheListOfCallParkExtensionsResponse']
 
 
 class GetCallParkExtensionObject(ApiModel):

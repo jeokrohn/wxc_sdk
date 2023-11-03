@@ -7,7 +7,22 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ActionOnRouteList', 'CallSourceInfo', 'CallSourceType', 'Customer', 'DestinationType', 'DeviceStatus', 'DeviceType', 'DialPattern', 'DialPatternPut', 'DialPatternStatus', 'DialPatternValidate', 'DialPatternValidateResult', 'DialPatternValidationStatus', 'DialPlan', 'DialPlanGet', 'DialPlanPost', 'DialPlanPut', 'Emergency', 'FeatureAccessCode', 'GetLocalGatewayDialPlanUsageForATrunkResponse', 'GetRouteGroupsUsingTheLocalGatewayResponse', 'HostedAgent', 'HostedAgentType', 'HostedFeature', 'LocalGatewayUsageCount', 'LocalGateways', 'LocationUsageGetResponse', 'ModifyNumbersForRouteListResponse', 'NumberStatus', 'OriginatorType', 'PbxUser', 'PostResponse', 'PstnNumber', 'ReadTheCallToExtensionLocationsOfARoutingGroupResponse', 'ReadTheListOfDialPlansResponse', 'ReadTheListOfRouteListsResponse', 'ReadTheListOfRoutingGroupsResponse', 'ReadTheListOfTrunksResponse', 'ReadTheRouteListsOfARoutingGroupResponse', 'ReadTheUsageOfARoutingGroupResponse', 'ResponseStatus', 'ResponseStatusType', 'RouteGroup', 'RouteGroupGet', 'RouteGroupPatch', 'RouteGroupUsageRouteListGet', 'RouteGroupUsageRouteListItem', 'RouteList', 'RouteListGet', 'RouteListNumberListGet', 'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteListPatch', 'RouteListPost', 'RouteType', 'ServiceType', 'TestCallRoutingPostResponse', 'Trunk', 'TrunkFQDNValidatePost', 'TrunkGet', 'TrunkGetOutboundProxy', 'TrunkPost', 'TrunkPut', 'TrunkType', 'TrunkTypeGetList', 'TrunkTypeWithDeviceType', 'VirtualExtension', 'VirtualExtensionRange']
+__auto__ = ['ActionOnRouteList', 'CallSourceInfo', 'CallSourceType', 'Customer', 'DestinationType', 'DeviceStatus',
+            'DeviceType', 'DialPattern', 'DialPatternPut', 'DialPatternStatus', 'DialPatternValidate',
+            'DialPatternValidateResult', 'DialPatternValidationStatus', 'DialPlan', 'DialPlanGet', 'DialPlanPost',
+            'DialPlanPut', 'Emergency', 'FeatureAccessCode', 'GetLocalGatewayDialPlanUsageForATrunkResponse',
+            'GetRouteGroupsUsingTheLocalGatewayResponse', 'HostedAgent', 'HostedAgentType', 'HostedFeature',
+            'LocalGatewayUsageCount', 'LocalGateways', 'LocationUsageGetResponse', 'ModifyNumbersForRouteListResponse',
+            'NumberStatus', 'OriginatorType', 'PbxUser', 'PostResponse', 'PstnNumber',
+            'ReadTheCallToExtensionLocationsOfARoutingGroupResponse', 'ReadTheListOfDialPlansResponse',
+            'ReadTheListOfRouteListsResponse', 'ReadTheListOfRoutingGroupsResponse', 'ReadTheListOfTrunksResponse',
+            'ReadTheRouteListsOfARoutingGroupResponse', 'ReadTheUsageOfARoutingGroupResponse', 'ResponseStatus',
+            'ResponseStatusType', 'RouteGroup', 'RouteGroupGet', 'RouteGroupPatch', 'RouteGroupUsageRouteListGet',
+            'RouteGroupUsageRouteListItem', 'RouteList', 'RouteListGet', 'RouteListNumberListGet',
+            'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteListPatch', 'RouteListPost', 'RouteType',
+            'ServiceType', 'TestCallRoutingPostResponse', 'Trunk', 'TrunkFQDNValidatePost', 'TrunkGet',
+            'TrunkGetOutboundProxy', 'TrunkPost', 'TrunkPut', 'TrunkType', 'TrunkTypeGetList',
+            'TrunkTypeWithDeviceType', 'VirtualExtension', 'VirtualExtensionRange']
 
 
 class ActionOnRouteList(str, Enum):
@@ -31,16 +46,24 @@ class CallSourceType(str, Enum):
 class CallSourceInfo(ApiModel):
     #: The type of call source.
     call_source_type: Optional[CallSourceType] = None
-    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk, this trunk belongs to a route group which is assigned to a route list with the name routeListA and `originatorNumber` is a number assigned to routeListA. routeListA is returned here. This element is returned when `callSourceType` is `ROUTE_LIST`.
+    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk, this trunk belongs to a route group which is
+    #: assigned to a route list with the name routeListA and `originatorNumber` is a number assigned to routeListA.
+    #: routeListA is returned here. This element is returned when `callSourceType` is `ROUTE_LIST`.
     #: example: routeList1
     route_list_name: Optional[str] = None
     #: Foute list ID.
     #: example: NTJiZmUxNDAtYjIwMS00NTUzLWI1OGQtMmVkNDU1NTFmYTUy
     route_list_id: Optional[str] = None
-    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk with name trunkA, trunkA belongs to a route group which is assigned to a route list with name routeListA,  trunkA is also assigned to dialPlanA as routing choice, dialPlanA has dialPattern xxxx assigned. If the `originatorNumber` matches the `dialPattern` `xxxx`, dialPlanA is returned. This element is returned when `callSourceType` is `DIAL_PATTERN`.
+    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk with name trunkA, trunkA belongs to a route
+    #: group which is assigned to a route list with name routeListA,  trunkA is also assigned to dialPlanA as routing
+    #: choice, dialPlanA has dialPattern xxxx assigned. If the `originatorNumber` matches the `dialPattern` `xxxx`,
+    #: dialPlanA is returned. This element is returned when `callSourceType` is `DIAL_PATTERN`.
     #: example: dialPlan1
     dial_plan_name: Optional[str] = None
-    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk with the name trunkA, trunkA belongs to a route group which is assigned to a route list with the name routeListA,  trunkA is also assigned to dialPlanA as routing choice, dialPlanA has `dialPattern` `xxxx` assigned. If the `originatorNumber` matches the `dialPattern` `xxxx`, `dialPattern` `xxxx` is returned. This element is returned when `callSourceType` is `DIAL_PATTERN`.
+    #: When `originatorType` is `trunk`, `originatorId` is a valid trunk with the name trunkA, trunkA belongs to a
+    #: route group which is assigned to a route list with the name routeListA,  trunkA is also assigned to dialPlanA as
+    #: routing choice, dialPlanA has `dialPattern` `xxxx` assigned. If the `originatorNumber` matches the `dialPattern`
+    #: `xxxx`, `dialPattern` `xxxx` is returned. This element is returned when `callSourceType` is `DIAL_PATTERN`.
     #: example: *888
     dial_pattern: Optional[str] = None
     #: Dial plan ID.
@@ -60,7 +83,8 @@ class Customer(ApiModel):
 class DestinationType(str, Enum):
     #: Matching destination is a person or workspace with details in the `hostedAgent` field.
     hosted_agent = 'HOSTED_AGENT'
-    #: Matching destination is a calling feature like auto-attendant or hunt group with details in the `hostedFeature` field.
+    #: Matching destination is a calling feature like auto-attendant or hunt group with details in the `hostedFeature`
+    #: field.
     hosted_feature = 'HOSTED_FEATURE'
     #: Matching destination routes into a separate PBX with details in the `pbxUser` field.
     pbx_user = 'PBX_USER'
@@ -641,7 +665,8 @@ class VirtualExtensionRange(ApiModel):
     #: Virtual extension range name.
     #: example: firstName1
     name: Optional[str] = None
-    #: Prefix that the virtual extension range is associated with (Note: Standard mode must have leading '+' in prefix; BCD/Enhanced mode can have any valid prefix).
+    #: Prefix that the virtual extension range is associated with (Note: Standard mode must have leading '+' in prefix;
+    #: BCD/Enhanced mode can have any valid prefix).
     #: example: +1214555
     prefix: Optional[str] = None
     #: Pattern associated with the virtual extension range.
@@ -715,7 +740,8 @@ class TestCallRoutingPostResponse(ApiModel):
 class TrunkType(str, Enum):
     #: For Cisco CUBE Local Gateway.
     registering = 'REGISTERING'
-    #: For Cisco Unified Border Element, Oracle ACME Session Border Controller, AudioCodes Session Border Controller, Ribbon Session Border Controller.
+    #: For Cisco Unified Border Element, Oracle ACME Session Border Controller, AudioCodes Session Border Controller,
+    #: Ribbon Session Border Controller.
     certificate_based = 'CERTIFICATE_BASED'
 
 
@@ -770,7 +796,8 @@ class TrunkGet(ApiModel):
     #: User ID.
     #: example: lg1_sias10_cpapi12446_LGU@64941297.int10.bcld.webex.com
     pilot_user_id: Optional[str] = None
-    #: Contains the body of the HTTP response received following the request to Console API and will not be set if the response has no body.
+    #: Contains the body of the HTTP response received following the request to Console API and will not be set if the
+    #: response has no body.
     outbound_proxy: Optional[TrunkGetOutboundProxy] = None
     #: User's authentication service information.
     #: example: lg1_sias10_cpapi12446_LGU
@@ -814,7 +841,8 @@ class TrunkPost(ApiModel):
     #: A password to use on the trunk.
     #: example: password
     password: Optional[str] = None
-    #: Dual Identity Support setting impacts the handling of the From header and P-Asserted-Identity header when sending an initial SIP `INVITE` to the trunk for an outbound call.
+    #: Dual Identity Support setting impacts the handling of the From header and P-Asserted-Identity header when
+    #: sending an initial SIP `INVITE` to the trunk for an outbound call.
     #: example: True
     dual_identity_support_enabled: Optional[bool] = None
     #: Trunk Type associated with the trunk.

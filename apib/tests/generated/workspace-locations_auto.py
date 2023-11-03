@@ -7,7 +7,8 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Floor', 'Location', 'WorkspaceLocationFloorsCollectionResponse', 'WorkspaceLocationFloorsCreationRequest', 'WorkspaceLocationsCollectionResponse', 'WorkspaceLocationsCreationRequest']
+__auto__ = ['Floor', 'Location', 'WorkspaceLocationFloorsCollectionResponse', 'WorkspaceLocationFloorsCreationRequest',
+            'WorkspaceLocationsCollectionResponse', 'WorkspaceLocationsCreationRequest']
 
 
 class Location(ApiModel):

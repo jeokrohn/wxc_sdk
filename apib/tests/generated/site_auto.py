@@ -7,7 +7,16 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetMeetingConfigurationCommonSettingObject', 'GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptions', 'GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptionsEntryAndExitTone', 'GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptionsTelephonySupport', 'GetMeetingConfigurationCommonSettingObjectScheduleMeetingOptions', 'GetMeetingConfigurationCommonSettingObjectSecurityOptions', 'GetMeetingConfigurationCommonSettingObjectSecurityOptionsPasswordCriteria', 'GetMeetingConfigurationCommonSettingObjectSiteOptions', 'GetMeetingConfigurationCommonSettingObjectTelephonyConfig', 'UpdateMeetingConfigurationCommonSettingObject']
+__auto__ = ['GetMeetingConfigurationCommonSettingObject',
+            'GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptions',
+            'GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptionsEntryAndExitTone',
+            'GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptionsTelephonySupport',
+            'GetMeetingConfigurationCommonSettingObjectScheduleMeetingOptions',
+            'GetMeetingConfigurationCommonSettingObjectSecurityOptions',
+            'GetMeetingConfigurationCommonSettingObjectSecurityOptionsPasswordCriteria',
+            'GetMeetingConfigurationCommonSettingObjectSiteOptions',
+            'GetMeetingConfigurationCommonSettingObjectTelephonyConfig',
+            'UpdateMeetingConfigurationCommonSettingObject']
 
 
 class GetMeetingConfigurationCommonSettingObjectSiteOptions(ApiModel):
@@ -115,9 +124,11 @@ class GetMeetingConfigurationCommonSettingObjectSecurityOptions(ApiModel):
 class GetMeetingConfigurationCommonSettingObject(ApiModel):
     #: Site Options on Webex Administration.
     site_options: Optional[GetMeetingConfigurationCommonSettingObjectSiteOptions] = None
-    #: Telephony Configuration on WebEx Super Admin (These options are read-only, unable to update by Update Common Settings API).
+    #: Telephony Configuration on WebEx Super Admin (These options are read-only, unable to update by Update Common
+    #: Settings API).
     telephony_config: Optional[GetMeetingConfigurationCommonSettingObjectTelephonyConfig] = None
-    #: Default Scheduler Options on Webex Administration (These options are applied to the site as defaults, but individual users can change them).
+    #: Default Scheduler Options on Webex Administration (These options are applied to the site as defaults, but
+    #: individual users can change them).
     default_scheduler_options: Optional[GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptions] = None
     #: Schedule Meeting Options on Webex Administration.
     schedule_meeting_options: Optional[GetMeetingConfigurationCommonSettingObjectScheduleMeetingOptions] = None
@@ -128,7 +139,8 @@ class GetMeetingConfigurationCommonSettingObject(ApiModel):
 class UpdateMeetingConfigurationCommonSettingObject(ApiModel):
     #: Site Options on Webex Administration.
     site_options: Optional[GetMeetingConfigurationCommonSettingObjectSiteOptions] = None
-    #: Default Scheduler Options on Webex Administration (These options are applied to the site as defaults, but individual users can change them).
+    #: Default Scheduler Options on Webex Administration (These options are applied to the site as defaults, but
+    #: individual users can change them).
     default_scheduler_options: Optional[GetMeetingConfigurationCommonSettingObjectDefaultSchedulerOptions] = None
     #: Schedule Meeting Options on Webex Administration.
     schedule_meeting_options: Optional[GetMeetingConfigurationCommonSettingObjectScheduleMeetingOptions] = None

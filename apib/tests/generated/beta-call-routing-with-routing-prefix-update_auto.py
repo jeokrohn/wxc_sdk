@@ -7,7 +7,8 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BatchJobError', 'BatchResponse', 'Counts', 'Error', 'ErrorMessage', 'JobExecutionStatus', 'StepExecutionStatuses']
+__auto__ = ['BatchJobError', 'BatchResponse', 'Counts', 'Error', 'ErrorMessage', 'JobExecutionStatus',
+            'StepExecutionStatuses']
 
 
 class StepExecutionStatuses(ApiModel):
@@ -70,9 +71,11 @@ class BatchResponse(ApiModel):
     target_customer_id: Optional[str] = None
     #: Unique identifier to identify the instance of the job.
     instance_id: Optional[int] = None
-    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the execution of the job.
+    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
+    #: execution of the job.
     job_execution_status: Optional[list[JobExecutionStatus]] = None
-    #: Indicates the most recent status (`STARTING`, `STARTED`, `COMPLETED`, `FAILED`) of the job at the time of invocation.
+    #: Indicates the most recent status (`STARTING`, `STARTED`, `COMPLETED`, `FAILED`) of the job at the time of
+    #: invocation.
     latest_execution_status: Optional[str] = None
     #: Job statistics.
     counts: Optional[Counts] = None
@@ -83,7 +86,8 @@ class ErrorMessage(ApiModel):
     description: Optional[str] = None
     #: Internal error code.
     code: Optional[str] = None
-    #: Error messages describing the location id in which the error occurs. For a move operation this is the target location ID.
+    #: Error messages describing the location id in which the error occurs. For a move operation this is the target
+    #: location ID.
     location_id: Optional[str] = None
 
 

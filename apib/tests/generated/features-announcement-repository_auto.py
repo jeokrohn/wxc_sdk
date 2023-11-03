@@ -7,11 +7,15 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AnnouncementResponse', 'AnnouncementResponseWithId', 'AnnouncementUsageResponse', 'AnnouncementsListResponse', 'AnnouncementsListResponseLevel', 'FeatureReferenceObject', 'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId', 'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelResponse', 'LocationObject']
+__auto__ = ['AnnouncementResponse', 'AnnouncementResponseWithId', 'AnnouncementUsageResponse',
+            'AnnouncementsListResponse', 'AnnouncementsListResponseLevel', 'FeatureReferenceObject',
+            'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelLocationId',
+            'FetchListOfAnnouncementGreetingsOnLocationAndOrganizationLevelResponse', 'LocationObject']
 
 
 class FeatureReferenceObject(ApiModel):
-    #: Unique identifier of the call feature referenced. The call Feature can be Auto Attendant, Call Queue or Music On hold.
+    #: Unique identifier of the call feature referenced. The call Feature can be Auto Attendant, Call Queue or Music On
+    #: hold.
     #: example: Y2lzY29zcGFyazovL3VzL0FVVE9fQVRURU5EQU5UL2QzVjBPWFIxWjJkM2FFQm1iR1Y0TWk1amFYTmpieTVqYjIw
     id: Optional[str] = None
     #: Name of the call feature referenced.

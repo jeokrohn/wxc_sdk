@@ -7,7 +7,8 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ClientTypeDistributionCollectionForOrg', 'ClientTypeDistributionForOrg', 'ClientTypeDistributionTrend1', 'ClusterClientTypeDistributionBlr1', 'ClusterClientTypeDistributionDetailsBlr1a']
+__auto__ = ['ClientTypeDistributionCollectionForOrg', 'ClientTypeDistributionForOrg', 'ClientTypeDistributionTrend1',
+            'ClusterClientTypeDistributionBlr1', 'ClusterClientTypeDistributionDetailsBlr1a']
 
 
 class ClusterClientTypeDistributionDetailsBlr1a(ApiModel):

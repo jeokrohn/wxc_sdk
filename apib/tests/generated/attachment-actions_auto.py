@@ -7,7 +7,8 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AttachmentAction', 'AttachmentActivity', 'AttachmentActivityType', 'SubmitCardAction', 'SubmitCardActionInputs', 'SubmitCardActionResponse']
+__auto__ = ['AttachmentAction', 'AttachmentActivity', 'AttachmentActivityType', 'SubmitCardAction',
+            'SubmitCardActionInputs', 'SubmitCardActionResponse']
 
 
 class AttachmentAction(ApiModel):

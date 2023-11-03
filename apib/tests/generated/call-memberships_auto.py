@@ -7,7 +7,8 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CallMembership', 'CallMembershipAudio', 'CallMembershipCollectionResponse', 'CallMembershipStatus', 'ListCallMembershipsCallStatus', 'ListCallMembershipsIsHost']
+__auto__ = ['CallMembership', 'CallMembershipAudio', 'CallMembershipCollectionResponse', 'CallMembershipStatus',
+            'ListCallMembershipsCallStatus', 'ListCallMembershipsIsHost']
 
 
 class CallMembershipStatus(str, Enum):

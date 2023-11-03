@@ -7,7 +7,15 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CallParkSettingsObject', 'CallParkSettingsObjectRingPattern', 'CreateACallParkResponse', 'GetAvailableAgentsFromCallParksResponse', 'GetAvailableRecallHuntGroupsFromCallParksResponse', 'GetAvailableRecallHuntGroupsObject', 'GetCallParkExtensionObject', 'GetCallParkObject', 'GetCallParkSettingsObject', 'GetPersonPlaceVirtualLineCallParksObject', 'GetPersonPlaceVirtualLineCallParksObjectType', 'GetRecallHuntGroupObject', 'GetRecallHuntGroupObjectOption', 'GetUserNumberItemObject', 'ListCPCallParkExtensionObject', 'ListCallParkExtensionObject', 'ListCallParkObject', 'ModifyCallExtensionParkObject', 'ModifyCallParkObject', 'ModifyCallParkSettingsObject', 'PutRecallHuntGroupObject', 'ReadTheListOfCallParkExtensionsResponse', 'ReadTheListOfCallParksResponse']
+__auto__ = ['CallParkSettingsObject', 'CallParkSettingsObjectRingPattern', 'CreateACallParkResponse',
+            'GetAvailableAgentsFromCallParksResponse', 'GetAvailableRecallHuntGroupsFromCallParksResponse',
+            'GetAvailableRecallHuntGroupsObject', 'GetCallParkExtensionObject', 'GetCallParkObject',
+            'GetCallParkSettingsObject', 'GetPersonPlaceVirtualLineCallParksObject',
+            'GetPersonPlaceVirtualLineCallParksObjectType', 'GetRecallHuntGroupObject',
+            'GetRecallHuntGroupObjectOption', 'GetUserNumberItemObject', 'ListCPCallParkExtensionObject',
+            'ListCallParkExtensionObject', 'ListCallParkObject', 'ModifyCallExtensionParkObject',
+            'ModifyCallParkObject', 'ModifyCallParkSettingsObject', 'PutRecallHuntGroupObject',
+            'ReadTheListOfCallParkExtensionsResponse', 'ReadTheListOfCallParksResponse']
 
 
 class CallParkSettingsObjectRingPattern(str, Enum):
@@ -25,10 +33,12 @@ class CallParkSettingsObject(ApiModel):
     #: Ring pattern for when this callpark is called.
     #: example: NORMAL
     ring_pattern: Optional[CallParkSettingsObjectRingPattern] = None
-    #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up within the set time, then the call will be recalled based on the Call Park Recall setting.
+    #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up within the
+    #: set time, then the call will be recalled based on the Call Park Recall setting.
     #: example: 60.0
     recall_time: Optional[int] = None
-    #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up, the call will revert back to the hunt group (after the person who parked the call is alerted).
+    #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up, the call
+    #: will revert back to the hunt group (after the person who parked the call is alerted).
     #: example: 60.0
     hunt_wait_time: Optional[int] = None
 

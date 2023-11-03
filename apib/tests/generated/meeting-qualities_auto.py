@@ -7,7 +7,8 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['MediaSessionQuality', 'MediaSessionQualityNetworkType', 'MeetingQualitiesResponse', 'Resources', 'VideoIn', 'VideoInTransportType']
+__auto__ = ['MediaSessionQuality', 'MediaSessionQualityNetworkType', 'MeetingQualitiesResponse', 'Resources', 'VideoIn',
+            'VideoInTransportType']
 
 
 class MediaSessionQualityNetworkType(str, Enum):

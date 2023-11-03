@@ -7,7 +7,13 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CapabilityMap', 'CapabilityResponse', 'SupportAndConfiguredInfo', 'Workspace', 'WorkspaceCalendar', 'WorkspaceCalendarType', 'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceCallingType', 'WorkspaceCollectionResponse', 'WorkspaceCreationRequest', 'WorkspaceCreationRequestCalendar', 'WorkspaceCreationRequestCalling', 'WorkspaceCreationRequestCallingWebexCalling', 'WorkspaceCreationRequestHotdeskingStatus', 'WorkspaceDeviceHostedMeetings', 'WorkspaceHotdeskingStatus', 'WorkspaceSupportedDevices', 'WorkspaceType', 'WorkspaceType1', 'WorkspaceUpdateRequest', 'WorkspaceUpdateRequestType']
+__auto__ = ['CapabilityMap', 'CapabilityResponse', 'SupportAndConfiguredInfo', 'Workspace', 'WorkspaceCalendar',
+            'WorkspaceCalendarType', 'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceCallingType',
+            'WorkspaceCollectionResponse', 'WorkspaceCreationRequest', 'WorkspaceCreationRequestCalendar',
+            'WorkspaceCreationRequestCalling', 'WorkspaceCreationRequestCallingWebexCalling',
+            'WorkspaceCreationRequestHotdeskingStatus', 'WorkspaceDeviceHostedMeetings', 'WorkspaceHotdeskingStatus',
+            'WorkspaceSupportedDevices', 'WorkspaceType', 'WorkspaceType1', 'WorkspaceUpdateRequest',
+            'WorkspaceUpdateRequestType']
 
 
 class WorkspaceType(str, Enum):
@@ -195,7 +201,8 @@ class WorkspaceCreationRequest(ApiModel):
     #: A friendly name for the workspace.
     #: example: SFO-12 Capanina
     display_name: Optional[str] = None
-    #: `OrgId` associated with the workspace. Only admin users of another organization (such as partners) may use this parameter.
+    #: `OrgId` associated with the workspace. Only admin users of another organization (such as partners) may use this
+    #: parameter.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8xZWI2NWZkZi05NjQzLTQxN2YtOTk3NC1hZDcyY2FlMGUxMGY
     org_id: Optional[str] = None
     #: Location associated with the workspace. Must be provided when the `floorId` is set.
@@ -211,9 +218,11 @@ class WorkspaceCreationRequest(ApiModel):
     type: Optional[WorkspaceType1] = None
     #: The `sipAddress` field can only be provided when calling type is `thirdPartySipCalling`
     sip_address: Optional[str] = None
-    #: Calling types supported on create are `freeCalling`, `webexEdgeForDevices`, `thirdPartySipCalling`, `webexCalling` and `none`. Default is `freeCalling`.
+    #: Calling types supported on create are `freeCalling`, `webexEdgeForDevices`, `thirdPartySipCalling`,
+    #: `webexCalling` and `none`. Default is `freeCalling`.
     calling: Optional[WorkspaceCreationRequestCalling] = None
-    #: Workspace calendar configuration. Provide a type (`microsoft`, `google` or `none`) and an `emailAddress`. Default is `none`.
+    #: Workspace calendar configuration. Provide a type (`microsoft`, `google` or `none`) and an `emailAddress`.
+    #: Default is `none`.
     calendar: Optional[WorkspaceCreationRequestCalendar] = None
     #: Notes associated to the workspace.
     #: example: this is a note
@@ -261,7 +270,9 @@ class WorkspaceUpdateRequest(ApiModel):
     #: The type that best describes the workspace.
     #: example: focus
     type: Optional[WorkspaceUpdateRequestType] = None
-    #: An empty/null calendar field will not cause any changes. Provide a type (`microsoft`, `google` or `none`) and an `emailAddress`. Removing calendar is done by setting the `none` type, and setting `none` type does not require an `emailAddress`.
+    #: An empty/null calendar field will not cause any changes. Provide a type (`microsoft`, `google` or `none`) and an
+    #: `emailAddress`. Removing calendar is done by setting the `none` type, and setting `none` type does not require
+    #: an `emailAddress`.
     calendar: Optional[WorkspaceCreationRequestCalendar] = None
     #: The `sipAddress` field can only be provided when calling type is `thirdPartySipCalling`
     sip_address: Optional[str] = None

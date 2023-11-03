@@ -7,7 +7,21 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersObject', 'AlternateNumbersObjectRingPattern', 'AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLevel', 'AudioAnnouncementFileObjectMediaFileType', 'AudioFileObject', 'AutoAttendantCallForwardSettingsDetailsObject', 'AutoAttendantCallForwardSettingsModifyDetailsObject', 'CallForwardRulesModifyObject', 'CallForwardRulesObject', 'CallForwardSelectiveCallsFromCustomNumbersObject', 'CallForwardSelectiveCallsFromObject', 'CallForwardSelectiveCallsFromObjectSelection', 'CallForwardSelectiveCallsToNumbersObject', 'CallForwardSelectiveCallsToNumbersObjectType', 'CallForwardSelectiveCallsToObject', 'CallForwardSelectiveForwardToObject', 'CallForwardSelectiveForwardToObjectSelection', 'CreateAnAutoAttendantResponse', 'GetAutoAttendantCallForwardSelectiveRuleObject', 'GetAutoAttendantCallForwardSettingsObject', 'GetAutoAttendantObject', 'GetAutoAttendantObjectExtensionDialing', 'GetCallForwardAlwaysSettingObject', 'HoursMenuGetObject', 'HoursMenuGetObjectGreeting', 'KeyConfigurationsGetObject', 'KeyConfigurationsGetObjectAction', 'KeyConfigurationsGetObjectKey', 'ListAutoAttendantObject', 'ModifyAutoAttendantCallForwardSelectiveRuleObject', 'ModifyAutoAttendantCallForwardSettingsObject', 'ModifyAutoAttendantObject', 'ReadTheListOfAutoAttendantsResponse']
+__auto__ = ['AlternateNumbersObject', 'AlternateNumbersObjectRingPattern', 'AudioAnnouncementFileGetObject',
+            'AudioAnnouncementFileGetObjectLevel', 'AudioAnnouncementFileObjectMediaFileType', 'AudioFileObject',
+            'AutoAttendantCallForwardSettingsDetailsObject', 'AutoAttendantCallForwardSettingsModifyDetailsObject',
+            'CallForwardRulesModifyObject', 'CallForwardRulesObject',
+            'CallForwardSelectiveCallsFromCustomNumbersObject', 'CallForwardSelectiveCallsFromObject',
+            'CallForwardSelectiveCallsFromObjectSelection', 'CallForwardSelectiveCallsToNumbersObject',
+            'CallForwardSelectiveCallsToNumbersObjectType', 'CallForwardSelectiveCallsToObject',
+            'CallForwardSelectiveForwardToObject', 'CallForwardSelectiveForwardToObjectSelection',
+            'CreateAnAutoAttendantResponse', 'GetAutoAttendantCallForwardSelectiveRuleObject',
+            'GetAutoAttendantCallForwardSettingsObject', 'GetAutoAttendantObject',
+            'GetAutoAttendantObjectExtensionDialing', 'GetCallForwardAlwaysSettingObject', 'HoursMenuGetObject',
+            'HoursMenuGetObjectGreeting', 'KeyConfigurationsGetObject', 'KeyConfigurationsGetObjectAction',
+            'KeyConfigurationsGetObjectKey', 'ListAutoAttendantObject',
+            'ModifyAutoAttendantCallForwardSelectiveRuleObject', 'ModifyAutoAttendantCallForwardSettingsObject',
+            'ModifyAutoAttendantObject', 'ReadTheListOfAutoAttendantsResponse']
 
 
 class AlternateNumbersObjectRingPattern(str, Enum):
@@ -78,7 +92,8 @@ class GetCallForwardAlwaysSettingObject(ApiModel):
     destination: Optional[str] = None
     #: If `true`, a brief tone will be played on the person's phone when a call has been forwarded.
     ring_reminder_enabled: Optional[bool] = None
-    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal phone number and that number has the voicemail service enabled.
+    #: Indicates enabled or disabled state of sending incoming calls to voicemail when the destination is an internal
+    #: phone number and that number has the voicemail service enabled.
     send_to_voicemail_enabled: Optional[bool] = None
 
 
@@ -89,7 +104,10 @@ class CallForwardRulesObject(ApiModel):
     #: Unique name of rule.
     #: example: Test Rule
     name: Optional[str] = None
-    #: Comma-separated list of incoming call numbers that, when matched, will not be forwarded. A Limit of 12 numbers is allowed. Use `Any private Number` in the comma-separated value to indicate rules that match incoming calls from a private number. Use `Any unavailable number` in the comma-separated value to match incoming calls from an unavailable number.
+    #: Comma-separated list of incoming call numbers that, when matched, will not be forwarded. A Limit of 12 numbers
+    #: is allowed. Use `Any private Number` in the comma-separated value to indicate rules that match incoming calls
+    #: from a private number. Use `Any unavailable number` in the comma-separated value to match incoming calls from an
+    #: unavailable number.
     #: example: Any private number
     calls_from: Optional[str] = None
     #: Comma-separated list of the types of numbers being matched for incoming call destination.
@@ -106,7 +124,8 @@ class CallForwardRulesObject(ApiModel):
 class AutoAttendantCallForwardSettingsDetailsObject(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
     always: Optional[GetCallForwardAlwaysSettingObject] = None
-    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one rule for forwarding applied for call forwarding to be active.
+    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one
+    #: rule for forwarding applied for call forwarding to be active.
     selective: Optional[GetCallForwardAlwaysSettingObject] = None
     #: Rules for selectively forwarding calls.
     rules: Optional[list[CallForwardRulesObject]] = None
@@ -116,7 +135,8 @@ class CallForwardRulesModifyObject(ApiModel):
     #: A unique identifier for the auto attendant call forward selective rule.
     #: example: Y2lzY29zcGFyazovL3VzL0NBTExfRk9SV0FSRElOR19TRUxFQ1RJVkVfUlVMRS9WR1Z6ZENCU2RXeGw
     id: Optional[str] = None
-    #: Flag to indicate if always call forwarding selective rule criteria is active. If not set, flag will be set to false.
+    #: Flag to indicate if always call forwarding selective rule criteria is active. If not set, flag will be set to
+    #: false.
     #: example: True
     enabled: Optional[bool] = None
 
@@ -124,7 +144,8 @@ class CallForwardRulesModifyObject(ApiModel):
 class AutoAttendantCallForwardSettingsModifyDetailsObject(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
     always: Optional[GetCallForwardAlwaysSettingObject] = None
-    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one rule for forwarding applied for call forwarding to be active.
+    #: Selectively forward calls to a designated number, depending on criteria rules. You'll need to have at least one
+    #: rule for forwarding applied for call forwarding to be active.
     selective: Optional[GetCallForwardAlwaysSettingObject] = None
     #: Rules for selectively forwarding calls. (Rules which are omitted in the list will not be deleted.)
     rules: Optional[list[CallForwardRulesModifyObject]] = None
@@ -149,7 +170,8 @@ class CallForwardSelectiveCallsFromObjectSelection(str, Enum):
 
 
 class CallForwardSelectiveCallsFromObject(ApiModel):
-    #: If `CUSTOM`, use `customNumbers` to specify which incoming caller ID values cause this rule to match. `ANY` means any incoming call matches assuming the rule is in effect based on the associated schedules.
+    #: If `CUSTOM`, use `customNumbers` to specify which incoming caller ID values cause this rule to match. `ANY`
+    #: means any incoming call matches assuming the rule is in effect based on the associated schedules.
     #: example: CUSTOM
     selection: Optional[CallForwardSelectiveCallsFromObjectSelection] = None
     #: Custom rules for matching incoming caller ID information. Mandatory if the selection option is set to `CUSTOM`.
@@ -157,9 +179,11 @@ class CallForwardSelectiveCallsFromObject(ApiModel):
 
 
 class CallForwardSelectiveCallsToNumbersObjectType(str, Enum):
-    #: Indicates that the given `phoneNumber` or `extension` associated with this rule's containing object is a primary number or extension.
+    #: Indicates that the given `phoneNumber` or `extension` associated with this rule's containing object is a primary
+    #: number or extension.
     primary = 'PRIMARY'
-    #: Indicates that the given `phoneNumber` or `extension` associated with this rule's containing object is an alternate number or extension.
+    #: Indicates that the given `phoneNumber` or `extension` associated with this rule's containing object is an
+    #: alternate number or extension.
     alternate = 'ALTERNATE'
 
 

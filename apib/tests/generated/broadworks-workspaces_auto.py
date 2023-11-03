@@ -11,7 +11,9 @@ __auto__ = ['WorkspaceResponse']
 
 
 class WorkspaceResponse(ApiModel):
-    #: Provisioning ID that defines how this workspace is to be provisioned for Cisco Webex Services. Each Customer Template will have their own unique Provisioning ID. This ID will be displayed under the chosen Customer Template on Cisco Webex Control Hub.
+    #: Provisioning ID that defines how this workspace is to be provisioned for Cisco Webex Services. Each Customer
+    #: Template will have their own unique Provisioning ID. This ID will be displayed under the chosen Customer
+    #: Template on Cisco Webex Control Hub.
     #: example: ZjViMzYxODctYzhkZC00NzI3LThiMmYtZjljNDQ3ZjI5MDQ2OjQyODVmNTk0LTViNTEtNDdiZS05Mzk2LTZjMzZlMmFkODNhNQ
     provisioning_id: Optional[str] = None
     #: The user ID of the workspace on BroadWorks.

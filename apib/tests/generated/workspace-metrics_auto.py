@@ -7,7 +7,10 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AggregatedMetric', 'DurationMetric', 'RawMetric', 'WorkspaceDurationMetricsResponse', 'WorkspaceDurationMetricsResponseAggregation', 'WorkspaceDurationMetricsResponseMeasurement', 'WorkspaceMetricsResponse', 'WorkspaceMetricsResponseAggregation', 'WorkspaceMetricsResponseMetricName', 'WorkspaceMetricsResponseSortBy', 'WorkspaceMetricsResponseUnit']
+__auto__ = ['AggregatedMetric', 'DurationMetric', 'RawMetric', 'WorkspaceDurationMetricsResponse',
+            'WorkspaceDurationMetricsResponseAggregation', 'WorkspaceDurationMetricsResponseMeasurement',
+            'WorkspaceMetricsResponse', 'WorkspaceMetricsResponseAggregation', 'WorkspaceMetricsResponseMetricName',
+            'WorkspaceMetricsResponseSortBy', 'WorkspaceMetricsResponseUnit']
 
 
 class AggregatedMetric(ApiModel):

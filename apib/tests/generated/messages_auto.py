@@ -7,7 +7,9 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AdaptiveCard', 'AdaptiveCardActions', 'AdaptiveCardBody', 'Attachment', 'DirectMessage', 'DirectMessageCollectionResponse', 'ListMessage', 'ListMessageCollectionResponse', 'Message', 'MessageCollectionResponse', 'MessageRoomType']
+__auto__ = ['AdaptiveCard', 'AdaptiveCardActions', 'AdaptiveCardBody', 'Attachment', 'DirectMessage',
+            'DirectMessageCollectionResponse', 'ListMessage', 'ListMessageCollectionResponse', 'Message',
+            'MessageCollectionResponse', 'MessageRoomType']
 
 
 class MessageRoomType(str, Enum):
@@ -75,7 +77,8 @@ class Message(ApiModel):
     #: The email address of the recipient when sending a private 1:1 message.
     #: example: julie@example.com
     to_person_email: Optional[str] = None
-    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide alternate text for UI clients that do not support rich text.
+    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide
+    #: alternate text for UI clients that do not support rich text.
     #: example: PROJECT UPDATE - A new project plan has been published om http://example.com/s/lf5vj. The PM for this project is Mike C. and the Engineering Manager is Jane W.
     text: Optional[str] = None
     #: The message, in Markdown format.
@@ -84,7 +87,8 @@ class Message(ApiModel):
     #: The text content of the message, in HTML format. This read-only property is used by the Webex clients.
     #: example: <p><strong>PROJECT UPDATE</strong> A new project plan has been published <a href=\"http://example.com/s/lf5vj\" rel=\"nofollow\">here</a>. The PM for this project is mike@example.com and the Engineering Manager is jane@example.com.</p>
     html: Optional[str] = None
-    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads, see [Message Attachments](/docs/basics#message-attachments).
+    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads,
+    #: see [Message Attachments](/docs/basics#message-attachments).
     #: example: ['http://www.example.com/images/media.png']
     files: Optional[list[str]] = None
     #: The person ID of the message author.
@@ -99,15 +103,18 @@ class Message(ApiModel):
     #: Group names for the groups mentioned in the message.
     #: example: ['all']
     mentioned_groups: Optional[list[str]] = None
-    #: Message content attachments attached to the message. See the [Cards Guide](/docs/api/guides/cards) for more information.
+    #: Message content attachments attached to the message. See the [Cards Guide](/docs/api/guides/cards) for more
+    #: information.
     attachments: Optional[list[Attachment]] = None
     #: The date and time the message was created.
     #: example: 2015-10-18T14:26:16+00:00
     created: Optional[datetime] = None
-    #: The date and time that the message was last edited by the author. This field is only present when the message contents have changed.
+    #: The date and time that the message was last edited by the author. This field is only present when the message
+    #: contents have changed.
     #: example: 2015-10-18T14:27:16+00:00
     updated: Optional[datetime] = None
-    #: True if the audio file is a voice clip recorded by the client; false if the audio file is a standard audio file not posted using the voice clip feature.
+    #: True if the audio file is a voice clip recorded by the client; false if the audio file is a standard audio file
+    #: not posted using the voice clip feature.
     is_voice_clip: Optional[bool] = None
 
 
@@ -124,7 +131,8 @@ class ListMessage(ApiModel):
     #: The type of room.
     #: example: group
     room_type: Optional[MessageRoomType] = None
-    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide alternate text for UI clients that do not support rich text.
+    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide
+    #: alternate text for UI clients that do not support rich text.
     #: example: PROJECT UPDATE - A new project plan has been published on http://example.com/s/lf5vj. The PM for this project is Mike C. and the Engineering Manager is Jane W.
     text: Optional[str] = None
     #: The message, in Markdown format.
@@ -133,7 +141,8 @@ class ListMessage(ApiModel):
     #: The text content of the message, in HTML format. This read-only property is used by the Webex clients.
     #: example: <p><strong>PROJECT UPDATE</strong> A new project plan has been published <a href=\"http://example.com/s/lf5vj\" rel=\"nofollow\">here</a>. The PM for this project is mike@example.com and the Engineering Manager is jane@example.com.</p>
     html: Optional[str] = None
-    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads, see [Message Attachments](/docs/basics#message-attachments).
+    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads,
+    #: see [Message Attachments](/docs/basics#message-attachments).
     #: example: ['http://www.example.com/images/media.png']
     files: Optional[list[str]] = None
     #: The person ID of the message author.
@@ -148,15 +157,18 @@ class ListMessage(ApiModel):
     #: Group names for the groups mentioned in the message.
     #: example: ['all']
     mentioned_groups: Optional[list[str]] = None
-    #: Message content attachments attached to the message. See the [Cards Guide](/docs/api/guides/cards) for more information.
+    #: Message content attachments attached to the message. See the [Cards Guide](/docs/api/guides/cards) for more
+    #: information.
     attachments: Optional[list[Attachment]] = None
     #: The date and time the message was created.
     #: example: 2015-10-18T14:26:16+00:00
     created: Optional[datetime] = None
-    #: The date and time that the message was last edited by the author. This field is only present when the message contents have changed.
+    #: The date and time that the message was last edited by the author. This field is only present when the message
+    #: contents have changed.
     #: example: 2015-10-18T14:27:16+00:00
     updated: Optional[datetime] = None
-    #: `true` if the audio file is a voice clip recorded by the client; `false` if the audio file is a standard audio file not posted using the voice clip feature.
+    #: `true` if the audio file is a voice clip recorded by the client; `false` if the audio file is a standard audio
+    #: file not posted using the voice clip feature.
     is_voice_clip: Optional[bool] = None
 
 
@@ -173,7 +185,8 @@ class DirectMessage(ApiModel):
     #: The type of room. Will always be `direct`.
     #: example: direct
     room_type: Optional[str] = None
-    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide alternate text for UI clients that do not support rich text.
+    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide
+    #: alternate text for UI clients that do not support rich text.
     #: example: Hey there, what do you think of this project update presentation (http://sharepoint.example.com/presentation.pptx)?
     text: Optional[str] = None
     #: The message, in Markdown format.
@@ -182,7 +195,8 @@ class DirectMessage(ApiModel):
     #: The text content of the message, in HTML format. This read-only property is used by the Webex clients.
     #: example: <p>Hey there, what do you think of <a href=\"http://sharepoint.example.com/presentation.pptx\" rel=\"nofollow\">this project update presentation</a>?</p>
     html: Optional[str] = None
-    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads, see [Message Attachments](/docs/api/basics#message-attachments).
+    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads,
+    #: see [Message Attachments](/docs/api/basics#message-attachments).
     #: example: ['http://www.example.com/images/media.png']
     files: Optional[list[str]] = None
     #: The person ID of the message author.
@@ -191,15 +205,18 @@ class DirectMessage(ApiModel):
     #: The email address of the message author.
     #: example: matt@example.com
     person_email: Optional[str] = None
-    #: Message content attachments attached to the message. See the [Cards Guide](/docs/api/guides/cards) for more information.
+    #: Message content attachments attached to the message. See the [Cards Guide](/docs/api/guides/cards) for more
+    #: information.
     attachments: Optional[list[Attachment]] = None
     #: The date and time the message was created.
     #: example: 2015-10-18T14:26:16+00:00
     created: Optional[datetime] = None
-    #: The date and time that the message was last edited by the author. This field is only present when the message contents have changed.
+    #: The date and time that the message was last edited by the author. This field is only present when the message
+    #: contents have changed.
     #: example: 2015-10-18T14:27:16+00:00
     updated: Optional[datetime] = None
-    #: True if the audio file is a voice clip recorded by the client; false if the audio file is a standard audio file not posted using the voice clip feature.
+    #: True if the audio file is a voice clip recorded by the client; false if the audio file is a standard audio file
+    #: not posted using the voice clip feature.
     is_voice_clip: Optional[bool] = None
 
 

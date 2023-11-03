@@ -55,7 +55,8 @@ class Report(ApiModel):
     temp_download_url: Optional[str] = Field(alias='tempDownloadURL', default=None)
     #: List of errors that occurred during report generation.
     #: **Note:**
-    #: * Captures errors that occurred during asynchronous or background report generation, after the request has been accepted and a `202 OK` response is returned.
+    #: * Captures errors that occurred during asynchronous or background report generation, after the request has been
+    #: accepted and a `202 OK` response is returned.
     errors: Optional[list[ReportError]] = None
 
 

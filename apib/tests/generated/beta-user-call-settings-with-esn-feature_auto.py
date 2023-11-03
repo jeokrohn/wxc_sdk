@@ -7,7 +7,13 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AgentAvaliableCallQueueIdList', 'AgentCallQueueId', 'AvailableSharedLineMemberItem', 'AvailableSharedLineMemberList', 'CallQueueObject', 'GetMonitoredElementsObject', 'GetMonitoredElementsObjectCallparkextension', 'GetMonitoredElementsObjectMember', 'GetNumbers', 'GetNumbersPhoneNumbers', 'GetNumbersPhoneNumbersRingPattern', 'GetSharedLineMemberItem', 'GetSharedLineMemberList', 'LineType', 'Location', 'MonitoredMemberObject', 'MonitoredNumberObject', 'MonitoringSettings', 'PeopleOrPlaceOrVirtualLineType', 'PrivacyGet', 'PushToTalkAccessType', 'PushToTalkConnectionType', 'PushToTalkInfo', 'ReceptionInfo', 'UserType']
+__auto__ = ['AgentAvaliableCallQueueIdList', 'AgentCallQueueId', 'AvailableSharedLineMemberItem',
+            'AvailableSharedLineMemberList', 'CallQueueObject', 'GetMonitoredElementsObject',
+            'GetMonitoredElementsObjectCallparkextension', 'GetMonitoredElementsObjectMember', 'GetNumbers',
+            'GetNumbersPhoneNumbers', 'GetNumbersPhoneNumbersRingPattern', 'GetSharedLineMemberItem',
+            'GetSharedLineMemberList', 'LineType', 'Location', 'MonitoredMemberObject', 'MonitoredNumberObject',
+            'MonitoringSettings', 'PeopleOrPlaceOrVirtualLineType', 'PrivacyGet', 'PushToTalkAccessType',
+            'PushToTalkConnectionType', 'PushToTalkInfo', 'ReceptionInfo', 'UserType']
 
 
 class CallQueueObject(ApiModel):
@@ -32,22 +38,27 @@ class CallQueueObject(ApiModel):
 
 
 class AgentAvaliableCallQueueIdList(ApiModel):
-    #: Indicates a list of Call Queues that the agent belongs and are available to be selected as the Caller ID for outgoing calls. It is empty when the agent's Call Queues have disabled the Call Queue outgoing phone number setting to be used as Caller ID. In the case where this setting is enabled the array will be populated.
+    #: Indicates a list of Call Queues that the agent belongs and are available to be selected as the Caller ID for
+    #: outgoing calls. It is empty when the agent's Call Queues have disabled the Call Queue outgoing phone number
+    #: setting to be used as Caller ID. In the case where this setting is enabled the array will be populated.
     available_queues: Optional[list[CallQueueObject]] = None
 
 
 class AgentCallQueueId(ApiModel):
-    #: When true, indicates that this agent is using the `selectedQueue` for its Caller ID. When false, indicates that it is using the agent's configured Caller ID.
+    #: When true, indicates that this agent is using the `selectedQueue` for its Caller ID. When false, indicates that
+    #: it is using the agent's configured Caller ID.
     #: example: True
     queue_caller_id_enabled: Optional[bool] = None
-    #: Indicates agent's choice of using this queue's Caller ID for outgoing calls. It is empty object when `queueCallerIdEnabled` is false. When `queueCallerIdEnabled` is true this data must be populated.
+    #: Indicates agent's choice of using this queue's Caller ID for outgoing calls. It is empty object when
+    #: `queueCallerIdEnabled` is false. When `queueCallerIdEnabled` is true this data must be populated.
     selected_queue: Optional[CallQueueObject] = None
 
 
 class LineType(str, Enum):
     #: Primary line for the member.
     primary = 'PRIMARY'
-    #: Shared line for the member. A shared line allows users to receive and place calls to and from another user's extension, using their own device.
+    #: Shared line for the member. A shared line allows users to receive and place calls to and from another user's
+    #: extension, using their own device.
     shared_call_appearance = 'SHARED_CALL_APPEARANCE'
 
 
@@ -110,7 +121,8 @@ class GetSharedLineMemberItem(ApiModel):
     #: Last name of person or workspace.
     #: example: Doe
     last_name: Optional[str] = None
-    #: Phone number of a person or workspace. Currently, E.164 format is not supported. This will be supported in the future update.
+    #: Phone number of a person or workspace. Currently, E.164 format is not supported. This will be supported in the
+    #: future update.
     #: example: 2056852221
     phone_number: Optional[str] = None
     #: Phone extension of a person or workspace.
@@ -143,13 +155,16 @@ class GetSharedLineMemberItem(ApiModel):
     #: Registration remote IP for the line port.
     #: example: 198.168.0.2
     remote_ip: Optional[str] = Field(alias='remoteIP', default=None)
-    #: Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line can only make calls to the predefined number set in hotlineDestination.
+    #: Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line
+    #: can only make calls to the predefined number set in hotlineDestination.
     #: example: True
     hotline_enabled: Optional[bool] = None
     #: Preconfigured number for the hotline. Required only if `hotlineEnabled` is set to `true`.
     #: example: 1234
     hotline_destination: Optional[datetime] = None
-    #: Set how a device behaves when a call is declined. When set to `true`, a call decline request is extended to all the endpoints on the device. When set to `false`, a call decline request is only declined at the current endpoint.
+    #: Set how a device behaves when a call is declined. When set to `true`, a call decline request is extended to all
+    #: the endpoints on the device. When set to `false`, a call decline request is only declined at the current
+    #: endpoint.
     #: example: True
     allow_call_decline_enabled: Optional[bool] = None
     #: Device line label.
@@ -348,14 +363,17 @@ class PushToTalkAccessType(str, Enum):
 
 
 class PushToTalkConnectionType(str, Enum):
-    #: Push-to-Talk initiators can chat with this person but only in one direction. The person you enable Push-to-Talk for cannot respond.
+    #: Push-to-Talk initiators can chat with this person but only in one direction. The person you enable Push-to-Talk
+    #: for cannot respond.
     one_way = 'ONE_WAY'
-    #: Push-to-Talk initiators can chat with this person in a two-way conversation. The person you enable Push-to-Talk for can respond.
+    #: Push-to-Talk initiators can chat with this person in a two-way conversation. The person you enable Push-to-Talk
+    #: for can respond.
     two_way = 'TWO_WAY'
 
 
 class PushToTalkInfo(ApiModel):
-    #: Set to `true` to enable the Push-to-Talk feature.  When enabled, a person receives a Push-to-Talk call and answers the call automatically.
+    #: Set to `true` to enable the Push-to-Talk feature.  When enabled, a person receives a Push-to-Talk call and
+    #: answers the call automatically.
     #: example: True
     allow_auto_answer: Optional[bool] = None
     #: Specifies the connection type to be used.

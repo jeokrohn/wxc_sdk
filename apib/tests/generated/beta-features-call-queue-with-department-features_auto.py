@@ -7,7 +7,13 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersWithPattern', 'CallQueueQueueSettingsObject', 'CallQueueQueueSettingsObjectOverflow', 'CallQueueQueueSettingsObjectOverflowAction', 'CallQueueQueueSettingsObjectOverflowGreeting', 'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObjectCallBounce', 'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueObject', 'GetCallQueueObjectAlternateNumberSettings', 'GetCallQueueObjectDepartment', 'GetPersonPlaceObject', 'HuntPolicySelection', 'ListCallQueueObject', 'ModifyCallQueueObject', 'ModifyCallQueueObjectDepartment', 'PostPersonPlaceObject', 'ReadTheListOfCallQueuesResponse', 'RingPatternObject']
+__auto__ = ['AlternateNumbersWithPattern', 'CallQueueQueueSettingsObject', 'CallQueueQueueSettingsObjectOverflow',
+            'CallQueueQueueSettingsObjectOverflowAction', 'CallQueueQueueSettingsObjectOverflowGreeting',
+            'GetCallQueueCallPolicyObject', 'GetCallQueueCallPolicyObjectCallBounce',
+            'GetCallQueueCallPolicyObjectDistinctiveRing', 'GetCallQueueObject',
+            'GetCallQueueObjectAlternateNumberSettings', 'GetCallQueueObjectDepartment', 'GetPersonPlaceObject',
+            'HuntPolicySelection', 'ListCallQueueObject', 'ModifyCallQueueObject', 'ModifyCallQueueObjectDepartment',
+            'PostPersonPlaceObject', 'ReadTheListOfCallQueuesResponse', 'RingPatternObject']
 
 
 class RingPatternObject(str, Enum):
@@ -25,7 +31,8 @@ class AlternateNumbersWithPattern(ApiModel):
     #: Alternate phone number for the hunt group.
     #: example: 5558675309
     phone_number: Optional[str] = None
-    #: Ring pattern for when this alternate number is called. Only available when `distinctiveRing` is enabled for the hunt group.
+    #: Ring pattern for when this alternate number is called. Only available when `distinctiveRing` is enabled for the
+    #: hunt group.
     #: example: NORMAL
     ring_pattern: Optional[RingPatternObject] = None
 
@@ -50,29 +57,34 @@ class CallQueueQueueSettingsObjectOverflow(ApiModel):
     #: Indicates how to handle new calls when the queue is full.
     #: example: PERFORM_BUSY_TREATMENT
     action: Optional[CallQueueQueueSettingsObjectOverflowAction] = None
-    #: When `true`, forwards all calls to a voicemail service of an internal number. This option is ignored when an external `transferNumber` is entered.
+    #: When `true`, forwards all calls to a voicemail service of an internal number. This option is ignored when an
+    #: external `transferNumber` is entered.
     send_to_voicemail: Optional[bool] = None
     #: Destination number for overflow calls when `action` is set to `TRANSFER_TO_PHONE_NUMBER`.
     #: example: +15553331212
     transfer_number: Optional[str] = None
-    #: After calls wait for the configured number of seconds and no agent is available, the overflow treatment is triggered.
+    #: After calls wait for the configured number of seconds and no agent is available, the overflow treatment is
+    #: triggered.
     #: example: True
     overflow_after_wait_enabled: Optional[bool] = None
     #: Number of seconds to wait before the overflow treatment is triggered when no agent is available.
     #: example: 20.0
     overflow_after_wait_time: Optional[int] = None
-    #: Indicate overflow audio to be played, otherwise callers will hear the hold music until the call is answered by a user.
+    #: Indicate overflow audio to be played, otherwise callers will hear the hold music until the call is answered by a
+    #: user.
     #: example: True
     play_overflow_greeting_enabled: Optional[bool] = None
     #: Indicates how to handle new calls when the queue is full.
     #: example: DEFAULT
     greeting: Optional[CallQueueQueueSettingsObjectOverflowGreeting] = None
-    #: Array of announcement file name strings to be played as overflow greetings. These files are from the list of announcements files associated with this call queue.
+    #: Array of announcement file name strings to be played as overflow greetings. These files are from the list of
+    #: announcements files associated with this call queue.
     audio_files: Optional[list[str]] = None
 
 
 class CallQueueQueueSettingsObject(ApiModel):
-    #: The maximum number of calls for this call queue. Once this number is reached, the overflow settings are triggered.
+    #: The maximum number of calls for this call queue. Once this number is reached, the overflow settings are
+    #: triggered.
     #: example: 50.0
     queue_size: Optional[int] = None
     #: Play ringing tone to callers when their call is set to an available agent.
@@ -112,19 +124,22 @@ class GetCallQueueCallPolicyObjectDistinctiveRing(ApiModel):
     #: Whether or not the distinctive ring is enabled.
     #: example: True
     enabled: Optional[bool] = None
-    #: Ring pattern for when this callqueue is called. Only available when `distinctiveRing` is enabled for the call queue.
+    #: Ring pattern for when this callqueue is called. Only available when `distinctiveRing` is enabled for the call
+    #: queue.
     #: example: NORMAL
     ring_pattern: Optional[RingPatternObject] = None
 
 
 class HuntPolicySelection(str, Enum):
-    #: This option cycles through all agents after the last agent that took a call. It sends calls to the next available agent.
+    #: This option cycles through all agents after the last agent that took a call. It sends calls to the next
+    #: available agent.
     circular = 'CIRCULAR'
     #: Send the call through the queue of agents in order, starting from the top each time.
     regular = 'REGULAR'
     #: Sends calls to all agents at once
     simultaneous = 'SIMULTANEOUS'
-    #: Sends calls to the agent that has been idle the longest. If they don't answer, proceed to the next agent who has been idle the second longest, and so on until the call is answered.
+    #: Sends calls to the agent that has been idle the longest. If they don't answer, proceed to the next agent who has
+    #: been idle the second longest, and so on until the call is answered.
     uniform = 'UNIFORM'
     #: Sends call to idle agents based on percentages you assign to each agent (up to 100%).
     weighted = 'WEIGHTED'
@@ -141,7 +156,8 @@ class GetCallQueueCallPolicyObject(ApiModel):
 
 
 class GetCallQueueObjectAlternateNumberSettings(ApiModel):
-    #: Distinctive Ringing selected for the alternate numbers in the call queue overrides the normal ringing patterns set for Alternate Number.
+    #: Distinctive Ringing selected for the alternate numbers in the call queue overrides the normal ringing patterns
+    #: set for Alternate Number.
     #: example: True
     distinctive_ring_enabled: Optional[bool] = None
     #: Specifies up to 10 numbers which can each have an overriden distinctive ring setting.
@@ -191,7 +207,8 @@ class GetCallQueueObject(ApiModel):
     #: First name to be shown when calls are forwarded out of this call queue. Defaults to ".".
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the phone number if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
     #: Primary phone number of the call queue.
@@ -200,7 +217,9 @@ class GetCallQueueObject(ApiModel):
     #: Extension of the call queue.
     #: example: 7781
     extension: Optional[datetime] = None
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
     alternate_number_settings: Optional[GetCallQueueObjectAlternateNumberSettings] = None
     #: Language for call queue.
     #: example: English
@@ -277,7 +296,8 @@ class ModifyCallQueueObject(ApiModel):
     #: First name to be shown when calls are forwarded out of this call queue. Defaults to ".".
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this call queue. Defaults to the phone number if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
     #: Time zone for the hunt group.
@@ -289,7 +309,9 @@ class ModifyCallQueueObject(ApiModel):
     #: Extension of the call queue.
     #: example: 7781
     extension: Optional[datetime] = None
-    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each number will reach the same greeting and each menu will function identically to the main number. The alternate numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
+    #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
+    #: number will reach the same greeting and each menu will function identically to the main number. The alternate
+    #: numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
     alternate_number_settings: Optional[GetCallQueueObjectAlternateNumberSettings] = None
     #: Policy controlling how calls are routed to agents.
     call_policies: Optional[GetCallQueueCallPolicyObject] = None

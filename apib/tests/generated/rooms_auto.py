@@ -42,15 +42,18 @@ class Room(ApiModel):
     #: The date and time the room was created.
     #: example: 2016-04-21T19:01:55.966Z
     created: Optional[datetime] = None
-    #: The ID of the organization which owns this room. See [Webex Data](/docs/api/guides/compliance#webex-teams-data) in the [Compliance Guide](/docs/api/guides/compliance) for more information.
+    #: The ID of the organization which owns this room. See [Webex Data](/docs/api/guides/compliance#webex-teams-data)
+    #: in the [Compliance Guide](/docs/api/guides/compliance) for more information.
     #: example: Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi85NmFiYzJhYS0zZGNjLTExZTUtYTE1Mi1mZTM0ODE5Y2RjOWE
     owner_id: Optional[str] = None
-    #: Space classification ID represents the space's current classification.  It can be attached during space creation time, and can be modified at the request of an authorized user.
+    #: Space classification ID represents the space's current classification.  It can be attached during space creation
+    #: time, and can be modified at the request of an authorized user.
     #: example: Y2lzY29zcGFyazovL3VzL0NMQVNTSUZJQ0FUSU9OL2YyMDUyZTgyLTU0ZjgtMTFlYS1hMmUzLTJlNzI4Y2U4ODEyNQ
     classification_id: Optional[str] = None
     #: Indicates when a space is in Announcement Mode where only moderators can post messages
     is_announcement_only: Optional[bool] = None
-    #: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in this space, while maintaing historical data.
+    #: A compliance officer can set a direct room as read-only, which will disallow any new information exchanges in
+    #: this space, while maintaing historical data.
     is_read_only: Optional[bool] = None
     #: The room is public and therefore discoverable within the org. Anyone can find and join that room.
     #: example: True

@@ -7,7 +7,8 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['DeveloperRegistrationGetResponse', 'DeveloperRegistrationUpdateRequest', 'SkillCreateRequest', 'SkillCreateRequestLanguages', 'SkillCreateResponse']
+__auto__ = ['DeveloperRegistrationGetResponse', 'DeveloperRegistrationUpdateRequest', 'SkillCreateRequest',
+            'SkillCreateRequestLanguages', 'SkillCreateResponse']
 
 
 class SkillCreateRequestLanguages(str, Enum):

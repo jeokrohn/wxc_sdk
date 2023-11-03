@@ -7,7 +7,8 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Attachment', 'DirectMessage', 'DirectMessageCollectionResponse', 'File', 'FileType', 'Message', 'MessageCollectionResponse', 'MessageRoomType']
+__auto__ = ['Attachment', 'DirectMessage', 'DirectMessageCollectionResponse', 'File', 'FileType', 'Message',
+            'MessageCollectionResponse', 'MessageRoomType']
 
 
 class MessageRoomType(str, Enum):
@@ -57,13 +58,15 @@ class Message(ApiModel):
     #: The email address of the recipient when sending a private 1:1 message.
     #: example: julie@example.com
     to_person_email: Optional[str] = None
-    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide alternate text for UI clients that do not support rich text.
+    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide
+    #: alternate text for UI clients that do not support rich text.
     #: example: PROJECT UPDATE - A new project plan has been published on http://example.com/s/lf5vj. The PM for this project is Mike C. and the Engineering Manager is Jane W.
     text: Optional[str] = None
     #: The message, in Markdown format.
     #: example: **PROJECT UPDATE** A new project plan has been published [here](http://example.com/s/lf5vj). The PM for this project is <@personEmail:mike@example.com> and the Engineering Manager is <@personEmail:jane@example.com>.
     markdown: Optional[str] = None
-    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads, see [Message Attachments](/docs/api/basics#message-attachments).
+    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads,
+    #: see [Message Attachments](/docs/api/basics#message-attachments).
     #: example: ['http://www.example.com/images/media.png']
     files: Optional[list[str]] = None
     #: Content attachments attached to the message.
@@ -95,13 +98,15 @@ class DirectMessage(ApiModel):
     #: The type of room. Will always be `direct`.
     #: example: direct
     room_type: Optional[str] = None
-    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide alternate text for UI clients that do not support rich text.
+    #: The message, in plain text. If `markdown` is specified this parameter may be *optionally* used to provide
+    #: alternate text for UI clients that do not support rich text.
     #: example: Hey there, what do you think of this project update presentation (http://sharepoint.example.com/presentation.pptx)?
     text: Optional[str] = None
     #: The message, in Markdown format.
     #: example: Hey there, what do you think of [this project update presentation](http://sharepoint.example.com/presentation.pptx)?
     markdown: Optional[str] = None
-    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads, see [Message Attachments](/docs/api/basics#message-attachments).
+    #: Public URLs for files attached to the message. For the supported media types and the behavior of file uploads,
+    #: see [Message Attachments](/docs/api/basics#message-attachments).
     #: example: ['http://www.example.com/images/media.png']
     files: Optional[list[str]] = None
     #: The person ID of the message author.

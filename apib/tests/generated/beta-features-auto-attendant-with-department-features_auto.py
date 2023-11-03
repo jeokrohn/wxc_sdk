@@ -7,7 +7,11 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AlternateNumbersObject', 'AlternateNumbersObjectRingPattern', 'GetAutoAttendantObject', 'GetAutoAttendantObjectDepartment', 'GetAutoAttendantObjectExtensionDialing', 'HoursMenuObject', 'HoursMenuObjectGreeting', 'KeyConfigurationsObject', 'KeyConfigurationsObjectAction', 'KeyConfigurationsObjectKey', 'ListAutoAttendantObject', 'ListAutoAttendantObjectDepartment', 'ModifyAutoAttendantObject', 'ReadTheListOfAutoAttendantsResponse']
+__auto__ = ['AlternateNumbersObject', 'AlternateNumbersObjectRingPattern', 'GetAutoAttendantObject',
+            'GetAutoAttendantObjectDepartment', 'GetAutoAttendantObjectExtensionDialing', 'HoursMenuObject',
+            'HoursMenuObjectGreeting', 'KeyConfigurationsObject', 'KeyConfigurationsObjectAction',
+            'KeyConfigurationsObjectKey', 'ListAutoAttendantObject', 'ListAutoAttendantObjectDepartment',
+            'ModifyAutoAttendantObject', 'ReadTheListOfAutoAttendantsResponse']
 
 
 class AlternateNumbersObjectRingPattern(str, Enum):

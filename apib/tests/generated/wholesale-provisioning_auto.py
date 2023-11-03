@@ -7,7 +7,17 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Address', 'Customer', 'CustomerListResponse', 'CustomerProvisioningPrecheckResponse', 'CustomerProvisioningPrecheckResponseInfo', 'CustomerStatus', 'Error', 'Package', 'PackageName', 'PackageStatus', 'PrecheckAWholesaleCustomerProvisioningCustomerInfo', 'PrecheckAWholesaleSubscriberProvisioningCustomerInfo', 'ProvisionAWholesaleCustomerCustomerInfo', 'ProvisionAWholesaleCustomerProvisioningParameters', 'ProvisionAWholesaleCustomerProvisioningParametersCalling', 'ProvisionAWholesaleCustomerProvisioningParametersCallingLocation', 'ProvisionAWholesaleCustomerProvisioningParametersMeetings', 'ProvisionAWholesaleSubscriberProvisioningParameters', 'ResourceDetails', 'ResourceURL', 'SubPartner', 'SubPartnerProvisioningState', 'SubPartnersListResponse', 'Subscriber', 'SubscriberListResponse', 'SubscriberPackage', 'SubscriberStatus', 'UpdateAWholesaleSubscriberProvisioningParameters']
+__auto__ = ['Address', 'Customer', 'CustomerListResponse', 'CustomerProvisioningPrecheckResponse',
+            'CustomerProvisioningPrecheckResponseInfo', 'CustomerStatus', 'Error', 'Package', 'PackageName',
+            'PackageStatus', 'PrecheckAWholesaleCustomerProvisioningCustomerInfo',
+            'PrecheckAWholesaleSubscriberProvisioningCustomerInfo', 'ProvisionAWholesaleCustomerCustomerInfo',
+            'ProvisionAWholesaleCustomerProvisioningParameters',
+            'ProvisionAWholesaleCustomerProvisioningParametersCalling',
+            'ProvisionAWholesaleCustomerProvisioningParametersCallingLocation',
+            'ProvisionAWholesaleCustomerProvisioningParametersMeetings',
+            'ProvisionAWholesaleSubscriberProvisioningParameters', 'ResourceDetails', 'ResourceURL', 'SubPartner',
+            'SubPartnerProvisioningState', 'SubPartnersListResponse', 'Subscriber', 'SubscriberListResponse',
+            'SubscriberPackage', 'SubscriberStatus', 'UpdateAWholesaleSubscriberProvisioningParameters']
 
 
 class Address(ApiModel):
@@ -90,13 +100,17 @@ class Package(ApiModel):
     status: Optional[PackageStatus] = None
     #: List of warnings that occurred during that last attempt to provision/update this customer.
     #: *Note:*
-    #: + This list captures errors that occurred during *asynchronous or background* provisioning of the customer, *after* the API has been accepted and 202 response returned.
-    #: + Any errors that occur during initial API request validation will be captured directly in error response with appropriate HTTP status code.
+    #: + This list captures errors that occurred during *asynchronous or background* provisioning of the customer,
+    #: *after* the API has been accepted and 202 response returned.
+    #: + Any errors that occur during initial API request validation will be captured directly in error response with
+    #: appropriate HTTP status code.
     warnings: Optional[list[Error]] = None
     #: List of errors that occurred during that last attempt to provision/update this customer.
     #: *Note:*
-    #: + This list captures errors that occurred during *asynchronous or background* provisioning of the customer, *after* the API has been accepted and 202 response returned.
-    #: + Any errors that occur during initial API request validation will be captured directly in error response with appropriate HTTP status code.
+    #: + This list captures errors that occurred during *asynchronous or background* provisioning of the customer,
+    #: *after* the API has been accepted and 202 response returned.
+    #: + Any errors that occur during initial API request validation will be captured directly in error response with
+    #: appropriate HTTP status code.
     errors: Optional[list[Error]] = None
 
 
@@ -105,10 +119,12 @@ class ResourceDetails(ApiModel):
 
 
 class Customer(ApiModel):
-    #: A unique Cisco identifier for the customer. This value should be used for the `customerId` parameter in the Wholesale Customers and Wholesale Subscribers API.
+    #: A unique Cisco identifier for the customer. This value should be used for the `customerId` parameter in the
+    #: Wholesale Customers and Wholesale Subscribers API.
     #: example: 'Y2lzY29zcGFyazovL3VzL0VOVEVSUFJJU0UvNTJjZjU3NmQtNjBhOC00MDdhLWIyMmMtNDY3YzUxNTkxOTA4'
     id: Optional[str] = None
-    #: The Organization ID of the enterprise on Cisco Webex, to be used when referencing this customer on other Cisco Webex APIs. Only presented when status is `provisioned`.
+    #: The Organization ID of the enterprise on Cisco Webex, to be used when referencing this customer on other Cisco
+    #: Webex APIs. Only presented when status is `provisioned`.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
     org_id: Optional[str] = None
     #: External ID of the Customer.
@@ -124,8 +140,10 @@ class Customer(ApiModel):
     resource_details: Optional[ResourceDetails] = None
     #: List of errors that occurred during that last attempt to provision/update this customer.
     #: *Note:*
-    #: + This list captures errors that occurred during *asynchronous or background* provisioning of the customer, *after* the API has been accepted and 202 response returned.
-    #: + Any errors that occur during initial API request validation will be captured directly in error response with appropriate HTTP status code.
+    #: + This list captures errors that occurred during *asynchronous or background* provisioning of the customer,
+    #: *after* the API has been accepted and 202 response returned.
+    #: + Any errors that occur during initial API request validation will be captured directly in error response with
+    #: appropriate HTTP status code.
     errors: Optional[list[Error]] = None
 
 
@@ -144,7 +162,8 @@ class CustomerProvisioningPrecheckResponseInfo(ApiModel):
 
 
 class CustomerProvisioningPrecheckResponse(ApiModel):
-    #: A textual representation of the Precheck response message containing the `infoCode` object in the case of a success response and the `errorCode` object in the case of failure.
+    #: A textual representation of the Precheck response message containing the `infoCode` object in the case of a
+    #: success response and the `errorCode` object in the case of failure.
     #: example: success
     message: Optional[str] = None
     #: A list of ProvisioningPreCheckResponseInfo object.
@@ -152,7 +171,8 @@ class CustomerProvisioningPrecheckResponse(ApiModel):
 
 
 class ResourceURL(ApiModel):
-    #: A URL which points to the [Get a Wholesale Customer](/docs/api/v1/wholesale-provisioning/get-a-wholesale-customer) endpoint for the provisioned customer.
+    #: A URL which points to the [Get a Wholesale
+    #: Customer](/docs/api/v1/wholesale-provisioning/get-a-wholesale-customer) endpoint for the provisioned customer.
     #: example: "https://webexapis.com/v1/wholesale/customers/Y2lzY29zcGFyazovL3VzL0VOVEVSUFJJU0UvNTJjZjU3NmQtNjBhOC00MDdhLWIyMmMtNDY3YzUxNTkxOTA4"
     url: Optional[str] = None
 
@@ -231,7 +251,8 @@ class Subscriber(ApiModel):
     #: List of errors that occurred during that last attempt to provision/update this subscriber.
     #: *Note:*
     #: + This list captures errors that occurred during provisioning of the subscriber.
-    #: + Any errors that occur during initial API request validation will be captured directly in error response with appropriate HTTP status code.
+    #: + Any errors that occur during initial API request validation will be captured directly in error response with
+    #: appropriate HTTP status code.
     errors: Optional[list[Error]] = None
     #: The date and time the subscriber was provisioned.
     #: example: 2019-10-18T14:26:16.000Z
@@ -253,7 +274,10 @@ class ProvisionAWholesaleCustomerCustomerInfo(ApiModel):
     #: The primary email address of the customer.
     #: example: john.anderson@acme.com
     primary_email: Optional[str] = None
-    #: The {ISO-639-1}_{ISO-3166} or {ISO-639-1} locale or language code used as preferred language for organization and Webex Meeting Sites. Refer to the [help page](https://www.cisco.com/c/en/us/td/docs/voice_ip_comm/cloudCollaboration/wholesale_rtm/wbxbw_b_wholesale-rtm-solution-guide/wbxbw_m_overview-of-webex-wholesale.html#Cisco_Reference.dita_deb994cb-9c48-4488-b352-54495c54ba1e) for more information.
+    #: The {ISO-639-1}_{ISO-3166} or {ISO-639-1} locale or language code used as preferred language for organization
+    #: and Webex Meeting Sites. Refer to the
+    #: https://www.cisco.com/c/en/us/td/docs/voice_ip_comm/cloudCollaboration/wholesale_rtm/wbxbw_b_wholesale-rtm-solution-guide/wbxbw_m_overview-of-webex-wholesale.html#Cisco_Reference.dita_deb994cb-9c48-4488-b352-54495c54ba1e for more
+    #: information.
     #: example: 'en'
     language: Optional[str] = None
 
@@ -312,25 +336,32 @@ class ProvisionAWholesaleSubscriberProvisioningParameters(ApiModel):
     #: The last name of the subscriber.
     #: example: Andersen
     last_name: Optional[str] = None
-    #: The primary phone number configured for the subscriber. A primary phone number, extension, or both must be supplied when assigning a calling-enabled package, unless the subscriber is an existing Webex Calling entitled user.
+    #: The primary phone number configured for the subscriber. A primary phone number, extension, or both must be
+    #: supplied when assigning a calling-enabled package, unless the subscriber is an existing Webex Calling entitled
+    #: user.
     #: example: +12405551212
     primary_phone_number: Optional[str] = None
-    #: The extension configured for the subscriber. An extension, primary phone number or both must be supplied when assigning a calling-enabled package, unless the subscriber is an existing Webex Calling entitled user.
+    #: The extension configured for the subscriber. An extension, primary phone number or both must be supplied when
+    #: assigning a calling-enabled package, unless the subscriber is an existing Webex Calling entitled user.
     #: example: 51212
     extension: Optional[str] = None
-    #: A unique identifier for the location. This ID should be retrieved via the [List Locations](/docs/api/v1/locations/list-locations) API.
+    #: A unique identifier for the location. This ID should be retrieved via the [List
+    #: Locations](/docs/api/v1/locations/list-locations) API.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzAxMjM0NTY3LTg5YWItY2RlZi0wMTIzLTQ1Njc4OWFiY2RlZg==
     location_id: Optional[str] = None
 
 
 class UpdateAWholesaleSubscriberProvisioningParameters(ApiModel):
-    #: The primary phone number configured for the subscriber. A primary phone number, extension, or both must be supplied when changing from the webex_meetings package to any calling-enabled package.
+    #: The primary phone number configured for the subscriber. A primary phone number, extension, or both must be
+    #: supplied when changing from the webex_meetings package to any calling-enabled package.
     #: example: +1-240-555-1212
     primary_phone_number: Optional[str] = None
-    #: The extension configured for the subscriber. An extension, primary phone number or both must be supplied when changing from the webex_meetings package to any calling-enabled package.
+    #: The extension configured for the subscriber. An extension, primary phone number or both must be supplied when
+    #: changing from the webex_meetings package to any calling-enabled package.
     #: example: 5221
     extension: Optional[datetime] = None
-    #: A unique identifier for the location. This id should be retrieved via the [List Locations](/docs/api/v1/locations/list-locations) API.
+    #: A unique identifier for the location. This id should be retrieved via the [List
+    #: Locations](/docs/api/v1/locations/list-locations) API.
     #: example: Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzAxMjM0NTY3LTg5YWItY2RlZi0wMTIzLTQ1Njc4OWFiY2RlZg==
     location_id: Optional[str] = None
 

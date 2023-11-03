@@ -7,7 +7,13 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetGroupResponse', 'GetGroupResponseMembers', 'GetGroupResponseUrnscimschemasextensionciscowebexidentity20Group', 'GetGroupResponseUrnscimschemasextensionciscowebexidentity20GroupMeta', 'GroupMemberObject', 'GroupMemberResponse', 'GroupMemberResponseMembers', 'ManagedByObject', 'MetaObject', 'MetaObjectResourceType', 'PatchGroup', 'PatchGroupOperations', 'PatchGroupOperationsOp', 'PostGroup', 'PostGroupUrnscimschemasextensionciscowebexidentity20Group', 'PostGroupUrnscimschemasextensionciscowebexidentity20GroupOwners', 'SearchGroupResponse']
+__auto__ = ['GetGroupResponse', 'GetGroupResponseMembers',
+            'GetGroupResponseUrnscimschemasextensionciscowebexidentity20Group',
+            'GetGroupResponseUrnscimschemasextensionciscowebexidentity20GroupMeta', 'GroupMemberObject',
+            'GroupMemberResponse', 'GroupMemberResponseMembers', 'ManagedByObject', 'MetaObject',
+            'MetaObjectResourceType', 'PatchGroup', 'PatchGroupOperations', 'PatchGroupOperationsOp', 'PostGroup',
+            'PostGroupUrnscimschemasextensionciscowebexidentity20Group',
+            'PostGroupUrnscimschemasextensionciscowebexidentity20GroupOwners', 'SearchGroupResponse']
 
 
 class PatchGroupOperationsOp(str, Enum):

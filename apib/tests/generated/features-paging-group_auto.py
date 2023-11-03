@@ -7,7 +7,9 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CreateANewPagingGroupResponse', 'GetPagingGroupAgentObject', 'GetPagingGroupAgentObjectType', 'GetPagingGroupObject', 'ListPagingGroupObject', 'PostPagingGroupObject', 'ReadTheListOfPagingGroupsResponse', 'UpdatePagingGroupObject']
+__auto__ = ['CreateANewPagingGroupResponse', 'GetPagingGroupAgentObject', 'GetPagingGroupAgentObjectType',
+            'GetPagingGroupObject', 'ListPagingGroupObject', 'PostPagingGroupObject',
+            'ReadTheListOfPagingGroupsResponse', 'UpdatePagingGroupObject']
 
 
 class GetPagingGroupAgentObjectType(str, Enum):
@@ -32,7 +34,8 @@ class GetPagingGroupAgentObject(ApiModel):
     #: Type of the person, workspace or virtual line.
     #: example: PEOPLE
     type: Optional[GetPagingGroupAgentObjectType] = None
-    #: Agents phone number. Minimum length is 1. Maximum length is 23.  Either `phoneNumber` or `extension` is mandatory.
+    #: Agents phone number. Minimum length is 1. Maximum length is 23.  Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
     #: Agents extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or `extension` is mandatory.
@@ -50,10 +53,12 @@ class GetPagingGroupObject(ApiModel):
     #: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
     #: example: PagingGroup-1
     name: Optional[str] = None
-    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either `phoneNumber` or `extension` is mandatory.
+    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
-    #: Paging group extension. Minimum length is 2. Maximum length is 6. Either `phoneNumber` or `extension` is mandatory.
+    #: Paging group extension. Minimum length is 2. Maximum length is 6. Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: 7781
     extension: Optional[datetime] = None
     #: Flag to indicate toll free number.
@@ -70,7 +75,8 @@ class GetPagingGroupObject(ApiModel):
     #: Last name that displays when a group page is performed. Minimum length is 1. Maximum length is 30.
     #: example: Group
     last_name: Optional[str] = None
-    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator ID.
+    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator
+    #: ID.
     #: example: True
     originator_caller_id_enabled: Optional[bool] = None
     #: An array of people, workspaces and virtual lines ID's who may originate pages to this paging group.
@@ -86,10 +92,12 @@ class ListPagingGroupObject(ApiModel):
     #: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
     #: example: PagingGroup-1
     name: Optional[str] = None
-    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either `phoneNumber` or `extension` is mandatory.
+    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
-    #: Paging group extension. Minimum length is 2. Maximum length is 6. Either `phoneNumber` or `extension` is mandatory.
+    #: Paging group extension. Minimum length is 2. Maximum length is 6. Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: 7781
     extension: Optional[datetime] = None
     #: Name of location for paging group.
@@ -106,10 +114,12 @@ class PostPagingGroupObject(ApiModel):
     #: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
     #: example: PagingGroup-1
     name: Optional[str] = None
-    #: Paging group phone number. Minimum length is 1. Maximum length is 23.  Either `phoneNumber` or `extension` is mandatory.
+    #: Paging group phone number. Minimum length is 1. Maximum length is 23.  Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
-    #: Paging group extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or `extension` is mandatory.
+    #: Paging group extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: 7781
     extension: Optional[datetime] = None
     #: Language code.
@@ -121,7 +131,8 @@ class PostPagingGroupObject(ApiModel):
     #: Last name that displays when a group page is performed. Minimum length is 1. Maximum length is 30.
     #: example: Group
     last_name: Optional[str] = None
-    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator ID.
+    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator
+    #: ID.
     #: example: True
     originator_caller_id_enabled: Optional[bool] = None
     #: An array of people, workspace, and virtual lines IDs who can originate pages to this paging group.
@@ -137,10 +148,12 @@ class UpdatePagingGroupObject(ApiModel):
     #: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
     #: example: CallQueue-1
     name: Optional[str] = None
-    #: Paging group phone number. Minimum length is 1. Maximum length is 23.  Either `phoneNumber` or `extension` is mandatory.
+    #: Paging group phone number. Minimum length is 1. Maximum length is 23.  Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
-    #: Paging group extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or `extension` is mandatory.
+    #: Paging group extension. Minimum length is 2. Maximum length is 6.  Either `phoneNumber` or `extension` is
+    #: mandatory.
     #: example: 7781
     extension: Optional[datetime] = None
     #: Language code.
@@ -149,10 +162,12 @@ class UpdatePagingGroupObject(ApiModel):
     #: First name to be shown when calls are forwarded out of this paging group. Defaults to ".".
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this paging group. Defaults to the phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this paging group. Defaults to the phone number if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
-    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator ID.
+    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator
+    #: ID.
     #: example: True
     originator_caller_id_enabled: Optional[bool] = None
     #: An array of people and/or workspaces, who may originate pages to this paging group.

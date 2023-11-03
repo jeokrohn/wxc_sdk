@@ -45,13 +45,15 @@ class AudioIn(ApiModel):
     #: The date and time when this audio session ended.
     #: example: 2016-04-18T17:00:00.000Z
     end_time: Optional[datetime] = None
-    #: The percentage of audio packet loss, in float between 0.0 and 100.0, during each sampling interval. This applies to IP type only.
+    #: The percentage of audio packet loss, in float between 0.0 and 100.0, during each sampling interval. This applies
+    #: to IP type only.
     #: example: [0.02, 0.1, 0.07]
     packet_loss: Optional[list[float]] = None
     #: The average latency, in milliseconds, during each sampling interval. This applies to IP type only.
     #: example: [30.0, 10.0, 5.0]
     latency: Optional[list[float]] = None
-    #: The mean opinion score, in float between 0.0 and 5.0, during each sampling interval. This applies to PSTN type only.
+    #: The mean opinion score, in float between 0.0 and 5.0, during each sampling interval. This applies to PSTN type
+    #: only.
     #: example: [1.2, 3.4, 4.9]
     mean_opinion_score: Optional[list[float]] = None
 

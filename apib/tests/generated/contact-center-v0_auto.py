@@ -7,7 +7,10 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ActivityList', 'ActivityListDatasetMetadata', 'Agent', 'AgentActivity', 'AgentAgentDn', 'AgentChannelType', 'AgentCurrentState', 'AgentSession', 'AnalyzeEntitiesDocument', 'Customer', 'CustomerActivity', 'CustomerCallDirection', 'CustomerCurrentState', 'CustomerSession', 'CustomerSessionTerminatingEnd', 'CustomerSessionTerminationType', 'Entity', 'EntityRecognition', 'Error', 'ErrorDetails', 'Link']
+__auto__ = ['ActivityList', 'ActivityListDatasetMetadata', 'Agent', 'AgentActivity', 'AgentAgentDn', 'AgentChannelType',
+            'AgentCurrentState', 'AgentSession', 'AnalyzeEntitiesDocument', 'Customer', 'CustomerActivity',
+            'CustomerCallDirection', 'CustomerCurrentState', 'CustomerSession', 'CustomerSessionTerminatingEnd',
+            'CustomerSessionTerminationType', 'Entity', 'EntityRecognition', 'Error', 'ErrorDetails', 'Link']
 
 
 class ErrorDetails(ApiModel):
@@ -148,7 +151,8 @@ class CustomerCurrentState(str, Enum):
 
 
 class Customer(ApiModel):
-    #: The ANI digits delivered with a call. ANI, or Automatic Number Identification, is a service provided by the phone company that delivers the caller's phone number along with the call.
+    #: The ANI digits delivered with a call. ANI, or Automatic Number Identification, is a service provided by the
+    #: phone company that delivers the caller's phone number along with the call.
     #: example: John
     ani: Optional[str] = None
     #: Flag that indicates whether this is a current session or not. 0 or 1.
@@ -174,13 +178,15 @@ class Customer(ApiModel):
     #: The current state of the contact.
     #: example: ended
     current_state: Optional[CustomerCurrentState] = None
-    #: The DNIS digits delivered with the call. DNIS, or Dialed Number Identification Service, is a service provided by the phone company that delivers a digit string indicating the number the caller dialed along with the call.
+    #: The DNIS digits delivered with the call. DNIS, or Dialed Number Identification Service, is a service provided by
+    #: the phone company that delivers a digit string indicating the number the caller dialed along with the call.
     #: example: 11888999
     dnis: Optional[str] = None
     #: The ID assigned to an entry point.
     #: example: 11
     entrypoint_id: Optional[datetime] = None
-    #: The name of the entry point, which is the landing place for customer calls on the Webex Contact Center system. Calls are moved from the entry point into a queue and are then distributed to agents.
+    #: The name of the entry point, which is the landing place for customer calls on the Webex Contact Center system.
+    #: Calls are moved from the entry point into a queue and are then distributed to agents.
     #: example: Apple-SalesEP
     entrypoint_name: Optional[str] = None
     #: The ID assigned to an entry point.
@@ -245,7 +251,8 @@ class CustomerSession(Customer):
     #: The number of queues contact entered.
     #: example: 1.0
     queue_count: Optional[int] = None
-    #: The name of the current or final queue, which is holding place for contacts while they await handling by an agent. Calls are moved from an entry point into a queue and are then distributed to agents.
+    #: The name of the current or final queue, which is holding place for contacts while they await handling by an
+    #: agent. Calls are moved from an entry point into a queue and are then distributed to agents.
     #: example: Apple-SalesQueue
     queue_name: Optional[str] = None
     #: The amount of time, in milliseconds, a contact spent in queue waiting.

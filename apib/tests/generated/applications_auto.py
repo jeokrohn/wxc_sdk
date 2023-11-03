@@ -7,7 +7,8 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Application', 'ApplicationOrgSubmissionStatus', 'ApplicationSubmissionStatus', 'ApplicationType', 'ApplicationsCollectionResponse', 'ListApplicationsOrderBy', 'ListApplicationsType']
+__auto__ = ['Application', 'ApplicationOrgSubmissionStatus', 'ApplicationSubmissionStatus', 'ApplicationType',
+            'ApplicationsCollectionResponse', 'ListApplicationsOrderBy', 'ListApplicationsType']
 
 
 class ApplicationType(str, Enum):

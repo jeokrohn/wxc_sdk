@@ -7,13 +7,16 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CreateAPersonPhoneNumbers', 'CreateAPersonPhoneNumbersType', 'Person', 'PersonAddresses', 'PersonCollectionResponse', 'PersonInvitePending', 'PersonPhoneNumbers', 'PersonPhoneNumbersType', 'PersonStatus', 'PersonType']
+__auto__ = ['CreateAPersonPhoneNumbers', 'CreateAPersonPhoneNumbersType', 'Person', 'PersonAddresses',
+            'PersonCollectionResponse', 'PersonInvitePending', 'PersonPhoneNumbers', 'PersonPhoneNumbersType',
+            'PersonStatus', 'PersonType']
 
 
 class PersonPhoneNumbersType(str, Enum):
     #: Work phone number of the person.
     work = 'work'
-    #: Work extension of the person. For the Webex Calling person, the value will have a routing prefix along with the extension.
+    #: Work extension of the person. For the Webex Calling person, the value will have a routing prefix along with the
+    #: extension.
     work_extension = 'work_extension'
     #: Mobile number of the person.
     mobile = 'mobile'
@@ -106,7 +109,8 @@ class Person(ApiModel):
     #: The full name of the person.
     #: example: John Andersen
     display_name: Optional[str] = None
-    #: The nickname of the person if configured. If no nickname is configured for the person, this field will not be present.
+    #: The nickname of the person if configured. If no nickname is configured for the person, this field will not be
+    #: present.
     #: example: John
     nick_name: Optional[str] = None
     #: The first name of the person.
@@ -147,10 +151,13 @@ class Person(ApiModel):
     #: The date and time the person was last changed.
     #: example: 2015-10-18T14:26:16.000Z
     last_modified: Optional[datetime] = None
-    #: The time zone of the person if configured. If no timezone is configured on the account, this field will not be present
+    #: The time zone of the person if configured. If no timezone is configured on the account, this field will not be
+    #: present
     #: example: America/Denver
     timezone: Optional[str] = None
-    #: The date and time of the person's last activity within Webex. This will only be returned for people within your organization or an organization you manage. Presence information will not be shown if the authenticated user has [disabled status sharing](https://help.webex.com/nkzs6wl/).
+    #: The date and time of the person's last activity within Webex. This will only be returned for people within your
+    #: organization or an organization you manage. Presence information will not be shown if the authenticated user has
+    #: https://help.webex.com/nkzs6wl/.
     #: example: 2015-10-18T14:26:16.028Z
     last_activity: Optional[datetime] = None
     #: One or several site names where this user has a role (host or attendee)
@@ -159,13 +166,20 @@ class Person(ApiModel):
     #: The users sip addresses. Read-only.
     #: example: ['{"type": "personal-room","value": "testuser5@mycompany.webex.com","primary": false}']
     sip_addresses: Optional[list[str]] = None
-    #: The current presence status of the person. This will only be returned for people within your organization or an organization you manage. Presence information will not be shown if the authenticated user has [disabled status sharing](https://help.webex.com/nkzs6wl/).
+    #: Identifier for intra-domain federation with other XMPP based messenger systems.
+    #: example: user@example.com
+    xmpp_federation_jid: Optional[str] = None
+    #: The current presence status of the person. This will only be returned for people within your organization or an
+    #: organization you manage. Presence information will not be shown if the authenticated user has
+    #: https://help.webex.com/nkzs6wl/.
     #: example: active
     status: Optional[PersonStatus] = None
-    #: Whether or not an invite is pending for the user to complete account activation. This property is only returned if the authenticated user is an admin user for the person's organization.
+    #: Whether or not an invite is pending for the user to complete account activation. This property is only returned
+    #: if the authenticated user is an admin user for the person's organization.
     #: example: false
     invite_pending: Optional[PersonInvitePending] = None
-    #: Whether or not the user is allowed to use Webex. This property is only returned if the authenticated user is an admin user for the person's organization.
+    #: Whether or not the user is allowed to use Webex. This property is only returned if the authenticated user is an
+    #: admin user for the person's organization.
     #: example: true
     login_enabled: Optional[PersonInvitePending] = None
     #: The type of person account, such as person or bot.

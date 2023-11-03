@@ -7,7 +7,18 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ArrayOfExtensionsObject', 'AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLevel', 'AudioAnnouncementFileGetObjectMediaFileType', 'CallBackEffectiveLevel', 'CallBackMemberType', 'CallBackQuality', 'CallBackSelected', 'ExtensionStatusObject', 'ExtensionStatusObjectState', 'ExtentionStatusObject', 'GetLocationCallBackNumberObject', 'GetLocationCallBackNumberObjectLocationInfo', 'GetLocationCallBackNumberObjectLocationMemberInfo', 'GetMusicOnHoldObject', 'GetMusicOnHoldObjectGreeting', 'GetPrivateNetworkConnectObject', 'GetPrivateNetworkConnectObjectNetworkConnectionType', 'GetTelephonyLocationObject', 'GetTelephonyLocationObjectCallingLineId', 'GetTelephonyLocationObjectConnection', 'ListLocationObject', 'ListLocationsWebexCallingDetailsResponse', 'LocationCallingResponseWithId', 'PostLocationAnnouncementLanguageObject', 'PostLocationCallingRequest', 'PostLocationCallingRequestAddress', 'PostValidateExtensionResponse', 'PostValidateExtensionResponseStatus', 'PutLocationCallBackNumberObject', 'PutTelephonyLocationObject', 'ReadTheListOfDialPatternsResponse', 'ReadTheListOfRoutingChoicesResponse', 'RouteIdentity', 'RouteType', 'StatusOfExtensionsObject']
+__auto__ = ['ArrayOfExtensionsObject', 'AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLevel',
+            'AudioAnnouncementFileGetObjectMediaFileType', 'CallBackEffectiveLevel', 'CallBackMemberType',
+            'CallBackQuality', 'CallBackSelected', 'ExtensionStatusObject', 'ExtensionStatusObjectState',
+            'ExtentionStatusObject', 'GetLocationCallBackNumberObject', 'GetLocationCallBackNumberObjectLocationInfo',
+            'GetLocationCallBackNumberObjectLocationMemberInfo', 'GetMusicOnHoldObject', 'GetMusicOnHoldObjectGreeting',
+            'GetPrivateNetworkConnectObject', 'GetPrivateNetworkConnectObjectNetworkConnectionType',
+            'GetTelephonyLocationObject', 'GetTelephonyLocationObjectCallingLineId',
+            'GetTelephonyLocationObjectConnection', 'ListLocationObject', 'ListLocationsWebexCallingDetailsResponse',
+            'LocationCallingResponseWithId', 'PostLocationAnnouncementLanguageObject', 'PostLocationCallingRequest',
+            'PostLocationCallingRequestAddress', 'PostValidateExtensionResponse', 'PostValidateExtensionResponseStatus',
+            'PutLocationCallBackNumberObject', 'PutTelephonyLocationObject', 'ReadTheListOfDialPatternsResponse',
+            'ReadTheListOfRoutingChoicesResponse', 'RouteIdentity', 'RouteType', 'StatusOfExtensionsObject']
 
 
 class ArrayOfExtensionsObject(ApiModel):
@@ -74,7 +85,8 @@ class GetLocationCallBackNumberObjectLocationInfo(ApiModel):
     #: The name of the location.
     #: example: CPAPI_Dev_Test_Location_DND
     name: Optional[str] = None
-    #: The source from which the emergency calling line ID (CLID) is selected for an actual emergency call, applying fallback rules as necessary.
+    #: The source from which the emergency calling line ID (CLID) is selected for an actual emergency call, applying
+    #: fallback rules as necessary.
     #: example: LOCATION_NUMBER
     effective_level: Optional[CallBackEffectiveLevel] = None
     #: Location calling line ID (CLID) number. Avaliable only when number is present and quality would be invalid.
@@ -101,7 +113,8 @@ class GetLocationCallBackNumberObjectLocationMemberInfo(ApiModel):
     #: Member Type.
     #: example: PEOPLE
     member_type: Optional[CallBackMemberType] = None
-    #: The source from which the emergency calling line ID (CLID) is selected for an actual emergency call, applying fallback rules as necessary.
+    #: The source from which the emergency calling line ID (CLID) is selected for an actual emergency call, applying
+    #: fallback rules as necessary.
     #: example: LOCATION_MEMBER_NUMBER
     effective_level: Optional[CallBackEffectiveLevel] = None
     #: Location CLID number. Avaliable only when number is present and quality would be invalid.
@@ -123,7 +136,8 @@ class GetLocationCallBackNumberObject(ApiModel):
 
 
 class GetMusicOnHoldObjectGreeting(str, Enum):
-    #: Play default music when call is placed on hold or parked. The system plays music to fill the silence and lets the customer know they are still connected.
+    #: Play default music when call is placed on hold or parked. The system plays music to fill the silence and lets
+    #: the customer know they are still connected.
     system = 'SYSTEM'
     #: Play previously uploaded custom music when call is placed on hold or parked.
     custom = 'CUSTOM'
@@ -231,7 +245,9 @@ class GetTelephonyLocationObject(ApiModel):
     #: Limit on the number of people at the location, Read-Only.
     #: example: 500000.0
     user_limit: Optional[int] = None
-    #: Emergency Location Identifier for a location. Set this field to provide the SIP access network information to the provider which will be used to populate the SIP P-Access-Network-Info header. This is helpful to establish the location of a device when you make an emergency call.
+    #: Emergency Location Identifier for a location. Set this field to provide the SIP access network information to
+    #: the provider which will be used to populate the SIP P-Access-Network-Info header. This is helpful to establish
+    #: the location of a device when you make an emergency call.
     #: example: 'Rcdn'
     p_access_network_info: Optional[str] = None
     #: Must dial to reach an outside line, default is None.
@@ -243,7 +259,8 @@ class GetTelephonyLocationObject(ApiModel):
     #: IP Address, hostname, or domain. Read-Only.
     #: example: '98079822.int10.bcld.webex.com'
     default_domain: Optional[str] = None
-    #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will include a P-Charge-Info header with the selected number in the SIP INVITE.
+    #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will
+    #: include a P-Charge-Info header with the selected number in the SIP INVITE.
     #: example: '+14158952369'
     charge_number: Optional[str] = None
 
@@ -312,7 +329,9 @@ class PostLocationCallingRequest(ApiModel):
     #: The name of the location.
     #: example: 'Denver'
     name: Optional[str] = None
-    #: Time zone associated with this location. Refer to this link (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone) for the format.
+    #: Time zone associated with this location. Refer to this link
+    #: (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone)
+    #: for the format.
     #: example: 'America/Chicago'
     time_zone: Optional[str] = None
     #: Default email language.
@@ -381,7 +400,8 @@ class PutTelephonyLocationObject(ApiModel):
     #: Must dial a prefix when calling between locations having same extension within same location; should be numeric.
     #: example: '2'
     routing_prefix: Optional[datetime] = None
-    #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will include a P-Charge-Info header with the selected number in the SIP INVITE.
+    #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will
+    #: include a P-Charge-Info header with the selected number in the SIP INVITE.
     #: example: '+14158952369'
     charge_number: Optional[str] = None
 
@@ -411,7 +431,8 @@ class ListLocationsWebexCallingDetailsResponse(ApiModel):
 
 
 class ReadTheListOfDialPatternsResponse(ApiModel):
-    #: Array of dial patterns. An enterprise dial pattern is represented by a sequence of digits (1-9), followed by optional wildcard characters.
+    #: Array of dial patterns. An enterprise dial pattern is represented by a sequence of digits (1-9), followed by
+    #: optional wildcard characters.
     dial_patterns: Optional[list[str]] = None
 
 

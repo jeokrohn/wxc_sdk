@@ -7,7 +7,9 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['DeleteTranscriptObject', 'DownloadAMeetingTranscriptFormat', 'ListMeetingTranscriptsResponse', 'ListSnippetsOfAMeetingTranscriptResponse', 'SnippetObject', 'TranscriptObject', 'TranscriptObjectStatus', 'UpdateSnippetObject']
+__auto__ = ['DeleteTranscriptObject', 'DownloadAMeetingTranscriptFormat', 'ListMeetingTranscriptsResponse',
+            'ListSnippetsOfAMeetingTranscriptResponse', 'SnippetObject', 'TranscriptObject', 'TranscriptObjectStatus',
+            'UpdateSnippetObject']
 
 
 class TranscriptObjectStatus(str, Enum):
@@ -25,16 +27,20 @@ class TranscriptObject(ApiModel):
     #: URL of the Webex site from which the API lists meeting transcripts.
     #: example: example.webex.com
     site_url: Optional[str] = None
-    #: Start time for the meeting transcript in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) compliant format.
+    #: Start time for the meeting transcript in https://en.wikipedia.org/wiki/ISO_8601 compliant format.
     #: example: 2020-06-01T20:30:15.042Z
     start_time: Optional[datetime] = None
     #: The meeting's topic.
     #: example: John's Meeting
     meeting_topic: Optional[str] = None
-    #: Unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the transcripts belong.
+    #: Unique identifier for the [meeting
+    #: instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the transcripts
+    #: belong.
     #: example: 0ed74a1c0551494fb7a04e2881bf50ae_I_166022169160077044
     meeting_id: Optional[str] = None
-    #: Unique identifier for scheduled meeting with which the current meeting is associated. Only apples to a meeting instance which is happening or has happened. This is the `id` of the scheduled meeting with which the instance is associated.
+    #: Unique identifier for scheduled meeting with which the current meeting is associated. Only apples to a meeting
+    #: instance which is happening or has happened. This is the `id` of the scheduled meeting with which the instance
+    #: is associated.
     #: example: 0ed74a1c0551494fb7a04e2881bf50ae_20210401T232500Z
     scheduled_meeting_id: Optional[str] = None
     #: Unique identifier for the parent meeting series to which the recording belongs.
@@ -83,7 +89,8 @@ class UpdateSnippetObject(ApiModel):
 
 
 class DeleteTranscriptObject(ApiModel):
-    #: Reason for deleting a transcript. Only required when a Compliance Officer is operating on another user's transcript.
+    #: Reason for deleting a transcript. Only required when a Compliance Officer is operating on another user's
+    #: transcript.
     #: example: audit
     reason: Optional[str] = None
     #: Explanation for deleting a transcript. The comment can be a maximum of 255 characters long.

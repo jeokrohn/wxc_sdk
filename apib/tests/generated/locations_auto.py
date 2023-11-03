@@ -7,7 +7,8 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CreateALocationResponse', 'Floor', 'FloorCollectionResponse', 'FloorCreationRequest', 'Location', 'LocationAddress', 'LocationsCollectionResponse', 'PostCommonLocationObject', 'PutCommonLocationObject']
+__auto__ = ['CreateALocationResponse', 'Floor', 'FloorCollectionResponse', 'FloorCreationRequest', 'Location',
+            'LocationAddress', 'LocationsCollectionResponse', 'PostCommonLocationObject', 'PutCommonLocationObject']
 
 
 class LocationAddress(ApiModel):
@@ -61,7 +62,9 @@ class PutCommonLocationObject(ApiModel):
     #: The name of the location.
     #: example: 'Denver'
     name: Optional[str] = None
-    #: Time zone associated with this location, refer to this link (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone) for format.
+    #: Time zone associated with this location, refer to this link
+    #: (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone)
+    #: for format.
     #: example: 'America/Chicago'
     time_zone: Optional[str] = None
     #: Default email language.
@@ -75,7 +78,9 @@ class PostCommonLocationObject(ApiModel):
     #: The name of the location.
     #: example: 'Denver'
     name: Optional[str] = None
-    #: Time zone associated with this location, refer to this link (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone) for format.
+    #: Time zone associated with this location, refer to this link
+    #: (https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone)
+    #: for format.
     #: example: 'America/Chicago'
     time_zone: Optional[str] = None
     #: Default email language.

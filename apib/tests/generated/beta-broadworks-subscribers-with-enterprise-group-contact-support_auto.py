@@ -33,9 +33,11 @@ class SubscriberPackage(str, Enum):
 class SubscriberStatus(str, Enum):
     #: Subscriber provisioning is paused, pending input of an email address.
     pending_email_input = 'pending_email_input'
-    #: Subscriber provisioning is paused. The subscriber has entered an email address but has yet to complete validation.
+    #: Subscriber provisioning is paused. The subscriber has entered an email address but has yet to complete
+    #: validation.
     pending_email_validation = 'pending_email_validation'
-    #: Subscriber provisioning is paused. An automated email has been sent to the subscriber; waiting for the subscriber's consent.
+    #: Subscriber provisioning is paused. An automated email has been sent to the subscriber; waiting for the
+    #: subscriber's consent.
     pending_user_migration = 'pending_user_migration'
     #: Subscriber provisioning is in progress.
     provisioning = 'provisioning'
@@ -51,7 +53,8 @@ class Subscriber(ApiModel):
     #: A unique Cisco identifier for the subscriber.
     #: example: 'Y2lzY29zcGFyazovL3VzL1NVQlNDUklCRVIvNjk3MGU2YmItNzQzOS00ZmZiLWFkMzQtZDNmZjAxNjdkZGFk'
     id: Optional[str] = None
-    #: The Person Id of the subscriber on Webex. To be used when referencing this subscriber on other Webex APIs. Only presented when status is `provisioned`.
+    #: The Person Id of the subscriber on Webex. To be used when referencing this subscriber on other Webex APIs. Only
+    #: presented when status is `provisioned`.
     #: example: Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mNWIzNjE4Ny1jOGRkLTQ3MjctOGIyZi1mOWM0NDdmMjkwNDY
     person_id: Optional[str] = None
     #: The user ID of the subscriber on BroadWorks.
@@ -78,7 +81,8 @@ class Subscriber(ApiModel):
     #: The mobile phone number configured against the subscriber on BroadWorks.
     #: example: +1-818-279-1234
     mobile_phone_number: Optional[str] = None
-    #: The ISO 639-1 language code associated with the subscriber. Reserved for future use. Any value returned should be ignored. Currently set to "en" in all responses.
+    #: The ISO 639-1 language code associated with the subscriber. Reserved for future use. Any value returned should
+    #: be ignored. Currently set to "en" in all responses.
     #: example: en
     language: Optional[str] = None
     #: The Webex for BroadWorks Package assigned to the subscriber.
@@ -89,8 +93,10 @@ class Subscriber(ApiModel):
     status: Optional[SubscriberStatus] = None
     #: List of errors that occurred during that last attempt to provision/update this subscriber.
     #: *Note:*
-    #: + This list captures errors that occurred during *asynchronous or background* provisioning of the subscriber, *after* the API has been accepted and 200 OK response returned.
-    #: + Any errors that occur during initial API request validation will be captured directly in error response with appropriate HTTP status code.
+    #: + This list captures errors that occurred during *asynchronous or background* provisioning of the subscriber,
+    #: *after* the API has been accepted and 200 OK response returned.
+    #: + Any errors that occur during initial API request validation will be captured directly in error response with
+    #: appropriate HTTP status code.
     errors: Optional[list[Error]] = None
     #: The date and time the subscriber was provisioned.
     #: example: 2019-10-18T14:26:16.000Z

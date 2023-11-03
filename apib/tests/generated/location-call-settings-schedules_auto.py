@@ -7,7 +7,11 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CreateAScheduleResponse', 'GetScheduleEventObject', 'GetScheduleObject', 'GetScheduleObjectType', 'ListScheduleObject', 'ModifyScheduleEventListObject', 'ModifyScheduleEventObject', 'ModifyScheduleObject', 'PostScheduleObject', 'ReadTheListOfSchedulesResponse', 'RecurWeeklyObject', 'RecurYearlyByDateObject', 'RecurYearlyByDateObjectMonth', 'RecurYearlyByDayObject', 'RecurYearlyByDayObjectDay', 'RecurYearlyByDayObjectWeek', 'RecurrenceObject']
+__auto__ = ['CreateAScheduleResponse', 'GetScheduleEventObject', 'GetScheduleObject', 'GetScheduleObjectType',
+            'ListScheduleObject', 'ModifyScheduleEventListObject', 'ModifyScheduleEventObject', 'ModifyScheduleObject',
+            'PostScheduleObject', 'ReadTheListOfSchedulesResponse', 'RecurWeeklyObject', 'RecurYearlyByDateObject',
+            'RecurYearlyByDateObjectMonth', 'RecurYearlyByDayObject', 'RecurYearlyByDayObjectDay',
+            'RecurYearlyByDayObjectWeek', 'RecurrenceObject']
 
 
 class RecurWeeklyObject(ApiModel):
@@ -185,7 +189,8 @@ class ModifyScheduleEventListObject(ApiModel):
     #: End time of event. Mandatory if the event is not all day.
     #: example: 14:20
     end_time: Optional[datetime] = None
-    #: An indication of whether given event is an all-day event or not. Mandatory if the `startTime` and `endTime` are not defined.
+    #: An indication of whether given event is an all-day event or not. Mandatory if the `startTime` and `endTime` are
+    #: not defined.
     all_day_enabled: Optional[bool] = None
     #: Recurrence definition.
     recurrence: Optional[RecurrenceObject] = None
@@ -207,7 +212,8 @@ class ModifyScheduleEventObject(ApiModel):
     #: End time of event. Mandatory if the event is not all day.
     #: example: 14:20
     end_time: Optional[datetime] = None
-    #: An indication of whether given event is an all-day event or not. Mandatory if the `startTime` and `endTime` are not defined.
+    #: An indication of whether given event is an all-day event or not. Mandatory if the `startTime` and `endTime` are
+    #: not defined.
     all_day_enabled: Optional[bool] = None
     #: Recurrence definition.
     recurrence: Optional[RecurrenceObject] = None

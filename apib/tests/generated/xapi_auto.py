@@ -7,7 +7,9 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ExecuteCommandArguments', 'ExecuteCommandBody', 'ExecuteCommandBodyBooking', 'ExecuteCommandBodyBookingOrganizer', 'ExecuteCommandBodyBookingTime', 'ExecuteCommandResponse', 'QueryStatusResponse', 'QueryStatusResponseResult', 'QueryStatusResponseResultAudio']
+__auto__ = ['ExecuteCommandArguments', 'ExecuteCommandBody', 'ExecuteCommandBodyBooking',
+            'ExecuteCommandBodyBookingOrganizer', 'ExecuteCommandBodyBookingTime', 'ExecuteCommandResponse',
+            'QueryStatusResponse', 'QueryStatusResponseResult', 'QueryStatusResponseResultAudio']
 
 
 class QueryStatusResponseResultAudio(ApiModel):

@@ -7,7 +7,10 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BulkCreate', 'BulkCreateContacts', 'BulkDelete', 'Contact', 'ContactEmails', 'ContactEmailsType', 'ContactIms', 'ContactImsType', 'ContactPhoneNumbers', 'ContactPhoneNumbersType', 'ContactPrimaryContactMethod', 'ContactResponse', 'ContactSipAddresses', 'ContactSipAddressesType', 'ContactSource', 'Meta', 'SearchResponse']
+__auto__ = ['BulkCreate', 'BulkCreateContacts', 'BulkDelete', 'Contact', 'ContactEmails', 'ContactEmailsType',
+            'ContactIms', 'ContactImsType', 'ContactPhoneNumbers', 'ContactPhoneNumbersType',
+            'ContactPrimaryContactMethod', 'ContactResponse', 'ContactSipAddresses', 'ContactSipAddressesType',
+            'ContactSource', 'Meta', 'SearchResponse']
 
 
 class ContactPrimaryContactMethod(str, Enum):

@@ -7,7 +7,8 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ListSiteSessionTypesResponse', 'ListUserSessionTypeResponse', 'SessionType', 'SiteSessionType', 'SiteSessionTypeType', 'UpdateUserSessionType', 'UserSessionTypes']
+__auto__ = ['ListSiteSessionTypesResponse', 'ListUserSessionTypeResponse', 'SessionType', 'SiteSessionType',
+            'SiteSessionTypeType', 'UpdateUserSessionType', 'UserSessionTypes']
 
 
 class SiteSessionTypeType(str, Enum):

@@ -7,7 +7,13 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetVoicemailRulesObject', 'GetVoicemailRulesObjectBlockPreviousPasscodes', 'GetVoicemailRulesObjectDefaultVoicemailPinRules', 'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockContiguousSequences', 'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits', 'GetVoicemailRulesObjectDefaultVoicemailPinRulesLength', 'GetVoicemailRulesObjectExpirePasscode', 'GetVoicemailSettingsObject', 'Language', 'PutVoicemailRulesObject', 'ReadTheListOfAnnouncementLanguagesResponse']
+__auto__ = ['GetVoicemailRulesObject', 'GetVoicemailRulesObjectBlockPreviousPasscodes',
+            'GetVoicemailRulesObjectDefaultVoicemailPinRules',
+            'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockContiguousSequences',
+            'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits',
+            'GetVoicemailRulesObjectDefaultVoicemailPinRulesLength', 'GetVoicemailRulesObjectExpirePasscode',
+            'GetVoicemailSettingsObject', 'Language', 'PutVoicemailRulesObject',
+            'ReadTheListOfAnnouncementLanguagesResponse']
 
 
 class GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits(ApiModel):
@@ -44,7 +50,8 @@ class GetVoicemailRulesObjectDefaultVoicemailPinRules(ApiModel):
     #: If enabled, the passcode should not contain repeated pattern.
     #: example: True
     block_repeated_patterns_enabled: Optional[bool] = None
-    #: Settings for not allowing single or groups of repeated digits in passcode (for example, 22888, 121212, or 408408).
+    #: Settings for not allowing single or groups of repeated digits in passcode (for example, 22888, 121212, or
+    #: 408408).
     block_repeated_digits: Optional[GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits] = None
     #: Settings for not allowing numerical sequence in passcode (for example, 012345 or 987654).
     block_contiguous_sequences: Optional[GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockContiguousSequences] = None
@@ -90,7 +97,8 @@ class GetVoicemailSettingsObject(ApiModel):
     #: Number of days after which messages expire.
     #: example: 10.0
     number_of_days_for_message_expiry: Optional[int] = None
-    #: When enabled, all read and unread voicemail messages will be deleted based on the time frame you set. When disabled, all unread voicemail messages will be kept.
+    #: When enabled, all read and unread voicemail messages will be deleted based on the time frame you set. When
+    #: disabled, all unread voicemail messages will be kept.
     strict_deletion_enabled: Optional[bool] = None
     #: When enabled, people in the organization can configure the email forwarding of voicemails.
     #: example: True

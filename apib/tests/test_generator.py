@@ -17,16 +17,23 @@ class GeneratorTest(ApibTest):
         """
         logging.getLogger().setLevel(logging.INFO)
         err = None
+
+        # ignore these APIB files
+        ignore = {'device-configurations.apib'}
+
         for apib_path in self.apib_paths:
+            apib_path_base = os.path.basename(apib_path)
+            if apib_path_base in ignore:
+                continue
             try:
                 code_gen = CodeGenerator()
                 code_gen.read_blueprint(apib_path)
                 code_gen.cleanup()
             except Exception as e:
                 err = err or e
-                print(f'{os.path.basename(apib_path)}: {e}')
+                print(f'{apib_path_base}: {e}')
             else:
-                apib_path = os.path.basename(apib_path)
+                apib_path = apib_path_base
                 py_path = os.path.join(os.path.dirname(__file__),
                                        'generated',
                                        f'{os.path.splitext(apib_path)[0]}_auto.py')

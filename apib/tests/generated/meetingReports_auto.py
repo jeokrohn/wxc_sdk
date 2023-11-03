@@ -7,7 +7,10 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ListMeetingAttendeeReportsResponse', 'ListMeetingUsageReportsResponse', 'MeetingAttendeeReportObject', 'MeetingAttendeeReportObjectParticipantType', 'MeetingUsageReportObject', 'MeetingUsageReportObjectScheduledType', 'MeetingUsageReportObjectServiceType', 'MeetingUsageReportTrackingCodeObject']
+__auto__ = ['ListMeetingAttendeeReportsResponse', 'ListMeetingUsageReportsResponse', 'MeetingAttendeeReportObject',
+            'MeetingAttendeeReportObjectParticipantType', 'MeetingUsageReportObject',
+            'MeetingUsageReportObjectScheduledType', 'MeetingUsageReportObjectServiceType',
+            'MeetingUsageReportTrackingCodeObject']
 
 
 class MeetingUsageReportObjectScheduledType(str, Enum):
@@ -47,10 +50,12 @@ class MeetingUsageReportObject(ApiModel):
     #: Meeting title.
     #: example: John's Meeting
     meeting_title: Optional[str] = None
-    #: The date and time when the meeting was started. It's in the timezone specified in the request header or in the `UTC` timezone if timezone is not specified.
+    #: The date and time when the meeting was started. It's in the timezone specified in the request header or in the
+    #: `UTC` timezone if timezone is not specified.
     #: example: 2023-01-18T10:26:30+08:00
     start: Optional[datetime] = None
-    #: The date and time when the meeting was ended. It's in the timezone specified in the request header or in the `UTC` timezone if timezone is not specified.
+    #: The date and time when the meeting was ended. It's in the timezone specified in the request header or in the
+    #: `UTC` timezone if timezone is not specified.
     #: example: 2023-01-18T10:46:30+08:00
     end: Optional[datetime] = None
     #: Duration of the meeting in minutes.
@@ -134,10 +139,12 @@ class MeetingAttendeeReportObject(ApiModel):
     #: Attendee's email.
     #: example: John Andersen
     email: Optional[str] = None
-    #: The date and time when the attendee joined the meeting. It's in the timezone specified in the request header or in the `UTC` timezone if timezone is not specified.
+    #: The date and time when the attendee joined the meeting. It's in the timezone specified in the request header or
+    #: in the `UTC` timezone if timezone is not specified.
     #: example: 2023-01-18T10:26:30+08:00
     joined_time: Optional[datetime] = None
-    #: The date and time when the attendee left the meeting. It's in the timezone specified in the request header or in the `UTC` timezone if timezone is not specified.
+    #: The date and time when the attendee left the meeting. It's in the timezone specified in the request header or in
+    #: the `UTC` timezone if timezone is not specified.
     #: example: 2023-01-18T10:46:30+08:00
     left_time: Optional[datetime] = None
     #: Duration of the attendee in the meeting in minutes.

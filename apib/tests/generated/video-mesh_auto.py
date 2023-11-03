@@ -7,7 +7,34 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['BandwidthTest', 'BlrClusterDetails', 'BlrNode1', 'BlrNodeLocation', 'BulkUpdateEventThresholdResponse', 'ClientTypeDistributionCollectionForOrg', 'ClientTypeDistributionForOrg', 'ClientTypeDistributionTrend1', 'CloudOverflowTrend1', 'ClusterAvailability', 'ClusterAvailabilityCollection', 'ClusterAvailableTimeline', 'ClusterClientTypeDistributionBlr1', 'ClusterClientTypeDistributionDetailsBlr1a', 'ClusterDetails', 'ClusterDetailsCollection', 'ClusterRedirectBlr1', 'ClusterRedirectDetailsBlr1a', 'ClusterUpgradeScheduleBlr', 'ClusterUtilizationCollection', 'ClusterUtilizationT1SJ', 'ClusterUtilizationTrend1', 'ClustersAvailability', 'ClustersUtilization', 'ConnectivityTestResultsClustersObject1', 'ConnectivityTestResultsForNode', 'ConnectivityTestResultsObject', 'EventThresholdBody', 'EventThresholdBodyEventName', 'FailureDetails3', 'GetEntityThresholdConfig1', 'GetEventThresholdResponse', 'ListEventThresholdConfigurationEventName', 'ListEventThresholdConfigurationEventScope', 'ListMediaHealthMonitoringToolTestResultsV2TriggerType', 'MediaHealthMonitoringClusters', 'MediaHealthMonitoringForFirstCluster', 'MediaHealthMonitoringResultsCollectionForOrganization', 'MediaHealthMonitoringResultsForOrganization', 'MediaHealthMonitoringSecondNode', 'MediaHealthMonitoringTestResultsFailure', 'MediaHealthMonitoringTestResultsSuccess', 'MediaSignallingTestResultFailure', 'MediaSignallingTestResultSuccess', 'NodeAvailability', 'NodeAvailabilityCollection', 'NodeAvailableTimeline', 'NodeStatusList1', 'NodeStatusList1Status', 'NodesAvailability', 'OverflowDetails1', 'OverflowToCloud', 'OverflowToCloudCollection', 'PerClusterConnectivityResult1', 'PerNodeConnectivityResult1', 'ReachabilityTestResults', 'ReachabilityTestResultsDestinationCluster', 'ReachabilityTestResultsFirstNode', 'ReachabilityTestResultsForCluster1', 'ReachabilityTestResultsForFirstCluster', 'ReachabilityTestResultsForOrganization', 'ReachabilityTestResultsStunResults1', 'ReachabilityTestResultsSuccess', 'RedirectCollectionForOrg', 'RedirectForOrg', 'RedirectTrend1', 'ServiceTypeResult2', 'ServiceTypeResult4', 'SingleNodeAvailability', 'SingleNodeAvailability1', 'SingleNodeAvailabilityCollection', 'SingleNodeAvailableTimeline', 'TriggerOnDemandBody', 'TriggerOnDemandBodyCluster', 'TriggerOnDemandBodyType', 'TriggeredTestResult', 'TriggeredTestStatus1', 'UpdateEventThresholdConfig1', 'UpdateEventThresholdConfigurationEventThresholds', 'UpdateEventThresholdConfigurationEventThresholdsThresholdConfig', 'UtilizationMetricsT1SJ', 'WebSocketConnectivityTest']
+__auto__ = ['BandwidthTest', 'BlrClusterDetails', 'BlrNode1', 'BlrNodeLocation', 'BulkUpdateEventThresholdResponse',
+            'ClientTypeDistributionCollectionForOrg', 'ClientTypeDistributionForOrg', 'ClientTypeDistributionTrend1',
+            'CloudOverflowTrend1', 'ClusterAvailability', 'ClusterAvailabilityCollection', 'ClusterAvailableTimeline',
+            'ClusterClientTypeDistributionBlr1', 'ClusterClientTypeDistributionDetailsBlr1a', 'ClusterDetails',
+            'ClusterDetailsCollection', 'ClusterRedirectBlr1', 'ClusterRedirectDetailsBlr1a',
+            'ClusterUpgradeScheduleBlr', 'ClusterUtilizationCollection', 'ClusterUtilizationT1SJ',
+            'ClusterUtilizationTrend1', 'ClustersAvailability', 'ClustersUtilization',
+            'ConnectivityTestResultsClustersObject1', 'ConnectivityTestResultsForNode', 'ConnectivityTestResultsObject',
+            'EventThresholdBody', 'EventThresholdBodyEventName', 'FailureDetails3', 'GetEntityThresholdConfig1',
+            'GetEventThresholdResponse', 'ListEventThresholdConfigurationEventName',
+            'ListEventThresholdConfigurationEventScope', 'ListMediaHealthMonitoringToolTestResultsV2TriggerType',
+            'MediaHealthMonitoringClusters', 'MediaHealthMonitoringForFirstCluster',
+            'MediaHealthMonitoringResultsCollectionForOrganization', 'MediaHealthMonitoringResultsForOrganization',
+            'MediaHealthMonitoringSecondNode', 'MediaHealthMonitoringTestResultsFailure',
+            'MediaHealthMonitoringTestResultsSuccess', 'MediaSignallingTestResultFailure',
+            'MediaSignallingTestResultSuccess', 'NodeAvailability', 'NodeAvailabilityCollection',
+            'NodeAvailableTimeline', 'NodeStatusList1', 'NodeStatusList1Status', 'NodesAvailability',
+            'OverflowDetails1', 'OverflowToCloud', 'OverflowToCloudCollection', 'PerClusterConnectivityResult1',
+            'PerNodeConnectivityResult1', 'ReachabilityTestResults', 'ReachabilityTestResultsDestinationCluster',
+            'ReachabilityTestResultsFirstNode', 'ReachabilityTestResultsForCluster1',
+            'ReachabilityTestResultsForFirstCluster', 'ReachabilityTestResultsForOrganization',
+            'ReachabilityTestResultsStunResults1', 'ReachabilityTestResultsSuccess', 'RedirectCollectionForOrg',
+            'RedirectForOrg', 'RedirectTrend1', 'ServiceTypeResult2', 'ServiceTypeResult4', 'SingleNodeAvailability',
+            'SingleNodeAvailability1', 'SingleNodeAvailabilityCollection', 'SingleNodeAvailableTimeline',
+            'TriggerOnDemandBody', 'TriggerOnDemandBodyCluster', 'TriggerOnDemandBodyType', 'TriggeredTestResult',
+            'TriggeredTestStatus1', 'UpdateEventThresholdConfig1', 'UpdateEventThresholdConfigurationEventThresholds',
+            'UpdateEventThresholdConfigurationEventThresholdsThresholdConfig', 'UtilizationMetricsT1SJ',
+            'WebSocketConnectivityTest']
 
 
 class ClusterAvailableTimeline(ApiModel):
@@ -594,9 +621,11 @@ class TriggeredTestStatus1(ApiModel):
 
 
 class TriggerOnDemandBodyType(str, Enum):
-    #: Used to test whether the media ports within the Video Mesh node are open, and whether the Video Mesh node is able to reach the cloud clusters pertaining to the media containers via those ports.
+    #: Used to test whether the media ports within the Video Mesh node are open, and whether the Video Mesh node is
+    #: able to reach the cloud clusters pertaining to the media containers via those ports.
     reachability_test = 'ReachabilityTest'
-    #: Used to test the network environment of the Video Mesh node by running various connectivity, bandwidth, and DNS resolution tests against Webex Cloud and ThirdParty Cloud (Docker) services.
+    #: Used to test the network environment of the Video Mesh node by running various connectivity, bandwidth, and DNS
+    #: resolution tests against Webex Cloud and ThirdParty Cloud (Docker) services.
     network_test = 'NetworkTest'
     #: Used to test the meetings and call health of Video Mesh nodes using signalling and cascading methods.
     media_health_monitor_test = 'MediaHealthMonitorTest'

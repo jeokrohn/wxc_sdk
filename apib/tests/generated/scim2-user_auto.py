@@ -7,7 +7,15 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['EmailObject', 'EmailObjectType', 'GetUserResponse', 'GetUserResponseUrnietfparamsscimschemasextensionenterprise20User', 'ManagedGroupObject', 'ManagedOrgsObject', 'ManagedSitesObject', 'ManagerResponseObject', 'NameObject', 'PatchUser', 'PatchUserOperations', 'PatchUserOperationsOp', 'PhotoObject', 'PhotoObjectType', 'PostUser', 'PostUserUrnietfparamsscimschemasextensionenterprise20User', 'PostUserUrnietfparamsscimschemasextensionenterprise20UserManager', 'PostUserUrnscimschemasextensionciscowebexidentity20User', 'PutUser', 'PutUserAddresses', 'PutUserPhoneNumbers', 'PutUserPhoneNumbersType', 'RoleObject', 'RoleObjectType', 'SearchUserResponse', 'SipAddressObject', 'SipAddressObjectType', 'UserTypeObject']
+__auto__ = ['EmailObject', 'EmailObjectType', 'GetUserResponse',
+            'GetUserResponseUrnietfparamsscimschemasextensionenterprise20User', 'ManagedGroupObject',
+            'ManagedOrgsObject', 'ManagedSitesObject', 'ManagerResponseObject', 'NameObject', 'PatchUser',
+            'PatchUserOperations', 'PatchUserOperationsOp', 'PhotoObject', 'PhotoObjectType', 'PostUser',
+            'PostUserUrnietfparamsscimschemasextensionenterprise20User',
+            'PostUserUrnietfparamsscimschemasextensionenterprise20UserManager',
+            'PostUserUrnscimschemasextensionciscowebexidentity20User', 'PutUser', 'PutUserAddresses',
+            'PutUserPhoneNumbers', 'PutUserPhoneNumbersType', 'RoleObject', 'RoleObjectType', 'SearchUserResponse',
+            'SipAddressObject', 'SipAddressObjectType', 'UserTypeObject']
 
 
 class PatchUserOperationsOp(str, Enum):
@@ -55,7 +63,8 @@ class PostUserUrnietfparamsscimschemasextensionenterprise20User(ApiModel):
     #: Identifies the name of a department.
     #: example: department 789
     department: Optional[str] = None
-    #: Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an organization.
+    #: Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an
+    #: organization.
     #: example: 518-8888-888
     employee_number: Optional[str] = None
     #: The user's manager.
@@ -133,19 +142,23 @@ class UserTypeObject(str, Enum):
 
 
 class NameObject(ApiModel):
-    #: The given name of the user, or first name in most Western languages (e.g., "Sarah" given the full name "Ms. Sarah J Henderson, III").
+    #: The given name of the user, or first name in most Western languages (e.g., "Sarah" given the full name "Ms.
+    #: Sarah J Henderson, III").
     #: example: Sarah
     given_name: Optional[str] = None
-    #: The family name of the user, or last name in most Western languages (e.g., "Henderson" given the full name "Ms. Sarah J Henderson, III").
+    #: The family name of the user, or last name in most Western languages (e.g., "Henderson" given the full name "Ms.
+    #: Sarah J Henderson, III").
     #: example: Henderson
     family_name: Optional[str] = None
     #: The middle name(s) of the user (e.g., "Jane" given the full name "Ms. Sarah J Henderson, III").
     #: example: Jane
     middle_name: Optional[str] = None
-    #: The honorific prefix(es) of the user, or title in most Western languages (e.g., "Ms." given the full name "Ms. Sarah J Henderson, III").
+    #: The honorific prefix(es) of the user, or title in most Western languages (e.g., "Ms." given the full name "Ms.
+    #: Sarah J Henderson, III").
     #: example: Mr.
     honorific_prefix: Optional[str] = None
-    #: The honorific suffix(es) of the user, or suffix in most Western languages (e.g., "III" given the full name "Ms. Sarah J Henderson, III").
+    #: The honorific suffix(es) of the user, or suffix in most Western languages (e.g., "III" given the full name "Ms.
+    #: Sarah J Henderson, III").
     #: example: III
     honorific_suffix: Optional[str] = None
 
@@ -164,7 +177,8 @@ class PutUserPhoneNumbers(ApiModel):
     #: phone number.
     #: example: 400 123 1234
     value: Optional[str] = None
-    #: We support the following types of phone numbers: 'mobile', 'work', 'fax', 'work_extension', 'alternate1', 'alternate2'.  Alternate 1 and Alternate 2 are types inherited from Webex meeting sites.
+    #: We support the following types of phone numbers: 'mobile', 'work', 'fax', 'work_extension', 'alternate1',
+    #: 'alternate2'.  Alternate 1 and Alternate 2 are types inherited from Webex meeting sites.
     #: example: work
     type: Optional[PutUserPhoneNumbersType] = None
     #: A human-readable name, primarily used for display purposes.
@@ -200,7 +214,8 @@ class PutUserAddresses(ApiModel):
     #: address type
     #: example: work
     type: Optional[str] = None
-    #: The full street address component, which may include house number, street name, P.O. box, and multi-line extended street address information. This attribute MAY contain newlines.
+    #: The full street address component, which may include house number, street name, P.O. box, and multi-line
+    #: extended street address information. This attribute MAY contain newlines.
     #: example: 100 Universal City Plaza
     street_address: Optional[str] = None
     #: The city or locality component.
@@ -234,34 +249,18 @@ class EmailObject(ApiModel):
     #: A human-readable description, primarily used for display purposes.
     #: example: home email description
     display: Optional[str] = None
-    #: A Boolean value indicating the email status. If the type is work and primary is true, the value must equal "userName".
+    #: A Boolean value indicating the email status. If the type is work and primary is true, the value must equal
+    #: "userName".
     primary: Optional[bool] = None
-
-
-class RoleObjectType(str, Enum):
-    #: Webex Identity roles: "id_full_admin", "id_user_admin", "id_readonly_admin", "id_device_admin".
-    cirole = 'cirole'
-    #: service registered role.
-    servicerole = 'servicerole'
-
-
-class RoleObject(ApiModel):
-    #: The role value.
-    #: example: id_full_admin
-    value: Optional[str] = None
-    #: The type of the role.
-    #: example: cirole
-    type: Optional[RoleObjectType] = None
-    #: A human-readable description, primarily used for display purposes.
-    #: example: role description
-    display: Optional[str] = None
 
 
 class PostUser(ApiModel):
     #: Input JSON schemas.
     #: example: ['urn:ietf:params:scim:schemas:core:2.0:User', 'urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', 'urn:scim:schemas:extension:cisco:webexidentity:2.0:User']
     schemas: Optional[list[str]] = None
-    #: A unique identifier for the user and is used to authenticate the user in Webex.  This attribute must be set to the user's primary email address.  No other user in Webex may have the same userName value and thus this value is required to be unique within Webex.
+    #: A unique identifier for the user and is used to authenticate the user in Webex.  This attribute must be set to
+    #: the user's primary email address.  No other user in Webex may have the same userName value and thus this value
+    #: is required to be unique within Webex.
     #: example: user1@example.com
     user_name: Optional[str] = None
     #: The type of the user.
@@ -273,15 +272,21 @@ class PostUser(ApiModel):
     #: A boolean value of "true" or "false" indicating whether the user is active in Webex.
     #: example: True
     active: Optional[bool] = None
-    #: Indicates the user's preferred language.  Acceptable values for this field are based on the [ISO-696](http://www.loc.gov/standards/iso639-2/php/code_list.php) and [ISO-3166](https://www.iso.org/obp/ui/#search) with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
+    #: Indicates the user's preferred language.  Acceptable values for this field are based on the
+    #: http://www.loc.gov/standards/iso639-2/php/code_list.php and https://www.iso.org/obp/ui/#search with the 2 letter
+    #: language code followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for english spoken in the United Statesfr_FR: for french spoken in France.
     #: example: en_US
     preferred_language: Optional[str] = None
-    #: The user's locale which is used to represent the user's currency, time format, and numerical representations.  Acceptable values for this field are based on the [ISO-696](http://www.loc.gov/standards/iso639-2/php/code_list.php) and [ISO-3166](https://www.iso.org/obp/ui/#search) with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
+    #: The user's locale which is used to represent the user's currency, time format, and numerical representations. 
+    #: Acceptable values for this field are based on the http://www.loc.gov/standards/iso639-2/php/code_list.php and
+    #: https://www.iso.org/obp/ui/#search with the 2 letter language code followed by an _ and then the 2 letter
+    #: country code.  Examples are:
     #: en_US : for English spoken in the United States or fr_FR: for French spoken in France.
     #: example: en_US
     locale: Optional[str] = None
-    #: The user's time zone specified in the [IANA timezone](https://nodatime.org/timezones) timezone format, for example, "America/Los_Angeles".
+    #: The user's time zone specified in the https://nodatime.org/timezones timezone format, for example,
+    #: "America/Los_Angeles".
     #: example: America/Los_Angeles
     timezone: Optional[str] = None
     #: A fully qualified URL pointing to a page representing the user's online profile.
@@ -304,10 +309,9 @@ class PostUser(ApiModel):
     photos: Optional[list[PhotoObject]] = None
     #: User's physical mailing address.
     addresses: Optional[list[PutUserAddresses]] = None
-    #: A list of the user's email addresses with an indicator of the user's primary email address.  The primary email address must be the same value as the user's userName.
+    #: A list of the user's email addresses with an indicator of the user's primary email address.  The primary email
+    #: address must be the same value as the user's userName.
     emails: Optional[list[EmailObject]] = None
-    #: A list of roles for the user that collectively represent who the user is.
-    roles: Optional[list[RoleObject]] = None
     #: SCIM2 enterprise extension
     urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: Optional[PostUserUrnietfparamsscimschemasextensionenterprise20User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
     #: The Cisco extension of SCIM 2.
@@ -318,7 +322,9 @@ class PutUser(ApiModel):
     #: Input JSON schemas.
     #: example: ['urn:ietf:params:scim:schemas:core:2.0:User', 'urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', 'urn:scim:schemas:extension:cisco:webexidentity:2.0:User']
     schemas: Optional[list[str]] = None
-    #: A unique identifier for the user and is used to authenticate the user in Webex.  This attribute must be set to the user's primary email address.  No other user in Webex may have the same userName value and thus this value is required to b unique within Webex.
+    #: A unique identifier for the user and is used to authenticate the user in Webex.  This attribute must be set to
+    #: the user's primary email address.  No other user in Webex may have the same userName value and thus this value
+    #: is required to b unique within Webex.
     #: example: user1Changed@example.com
     user_name: Optional[str] = None
     #: The type of the user.
@@ -330,15 +336,21 @@ class PutUser(ApiModel):
     #: A boolean value of "true" or "false" indicating whether the user is active in Webex.
     #: example: True
     active: Optional[bool] = None
-    #: Indicates the user's preferred language.  Acceptable values for this field are based on the [ISO-696](http://www.loc.gov/standards/iso639-2/php/code_list.php) and [ISO-3166](https://www.iso.org/obp/ui/#search) with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
+    #: Indicates the user's preferred language.  Acceptable values for this field are based on the
+    #: http://www.loc.gov/standards/iso639-2/php/code_list.php and https://www.iso.org/obp/ui/#search with the 2 letter
+    #: language code followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for english spoken in the United States, fr_FR: for french spoken in France.
     #: example: en_US
     preferred_language: Optional[str] = None
-    #: The user's locale which is used to represent the user's currency, time format, and numerical representations.  Acceptable values for this field are based on the  [ISO-696](http://www.loc.gov/standards/iso639-2/php/code_list.php) and [ISO-3166](https://www.iso.org/obp/ui/#search) with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
+    #: The user's locale which is used to represent the user's currency, time format, and numerical representations. 
+    #: Acceptable values for this field are based on the  http://www.loc.gov/standards/iso639-2/php/code_list.php and
+    #: https://www.iso.org/obp/ui/#search with the 2 letter language code followed by an _ and then the 2 letter
+    #: country code.  Examples are:
     #: en_US : for English spoken in the United States, or fr_FR: for French spoken in France.
     #: example: en_US
     locale: Optional[str] = None
-    #: The user's time zone specified in the [IANA timezone](https://nodatime.org/timezones) timezone format. e.g: "America/Los_Angeles".
+    #: The user's time zone specified in the https://nodatime.org/timezones timezone format. e.g:
+    #: "America/Los_Angeles".
     #: example: America/Los_Angeles
     timezone: Optional[str] = None
     #: A fully qualified URL pointing to a page representing the user's online profile.
@@ -359,10 +371,9 @@ class PutUser(ApiModel):
     photos: Optional[list[PhotoObject]] = None
     #: A physical mailing address of user.
     addresses: Optional[list[PutUserAddresses]] = None
-    #: A list of the user's email addresses with an indicator of the user's primary email address.  The primary email address must be the same value as the user's userName.
+    #: A list of the user's email addresses with an indicator of the user's primary email address.  The primary email
+    #: address must be the same value as the user's userName.
     emails: Optional[list[EmailObject]] = None
-    #: A list of roles for the user that collectively represent who the user is.
-    roles: Optional[list[RoleObject]] = None
     #: SCIM2 enterprise extention
     urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: Optional[PostUserUrnietfparamsscimschemasextensionenterprise20User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
     #: cisco extention of SCIM 2
@@ -394,7 +405,8 @@ class GetUserResponseUrnietfparamsscimschemasextensionenterprise20User(ApiModel)
     #: Identifies the name of a department.
     #: example: department 789
     department: Optional[str] = None
-    #: Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an organization.
+    #: Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an
+    #: organization.
     #: example: 518-8888-888
     employee_number: Optional[str] = None
     #: The user's manager.
@@ -408,14 +420,14 @@ class GetUserResponse(ApiModel):
     #: Webex Identity assigned user identifier.
     #: example: 3426a8e3-d414-4bf0-a493-4f6787632a13
     id: Optional[str] = None
-    #: A unique identifier for the user and is used to authenticate the user in Webex.  This attribute must be set to the user's primary email address.  No other user in Webex may have the same userName value and thus this value is required to be unique within Webex.
+    #: A unique identifier for the user and is used to authenticate the user in Webex.  This attribute must be set to
+    #: the user's primary email address.  No other user in Webex may have the same userName value and thus this value
+    #: is required to be unique within Webex.
     #: example: user1@example.com
     user_name: Optional[str] = None
     #: A boolean value of "true" or "false" indicating whether the user is active in Webex.
     #: example: True
     active: Optional[bool] = None
-    #: A list of roles for the user that collectively represent who the user is.
-    roles: Optional[list[RoleObject]] = None
     #: The components of the user's real name.
     name: Optional[NameObject] = None
     #: The value to display or show the user's name in Webex.
@@ -424,7 +436,8 @@ class GetUserResponse(ApiModel):
     #: A casual name of the user.  The value Bob when the user's formal name is Robert.
     #: example: JoJo
     nick_name: Optional[str] = None
-    #: A list of the user's email addresses with an indicator of the user's primary email address.  The primary email address must be the same value as the user's userName.
+    #: A list of the user's email addresses with an indicator of the user's primary email address.  The primary email
+    #: address must be the same value as the user's userName.
     emails: Optional[list[EmailObject]] = None
     #: The type of the user.
     #: example: user
@@ -435,18 +448,24 @@ class GetUserResponse(ApiModel):
     #: The user's business title.  Examples of a title is "Business Manager". "Senior Accountant", "Engineer" etc.
     #: example: Sales manager
     title: Optional[str] = None
-    #: Indicates the user's preferred language.  Acceptable values for this field are based on the [ISO-696](http://www.loc.gov/standards/iso639-2/php/code_list.php) and [ISO-3166](https://www.iso.org/obp/ui/#search) with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
+    #: Indicates the user's preferred language.  Acceptable values for this field are based on the
+    #: http://www.loc.gov/standards/iso639-2/php/code_list.php and https://www.iso.org/obp/ui/#search with the 2 letter
+    #: language code followed by an _ and then the 2 letter country code.  Examples are:
     #: en_US : for english spoken in the United Statesfr_FR: for french spoken in France.
     #: example: en_US
     preferred_language: Optional[str] = None
-    #: The user's locale which is used to represent the user's currency, time format, and numerical representations.  Acceptable values for this field are based on the [ISO-696](http://www.loc.gov/standards/iso639-2/php/code_list.php) and [ISO-3166](https://www.iso.org/obp/ui/#search) with the 2 letter language code followed by an _ and then the 2 letter country code.  Examples are:
+    #: The user's locale which is used to represent the user's currency, time format, and numerical representations. 
+    #: Acceptable values for this field are based on the http://www.loc.gov/standards/iso639-2/php/code_list.php and
+    #: https://www.iso.org/obp/ui/#search with the 2 letter language code followed by an _ and then the 2 letter
+    #: country code.  Examples are:
     #: en_US : for English spoken in the United States or fr_FR: for French spoken in France.
     #: example: en_US
     locale: Optional[str] = None
     #: External identity.
     #: example: externalIdValue
     external_id: Optional[str] = None
-    #: The user's time zone specified in the [IANA timezone](https://nodatime.org/timezones) timezone format, for example, "America/Los_Angeles".
+    #: The user's time zone specified in the https://nodatime.org/timezones timezone format, for example,
+    #: "America/Los_Angeles".
     #: example: America/Los_Angeles
     timezone: Optional[str] = None
     #: A list of user's phone numbers with an indicator of primary to specify the user's main number.
@@ -459,6 +478,25 @@ class GetUserResponse(ApiModel):
     urn_ietf_params_scim_schemas_extension_enterprise_2_0_user: Optional[GetUserResponseUrnietfparamsscimschemasextensionenterprise20User] = Field(alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
     #: The Cisco extension of SCIM 2.
     urn_scim_schemas_extension_cisco_webexidentity_2_0_user: Optional[PostUserUrnscimschemasextensionciscowebexidentity20User] = Field(alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
+
+
+class RoleObjectType(str, Enum):
+    #: Webex Identity roles: "id_full_admin", "id_user_admin", "id_readonly_admin", "id_device_admin".
+    cirole = 'cirole'
+    #: service registered role.
+    servicerole = 'servicerole'
+
+
+class RoleObject(ApiModel):
+    #: The role value.
+    #: example: id_full_admin
+    value: Optional[str] = None
+    #: The type of the role.
+    #: example: cirole
+    type: Optional[RoleObjectType] = None
+    #: A human-readable description, primarily used for display purposes.
+    #: example: role description
+    display: Optional[str] = None
 
 
 class SearchUserResponse(ApiModel):

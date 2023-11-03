@@ -7,7 +7,9 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ListNumbersAssociatedWithASpecificWorkspaceResponse', 'Location', 'MonitoredElementCallParkExtension', 'MonitoredElementItem', 'MonitoredElementUser', 'MonitoredElementUserType', 'PhoneNumbers', 'UserMonitoringGet', 'UserNumberItem', 'Workspace']
+__auto__ = ['ListNumbersAssociatedWithASpecificWorkspaceResponse', 'Location', 'MonitoredElementCallParkExtension',
+            'MonitoredElementItem', 'MonitoredElementUser', 'MonitoredElementUserType', 'PhoneNumbers',
+            'UserMonitoringGet', 'UserNumberItem', 'Workspace']
 
 
 class MonitoredElementCallParkExtension(ApiModel):

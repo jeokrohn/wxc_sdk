@@ -7,7 +7,8 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['ApplicationUsage', 'ApplicationUsageCollectionResponse', 'ApplicationUsagePolicyAction', 'ListApplicationUsageOrderBy']
+__auto__ = ['ApplicationUsage', 'ApplicationUsageCollectionResponse', 'ApplicationUsagePolicyAction',
+            'ListApplicationUsageOrderBy']
 
 
 class ApplicationUsagePolicyAction(str, Enum):

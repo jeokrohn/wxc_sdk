@@ -7,7 +7,11 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AgentStats', 'AgentStatsChannel', 'AgentStatsChannelChannelType', 'AgentStatsResponse', 'Artifact', 'ArtifactAttributes', 'FieldValidationError', 'GetAgentsStatisticsInterval', 'ListCapturesQuery', 'ListCapturesResponse', 'Meta', 'QueueStats', 'QueueStatsResponse', 'Recording', 'RecordingStatus', 'Task', 'TaskAttributes', 'TaskAttributesContext', 'TaskAttributesStatus', 'TaskOwner', 'TaskWithCaptures', 'TasksResponse', 'TasksValidationError']
+__auto__ = ['AgentStats', 'AgentStatsChannel', 'AgentStatsChannelChannelType', 'AgentStatsResponse', 'Artifact',
+            'ArtifactAttributes', 'FieldValidationError', 'GetAgentsStatisticsInterval', 'ListCapturesQuery',
+            'ListCapturesResponse', 'Meta', 'QueueStats', 'QueueStatsResponse', 'Recording', 'RecordingStatus', 'Task',
+            'TaskAttributes', 'TaskAttributesContext', 'TaskAttributesStatus', 'TaskOwner', 'TaskWithCaptures',
+            'TasksResponse', 'TasksValidationError']
 
 
 class Meta(ApiModel):
@@ -45,25 +49,32 @@ class TaskAttributes(ApiModel):
     #: Created time of the task (epoch milliseconds).
     #: example: 1591702170000.0
     created_time: Optional[int] = None
-    #: Last updated time of the task (epoch milliseconds). Updates whenever the underlying data is modified, even if the Task view of the data is the same. May also update after task "closure", so not suitable for finding a task's "closed time".
+    #: Last updated time of the task (epoch milliseconds). Updates whenever the underlying data is modified, even if
+    #: the Task view of the data is the same. May also update after task "closure", so not suitable for finding a
+    #: task's "closed time".
     #: example: 1591712170099.0
     last_updated_time: Optional[int] = None
     owner: Optional[TaskOwner] = None
     queue: Optional[TaskOwner] = None
     context: Optional[TaskAttributesContext] = None
-    #: Customer's channel-specific identifier. For telephony, this is the phone number. For email and chat, this is the email address.
+    #: Customer's channel-specific identifier. For telephony, this is the phone number. For email and chat, this is the
+    #: email address.
     #: example: chatuser@email.com
     origin: Optional[str] = None
-    #: Destination the customer contacted. For telephony, this is the number the contact called. For chat, this is the URL of the page where the chat takes place. For email, it is the email address contacted.
+    #: Destination the customer contacted. For telephony, this is the number the contact called. For chat, this is the
+    #: URL of the page where the chat takes place. For email, it is the email address contacted.
     #: example: +18005555555
     destination: Optional[str] = None
-    #: Indicates which party initiated the Task. If "inbound", call was initated by customer. If "outbound", was initiated by system as part of campaign. If "outdial", was initiated by an agent.
+    #: Indicates which party initiated the Task. If "inbound", call was initated by customer. If "outbound", was
+    #: initiated by system as part of campaign. If "outdial", was initiated by an agent.
     #: example: inbound
     direction: Optional[str] = None
     #: Reason code specified by customer to indicate main aim of the task.
     #: example: Credit
     reason_code: Optional[str] = None
-    #: Whether a capture has been requested for this Task. If this is true, a capture should eventually be available. False indicates no capture will be made available. If null, it is not yet known whether a capture has been requested.
+    #: Whether a capture has been requested for this Task. If this is true, a capture should eventually be available.
+    #: False indicates no capture will be made available. If null, it is not yet known whether a capture has been
+    #: requested.
     capture_requested: Optional[bool] = None
     #: Current status of the task.
     #: example: assigned
@@ -253,7 +264,8 @@ class GetAgentsStatisticsInterval(str, Enum):
 
 
 class ListCapturesQuery(ApiModel):
-    #: Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to interact with this organization.
+    #: Organization ID to use for this operation. If unspecified, inferred from token. Token must have permission to
+    #: interact with this organization.
     #: example: 93912f11-6017-404b-bf14-5331890b1797
     org_id: Optional[str] = None
     #: Comma separated list of taskIds to gather captures for. Max of 10 taskIds per request.

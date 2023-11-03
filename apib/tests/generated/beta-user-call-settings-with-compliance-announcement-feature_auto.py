@@ -7,7 +7,9 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CallRecordingInfo', 'CallRecordingInfoNotification', 'CallRecordingInfoNotificationType', 'CallRecordingInfoRecord', 'CallRecordingInfoRepeat', 'CallRecordingInfoStartStopAnnouncement', 'CallRecordingPut']
+__auto__ = ['CallRecordingInfo', 'CallRecordingInfoNotification', 'CallRecordingInfoNotificationType',
+            'CallRecordingInfoRecord', 'CallRecordingInfoRepeat', 'CallRecordingInfoStartStopAnnouncement',
+            'CallRecordingPut']
 
 
 class CallRecordingInfoRecord(str, Enum):
@@ -17,7 +19,8 @@ class CallRecordingInfoRecord(str, Enum):
     never = 'Never'
     #: Calls are always recorded, but user can pause or resume the recording. Stop recording is not supported.
     always_with_pause_resume = 'Always with Pause/Resume'
-    #: Records only the portion of the call after the recording start (`*44`) has been entered. Pause, resume, and stop controls are supported.
+    #: Records only the portion of the call after the recording start (`*44`) has been entered. Pause, resume, and stop
+    #: controls are supported.
     on_demand_with_user_initiated_start = 'On Demand with User Initiated Start'
 
 
@@ -42,14 +45,17 @@ class CallRecordingInfoRepeat(ApiModel):
     #: Interval at which warning tone "beep" will be played. This interval is an integer from 10 to 1800 seconds
     #: example: 15.0
     interval: Optional[int] = None
-    #: `true` when ongoing call recording tone will be played at the designated interval. `false` indicates no warning tone will be played.
+    #: `true` when ongoing call recording tone will be played at the designated interval. `false` indicates no warning
+    #: tone will be played.
     enabled: Optional[bool] = None
 
 
 class CallRecordingInfoStartStopAnnouncement(ApiModel):
-    #: When `true`, an announcement is played when call recording starts and an announcement is played when call recording ends for internal calls.
+    #: When `true`, an announcement is played when call recording starts and an announcement is played when call
+    #: recording ends for internal calls.
     internal_calls_enabled: Optional[bool] = None
-    #: When `true`, an announcement is played when call recording starts and an announcement is played when call recording ends for PSTN calls.
+    #: When `true`, an announcement is played when call recording starts and an announcement is played when call
+    #: recording ends for PSTN calls.
     pstn_calls_enabled: Optional[bool] = None
 
 
@@ -62,7 +68,8 @@ class CallRecordingInfo(ApiModel):
     record: Optional[CallRecordingInfoRecord] = None
     #: When `true`, voicemail messages are also recorded.
     record_voicemail_enabled: Optional[bool] = None
-    #: When enabled, an announcement is played when call recording starts and an announcement is played when call recording ends.
+    #: When enabled, an announcement is played when call recording starts and an announcement is played when call
+    #: recording ends.
     start_stop_announcement_enabled: Optional[bool] = None
     #: Pause/resume notification settings.
     notification: Optional[CallRecordingInfoNotification] = None
@@ -90,7 +97,8 @@ class CallRecordingPut(ApiModel):
     record: Optional[CallRecordingInfoRecord] = None
     #: When `true`, voicemail messages are also recorded.
     record_voicemail_enabled: Optional[bool] = None
-    #: When enabled, an announcement is played when call recording starts and an announcement is played when call recording ends.
+    #: When enabled, an announcement is played when call recording starts and an announcement is played when call
+    #: recording ends.
     start_stop_announcement_enabled: Optional[bool] = None
     #: Pause/resume notification settings.
     notification: Optional[CallRecordingInfoNotification] = None

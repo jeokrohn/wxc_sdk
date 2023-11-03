@@ -7,7 +7,9 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['GetPagingGroupAgentObject', 'GetPagingGroupAgentObjectType', 'GetPagingGroupObject', 'GetPagingGroupObjectDepartment', 'ListPagingGroupObject', 'ReadTheListOfPagingGroupsResponse', 'UpdatePagingGroupObject', 'UpdatePagingGroupObjectDepartment']
+__auto__ = ['GetPagingGroupAgentObject', 'GetPagingGroupAgentObjectType', 'GetPagingGroupObject',
+            'GetPagingGroupObjectDepartment', 'ListPagingGroupObject', 'ReadTheListOfPagingGroupsResponse',
+            'UpdatePagingGroupObject', 'UpdatePagingGroupObjectDepartment']
 
 
 class GetPagingGroupAgentObjectType(str, Enum):
@@ -57,7 +59,8 @@ class GetPagingGroupObject(ApiModel):
     #: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
     #: example: PagingGroup-1
     name: Optional[str] = None
-    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is mandatory.
+    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is
+    #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
     #: Paging group extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
@@ -75,7 +78,8 @@ class GetPagingGroupObject(ApiModel):
     #: Last name that displays when a group page is performed. Minimum length is 1. Maximum length is 30.
     #: example: Group
     last_name: Optional[str] = None
-    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator ID.
+    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator
+    #: ID.
     #: example: True
     originator_caller_id_enabled: Optional[bool] = None
     #: An array of people and/or workspaces, who may originate pages to this paging group.
@@ -93,7 +97,8 @@ class ListPagingGroupObject(ApiModel):
     #: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
     #: example: PagingGroup-1
     name: Optional[str] = None
-    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is mandatory.
+    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is
+    #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
     #: Paging group extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
@@ -122,7 +127,8 @@ class UpdatePagingGroupObject(ApiModel):
     #: Unique name for the paging group. Minimum length is 1. Maximum length is 30.
     #: example: PagingGroup-1
     name: Optional[str] = None
-    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is mandatory.
+    #: Paging group phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is
+    #: mandatory.
     #: example: +15558675309
     phone_number: Optional[str] = None
     #: Paging group extension. Minimum length is 2. Maximum length is 6. Either phoneNumber or extension is mandatory.
@@ -134,10 +140,12 @@ class UpdatePagingGroupObject(ApiModel):
     #: First name to be shown when calls are forwarded out of this paging group. Defaults to ".".
     #: example: Hakim
     first_name: Optional[str] = None
-    #: Last name to be shown when calls are forwarded out of this paging group. Defaults to the phone number if set, otherwise defaults to call group name.
+    #: Last name to be shown when calls are forwarded out of this paging group. Defaults to the phone number if set,
+    #: otherwise defaults to call group name.
     #: example: Smith
     last_name: Optional[str] = None
-    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator ID.
+    #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator
+    #: ID.
     #: example: True
     originator_caller_id_enabled: Optional[bool] = None
     #: An array of people and/or workspaces, who may originate pages to this paging group.

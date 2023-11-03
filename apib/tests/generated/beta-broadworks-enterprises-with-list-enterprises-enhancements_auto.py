@@ -7,7 +7,11 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['EnterpriseListResponse', 'EnterpriseListResponseBroadworksDirectorySync', 'EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatus', 'EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors', 'TriggerDirectorySyncResponse', 'TriggerDirectorySyncResponseDirectorySyncStatus', 'TriggerUserDirectorySyncResponse', 'TriggerUserDirectorySyncResponseStatus', 'TriggerUserDirectorySyncResponseUserResponse']
+__auto__ = ['EnterpriseListResponse', 'EnterpriseListResponseBroadworksDirectorySync',
+            'EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatus',
+            'EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors', 'TriggerDirectorySyncResponse',
+            'TriggerDirectorySyncResponseDirectorySyncStatus', 'TriggerUserDirectorySyncResponse',
+            'TriggerUserDirectorySyncResponseStatus', 'TriggerUserDirectorySyncResponseUserResponse']
 
 
 class EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors(ApiModel):
@@ -59,7 +63,10 @@ class EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatus(ApiModel)
     #: Unique tracking identifier.
     #: example: NA_dde3a13a-bad7-4990-b155-9b4574e545b9
     last_sync_tracking_id: Optional[str] = None
-    #: List of errors that occurred during that last attempt to sync this BroadWorks enterprise. This list captures errors that occur during a directory sync of the BroadWorks enterprise, after the API has been accepted and a 200 OK response is returned. Any errors that occur during the initial API request validation will be captured directly in the error response with an appropriate HTTP status code.
+    #: List of errors that occurred during that last attempt to sync this BroadWorks enterprise. This list captures
+    #: errors that occur during a directory sync of the BroadWorks enterprise, after the API has been accepted and a
+    #: 200 OK response is returned. Any errors that occur during the initial API request validation will be captured
+    #: directly in the error response with an appropriate HTTP status code.
     errors: Optional[list[EnterpriseListResponseBroadworksDirectorySyncDirectorySyncStatusErrors]] = None
     #: The number of user contacts added to Contact service in this sync.
     #: example: 5.0

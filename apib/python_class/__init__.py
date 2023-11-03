@@ -17,6 +17,7 @@ import dateutil.parser
 
 from apib.apib import ApibDatastructure, ApibObject, ApibEnum, ApibParseResult, ApibMember, words_to_camel
 from apib.apib.classes import snake_case, ApibElement, ApibSelect, ApibString, ApibBool, ApibNumber, ApibArray
+from apib.tools import break_line, remove_links
 from wxc_sdk.base import to_camel
 
 log = logging.getLogger(__name__)
@@ -89,8 +90,11 @@ class Attribute:
         Python source for one class attribute
         """
         if self.docstring:
-            lines = [f'#: {ls}' for line in self.docstring.strip().splitlines()
-                     if (ls := line.strip())]
+            # break docstring lines to 80 characters
+            lines = chain.from_iterable(break_line(remove_links(ls), 112)
+                                        for line in self.docstring.strip().splitlines()
+                                        if (ls := line.strip()))
+            lines = [f'#: {line}' for line in lines]
         else:
             lines = []
         if for_enum:

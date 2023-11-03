@@ -7,7 +7,8 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['AnswerObject', 'ListAnswersOfAQuestionResponse', 'ListMeetingQAndAResponse', 'QAObject', 'QAObjectAnswers', 'QAObjectAnswersLinks']
+__auto__ = ['AnswerObject', 'ListAnswersOfAQuestionResponse', 'ListMeetingQAndAResponse', 'QAObject', 'QAObjectAnswers',
+            'QAObjectAnswersLinks']
 
 
 class QAObjectAnswersLinks(ApiModel):
@@ -51,7 +52,8 @@ class QAObject(ApiModel):
     #: A unique identifier for the question.
     #: example: 1aea8390-e375-4547-b7ff-58ecd9e0b03d
     id: Optional[str] = None
-    #: A unique identifier for the [meeting instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the Q&A belongs.
+    #: A unique identifier for the [meeting
+    #: instance](/docs/meetings#meeting-series-scheduled-meetings-and-meeting-instances) to which the Q&A belongs.
     #: example: a2f95f5073e347489f7611492dbd6ad5_I_199075330905867928
     meeting_id: Optional[str] = None
     #: The total number of attendees in the meeting.

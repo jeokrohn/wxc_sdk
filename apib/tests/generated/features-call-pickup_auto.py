@@ -7,7 +7,10 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CreateACallPickupResponse', 'GetAvailableAgentsFromCallPickupsResponse', 'GetCallPickupObject', 'GetPersonPlaceVirtualLineCallPickupObject', 'GetPersonPlaceVirtualLineCallPickupObjectType', 'GetUserNumberItemObject', 'ListCallPickupObject', 'ModifyCallPickupObject', 'ReadTheListOfCallPickupsResponse']
+__auto__ = ['CreateACallPickupResponse', 'GetAvailableAgentsFromCallPickupsResponse', 'GetCallPickupObject',
+            'GetPersonPlaceVirtualLineCallPickupObject', 'GetPersonPlaceVirtualLineCallPickupObjectType',
+            'GetUserNumberItemObject', 'ListCallPickupObject', 'ModifyCallPickupObject',
+            'ReadTheListOfCallPickupsResponse']
 
 
 class GetPersonPlaceVirtualLineCallPickupObjectType(str, Enum):

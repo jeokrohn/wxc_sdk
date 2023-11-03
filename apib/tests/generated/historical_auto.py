@@ -7,7 +7,14 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['HistoricalDataRelatedToMeetingsResponse', 'HistoricalDataRelatedToMeetingsResponseMetrics', 'HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByJoinMethods', 'HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByLocation', 'HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByRoles', 'HistoricalDataRelatedToMessagingResponse', 'HistoricalDataRelatedToMessagingResponseMetrics', 'HistoricalDataRelatedToMessagingResponseMetricsSharing', 'HistoricalDataRelatedToRoomDevicesResponse', 'HistoricalDataRelatedToRoomDevicesResponseMetrics', 'HistoricalDataRelatedToRoomDevicesResponseMetricsSharing']
+__auto__ = ['HistoricalDataRelatedToMeetingsResponse', 'HistoricalDataRelatedToMeetingsResponseMetrics',
+            'HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByJoinMethods',
+            'HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByLocation',
+            'HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByRoles',
+            'HistoricalDataRelatedToMessagingResponse', 'HistoricalDataRelatedToMessagingResponseMetrics',
+            'HistoricalDataRelatedToMessagingResponseMetricsSharing', 'HistoricalDataRelatedToRoomDevicesResponse',
+            'HistoricalDataRelatedToRoomDevicesResponseMetrics',
+            'HistoricalDataRelatedToRoomDevicesResponseMetricsSharing']
 
 
 class HistoricalDataRelatedToMessagingResponseMetricsSharing(ApiModel):
@@ -118,7 +125,8 @@ class HistoricalDataRelatedToMeetingsResponseMetricsParticipantsByLocation(ApiMo
 
 
 class HistoricalDataRelatedToMeetingsResponseMetrics(ApiModel):
-    #: Total number of meetings held over the selected date range. includes Webex Meetings, Webex Events, Webex Support, and Webex Training sessions
+    #: Total number of meetings held over the selected date range. includes Webex Meetings, Webex Events, Webex
+    #: Support, and Webex Training sessions
     #: example: 123.0
     total_meetings: Optional[int] = None
     #: Total number of joins by participant and devices from all Webex meetings over the selected date range

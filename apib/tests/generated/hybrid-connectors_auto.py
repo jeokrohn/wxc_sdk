@@ -7,7 +7,8 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['Alarm', 'AlarmCollection', 'AlarmSeverity', 'Connector', 'ConnectorCollection', 'ConnectorStatus', 'ConnectorType']
+__auto__ = ['Alarm', 'AlarmCollection', 'AlarmSeverity', 'Connector', 'ConnectorCollection', 'ConnectorStatus',
+            'ConnectorType']
 
 
 class ConnectorStatus(str, Enum):

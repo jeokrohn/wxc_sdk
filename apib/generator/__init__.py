@@ -1,19 +1,12 @@
 import os
-import re
-from collections import defaultdict
 from collections.abc import Generator
 from dataclasses import dataclass
 from itertools import chain
-from typing import NamedTuple, Union
-from urllib.parse import urljoin
-
-import dateutil.parser
+from typing import NamedTuple
 
 from apib.apib import read_api_blueprint, ApibParseResult
-from apib.apib.classes import ApibElement, ApibEnum, ApibDatastructure, ApibObject, ApibString, \
-    ApibBool, ApibNumber, ApibArray, ApibSelect, ApibMember
-from apib.python_class import PythonClassRegistry, Endpoint, Parameter, PythonClass, Attribute, \
-    simple_python_type
+from apib.python_class import PythonClassRegistry, Endpoint
+from apib.tools import break_line
 
 PREAMBLE = """
 from datetime import datetime
@@ -69,8 +62,16 @@ class CodeGenerator:
         Generate Python source for the APIB read
         """
         class_names = []
-        class_sources = [class_names.append(c.name) or s for c in self.class_registry.classes() if (s := c.source())]
+        class_sources = []
+        for python_class in self.class_registry.classes():
+            source = python_class.source()
+            if not source:
+                continue
+            class_names.append(python_class.name)
+            class_sources.append(source)
+        # __auto__ with all class names
         auto_src = f"""__auto__ = [{", ".join(f"'{c}'" for c in sorted(class_names))}]"""
+        auto_src = '\n'.join(break_line(auto_src, width=120, prefix=' ' * 12))
         source = '\n\n\n'.join(chain.from_iterable(((PREAMBLE, auto_src), class_sources)))
         source = source.strip() + '\n'
         return source

@@ -7,7 +7,16 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__auto__ = ['CreateANewVoicemailGroupForALocationResponse', 'GetLocationVoicemailGroupObject', 'GetLocationVoicemailGroupObjectEmailCopyOfMessage', 'GetLocationVoicemailGroupObjectFaxMessage', 'GetLocationVoicemailGroupObjectGreeting', 'GetLocationVoicemailGroupObjectMessageStorage', 'GetLocationVoicemailGroupObjectMessageStorageStorageType', 'GetLocationVoicemailGroupObjectNotifications', 'GetLocationVoicemailObject', 'GetVoicePortalObject', 'GetVoicePortalPasscodeRuleObject', 'GetVoicePortalPasscodeRuleObjectBlockPreviousPasscodes', 'GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits', 'GetVoicePortalPasscodeRuleObjectExpirePasscode', 'GetVoicePortalPasscodeRuleObjectFailedAttempts', 'GetVoicePortalPasscodeRuleObjectLength', 'GetVoicemailGroupObject', 'ListVoicemailgroupResponse', 'PostLocationVoicemailGroupObject', 'PutLocationVoicemailGroupObject', 'PutVoicePortalObject', 'PutVoicePortalObjectPasscode']
+__auto__ = ['CreateANewVoicemailGroupForALocationResponse', 'GetLocationVoicemailGroupObject',
+            'GetLocationVoicemailGroupObjectEmailCopyOfMessage', 'GetLocationVoicemailGroupObjectFaxMessage',
+            'GetLocationVoicemailGroupObjectGreeting', 'GetLocationVoicemailGroupObjectMessageStorage',
+            'GetLocationVoicemailGroupObjectMessageStorageStorageType', 'GetLocationVoicemailGroupObjectNotifications',
+            'GetLocationVoicemailObject', 'GetVoicePortalObject', 'GetVoicePortalPasscodeRuleObject',
+            'GetVoicePortalPasscodeRuleObjectBlockPreviousPasscodes',
+            'GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits', 'GetVoicePortalPasscodeRuleObjectExpirePasscode',
+            'GetVoicePortalPasscodeRuleObjectFailedAttempts', 'GetVoicePortalPasscodeRuleObjectLength',
+            'GetVoicemailGroupObject', 'ListVoicemailgroupResponse', 'PostLocationVoicemailGroupObject',
+            'PutLocationVoicemailGroupObject', 'PutVoicePortalObject', 'PutVoicePortalObjectPasscode']
 
 
 class GetLocationVoicemailGroupObjectGreeting(str, Enum):
@@ -194,14 +203,19 @@ class GetVoicePortalPasscodeRuleObject(ApiModel):
     failed_attempts: Optional[GetVoicePortalPasscodeRuleObjectFailedAttempts] = None
     #: Settings for previous passcode usage.
     block_previous_passcodes: Optional[GetVoicePortalPasscodeRuleObjectBlockPreviousPasscodes] = None
-    #: Settings for not allowing single or groups of repeated digits in passcode (for example, 22888, 121212, or 408408).
+    #: Settings for not allowing single or groups of repeated digits in passcode (for example, 22888, 121212, or
+    #: 408408).
     #: + enabled: true (boolean) - If enabled, passcode should not contain repeated digits.
-    #: + max: `3` (number) - Maximum number of digits to be considered as a repeated sequence. The minimum value is 1. The maximum value is 6.
+    #: + max: `3` (number) - Maximum number of digits to be considered as a repeated sequence. The minimum value is 1.
+    #: The maximum value is 6.
     block_repeated_digits: Optional[GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits] = None
     #: Settings for not allowing numerical sequence in passcode (for example, 012345 or 987654).
-    #: + enabled: true (boolean) - If enabled, do not allow the specified number of ascending or descending digits in a row.
-    #: + numberOfAscendingDigits: `3` (number) -  Number of ascending digits in sequence. The minimum value is 2. The maximum value is 5.
-    #: + numberOfDescendingDigits: `3` (number) -  Number of descending digits in sequence. The minimum value is 2. The maximum value is 5.
+    #: + enabled: true (boolean) - If enabled, do not allow the specified number of ascending or descending digits in a
+    #: row.
+    #: + numberOfAscendingDigits: `3` (number) -  Number of ascending digits in sequence. The minimum value is 2. The
+    #: maximum value is 5.
+    #: + numberOfDescendingDigits: `3` (number) -  Number of descending digits in sequence. The minimum value is 2. The
+    #: maximum value is 5.
     block_contiguous_sequences: Optional[GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits] = None
     #: Allowed length of the passcode.
     length: Optional[GetVoicePortalPasscodeRuleObjectLength] = None

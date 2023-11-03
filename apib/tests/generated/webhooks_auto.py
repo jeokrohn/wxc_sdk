@@ -83,7 +83,10 @@ class Webhook(ApiModel):
     #: The date and time the webhook was created.
     #: example: 2015-10-18T14:26:16+00:00
     created: Optional[datetime] = None
-    #: Specified when creating an org/admin level webhook.
+    #: Specify `org` when creating an org/admin level webhook. Supported for `meetings`, `recordings`,
+    #: `meetingParticipants`, `meetingTranscripts`, `videoMeshAlerts`, `controlHubAlerts`, `rooms`, and `messaging`
+    #: (for Compliance Officers and messages with file attachments only - see
+    #: https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics) resources.
     #: example: org
     owned_by: Optional[str] = None
 
