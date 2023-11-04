@@ -1,6 +1,8 @@
 import os
+from collections import defaultdict
 from collections.abc import Generator
 from dataclasses import dataclass
+from functools import reduce
 from itertools import chain
 from typing import NamedTuple
 
@@ -59,10 +61,22 @@ class CodeGenerator:
 
     def source(self) -> str:
         """
-        Generate Python source for the APIB read
+        Generate Python source for the APIB files read
+            * dataclasses
+            * API classes
         """
+        endpoint_sources = []
+        # work on endpoints in groups by APIB file
+        endpoints_by_apib: dict[str, list[Endpoint]] = \
+            reduce(lambda r, e: r[e[0]].append(e[1]) or r,
+                   self.class_registry.endpoints(),
+                   defaultdict(list))
+
+        apis = [api for _, api in self.class_registry.apis()]
+
         class_names = []
         class_sources = []
+
         for python_class in self.class_registry.classes():
             source = python_class.source()
             if not source:
@@ -75,5 +89,3 @@ class CodeGenerator:
         source = '\n\n\n'.join(chain.from_iterable(((PREAMBLE, auto_src), class_sources)))
         source = source.strip() + '\n'
         return source
-
-

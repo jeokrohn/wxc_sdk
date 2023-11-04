@@ -14,41 +14,12 @@ __all__ = ['ApibParseResult', 'ApibElement', 'ApibCopy', 'ApibResource', 'ApibMo
            'ApibMeta', 'ApibArray', 'ApibString', 'ApibEnum', 'ApibEnumElement', 'ApibHttpHeaders',
            'ApibWithHeaders', 'ApibHttpResponse', 'ApibHttpTransaction', 'ApibHttpRequest',
            'ApibBool', 'ApibApi', 'ApibHrefVariables', 'ApibNumber', 'ApibSourceMap', 'ApibSourceMapNumber',
-           'AbibSourceMapNumberArray', 'ApibObject', 'words_to_camel', 'ApibSourceMapEntry', 'ApibOption',
-           'ApibSelect', 'snake_case']
+           'AbibSourceMapNumberArray', 'ApibObject', 'ApibSourceMapEntry', 'ApibOption',
+           'ApibSelect']
+
+from apib.tools import words_to_camel
 
 log = logging.getLogger(__name__)
-
-
-def words_to_camel(s: str) -> str:
-    """
-    Generate a camel case Python name from multi-word input string
-    Example: 'User name' --> 'UserName'
-    """
-    def cap_first(s: str) -> str:
-        return f'{s[0].upper()}{s[1:]}'
-
-    r = ''.join(cap_first(w) for w in s.split())
-    r, _ = re.subn(r'\W', '', r)
-    return r
-
-
-def snake_case(s: str) -> str:
-    """
-    Generate a snake case Python name for given input string.
-    Input string can be a multiple words or a camel case string
-    Examples:
-        * 'user name' --> user_name
-        * 'User Name' --> user_name
-    """
-    # get rid of all spaces
-    r = s.replace(' ', '_')
-    # add underscore whenever a capital letter is preceded by lower case or digit
-    r, _ = re.subn(r'([a-z0-9])([A-Z])', '\\1_\\2', r)
-    # add underscore whenever a letter or digit is preceded by non-word character other than underscore
-    r, _ = re.subn(r'[^_\w]([A-Za-z0-9])', '_\\1', r)
-    r = r.lower()
-    return r
 
 
 class ApibModel(BaseModel):
